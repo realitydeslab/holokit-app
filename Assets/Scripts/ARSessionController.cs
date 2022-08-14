@@ -5,7 +5,7 @@ using HoloKit;
 using UnityEngine.XR.ARKit;
 using UnityEngine.XR.ARFoundation;
 
-public class ARSessionManager : MonoBehaviour
+public class ARSessionController : MonoBehaviour
 {
     public bool CoachingOverlaySupported
     {

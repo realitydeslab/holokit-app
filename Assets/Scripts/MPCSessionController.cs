@@ -4,7 +4,7 @@ using UnityEngine;
 using HoloKitAppNativePlugin;
 using System;
 
-public class MPCSessionManager : MonoBehaviour
+public class MPCSessionController : MonoBehaviour
 {
     private void Awake()
     {
