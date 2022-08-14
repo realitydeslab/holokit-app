@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>QR Code Tracker Documentation</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <img src="assets/title.png" class="title">
+    <div class="content">
+
+        <h1>Example Setup</h1>
+        <h2>Preliminaries</h2>
+        <p>
+            <em>QR Foundation</em> is built to work together with <em>AR Foundation</em>. Therefore, before you can get
+            started, you will need to integrate <em>AR Foundation</em> into your project. 
+            As <em>AR Foundation</em> is a new and constantly evolving technology, this process will vary based on the version
+            you are using. Try to follow the <a href="https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.0/manual/index.html">official guide</a>.
+        </p>
+        <p>
+            When you're done, you should end up with a scene like this:
+        </p>
+        <img src="assets/scene.png">
+        <p>
+            The <tt>AR Session</tt> and <tt>AR Session Origin</tt> can be created pre-configured from the 
+            <tt>GameObject > XR</tt> menu. Make sure this basic setup works before you proceed. To confirm, 
+            you can place objects in the scene and look around with your phone to see if they stay at fixed locations 
+            in the physical world.
+        </p>
+
+        <h2>Basic usage</h2>
+        <p>
+            When your basic AR setup is running, attach the <tt>QR Code Tracker</tt> script to your <tt>AR Camera</tt>.
+        </p>
+        <p>
+            Now measure the width of your physical QR code in meters and enter it as the <tt>Code width</tt> parameter
+            in the inspector. The width is the distance between the outer borders of the alignment patters, as you can see below. 
+            Do this <em>as precisely as possible</em>, as small errors in the measurement may result in large errors in the tracking.
+        </p>
+        <img src="assets/width.png">
+        <p>
+            Lastly, assign a prefab to the <tt>Tracked code prefab</tt> property in order to see an effect. You can use
+            the <tt>Coords</tt> prefab from the <tt>/Prefabs/Debug</tt> folder.
+        </p>
+        <img src="assets/basic.png">
+        <p>
+            That's it. You're ready to try it out.
+        </p>
+        <img src="assets/screenshot.png">
+
+        <h1>How to proceed</h1>
+        <p>
+            Sooner or later you'll likely want to be able to track QR codes of different sizes. Check out the section on
+            <a href="#sizeDetermination">size determination strategies</a> for this. If you're interested in triggering
+            custom actions on code detection, refer to the <a href="#lifecycle">lifecycle events</a>. You can also see
+            some of the topics discussed there in action in the sample scene located under <tt>/Samples/SampleScanner</tt>.
+        </p>
+        <p>
+            Finally, if you want more control over the tracking or need to troubleshoot issues , have a
+            look at the <a href="#advanced">advanced options</a>.
+        </p>
+
+        <h1 id="api">API</h1>
+        <h2>Tracking configuration</h2>
+        <img src="assets/api1.png">
+        <h3 id="sizeDetermination">Size determination strategy</h3>
+        <p>
+            For locating the QR code in space, it is under the current state of AR technology on most consumer hardware
+            still necessary to know the pysical size of the tracking target in advance. This asset offers three ways to
+            specify the size, which will be explained in the following.
+        </p>
+        <h4>Fixed size</h4>
+        <p>
+            In the most simple case, all codes have the same phyical size. In this case, this strategy can be used.
+        </p>
+
+        <h4>Content mapping</h4>
+        <p>
+            A size is assigned to the code by matching its content against a search string. An arbitrary number of
+            search strings can be mapped to a size each.
+        </p>
+        <p>
+            The algorithm looks tests the strings in the specified order to see if one is contained within the QR code's
+            content. If so, it stops. You can add an entry with an empty search string at the last position as a
+            fallback that will always match.
+        </p>
+        </p>
+
+        <h4>Custom function</h4>
+        <p>
+            This mode enables you to write custom logic for determining the code width. Simply assign your own function
+            to the public \"getWidthDelegate\" property of this component. It will receive the QR code's content as a
+            string and has to return the width in meters.
+        </p>
+        <code>
+    GetComponent&lt;QRCodeTracker&gt;().getWidthDelegate =
+        (content) =>
+        {
+            if (content.Length < 20)
+                return 0.05f;
+            return 0.2f;
+        };
+    </code>
+
+        <h3>Inversion attempt</h3>
+        <p>
+            Specifies whether the system should look for light-on-dark QR codes. Disable it if you are not planning to
+            support light-on-dark codes, at is has a negative performance impact.
+        </p>
+
+        <h3 id="prefab">Tracked code prefab</h3>
+        <p>
+            A prefab which will be spawned where the QR code is detected and kept synchronized over time. Defaults to
+            an empty <tt>GameObject</tt>. The spawned <tt>GameObject</tt> will also share the <em>rotation</em> and
+            <em>scale</em> of the code, in the sense that a rectangle with an edge length of <tt>1 meter</tt> with its
+            origin at the center will overlay the code perfectly.
+        </p>
+
+        <h2 id="lifecycle">Lifecycle events</h2>
+        <p>
+            The tracking has three states. In <em>SEARCHING</em> state no QR code is detected and scanning is done in
+            larger intervals.
+            When a code is detected, the system switches to <em>STABILIZING</em> state where scanning is done as often
+            as possbile to quickly fixate the code in space.
+            As soon as the desired precision is reached, the system switches to <em>REGISTERED</em> state, which is when
+            the <tt>GameObject</tt> is spawned.
+            The other possible transitions can be seen below.
+        </p>
+
+        <img src="assets/trackingstates.png">
+
+        <p>
+            Within this state machine, you can specify the following lifecycle hooks:
+        </p>
+
+        <h3>On Code Detected</h3>
+        <p>
+            This event fires right after a (new) code as first been recognized. It emits the string content of the QR
+            code.
+            As a little time may pass between the initial recognition and the tracking being stable, this event can be
+            used to preload data or already give a first success indication in the UI.
+        </p>
+
+        <h3>On Code Registered</h3>
+        <p>
+            This event fires when the code is stabilized for tracking. It emits the string content of the QR code and
+            the <tt>GameObject</tt> (see <a href="#prefab">Tracked code prefab</a>) which is spawned in its place.
+            Based on the string content, you can for example attach different prefabs to the spawned <tt>GameObject</tt>.
+        </p>
+
+        <h3>On Code Lost</h3>
+        <p>
+            Called when the previously registered code has not been successfully scanned for a <a href="#timeout">certain
+            amount of time</a>
+        </p>
+
+        <h2 id="advanced">Advanced settings</h2>
+        <img src="assets/api3.png">
+
+        <h3 id="timeout">Code lost timeout</h3>
+        <p>
+            The amount of seconds that need to pass without a successful recognition of the code before treating it as
+            lost and switching back to <a href="#lifecycle">SEARCHING</a> mode.
+        </p>
+        <p>
+            In some scenarios it may be useful to just set this to a very high number in order to practically never lose
+            the code.
+        </p>
+
+        <h3 id="stability">Required stability</h3>
+        <p>
+            This can be interpreted as the maximum allowed degree of fluctuation in the tracking before the system
+            switches to the <a href="#lifecycle">REGISTERED</a> state (lower value = less fluctuation = more stable).
+        </p>
+        <p>
+            Higher values result in earlier, but initially less stable alignment. Values between <tt>1</tt> and
+            <tt>2</tt> have proven to be reasonably choices here.
+        </p>
+        <h3>Max. scan resolution</h3>
+        <p>
+            For performance reasons, the camera image is downscaled before analyzing it. This value determines the
+            maximum amount of pixels (width x height) that should be targeted for this.
+        </p>
+        <p>
+            Higher values result in more accurate tracking at the cost of higher CPU usage/fewer scans per seconds.
+            However, the benefit of increasing this value is neglectable. Decrease it if you need better performance.
+        </p>
+
+        <h3>Search scan interval</h3>
+        <p>
+            The number of seconds (with fractional part) that have to pass <em>at least</em> between two consecutive
+            scans in <a href="#lifecycle">SEARCHING</a> mode, i.e. when no code has been recognized so far.
+        </p>
+        <p>
+            You can keep this value rather high (<tt>≥0.5</tt>) in order to save CPU time.
+        </p>
+
+        <h3>Stabilize scan inverval</h3>
+        <p>
+            The number of seconds (with fractional part) that have to pass <em>at least</em> between two consecutive
+            scans in
+            <a href="#lifecycle">STABILIZING</a> mode, i.e. when a (new) code has been found, but the AR alignment is
+            not yet stable enough to count it as registered.
+        </p>
+        <p>
+            It is recommended to keep this value at <tt>0</tt> for the fastest registration possible.
+        </p>
+
+        <h3>Refine scan interval</h3>
+        <p>
+            The number of seconds (with fractional part) that have to pass <em>at least</em> between two consecutive
+            scans in <a href="#lifecycle">REGISTERED</a> mode, i.e. after the prefab is spawned.
+        </p>
+        <p>
+            How you set this value depends on your use case. For the most accurate tracking over time, you may set it to
+            <tt>0</tt>. If accuracy is not too important in your scenario, you can choose high values and rely on AR
+            Foundation to preserve the alignment.
+        </p>
+
+        <h3>
+            Stabilize timeout
+        </h3>
+        <p>
+            When this amount of seconds has passed in STABILIZING mode, the code is registered based on the current samples regardless of the precision.
+        </p>
+
+        <h3>Debug mode</h3>
+        <img src="assets/debug.png">
+        <p>
+            Activating the debug mode will have the following effects:
+        </p>
+        <h4>Debug outputs</h4>
+        <p>
+            In the top left corner of the sceen, you will see the following debug outputs:
+            <ul>
+                <li><b>QR content:</b> String content of the last detected QR code</li>
+                <li><b>Tracking state:</b> The current state in the <a href="#lifecycle">lifecycle</a>. </li>
+                <li><b>Precision:</b> The current tracking precision as it is used for configuration <a href="#stability">here</a>. Lower is better.</li>
+                <li><b>Samples:</b> The current number of registered samples from which the alignment is averaged.</li>
+                <li><b>Scan time:</b> The number of seconds the last scan took.</li>
+                <li><b>Calc time:</b> The number of seconds the last processing of the scanned data took.</li>
+            </ul>
+        </p>
+
+        <h4>Simulated QR codes</h4>
+        <p>
+            It is possible to track virtual QR codes in debug mode. If you create an object (e.g. a plane) with a QR
+            code as the texture and place it on <strong>Layer 8</strong>, it will be treated as if it were part of the real world.
+        </p>
+
+        <h4>Center markers</h4>
+        <p>
+            Red spheres will spawn at the estimated center of the QR code. Use can use them to diagnose your device's
+            world tracking stability if you experience bad performance of QR Foundation.
+            If the spheres are very scattered but remain stationary, the error probably lies within QR Foundation.
+            If the spheres are moving around relative to the real world, your device's world tracking is unstable and
+            thus QR Foundation's performance will suffer as well.
+        </p>
+
+    </div>
+</body>
+
+</html>

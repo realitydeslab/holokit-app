@@ -1,0 +1,39 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel InitializeHorizonalHistogram
+#pragma kernel InitializeVerticalHistogram
+#pragma kernel CalculateHistogram
+
+Texture2D<float> DepthTexture;
+Texture2D<float> StencilTexture;
+
+float MaxDepth;
+
+struct HistStruct {
+   uint sum;
+};
+
+RWStructuredBuffer<HistStruct> HorizonalHistogram;
+RWStructuredBuffer<HistStruct> VerticalHistogram;
+
+[numthreads(64,1,1)]
+void InitializeHorizonalHistogram(uint3 id : SV_DispatchThreadID) 
+{
+   HorizonalHistogram[id.x].sum = 0;
+}
+
+[numthreads(64,1,1)]
+void InitializeVerticalHistogram(uint3 id : SV_DispatchThreadID) 
+{
+   VerticalHistogram[id.x].sum = 0;
+}
+
+[numthreads(8,8,1)]
+void CalculateHistogram(uint3 id : SV_DispatchThreadID)
+{
+    uint2 uv = uint2(id.x, id.y);
+    if (StencilTexture[uv].r > 0 && DepthTexture[uv].r > 0 && DepthTexture[uv].r < MaxDepth) {
+        float value = StencilTexture[uv];
+        InterlockedAdd(VerticalHistogram[id.y].sum, 1);
+        InterlockedAdd(HorizonalHistogram[id.x].sum, 1);    
+    }
+}

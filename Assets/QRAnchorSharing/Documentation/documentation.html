@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>QR Anchor Sharing Documentation</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <img src="assets/title.png" class="title">
+    <div class="content">
+        <h1>First things first</h1>
+        This document is about the <em>QR Anchor Sharing</em> plugin. If you are looking for the documentation of the underlying <em>QR Foundation</em> plugin which is included in this asset as well, have a look <a href="./../Libraries/QRFoundation/Documentation/documentation.html">here</a>.
+
+        <h1>Example Setup</h1>
+        <h2>Preliminaries</h2>
+        <p>
+            <em>QR Anchor Sharing</em> is built to work together with <em>AR Foundation</em>. Therefore, before you can get
+            started, you will need to integrate <em>AR Foundation</em> into your project. 
+            As <em>AR Foundation</em> is a new and constantly evolving technology, this process will vary based on the version
+            you are using. Try to follow the <a href="https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.0/manual/index.html">official guide</a>.
+        </p>
+        <p>
+            When you're done, you should end up with a scene like this:
+        </p>
+        <img src="assets/scene.png">
+        <p>
+            The <tt>AR Session</tt> and <tt>AR Session Origin</tt> can be created pre-configured from the 
+            <tt>GameObject > XR</tt> menu. Make sure this basic setup works before you proceed. To confirm, 
+            you can place objects in the scene and look around with your phone to see if they stay at fixed locations 
+            in the physical world.
+        </p>
+        <p>
+            Lastly, you will need to attach the <tt>AR Anchor Manager</tt> script to the <tt>AR Session Origin</tt>.
+            For this tutorial you have to specify an <tt>Anchor Prefab</tt> (you can use one from the <em>Samples/Basic</em> folder of this project or create one from a 10cm cube). This is only to get a visible result without having to write code. In a production scenario you will want to attach your GameObject to the generated anchor manually as described <a href="https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.1/manual/anchor-manager.html">here</a> and as done in the advanced sample scene of this asset.
+        </p>
+        <img src="assets/basic4.png">
+
+        <h2>Basic usage</h2>
+        <p>
+            The two essential scripts of this package are <tt>QR Anchor Sender</tt> for sending an anchor and <tt>QR Anchor Receiver</tt> for receiving an anchor.
+            Attach them both to the <tt>AR Camera</tt>.
+        </p>
+        <h3>Sender setup</h3>
+        <p>
+            The <tt>QR Anchor Sender</tt> continuously provides a QR code texture that can be used to transmit the pose of an arbitrary object in the scene to another device with a different reference system. You can receive the texture as a <em>Texture2D</em> and render it manually, or let the script draw it on the GUI for you.
+            While you may probably want to go for option one in a production scenario, this basic scenario will cover option two as no additional code is required there.
+        </p>
+        <p>
+            Add the GameObject that you want to share to the scene. I recommend to use a plain white 10cm cube and place it at the origin. Set this as the <tt>Sharing target</tt> property of the <tt>QR Anchor Sender</tt>. You can leave the other properties unchanged.
+        </p>
+        <img src="assets/basic1.png">
+        <img src="assets/basic3.png">
+        <p>
+            Next, you will need a way to trigger the display of the QR code. The <tt>Share On Tap</tt> script which is included in this asset will do just that: It shows the QR code while you press and hold anywhere on the screen (Pro tip: Don't cover the code with your finger). Attach it to the <tt>AR Camera</tt> as well.
+            Take a look at the script. The two important statements are <tt>sender.StartSharing();</tt> (line 24) and <tt>sender.StopSharing();</tt> (line 32). Before <tt>StartSharing</tt> is called, the sender script will be idle.
+        </p>
+        <p>
+            Try it out! Locate the cube with your phone to make sure that it stays aligned with the real world. Then tap the screen to see if the QR code is rendered. It should change about three times a second.
+        </p>
+
+        <h3>Receiver setup</h3>
+        <p>
+            The <tt>QR Anchor Receiver</tt> scans the QR code from the sending device and calculates the resulting anchor. For now, all you need to do is to set the <tt>AR Session origin</tt> property to the actual <tt>AR Session Origin</tt> GameObject from the scene.
+            By default, the script will look for a code once every second. If a code is found, it will use all available resources to calculate the shared pose. If after four seconds of calculation the pose is still not stable enough, it will stop and emit what the result that it has come up with so far. All these thresholds can be customized in the <a href="#advanced">advanced settings</a>.
+        </p>
+        <p>
+            In a production scenario, you should use the <tt>On code detected</tt> and <tt>On stabilize failure</tt> lifecycle hooks to indicate the state of the scanning to the user. For now, you can activate the <em>Debug mode</em> in the <a href="#advanced">advanced settings</a>, showing you some status values including the tracking status.
+        </p>
+        <img src="assets/basic2.png">
+
+        <h3>Try it out</h3>
+        With one device, find the white cube and tab the screen. With the other device, focus on the QR code. After at most five seconds, the <em>tracking state</em> on the receiving device should switch to <em>"Registered"</em> and the prefab that you selected as the <tt>Anchor Prefab</tt> should appear in the scene.
+
+        <p>
+            For a more production-like example that includes plane detection, metadata transmission, a custom spawning script, custom rendering of the QR code and a scanning progress indicator, have a look at the advanced sample scene in this project.
+        </p>
+
+        <h1>Sender API</h1>
+        <h2>Sharing target</h2>
+        <p>
+            The GameObject which's pose should be shared. Note, that <em>only</em> its pose is transmitted, not the identitiy of the GameObject itself. You have to manually ensure that what is being shared is also what is being spawned.
+        </p>
+
+        <h2>Anchor ID</h2>
+        <p>
+            A numeric ID for the currently shared anchor. For each ID there can only be one anchor at a time. Note, that while it is possbile to share multiple anchors by choosing different IDs, every anchor in the scene has a big CPU impact and it is therefore recommended to get by with only one. 
+        </p>
+
+        <h2>Meta data</h2>
+        <p>
+            String meta data that can be transmitted along with the QR code. It can be used for session information or to communicate which GameObject to spawn at the anchor. Try to keep it short and condensed, as the information density of the QR code will increase along with it.
+        </p>
+
+        <h2>Update interval</h2>
+        <p>
+            How often the QR code should refresh. Too low values might have a negative impact on the precision and slow down the transmission speed. Too high values may make the QR code unreadable on the receiving device. I would recommend to not tweak it too much ;)
+        </p>
+
+        <h2>Code scale</h2>
+        <p>
+            The size in which you will display the QR code texture on the screen, measured as the share of the smaller side of the screen. If your device has a 720 x 1080 pixel screen (portrait) and you set this value to 1, you'll have to make sure that the QR texture is rendered across the full width of the screen and maintains its 1:1 aspect ratio, so in this case 720 x 720 pixels. For a value of 0.5 it would be 360 x 360 pixels.
+        </p>
+        <p>
+            Setting this value correctly is <em>essential</em>! Slight errors here may lead to very badly offset transmissions.
+        </p>
+
+        <h2>Draw on GUI</h2>
+        <p>
+            If this is checked, the plugin will render the QR code to the sceen in full width/height automatically using the GUI API. It will be drawn on GUI depth 0, so you can overlay custom UI by drawing anywhere below 0.
+        </p>
+
+        <h2>On code updated</h2>
+        <p>
+            In case you decide to render the QR texture manually, you will receive it through this event after every change.
+        </p>
+
+        <h1>Receiver API</h1>
+        <h2>Rotation mode</h2>
+        <p>
+        Due to their gyro sensors, AR capable phones have a mutual understanding of the direction of the Y axis by default. If the objects that you want to share are always "standing straight" anyway, you can remove a potential source of error by setting this parameter to <b>Aling with Y axis</b>.
+        </p>
+
+        <h2>Output mode</h2>
+        <p>
+        In <b>Managed anchor</b> mode, the plugin will automatically create an anchor after successful transmission. For this mode, you have to tell the plugin which GameObject has the <em>AR Anchor Manager</em> attached using the <tt>AR session origin</tt> property.
+        </p>
+        <p>
+            Use <b>Pose</b> as the output mode for custom behavior.
+        </p>
+
+        <h2>On anchor/pose received</h2>
+        <p>
+            The <tt>On anchor received</tt> and respectively <tt>On pose received</tt> events will yield you the ID and the string metadata of the anchor (set by the sender) and the received anchor/pose.
+        </p>
+
+        <h2>Lifecycle events</h2>
+        These secondary lifecycle events can be used to give the user feedback about the current transmission state. This can be crucial, as the process may take a few seconds and you don't want your users to give up halfway through.
+
+        <h3>On code detected</h3>
+        This event is invoked as soon as a code is detected. It contains its anchor ID. 
+
+        <h3>On stabilize failure</h3>
+        This event is invoked when the current transmission is interrupted, e.g. because the code could not be detected for too long.
+        
+        <h2 id="advanced">Advanced settings</h2>
+        <img src="assets/advanced.png">
+        <h3 id="stability">Required stability</h3>
+        <p>
+            This can be interpreted as the maximum allowed degree of fluctuation in the tracking before the system
+            switches to the <a href="#lifecycle">REGISTERED</a> state (lower value = less fluctuation = more stable).
+        </p>
+        <p>
+            Higher values result in earlier, but initially less stable alignment. Values between <tt>1</tt> and
+            <tt>2</tt> have proven to be reasonably choices here.
+        </p>
+        <h3>Max. scan resolution</h3>
+        <p>
+            For performance reasons, the camera image is downscaled before analyzing it. This value determines the
+            maximum amount of pixels (width x height) that should be targeted for this.
+        </p>
+        <p>
+            Higher values result in more accurate tracking at the cost of higher CPU usage/fewer scans per seconds.
+            However, the benefit of increasing this value is neglectable. Decrease it if you need better performance.
+        </p>
+
+        <h3>Search scan interval</h3>
+        <p>
+            The number of seconds (with fractional part) that have to pass <em>at least</em> between two consecutive
+            scans in <a href="#lifecycle">SEARCHING</a> mode, i.e. when no code has been recognized so far.
+        </p>
+        <p>
+            You can keep this value rather high (<tt>≥0.5</tt>) in order to save CPU time.
+        </p>
+
+        <h3>Stabilize scan inverval</h3>
+        <p>
+            The number of seconds (with fractional part) that have to pass <em>at least</em> between two consecutive
+            scans in
+            <a href="#lifecycle">STABILIZING</a> mode, i.e. when a (new) code has been found, but the AR alignment is
+            not yet stable enough to count it as registered.
+        </p>
+        <p>
+            It is recommended to keep this value at <tt>0</tt> for the fastest registration possible.
+        </p>
+
+        <h3>Refine scan interval</h3>
+        <p>
+            The number of seconds (with fractional part) that have to pass <em>at least</em> between two consecutive
+            scans in <a href="#lifecycle">REGISTERED</a> mode, i.e. after the prefab is spawned.
+        </p>
+        <p>
+            How you set this value depends on your use case. For the most accurate tracking over time, you may set it to
+            <tt>0</tt>. If accuracy is not too important in your scenario, you can choose high values and rely on AR
+            Foundation to preserve the alignment.
+        </p>
+
+        <h3>
+            Stabilize timeout
+        </h3>
+        <p>
+            When this amount of seconds has passed in STABILIZING mode, the code is registered based on the current samples regardless of the precision.
+        </p>
+
+        <h3>Debug mode</h3>
+        <img src="assets/debug.png">
+        <p>
+            Activating the debug mode will have the following effects:
+        </p>
+        <h4>Debug outputs</h4>
+        <p>
+            In the top left corner of the sceen, you will see the following debug outputs:
+            <ul>
+                <li><b>QR content:</b> The last received anchor ID</li>
+                <li><b>Tracking state:</b> The current state in the <a href="#lifecycle">lifecycle</a>. </li>
+                <li><b>Precision:</b> The current tracking precision as it is used for configuration <a href="#stability">here</a>. Lower is better.</li>
+                <li><b>Samples:</b> The current number of registered samples from which the alignment is averaged.</li>
+                <li><b>Scan time:</b> The number of seconds the last scan took.</li>
+                <li><b>Calc time:</b> The number of seconds the last processing of the scanned data took.</li>
+            </ul>
+        </p>
+
+    </div>
+</body>
+
+</html>
