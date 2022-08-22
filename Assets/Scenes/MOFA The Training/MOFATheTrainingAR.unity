@@ -1198,7 +1198,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1445333374
 Transform:
   m_ObjectHideFlags: 0
@@ -1550,7 +1550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sender: {fileID: 5626992625954052369}
-  _receiver: {fileID: 5626992625954052368}
+  _receiver: {fileID: 5626992625954052370}
   _qrCodeImage: {fileID: 900526816}
 --- !u!4 &1747120841
 Transform:
@@ -2536,7 +2536,7 @@ GameObject:
   - component: {fileID: 5626992625954052362}
   - component: {fileID: 5626992625954052363}
   - component: {fileID: 5626992625954052369}
-  - component: {fileID: 5626992625954052368}
+  - component: {fileID: 5626992625954052370}
   m_Layer: 0
   m_Name: HoloKit Camera
   m_TagString: MainCamera
@@ -2676,7 +2676,29 @@ MonoBehaviour:
   m_LightEstimation: 0
   m_FacingDirection: 1
   m_RenderMode: 0
---- !u!114 &5626992625954052368
+--- !u!114 &5626992625954052369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5626992625954052354}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cbb2154194784a4b90408bdbbef6c0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 2038846685}
+  updateInterval: 0.5
+  metaData: 
+  anchorId: 0
+  codeScale: 1
+  drawOnGui: 1
+  onCodeUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  qrCodeAsTexture2D: {fileID: 0}
+--- !u!114 &5626992625954052370
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2726,7 +2748,7 @@ MonoBehaviour:
   stabilizingTime: 0
   registeredGameObject: {fileID: 0}
   rotationMode: 1
-  outputMode: 1
+  outputMode: 0
   onAnchorReceived:
     m_PersistentCalls:
       m_Calls: []
@@ -2736,25 +2758,3 @@ MonoBehaviour:
   sessionOrigin: {fileID: 1860620426}
   _searchScanInterval: 1
   _truncateTimeout: 4
---- !u!114 &5626992625954052369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5626992625954052354}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cbb2154194784a4b90408bdbbef6c0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 2038846685}
-  updateInterval: 0.5
-  metaData: 
-  anchorId: 0
-  codeScale: 1
-  drawOnGui: 1
-  onCodeUpdate:
-    m_PersistentCalls:
-      m_Calls: []
-  qrCodeAsTexture2D: {fileID: 0}

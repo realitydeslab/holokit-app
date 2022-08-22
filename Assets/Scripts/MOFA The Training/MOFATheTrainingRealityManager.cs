@@ -12,16 +12,9 @@ public class MOFATheTrainingRealityManager : RealityManager
     {
         base.Spawned();
 
-        Debug.Log("MOFATheTrainingRealityManager spawned");
-
         if (App.Instance.IsMaster)
         {
             Runner.Spawn(_networkedCubePrefab, Vector3.zero, Quaternion.identity);
-        }
-
-        if (!App.Instance.IsMaster)
-        {
-            FindObjectOfType<ImageTracker>().StartFindingImage();
         }
     }
 }

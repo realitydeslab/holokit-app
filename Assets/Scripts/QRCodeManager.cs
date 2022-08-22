@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using QRFoundation;
+using UnityEngine.XR.ARFoundation;
+using HoloKit;
 
 public class QRCodeManager : MonoBehaviour
 {
@@ -18,6 +20,7 @@ public class QRCodeManager : MonoBehaviour
 
         _sender.enabled = true;
         _sender.metaData = App.Instance.CurrentSessionCode;
+        _sender.drawOnGui = false;
         _sender.onCodeUpdate.RemoveAllListeners();
         _sender.onCodeUpdate.AddListener((Texture2D texture) =>
         {
@@ -40,12 +43,25 @@ public class QRCodeManager : MonoBehaviour
         {
             Debug.Log($"On code detected {call}");
         });
-        _receiver.onPoseReceived.RemoveAllListeners();
-        _receiver.onPoseReceived.AddListener((int anchorId, string metadata, Pose pose) =>
+        //_receiver.onPoseReceived.RemoveAllListeners();
+        //_receiver.onPoseReceived.AddListener((int anchorId, string metadata, Pose pose) =>
+        //{
+        //    Debug.Log($"On pose received {metadata}");
+        //    App.Instance.JoinReality(metadata);
+        //    _receiver.enabled = false;
+        //    App.Instance.RealityManager.ResetOrigin(pose.position, pose.rotation);
+        //});
+        _receiver.onAnchorReceived.RemoveAllListeners();
+        _receiver.onAnchorReceived.AddListener((int anchorId, string metadata, ARAnchor anchor) =>
         {
-            Debug.Log($"On pose received {metadata}");
+            Debug.Log($"On anchor received {metadata}");
+            ResetOrigin(anchor.transform.position, anchor.transform.rotation);
             App.Instance.JoinReality(metadata);
-            _receiver.enabled = false;
         });
+    }
+
+    private void ResetOrigin(Vector3 originPosition, Quaternion originRotation)
+    {
+        HoloKitARSessionControllerAPI.ResetOrigin(originPosition, originRotation);
     }
 }

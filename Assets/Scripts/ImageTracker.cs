@@ -40,7 +40,7 @@ public class ImageTracker : MonoBehaviour
                     Quaternion.Euler(new Vector3(0f, -App.Instance.RealityManager.HoriontalRotation, 0f))
                     * Quaternion.Euler(0f, theta, 0f) * -App.Instance.RealityManager.PosePosition;
                 float horizontalRotation = theta - App.Instance.RealityManager.HoriontalRotation;
-                App.Instance.RealityManager.ResetOrigin(position, Quaternion.Euler(0f, horizontalRotation, 0f));
+                //App.Instance.RealityManager.ResetOrigin(position, Quaternion.Euler(0f, horizontalRotation, 0f));
             }
         }
 

@@ -39,9 +39,4 @@ public abstract class RealityManager : NetworkBehaviour
     {
         FindObjectOfType<QRCodeManager>().StopSharingQRCode();
     }
-
-    public void ResetOrigin(Vector3 originPosition, Quaternion originRotation)
-    {
-        HoloKitARSessionControllerAPI.ResetOrigin(originPosition, originRotation);
-    }
 }
