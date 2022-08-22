@@ -43,21 +43,21 @@ public class ScreenUIPanel : MonoBehaviour
         // Spectator
         else
         {
-            _back.SetActive(true);
+            _back.SetActive(false);
             _star.SetActive(false);
             _spectator.SetActive(false);
             _enterStARMode.SetActive(false);
             _record.SetActive(false);
             _shareYourReality.SetActive(false);
-            _scanQRCodeFrame.SetActive(false);
-            _scanQRCodeText.SetActive(false);
-            _showQRCode.SetActive(true);
+            _scanQRCodeFrame.SetActive(true);
+            _scanQRCodeText.SetActive(true);
+            _showQRCode.SetActive(false);
 
-            _qrCodeManager.StartSharingQRCode();
+            _qrCodeManager.StartScanningQRCode();
         }
     }
 
-    public void ShareYourReality()
+    public void OnSpectatorBtnPressed()
     {
         _back.SetActive(false);
         _star.SetActive(false);
@@ -67,6 +67,21 @@ public class ScreenUIPanel : MonoBehaviour
         _shareYourReality.SetActive(true);
         _scanQRCodeFrame.SetActive(false);
         _scanQRCodeText.SetActive(false);
+    }
+
+    public void ShareQRCode()
+    {
+        _back.SetActive(true);
+        _star.SetActive(false);
+        _spectator.SetActive(false);
+        _enterStARMode.SetActive(false);
+        _record.SetActive(false);
+        _shareYourReality.SetActive(false);
+        _scanQRCodeFrame.SetActive(false);
+        _scanQRCodeText.SetActive(false);
+        _showQRCode.SetActive(true);
+
+        _qrCodeManager.StartSharingQRCode();
     }
 
     public void ScanQRCode()

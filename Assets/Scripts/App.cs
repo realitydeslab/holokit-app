@@ -54,6 +54,8 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 
     private RealityManager _realityManager;
 
+    public static event Action OnSpectatorJoined;
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -139,6 +141,12 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 
                 string arSceneName = _reality.ToString() + "AR";
                 _runner.SetActiveScene(arSceneName);
+            }
+            // Another play has joined
+            else
+            {
+                _realityManager.StopSharingQRCode();
+                OnSpectatorJoined?.Invoke();
             }
         }
     }

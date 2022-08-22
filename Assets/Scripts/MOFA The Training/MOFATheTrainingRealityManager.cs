@@ -21,17 +21,7 @@ public class MOFATheTrainingRealityManager : RealityManager
 
         if (!App.Instance.IsMaster)
         {
-            Debug.Log($"pose: {PosePosition} and {PoseRotation}");
-            GameObject go = new GameObject();
-            Transform trans = go.transform;
-            trans.SetPositionAndRotation(PosePosition, PoseRotation);
-            Matrix4x4 matrix = trans.localToWorldMatrix;
-            Matrix4x4 inverseMatrix = matrix.inverse;
-            Vector3 position = inverseMatrix.GetPosition();
-            Quaternion rotation = inverseMatrix.rotation;
-            Debug.Log($"inversed pose: {position} and {rotation}");
-            HoloKitARSessionControllerAPI.ResetOrigin(position, rotation);
-            Destroy(go);
+            FindObjectOfType<ImageTracker>().StartFindingImage();
         }
     }
 }

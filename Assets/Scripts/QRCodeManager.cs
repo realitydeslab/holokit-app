@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using QRFoundation;
 using UnityEngine.UI;
-using HoloKitAppNativePlugin;
+using QRFoundation;
 
 public class QRCodeManager : MonoBehaviour
 {
@@ -16,18 +15,20 @@ public class QRCodeManager : MonoBehaviour
     public void StartSharingQRCode()
     {
         Debug.Log("Start sharing QR code");
-        // Generate a random password for MPC
-        string password = Utils.GetRandomMPCPassword();
-        MPCSessionControllerAPI.StartAdvertising(password);
 
         _sender.enabled = true;
-        _sender.metaData = password;
+        _sender.metaData = App.Instance.CurrentSessionCode;
         _sender.onCodeUpdate.RemoveAllListeners();
         _sender.onCodeUpdate.AddListener((Texture2D texture) =>
         {
             _qrCodeImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
         });
         _sender.StartSharing();
+    }
+
+    public void StopSharingQRCode()
+    {
+        _sender.StopSharing();
     }
 
     public void StartScanningQRCode()
@@ -42,13 +43,9 @@ public class QRCodeManager : MonoBehaviour
         _receiver.onPoseReceived.RemoveAllListeners();
         _receiver.onPoseReceived.AddListener((int anchorId, string metadata, Pose pose) =>
         {
-            Debug.Log($"On pose received {anchorId} {metadata} {pose}");
-            App.Instance.RealityManager.SetPose(pose);
-            
-            //HoloKit.HoloKitARSessionControllerAPI.ResetOrigin(pose.position, pose.rotation);
+            Debug.Log($"On pose received {metadata}");
+            App.Instance.JoinReality(metadata);
             _receiver.enabled = false;
-            // TODO: Start browse the advertiser with the same metadata
-            MPCSessionControllerAPI.StartBrowsing(metadata, App.Instance.CurrentSessionCode);
         });
     }
 }
