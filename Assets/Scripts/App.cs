@@ -56,6 +56,8 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 
     public static event Action OnSpectatorJoined;
 
+    public static event Action OnJoinedAsSpectator;
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -147,6 +149,13 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
             {
                 _realityManager.StopSharingQRCode();
                 OnSpectatorJoined?.Invoke();
+            }
+        }
+        else
+        {
+            if (player == _runner.LocalPlayer)
+            {
+                OnJoinedAsSpectator?.Invoke();
             }
         }
     }

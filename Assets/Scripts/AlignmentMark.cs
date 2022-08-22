@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 
-public class NetworkedCube : NetworkBehaviour
+public class AlignmentMark : NetworkBehaviour
 {
     private void Awake()
     {

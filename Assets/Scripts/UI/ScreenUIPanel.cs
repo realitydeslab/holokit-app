@@ -18,12 +18,26 @@ public class ScreenUIPanel : MonoBehaviour
 
     [SerializeField] private GameObject _scanQRCodeFrame;
 
-    [SerializeField] private GameObject _scanQRCodeText;
+    [SerializeField] private GameObject _scanQRCodeScanningText;
+
+    [SerializeField] private GameObject _scanQRCodeConnectedText;
 
     [SerializeField] private GameObject _showQRCode;
 
-    [Space(16)]
-    [SerializeField] private QRCodeManager _qrCodeManager;
+    [SerializeField] private GameObject _checkMarkWindow;
+
+    //[Space(16)]
+    //[SerializeField] private QRCodeManager _qrCodeManager;
+
+    private void Awake()
+    {
+        App.OnJoinedAsSpectator += OnJoinedAsSpectator;
+    }
+
+    private void OnDestroy()
+    {
+        App.OnJoinedAsSpectator -= OnJoinedAsSpectator;
+    }
 
     private void OnEnable()
     {
@@ -37,7 +51,7 @@ public class ScreenUIPanel : MonoBehaviour
             _record.SetActive(true);
             _shareYourReality.SetActive(false);
             _scanQRCodeFrame.SetActive(false);
-            _scanQRCodeText.SetActive(false);
+            _scanQRCodeScanningText.SetActive(false);
             _showQRCode.SetActive(false);
         }
         // Spectator
@@ -50,10 +64,10 @@ public class ScreenUIPanel : MonoBehaviour
             _record.SetActive(false);
             _shareYourReality.SetActive(false);
             _scanQRCodeFrame.SetActive(true);
-            _scanQRCodeText.SetActive(true);
+            _scanQRCodeScanningText.SetActive(true);
             _showQRCode.SetActive(false);
 
-            _qrCodeManager.StartScanningQRCode();
+            FindObjectOfType<QRCodeManager>().StartScanningQRCode();
         }
     }
 
@@ -66,7 +80,7 @@ public class ScreenUIPanel : MonoBehaviour
         _record.SetActive(false);
         _shareYourReality.SetActive(true);
         _scanQRCodeFrame.SetActive(false);
-        _scanQRCodeText.SetActive(false);
+        _scanQRCodeScanningText.SetActive(false);
     }
 
     public void ShareQRCode()
@@ -78,18 +92,39 @@ public class ScreenUIPanel : MonoBehaviour
         _record.SetActive(false);
         _shareYourReality.SetActive(false);
         _scanQRCodeFrame.SetActive(false);
-        _scanQRCodeText.SetActive(false);
+        _scanQRCodeScanningText.SetActive(false);
         _showQRCode.SetActive(true);
 
-        _qrCodeManager.StartSharingQRCode();
+        App.Instance.RealityManager.StartSharingQRCode();
+        //_qrCodeManager.StartSharingQRCode();
     }
 
-    public void ScanQRCode()
+    public void OnJoinedAsSpectator()
     {
-        _shareYourReality.SetActive(false);
-        _scanQRCodeFrame.SetActive(true);
-        _scanQRCodeText.SetActive(true);
+        _scanQRCodeScanningText.SetActive(false);
+        _scanQRCodeConnectedText.SetActive(true);
+        StartCoroutine(ShowCheckMarkWindow());
+    }
 
-        _qrCodeManager.StartScanningQRCode();
+    private IEnumerator ShowCheckMarkWindow()
+    {
+        yield return new WaitForSeconds(2f);
+        _scanQRCodeConnectedText.SetActive(false);
+        _scanQRCodeFrame.SetActive(false);
+        _checkMarkWindow.SetActive(true);
+    }
+
+    public void OnMarkChecked()
+    {
+        App.Instance.RealityManager.RPC_OnMarkChecked();
+        _checkMarkWindow.SetActive(false);
+        _back.SetActive(true);
+        _spectator.SetActive(true);
+        _record.SetActive(true);
+    }
+
+    public void OnRescan()
+    {
+
     }
 }
