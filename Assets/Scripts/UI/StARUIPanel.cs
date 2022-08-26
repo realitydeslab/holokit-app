@@ -1,18 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class StARUIPanel : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public static event Action OnTriggerBtnPressed;
 
-    // Update is called once per frame
-    void Update()
+    public void TriggerBtn()
     {
-        
+        Debug.Log("OnTriggerBtnPressed");
+        OnTriggerBtnPressed?.Invoke();
     }
 }

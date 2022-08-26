@@ -40,15 +40,39 @@ public abstract class RealityManager : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_OnSpectatorScannedQRCode()
+    {
+        Debug.Log("[RPC] RPC_OnSpectatorScannedQRCode");
+        StopSharingQRCode();
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_OnSpectatorStartScanningAgain()
+    {
+        if (_alignmentMark != null)
+        {
+            Runner.Despawn(_alignmentMark.Object);
+        }
+        FindObjectOfType<ScreenUIPanel>().ShareQRCode();
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_OnMarkChecked()
     {
         Debug.Log("[RPC] OnMarkChecked");
-        Runner.Despawn(_alignmentMark.Object);
+        if (_alignmentMark != null)
+        {
+            Runner.Despawn(_alignmentMark.Object);
+        }
+        FindObjectOfType<ScreenUIPanel>().DefaultHostUI();
     }
 
     private void SpawnAlignmentMark()
     {
-        _alignmentMark = Runner.Spawn(_alignmentMarkPrefab, Vector3.zero, Quaternion.identity);
+        if (_alignmentMark == null)
+        {
+            _alignmentMark = Runner.Spawn(_alignmentMarkPrefab, Vector3.zero, Quaternion.identity);
+        }
     }
 
     public void StartSharingQRCode()

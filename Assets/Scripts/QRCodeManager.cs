@@ -32,31 +32,46 @@ public class QRCodeManager : MonoBehaviour
     public void StopSharingQRCode()
     {
         _sender.StopSharing();
+        _sender.enabled = false;
     }
 
     public void StartScanningQRCode()
     {
         Debug.Log("Start scanning QR code");
+
+        if (App.Instance.Runner != null)
+        {
+            App.Instance.RealityManager.RPC_OnSpectatorStartScanningAgain();
+        }
+
         _receiver.enabled = true;
         _receiver.onCodeDetected.RemoveAllListeners();
         _receiver.onCodeDetected.AddListener((string call) =>
         {
             Debug.Log($"On code detected {call}");
         });
-        //_receiver.onPoseReceived.RemoveAllListeners();
-        //_receiver.onPoseReceived.AddListener((int anchorId, string metadata, Pose pose) =>
-        //{
-        //    Debug.Log($"On pose received {metadata}");
-        //    App.Instance.JoinReality(metadata);
-        //    _receiver.enabled = false;
-        //    App.Instance.RealityManager.ResetOrigin(pose.position, pose.rotation);
-        //});
+        _receiver.onStabilizeFailure.RemoveAllListeners();
+        _receiver.onStabilizeFailure.AddListener((string call) =>
+        {
+            Debug.Log($"On stabilize failure {call}");
+        });
         _receiver.onAnchorReceived.RemoveAllListeners();
         _receiver.onAnchorReceived.AddListener((int anchorId, string metadata, ARAnchor anchor) =>
         {
             Debug.Log($"On anchor received {metadata}");
+  
+            _receiver.enabled = false;
             ResetOrigin(anchor.transform.position, anchor.transform.rotation);
-            App.Instance.JoinReality(metadata);
+            if (App.Instance.Runner == null)
+            {
+                Debug.Log("Attempting joining Fusion room");
+                App.Instance.JoinReality(metadata);
+            }
+            else
+            {
+                Debug.Log("Already connected to the Fusion room");
+                App.Instance.RealityManager.RPC_OnSpectatorScannedQRCode();
+            }
         });
     }
 

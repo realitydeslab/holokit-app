@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HoloKit;
 
 public class ScreenUIPanel : MonoBehaviour
 {
@@ -26,6 +27,9 @@ public class ScreenUIPanel : MonoBehaviour
 
     [SerializeField] private GameObject _checkMarkWindow;
 
+    [Space(10)]
+    [SerializeField] private GameObject _starUI;
+
     //[Space(16)]
     //[SerializeField] private QRCodeManager _qrCodeManager;
 
@@ -44,31 +48,29 @@ public class ScreenUIPanel : MonoBehaviour
         // Host
         if(App.Instance.Runner != null)
         {
-            _back.SetActive(true);
-            _star.SetActive(true);
-            _spectator.SetActive(true);
-            _enterStARMode.SetActive(true);
-            _record.SetActive(true);
-            _shareYourReality.SetActive(false);
-            _scanQRCodeFrame.SetActive(false);
-            _scanQRCodeScanningText.SetActive(false);
-            _showQRCode.SetActive(false);
+            DefaultHostUI();
         }
         // Spectator
         else
         {
-            _back.SetActive(false);
-            _star.SetActive(false);
-            _spectator.SetActive(false);
-            _enterStARMode.SetActive(false);
-            _record.SetActive(false);
-            _shareYourReality.SetActive(false);
-            _scanQRCodeFrame.SetActive(true);
-            _scanQRCodeScanningText.SetActive(true);
-            _showQRCode.SetActive(false);
-
-            FindObjectOfType<QRCodeManager>().StartScanningQRCode();
+            StartScanningQRCode();
         }
+    }
+
+    private void StartScanningQRCode()
+    {
+        _back.SetActive(false);
+        _star.SetActive(false);
+        _spectator.SetActive(false);
+        _enterStARMode.SetActive(false);
+        _record.SetActive(false);
+        _shareYourReality.SetActive(false);
+        _scanQRCodeFrame.SetActive(true);
+        _scanQRCodeScanningText.SetActive(true);
+        _showQRCode.SetActive(false);
+        _checkMarkWindow.SetActive(false);
+
+        FindObjectOfType<QRCodeManager>().StartScanningQRCode();
     }
 
     public void OnSpectatorBtnPressed()
@@ -125,6 +127,27 @@ public class ScreenUIPanel : MonoBehaviour
 
     public void OnRescan()
     {
+        StartScanningQRCode();
+    }
 
+    public void DefaultHostUI()
+    {
+        _back.SetActive(true);
+        _star.SetActive(true);
+        _spectator.SetActive(true);
+        _enterStARMode.SetActive(true);
+        _record.SetActive(true);
+        _shareYourReality.SetActive(false);
+        _scanQRCodeFrame.SetActive(false);
+        _scanQRCodeScanningText.SetActive(false);
+        _showQRCode.SetActive(false);
+    }
+
+    public void SwitchToStAR()
+    {
+        HoloKitCamera.Instance.OpenStereoWithoutNFC("SomethingForNothing");
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
+        gameObject.SetActive(false);
+        _starUI.SetActive(true);
     }
 }

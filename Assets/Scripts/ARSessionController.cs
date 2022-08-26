@@ -24,6 +24,7 @@ public class ARSessionController : MonoBehaviour
 
     private void Start()
     {
+        CoachingOverlaySessionDelegate.OnCoachingOverlayViewEnded += OnCoachingOverlayViewEnded;
         if (CoachingOverlaySupported && GetComponent<ARSession>().subsystem is ARKitSessionSubsystem sessionSubsystem)
         {
             Debug.Log("Start coaching overlay");
@@ -31,6 +32,19 @@ public class ARSessionController : MonoBehaviour
             sessionSubsystem.coachingActivatesAutomatically = true;
             sessionSubsystem.sessionDelegate = new CoachingOverlaySessionDelegate();
             sessionSubsystem.SetCoachingActive(true, ARCoachingOverlayTransition.Animated);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        CoachingOverlaySessionDelegate.OnCoachingOverlayViewEnded -= OnCoachingOverlayViewEnded;
+    }
+
+    private void OnCoachingOverlayViewEnded()
+    {
+        if (GetComponent<ARSession>().subsystem is ARKitSessionSubsystem sessionSubsystem)
+        {
+            sessionSubsystem.SetCoachingActive(false, ARCoachingOverlayTransition.Animated);
         }
     }
 }
