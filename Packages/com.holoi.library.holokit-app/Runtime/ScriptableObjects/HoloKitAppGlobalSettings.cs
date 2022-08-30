@@ -15,12 +15,14 @@ namespace Holoi.HoloKit.App
         
         public bool TechnicalInformationInStAR;
         
+        private string SavedPath => Application.persistentDataPath + "/HoloKitAppGlobalSettings.save";
+
         public void Save()
         {
             HoloKitAppGlobalSettings data = new HoloKitAppGlobalSettings(this);
             BinaryFormatter formatter = new BinaryFormatter();
 
-            string path = Application.persistentDataPath + "/HoloKitAppGlobalSettings.save";
+            string path = SavedPath();
             FileStream stream = new FileStream(path, FileMode.Create);
             formatter.Serialize(stream, data);
             stream.Close();
@@ -30,7 +32,7 @@ namespace Holoi.HoloKit.App
 
         private HoloKitAppGlobalSettings LoadLocalPlayerSettings()
         {
-            string path = Application.persistentDataPath + "/HoloKitAppGlobalSettings.save";
+            string path = SavedPath();
             if (File.Exists(path))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
