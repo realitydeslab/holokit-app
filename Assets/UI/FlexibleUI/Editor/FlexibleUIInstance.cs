@@ -10,6 +10,14 @@ public class FlexibleUIInstance : Editor
     {
         Create("ButtonSample");
     }
+
+    [MenuItem("GameObject/Flexible UI/ExitButton", priority = 0)]
+    public static void AddExitButton()
+    {
+        Create("ExitButtonSample");
+    }
+
+
     static GameObject _clickedObject;
 
     static GameObject Create(string objectName)
