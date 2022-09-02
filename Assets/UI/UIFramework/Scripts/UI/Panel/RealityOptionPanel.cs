@@ -10,24 +10,32 @@ public class RealityOptionPanel : BasePanel
 
     public override void OnEnter()
     {
-        UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
+        UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
         {
             // here we do onclick event of this button
-            Debug.Log("BackButton is clicked.");
+            Debug.Log("ExitButton is clicked.");
             PanelManager.Pop();
         });
-        UITool.GetOrAddComponentInChildren<Button>("EnterButton").onClick.AddListener(() =>
+        UITool.GetOrAddComponentInChildren<Button>("StarButton").onClick.AddListener(() =>
         {
             // here we do onclick event of this button
-            Debug.Log("EnterButton is clicked.");
+            Debug.Log("StarButton is clicked.");
 
-            //var panel = new RealityOptionPanel();
+            //var panel = new StARModePanel();
             //PanelManager.Push(panel);
         });
         UITool.GetOrAddComponentInChildren<Button>("SpectatorButton").onClick.AddListener(() =>
         {
             // here we do onclick event of this button
             Debug.Log("SpectatorButton is clicked.");
+
+            var panel = new SpectatorOpenComfirmPanel();
+            PanelManager.Push(panel);
+        });
+        UITool.GetOrAddComponentInChildren<Button>("RecordButton").onClick.AddListener(() =>
+        {
+            // here we do onclick event of this button
+            Debug.Log("RecordButton is clicked.");
 
             //var panel = new RealityOptionPanel();
             //PanelManager.Push(panel);

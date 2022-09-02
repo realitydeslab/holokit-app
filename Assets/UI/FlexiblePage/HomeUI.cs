@@ -9,21 +9,13 @@ public class HomeUI : MonoBehaviour
 {
     public RealityCollection RealityListData;
 
-    protected virtual void OnHomeUI()
+    protected virtual void OnHomeUIAweak()
     {
     }
 
     public virtual void Aweak()
     {
-        OnHomeUI();
-    }
-
-    public virtual void Update()
-    {
-        if (Application.isEditor)
-        {
-            OnHomeUI();
-        }
+        Debug.Log("HomeUI Aweak");
     }
 }
 
