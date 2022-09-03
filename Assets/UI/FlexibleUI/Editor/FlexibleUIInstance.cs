@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+
 public class FlexibleUIInstance : Editor
 {
     [MenuItem("GameObject/Flexible UI/Button", priority =0)]
@@ -14,9 +15,28 @@ public class FlexibleUIInstance : Editor
     [MenuItem("GameObject/Flexible UI/ExitButton", priority = 0)]
     public static void AddExitButton()
     {
-        Create("ExitButtonSample");
+        Create("ExitButton");
     }
-
+    [MenuItem("GameObject/Flexible UI/BackButton", priority = 0)]
+    public static void AddBackButton()
+    {
+        Create("BackButton");
+    }
+    [MenuItem("GameObject/Flexible UI/RecordButton", priority = 0)]
+    public static void AddRecordButton()
+    {
+        Create("RecordButton");
+    }
+    [MenuItem("GameObject/Flexible UI/SpectatorButton", priority = 0)]
+    public static void AddSpectatorButton()
+    {
+        Create("SpectatorButton");
+    }
+    [MenuItem("GameObject/Flexible UI/StarButton", priority = 0)]
+    public static void AddStarButton()
+    {
+        Create("StarButton");
+    }
 
     static GameObject _clickedObject;
 

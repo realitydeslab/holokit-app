@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace UIFramwork
+namespace Holoi.HoloKit.App.UI
 {
     public abstract class SceneState
     {

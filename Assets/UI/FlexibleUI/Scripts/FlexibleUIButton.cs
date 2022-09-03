@@ -8,16 +8,13 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class FlexibleUIButton : FlexibleUI
 {
-    public enum ButtonType
+    public enum Theme
     {
         Default,
-        Contract,
-        Comfirm,
-        Decline,
-        Warning
+        Contract
     }
 
-    public ButtonType buttonType;
+    public Theme theme;
 
     Image _image;
     Image _icon;
@@ -43,36 +40,20 @@ public class FlexibleUIButton : FlexibleUI
         _button.spriteState = SkinData.ButtonSpriteState;
 
 
-        switch (buttonType)
+        switch (theme)
         {
-            case ButtonType.Default:
+            case Theme.Default:
                 _image.color = SkinData.DefaultColor;
                 _icon.sprite = SkinData.DefaultIcon;
                 _text.color = Color.black;
                 _text.text = _string;
                 break;
-            case ButtonType.Contract:
+            case Theme.Contract:
                 _image.color = SkinData.ContractColor;
                 _icon.sprite = SkinData.ContractIcon;
                 _text.color = Color.white;
                 _text.text = _string;
                 break;
-            case ButtonType.Comfirm:
-                _image.color = SkinData.ComfirmColor;
-                _icon.sprite = SkinData.ComfirmIcon;
-                _text.text = _string;
-                break;
-            case ButtonType.Decline:
-                _image.color = SkinData.DeclineColor;
-                _icon.sprite = SkinData.DeclineIcon;
-                _text.text = _string;
-                break;
-            case ButtonType.Warning:
-                _image.color = SkinData.WarningColor;
-                _icon.sprite = SkinData.WarningIcon;
-                _text.text = _string;
-                break;
-
         }
     }
 }

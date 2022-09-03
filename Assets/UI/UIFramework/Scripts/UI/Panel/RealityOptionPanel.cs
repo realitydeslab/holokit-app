@@ -3,43 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RealityOptionPanel : BasePanel
+namespace Holoi.HoloKit.App.UI
 {
-    static readonly string _path = "Prefabs/UI/Panels/RealityOptionPanel";
-    public RealityOptionPanel() : base(new UIType(_path)) { }
-
-    public override void OnEnter()
+    public class RealityOptionPanel : BasePanel
     {
-        UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
-        {
-            // here we do onclick event of this button
-            Debug.Log("ExitButton is clicked.");
-            PanelManager.Pop();
-        });
-        UITool.GetOrAddComponentInChildren<Button>("StarButton").onClick.AddListener(() =>
-        {
-            // here we do onclick event of this button
-            Debug.Log("StarButton is clicked.");
+        static readonly string _path = "Prefabs/UI/Panels/RealityOptionPanel";
+        public RealityOptionPanel() : base(new UIType(_path)) { }
 
-            //var panel = new StARModePanel();
-            //PanelManager.Push(panel);
-        });
-        UITool.GetOrAddComponentInChildren<Button>("SpectatorButton").onClick.AddListener(() =>
+        public override void OnEnter()
         {
-            // here we do onclick event of this button
-            Debug.Log("SpectatorButton is clicked.");
+            UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("BackButton is clicked.");
+                PanelManager.Pop();
+            });
+            UITool.GetOrAddComponentInChildren<Button>("EnterScreenARButton").onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("EnterScreenARButton is clicked.");
 
-            var panel = new SpectatorOpenComfirmPanel();
-            PanelManager.Push(panel);
-        });
-        UITool.GetOrAddComponentInChildren<Button>("RecordButton").onClick.AddListener(() =>
-        {
-            // here we do onclick event of this button
-            Debug.Log("RecordButton is clicked.");
+                // enter screen ar scene:
+                GameRoot.Instance.SceneSystem.SetScene(new ScreenARMainScene());
 
-            //var panel = new RealityOptionPanel();
-            //PanelManager.Push(panel);
-        });
+            });
+            UITool.GetOrAddComponentInChildren<Button>("SpectatorButton").onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("SpectatorButton is clicked.");
 
+                var panel = new SpectatorOpenComfirmPanel();
+                PanelManager.Push(panel);
+            });
+        }
     }
 }
+

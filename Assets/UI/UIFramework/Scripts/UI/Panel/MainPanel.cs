@@ -2,28 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UIFramwork;
 
-public class MainPanel : BasePanel
+namespace Holoi.HoloKit.App.UI
 {
-    static readonly string _path = "Prefabs/UI/Panels/MainPanel";
-    public MainPanel() : base(new UIType(_path)) { }
-
-    public override void OnEnter()
+    public class MainPanel : BasePanel
     {
-        //UITool.GetOrAddComponentInChildren<Button>("SettingButton").onClick.AddListener(() =>
-        //{
-        //    // here we do onclick event of this button
-        //    Debug.Log("SettingButton is clicked.");
+        static readonly string _path = "Prefabs/UI/Panels/MainPanel";
+        public MainPanel() : base(new UIType(_path)) { }
 
-        //    PanelManager.Push(new SettingPanel());
-        //});
-
-        UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
+        public override void OnEnter()
         {
+            //UITool.GetOrAddComponentInChildren<Button>("SettingButton").onClick.AddListener(() =>
+            //{
+            //    // here we do onclick event of this button
+            //    Debug.Log("SettingButton is clicked.");
+
+            //    PanelManager.Push(new SettingPanel());
+            //});
+
+            UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
+            {
             // here we do onclick event of this button
             Debug.Log("BackButton is clicked.");
-            GameRoot.Instance.SceneSystem.SetScene(new StartScene());
-        });
+                GameRoot.Instance.SceneSystem.SetScene(new StartScene());
+            });
+        }
     }
 }

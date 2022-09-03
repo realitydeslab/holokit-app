@@ -5,9 +5,9 @@ using UnityEngine.SceneManagement;
 
 namespace Holoi.HoloKit.App.UI
 {
-    public class StartScene : SceneState
+    public class ScreenARMainScene : SceneState
     {
-        readonly string _sceneName = "Start";
+        readonly string _sceneName = "ScreenARMain";
         PanelManager _panelManager;
         public override void OnEnter()
         {
@@ -19,7 +19,7 @@ namespace Holoi.HoloKit.App.UI
             }
             else
             {
-                _panelManager.Push(new StartPanel());
+                _panelManager.Push(new ScreenARModePanel());
 
             }
         }
@@ -31,7 +31,7 @@ namespace Holoi.HoloKit.App.UI
 
         private void SceneLoaded(Scene scene, LoadSceneMode load)
         {
-            _panelManager.Push(new StartPanel());
+            _panelManager.Push(new ScreenARModePanel());
             Debug.Log($"{_sceneName} scene is loaded.");
         }
     }

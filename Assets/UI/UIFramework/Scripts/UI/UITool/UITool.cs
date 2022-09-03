@@ -2,66 +2,70 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UITool
+namespace Holoi.HoloKit.App.UI
 {
-    GameObject _activePanelGO;
-
-    public GameObject ActivePanel
+    public class UITool
     {
-        get { return _activePanelGO; }
-        set { _activePanelGO = value; }
-    }
+        GameObject _activePanelGO;
 
-    public UITool(GameObject panel)
-    {
-        _activePanelGO = panel;
-    }
-
-    public T GetOrAddComponent<T>() where T : Component
-    {
-        if (_activePanelGO.GetComponent<T>() == null)
+        public GameObject ActivePanel
         {
-            Debug.Log("(_activePanel.GetComponent<T>() == null");
-            _activePanelGO.AddComponent<T>();
-        }
-        else
-        {
-            Debug.Log("(_activePanel.GetComponent<T>() !-=null");
+            get { return _activePanelGO; }
+            set { _activePanelGO = value; }
         }
 
-        return _activePanelGO.GetComponent < T > ();
-    }
-
-    public GameObject FindChildGameObject(string name)
-    {
-        Transform[] children = _activePanelGO.GetComponentsInChildren<Transform>();
-
-        foreach (var child in children)
+        public UITool(GameObject panel)
         {
-            if(child.name == name)
+            _activePanelGO = panel;
+        }
+
+        public T GetOrAddComponent<T>() where T : Component
+        {
+            if (_activePanelGO.GetComponent<T>() == null)
             {
-                return child.gameObject;
+                Debug.Log("(_activePanel.GetComponent<T>() == null");
+                _activePanelGO.AddComponent<T>();
             }
+            else
+            {
+                Debug.Log("(_activePanel.GetComponent<T>() !-=null");
+            }
+
+            return _activePanelGO.GetComponent<T>();
         }
 
-        Debug.LogError($"{_activePanelGO.name} does not exist a child named: { name }");
-        return null;
-    }
-
-    public T GetOrAddComponentInChildren<T>(string name) where T : Component
-    {
-        var child = FindChildGameObject(name);
-        if (child!=null)
+        public GameObject FindChildGameObject(string name)
         {
-            if(child.GetComponent<T>() == null)
-                child.AddComponent<T>();
+            Transform[] children = _activePanelGO.GetComponentsInChildren<Transform>();
+
+            foreach (var child in children)
+            {
+                if (child.name == name)
+                {
+                    return child.gameObject;
+                }
+            }
+
+            Debug.LogError($"{_activePanelGO.name} does not exist a child named: { name }");
+            return null;
+        }
+
+        public T GetOrAddComponentInChildren<T>(string name) where T : Component
+        {
+            var child = FindChildGameObject(name);
+            if (child != null)
+            {
+                if (child.GetComponent<T>() == null)
+                    child.AddComponent<T>();
 
                 return child.GetComponent<T>();
+            }
+            else
+            {
+                Debug.LogError("GetOrAddComponentInChildren with a result: null found.");
+            }
+            return null;
         }
-        else
-        {
-            Debug.LogError("GetOrAddComponentInChildren with a result: null found.");
-        }
-        return null;
     }
+
 }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace UIFramwork
+namespace Holoi.HoloKit.App.UI
 {
-    public class MainScene : SceneState
+    public class StARMainScene : SceneState
     {
-        readonly string _sceneName = "Main";
+        readonly string _sceneName = "ScreenARMain";
         PanelManager _panelManager;
         public override void OnEnter()
         {
@@ -19,7 +19,7 @@ namespace UIFramwork
             }
             else
             {
-                _panelManager.Push(new StartPanel());
+                _panelManager.Push(new StARModePanel());
 
             }
         }
@@ -31,7 +31,7 @@ namespace UIFramwork
 
         private void SceneLoaded(Scene scene, LoadSceneMode load)
         {
-            _panelManager.Push(new MainPanel());
+            _panelManager.Push(new StARModePanel());
             Debug.Log($"{_sceneName} scene is loaded.");
         }
     }

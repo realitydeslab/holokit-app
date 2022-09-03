@@ -5,39 +5,42 @@ using UnityEngine;
 /// <summary>
 ///  save all UI data and create/detroy UI
 /// </summary>
-public class UIManager
+namespace Holoi.HoloKit.App.UI
 {
-    private Dictionary<UIType, GameObject> _dicUI;
-
-    public UIManager()
+    public class UIManager
     {
-        _dicUI = new Dictionary<UIType, GameObject>();
-    }
+        private Dictionary<UIType, GameObject> _dicUI;
 
-    public GameObject GetUIGO(UIType type)
-    {
-        var parent = GameObject.Find("Canvas");
-
-        if (!parent)
+        public UIManager()
         {
-            Debug.LogError("Canvas not found, please check.");
-            return null;
+            _dicUI = new Dictionary<UIType, GameObject>();
         }
-        if (_dicUI.ContainsKey(type))
-            return _dicUI[type];
 
-        GameObject ui = GameObject.Instantiate(Resources.Load<GameObject>(type.Path), parent.transform);
-        ui.name = type.Name;
-        _dicUI.Add(type, ui);
-        return ui;
-    }
-
-    public void DestroyUI(UIType type)
-    {
-        if (_dicUI.ContainsKey(type))
+        public GameObject GetUIGO(UIType type)
         {
-            GameObject.Destroy(_dicUI[type]);
-            _dicUI.Remove(type);
+            var parent = GameObject.Find("Canvas");
+
+            if (!parent)
+            {
+                Debug.LogError("Canvas not found, please check.");
+                return null;
+            }
+            if (_dicUI.ContainsKey(type))
+                return _dicUI[type];
+
+            GameObject ui = GameObject.Instantiate(Resources.Load<GameObject>(type.Path), parent.transform);
+            ui.name = type.Name;
+            _dicUI.Add(type, ui);
+            return ui;
+        }
+
+        public void DestroyUI(UIType type)
+        {
+            if (_dicUI.ContainsKey(type))
+            {
+                GameObject.Destroy(_dicUI[type]);
+                _dicUI.Remove(type);
+            }
         }
     }
 }

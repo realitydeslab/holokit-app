@@ -14,7 +14,7 @@ public class HomeUIPanel : HomeUI
 
     List<GameObject> _realityThumbnailList = new List<GameObject>();
 
-    string IndexAndNamePath = "Prefabs/UI/Components/IndexAndName";
+    string IndexAndNamePath = "Prefabs/UI/Components/HomePage-Reality-IndexAndName";
 
     int _realityTotal;
 
@@ -68,7 +68,7 @@ public class HomeUIPanel : HomeUI
         }
     }
 
-    public void EnterRealityDetailPage()
+    public void SwitchToRealityDetailPageLayout()
     {
         transform.Find("HamburgerButton").gameObject.SetActive(false);
         transform.Find("PlayButton").gameObject.SetActive(false);
@@ -88,7 +88,7 @@ public class HomeUIPanel : HomeUI
         _realityThumbnailContainer.transform.position = new Vector3(0, 2, 0);
     }
 
-    public void BackToHomePage()
+    public void SwitchToHomePageLayout()
     {
         Debug.Log("BackToHomePage");
         transform.Find("HamburgerButton").gameObject.SetActive(true);

@@ -1,27 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UIFramwork;
 
-public class GameRoot : MonoBehaviour
+namespace Holoi.HoloKit.App.UI
 {
-    public static GameRoot Instance { get; private set; }
-    public SceneSystem SceneSystem { get; private set; }
-    private void Awake()
+    public class GameRoot : MonoBehaviour
     {
-        if (Instance != null && Instance != this)
+        public static GameRoot Instance { get; private set; }
+        public SceneSystem SceneSystem { get; private set; }
+        private void Awake()
         {
-            Destroy(this.gameObject);
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                Instance = this;
+            }
+            SceneSystem = new SceneSystem();
+            DontDestroyOnLoad(this.gameObject);
         }
-        else
+        private void Start()
         {
-            Instance = this;
+            SceneSystem.SetScene(new StartScene());
         }
-        SceneSystem = new SceneSystem();
-        DontDestroyOnLoad(this.gameObject);
-    }
-    private void Start()
-    {
-        SceneSystem.SetScene(new StartScene());
     }
 }
