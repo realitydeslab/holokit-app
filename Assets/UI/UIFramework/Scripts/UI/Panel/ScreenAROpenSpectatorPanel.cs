@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 namespace Holoi.HoloKit.App.UI
 {
-    public class SpectatorOpenComfirmPanel : BasePanel
+    public class ScreenAROpenSpectatorPanel : BasePanel
     {
-        static readonly string _path = "Prefabs/UI/Panels/SpectatorOpenComfirmPanel";
+        static readonly string _path = "Prefabs/UI/Panels/ScreenAROpenSpectatorPanel";
 
-        public SpectatorOpenComfirmPanel() : base(new UIType(_path)) { }
+        public ScreenAROpenSpectatorPanel() : base(new UIType(_path)) { }
 
         public override void OnEnter()
         {
@@ -17,7 +17,7 @@ namespace Holoi.HoloKit.App.UI
             {
             // here we do onclick event of this button
             Debug.Log("ShareButton is clicked.");
-                var panel = new SpectatorOpenComfirmPanel();
+                var panel = new ScreenARShareQRPanel();
                 PanelManager.Push(panel);
             });
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>

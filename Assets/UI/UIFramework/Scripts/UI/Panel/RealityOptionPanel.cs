@@ -32,8 +32,8 @@ namespace Holoi.HoloKit.App.UI
                 // here we do onclick event of this button
                 Debug.Log("SpectatorButton is clicked.");
 
-                var panel = new SpectatorOpenComfirmPanel();
-                PanelManager.Push(panel);
+                //var panel = new SpectatorOpenComfirmPanel();
+                //PanelManager.Push(panel);
             });
         }
     }
