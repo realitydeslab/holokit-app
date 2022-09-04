@@ -7,12 +7,21 @@ using UnityEngine.UI;
 public class RealityOptionUIPanel : RealityOptionUI
 {
     int _collectionCount;
-
     Transform _content;
+    Transform _prefix;
+
+    //[Header("Components")]
+    //[SerializeField] GameObject _scrollViewObject;
+    //[SerializeField] GameObject _scrollViewAvatar;
 
 
-    [SerializeField] GameObject _collectionScorllView;
+
+    [Header("Prefabs")]
+    [SerializeField] GameObject _scrollViewObject;
+    [SerializeField] GameObject _scrollViewAvatar;
+    [SerializeField] GameObject _collectionContainer;
     [SerializeField] GameObject _itemContainer;
+    [SerializeField] GameObject _buttonContainer;
 
     private void Awake()
     {
@@ -23,39 +32,114 @@ public class RealityOptionUIPanel : RealityOptionUI
     {
         base.OnUIAweak();
 
-        _collectionCount = metaObjectCollection.Count;
-
+        _collectionCount = metaObjectCollections.Count;
         _content = transform.Find("Scroll View/Viewport/Content");
-
-        if (_content.childCount != _collectionCount)
+        
+        Debug.Log("update content!");
+        Debug.Log(_content.childCount);
+        // clear all gameobject
+        foreach (Transform child in _content.transform)
         {
-            Debug.Log("update content!");
-            // clear all gameobject
-            foreach (Transform child in _content.transform)
+            if (Application.isEditor)
             {
-                GameObject.Destroy(child.gameObject);
-            }
+                Debug.Log("DestroyImmediate:" + child.name);
 
-            // create new by data
+                DestroyImmediate(child.gameObject);
+            }
+            else
+            {
+                Debug.Log("Destroy:" + child.name);
+
+                Destroy(child.gameObject);
+            }
+        }
+        // the following aims to slove the bug: foreach and for loop can not delete all gameobject and i do not know why
+        for (int i = 0; i < _content.childCount; i++)
+        {
+            if (Application.isEditor)
+            {
+
+                DestroyImmediate(_content.GetChild(i).gameObject);
+            }
+            else
+            {
+
+                Destroy(_content.GetChild(i).gameObject);
+            }
+        }
+        Debug.Log(_content.childCount);
+
+
+        if (metaObjectCollections.Count > 0)
+        {
+            Debug.Log("create object sv");
+            //_scrollViewObject.SetActive(true);
+            var _scrollViewObject = Instantiate(this._scrollViewObject, _content);
+
             for (int i = 0; i < _collectionCount; i++)
             {
-                var collection = Instantiate(_collectionScorllView);
-                collection.transform.parent = _content;
 
-                for (int j = 0; j < metaObjectCollection[i].MetaObject.Count; j++)
+                // create new by data
+                var collection = Instantiate(_collectionContainer);
+                collection.transform.parent = _scrollViewObject.transform.Find("Viewport/Content");
+                _prefix = collection.transform.Find("Prefix");
+
+                for (int j = 0; j < metaObjectCollections[i].MetaObject.Count; j++)
                 {
                     var item = Instantiate(_itemContainer);
-                    var itemContent = collection.transform.Find("Viewport/Content");
+                    var itemContent = collection.transform.Find("Scroll View/Viewport/Content");
 
                     item.transform.parent = itemContent;
 
-                    item.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = metaObjectCollection[i].displayName;
-                    item.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaObjectCollection[i].MetaObject[j].tokenId;
-                    item.transform.Find("Image").GetComponent<Image>().sprite = metaObjectCollection[i].MetaObject[j].image;
+                    _prefix.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = metaObjectCollections[i].displayName;
+                    _prefix.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaObjectCollections[i].MetaObject[j].tokenId;
+                    item.transform.Find("Image").GetComponent<Image>().sprite = metaObjectCollections[i].MetaObject[j].image;
                     //item.transform.Find("EnterDetailButton").GetComponent<ObjectPackageObjectButtonDescription>().metaObject = metaObjectCollection[i].MetaObject[j];
                 }
             }
         }
+        else
+        {
+            //_scrollViewObject.SetActive(false);
+
+        }
+        if (metaAvatarCollections.Count > 0)
+        {
+            Debug.Log("create ava sv");
+            //_scrollViewAvatar.SetActive(true);
+            var _scrollViewAvatar = Instantiate(this._scrollViewAvatar, _content);
+
+            for (int i = 0; i < _collectionCount; i++)
+            {
+
+                // create new by data
+                var collection = Instantiate(_collectionContainer);
+                collection.transform.parent = _scrollViewAvatar.transform.Find("Viewport/Content");
+                _prefix = collection.transform.Find("Prefix");
+
+                for (int j = 0; j < metaAvatarCollections[i].MetaAvatar.Count; j++)
+                {
+                    var item = Instantiate(_itemContainer);
+                    var itemContent = collection.transform.Find("Scroll View/Viewport/Content");
+
+                    item.transform.parent = itemContent;
+
+                    _prefix.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = metaAvatarCollections[i].displayName;
+                    _prefix.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaAvatarCollections[i].MetaAvatar[j].tokenId;
+                    item.transform.Find("Image").GetComponent<Image>().sprite = metaAvatarCollections[i].MetaAvatar[j].image;
+                    //item.transform.Find("EnterDetailButton").GetComponent<ObjectPackageObjectButtonDescription>().metaObject = metaObjectCollection[i].MetaObject[j];
+                }
+            }
+
+        }
+        else
+        {
+            //_scrollViewAvatar.SetActive(false);
+
+        }
+
+        var buttons = Instantiate(_buttonContainer, _content);
+
     }
 
     private void Update()

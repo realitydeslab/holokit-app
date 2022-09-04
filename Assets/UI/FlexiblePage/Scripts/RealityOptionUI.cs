@@ -7,8 +7,8 @@ using Holoi.AssetFoundation;
 [ExecuteInEditMode]
 public class RealityOptionUI : MonoBehaviour
 {
-    public List<MetaObjectCollection> metaObjectCollection;
-    public List<MetaAvatarCollection> metaAvatarCollection;
+    public List<MetaObjectCollection> metaObjectCollections;
+    public List<MetaAvatarCollection> metaAvatarCollections;
 
     protected virtual void OnUIAweak()
     {

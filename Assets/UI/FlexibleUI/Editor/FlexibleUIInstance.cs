@@ -37,6 +37,16 @@ public class FlexibleUIInstance : Editor
     {
         Create("StarButton");
     }
+    [MenuItem("GameObject/Flexible UI/Setting", priority = 0)]
+    public static void AddSetting()
+    {
+        Create("Setting");
+    }
+    [MenuItem("GameObject/Flexible UI/Logo", priority = 0)]
+    public static void AddLogo()
+    {
+        Create("Logo");
+    }
 
     static GameObject _clickedObject;
 

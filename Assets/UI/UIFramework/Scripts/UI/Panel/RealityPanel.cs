@@ -42,8 +42,8 @@ namespace Holoi.HoloKit.App.UI
 
                 var panel = new RealityOptionPanel();
                 PanelManager.Push(panel);
-                panel.UITool.GetOrAddComponent<RealityOptionUIPanel>().metaObjectCollection = RealityData.compatibleMetaObjectCollections;
-                panel.UITool.GetOrAddComponent<RealityOptionUIPanel>().metaAvatarCollection = RealityData.compatibleMetaAvatarCollections;
+                panel.UITool.GetOrAddComponent<RealityOptionUIPanel>().metaObjectCollections = RealityData.compatibleMetaObjectCollections;
+                panel.UITool.GetOrAddComponent<RealityOptionUIPanel>().metaAvatarCollections = RealityData.compatibleMetaAvatarCollections;
             });
         }
 
