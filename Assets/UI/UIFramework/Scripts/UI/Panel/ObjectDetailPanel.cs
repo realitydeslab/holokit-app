@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Holoi.AssetFoundation;
 
 namespace Holoi.HoloKit.App.UI
 {
@@ -9,6 +10,7 @@ namespace Holoi.HoloKit.App.UI
     {
         static readonly string _path = "Prefabs/UI/Panels/ObjectDetailPanel";
         public ObjectDetailPanel() : base(new UIType(_path)) { }
+        public MetaObject metaObject;
 
         public override void OnEnter()
         {

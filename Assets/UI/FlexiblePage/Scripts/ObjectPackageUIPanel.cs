@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 [ExecuteInEditMode]
@@ -13,7 +12,6 @@ public class ObjectPackageUIPanel : ObjectPackageUI
 
     Transform _content;
 
-    UnityEvent _enterDetialPageEvent;
 
     [SerializeField] GameObject _collectionScorllView;
     [SerializeField] GameObject _itemContainer;
@@ -72,11 +70,11 @@ public class ObjectPackageUIPanel : ObjectPackageUI
                     item.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = CollectionLists[i].MetaObject[j].name == null?"not found name": CollectionLists[i].displayName;
                     item.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + CollectionLists[i].MetaObject[j].tokenId;
                     item.transform.Find("Image").GetComponent<Image>().sprite = CollectionLists[i].MetaObject[j].image;
-                    item.transform.Find("EnterDtailButton").GetComponent<Button>().onClick.AddListener(() =>
+                    item.transform.Find("EnterDetailButton").GetComponent<ObjectPackageObjectButtonDescription>().metaObject = CollectionLists[i].MetaObject[j];
+                    item.transform.Find("EnterDetailButton").GetComponent<Button>().onClick.AddListener(() =>
                     {
                         // here we do onclick event of this button
-                        Debug.Log("EnterDtailButton is clicked.");
-                        _enterDetialPageEvent?.Invoke();
+                        Debug.Log("EnterDetailButton is clicked.");
                     });
 
                     Debug.Log("item count: " + CollectionLists[i].MetaObject.Count);

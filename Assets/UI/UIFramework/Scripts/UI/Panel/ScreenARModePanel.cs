@@ -17,26 +17,24 @@ namespace Holoi.HoloKit.App.UI
 
             UITool.GetOrAddComponentInChildren<Button>("OpenSpectatorButton").onClick.AddListener(() =>
             {
-            // here we do onclick event of this button
-            Debug.Log("OpenSpectatorButton is clicked.");
+                // here we do onclick event of this button
+                Debug.Log("OpenSpectatorButton is clicked.");
 
                 var panel = new ScreenAROpenSpectatorPanel();
                 PanelManager.Push(panel);
             });
             UITool.GetOrAddComponentInChildren<Button>("SwitchToStARButton").onClick.AddListener(() =>
             {
-            // here we do onclick event of this button
-            Debug.Log("SwitchToStARButton is clicked.");
+                // here we do onclick event of this button
+                Debug.Log("SwitchToStARButton is clicked.");
 
                 // switch to stAR mode
                 GameRoot.Instance.SceneSystem.SetScene(new StARMainScene());
-
-
             });
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {
-            // here we do onclick event of this button
-            Debug.Log("ExitButton is clicked. Exit from ScreenAR Mode to RealityOptionPanel.");
+                // here we do onclick event of this button
+                Debug.Log("ExitButton is clicked. Exit from ScreenAR Mode to RealityOptionPanel."); 
                 PanelManager.Pop();
 
                 // exit to start scene

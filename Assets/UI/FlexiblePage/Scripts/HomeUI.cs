@@ -7,7 +7,7 @@ using Holoi.AssetFoundation;
 [ExecuteInEditMode]
 public class HomeUI : MonoBehaviour
 {
-    public RealityCollection RealityListData;
+    public RealityCollection realityCollection;
 
     protected virtual void OnHomeUIAweak()
     {

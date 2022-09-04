@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Holoi.AssetFoundation;
 
 namespace Holoi.HoloKit.App.UI
 {
@@ -32,7 +33,6 @@ namespace Holoi.HoloKit.App.UI
                     Debug.LogError("Not Found HUP");
                 }
 
-
                 PanelManager.Pop();
             });
             UITool.GetOrAddComponentInChildren<Button>("PlayButton").onClick.AddListener(() =>
@@ -42,6 +42,8 @@ namespace Holoi.HoloKit.App.UI
 
                 var panel = new RealityOptionPanel();
                 PanelManager.Push(panel);
+                panel.UITool.GetOrAddComponent<RealityOptionUIPanel>().metaObjectCollection = RealityData.compatibleMetaObjectCollections;
+                panel.UITool.GetOrAddComponent<RealityOptionUIPanel>().metaAvatarCollection = RealityData.compatibleMetaAvatarCollections;
             });
         }
 

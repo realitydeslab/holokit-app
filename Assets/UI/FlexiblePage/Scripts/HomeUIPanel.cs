@@ -8,6 +8,8 @@ public class HomeUIPanel : HomeUI
 {
     Canvas _canvas;
 
+    Transform _indexAndNameContainer;
+
     RealityThumbnailContainer _realityThumbnailContainer;
 
     List<GameObject> _indexAndNameList = new List<GameObject>();
@@ -22,8 +24,7 @@ public class HomeUIPanel : HomeUI
 
     public int ActiveIndex
     {
-        get
-        { return _activeIndex; }
+        get{ return _activeIndex; }
     }
 
     float _realityBoxDistance = 4f;
@@ -37,9 +38,10 @@ public class HomeUIPanel : HomeUI
     {
         base.OnHomeUIAweak();
 
-        _realityTotal = RealityListData.realityCollection.Count;
+        _realityTotal = realityCollection.realityCollection.Count;
         _canvas = FindObjectOfType<Canvas>();
         _realityThumbnailContainer = FindObjectOfType<RealityThumbnailContainer>();
+        _indexAndNameContainer = transform.Find("IndexAndNameContainer");
         InstantiateRealities();
     }
 
@@ -48,15 +50,15 @@ public class HomeUIPanel : HomeUI
     {
         for (int i = 0; i < _realityTotal; i++)
         {
-            var realityThumbnailGO = Instantiate(RealityListData.realityCollection[i].thumbnailPrefab, _realityThumbnailContainer.transform);
+            var realityThumbnailGO = Instantiate(realityCollection.realityCollection[i].thumbnailPrefab, _realityThumbnailContainer.transform);
             realityThumbnailGO.transform.position = new Vector3(i* _realityBoxDistance, 0, 0);
             _realityThumbnailList.Add(realityThumbnailGO);
 
-            var indexAndNameGO = Instantiate(Resources.Load<GameObject>(IndexAndNamePath), _canvas.transform);
+            var indexAndNameGO = Instantiate(Resources.Load<GameObject>(IndexAndNamePath), _indexAndNameContainer);
             _indexAndNameList.Add(indexAndNameGO);
 
-            _indexAndNameList[i].transform.Find("Index").GetComponent<TMPro.TMP_Text>().text = "Reality " + "#00" + RealityListData.realityCollection[i].realityId;
-            _indexAndNameList[i].transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = RealityListData.realityCollection[i].displayName;
+            _indexAndNameList[i].transform.Find("Index").GetComponent<TMPro.TMP_Text>().text = "Reality " + "#00" + realityCollection.realityCollection[i].realityId;
+            _indexAndNameList[i].transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = realityCollection.realityCollection[i].displayName;
             if (i == 0)
             {
                 _indexAndNameList[i].SetActive(true);
@@ -72,6 +74,7 @@ public class HomeUIPanel : HomeUI
     {
         transform.Find("HamburgerButton").gameObject.SetActive(false);
         transform.Find("PlayButton").gameObject.SetActive(false);
+        _indexAndNameContainer.gameObject.SetActive(false);
 
         for (int i = 0; i < _realityTotal; i++)
         {
@@ -90,9 +93,10 @@ public class HomeUIPanel : HomeUI
 
     public void SwitchToHomePageLayout()
     {
-        Debug.Log("BackToHomePage");
         transform.Find("HamburgerButton").gameObject.SetActive(true);
         transform.Find("PlayButton").gameObject.SetActive(true);
+        _indexAndNameContainer.gameObject.SetActive(true);
+
 
         for (int i = 0; i < _realityTotal; i++)
         {
