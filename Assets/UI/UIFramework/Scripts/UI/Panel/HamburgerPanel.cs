@@ -28,7 +28,7 @@ namespace Holoi.HoloKit.App.UI
             {
             // here we do onclick event of this button
             Debug.Log("ObjectButton is clicked.");
-            var panel = new ObjectPanel();
+            var panel = new ObjectPackagePanel();
                 PanelManager.Push(panel);
             });
             UITool.GetOrAddComponentInChildren<Button>("AvatarButton").onClick.AddListener(() =>

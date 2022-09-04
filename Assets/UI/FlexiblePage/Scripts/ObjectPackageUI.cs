@@ -5,11 +5,11 @@ using Holoi.AssetFoundation;
 
 
 [ExecuteInEditMode]
-public class ItemPackageUI : MonoBehaviour
+public class ObjectPackageUI : MonoBehaviour
 {
     public List<MetaObjectCollection> CollectionLists;
 
-    protected virtual void OnItemPackageUIAweak()
+    protected virtual void OnObjectPackageUIAweak()
     {
     }
 

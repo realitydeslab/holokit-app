@@ -27,9 +27,7 @@ namespace Holoi.HoloKit.App.UI
         {
             if (_panelStack.Count > 0)
             {
-                Debug.Log("_panelStack.Count > 0");
                 _panel = _panelStack.Peek();
-                Debug.Log("Current Pause Panel:" + _panel.UIType.Name);
                 _panel.OnPause();
             }
             else
@@ -39,7 +37,6 @@ namespace Holoi.HoloKit.App.UI
 
             var panelGO = _uiManager.GetUIGO(nextPanel.UIType);
             nextPanel.Initialize(new UITool(panelGO));
-            Debug.Log("Current Active Panele:" + nextPanel.UITool.ActivePanel);
             nextPanel.Initialize(this);
             nextPanel.Initialize(_uiManager);
             nextPanel.OnEnter();
