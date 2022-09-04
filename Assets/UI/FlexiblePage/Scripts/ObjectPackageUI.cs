@@ -7,7 +7,8 @@ using Holoi.AssetFoundation;
 [ExecuteInEditMode]
 public class ObjectPackageUI : MonoBehaviour
 {
-    public List<MetaObjectCollection> CollectionLists;
+    public List<MetaObjectCollection> metaObjectCollection;
+    public List<MetaAvatarCollection> metaAvatarCollection;
 
     protected virtual void OnObjectPackageUIAweak()
     {

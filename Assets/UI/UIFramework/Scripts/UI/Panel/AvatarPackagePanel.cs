@@ -1,14 +1,14 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Holoi.HoloKit.App.UI
 {
-    public class ObjectPackagePanel : BasePanel
+    public class AvatarPackagePanel : BasePanel
     {
-        static readonly string _path = "Prefabs/UI/Panels/ObjectPackagePanel";
-        public ObjectPackagePanel() : base(new UIType(_path)) { }
+        static readonly string _path = "Prefabs/UI/Panels/AvatarPackagePanel";
+        public AvatarPackagePanel() : base(new UIType(_path)) { }
 
         public override void OnEnter()
         {
@@ -27,9 +27,9 @@ namespace Holoi.HoloKit.App.UI
                 {
                     // here we do onclick event of this button
                     Debug.Log("EnterDetailButton is clicked.");
-                    var panel = new ObjectDetailPanel();
+                    var panel = new AvatarDetailPanel();
                     PanelManager.Push(panel);
-                    panel.UITool.GetOrAddComponent<ObjectDetailUIPanel>().metaObject = button.GetComponent<ObjectPackageObjectButtonDescription>().metaObject;
+                    panel.UITool.GetOrAddComponent<ObjectDetailUIPanel>().metaAvatar = button.GetComponent<ObjectPackageObjectButtonDescription>().metaAvatar;
 
                 });
             }

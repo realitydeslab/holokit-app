@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Holoi.AssetFoundation;
 
 [ExecuteInEditMode]
 public class ObjectDetailUIPanel : ObjectDetailUI
@@ -24,13 +25,29 @@ public class ObjectDetailUIPanel : ObjectDetailUI
     {
         base.OnObjectDetailUIAweak();
 
-        _image.sprite = metaObject.image;
-        _collectionName.text = metaObject.collection.displayName;
-        _ID.text = "#" + metaObject.tokenId;
-        _objectName.text = metaObject.name;
-        _author.text = metaObject.collection.author;
-        _description.text = metaObject.collection.description;
-        //_siteAddress.text = metaObject.collection.;
+        if (metaAvatar)
+        {
+            var metaItem = metaAvatar;
+
+            _image.sprite = metaItem.image;
+            _collectionName.text = metaItem.collection.displayName;
+            _ID.text = "#" + metaItem.tokenId;
+            _objectName.text = metaItem.name;
+            _author.text = metaItem.collection.author;
+            _description.text = metaItem.collection.description;
+        }
+        else
+        {
+            var metaItem = metaObject;
+
+            _image.sprite = metaItem.image;
+            _collectionName.text = metaItem.collection.displayName;
+            _ID.text = "#" + metaItem.tokenId;
+            _objectName.text = metaItem.name;
+            _author.text = metaItem.collection.author;
+            _description.text = metaItem.collection.description;
+        }
+        
     }
 
     private void Update()

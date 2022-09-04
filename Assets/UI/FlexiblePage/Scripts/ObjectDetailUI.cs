@@ -8,6 +8,7 @@ using Holoi.AssetFoundation;
 public class ObjectDetailUI : MonoBehaviour
 {
     public MetaObject metaObject;
+    public MetaAvatar metaAvatar;
 
     protected virtual void OnObjectDetailUIAweak()
     {
