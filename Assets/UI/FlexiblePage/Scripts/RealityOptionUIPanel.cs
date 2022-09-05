@@ -36,38 +36,17 @@ public class RealityOptionUIPanel : RealityOptionUI
         _content = transform.Find("Scroll View/Viewport/Content");
         
         Debug.Log("update content!");
-        Debug.Log(_content.childCount);
         // clear all gameobject
-        foreach (Transform child in _content.transform)
-        {
-            if (Application.isEditor)
-            {
-                Debug.Log("DestroyImmediate:" + child.name);
-
-                DestroyImmediate(child.gameObject);
-            }
-            else
-            {
-                Debug.Log("Destroy:" + child.name);
-
-                Destroy(child.gameObject);
-            }
-        }
-        // the following aims to slove the bug: foreach and for loop can not delete all gameobject and i do not know why
+        var tempList = new List<Transform>();
         for (int i = 0; i < _content.childCount; i++)
         {
-            if (Application.isEditor)
-            {
-
-                DestroyImmediate(_content.GetChild(i).gameObject);
-            }
-            else
-            {
-
-                Destroy(_content.GetChild(i).gameObject);
-            }
+            tempList.Add(_content.GetChild(i));
         }
-        Debug.Log(_content.childCount);
+        foreach (var child in tempList)
+        {
+            DestroyImmediate(child.gameObject);
+        }
+
 
 
         if (metaObjectCollections.Count > 0)

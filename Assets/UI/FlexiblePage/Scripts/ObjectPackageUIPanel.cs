@@ -35,16 +35,14 @@ public class ObjectPackageUIPanel : ObjectPackageUI
 
         Debug.Log("update content!");
         // clear all gameobject
-        foreach (Transform child in _content.transform)
+        var tempList = new List<Transform>();
+        for (int i = 0; i < _content.childCount; i++)
         {
-            if (Application.isEditor)
-            {
-                DestroyImmediate(child.gameObject);
-            }
-            else
-            {
-                GameObject.Destroy(child.gameObject);
-            }
+            tempList.Add(_content.GetChild(i));
+        }
+        foreach (var child in tempList)
+        {
+            DestroyImmediate(child.gameObject);
         }
 
         switch (metaType)
