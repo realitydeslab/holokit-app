@@ -9,30 +9,36 @@ namespace Holoi.HoloKit.App.UI
     public class FlexibleUIData : ScriptableObject
     {
         [Header("Theme Color")]
-        public Color DefaultColor;
-        public Color ContractColor;
+        public Color WhiteActiveColor;
+        public Color WhiteInactiveColor;
+        public Color DarkActiveColor;
+        public Color DarkInactiveColor;
 
         [Header("Icon List")]
-        public Sprite DefaultArrow;
-        public Sprite ContractArrow;
+        public Sprite WhiteArrow;
+        public Sprite BlackArrow;
         public Sprite UnchenckCircle;
         public Sprite CheckedCircle;
 
         [Header("ButtonSprites")]
         public Sprite ButtonSprite;
+        public Sprite ButtonStrokeSprite;
         public SpriteState ButtonSpriteState; // create 4 sprites on inspector
 
-
-        [Header("BackButtonSprites")]
         public Sprite BackButtonSprite;
-        [Header("ExitButtonSprites")]
         public Sprite ExitButtonSprite;
-        [Header("StARButtonSprites")]
         public Sprite StARButtonSprite;
-        [Header("SpectatorButtonSprites")]
         public Sprite SpectatorButtonSprite;
 
-
+        [Header("Font Assets")]
+        public TMPro.TMP_FontAsset Heavy;
+        public TMPro.TMP_FontAsset HeavySlanted;
+        public TMPro.TMP_FontAsset Bold;
+        public TMPro.TMP_FontAsset BoldSlanted;
+        public TMPro.TMP_FontAsset Regular;
+        public TMPro.TMP_FontAsset RegularSlanted;
+        public TMPro.TMP_FontAsset Thin;
+        public TMPro.TMP_FontAsset ThinSlanted;
 
     }
 

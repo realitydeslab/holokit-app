@@ -53,7 +53,7 @@ namespace Holoi.HoloKit.App.UI
             switch (state)
             {
                 case State.Uncheck:
-                    _image.color = SkinData.DefaultColor;
+                    _image.color = SkinData.WhiteActiveColor;
                     _icon.sprite = SkinData.UnchenckCircle;
                     _icon.color = Color.black;
                     _text.color = Color.black;
@@ -61,7 +61,7 @@ namespace Holoi.HoloKit.App.UI
 
                     break;
                 case State.Checked:
-                    _image.color = SkinData.ContractColor;
+                    _image.color = SkinData.DarkActiveColor;
                     _icon.sprite = SkinData.CheckedCircle;
                     _icon.color = Color.white;
                     _text.color = Color.white;

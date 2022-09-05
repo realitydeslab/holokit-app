@@ -15,8 +15,14 @@ namespace Holoi.HoloKit.App.UI
             White,
             Black
         }
+        public enum State
+        {
+            Inactive,
+            Active
+        }
 
         public Theme theme;
+        public State state;
 
         Image _image;
         Image _icon;
@@ -33,12 +39,13 @@ namespace Holoi.HoloKit.App.UI
             _image = GetComponent<Image>();
             _icon = transform.Find("Icon").GetComponent<Image>();
             _text = transform.Find("Text").GetComponent<TMPro.TMP_Text>();
+            _text.font = SkinData.BoldSlanted;
+            _text.characterSpacing = -1.94f;
             _button = GetComponent<Button>();
 
             _button.transition = Selectable.Transition.SpriteSwap; // set transition mode
             _button.targetGraphic = _image;
 
-            _image.sprite = SkinData.ButtonSprite;
             _image.type = Image.Type.Sliced;
             _button.spriteState = SkinData.ButtonSpriteState;
 
@@ -46,16 +53,41 @@ namespace Holoi.HoloKit.App.UI
             switch (theme)
             {
                 case Theme.Black:
-                    _image.color = SkinData.DefaultColor;
-                    _icon.sprite = SkinData.DefaultArrow;
-                    _text.color = Color.black;
-                    _text.text = _string;
+                    _image.sprite = SkinData.ButtonSprite;  
+                    switch (state)
+                    {
+                        case State.Inactive:
+                            _image.color = SkinData.DarkInactiveColor;
+                            _icon.sprite = SkinData.WhiteArrow;
+                            _text.color = Color.white;
+                            _text.text = _string;
+                            break;
+                        case State.Active:
+                            _image.color = SkinData.DarkActiveColor;
+                            _icon.sprite = SkinData.WhiteArrow;
+                            _text.color = Color.white;
+                            _text.text = _string;
+                            break;
+                    }
                     break;
                 case Theme.White:
-                    _image.color = SkinData.ContractColor;
-                    _icon.sprite = SkinData.ContractArrow;
-                    _text.color = Color.white;
-                    _text.text = _string;
+                    _image.sprite = SkinData.ButtonStrokeSprite;
+
+                    switch (state)
+                    {
+                        case State.Inactive:
+                            _image.color = SkinData.WhiteInactiveColor;
+                            _icon.sprite = SkinData.BlackArrow;
+                            _text.color = Color.black;
+                            _text.text = _string;
+                            break;
+                        case State.Active:
+                            _image.color = SkinData.WhiteActiveColor;
+                            _icon.sprite = SkinData.BlackArrow;
+                            _text.color = Color.black;
+                            _text.text = _string;
+                            break;
+                    }
                     break;
             }
         }

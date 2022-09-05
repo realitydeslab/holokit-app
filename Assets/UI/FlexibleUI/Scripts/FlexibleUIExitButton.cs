@@ -36,11 +36,11 @@ namespace Holoi.HoloKit.App.UI
             {
                 case Theme.Default:
                     _image.sprite = SkinData.ExitButtonSprite;
-                    _image.color = SkinData.DefaultColor;
+                    _image.color = SkinData.WhiteActiveColor;
                     break;
                 case Theme.Contract:
                     _image.sprite = SkinData.ExitButtonSprite;
-                    _image.color = SkinData.ContractColor;
+                    _image.color = SkinData.DarkActiveColor;
                     break;
             }
         }
