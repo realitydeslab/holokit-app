@@ -3,43 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-[RequireComponent(typeof(Button))]
-[RequireComponent(typeof(Image))]
-public class FlexibleUIBackButton : FlexibleUI
+namespace Holoi.HoloKit.App.UI
 {
-    public enum Theme
+
+    [RequireComponent(typeof(Button))]
+    [RequireComponent(typeof(Image))]
+    public class FlexibleUIBackButton : FlexibleUI
     {
-        Default,
-        Contract
-    }
-
-    public Theme theme;
-
-    Image _image;
-    //Button _button;
-
-
-    protected override void OnSkinUI()
-    {
-        base.OnSkinUI();
-
-        _image = transform.Find("Image").GetComponent<Image>();
-
-        //_image = GetComponent<Image>();
-        //_button = GetComponent<Button>();
-
-
-        switch (theme)
+        public enum Theme
         {
-            case Theme.Default:
-                _image.sprite = SkinData.BackButtonSprite;
-                _image.color = SkinData.DefaultColor;
-                break;
-            case Theme.Contract:
-                _image.sprite = SkinData.BackButtonSprite;
-                _image.color = SkinData.ContractColor;
-                break;
+            Default,
+            Contract
+        }
+
+        public Theme theme;
+
+        Image _image;
+        //Button _button;
+
+
+        protected override void OnSkinUI()
+        {
+            base.OnSkinUI();
+
+            _image = transform.Find("Image").GetComponent<Image>();
+
+            //_image = GetComponent<Image>();
+            //_button = GetComponent<Button>();
+
+            switch (theme)
+            {
+                case Theme.Default:
+                    _image.sprite = SkinData.BackButtonSprite;
+                    _image.color = SkinData.DefaultColor;
+                    break;
+                case Theme.Contract:
+                    _image.sprite = SkinData.BackButtonSprite;
+                    _image.color = SkinData.ContractColor;
+                    break;
+            }
         }
     }
 }
