@@ -42,8 +42,15 @@ namespace Holoi.HoloKit.App.UI
 
                 var panel = new RealityOptionPanel();
                 PanelManager.Push(panel);
-                panel.UITool.GetOrAddComponent<RealityOptionUIPanel>().metaObjectCollections = RealityData.compatibleMetaObjectCollections;
-                panel.UITool.GetOrAddComponent<RealityOptionUIPanel>().metaAvatarCollections = RealityData.compatibleMetaAvatarCollections;
+
+                // filter all object list with tag:
+                MetaObjectCollectionList MOCL = new MetaObjectCollectionList();
+
+                // filter all ava list with tag:
+                MetaAvatarCollectionList MACL = new MetaAvatarCollectionList();
+
+                panel.UITool.GetOrAddComponent<RealityOptionUIPanel>().metaObjectCollections = MOCL.list;
+                panel.UITool.GetOrAddComponent<RealityOptionUIPanel>().metaAvatarCollections = MACL.list;
             });
         }
 
@@ -57,7 +64,7 @@ namespace Holoi.HoloKit.App.UI
             UITool.FindChildGameObject("Description").GetComponent<TMPro.TMP_Text>().text = RealityData.description;
 
             string tagString = "";
-            foreach (var tag in RealityData.techTags)
+            foreach (var tag in RealityData.realityTags)
             {
                 tagString += tag.ToString();
                 tagString += "; ";

@@ -8,15 +8,21 @@ namespace Holoi.HoloKit.App.UI
 {
     [RequireComponent(typeof(Button))]
     [RequireComponent(typeof(Image))]
-    public class FlexibleUIButton : FlexibleUI
+    public class FlexibleUIPermissionButton : FlexibleUI
     {
-        public enum Theme
+        //public enum Theme
+        //{
+        //    White,
+        //    Black
+        //}
+        public enum State
         {
-            White,
-            Black
+            Uncheck,
+            Checked
         }
 
-        public Theme theme;
+        //public Theme theme;
+        public State state;
 
         Image _image;
         Image _icon;
@@ -43,21 +49,26 @@ namespace Holoi.HoloKit.App.UI
             _button.spriteState = SkinData.ButtonSpriteState;
 
 
-            switch (theme)
+
+            switch (state)
             {
-                case Theme.Black:
+                case State.Uncheck:
                     _image.color = SkinData.DefaultColor;
-                    _icon.sprite = SkinData.DefaultArrow;
+                    _icon.sprite = SkinData.UnchenckCircle;
+                    _icon.color = Color.black;
                     _text.color = Color.black;
                     _text.text = _string;
+
                     break;
-                case Theme.White:
+                case State.Checked:
                     _image.color = SkinData.ContractColor;
-                    _icon.sprite = SkinData.ContractArrow;
+                    _icon.sprite = SkinData.CheckedCircle;
+                    _icon.color = Color.white;
                     _text.color = Color.white;
                     _text.text = _string;
                     break;
             }
+        
         }
     }
 

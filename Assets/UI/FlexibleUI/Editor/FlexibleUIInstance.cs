@@ -6,46 +6,51 @@ using UnityEditor;
 
 public class FlexibleUIInstance : Editor
 {
-    [MenuItem("GameObject/Flexible UI/Button", priority =0)]
+    [MenuItem("GameObject/HolikitX UI/Button", priority =0)]
     public static void AddButton()
     {
         Create("ButtonSample");
     }
 
-    [MenuItem("GameObject/Flexible UI/ExitButton", priority = 0)]
+    [MenuItem("GameObject/HolikitX UI/ExitButton", priority = 0)]
     public static void AddExitButton()
     {
         Create("ExitButton");
     }
-    [MenuItem("GameObject/Flexible UI/BackButton", priority = 0)]
+    [MenuItem("GameObject/HolikitX UI/BackButton", priority = 0)]
     public static void AddBackButton()
     {
         Create("BackButton");
     }
-    [MenuItem("GameObject/Flexible UI/RecordButton", priority = 0)]
+    [MenuItem("GameObject/HolikitX UI/RecordButton", priority = 0)]
     public static void AddRecordButton()
     {
         Create("RecordButton");
     }
-    [MenuItem("GameObject/Flexible UI/SpectatorButton", priority = 0)]
+    [MenuItem("GameObject/HolikitX UI/SpectatorButton", priority = 0)]
     public static void AddSpectatorButton()
     {
         Create("SpectatorButton");
     }
-    [MenuItem("GameObject/Flexible UI/StarButton", priority = 0)]
+    [MenuItem("GameObject/HolikitX UI/StarButton", priority = 0)]
     public static void AddStarButton()
     {
         Create("StarButton");
     }
-    [MenuItem("GameObject/Flexible UI/Setting", priority = 0)]
+    [MenuItem("GameObject/HolikitX UI/Setting", priority = 0)]
     public static void AddSetting()
     {
         Create("Setting");
     }
-    [MenuItem("GameObject/Flexible UI/Logo", priority = 0)]
+    [MenuItem("GameObject/HolikitX UI/Logo", priority = 0)]
     public static void AddLogo()
     {
         Create("Logo");
+    }
+    [MenuItem("GameObject/HolikitX UI/PermissionButton", priority = 0)]
+    public static void AddPermissionButton()
+    {
+        Create("PermissionButton");
     }
 
     static GameObject _clickedObject;

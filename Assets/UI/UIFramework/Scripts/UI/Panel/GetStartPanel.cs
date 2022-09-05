@@ -18,7 +18,6 @@ namespace Holoi.HoloKit.App.UI
             Debug.Log("BackButton is clicked.");
                 PanelManager.Pop();
             });
-
         }
     }
 }

@@ -63,7 +63,7 @@ public class RealityOptionUIPanel : RealityOptionUI
                 collection.transform.parent = _scrollViewObject.transform.Find("Viewport/Content");
                 _prefix = collection.transform.Find("Prefix");
 
-                for (int j = 0; j < metaObjectCollections[i].MetaObject.Count; j++)
+                for (int j = 0; j < metaObjectCollections[i].metaObjects.Count; j++)
                 {
                     var item = Instantiate(_itemContainer);
                     var itemContent = collection.transform.Find("Scroll View/Viewport/Content");
@@ -71,8 +71,8 @@ public class RealityOptionUIPanel : RealityOptionUI
                     item.transform.parent = itemContent;
 
                     _prefix.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = metaObjectCollections[i].displayName;
-                    _prefix.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaObjectCollections[i].MetaObject[j].tokenId;
-                    item.transform.Find("Image").GetComponent<Image>().sprite = metaObjectCollections[i].MetaObject[j].image;
+                    _prefix.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaObjectCollections[i].metaObjects[j].tokenId;
+                    item.transform.Find("Image").GetComponent<Image>().sprite = metaObjectCollections[i].metaObjects[j].image;
                     //item.transform.Find("EnterDetailButton").GetComponent<ObjectPackageObjectButtonDescription>().metaObject = metaObjectCollection[i].MetaObject[j];
                 }
             }
@@ -96,7 +96,7 @@ public class RealityOptionUIPanel : RealityOptionUI
                 collection.transform.parent = _scrollViewAvatar.transform.Find("Viewport/Content");
                 _prefix = collection.transform.Find("Prefix");
 
-                for (int j = 0; j < metaAvatarCollections[i].MetaAvatar.Count; j++)
+                for (int j = 0; j < metaAvatarCollections[i].metaAvatars.Count; j++)
                 {
                     var item = Instantiate(_itemContainer);
                     var itemContent = collection.transform.Find("Scroll View/Viewport/Content");
@@ -104,8 +104,8 @@ public class RealityOptionUIPanel : RealityOptionUI
                     item.transform.parent = itemContent;
 
                     _prefix.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = metaAvatarCollections[i].displayName;
-                    _prefix.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaAvatarCollections[i].MetaAvatar[j].tokenId;
-                    item.transform.Find("Image").GetComponent<Image>().sprite = metaAvatarCollections[i].MetaAvatar[j].image;
+                    _prefix.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaAvatarCollections[i].metaAvatars[j].tokenId;
+                    item.transform.Find("Image").GetComponent<Image>().sprite = metaAvatarCollections[i].metaAvatars[j].image;
                     //item.transform.Find("EnterDetailButton").GetComponent<ObjectPackageObjectButtonDescription>().metaObject = metaObjectCollection[i].MetaObject[j];
                 }
             }

@@ -60,16 +60,16 @@ public class ObjectPackageUIPanel : ObjectPackageUI
                         collection.transform.parent = _content;
                         _prefix = collection.transform.Find("Prefix");
 
-                        for (int j = 0; j < metaObjectCollection[i].MetaObject.Count; j++)
+                        for (int j = 0; j < metaObjectCollection[i].metaObjects.Count; j++)
                         {
                             var item = Instantiate(_itemContainer);
                             var itemContent = collection.transform.Find("Scroll View/Viewport/Content");
                             item.transform.parent = itemContent;
 
-                            _prefix.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = metaObjectCollection[i].MetaObject[j].name == null ? "not found name" : metaObjectCollection[i].displayName;
-                            _prefix.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaObjectCollection[i].MetaObject[j].tokenId;
-                            item.transform.Find("Image").GetComponent<Image>().sprite = metaObjectCollection[i].MetaObject[j].image;
-                            item.transform.Find("EnterDetailButton").GetComponent<ObjectPackageObjectButtonDescription>().metaObject = metaObjectCollection[i].MetaObject[j];
+                            _prefix.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = metaObjectCollection[i].displayName;
+                            _prefix.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaObjectCollection[i].metaObjects[j].tokenId;
+                            item.transform.Find("Image").GetComponent<Image>().sprite = metaObjectCollection[i].metaObjects[j].image;
+                            item.transform.Find("EnterDetailButton").GetComponent<ObjectPackageObjectButtonDescription>().metaObject = metaObjectCollection[i].metaObjects[j];
                             //item.transform.Find("EnterDetailButton").GetComponent<Button>().onClick.AddListener(() =>
                             //{
                             //    // here we do onclick event of this button
@@ -92,16 +92,16 @@ public class ObjectPackageUIPanel : ObjectPackageUI
                         collection.transform.parent = _content;
                         _prefix = collection.transform.Find("Prefix");
 
-                        for (int j = 0; j < metaAvatarCollection[i].MetaAvatar.Count; j++)
+                        for (int j = 0; j < metaAvatarCollection[i].metaAvatars.Count; j++)
                         {
                             var item = Instantiate(_itemContainer);
                             var itemContent = collection.transform.Find("Scroll View/Viewport/Content");
                             item.transform.parent = itemContent;
 
                             _prefix.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = metaAvatarCollection[i].displayName;
-                            _prefix.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaAvatarCollection[i].MetaAvatar[j].tokenId;
-                            item.transform.Find("Image").GetComponent<Image>().sprite = metaAvatarCollection[i].MetaAvatar[j].image;
-                            item.transform.Find("EnterDetailButton").GetComponent<ObjectPackageObjectButtonDescription>().metaAvatar = metaAvatarCollection[i].MetaAvatar[j];
+                            _prefix.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaAvatarCollection[i].metaAvatars[j].tokenId;
+                            item.transform.Find("Image").GetComponent<Image>().sprite = metaAvatarCollection[i].metaAvatars[j].image;
+                            item.transform.Find("EnterDetailButton").GetComponent<ObjectPackageObjectButtonDescription>().metaAvatar = metaAvatarCollection[i].metaAvatars[j];
                             //item.transform.Find("EnterDetailButton").GetComponent<Button>().onClick.AddListener(() =>
                             //{
                             //    // here we do onclick event of this button
