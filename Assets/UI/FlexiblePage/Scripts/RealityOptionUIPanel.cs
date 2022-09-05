@@ -42,7 +42,7 @@ public class RealityOptionUIPanel : RealityOptionUI
                 var collection = Instantiate(_collectionScorllView);
                 collection.transform.parent = _content;
 
-                for (int j = 0; j < metaObjectCollection[i].MetaObject.Count; j++)
+                for (int j = 0; j < metaObjectCollection[i].metaObjects.Count; j++)
                 {
                     var item = Instantiate(_itemContainer);
                     var itemContent = collection.transform.Find("Viewport/Content");
@@ -50,8 +50,8 @@ public class RealityOptionUIPanel : RealityOptionUI
                     item.transform.parent = itemContent;
 
                     item.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = metaObjectCollection[i].displayName;
-                    item.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaObjectCollection[i].MetaObject[j].tokenId;
-                    item.transform.Find("Image").GetComponent<Image>().sprite = metaObjectCollection[i].MetaObject[j].image;
+                    item.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaObjectCollection[i].metaObjects[j].tokenId;
+                    item.transform.Find("Image").GetComponent<Image>().sprite = metaObjectCollection[i].metaObjects[j].image;
                     //item.transform.Find("EnterDetailButton").GetComponent<ObjectPackageObjectButtonDescription>().metaObject = metaObjectCollection[i].MetaObject[j];
                 }
             }
