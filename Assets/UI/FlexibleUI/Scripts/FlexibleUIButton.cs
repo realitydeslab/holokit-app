@@ -21,8 +21,8 @@ namespace Holoi.HoloKit.App.UI
             Active
         }
 
-        public Theme theme;
-        public State state;
+        public Theme theme = Theme.Black;
+        public State state = State.Active;
 
         Image _image;
         Image _icon;
@@ -36,6 +36,7 @@ namespace Holoi.HoloKit.App.UI
         {
             base.OnSkinUI();
 
+            GetComponent<RectTransform>().sizeDelta = new Vector2(978, 207);
             _image = GetComponent<Image>();
             _icon = transform.Find("Icon").GetComponent<Image>();
             _text = transform.Find("Text").GetComponent<TMPro.TMP_Text>();

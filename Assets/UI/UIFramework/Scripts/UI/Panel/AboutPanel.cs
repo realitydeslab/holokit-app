@@ -12,12 +12,19 @@ namespace Holoi.HoloKit.App.UI
 
         public override void OnEnter()
         {
-            UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
-            {
+            UITool.FindTransform("PageHeader-backbutton/BackButton").GetComponent<Button>().onClick.AddListener(() =>
+            { 
             // here we do onclick event of this button
             Debug.Log("BackButton is clicked.");
-                PanelManager.Pop();
+            PanelManager.Pop();
             });
+
+            //UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
+            //{
+            //// here we do onclick event of this button
+            //Debug.Log("BackButton is clicked.");
+            //    PanelManager.Pop();
+            //});
 
         }
     }

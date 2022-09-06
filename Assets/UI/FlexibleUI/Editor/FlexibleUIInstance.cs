@@ -16,10 +16,10 @@ public class FlexibleUIInstance : Editor
     {
         Create("H2");
     }
-    [MenuItem("GameObject/HolikitX UI/Text/Paragraph", priority = 0)]
+    [MenuItem("GameObject/HolikitX UI/Text/Body", priority = 0)]
     public static void AddParagraph()
     {
-        Create("Paragraph");
+        Create("Body");
     }
     [MenuItem("GameObject/HolikitX UI/Button/Button", priority =0)]
     public static void AddButton()

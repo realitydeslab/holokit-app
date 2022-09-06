@@ -19,6 +19,20 @@ namespace Holoi.HoloKit.App.UI
             _activePanelGO = panel;
         }
 
+        public Transform FindTransform(string path)
+        {
+            var t = _activePanelGO.transform.Find(path);
+            if(t == null)
+            {
+                Debug.LogError("not found transform with name: " + path);
+                return null;
+            }
+            else
+            {
+                return t;
+            }
+        }
+
         public T GetOrAddComponent<T>() where T : Component
         {
             if (_activePanelGO.GetComponent<T>() == null)

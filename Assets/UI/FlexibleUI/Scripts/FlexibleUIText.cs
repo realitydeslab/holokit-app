@@ -39,7 +39,7 @@ namespace Holoi.HoloKit.App.UI
                 case Type.H3:
                     break;
                 case Type.body:
-                    SetText(Color.black, SkinData.Regular, 42, -1.34f, 1.06f, 48);
+                    SetText(Color.black, SkinData.Regular, 42, -1.34f, 1.06f, 39.78f);
 
                     break;
             }
