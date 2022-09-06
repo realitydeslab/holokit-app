@@ -77,6 +77,11 @@ public class FlexibleUIInstance : Editor
     {
         Create("MediaList");
     }
+    [MenuItem("GameObject/HolikitX UI/Button/PlayButton", priority = 0)]
+    public static void AddPlayButton()
+    {
+        Create("PlayButton");
+    }
 
 
 
