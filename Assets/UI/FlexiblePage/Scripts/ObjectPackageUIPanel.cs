@@ -2,37 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Holoi.AssetFoundation;
 
 [ExecuteInEditMode]
-public class ObjectPackageUIPanel : ObjectPackageUI
+public class ObjectPackageUIPanel : MonoBehaviour
 {
-    int _collectionCount;
 
-    Transform _content;
-    Transform _prefix;
+    public MetaObjectCollectionList metaObjectCollectionList;
 
-    [SerializeField] GameObject _collectionScorllView;
-    [SerializeField] GameObject _itemContainer;
+    int _listCount;
 
-    public enum MetaType
-    {
-        Object,
-        Avatar
-    }
+    [SerializeField] Transform _content;
 
-    public MetaType metaType = MetaType.Object;
+    [SerializeField] GameObject _collectionContainer;
+    [SerializeField] GameObject _footer;
 
     private void Awake()
     {
-        OnObjectPackageUIAweak();
-    }
-
-    protected override void OnObjectPackageUIAweak()
-    {
-        base.OnObjectPackageUIAweak();
-
-        _content = transform.Find("Scroll View/Viewport/Content");
-
         Debug.Log("update content!");
         // clear all gameobject
         var tempList = new List<Transform>();
@@ -42,84 +28,28 @@ public class ObjectPackageUIPanel : ObjectPackageUI
         }
         foreach (var child in tempList)
         {
-            DestroyImmediate(child.gameObject);
+            if (Application.isEditor)
+            {
+                DestroyImmediate(child.gameObject);
+            }
+            else
+            {
+                Destroy(child.gameObject);
+            }
         }
 
-        switch (metaType)
+        _listCount = metaObjectCollectionList.list.Count;
+
+
+        // create new by data
+        for (int i = 0; i < _listCount; i++)
         {
-            case MetaType.Object:
-
-                _collectionCount = metaObjectCollection.Count;
-
-                if (_content.childCount != _collectionCount)
-                {
-                    // create new by data
-                    for (int i = 0; i < _collectionCount; i++)
-                    {
-                        var collection = Instantiate(_collectionScorllView);
-                        collection.transform.parent = _content;
-                        _prefix = collection.transform.Find("Prefix");
-
-                        for (int j = 0; j < metaObjectCollection[i].metaObjects.Count; j++)
-                        {
-                            var item = Instantiate(_itemContainer);
-                            var itemContent = collection.transform.Find("Scroll View/Viewport/Content");
-                            item.transform.parent = itemContent;
-
-                            _prefix.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = metaObjectCollection[i].displayName;
-                            _prefix.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaObjectCollection[i].metaObjects[j].tokenId;
-                            item.transform.Find("Image").GetComponent<Image>().sprite = metaObjectCollection[i].metaObjects[j].image;
-                            item.transform.Find("EnterDetailButton").GetComponent<ObjectPackageObjectButtonDescription>().metaObject = metaObjectCollection[i].metaObjects[j];
-                            //item.transform.Find("EnterDetailButton").GetComponent<Button>().onClick.AddListener(() =>
-                            //{
-                            //    // here we do onclick event of this button
-                            //    Debug.Log("EnterDetailButton is clicked.");
-                            //});
-                        }
-                    }
-                }
-                break;
-            case MetaType.Avatar:
-
-                _collectionCount = metaAvatarCollection.Count;
-
-                if (_content.childCount != _collectionCount)
-                {
-                    // create new by data
-                    for (int i = 0; i < _collectionCount; i++)
-                    {
-                        var collection = Instantiate(_collectionScorllView);
-                        collection.transform.parent = _content;
-                        _prefix = collection.transform.Find("Prefix");
-
-                        for (int j = 0; j < metaAvatarCollection[i].metaAvatars.Count; j++)
-                        {
-                            var item = Instantiate(_itemContainer);
-                            var itemContent = collection.transform.Find("Scroll View/Viewport/Content");
-                            item.transform.parent = itemContent;
-
-                            _prefix.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = metaAvatarCollection[i].displayName;
-                            _prefix.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaAvatarCollection[i].metaAvatars[j].tokenId;
-                            item.transform.Find("Image").GetComponent<Image>().sprite = metaAvatarCollection[i].metaAvatars[j].image;
-                            item.transform.Find("EnterDetailButton").GetComponent<ObjectPackageObjectButtonDescription>().metaAvatar = metaAvatarCollection[i].metaAvatars[j];
-                            //item.transform.Find("EnterDetailButton").GetComponent<Button>().onClick.AddListener(() =>
-                            //{
-                            //    // here we do onclick event of this button
-                            //    Debug.Log("EnterDetailButton is clicked.");
-                            //});
-                        }
-                    }
-                }
-                break;
+            _collectionContainer.GetComponent<CollectionDisplayContainer>().metaObjectCollection = metaObjectCollectionList.list[i];
+            var collection = Instantiate(_collectionContainer);
+            collection.transform.parent = _content;
         }
 
-    }
-
-    private void Update()
-    {
-        if (Application.isEditor)
-        {
-
-        }
+        var footer = Instantiate(_footer);
+        footer.transform.parent = _content;
     }
 }

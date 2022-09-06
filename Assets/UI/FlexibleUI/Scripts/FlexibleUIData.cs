@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,6 +38,15 @@ namespace Holoi.HoloKit.App.UI
         public TMPro.TMP_FontAsset Thin;
         public TMPro.TMP_FontAsset ThinSlanted;
 
+        [Header("Logo Sprites")]
+        public Sprite LogoAWhite;
+        public Sprite LogoABlack;
+        public Sprite LogoBWhite;
+        public Sprite LogoBBlack;
+
+        [Header("Switch Sprites")]
+        public Sprite SwitchOpen;
+        public Sprite SwitchClose;
     }
 
 }

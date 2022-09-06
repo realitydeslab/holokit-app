@@ -29,8 +29,7 @@ namespace Holoi.HoloKit.App.UI
                     Debug.Log("EnterDetailButton is clicked.");
                     var panel = new AvatarDetailPanel();
                     PanelManager.Push(panel);
-                    panel.UITool.GetOrAddComponent<ObjectDetailUIPanel>().metaAvatar = button.GetComponent<ObjectPackageObjectButtonDescription>().metaAvatar;
-
+                    //panel.UITool.GetOrAddComponent<ObjectDetailUIPanel>().metaAvatar = button.GetComponent<ObjectPackageObjectButtonDescription>().metaAvatar;
                 });
             }
         }

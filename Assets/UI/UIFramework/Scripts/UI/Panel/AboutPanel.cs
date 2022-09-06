@@ -12,7 +12,7 @@ namespace Holoi.HoloKit.App.UI
 
         public override void OnEnter()
         {
-            UITool.FindTransform("PageHeader-backbutton/BackButton").GetComponent<Button>().onClick.AddListener(() =>
+            UITool.FindChildGameObject("BackButton").GetComponent<Button>().onClick.AddListener(() =>
             { 
             // here we do onclick event of this button
             Debug.Log("BackButton is clicked.");

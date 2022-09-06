@@ -16,10 +16,15 @@ public class FlexibleUIInstance : Editor
     {
         Create("H2");
     }
-    [MenuItem("GameObject/HolikitX UI/Text/Body", priority = 0)]
+    [MenuItem("GameObject/HolikitX UI/Text/H3", priority = 0)]
+    public static void AddH3()
+    {
+        Create("H3");
+    }
+    [MenuItem("GameObject/HolikitX UI/Text/Body2", priority = 0)]
     public static void AddParagraph()
     {
-        Create("Body");
+        Create("Body2");
     }
     [MenuItem("GameObject/HolikitX UI/Button/Button", priority =0)]
     public static void AddButton()
@@ -66,6 +71,11 @@ public class FlexibleUIInstance : Editor
     public static void AddLogo()
     {
         Create("Logo");
+    }
+    [MenuItem("GameObject/HolikitX UI/Media/MediaList", priority = 0)]
+    public static void AddMedia()
+    {
+        Create("MediaList");
     }
 
 

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,7 +42,7 @@ namespace Holoi.HoloKit.App.UI
             _button.transition = Selectable.Transition.SpriteSwap; // set transition mode
             _button.targetGraphic = _image;
 
-            _image.sprite = SkinData.ButtonSprite;
+            _image.sprite = SkinData.ButtonStrokeSprite;
             _image.type = Image.Type.Sliced;
             _button.spriteState = SkinData.ButtonSpriteState;
 
