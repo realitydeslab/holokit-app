@@ -1,26 +1,52 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[CreateAssetMenu(menuName = "Flexible UI Data")]
-public class FlexibleUIData : ScriptableObject
+namespace Holoi.HoloKit.App.UI
 {
-    [Header("LongButtonSprites")]
-    public Sprite ButtonSprite;
-    public SpriteState ButtonSpriteState; // create 4 sprites on inspector
+    [CreateAssetMenu(menuName = "Flexible UI Data")]
+    public class FlexibleUIData : ScriptableObject
+    {
+        [Header("Theme Color")]
+        public Color WhiteActiveColor;
+        public Color WhiteInactiveColor;
+        public Color DarkActiveColor;
+        public Color DarkInactiveColor;
 
-    [Header("ButtonSprites")]
-    public Sprite BackButtonSprite;
-    public Sprite ExitButtonSprite;
-    public Sprite StARButtonSprite;
-    public Sprite SpectatorButtonSprite;
+        [Header("Icon List")]
+        public Sprite WhiteArrow;
+        public Sprite BlackArrow;
+        public Sprite UnchenckCircle;
+        public Sprite CheckedCircle;
 
+        [Header("ButtonSprites")]
+        public Sprite ButtonSprite;
+        public Sprite ButtonStrokeSprite;
+        public SpriteState ButtonSpriteState; // create 4 sprites on inspector
 
-    [Header("Theme")]
-    public Color DefaultColor;
-    public Sprite DefaultIcon;
+        public Sprite BackButtonSprite;
+        public Sprite ExitButtonSprite;
+        public Sprite StARButtonSprite;
+        public Sprite SpectatorButtonSprite;
 
-    public Color ContractColor;
-    public Sprite ContractIcon;
+        [Header("Font Assets")]
+        public TMPro.TMP_FontAsset Heavy;
+        public TMPro.TMP_FontAsset HeavySlanted;
+        public TMPro.TMP_FontAsset Bold;
+        public TMPro.TMP_FontAsset BoldSlanted;
+        public TMPro.TMP_FontAsset Regular;
+        public TMPro.TMP_FontAsset RegularSlanted;
+        public TMPro.TMP_FontAsset Thin;
+        public TMPro.TMP_FontAsset ThinSlanted;
+
+        [Header("Logo Sprites")]
+        public Sprite LogoAWhite;
+        public Sprite LogoABlack;
+        public Sprite LogoBWhite;
+        public Sprite LogoBBlack;
+
+        [Header("Switch Sprites")]
+        public Sprite SwitchOpen;
+        public Sprite SwitchClose;
+    }
+
 }

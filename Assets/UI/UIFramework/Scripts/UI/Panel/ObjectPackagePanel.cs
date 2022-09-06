@@ -18,17 +18,21 @@ namespace Holoi.HoloKit.App.UI
                 Debug.Log("HamburgerButton is clicked.");
                 PanelManager.Pop();
             });
-        }
 
-        public void CustomFunction(Button button, string PanelName)
-        {
-            button.onClick.AddListener(() =>
+            List<GameObject> enterButtons = UITool.FindChildrenGameObject("EnterDetailButton");
+
+            foreach (var button in enterButtons)
             {
-                // here we do onclick event of this button
-                Debug.Log("HamburgerButton is clicked.");
-                //var panel = new SpectatorOpenComfirmPanel();
-                //PanelManager.Push(panel);
-            });
+                button.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    // here we do onclick event of this button
+                    Debug.Log("EnterDetailButton is clicked.");
+                    var panel = new ObjectDetailPanel();
+                    PanelManager.Push(panel);
+                    panel.UITool.GetOrAddComponent<ObjectDetailUIPanel>().metaObject = button.GetComponent<ObjectPackageObjectButtonDescription>().metaObject;
+
+                });
+            }
         }
     }
 }

@@ -25,15 +25,14 @@ namespace Holoi.HoloKit.App.UI
 
                 // enter screen ar scene:
                 GameRoot.Instance.SceneSystem.SetScene(new ScreenARMainScene());
-
             });
             UITool.GetOrAddComponentInChildren<Button>("SpectatorButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("SpectatorButton is clicked.");
 
-                //var panel = new SpectatorOpenComfirmPanel();
-                //PanelManager.Push(panel);
+                var panel = new ScreenARScanQRPanel();
+                PanelManager.Push(panel);
             });
         }
     }

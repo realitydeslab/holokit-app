@@ -50,6 +50,21 @@ namespace Holoi.HoloKit.App.UI
             return null;
         }
 
+        public List<GameObject> FindChildrenGameObject(string name)
+        {
+            List<GameObject> childrenList = new List<GameObject>();
+            Transform[] children = _activePanelGO.GetComponentsInChildren<Transform>();
+
+            foreach (var child in children)
+            {
+                if (child.name == name)
+                {
+                    childrenList.Add(child.gameObject);
+                }
+            }
+            return childrenList;
+        }
+
         public T GetOrAddComponentInChildren<T>(string name) where T : Component
         {
             var child = FindChildGameObject(name);

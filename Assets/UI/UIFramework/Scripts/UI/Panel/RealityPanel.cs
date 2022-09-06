@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Holoi.AssetFoundation;
 
 namespace Holoi.HoloKit.App.UI
 {
@@ -32,7 +33,6 @@ namespace Holoi.HoloKit.App.UI
                     Debug.LogError("Not Found HUP");
                 }
 
-
                 PanelManager.Pop();
             });
             UITool.GetOrAddComponentInChildren<Button>("PlayButton").onClick.AddListener(() =>
@@ -42,6 +42,15 @@ namespace Holoi.HoloKit.App.UI
 
                 var panel = new RealityOptionPanel();
                 PanelManager.Push(panel);
+
+                // filter all object list with tag:
+                MetaObjectCollectionList MOCL = new MetaObjectCollectionList();
+
+                // filter all ava list with tag:
+                MetaAvatarCollectionList MACL = new MetaAvatarCollectionList();
+
+                panel.UITool.GetOrAddComponent<RealityOptionUIPanel>().metaObjectCollections = MOCL.list;
+                panel.UITool.GetOrAddComponent<RealityOptionUIPanel>().metaAvatarCollections = MACL.list;
             });
         }
 
@@ -55,7 +64,7 @@ namespace Holoi.HoloKit.App.UI
             UITool.FindChildGameObject("Description").GetComponent<TMPro.TMP_Text>().text = RealityData.description;
 
             string tagString = "";
-            foreach (var tag in RealityData.techTags)
+            foreach (var tag in RealityData.realityTags)
             {
                 tagString += tag.ToString();
                 tagString += "; ";

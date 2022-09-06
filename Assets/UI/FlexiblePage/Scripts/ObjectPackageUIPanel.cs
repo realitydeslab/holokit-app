@@ -1,96 +1,55 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
+using Holoi.AssetFoundation;
 
 [ExecuteInEditMode]
-public class ObjectPackageUIPanel : ObjectPackageUI
+public class ObjectPackageUIPanel : MonoBehaviour
 {
-    Canvas _canvas;
 
-    int _collectionCount;
+    public MetaObjectCollectionList metaObjectCollectionList;
 
-    Transform _content;
+    int _listCount;
 
-    UnityEvent _enterDetialPageEvent;
+    [SerializeField] Transform _content;
 
-    [SerializeField] GameObject _collectionScorllView;
-    [SerializeField] GameObject _itemContainer;
+    [SerializeField] GameObject _collectionContainer;
+    [SerializeField] GameObject _footer;
 
     private void Awake()
     {
-        OnObjectPackageUIAweak();
-    }
-
-    protected override void OnObjectPackageUIAweak()
-    {
-        base.OnObjectPackageUIAweak();
-
-        _collectionCount = CollectionLists.Count;
-        Debug.Log("item count:" + _collectionCount);
-
-        _content = transform.Find("Scroll View/Viewport/Content");
-        if (_content)
+        Debug.Log("update content!");
+        // clear all gameobject
+        var tempList = new List<Transform>();
+        for (int i = 0; i < _content.childCount; i++)
         {
-
+            tempList.Add(_content.GetChild(i));
         }
-        else
+        foreach (var child in tempList)
         {
-            Debug.Log("not found content");
-        }
-
-        if (_content.childCount != _collectionCount)
-        {
-            Debug.Log("update content!");
-            // clear all gameobject
-            foreach (Transform child in _content.transform)
+            if (Application.isEditor)
             {
-                GameObject.Destroy(child.gameObject);
+                DestroyImmediate(child.gameObject);
             }
-
-            // create new by data
-            for (int i = 0; i < _collectionCount; i++)
+            else
             {
-                var collection = Instantiate(_collectionScorllView);
-                collection.transform.parent = _content;
-
-                for (int j = 0; j < CollectionLists[i].MetaObject.Count; j++)
-                {
-                    var item = Instantiate(_itemContainer);
-                    var itemContent = collection.transform.Find("Viewport/Content");
-                    if (itemContent)
-                    {
-
-                    }
-                    else
-                    {
-                        Debug.Log("not found itemContent");
-                    }
-                    item.transform.parent = itemContent;
-
-                    item.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = CollectionLists[i].MetaObject[j].name == null?"not found name": CollectionLists[i].displayName;
-                    item.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + CollectionLists[i].MetaObject[j].tokenId;
-                    item.transform.Find("Image").GetComponent<Image>().sprite = CollectionLists[i].MetaObject[j].image;
-                    item.transform.Find("EnterDtailButton").GetComponent<Button>().onClick.AddListener(() =>
-                    {
-                        // here we do onclick event of this button
-                        Debug.Log("EnterDtailButton is clicked.");
-                        _enterDetialPageEvent?.Invoke();
-                    });
-
-                    Debug.Log("item count: " + CollectionLists[i].MetaObject.Count);
-                    Debug.Log("Name: " + item.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text);
-                }
+                Destroy(child.gameObject);
             }
         }
-    }
 
-    private void Update()
-    {
-        if (Application.isEditor)
+        _listCount = metaObjectCollectionList.list.Count;
+
+
+        // create new by data
+        for (int i = 0; i < _listCount; i++)
         {
-
+            _collectionContainer.GetComponent<CollectionDisplayContainer>().metaObjectCollection = metaObjectCollectionList.list[i];
+            var collection = Instantiate(_collectionContainer);
+            collection.transform.parent = _content;
         }
+
+        var footer = Instantiate(_footer);
+        footer.transform.parent = _content;
     }
 }
