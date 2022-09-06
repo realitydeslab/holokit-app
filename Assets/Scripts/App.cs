@@ -147,7 +147,7 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
             // Another play has joined
             else
             {
-                _realityManager.StopSharingQRCode();
+                //_realityManager.StopSharingQRCode();
                 OnSpectatorJoined?.Invoke();
             }
         }
