@@ -40,7 +40,7 @@ namespace Holoi.HoloKit.App.UI
                     SetText(Color.black, SkinData.Bold, 41, 0.7f, 0, 0);
                     break;
                 case Type.H3Slanted:
-                    SetText(Color.black, SkinData.BoldSlanted, 62, 3.06f, 0, 0);
+                    SetText(Color.black, SkinData.BoldSlanted, 41, 0.7f, 0, 0);
                     break;
                 case Type.body1:
                     SetText(Color.black, SkinData.Regular, 48, -1.34f, 1.06f, 39.78f);

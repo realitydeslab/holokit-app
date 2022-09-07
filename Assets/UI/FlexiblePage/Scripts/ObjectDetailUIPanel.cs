@@ -6,7 +6,6 @@ using Holoi.AssetFoundation;
 public class ObjectDetailUIPanel : MonoBehaviour
 {
     public MetaObject metaObject;
-    [SerializeField] Image _image;
     [SerializeField] TMPro.TMP_Text _ID;
     [SerializeField] TMPro.TMP_Text _collectionName;
     [SerializeField] TMPro.TMP_Text _objectName;
@@ -28,7 +27,6 @@ public class ObjectDetailUIPanel : MonoBehaviour
 
     private void Awake()
     {
-        _image.sprite = metaObject.image;
         _collectionName.text = metaObject.collection.displayName;
         _ID.text = "#" + metaObject.tokenId;
         _objectName.text = metaObject.name;

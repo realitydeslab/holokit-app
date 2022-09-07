@@ -4,25 +4,29 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [ExecuteInEditMode]
-public class ScorllBarSlidingAreaStyle : MonoBehaviour
+public class ScrollBarSlidingAreaStyle : MonoBehaviour
 {
+    [Header("UI Elements")]
     [SerializeField] Transform _content;
-    [SerializeField] int _count;
-    [SerializeField] float _value;
 
-
-    [SerializeField] GameObject _slidingAreaElementStyleDot;
-    [SerializeField] float _spacing;
-
-
+    [Header("Styles")]
+    [SerializeField] GameObject _slidingAreaElement;
     [SerializeField] Sprite _activeSprite;
     [SerializeField] Sprite _inactiveSprite;
+    [SerializeField] Color _color = Color.black;
+    [SerializeField] float _spacing;
+    [SerializeField] float _offsetY;
+
+
+    int _count;
+    float _value;
+
 
     List<GameObject> _dots = new List<GameObject>();
 
     private void Awake()
     {
-        //_count = _content.childCount;
+        _count = _content.childCount;
 
         Debug.Log("update content!");
         // clear all gameobject
@@ -33,7 +37,14 @@ public class ScorllBarSlidingAreaStyle : MonoBehaviour
         }
         foreach (var child in tempList)
         {
-            DestroyImmediate(child.gameObject);
+            if (Application.isEditor)
+            {
+                DestroyImmediate(child.gameObject);
+            }
+            else
+            {
+                Destroy(child.gameObject);
+            }
         }
 
         float firstDotPosOffsetX = 0;
@@ -52,10 +63,11 @@ public class ScorllBarSlidingAreaStyle : MonoBehaviour
 
         for (int i = 0; i < _count; i++)
         {
-            var go = Instantiate(_slidingAreaElementStyleDot);
+            var go = Instantiate(_slidingAreaElement);
             go.transform.parent = transform;
-            go.transform.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(firstDotPosOffsetX + (_spacing * i), 0, 0);
+            go.transform.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(firstDotPosOffsetX + (_spacing * i), _offsetY, 0);
 
+            go.GetComponent<Image>().color = _color;
             _dots.Add(go);
         }
         SetDotState(_value);

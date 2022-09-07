@@ -7,10 +7,11 @@ using Holoi.AssetFoundation;
 [ExecuteInEditMode]
 public class ObjectPackageUIPanel : MonoBehaviour
 {
-
+    public CollectionContainer.Type type;
     public MetaObjectCollectionList metaObjectCollectionList;
+    public MetaAvatarCollectionList metaAvatarCollectionList;
 
-    int _listCount;
+    int _count;
 
     [SerializeField] Transform _content;
 
@@ -19,8 +20,24 @@ public class ObjectPackageUIPanel : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("update content!");
-        // clear all gameobject
+        DeletePreviousElement();
+
+        switch (type)
+        {
+            case CollectionContainer.Type.objectContainer:
+                CreateCollectionContainer(metaObjectCollectionList);
+                break;
+            case CollectionContainer.Type.avatarContainer:
+                CreateCollectionContainer(metaAvatarCollectionList);
+                break;
+        }
+        
+
+        CreateFooter();
+    }
+
+    void DeletePreviousElement()
+    {
         var tempList = new List<Transform>();
         for (int i = 0; i < _content.childCount; i++)
         {
@@ -37,18 +54,38 @@ public class ObjectPackageUIPanel : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
+    }
 
-        _listCount = metaObjectCollectionList.list.Count;
-
+    void CreateCollectionContainer(MetaObjectCollectionList mocl)
+    {
+        _count = mocl.list.Count;
 
         // create new by data
-        for (int i = 0; i < _listCount; i++)
+        for (int i = 0; i < _count; i++)
         {
-            _collectionContainer.GetComponent<CollectionDisplayContainer>().metaObjectCollection = metaObjectCollectionList.list[i];
+            _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.objectContainer;
+            _collectionContainer.GetComponent<CollectionContainer>().metaObjectCollection = mocl.list[i];
             var collection = Instantiate(_collectionContainer);
             collection.transform.parent = _content;
         }
+    }
 
+    void CreateCollectionContainer(MetaAvatarCollectionList macl)
+    {
+        _count = macl.list.Count;
+
+        // create new by data
+        for (int i = 0; i < _count; i++)
+        {
+            _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.avatarContainer;
+            _collectionContainer.GetComponent<CollectionContainer>().metaAvatarCollection = macl.list[i];
+            var collection = Instantiate(_collectionContainer);
+            collection.transform.parent = _content;
+        }
+    }
+
+    void CreateFooter()
+    {
         var footer = Instantiate(_footer);
         footer.transform.parent = _content;
     }
