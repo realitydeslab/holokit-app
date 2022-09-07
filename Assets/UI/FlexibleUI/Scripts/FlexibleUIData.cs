@@ -47,6 +47,10 @@ namespace Holoi.HoloKit.App.UI
         [Header("Switch Sprites")]
         public Sprite SwitchOpen;
         public Sprite SwitchClose;
+
+        [Header("Play Sprites")]
+        public Sprite PlayWhite;
+        public Sprite PlayBlack;
     }
 
 }

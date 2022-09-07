@@ -21,8 +21,13 @@ public class FlexibleUIInstance : Editor
     {
         Create("H3");
     }
+    [MenuItem("GameObject/HolikitX UI/Text/Body1", priority = 0)]
+    public static void AddBody1()
+    {
+        Create("Body1");
+    }
     [MenuItem("GameObject/HolikitX UI/Text/Body2", priority = 0)]
-    public static void AddParagraph()
+    public static void AddBody2()
     {
         Create("Body2");
     }
@@ -42,20 +47,10 @@ public class FlexibleUIInstance : Editor
     {
         Create("BackButton");
     }
-    [MenuItem("GameObject/HolikitX UI/Button/RecordButton", priority = 0)]
-    public static void AddRecordButton()
+    [MenuItem("GameObject/HolikitX UI/Button/StAR Tools", priority = 0)]
+    public static void AddStARTools()
     {
-        Create("RecordButton");
-    }
-    [MenuItem("GameObject/HolikitX UI/Button/SpectatorButton", priority = 0)]
-    public static void AddSpectatorButton()
-    {
-        Create("SpectatorButton");
-    }
-    [MenuItem("GameObject/HolikitX UI/Button/StarButton", priority = 0)]
-    public static void AddStarButton()
-    {
-        Create("StarButton");
+        Create("StARTools");
     }
     [MenuItem("GameObject/HolikitX UI/Button/PermissionButton", priority = 0)]
     public static void AddPermissionButton()
@@ -76,6 +71,11 @@ public class FlexibleUIInstance : Editor
     public static void AddMedia()
     {
         Create("MediaList");
+    }
+    [MenuItem("GameObject/HolikitX UI/Button/PlayButton", priority = 0)]
+    public static void AddPlayButton()
+    {
+        Create("PlayButton");
     }
 
 
