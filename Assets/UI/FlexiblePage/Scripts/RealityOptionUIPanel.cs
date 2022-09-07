@@ -10,11 +10,6 @@ public class RealityOptionUIPanel : RealityOptionUI
     Transform _content;
     Transform _prefix;
 
-    //[Header("Components")]
-    //[SerializeField] GameObject _scrollViewObject;
-    //[SerializeField] GameObject _scrollViewAvatar;
-
-
 
     [Header("Prefabs")]
     [SerializeField] GameObject _scrollViewObject;
@@ -33,6 +28,7 @@ public class RealityOptionUIPanel : RealityOptionUI
         base.OnUIAweak();
 
         _collectionCount = metaObjectCollections.Count;
+        Debug.Log(_collectionCount);
         _content = transform.Find("Scroll View/Viewport/Content");
         
         Debug.Log("update content!");
@@ -48,30 +44,29 @@ public class RealityOptionUIPanel : RealityOptionUI
         }
 
 
-
         if (metaObjectCollections.Count > 0)
         {
             Debug.Log("create object sv");
-            //_scrollViewObject.SetActive(true);
             var _scrollViewObject = Instantiate(this._scrollViewObject, _content);
 
             for (int i = 0; i < _collectionCount; i++)
             {
 
                 // create new by data
-                var collection = Instantiate(_collectionContainer);
-                collection.transform.parent = _scrollViewObject.transform.Find("Viewport/Content");
-                _prefix = collection.transform.Find("Prefix");
+                var collectionContainer = Instantiate(_collectionContainer);
+                collectionContainer.name = "collectionContainer" + i;
+                collectionContainer.transform.parent = _scrollViewObject.transform.Find("Viewport/Content");
+                _prefix = collectionContainer.transform.Find("Prefix");
 
                 for (int j = 0; j < metaObjectCollections[i].metaObjects.Count; j++)
                 {
                     var item = Instantiate(_itemContainer);
-                    var itemContent = collection.transform.Find("Scroll View/Viewport/Content");
+                    var itemContent = collectionContainer.transform.Find("Scroll View/Viewport/Content");
 
                     item.transform.parent = itemContent;
 
-                    _prefix.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = metaObjectCollections[i].displayName;
-                    _prefix.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaObjectCollections[i].metaObjects[j].tokenId;
+                    _prefix.transform.Find("Title").GetChild(0).GetComponent<TMPro.TMP_Text>().text = metaObjectCollections[i].displayName;
+                    _prefix.transform.Find("ID").GetChild(0).GetComponent<TMPro.TMP_Text>().text = "#" + metaObjectCollections[i].metaObjects[j].tokenId;
                     item.transform.Find("Image").GetComponent<Image>().sprite = metaObjectCollections[i].metaObjects[j].image;
                     //item.transform.Find("EnterDetailButton").GetComponent<ObjectPackageObjectButtonDescription>().metaObject = metaObjectCollection[i].MetaObject[j];
                 }
@@ -79,13 +74,11 @@ public class RealityOptionUIPanel : RealityOptionUI
         }
         else
         {
-            //_scrollViewObject.SetActive(false);
 
         }
         if (metaAvatarCollections.Count > 0)
         {
             Debug.Log("create ava sv");
-            //_scrollViewAvatar.SetActive(true);
             var _scrollViewAvatar = Instantiate(this._scrollViewAvatar, _content);
 
             for (int i = 0; i < _collectionCount; i++)
@@ -103,8 +96,8 @@ public class RealityOptionUIPanel : RealityOptionUI
 
                     item.transform.parent = itemContent;
 
-                    _prefix.transform.Find("Title").GetComponent<TMPro.TMP_Text>().text = metaAvatarCollections[i].displayName;
-                    _prefix.transform.Find("ID").GetComponent<TMPro.TMP_Text>().text = "#" + metaAvatarCollections[i].metaAvatars[j].tokenId;
+                    _prefix.transform.Find("Title").GetChild(0).GetComponent<TMPro.TMP_Text>().text = metaAvatarCollections[i].displayName;
+                    _prefix.transform.Find("ID").GetChild(0).GetComponent<TMPro.TMP_Text>().text = "#" + metaAvatarCollections[i].metaAvatars[j].tokenId;
                     item.transform.Find("Image").GetComponent<Image>().sprite = metaAvatarCollections[i].metaAvatars[j].image;
                     //item.transform.Find("EnterDetailButton").GetComponent<ObjectPackageObjectButtonDescription>().metaObject = metaObjectCollection[i].MetaObject[j];
                 }
@@ -113,8 +106,6 @@ public class RealityOptionUIPanel : RealityOptionUI
         }
         else
         {
-            //_scrollViewAvatar.SetActive(false);
-
         }
 
         var buttons = Instantiate(_buttonContainer, _content);
@@ -123,9 +114,5 @@ public class RealityOptionUIPanel : RealityOptionUI
 
     private void Update()
     {
-        if (Application.isEditor)
-        {
-
-        }
     }
 }
