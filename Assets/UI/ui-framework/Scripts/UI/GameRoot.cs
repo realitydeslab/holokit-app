@@ -23,7 +23,7 @@ namespace Holoi.HoloKit.App.UI
         }
         private void Start()
         {
-            SceneSystem.SetScene(new StartScene());
+            SceneSystem.SetScene(new LoadingScene());
         }
     }
 }

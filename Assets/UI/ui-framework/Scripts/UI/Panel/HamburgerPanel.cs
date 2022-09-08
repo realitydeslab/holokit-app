@@ -14,15 +14,16 @@ namespace Holoi.HoloKit.App.UI
         {
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {
-            // here we do onclick event of this button
-            Debug.Log("ExitButton is clicked.");
+                // here we do onclick event of this button
+                Debug.Log("ExitButton is clicked.");
                 PanelManager.Pop();
             });
             UITool.GetOrAddComponentInChildren<Button>("RealityButton").onClick.AddListener(() =>
             {
-            // here we do onclick event of this button
-            Debug.Log("RealityButton is clicked.");
+                // here we do onclick event of this button
+                Debug.Log("RealityButton is clicked.");
                 PanelManager.Pop();
+                PanelManager.GetActivePanel().UITool.GetOrAddComponent<HomeUIPanel>().SetThumbnail(true);
             });
             UITool.GetOrAddComponentInChildren<Button>("ObjectButton").onClick.AddListener(() =>
             {

@@ -70,8 +70,8 @@ public class CollectionContainer : MonoBehaviour
         {
             _portraitContainerHorizentalScroll.GetComponent<NFTPortraitContainer>().type = Type.objectContainer;
             _portraitContainerHorizentalScroll.GetComponent<NFTPortraitContainer>().metaObjectCollection = moc;
-            var portraitContainer = Instantiate(_portraitContainerHorizentalScroll);
-            portraitContainer.transform.parent = _content;
+            var portraitContainer = Instantiate(_portraitContainerHorizentalScroll, _content);
+            portraitContainer.GetComponent<RectTransform>().localScale = Vector3.one; // lock for a auto-huge scale number around 250
 
             _id.text = "#" + metaObjectCollection.metaObjects[i].tokenId;
         }
@@ -86,8 +86,8 @@ public class CollectionContainer : MonoBehaviour
         {
             _portraitContainerHorizentalScroll.GetComponent<NFTPortraitContainer>().type = Type.avatarContainer;
             _portraitContainerHorizentalScroll.GetComponent<NFTPortraitContainer>().metaAvatarCollection = mac;
-            var portraitContainer = Instantiate(_portraitContainerHorizentalScroll);
-            portraitContainer.transform.parent = _content;
+            var portraitContainer = Instantiate(_portraitContainerHorizentalScroll, _content);
+            portraitContainer.GetComponent<RectTransform>().localScale = Vector3.one;
 
             _id.text = "#" + mac.metaAvatars[i].tokenId;
         }

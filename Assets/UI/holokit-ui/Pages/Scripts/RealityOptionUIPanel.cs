@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Holoi.AssetFoundation;
 
-//[ExecuteInEditMode]
+[ExecuteInEditMode]
 public class RealityOptionUIPanel : MonoBehaviour
 {
 

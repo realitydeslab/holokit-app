@@ -20,14 +20,16 @@ namespace Holoi.HoloKit.App.UI
 
         public override void OnEnter()
         {
+            _hup = UITool.GetOrAddComponent<HomeUIPanel>();
+            _hup.realityThumbnailContainer.clickEvent += EnterRealityDetailPanel;
+
+
             UITool.GetOrAddComponentInChildren<Button>("HamburgerButton").onClick.AddListener(() =>
             {
                 var panel = new HamburgerPanel();
                 PanelManager.Push(panel);
+                _hup.SetThumbnail(false);
             });
-
-            _hup = UITool.GetOrAddComponent<HomeUIPanel>();
-            _hup.realityThumbnailContainer.clickEvent += EnterRealityDetailPanel;
 
             //UITool.GetOrAddComponentInChildren<Button>("PlayButton").onClick.AddListener(() =>
             //{

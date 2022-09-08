@@ -64,10 +64,5 @@ namespace Holoi.HoloKit.App.UI
                 PanelManager.Push(panel);
             });
         }
-
-        public override void OnExit()
-        {
-            Debug.Log("ScreenARMode Exit");
-        }
     }
 }

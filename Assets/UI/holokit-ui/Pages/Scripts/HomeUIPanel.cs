@@ -141,6 +141,14 @@ public class HomeUIPanel : MonoBehaviour
         realityThumbnailContainer._offset = new Vector3(0, 0, 0);
     }
 
+    public void SetThumbnail(bool state)
+    {
+        for (int i = 0; i < _realityCount; i++)
+        {
+            _realityThumbnailList[i].SetActive(state);
+        }
+    }
+
 }
 
 

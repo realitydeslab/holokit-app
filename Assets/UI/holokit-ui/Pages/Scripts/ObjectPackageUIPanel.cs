@@ -65,8 +65,8 @@ public class ObjectPackageUIPanel : MonoBehaviour
         {
             _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.objectContainer;
             _collectionContainer.GetComponent<CollectionContainer>().metaObjectCollection = mocl.list[i];
-            var collection = Instantiate(_collectionContainer);
-            collection.transform.parent = _content;
+            var collection = Instantiate(_collectionContainer, _content);
+            collection.GetComponent<RectTransform>().localScale = Vector3.one;
         }
     }
 
@@ -79,8 +79,8 @@ public class ObjectPackageUIPanel : MonoBehaviour
         {
             _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.avatarContainer;
             _collectionContainer.GetComponent<CollectionContainer>().metaAvatarCollection = macl.list[i];
-            var collection = Instantiate(_collectionContainer);
-            collection.transform.parent = _content;
+            var collection = Instantiate(_collectionContainer, _content);
+            collection.GetComponent<RectTransform>().localScale = Vector3.one;
         }
     }
 
