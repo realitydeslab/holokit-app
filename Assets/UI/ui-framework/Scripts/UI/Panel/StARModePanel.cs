@@ -19,8 +19,7 @@ namespace Holoi.HoloKit.App.UI
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {
                 Debug.Log("ExitButton is clicked.");
-                var panel = new HamburgerPanel();
-                PanelManager.Push(panel);
+                PanelManager.Pop();
             });
         }
 

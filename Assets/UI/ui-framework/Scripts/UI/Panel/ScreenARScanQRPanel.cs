@@ -15,16 +15,24 @@ namespace Holoi.HoloKit.App.UI
         {
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {
-            // here we do onclick event of this button
-            Debug.Log("ExitButton is clicked.");
+                // here we do onclick event of this button
+                Debug.Log("ExitButton is clicked.");
                 PanelManager.Pop();
             });
 
-            UITool.GetOrAddComponentInChildren<Button>("SpectatorButton").onClick.AddListener(() =>
+            UITool.GetOrAddComponentInChildren<Button>("OpenSpectatorButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("SpectatorButton is clicked.");
                 PanelManager.Pop();
+            });
+
+            UITool.GetOrAddComponentInChildren<Button>("DebugButton").onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("DebugButton is clicked.");
+                var panel = new ScreenARCheckTheMarkPanel();
+                PanelManager.Push(panel);
             });
 
         }

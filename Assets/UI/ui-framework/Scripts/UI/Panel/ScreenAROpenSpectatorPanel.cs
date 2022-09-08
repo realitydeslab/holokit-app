@@ -15,15 +15,15 @@ namespace Holoi.HoloKit.App.UI
         {
             UITool.GetOrAddComponentInChildren<Button>("ShareButton").onClick.AddListener(() =>
             {
-            // here we do onclick event of this button
-            Debug.Log("ShareButton is clicked.");
+                // here we do onclick event of this button
+                Debug.Log("ShareButton is clicked.");
                 var panel = new ScreenARShareQRPanel();
                 PanelManager.Push(panel);
             });
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {
-            // here we do onclick event of this button
-            Debug.Log("ExitButton is clicked.");
+                // here we do onclick event of this button
+                Debug.Log("ExitButton is clicked.");
                 PanelManager.Pop();
             });
 

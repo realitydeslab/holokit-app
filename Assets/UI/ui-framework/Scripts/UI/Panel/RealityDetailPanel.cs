@@ -15,25 +15,25 @@ namespace Holoi.HoloKit.App.UI
         {
             UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
             {
-            // here we do onclick event of this button
-            Debug.Log("BackButton is clicked.");
+                // here we do onclick event of this button
+                Debug.Log("BackButton is clicked.");
 
-                HomeUIPanel HUP = Transform.FindObjectOfType<HomeUIPanel>();
-                if (HUP != null)
+                HomeUIPanel hup = Transform.FindObjectOfType<HomeUIPanel>();
+                if (hup != null)
                 {
-                    //HUP.SwitchToHomePageLayout();
+                    hup.GoToHomePanelLayout();
                 }
                 else
                 {
-                    Debug.LogError("Not Found HUP");
+                    Debug.LogError("Not Found");
                 }
-
                 PanelManager.Pop();
             });
+
             UITool.GetOrAddComponentInChildren<Button>("PlayButton").onClick.AddListener(() =>
             {
-            // here we do onclick event of this button
-            Debug.Log("PlayButton is clicked.");
+                // here we do onclick event of this button
+                Debug.Log("PlayButton is clicked.");
 
                 var panel = new RealityOptionPanel();
                 PanelManager.Push(panel);

@@ -54,5 +54,14 @@ namespace Holoi.HoloKit.App.UI
             if (_panelStack.Count > 0)
                 _panelStack.Peek().OnResume();
         }
+
+        public BasePanel GetActivePanel()
+        {
+            if (_panelStack.Count > 0)
+            {
+               return _panel = _panelStack.Peek();
+            }
+            return null;
+        }
     }
 }

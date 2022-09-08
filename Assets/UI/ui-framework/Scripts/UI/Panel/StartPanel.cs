@@ -44,6 +44,8 @@ namespace Holoi.HoloKit.App.UI
             var newPanelUI = newPanel.UITool.GetOrAddComponent<RealityDetailUIPanel>();
             newPanelUI.reality = _hup.realityCollection.realities[_hup.CurrentIndex];
             newPanelUI.UpdateInformation();
+
+            _hup.GoToRealityDetailPanel();
         }
 
         public override void OnExit()

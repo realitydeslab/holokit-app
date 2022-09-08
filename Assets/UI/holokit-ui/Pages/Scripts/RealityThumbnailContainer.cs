@@ -8,24 +8,28 @@ public class RealityThumbnailContainer : MonoBehaviour
 {
     public float currentPostion = 0;
     [HideInInspector]
-    public Vector3 positionOffset;
+    public Vector3 _offset;
     [HideInInspector]
     public float currentIndex;
 
     public event Action clickEvent;
 
-    Transform _container;
+    [Header("UI Elements")]
+    [SerializeField] Transform _container;
+    [SerializeField] Transform _lightGroup;
     //[Header("Rendering")]
     //[SerializeField] Material _wall;
 
     private void Awake()
     {
-        _container = transform.Find("Container");
+
     }
 
     private void Update()
     {
-        _container.localPosition = new Vector3(-1 * currentPostion, 0,0) + positionOffset;
+        _container.localPosition = new Vector3(-1 * currentPostion, 0,0) + _offset;
+        _lightGroup.localPosition = _offset;
+
         SetSelectPrefab();
         GetTouchOnPrefabs();
     }

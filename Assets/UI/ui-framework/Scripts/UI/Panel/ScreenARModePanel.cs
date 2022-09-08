@@ -14,42 +14,54 @@ namespace Holoi.HoloKit.App.UI
 
         public override void OnEnter()
         {
-
-            UITool.GetOrAddComponentInChildren<Button>("OpenSpectatorButton").onClick.AddListener(() =>
+            UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
-                Debug.Log("OpenSpectatorButton is clicked.");
+                Debug.Log("ExitButton is clicked. Exit from ScreenAR Mode to RealityOptionPanel.");
+                Debug.Log("B pop" + PanelManager.GetActivePanel().UIType.Name);
+                PanelManager.Pop();
+                Debug.Log("A pop" + PanelManager.GetActivePanel().UIType.Name);
+                // exit to start scene
+                //GameRoot.Instance.SceneSystem.SetScene(new StartScene());
+
+            });
+
+            UITool.GetOrAddComponentInChildren<Button>("SpectatorButton").onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("SpectatorButton is clicked.");
 
                 var panel = new ScreenAROpenSpectatorPanel();
                 PanelManager.Push(panel);
             });
-            UITool.GetOrAddComponentInChildren<Button>("SwitchToStARButton").onClick.AddListener(() =>
+
+            UITool.GetOrAddComponentInChildren<Button>("StARButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
-                Debug.Log("SwitchToStARButton is clicked.");
+                Debug.Log("StARButton is clicked.");
 
                 // switch to stAR mode
                 GameRoot.Instance.SceneSystem.SetScene(new StARMainScene());
             });
-            UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
+
+            UITool.GetOrAddComponentInChildren<Button>("RecordButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
-                Debug.Log("ExitButton is clicked. Exit from ScreenAR Mode to RealityOptionPanel."); 
-                PanelManager.Pop();
-
-                // exit to start scene
-                GameRoot.Instance.SceneSystem.SetScene(new StartScene());
-
-            });
-
-            UITool.GetOrAddComponentInChildren<Button>("StartRecordButton").onClick.AddListener(() =>
-            {
-                // here we do onclick event of this button
-                Debug.Log("StartRecordButton is clicked.");
+                Debug.Log("RecordButton is clicked.");
                 // switch record button style:
 
                 // start recording:
 
+            });
+
+            // debug for scanning -> check mark
+            UITool.GetOrAddComponentInChildren<Button>("CheckMarkButton").onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("CheckMarkButton is clicked.");
+
+                var panel = new ScreenARCheckTheMarkPanel();
+                PanelManager.Push(panel);
             });
         }
 

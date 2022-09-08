@@ -20,6 +20,16 @@ namespace Holoi.HoloKit.App.UI
                 PanelManager.Pop();
             });
 
+            // debug for scanning -> check mark
+            UITool.GetOrAddComponentInChildren<Button>("CheckMarkButton").onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("CheckMarkButton is clicked.");
+
+                var panel = new ScreenARCheckTheMarkPanel();
+                PanelManager.Push(panel);
+            });
+
         }
     }
 }

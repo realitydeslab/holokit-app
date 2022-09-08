@@ -108,41 +108,38 @@ public class HomeUIPanel : MonoBehaviour
         }
     }
 
-    //public void SwitchToRealityDetailPageLayout()
-    //{
-    //    transform.Find("HamburgerButton").gameObject.SetActive(false);
-    //    transform.Find("PlayButton").gameObject.SetActive(false);
-    //    _indexAndNameContainer.gameObject.SetActive(false);
+    public void GoToRealityDetailPanel()
+    {
+        transform.Find("HamburgerButton").gameObject.SetActive(false);
+        //transform.Find("PlayButton").gameObject.SetActive(false);
 
-    //    for (int i = 0; i < _realityCount; i++)
-    //    {
-    //        if (i == _currentIndex)
-    //        {
-    //            _realityThumbnailList[i].SetActive(true);
-    //        }
-    //        else
-    //        {
-    //            _realityThumbnailList[i].SetActive(false);
-    //        }
-    //    }
+        for (int i = 0; i < _realityCount; i++)
+        {
+            if (i == _currentIndex)
+            {
+                _realityThumbnailList[i].SetActive(true);
+            }
+            else
+            {
+                _realityThumbnailList[i].SetActive(false);
+            }
+        }
 
-    //    _realityThumbnailContainer.transform.position = new Vector3(0, 2, 0);
-    //}
+        realityThumbnailContainer._offset = new Vector3(0,2,0);
+    }
 
-    //public void SwitchToHomePageLayout()
-    //{
-    //    transform.Find("HamburgerButton").gameObject.SetActive(true);
-    //    transform.Find("PlayButton").gameObject.SetActive(true);
-    //    _indexAndNameContainer.gameObject.SetActive(true);
+    public void GoToHomePanelLayout()
+    {
+        transform.Find("HamburgerButton").gameObject.SetActive(true);
+        //transform.Find("PlayButton").gameObject.SetActive(false);
 
+        for (int i = 0; i < _realityCount; i++)
+        {
+                _realityThumbnailList[i].SetActive(true);
+        }
 
-    //    for (int i = 0; i < _realityCount; i++)
-    //    {
-    //            _realityThumbnailList[i].SetActive(true);
-    //    }
-
-    //    _realityThumbnailContainer.transform.position = new Vector3(0, 0, 0);
-    //}
+        realityThumbnailContainer._offset = new Vector3(0, 0, 0);
+    }
 
 }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Holoi.AssetFoundation;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class RealityOptionUIPanel : MonoBehaviour
 {
 
@@ -39,8 +39,8 @@ public class RealityOptionUIPanel : MonoBehaviour
                 // create new by data
                 _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.objectContainer;
                 _collectionContainer.GetComponent<CollectionContainer>().metaObjectCollection = metaObjectCollections[i];
-                var collectionContainer = Instantiate(_collectionContainer);
-                collectionContainer.transform.parent = _scrollViewObject.transform.Find("Content");
+                var collectionContainer = Instantiate(_collectionContainer, _scrollViewObject.transform.Find("Content"));
+                _collectionContainer.GetComponent<RectTransform>().localScale = Vector3.one;
                 collectionContainer.transform.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
             }
         }
@@ -61,8 +61,8 @@ public class RealityOptionUIPanel : MonoBehaviour
                 // create new by data
                 _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.avatarContainer;
                 _collectionContainer.GetComponent<CollectionContainer>().metaAvatarCollection = metaAvatarCollections[i];
-                var collectionContainer = Instantiate(_collectionContainer);
-                collectionContainer.transform.parent = _scrollViewAvatar.transform.Find("Content");
+                var collectionContainer = Instantiate(_collectionContainer, _scrollViewAvatar.transform.Find("Content"));
+                _collectionContainer.GetComponent<RectTransform>().localScale = Vector3.one;
                 collectionContainer.transform.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
             }
 
