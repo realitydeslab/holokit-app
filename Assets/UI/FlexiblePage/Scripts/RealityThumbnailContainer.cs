@@ -4,5 +4,10 @@ using UnityEngine;
 
 public class RealityThumbnailContainer : MonoBehaviour
 {
-    public float _scrollValue;
+    public float positionOffset;
+
+    private void Update()
+    {
+        transform.position = new Vector3(-1 * positionOffset, 0,0);
+    }
 }

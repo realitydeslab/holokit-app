@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class ScrollBarSlidingAreaStyle : MonoBehaviour
 {
     [Header("UI Elements")]
-    [SerializeField] Transform _content;
+    [SerializeField] Transform _scrollContent;
+    [SerializeField] Transform _slidingArea;
 
     [Header("Styles")]
     [SerializeField] GameObject _slidingAreaElement;
@@ -26,26 +27,9 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
 
     private void Awake()
     {
-        _count = _content.childCount;
+        DeletePreviousContent(transform);
 
-        Debug.Log("update content!");
-        // clear all gameobject
-        var tempList = new List<Transform>();
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            tempList.Add(transform.GetChild(i));
-        }
-        foreach (var child in tempList)
-        {
-            if (Application.isEditor)
-            {
-                DestroyImmediate(child.gameObject);
-            }
-            else
-            {
-                Destroy(child.gameObject);
-            }
-        }
+        _count = _scrollContent.childCount;
 
         float firstDotPosOffsetX = 0;
         float paddingCount = 0;
@@ -63,8 +47,7 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
 
         for (int i = 0; i < _count; i++)
         {
-            var go = Instantiate(_slidingAreaElement);
-            go.transform.parent = transform;
+            var go = Instantiate(_slidingAreaElement, transform);
             go.transform.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(firstDotPosOffsetX + (_spacing * i), _offsetY, 0);
 
             go.GetComponent<Image>().color = _color;
@@ -75,16 +58,40 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
 
     void Update()
     {
-        if (Application.isPlaying)
-        {
-            _value = GetComponent<Scrollbar>().value;
-            SetDotState(_value);
-        }
+        _value = GetComponent<Scrollbar>().value;
+        _value = Mathf.Clamp01(_value);
+        SetDotState(_value);
     }
 
+    void DeletePreviousContent(Transform content)
+    {
+        var tempList = new List<Transform>();
+        for (int i = 0; i < content.childCount; i++)
+        {
+            if(content.GetChild(i).name == "Sliding Area")
+            {
+
+            }
+            else
+            {
+                tempList.Add(content.GetChild(i));
+            }
+        }
+        foreach (var child in tempList)
+        {
+            if (Application.isEditor)
+            {
+                DestroyImmediate(child.gameObject);
+            }
+            else
+            {
+                Destroy(child.gameObject);
+            }
+        }
+    }
     void SetDotState(float value)
     {
-        var valueFixer = Mathf.CeilToInt(value*(_count-1));
+        var valueFixer = Mathf.RoundToInt(value*(_count-1));
 
         for (int i = 0; i < _count; i++)
         {

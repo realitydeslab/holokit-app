@@ -13,12 +13,13 @@ public class HomeUIPanel : MonoBehaviour
     RealityThumbnailContainer _realityThumbnailContainer;
 
     [Header("Prefabs")]
-    [SerializeField] GameObject _nameContainer;
+    [SerializeField] GameObject _prefabTitle;
 
     [Header("UI Elements")]
-    [SerializeField] Transform _nameScrollContainer;
+    [SerializeField] Transform _verticleScrollContainer;
+    [SerializeField] Transform _titleScrollContent;
     [SerializeField] Transform _horizentalScrollContainer;
-    [SerializeField] Transform _verticalScrollContainer;
+
 
     List<GameObject> _realityThumbnailList = new List<GameObject>();
 
@@ -31,43 +32,74 @@ public class HomeUIPanel : MonoBehaviour
         get{ return _currentIndex; }
     }
 
-    float _thumbnailSpacing = 4f;
-
     float _scrollValue;
+
+    float _offset = 4f;
 
     private void Awake()
     {
         _realityCount = realityCollection.realities.Count;
         _canvas = FindObjectOfType<Canvas>();
         _realityThumbnailContainer = FindObjectOfType<RealityThumbnailContainer>();
+
+        DeletePreviousElement(_titleScrollContent);
+        DeletePreviousElement(_realityThumbnailContainer.transform);
+
         InitialCoverContent();
     }
 
+
+    private void Update()
+    {
+        UpdateScrollValue();
+    }
 
     void InitialCoverContent()
     {
         for (int i = 0; i < _realityCount; i++)
         {
+            // create thumbnailPrefabs
             var realityThumbnailGO = Instantiate(realityCollection.realities[i].thumbnailPrefab, _realityThumbnailContainer.transform);
-            realityThumbnailGO.transform.position = new Vector3(i* _thumbnailSpacing, 0, 0);
+            realityThumbnailGO.transform.position = new Vector3(i* _offset, 0, 0);
             _realityThumbnailList.Add(realityThumbnailGO);
 
-            var indexAndNameGO = Instantiate(_nameContainer, _nameScrollContainer);
-
-            indexAndNameGO.transform.Find("Index").GetComponent<TMPro.TMP_Text>().text = "Reality " + "#00" + realityCollection.realities[i].realityId;
-            indexAndNameGO.transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = realityCollection.realities[i].displayName;
+            // create titles
+            _prefabTitle.transform.Find("Index").GetChild(0).GetComponent<TMPro.TMP_Text>().text = "Reality " + "#00" + realityCollection.realities[i].realityId;
+            _prefabTitle.transform.Find("Title").GetChild(0).GetComponent<TMPro.TMP_Text>().text = realityCollection.realities[i].displayName;
+            var titleGO = Instantiate(_prefabTitle, _titleScrollContent);
         }
     }
 
     void UpdateScrollValue()
     {
         _scrollValue = _horizentalScrollContainer.Find("Scrollbar Horizontal").GetComponent<Scrollbar>().value;
-
+        _scrollValue = Mathf.Clamp01(_scrollValue);
+        Debug.Log(_scrollValue);
         // set value to thumbnails
-        _realityThumbnailContainer._scrollValue = _scrollValue;
+        var positionOffset = _scrollValue * (_realityCount-1) * _offset;
+        _realityThumbnailContainer.positionOffset = positionOffset;
         // set valut to name container
-        _verticalScrollContainer.GetComponent<ScrollRect>().verticalNormalizedPosition = _scrollValue;
+        _verticleScrollContainer.GetComponent<ScrollRect>().verticalNormalizedPosition = _scrollValue;
+    }
 
+    void DeletePreviousElement(Transform content)
+    {
+        var tempList = new List<Transform>();
+        for (int i = 0; i < content.childCount; i++)
+        {
+            tempList.Add(content.GetChild(i));
+        }
+        foreach (var child in tempList)
+        {
+            if (Application.isEditor)
+            {
+                DestroyImmediate(child.gameObject);
+            }
+            else
+            {
+                Destroy(child.gameObject);
+            }
+        }
     }
 
     //public void SwitchToRealityDetailPageLayout()
@@ -106,12 +138,6 @@ public class HomeUIPanel : MonoBehaviour
     //    _realityThumbnailContainer.transform.position = new Vector3(0, 0, 0);
     //}
 
-    private void Update()
-    {
-        if (Application.isEditor)
-        {
-        }
-    }
 }
 
 

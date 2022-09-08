@@ -27,7 +27,6 @@ namespace Holoi.HoloKit.App.UI
             UITool.GetOrAddComponentInChildren<Button>("PlayButton").onClick.AddListener(() =>
             {
                 EnterRealityEvents?.Invoke();
-                //GameRoot.Instance.SceneSystem.SetScene(new MainScene());
                 //UITool.GetOrAddComponent<HomeUIPanel>().SwitchToRealityDetailPageLayout();
                 var panel = new RealityDetailPanel();
                 panel.UITool.GetOrAddComponent<RealityDetailUIPanel>().reality = UITool.GetOrAddComponent<HomeUIPanel>().realityCollection.realities[UITool.GetOrAddComponent<HomeUIPanel>().CurrentIndex];
