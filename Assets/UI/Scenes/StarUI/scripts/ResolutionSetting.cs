@@ -83,5 +83,4 @@ namespace StarUI
             _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 529.5f - offset, 0);
         }
     }
-
 }
