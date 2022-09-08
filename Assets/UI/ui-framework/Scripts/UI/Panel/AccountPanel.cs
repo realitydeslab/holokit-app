@@ -23,10 +23,10 @@ namespace Holoi.HoloKit.App.UI
                 Debug.Log("LogButton is clicked.");
             });
 
-            UITool.FindChildGameObject("SignInButton").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                Debug.Log("SignInButton is clicked.");
-            });
+            //UITool.FindChildGameObject("SignInButton").GetComponent<Button>().onClick.AddListener(() =>
+            //{
+            //    Debug.Log("SignInButton is clicked.");
+            //});
 
 
             UITool.FindChildGameObject("ScanButton").GetComponent<Button>().onClick.AddListener(() =>

@@ -20,7 +20,7 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
 
 
     int _count;
-    float _value;
+    float _scrollValue;
 
 
     List<GameObject> _dots = new List<GameObject>();
@@ -53,14 +53,14 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
             go.GetComponent<Image>().color = _color;
             _dots.Add(go);
         }
-        SetDotState(_value);
+        SetDotState(_scrollValue);
     }
 
     void Update()
     {
-        _value = GetComponent<Scrollbar>().value;
-        _value = Mathf.Clamp01(_value);
-        SetDotState(_value);
+        _scrollValue = GetComponent<Scrollbar>().value;
+        _scrollValue = Mathf.Clamp01(_scrollValue);
+        SetDotState(_scrollValue);
     }
 
     void DeletePreviousContent(Transform content)
@@ -91,11 +91,11 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
     }
     void SetDotState(float value)
     {
-        var valueFixer = Mathf.RoundToInt(value*(_count-1));
+        //var valueFixer = Mathf.RoundToInt(value*(_count-1));
 
         for (int i = 0; i < _count; i++)
         {
-            if (valueFixer == i)
+            if (_scrollValue == i)
             {
                 _dots[i].GetComponent<Image>().sprite = _activeSprite;
             }

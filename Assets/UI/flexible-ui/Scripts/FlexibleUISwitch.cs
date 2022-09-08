@@ -13,7 +13,7 @@ namespace Holoi.HoloKit.App.UI
             Open,
         }
 
-        [SerializeField] State _state;
+        public State state;
 
         Image _image;
 
@@ -24,7 +24,7 @@ namespace Holoi.HoloKit.App.UI
 
             _image = GetComponent<Image>();
 
-            switch (_state)
+            switch (state)
             {
                 case State.Close:
                     _image.sprite = SkinData.SwitchClose;

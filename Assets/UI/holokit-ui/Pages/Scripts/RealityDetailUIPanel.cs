@@ -20,16 +20,16 @@ public class RealityDetailUIPanel : MonoBehaviour
 
     private void Awake()
     {
+
+    }
+
+    public void UpdateInformation()
+    {
         _id.text = "Reality #" + reality.realityId;
         _name.text = reality.name;
         _version.text = reality.version;
         _lastUpdate.text = "2022. 09. 28";
         _author.text = reality.author;
         _description.text = reality.description;
-    }
-
-    private void Update()
-    {
-
     }
 }

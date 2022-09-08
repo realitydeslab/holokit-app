@@ -9,8 +9,7 @@ using Holoi.AssetFoundation;
 public class HomeUIPanel : MonoBehaviour
 {
     public RealityList realityCollection;
-    Canvas _canvas;
-    RealityThumbnailContainer _realityThumbnailContainer;
+    public RealityThumbnailContainer realityThumbnailContainer;
 
     [Header("Prefabs")]
     [SerializeField] GameObject _prefabTitle;
@@ -20,6 +19,7 @@ public class HomeUIPanel : MonoBehaviour
     [SerializeField] Transform _titleScrollContent;
     [SerializeField] Transform _horizentalScrollContainer;
 
+    Canvas _canvas;
 
     List<GameObject> _realityThumbnailList = new List<GameObject>();
 
@@ -40,10 +40,10 @@ public class HomeUIPanel : MonoBehaviour
     {
         _realityCount = realityCollection.realities.Count;
         _canvas = FindObjectOfType<Canvas>();
-        _realityThumbnailContainer = FindObjectOfType<RealityThumbnailContainer>();
+        realityThumbnailContainer = FindObjectOfType<RealityThumbnailContainer>();
 
         DeletePreviousElement(_titleScrollContent);
-        DeletePreviousElement(_realityThumbnailContainer.transform);
+        DeletePreviousElement(realityThumbnailContainer.transform.Find("Container").transform);
 
         InitialCoverContent();
     }
@@ -59,8 +59,9 @@ public class HomeUIPanel : MonoBehaviour
         for (int i = 0; i < _realityCount; i++)
         {
             // create thumbnailPrefabs
-            var realityThumbnailGO = Instantiate(realityCollection.realities[i].thumbnailPrefab, _realityThumbnailContainer.transform);
-            realityThumbnailGO.transform.position = new Vector3(i* _offset, 0, 0);
+            var realityThumbnailGO = Instantiate(realityCollection.realities[i].thumbnailPrefab, realityThumbnailContainer.transform.Find("Container").transform);
+            realityThumbnailGO.transform.localPosition = new Vector3(i* _offset, 0, 0);
+            realityThumbnailGO.tag = "Reality Thumbnail";
             _realityThumbnailList.Add(realityThumbnailGO);
 
             // create titles
@@ -74,12 +75,17 @@ public class HomeUIPanel : MonoBehaviour
     {
         _scrollValue = _horizentalScrollContainer.Find("Scrollbar Horizontal").GetComponent<Scrollbar>().value;
         _scrollValue = Mathf.Clamp01(_scrollValue);
-        Debug.Log(_scrollValue);
+        _currentIndex = Mathf.RoundToInt(_scrollValue * (_realityCount - 1));
+
+        realityThumbnailContainer.currentIndex = _currentIndex;
+        //_realityThumbnailContainer.transform.GetChild(_currentIndex).GetComponent<MeshRenderer>().material.SetFloat("_Brightness", -2);
+
         // set value to thumbnails
-        var positionOffset = _scrollValue * (_realityCount-1) * _offset;
-        _realityThumbnailContainer.positionOffset = positionOffset;
+        var thumbnailContainerPosition = _scrollValue * (_realityCount-1) * _offset;
+        //Debug.Log("thumbnailContainerPosition" + thumbnailContainerPosition);
+        realityThumbnailContainer.currentPostion = thumbnailContainerPosition;
         // set valut to name container
-        _verticleScrollContainer.GetComponent<ScrollRect>().verticalNormalizedPosition = _scrollValue;
+        _verticleScrollContainer.GetComponent<ScrollRect>().verticalNormalizedPosition = 1 -  _scrollValue;
     }
 
     void DeletePreviousElement(Transform content)
