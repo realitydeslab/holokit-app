@@ -60,11 +60,11 @@ namespace Holoi.HoloKit.App.UI
             _text.characterSpacing = -1.94f;
             _button = GetComponent<Button>();
 
-            _button.transition = Selectable.Transition.SpriteSwap; // set transition mode
+            //_button.transition = Selectable.Transition.SpriteSwap; // set transition mode
             _button.targetGraphic = _image;
 
             _image.type = Image.Type.Sliced;
-            _button.spriteState = SkinData.ButtonSpriteState;
+            //_button.spriteState = SkinData.ButtonSpriteState;
 
 
             switch (color)

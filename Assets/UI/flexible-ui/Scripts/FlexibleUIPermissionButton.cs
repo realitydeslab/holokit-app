@@ -39,12 +39,12 @@ namespace Holoi.HoloKit.App.UI
             _text = transform.Find("Text").GetComponent<TMPro.TMP_Text>();
             _button = GetComponent<Button>();
 
-            _button.transition = Selectable.Transition.SpriteSwap; // set transition mode
+            //_button.transition = Selectable.Transition.SpriteSwap; // set transition mode
             _button.targetGraphic = _image;
 
             _image.sprite = SkinData.ButtonStrokeSprite;
             _image.type = Image.Type.Sliced;
-            _button.spriteState = SkinData.ButtonSpriteState;
+            //_button.spriteState = SkinData.ButtonSpriteState;
 
 
 

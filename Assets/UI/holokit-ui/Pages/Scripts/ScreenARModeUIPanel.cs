@@ -9,6 +9,7 @@ public class ScreenARModeUIPanel : MonoBehaviour
     {
         idle,
         scanning,
+        checking,
         scanned,
         recording,
     }
@@ -39,6 +40,12 @@ public class ScreenARModeUIPanel : MonoBehaviour
 
                 scanContainer.Find("Scanning").gameObject.SetActive(true);
                 scanContainer.Find("Scanned").gameObject.SetActive(false);
+                break;
+            case State.checking:
+                scanContainer.gameObject.SetActive(false);
+                spectator.gameObject.SetActive(true);
+                stAR.gameObject.SetActive(false);
+                recorder.gameObject.SetActive(false);
                 break;
             case State.scanned:
                 scanContainer.gameObject.SetActive(true);

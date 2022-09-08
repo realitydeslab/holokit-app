@@ -12,7 +12,7 @@ public class NFTPortraitContainer : MonoBehaviour
     public MetaAvatarCollection metaAvatarCollection;
     [SerializeField] GameObject _objectPortraitContainer;
     [SerializeField] Transform _content;
-    [SerializeField] float _portraitSize = 480f;
+    [SerializeField] float _portraitSize = 460;
 
     [Header("debug")]
     int _count = 0;
