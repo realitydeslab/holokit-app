@@ -485,11 +485,11 @@ namespace UnityEngine.UI.Extensions
             }
             if (!_scroll_rect.horizontal && !_scroll_rect.vertical)
             {
-                Debug.LogError("ScrollRect has to have a direction, please select either Horizontal OR Vertical with the appropriate control.");
+                Debug.Log("ScrollRect has to have a direction, please select either Horizontal OR Vertical with the appropriate control.");
             }
             if (_scroll_rect.horizontal && _scroll_rect.vertical)
             {
-                Debug.LogError("ScrollRect has to be unidirectional, only use either Horizontal or Vertical on the ScrollRect, NOT both.");
+                Debug.Log("ScrollRect has to be unidirectional, only use either Horizontal or Vertical on the ScrollRect, NOT both.");
             }
             var ScrollRectContent = gameObject.GetComponent<ScrollRect>().content;
             if (ScrollRectContent != null)

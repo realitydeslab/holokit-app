@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class RealityThumbnailContainer : MonoBehaviour
 {
-
+    public float _scrollValue;
 }
