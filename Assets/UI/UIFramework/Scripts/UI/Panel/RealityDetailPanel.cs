@@ -21,7 +21,7 @@ namespace Holoi.HoloKit.App.UI
                 HomeUIPanel HUP = Transform.FindObjectOfType<HomeUIPanel>();
                 if (HUP != null)
                 {
-                    HUP.SwitchToHomePageLayout();
+                    //HUP.SwitchToHomePageLayout();
                 }
                 else
                 {

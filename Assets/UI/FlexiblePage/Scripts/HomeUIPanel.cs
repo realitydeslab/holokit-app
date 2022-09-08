@@ -2,136 +2,114 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Holoi.AssetFoundation;
+
 
 [ExecuteInEditMode]
-public class HomeUIPanel : HomeUI
+public class HomeUIPanel : MonoBehaviour
 {
+    public RealityList realityCollection;
     Canvas _canvas;
-
-    Transform _indexAndNameContainer;
-
     RealityThumbnailContainer _realityThumbnailContainer;
 
-    List<GameObject> _indexAndNameList = new List<GameObject>();
+    [Header("Prefabs")]
+    [SerializeField] GameObject _nameContainer;
+
+    [Header("UI Elements")]
+    [SerializeField] Transform _nameScrollContainer;
+    [SerializeField] Transform _horizentalScrollContainer;
+    [SerializeField] Transform _verticalScrollContainer;
 
     List<GameObject> _realityThumbnailList = new List<GameObject>();
 
-    string IndexAndNamePath = "Prefabs/UI/Components/HomePage-Reality-IndexAndName";
+    int _realityCount;
 
-    int _realityTotal;
+    int _currentIndex = 0;
 
-    int _activeIndex = 0;
-
-    public int ActiveIndex
+    public int CurrentIndex
     {
-        get{ return _activeIndex; }
+        get{ return _currentIndex; }
     }
 
-    float _realityBoxDistance = 4f;
+    float _thumbnailSpacing = 4f;
+
+    float _scrollValue;
 
     private void Awake()
     {
-        OnHomeUIAweak();
-    }
-
-    protected override void OnHomeUIAweak()
-    {
-        base.OnHomeUIAweak();
-
-        _realityTotal = realityCollection.realities.Count;
+        _realityCount = realityCollection.realities.Count;
         _canvas = FindObjectOfType<Canvas>();
         _realityThumbnailContainer = FindObjectOfType<RealityThumbnailContainer>();
-        _indexAndNameContainer = transform.Find("IndexAndNameContainer");
-        InstantiateRealities();
+        InitialCoverContent();
     }
 
 
-    void InstantiateRealities()
+    void InitialCoverContent()
     {
-        for (int i = 0; i < _realityTotal; i++)
+        for (int i = 0; i < _realityCount; i++)
         {
             var realityThumbnailGO = Instantiate(realityCollection.realities[i].thumbnailPrefab, _realityThumbnailContainer.transform);
-            realityThumbnailGO.transform.position = new Vector3(i* _realityBoxDistance, 0, 0);
+            realityThumbnailGO.transform.position = new Vector3(i* _thumbnailSpacing, 0, 0);
             _realityThumbnailList.Add(realityThumbnailGO);
 
-            var indexAndNameGO = Instantiate(Resources.Load<GameObject>(IndexAndNamePath), _indexAndNameContainer);
-            _indexAndNameList.Add(indexAndNameGO);
+            var indexAndNameGO = Instantiate(_nameContainer, _nameScrollContainer);
 
-            _indexAndNameList[i].transform.Find("Index").GetComponent<TMPro.TMP_Text>().text = "Reality " + "#00" + realityCollection.realities[i].realityId;
-            _indexAndNameList[i].transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = realityCollection.realities[i].displayName;
-            if (i == 0)
-            {
-                _indexAndNameList[i].SetActive(true);
-            }
-            else
-            {
-                _indexAndNameList[i].SetActive(false);
-            }
+            indexAndNameGO.transform.Find("Index").GetComponent<TMPro.TMP_Text>().text = "Reality " + "#00" + realityCollection.realities[i].realityId;
+            indexAndNameGO.transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = realityCollection.realities[i].displayName;
         }
     }
 
-    public void SwitchToRealityDetailPageLayout()
+    void UpdateScrollValue()
     {
-        transform.Find("HamburgerButton").gameObject.SetActive(false);
-        transform.Find("PlayButton").gameObject.SetActive(false);
-        _indexAndNameContainer.gameObject.SetActive(false);
+        _scrollValue = _horizentalScrollContainer.Find("Scrollbar Horizontal").GetComponent<Scrollbar>().value;
 
-        for (int i = 0; i < _realityTotal; i++)
-        {
-            if (i == _activeIndex)
-            {
-                _realityThumbnailList[i].SetActive(true);
-            }
-            else
-            {
-                _realityThumbnailList[i].SetActive(false);
-            }
-        }
+        // set value to thumbnails
+        _realityThumbnailContainer._scrollValue = _scrollValue;
+        // set valut to name container
+        _verticalScrollContainer.GetComponent<ScrollRect>().verticalNormalizedPosition = _scrollValue;
 
-        _realityThumbnailContainer.transform.position = new Vector3(0, 2, 0);
     }
 
-    public void SwitchToHomePageLayout()
-    {
-        transform.Find("HamburgerButton").gameObject.SetActive(true);
-        transform.Find("PlayButton").gameObject.SetActive(true);
-        _indexAndNameContainer.gameObject.SetActive(true);
+    //public void SwitchToRealityDetailPageLayout()
+    //{
+    //    transform.Find("HamburgerButton").gameObject.SetActive(false);
+    //    transform.Find("PlayButton").gameObject.SetActive(false);
+    //    _indexAndNameContainer.gameObject.SetActive(false);
+
+    //    for (int i = 0; i < _realityCount; i++)
+    //    {
+    //        if (i == _currentIndex)
+    //        {
+    //            _realityThumbnailList[i].SetActive(true);
+    //        }
+    //        else
+    //        {
+    //            _realityThumbnailList[i].SetActive(false);
+    //        }
+    //    }
+
+    //    _realityThumbnailContainer.transform.position = new Vector3(0, 2, 0);
+    //}
+
+    //public void SwitchToHomePageLayout()
+    //{
+    //    transform.Find("HamburgerButton").gameObject.SetActive(true);
+    //    transform.Find("PlayButton").gameObject.SetActive(true);
+    //    _indexAndNameContainer.gameObject.SetActive(true);
 
 
-        for (int i = 0; i < _realityTotal; i++)
-        {
-                _realityThumbnailList[i].SetActive(true);
-        }
+    //    for (int i = 0; i < _realityCount; i++)
+    //    {
+    //            _realityThumbnailList[i].SetActive(true);
+    //    }
 
-        _realityThumbnailContainer.transform.position = new Vector3(0, 0, 0);
-    }
+    //    _realityThumbnailContainer.transform.position = new Vector3(0, 0, 0);
+    //}
 
     private void Update()
     {
         if (Application.isEditor)
         {
-            if (Input.GetKeyUp(KeyCode.RightArrow))
-            {
-                // to next reality
-                _activeIndex++;
-                if (_activeIndex > _realityTotal-1) _activeIndex = _realityTotal-1;
-
-                _indexAndNameList[_activeIndex-1].SetActive(false);
-                _indexAndNameList[_activeIndex].SetActive(true);
-
-                _realityThumbnailContainer.transform.position = new Vector3(-1* _activeIndex * _realityBoxDistance,0,0);
-            }
-
-            if (Input.GetKeyUp(KeyCode.LeftArrow))
-            {
-                // to last reality
-                _activeIndex--;
-                if (_activeIndex < 0) _activeIndex = 0;
-                _indexAndNameList[_activeIndex + 1].SetActive(false);
-                _indexAndNameList[_activeIndex].SetActive(true);
-                _realityThumbnailContainer.transform.position = new Vector3(-1 * _activeIndex * _realityBoxDistance, 0, 0);
-
-            }
         }
     }
 }
