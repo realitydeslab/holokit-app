@@ -14,12 +14,14 @@ public class NFTPortraitContainer : MonoBehaviour
     [SerializeField] Transform _content;
     [SerializeField] float _portraitSize = 460;
 
+
+
     [Header("debug")]
     int _count = 0;
 
     void Awake()
     {
-        
+        //transform.GetComponent<RectTransform>().sizeDelta = new Vector2(_portraitSize, _portraitSize+72);
         Debug.Log("update content!");
         // clear all gameobject
         var tempList = new List<Transform>();

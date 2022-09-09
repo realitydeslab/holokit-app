@@ -27,8 +27,9 @@ namespace Holoi.HoloKit.App.UI
                 PanelManager.Pop();
             });
 
-            UITool.GetOrAddComponentInChildren<Button>("DebugButton").onClick.AddListener(() =>
+            UITool.GetOrAddComponentInChildren<Button>("CheckMarkButton").onClick.AddListener(() =>
             {
+                PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.checking);
                 // here we do onclick event of this button
                 Debug.Log("DebugButton is clicked.");
                 var panel = new ScreenARCheckTheMarkPanel();

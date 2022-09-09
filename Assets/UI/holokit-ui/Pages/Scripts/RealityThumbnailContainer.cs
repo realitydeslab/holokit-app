@@ -2,23 +2,25 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 [ExecuteInEditMode]
 public class RealityThumbnailContainer : MonoBehaviour
 {
-    public float currentPostion = 0;
-    [HideInInspector]
-    public Vector3 _offset;
-    [HideInInspector]
-    public float currentIndex;
+
+     public float currentPostion = 0;
+
+     public Vector3 _offset;
+
+    [HideInInspector]public float currentIndex;
 
     public event Action clickEvent;
 
     [Header("UI Elements")]
     [SerializeField] Transform _container;
     [SerializeField] Transform _lightGroup;
+
     //[Header("Rendering")]
-    //[SerializeField] Material _wall;
 
     private void Awake()
     {
@@ -31,6 +33,8 @@ public class RealityThumbnailContainer : MonoBehaviour
         _lightGroup.localPosition = _offset;
 
         SetSelectPrefab();
+        //DebugTouchItem();
+        TouchOnTrashButton();
         //GetTouchOnPrefabs();
     }
 
@@ -85,6 +89,48 @@ public class RealityThumbnailContainer : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void DebugTouchItem()
+    {
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            //Check for mouse click 
+            if (touch.phase == TouchPhase.Ended)
+            {
+                RaycastHit raycastHit;
+                Ray ray = Camera.main.ScreenPointToRay(touch.position);
+                if (Physics.Raycast(ray, out raycastHit, 100f))
+                {
+                    if (raycastHit.transform != null)
+                    {
+                        //Our custom method. 
+                        Debug.Log(raycastHit.transform.gameObject.name);
+                    }
+                }
+            }
+        }
+    }
+
+    public bool TouchOnTrashButton()//if touch phase ends on this button 
+    {
+        if (Input.touchCount > 0)
+        {//than the function will return true .
+            if (Input.GetTouch(0).phase == TouchPhase.Ended)
+            {
+                PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+                eventDataCurrentPosition.position = new Vector2(Input.GetTouch(0).position.x, Input.GetTouch(0).position.y);
+                List<RaycastResult> results = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+                if (results.Count > 0)
+                {
+                    Debug.Log(results[0].gameObject.name);
+                }
+            }
+        }
+        return false;
     }
 
     public void CurrentClickedGameObject(GameObject gameObject)

@@ -19,55 +19,56 @@ namespace Holoi.HoloKit.App.UI
             var cameraButton = UITool.GetOrAddComponentInChildren<Button>("CameraButton");
             cameraButton.onClick.AddListener(() =>
             {
-                if (cameraButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
-                {
-                    cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
-                }
-                else
-                {
-                    cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
-                }
+                //if (cameraButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
+                //{
+                //    cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
+                //}
+                //else
+                //{
+                //    cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
+                //}
             });
+
             var microphoneButton = UITool.GetOrAddComponentInChildren<Button>("MicrophoneButton");
             microphoneButton.onClick.AddListener(() =>
             {
-                if (microphoneButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
-                {
-                    microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
-                }
-                else
-                {
-                    microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
-                }
+                //if (microphoneButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
+                //{
+                //    microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
+                //}
+                //else
+                //{
+                //    microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
+                //}
             });
-            var photoButton = UITool.GetOrAddComponentInChildren<Button>("PhotoButton");
 
+            var photoButton = UITool.GetOrAddComponentInChildren<Button>("PhotoButton");
             photoButton.onClick.AddListener(() =>
             {
-                if (photoButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
-                {
-                    photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
-                }
-                else
-                {
-                    photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
-                }
+                //if (photoButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
+                //{
+                //    photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
+                //}
+                //else
+                //{
+                //    photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
+                //}
             });
-            var LocationButton = UITool.GetOrAddComponentInChildren<Button>("LocationButton");
 
+            var LocationButton = UITool.GetOrAddComponentInChildren<Button>("LocationButton");
             LocationButton.onClick.AddListener(() =>
             {
-                if (LocationButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
-                {
-                    LocationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
-                }
-                else
-                {
-                    LocationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
-                }
+                //if (LocationButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
+                //{
+                //    LocationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
+                //}
+                //else
+                //{
+                //    LocationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
+                //}
             });
-            var NetworkButton = UITool.GetOrAddComponentInChildren<Button>("NetworkButton");
 
+            var NetworkButton = UITool.GetOrAddComponentInChildren<Button>("NetworkButton");
             NetworkButton.onClick.AddListener(() =>
             {
                 if (NetworkButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
@@ -79,8 +80,8 @@ namespace Holoi.HoloKit.App.UI
                     NetworkButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
                 }
             });
-            var NotificationButton = UITool.GetOrAddComponentInChildren<Button>("NotificationButton");
 
+            var NotificationButton = UITool.GetOrAddComponentInChildren<Button>("NotificationButton");
             NotificationButton.onClick.AddListener(() =>
             {
                 if (NotificationButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
@@ -94,7 +95,6 @@ namespace Holoi.HoloKit.App.UI
             });
 
             var DoneButton = UITool.GetOrAddComponentInChildren<Button>("DoneButton");
-
             DoneButton.onClick.AddListener(() =>
             {
                 if (DoneButton.GetComponent<FlexibleUIButton>().state == FlexibleUIButton.State.Active)

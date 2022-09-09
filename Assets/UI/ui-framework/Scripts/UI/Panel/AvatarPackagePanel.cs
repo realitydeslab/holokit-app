@@ -19,7 +19,7 @@ namespace Holoi.HoloKit.App.UI
                 PanelManager.Pop();
             });
 
-            List<GameObject> enterButtons = UITool.FindChildrenGameObject("EnterDetailButton");
+            List<GameObject> enterButtons = UITool.FindGameObjectsInChildren("EnterDetailButton");
 
             foreach (var button in enterButtons)
             {

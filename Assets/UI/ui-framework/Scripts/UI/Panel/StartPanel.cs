@@ -26,14 +26,13 @@ namespace Holoi.HoloKit.App.UI
             {
                 var panel = new HamburgerPanel();
                 PanelManager.Push(panel);
-                _hup.SetThumbnail(false);
+                _hup.SetThumbnailState(false);
             });
 
             UITool.GetOrAddComponentInChildren<Button>("EnterButton").onClick.AddListener(() =>
             {
-                var panel = new HamburgerPanel();
-                PanelManager.Push(panel);
-                _hup.SetThumbnail(false);
+                var newPanel = new RealityDetailPanel();
+                PanelManager.Push(newPanel);
             });
 
             //UITool.GetOrAddComponentInChildren<Button>("PlayButton").onClick.AddListener(() =>

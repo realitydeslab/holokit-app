@@ -17,12 +17,12 @@ public class CollectionContainer : MonoBehaviour
     public MetaObjectCollection metaObjectCollection;
     public MetaAvatarCollection metaAvatarCollection;
     [Header("Prefabs")]
-    [SerializeField] GameObject _portraitContainerHorizentalScroll;
+    [SerializeField] GameObject _portraitScorllView;
     [Header("UI Elements")]
     [SerializeField] Image _background;
     [SerializeField] TMPro.TMP_Text _title;
     [SerializeField] TMPro.TMP_Text _id;
-    [SerializeField] Transform _content;
+    [SerializeField] Transform _scrollviewContainer;
 
 
     private void Awake()
@@ -31,9 +31,9 @@ public class CollectionContainer : MonoBehaviour
         Debug.Log("update content!");
         // clear all gameobject
         var tempList = new List<Transform>();
-        for (int i = 0; i < _content.childCount; i++)
+        for (int i = 0; i < _scrollviewContainer.childCount; i++)
         {
-            tempList.Add(_content.GetChild(i));
+            tempList.Add(_scrollviewContainer.GetChild(i));
         }
         foreach (var child in tempList)
         {
@@ -50,43 +50,43 @@ public class CollectionContainer : MonoBehaviour
         switch (type)
         {
             case Type.objectContainer:
-                CreateCollectionContainer(metaObjectCollection);
+                CreatePotraitScorllView(metaObjectCollection);
                 break;
             case Type.avatarContainer:
-                CreateCollectionContainer(metaAvatarCollection);
+                CreatePotraitScorllView(metaAvatarCollection);
                 break;
         }
 
 
     }
 
-    void CreateCollectionContainer(MetaObjectCollection moc)
+    void CreatePotraitScorllView(MetaObjectCollection moc)
     {
         _title.text = moc.displayName;
         _id.text = moc.metaObjects[0].tokenId;
 
         // create new by data
-        for (int i = 0; i < moc.metaObjects.Count; i++)
+        for (int i = 0; i < 1; i++)
         {
-            _portraitContainerHorizentalScroll.GetComponent<NFTPortraitContainer>().type = Type.objectContainer;
-            _portraitContainerHorizentalScroll.GetComponent<NFTPortraitContainer>().metaObjectCollection = moc;
-            var portraitContainer = Instantiate(_portraitContainerHorizentalScroll, _content);
+            _portraitScorllView.GetComponent<NFTPortraitContainer>().type = Type.objectContainer;
+            _portraitScorllView.GetComponent<NFTPortraitContainer>().metaObjectCollection = moc;
+            var portraitContainer = Instantiate(_portraitScorllView, _scrollviewContainer);
             portraitContainer.GetComponent<RectTransform>().localScale = Vector3.one; // lock for a auto-huge scale number around 250
 
             _id.text = "#" + metaObjectCollection.metaObjects[i].tokenId;
         }
     }
-    void CreateCollectionContainer(MetaAvatarCollection mac)
+    void CreatePotraitScorllView(MetaAvatarCollection mac)
     {
         _title.text = mac.displayName;
         _id.text = mac.metaAvatars[0].tokenId;
 
         // create new by data
-        for (int i = 0; i < mac.metaAvatars.Count; i++)
+        for (int i = 0; i < 1; i++)
         {
-            _portraitContainerHorizentalScroll.GetComponent<NFTPortraitContainer>().type = Type.avatarContainer;
-            _portraitContainerHorizentalScroll.GetComponent<NFTPortraitContainer>().metaAvatarCollection = mac;
-            var portraitContainer = Instantiate(_portraitContainerHorizentalScroll, _content);
+            _portraitScorllView.GetComponent<NFTPortraitContainer>().type = Type.avatarContainer;
+            _portraitScorllView.GetComponent<NFTPortraitContainer>().metaAvatarCollection = mac;
+            var portraitContainer = Instantiate(_portraitScorllView, _scrollviewContainer);
             portraitContainer.GetComponent<RectTransform>().localScale = Vector3.one;
 
             _id.text = "#" + mac.metaAvatars[i].tokenId;

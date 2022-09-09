@@ -50,7 +50,7 @@ namespace Holoi.HoloKit.App.UI
             return null;
         }
 
-        public List<GameObject> FindChildrenGameObject(string name)
+        public List<GameObject> FindGameObjectsInChildren(string name)
         {
             List<GameObject> childrenList = new List<GameObject>();
             Transform[] children = _activePanelGO.GetComponentsInChildren<Transform>();
@@ -82,5 +82,4 @@ namespace Holoi.HoloKit.App.UI
             return null;
         }
     }
-
 }

@@ -27,6 +27,7 @@ namespace Holoi.HoloKit.App.UI
             base.OnSkinUI();
 
             _text = transform.Find("Text").GetComponent<TMPro.TMP_Text>();
+            _text.raycastTarget = true;
 
             switch (_type)
             {

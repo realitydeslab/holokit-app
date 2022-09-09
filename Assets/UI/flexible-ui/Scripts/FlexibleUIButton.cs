@@ -15,8 +15,9 @@ namespace Holoi.HoloKit.App.UI
         }
         public enum Size
         {
-            Default,
-            Banner
+            Bold,
+            Thin,
+            Regular
         }
 
 
@@ -27,7 +28,7 @@ namespace Holoi.HoloKit.App.UI
         }
 
         public Color color = Color.Black;
-        public Size size = Size.Default;
+        public Size size = Size.Bold;
         public State state = State.Active;
 
         Image _image;
@@ -37,8 +38,9 @@ namespace Holoi.HoloKit.App.UI
         TMPro.TMP_Text _text;
         Button _button;
 
-        Vector2 _sizeDefault = new Vector2(978, 207);
-        Vector2 _sizeHamburger = new Vector2(978, 129);
+        Vector2 _sizeBold = new Vector2(1002, 207);
+        Vector2 _sizeThin = new Vector2(1002, 129);
+        Vector2 _sizeRegular = new Vector2(1002, 168);
 
         protected override void OnSkinUI()
         {
@@ -46,18 +48,23 @@ namespace Holoi.HoloKit.App.UI
 
             switch (size)
             {
-                case Size.Default:
-                    GetComponent<RectTransform>().sizeDelta = _sizeDefault;
+                case Size.Bold:
+                    GetComponent<RectTransform>().sizeDelta = _sizeBold;
                     break;
-                case Size.Banner:
-                    GetComponent<RectTransform>().sizeDelta = _sizeHamburger;
+                case Size.Regular:
+                    GetComponent<RectTransform>().sizeDelta = _sizeRegular;
+                    break;
+                case Size.Thin:
+                    GetComponent<RectTransform>().sizeDelta = _sizeThin;
                     break;
             }
             _image = GetComponent<Image>();
             _icon = transform.Find("Icon").GetComponent<Image>();
-            _text = transform.Find("Text").GetComponent<TMPro.TMP_Text>();
-            _text.font = SkinData.BoldSlanted;
-            _text.characterSpacing = -1.94f;
+            _text = GetComponentInChildren<TMPro.TMP_Text>();
+
+
+            //_text.font = SkinData.BoldSlanted;
+            //_text.characterSpacing = -1.94f;
             _button = GetComponent<Button>();
 
             //_button.transition = Selectable.Transition.SpriteSwap; // set transition mode

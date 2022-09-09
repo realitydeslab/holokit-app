@@ -78,11 +78,9 @@ public class HomeUIPanel : MonoBehaviour
         _currentIndex = Mathf.RoundToInt(_scrollValue * (_realityCount - 1));
 
         realityThumbnailContainer.currentIndex = _currentIndex;
-        //_realityThumbnailContainer.transform.GetChild(_currentIndex).GetComponent<MeshRenderer>().material.SetFloat("_Brightness", -2);
 
         // set value to thumbnails
         var thumbnailContainerPosition = _scrollValue * (_realityCount-1) * _offset;
-        //Debug.Log("thumbnailContainerPosition" + thumbnailContainerPosition);
         realityThumbnailContainer.currentPostion = thumbnailContainerPosition;
         // set valut to name container
         _verticleScrollContainer.GetComponent<ScrollRect>().verticalNormalizedPosition = 1 -  _scrollValue;
@@ -111,7 +109,6 @@ public class HomeUIPanel : MonoBehaviour
     public void GoToRealityDetailPanel()
     {
         transform.Find("HamburgerButton").gameObject.SetActive(false);
-        //transform.Find("PlayButton").gameObject.SetActive(false);
 
         for (int i = 0; i < _realityCount; i++)
         {
@@ -125,13 +122,12 @@ public class HomeUIPanel : MonoBehaviour
             }
         }
 
-        realityThumbnailContainer._offset = new Vector3(0,2,0);
+        //realityThumbnailContainer._offset = new Vector3(0,1,0);
     }
 
     public void GoToHomePanelLayout()
     {
         transform.Find("HamburgerButton").gameObject.SetActive(true);
-        //transform.Find("PlayButton").gameObject.SetActive(false);
 
         for (int i = 0; i < _realityCount; i++)
         {
@@ -141,7 +137,7 @@ public class HomeUIPanel : MonoBehaviour
         realityThumbnailContainer._offset = new Vector3(0, 0, 0);
     }
 
-    public void SetThumbnail(bool state)
+    public void SetThumbnailState(bool state)
     {
         for (int i = 0; i < _realityCount; i++)
         {
