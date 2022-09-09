@@ -52,6 +52,10 @@ public class NFTPortraitContainer : MonoBehaviour
                 break;
         }
 
+        var ss = transform.Find("Scrollbar Horizontal").GetComponent<ScrollBarSlidingAreaStyle>();
+        ss.count = _count;
+        ss.Init();
+
     }
 
 

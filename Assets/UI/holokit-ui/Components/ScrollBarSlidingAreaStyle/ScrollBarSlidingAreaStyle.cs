@@ -19,51 +19,69 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
     [SerializeField] float _offsetY;
 
 
-    int _count;
+    public int count = 0;
     float _scrollValue;
 
+    public enum State
+    {
+        init,
+        update,
+    }
+
+    State state = State.init;
 
     List<GameObject> _dots = new List<GameObject>();
 
-    private void Awake()
-    {
-        DeletePreviousContent(transform);
 
-        _count = _scrollContent.childCount;
+    public void Init()
+    {
+        ClearLastContent(transform);
+
+        //count = _scrollContent.childCount;
+        Debug.Log("slidingbar count: " + count);
 
         float firstDotPosOffsetX = 0;
         float paddingCount = 0;
 
-        if (_count % 2 == 1)
+        if (count % 2 == 1)
         {
-            paddingCount = (_count - 1) / 2;
+            paddingCount = (count - 1) / 2;
         }
         else
         {
-            paddingCount = (_count - 2) / 2 + 0.5f;
+            paddingCount = (count - 2) / 2 + 0.5f;
         }
 
         firstDotPosOffsetX = -1 * paddingCount * _spacing;
 
-        for (int i = 0; i < _count; i++)
+        for (int i = 0; i < count; i++)
         {
+            Debug.Log("create sliding bar, parent: " + transform.parent.name);
             var go = Instantiate(_slidingAreaElement, transform);
             go.transform.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(firstDotPosOffsetX + (_spacing * i), _offsetY, 0);
 
             go.GetComponent<Image>().color = _color;
             _dots.Add(go);
         }
+
         SetDotState(_scrollValue);
+        state = State.update;
     }
 
     void Update()
     {
-        _scrollValue = GetComponent<Scrollbar>().value;
-        _scrollValue = Mathf.Clamp01(_scrollValue);
-        SetDotState(_scrollValue);
+        if(state == State.update)
+        {
+            _scrollValue = GetComponent<Scrollbar>().value;
+            _scrollValue = Mathf.Clamp01(_scrollValue);
+            var currentIndex = Mathf.RoundToInt(_scrollValue * (count - 1)); // start from index 0!
+            Debug.Log(currentIndex);
+
+            SetDotState(currentIndex);
+        }
     }
 
-    void DeletePreviousContent(Transform content)
+    void ClearLastContent(Transform content)
     {
         var tempList = new List<Transform>();
         for (int i = 0; i < content.childCount; i++)
@@ -91,11 +109,9 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
     }
     void SetDotState(float value)
     {
-        //var valueFixer = Mathf.RoundToInt(value*(_count-1));
-
-        for (int i = 0; i < _count; i++)
+        for (int i = 0; i < count; i++)
         {
-            if (_scrollValue == i)
+            if (value == i)
             {
                 _dots[i].GetComponent<Image>().sprite = _activeSprite;
             }
