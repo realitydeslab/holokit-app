@@ -31,7 +31,7 @@ public class RealityThumbnailContainer : MonoBehaviour
         _lightGroup.localPosition = _offset;
 
         SetSelectPrefab();
-        GetTouchOnPrefabs();
+        //GetTouchOnPrefabs();
     }
 
     public void SetSelectPrefab()

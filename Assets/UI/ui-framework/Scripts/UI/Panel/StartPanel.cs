@@ -14,8 +14,6 @@ namespace Holoi.HoloKit.App.UI
         static readonly string _path = "Prefabs/UI/Panels/StartPanel";
         public StartPanel() : base(new UIType(_path)) { }
 
-        public UnityEvent EnterRealityEvents;
-
         HomeUIPanel _hup;
 
         public override void OnEnter()
@@ -31,6 +29,13 @@ namespace Holoi.HoloKit.App.UI
                 _hup.SetThumbnail(false);
             });
 
+            UITool.GetOrAddComponentInChildren<Button>("EnterButton").onClick.AddListener(() =>
+            {
+                var panel = new HamburgerPanel();
+                PanelManager.Push(panel);
+                _hup.SetThumbnail(false);
+            });
+
             //UITool.GetOrAddComponentInChildren<Button>("PlayButton").onClick.AddListener(() =>
             //{
 
@@ -39,7 +44,6 @@ namespace Holoi.HoloKit.App.UI
 
         void EnterRealityDetailPanel()
         {
-            EnterRealityEvents?.Invoke();
             //UITool.GetOrAddComponent<HomeUIPanel>().SwitchToRealityDetailPageLayout();
             var newPanel = new RealityDetailPanel();
             PanelManager.Push(newPanel);
