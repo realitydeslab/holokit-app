@@ -48,14 +48,14 @@ namespace StarUI
         {
             _VPH.UnitsSize = iPhoneX;
             var offset = (_resolutionX.y - _resolutionX.y);
-            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 529.5f - offset, 0);
+            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 539.5f - offset, 0);
         }
         [MenuItem("Tools/Update Resolution/XSMax&11ProMax")]
         private static void UpdateResolutionXSMax()
         {
             _VPH.UnitsSize = iPhoneXSMAx;
             var offset = (_resolutionXSMax.y - _resolutionX.y) / 2;
-            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 529.5f - offset, 0);
+            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 539.5f - offset, 0);
         }
 
         [MenuItem("Tools/Update Resolution/12&12Pro&13&13Pro")]
@@ -64,14 +64,14 @@ namespace StarUI
             GetData();
             _VPH.UnitsSize = iPhoneXR;
             var offset = (_resolution12.y - _resolutionX.y) / 2;
-            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 529.5f - offset, 0);
+            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 539.5f - offset, 0);
         }
         [MenuItem("Tools/Update Resolution/11&XR")]
         private static void UpdateResolution11()
         {
             _VPH.UnitsSize = iPhone11;
             var offset = 0;
-            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 529.5f - offset, 0);
+            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 539.5f - offset, 0);
         }
 
         [MenuItem("Tools/Update Resolution/12ProMax&13ProMax")]
@@ -79,7 +79,7 @@ namespace StarUI
         {
             _VPH.UnitsSize = iPhone12ProMax;
             var offset = (_resolution12ProMax.y - _resolutionX.y) / 2;
-            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 529.5f - offset, 0);
+            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 539.5f - offset, 0);
         }
     }
 }
