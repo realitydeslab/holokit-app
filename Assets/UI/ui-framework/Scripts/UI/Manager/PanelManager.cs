@@ -9,11 +9,27 @@ namespace Holoi.HoloKit.App.UI
 {
     public class PanelManager
     {
+        public static PanelManager _instance;
+        public static PanelManager Instance
+        {
+            get
+            {
+                if (null == _instance)
+                {
+                    _instance = new PanelManager();
+                }
+                return _instance;
+            }
+        }
+
         public Stack<BasePanel> _panelStack;
         public UIManager _uiManager;
         private BasePanel _panel;
 
-        public PanelManager()
+
+
+
+        public PanelManager() // 构造函数，创建类的新对象时执行
         {
             _panelStack = new Stack<BasePanel>();
             _uiManager = new UIManager();

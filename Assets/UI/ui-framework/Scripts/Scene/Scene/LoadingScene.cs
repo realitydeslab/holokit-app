@@ -33,9 +33,8 @@ namespace Holoi.HoloKit.App.UI
 
         private void SceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode load)
         {
-            _panelManager.Push(new StartPanel());
+            _panelManager.Push(new LoadingPanel());
             Debug.Log($"{_sceneName} scene is loaded.");
-
         }
     }
 }
