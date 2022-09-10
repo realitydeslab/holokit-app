@@ -10,7 +10,7 @@ namespace Holoi.HoloKit.App.UI
         static readonly string _path = "Prefabs/UI/Panels/AccountPanel";
         public AccountPanel() : base(new UIType(_path)) { }
 
-        public override void OnEnter()
+        public override void OnOpen()
         {
             UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
             {

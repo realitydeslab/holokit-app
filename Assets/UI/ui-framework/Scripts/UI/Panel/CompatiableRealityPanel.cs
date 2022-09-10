@@ -12,7 +12,7 @@ namespace Holoi.HoloKit.App.UI
         public CompatiableRealityPanel() : base(new UIType(_path)) { }
         public MetaObject _metaObject;
 
-        public override void OnEnter()
+        public override void OnOpen()
         {
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {
@@ -24,14 +24,13 @@ namespace Holoi.HoloKit.App.UI
             // create button by script object:
             InitialUI();
 
-            // add button listenser:
-            //UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
-            //{
-            //    // here we do onclick event of this button
-            //    Debug.Log("HamburgerButton is clicked.");
-            //    var panel = new SpectatorOpenComfirmPanel();
-            //    PanelManager.Push(panel);
-            //});
+            UITool.GetOrAddComponentInChildren<Button>("PVEButton").onClick.AddListener(() =>
+            {
+                Debug.Log("PVEButton is clicked.");
+
+                // enter screen ar scene:
+                GameRoot.Instance.SceneSystem.SetScene(new ScreenARMainScene());
+            });
         }
 
         void InitialUI()

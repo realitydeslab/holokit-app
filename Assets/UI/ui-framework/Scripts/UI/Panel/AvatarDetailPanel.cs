@@ -12,7 +12,7 @@ namespace Holoi.HoloKit.App.UI
         public AvatarDetailPanel() : base(new UIType(_path)) { }
         public MetaObject metaObject;
 
-        public override void OnEnter()
+        public override void OnOpen()
         {
             UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
             {

@@ -14,7 +14,7 @@ namespace Holoi.HoloKit.App.UI
         static readonly string _path = "Prefabs/UI/Panels/LoadingPanel";
         public LoadingPanel() : base(new UIType(_path)) { }
 
-        public override void OnEnter()
+        public override void OnOpen()
         {
             UITool.GetOrAddComponentInChildren<Button>("DebugButton").onClick.AddListener(() =>
             {

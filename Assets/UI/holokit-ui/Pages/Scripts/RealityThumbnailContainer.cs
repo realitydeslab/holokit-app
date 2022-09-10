@@ -21,7 +21,8 @@ public class RealityThumbnailContainer : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] Transform _container;
     [SerializeField] Transform _lightGroup;
-    public Transform _arrowPath;
+    public Transform _homePageDeco;
+    [SerializeReference] Transform _arrowPath;
 
     //[Header("Rendering")]
 

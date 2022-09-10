@@ -11,7 +11,7 @@ namespace Holoi.HoloKit.App.UI
 
         public ScreenARCheckTheMarkPanel() : base(new UIType(_path)) { }
 
-        public override void OnEnter()
+        public override void OnOpen()
         {
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {

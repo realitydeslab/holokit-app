@@ -14,7 +14,7 @@ namespace Holoi.HoloKit.App.UI
         public StARModePanel() : base(new UIType(_path)) { }
 
 
-        public override void OnEnter()
+        public override void OnOpen()
         {
             UITool.GetOrAddComponentInChildren<Scrollbar>("Exit Bar").onValueChanged.AddListener((value) =>
             {

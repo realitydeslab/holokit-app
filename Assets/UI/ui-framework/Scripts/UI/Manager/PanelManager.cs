@@ -9,7 +9,7 @@ namespace Holoi.HoloKit.App.UI
 {
     public class PanelManager
     {
-        public static PanelManager _instance;
+        public static PanelManager _instance; // using instance to maintain the state of ui scenes.
         public static PanelManager Instance
         {
             get
@@ -27,16 +27,14 @@ namespace Holoi.HoloKit.App.UI
         private BasePanel _panel;
 
 
-
-
-        public PanelManager() // 构造函数，创建类的新对象时执行
+        public PanelManager()
         {
             _panelStack = new Stack<BasePanel>();
             _uiManager = new UIManager();
         }
 
         /// <summary>
-        ///  excute it, a new ui shows up
+        ///  create a ui panel, and push it to stack
         /// </summary>
         /// <param name="nextPanel"> the panel you want to display</param>
         public void Push(BasePanel nextPanel)
@@ -51,11 +49,24 @@ namespace Holoi.HoloKit.App.UI
                 //Debug.Log("_panelStack.Count = 0, do not need Pause the previous UI");
             }
 
+            Debug.Log("Push() panelGO Create");
             var panelGO = _uiManager.CreateUIGO(nextPanel.UIType);
+            Debug.Log($"Push() panelGO Create Done with {panelGO.name}");
+
             nextPanel.Initialize(new UITool(panelGO));
             nextPanel.Initialize(this);
             nextPanel.Initialize(_uiManager);
-            nextPanel.OnEnter();
+
+            if (nextPanel.UITool.ActivePanelGO == null)
+            {
+                Debug.LogError("ActivePanelGO NULL!!!");
+            }
+            else
+            {
+                Debug.Log("push new panel with a go:" + nextPanel.UITool.ActivePanelGO.name);
+            }
+            
+            nextPanel.OnOpen();
 
             _panelStack.Push(nextPanel);
         }
@@ -64,7 +75,7 @@ namespace Holoi.HoloKit.App.UI
         {
             if (_panelStack.Count > 0)
             {
-                _panelStack.Peek().OnExit();
+                _panelStack.Peek().OnClose();
                 _panelStack.Pop();
             }
             if (_panelStack.Count > 0)
@@ -77,7 +88,7 @@ namespace Holoi.HoloKit.App.UI
         {
             while(_panelStack.Count > 0)
             {
-                _panelStack.Pop().OnExit();
+                _panelStack.Pop().OnClose();
             }
         }
 
@@ -88,6 +99,33 @@ namespace Holoi.HoloKit.App.UI
                return _panel = _panelStack.Peek();
             }
             return null;
+        }
+
+        /// <summary>
+        /// when switch back to ui scenes, it should be called and recover all ui state in new scene
+        /// </summary>
+        public void RecoverPanel()
+        {
+            
+            int num = _panelStack.Count;
+            var panelList = new BasePanel[num];
+
+            for (int i = 0; i < num; i++)
+            {
+                Debug.Log($"pop panel with name {_panelStack.Peek().UIType.Name}");
+                panelList[num - 1 - i] = _panelStack.Peek();
+                _panelStack.Pop().OnClose();
+            }
+
+            Debug.Log($"panel number after pop {_panelStack.Count}");
+
+            for (int i = 0; i < num; i++)
+            {
+                Debug.Log($"push panel with name {panelList[i].UIType.Name}");
+                Push(panelList[i]);
+            }
+
+            Debug.Log($"recover panels with a number{num}");
         }
     }
 }

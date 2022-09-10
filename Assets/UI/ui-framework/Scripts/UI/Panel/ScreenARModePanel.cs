@@ -12,17 +12,15 @@ namespace Holoi.HoloKit.App.UI
 
         public UnityEvent EnterRealityEvents;
 
-        public override void OnEnter()
+        public override void OnOpen()
         {
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("ExitButton is clicked. Exit from ScreenAR Mode to RealityOptionPanel.");
-                Debug.Log("B pop" + PanelManager.GetActivePanel().UIType.Name);
                 PanelManager.Pop();
-                Debug.Log("A pop" + PanelManager.GetActivePanel().UIType.Name);
                 // exit to start scene
-                //GameRoot.Instance.SceneSystem.SetScene(new StartScene());
+                GameRoot.Instance.SceneSystem.SetScene(new StartScene());
 
             });
 

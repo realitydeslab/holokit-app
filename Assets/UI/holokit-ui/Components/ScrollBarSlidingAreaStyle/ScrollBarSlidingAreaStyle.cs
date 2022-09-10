@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class ScrollBarSlidingAreaStyle : MonoBehaviour
 {
     [Header("UI Elements")]
-    [SerializeField] Transform _scrollContent;
     [SerializeField] Transform _slidingArea;
 
     [Header("Styles")]
@@ -33,11 +32,11 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
     List<GameObject> _dots = new List<GameObject>();
 
 
-    public void Init()
+    public void Init(int num)
     {
+        count = num;
         ClearLastContent(transform);
 
-        //count = _scrollContent.childCount;
         Debug.Log("slidingbar count: " + count);
 
         float firstDotPosOffsetX = 0;
@@ -73,9 +72,10 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
         if(state == State.update)
         {
             _scrollValue = GetComponent<Scrollbar>().value;
+            Debug.Log(_scrollValue);
             _scrollValue = Mathf.Clamp01(_scrollValue);
             var currentIndex = Mathf.RoundToInt(_scrollValue * (count - 1)); // start from index 0!
-            Debug.Log(currentIndex);
+            //Debug.Log(currentIndex);
 
             SetDotState(currentIndex);
         }

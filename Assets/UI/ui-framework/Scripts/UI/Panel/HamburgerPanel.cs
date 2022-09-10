@@ -10,21 +10,23 @@ namespace Holoi.HoloKit.App.UI
         static readonly string _path = "Prefabs/UI/Panels/HamburgerPanel";
         public HamburgerPanel() : base(new UIType(_path)) { }
 
-        public override void OnEnter()
+        public override void OnOpen()
         {
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("ExitButton is clicked.");
                 PanelManager.Pop();
-                PanelManager.GetActivePanel().UITool.GetOrAddComponent<HomeUIPanel>().SetThumbnailState(true);
+                PanelManager.GetActivePanel().UITool.GetOrAddComponent<HomeUIPanel>().HomePanelUIlayout();
+
+
             });
             UITool.GetOrAddComponentInChildren<Button>("RealityButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("RealityButton is clicked.");
                 PanelManager.Pop();
-                PanelManager.GetActivePanel().UITool.GetOrAddComponent<HomeUIPanel>().SetThumbnailState(true);
+                PanelManager.GetActivePanel().UITool.GetOrAddComponent<HomeUIPanel>().HomePanelUIlayout();
             });
             UITool.GetOrAddComponentInChildren<Button>("ObjectButton").onClick.AddListener(() =>
             {

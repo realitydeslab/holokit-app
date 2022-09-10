@@ -10,12 +10,12 @@ namespace Holoi.HoloKit.App.UI
         static readonly string _path = "Prefabs/UI/Panels/RealityOptionPanel";
         public RealityOptionPanel() : base(new UIType(_path)) { }
 
-        public override void OnEnter()
+        public override void OnOpen()
         {
             UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
-                Debug.Log("BackButton is clicked.");
+                Debug.Log("Optional BackButton is clicked.");
                 PanelManager.Pop();
             });
 
@@ -25,12 +25,13 @@ namespace Holoi.HoloKit.App.UI
                 Debug.Log("EnterScreenARButton is clicked.");
 
                 // enter screen ar scene:
-                //GameRoot.Instance.SceneSystem.SetScene(new ScreenARMainScene());
-                var newPanel = new ScreenARModePanel();
-                PanelManager.Push(newPanel);
+                GameRoot.Instance.SceneSystem.SetScene(new ScreenARMainScene());
 
-                var samup = newPanel.UITool.GetOrAddComponent<ScreenARModeUIPanel>();
-                samup.SetState(ScreenARModeUIPanel.State.idle);
+                //var newPanel = new ScreenARModePanel();
+                //PanelManager.Push(newPanel);
+
+                //var samup = newPanel.UITool.GetOrAddComponent<ScreenARModeUIPanel>();
+                //samup.SetState(ScreenARModeUIPanel.State.idle);
 
             });
             UITool.GetOrAddComponentInChildren<Button>("SpectatorButton").onClick.AddListener(() =>

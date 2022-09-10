@@ -12,12 +12,12 @@ namespace Holoi.HoloKit.App.UI
         public ObjectDetailPanel() : base(new UIType(_path)) { }
         public MetaObject metaObject;
 
-        public override void OnEnter()
+        public override void OnOpen()
         {
             UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
             {
-            // here we do onclick event of this button
-            Debug.Log("BackButton is clicked.");
+                // here we do onclick event of this button
+                Debug.Log("BackButton is clicked.");
                 PanelManager.Pop();
             });
 

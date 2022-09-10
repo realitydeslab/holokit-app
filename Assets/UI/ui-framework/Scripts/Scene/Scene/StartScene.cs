@@ -11,7 +11,8 @@ namespace Holoi.HoloKit.App.UI
         PanelManager _panelManager;
         public override void OnEnter()
         {
-            _panelManager = new PanelManager();
+            _panelManager = PanelManager.Instance;
+
             if (SceneManager.GetActiveScene().name != _sceneName)
             {
                 SceneManager.LoadScene(_sceneName);
@@ -20,7 +21,6 @@ namespace Holoi.HoloKit.App.UI
             else
             {
                 _panelManager.Push(new StartPanel());
-
             }
         }
 
@@ -31,7 +31,9 @@ namespace Holoi.HoloKit.App.UI
 
         private void SceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode load)
         {
-            _panelManager.Push(new StartPanel());
+            //Debug.Log($"{_panelManager._panelStack.Count} panel before recover");
+            _panelManager.RecoverPanel();
+            //Debug.Log($"{_panelManager._panelStack.Count} panel after recover");
             Debug.Log($"{_sceneName} scene is loaded.");
         }
     }

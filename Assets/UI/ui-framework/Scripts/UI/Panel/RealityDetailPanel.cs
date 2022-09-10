@@ -11,17 +11,17 @@ namespace Holoi.HoloKit.App.UI
         static readonly string _path = "Prefabs/UI/Panels/RealityDetailPanel";
         public RealityDetailPanel() : base(new UIType(_path)) { }
 
-        public override void OnEnter()
+        public override void OnOpen()
         {
             UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
-                Debug.Log("BackButton is clicked.");
+                Debug.Log("Reality Detail BackButton is clicked.");
 
                 HomeUIPanel hup = Transform.FindObjectOfType<HomeUIPanel>();
                 if (hup != null)
                 {
-                    hup.GoToHomePanelLayout();
+                    hup.HomePanelUIlayout();
                 }
                 else
                 {

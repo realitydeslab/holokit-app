@@ -24,7 +24,8 @@ namespace Holoi.HoloKit.App.UI
 
         public void Initialize(PanelManager panelManager)
         {
-            PanelManager = panelManager;
+            //PanelManager = panelManager;
+            PanelManager = PanelManager.Instance;
         }
 
         public void Initialize(UIManager uiManager)
@@ -32,7 +33,7 @@ namespace Holoi.HoloKit.App.UI
             UIManager = uiManager;
         }
 
-        public virtual void OnEnter()
+        public virtual void OnOpen()
         {
 
         }
@@ -46,7 +47,7 @@ namespace Holoi.HoloKit.App.UI
             }
             else if (UITool.GetOrAddComponent<CanvasGroup>() == null)
             {
-                Debug.LogError($"{UIType.Name}: not found CanvasGroup");
+                Debug.Log($"warning: {UIType.Name} not found CanvasGroup");
             }
             else
             {
@@ -64,7 +65,7 @@ namespace Holoi.HoloKit.App.UI
             }
             else if(UITool.GetOrAddComponent<CanvasGroup>() == null)
             {
-                Debug.LogError("not found CanvasGroup");
+                Debug.Log($"warning: {UIType.Name} not found CanvasGroup");
 
             }
             else
@@ -72,10 +73,10 @@ namespace Holoi.HoloKit.App.UI
                 UITool.GetOrAddComponent<CanvasGroup>().blocksRaycasts = true;
             }
         }
-        public virtual void OnExit()
+        public virtual void OnClose()
         {
+            Debug.Log($"{UIType.Name} close");
             UIManager.DestroyUI(UIType);
-
         }
     }
 }

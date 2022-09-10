@@ -8,7 +8,7 @@ namespace Holoi.HoloKit.App.UI
     {
         GameObject _activePanelGO;
 
-        public GameObject ActivePanel
+        public GameObject ActivePanelGO
         {
             get { return _activePanelGO; }
             set { _activePanelGO = value; }
@@ -45,7 +45,18 @@ namespace Holoi.HoloKit.App.UI
 
         public GameObject FindChildGameObject(string name)
         {
-            Transform[] children = _activePanelGO.GetComponentsInChildren<Transform>();
+            Transform[] children;
+
+            if (_activePanelGO == null)
+            {
+                Debug.Log("not found activepanelGO");
+                children = new Transform[0];
+            }
+            else
+            {
+                children = _activePanelGO.GetComponentsInChildren<Transform>();
+            }
+            
 
             foreach (var child in children)
             {

@@ -25,19 +25,27 @@ namespace Holoi.HoloKit.App.UI
                 Debug.LogError("Canvas not found, please check.");
                 return null;
             }
-            if (_dicUI.ContainsKey(type))
-                return _dicUI[type];
 
+            if (_dicUI.ContainsKey(type))
+            {
+                _dicUI.Remove(type);
+                Debug.Log("contain key");
+                //return _dicUI[type];
+            }
+
+            Debug.Log("create panel ui go:");
             GameObject ui = GameObject.Instantiate(Resources.Load<GameObject>(type.Path), parent.transform);
+            Debug.Log("create panel ui go done!");
             ui.name = type.Name;
             _dicUI.Add(type, ui);
             return ui;
-        }
+    }
 
         public void DestroyUI(UIType type)
         {
             if (_dicUI.ContainsKey(type))
             {
+                Debug.Log($"delete dic with {type.Name}");
                 GameObject.Destroy(_dicUI[type]);
                 _dicUI.Remove(type);
             }

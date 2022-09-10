@@ -18,6 +18,7 @@ public class HomeUIPanel : MonoBehaviour
     [SerializeField] Transform _verticleScrollContainer;
     [SerializeField] Transform _titleScrollContent;
     [SerializeField] Transform _horizentalScrollContainer;
+    [SerializeField] Transform _handle;
 
     Canvas _canvas;
 
@@ -46,6 +47,8 @@ public class HomeUIPanel : MonoBehaviour
         DeletePreviousElement(realityThumbnailContainer.transform.Find("Container").transform);
 
         InitialCoverContent();
+
+        _handle.GetComponent<ScrollBarSlidingAreaStyle>().Init(_realityCount);
     }
 
 
@@ -107,9 +110,9 @@ public class HomeUIPanel : MonoBehaviour
         }
     }
 
-    public void GoToRealityDetailPanel()
+    public void OthersPanelUILayout()
     {
-        realityThumbnailContainer._arrowPath.gameObject.SetActive(false);
+        realityThumbnailContainer._homePageDeco.gameObject.SetActive(false);
         transform.Find("HamburgerButton").gameObject.SetActive(false);
 
         for (int i = 0; i < _realityCount; i++)
@@ -127,9 +130,9 @@ public class HomeUIPanel : MonoBehaviour
         realityThumbnailContainer._offset = new Vector3(0, 1.7f , 0);
     }
 
-    public void GoToHomePanelLayout()
+    public void HomePanelUIlayout()
     {
-        realityThumbnailContainer._arrowPath.gameObject.SetActive(true);
+        realityThumbnailContainer._homePageDeco.gameObject.SetActive(true);
 
         transform.Find("HamburgerButton").gameObject.SetActive(true);
 
@@ -140,15 +143,6 @@ public class HomeUIPanel : MonoBehaviour
 
         realityThumbnailContainer._offset = new Vector3(0, 0f, 0);
     }
-
-    public void SetThumbnailState(bool state)
-    {
-        for (int i = 0; i < _realityCount; i++)
-        {
-            _realityThumbnailList[i].SetActive(state);
-        }
-    }
-
 }
 
 

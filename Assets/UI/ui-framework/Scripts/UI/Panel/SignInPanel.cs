@@ -14,7 +14,7 @@ namespace Holoi.HoloKit.App.UI
         public SignInPanel() : base(new UIType(_path)) { }
 
 
-        public override void OnEnter()
+        public override void OnOpen()
         {
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {

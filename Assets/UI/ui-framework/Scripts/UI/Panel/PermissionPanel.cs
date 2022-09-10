@@ -14,7 +14,7 @@ namespace Holoi.HoloKit.App.UI
         static readonly string _path = "Prefabs/UI/Panels/PermissionPanel";
         public PermissionPanel() : base(new UIType(_path)) { }
 
-        public override void OnEnter()
+        public override void OnOpen()
         {
             var cameraButton = UITool.GetOrAddComponentInChildren<Button>("CameraButton");
             cameraButton.onClick.AddListener(() =>

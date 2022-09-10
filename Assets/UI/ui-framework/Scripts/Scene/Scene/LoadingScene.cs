@@ -11,7 +11,7 @@ namespace Holoi.HoloKit.App.UI
         PanelManager _panelManager;
         public override void OnEnter()
         {
-            _panelManager = new PanelManager();
+            _panelManager = PanelManager.Instance;
 
             if (SceneManager.GetActiveScene().name != _sceneName)
             {
@@ -28,7 +28,9 @@ namespace Holoi.HoloKit.App.UI
         public override void OnExit()
         {
             SceneManager.sceneLoaded -= SceneLoaded;
-            _panelManager.PopAll();
+            Debug.Log($"panel with {_panelManager._panelStack.Count} left");
+            //_panelManager.PopAll();
+            Debug.Log($"exit scene, pop all panel with {_panelManager._panelStack.Count} left");
         }
 
         private void SceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode load)
