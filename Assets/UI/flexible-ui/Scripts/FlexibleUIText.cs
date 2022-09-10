@@ -15,6 +15,7 @@ namespace Holoi.HoloKit.App.UI
             H3Slanted,
             body1,
             body2,
+            debug
         }
 
         [SerializeField] Type _type;
@@ -48,7 +49,9 @@ namespace Holoi.HoloKit.App.UI
                     break;
                 case Type.body2:
                     SetText(Color.black, SkinData.Regular, 42, -1.24f, 1.06f, 47.25f);
-
+                    break;
+                case Type.debug:
+                    SetText(Color.black, SkinData.Thin, 30, 2.25f, 1.06f, 47.25f);
                     break;
             }
 

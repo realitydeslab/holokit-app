@@ -21,17 +21,26 @@ namespace Holoi.HoloKit.App.UI
 
         public T GetOrAddComponent<T>() where T : Component
         {
-            if (_activePanelGO.GetComponent<T>() == null)
+            if(_activePanelGO == null)
             {
-                Debug.Log("(_activePanel.GetComponent<T>() == null");
-                _activePanelGO.AddComponent<T>();
+                Debug.Log("not found activePanelGO");
+                return null;
             }
             else
             {
-                Debug.Log("(_activePanel.GetComponent<T>() !-=null");
+                if (_activePanelGO.GetComponent<T>() == null)
+                {
+                    //Debug.Log("(_activePanel.GetComponent<T>() == null");
+                    _activePanelGO.AddComponent<T>();
+                }
+                else
+                {
+                    //Debug.Log("(_activePanel.GetComponent<T>() !-=null");
+                }
+                return _activePanelGO.GetComponent<T>();
             }
 
-            return _activePanelGO.GetComponent<T>();
+            
         }
 
         public GameObject FindChildGameObject(string name)

@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace Holoi.HoloKit.App.UI
 {
-    public class StartScene : SceneState
+    public class StartScene : Scene
     {
         readonly string _sceneName = "Start";
         PanelManager _panelManager;
@@ -29,7 +29,7 @@ namespace Holoi.HoloKit.App.UI
             SceneManager.sceneLoaded -= SceneLoaded;
         }
 
-        private void SceneLoaded(Scene scene, LoadSceneMode load)
+        private void SceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode load)
         {
             _panelManager.Push(new StartPanel());
             Debug.Log($"{_sceneName} scene is loaded.");

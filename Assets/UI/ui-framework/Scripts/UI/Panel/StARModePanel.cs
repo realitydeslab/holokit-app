@@ -16,16 +16,13 @@ namespace Holoi.HoloKit.App.UI
 
         public override void OnEnter()
         {
-            UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
+            UITool.GetOrAddComponentInChildren<Scrollbar>("Exit Bar").onValueChanged.AddListener((value) =>
             {
-                Debug.Log("ExitButton is clicked.");
-                PanelManager.Pop();
+                if(value == 1)
+                {
+                    GameRoot.Instance.SceneSystem.SetScene(new StartScene());
+                }
             });
-        }
-
-        public override void OnExit()
-        {
-            Debug.Log("StARMode Exit");
         }
     }
 }

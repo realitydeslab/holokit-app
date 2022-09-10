@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace Holoi.HoloKit.App.UI
 {
-    public class StARMainScene : SceneState
+    public class StARMainScene : Scene
     {
         readonly string _sceneName = "StARMain";
         PanelManager _panelManager;
@@ -27,9 +27,11 @@ namespace Holoi.HoloKit.App.UI
         public override void OnExit()
         {
             SceneManager.sceneLoaded -= SceneLoaded;
+            _panelManager.PopAll();
+            Debug.Log($"exit scene, pop all panel with {_panelManager._panelStack.Count} left");
         }
 
-        private void SceneLoaded(Scene scene, LoadSceneMode load)
+        private void SceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode load)
         {
             _panelManager.Push(new StARModePanel());
             Debug.Log($"{_sceneName} scene is loaded.");

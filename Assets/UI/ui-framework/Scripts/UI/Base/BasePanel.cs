@@ -39,13 +39,38 @@ namespace Holoi.HoloKit.App.UI
 
         public virtual void OnPause()
         {
-            UITool.GetOrAddComponent<CanvasGroup>().blocksRaycasts = false;
+            Debug.Log($"{UIType.Name} panel is paused");
+            if (UITool == null)
+            {
+                Debug.LogError($"{UIType.Name}: not found UITool");
+            }
+            else if (UITool.GetOrAddComponent<CanvasGroup>() == null)
+            {
+                Debug.LogError($"{UIType.Name}: not found CanvasGroup");
+            }
+            else
+            {
+                UITool.GetOrAddComponent<CanvasGroup>().blocksRaycasts = false;
+            }
         }
 
         public virtual void OnResume()
         {
-            UITool.GetOrAddComponent<CanvasGroup>().blocksRaycasts = true;
+            Debug.Log($"{UIType.Name} panel is resume");
 
+            if (UITool == null)
+            {
+                Debug.LogError("not found UITool");
+            }
+            else if(UITool.GetOrAddComponent<CanvasGroup>() == null)
+            {
+                Debug.LogError("not found CanvasGroup");
+
+            }
+            else
+            {
+                UITool.GetOrAddComponent<CanvasGroup>().blocksRaycasts = true;
+            }
         }
         public virtual void OnExit()
         {

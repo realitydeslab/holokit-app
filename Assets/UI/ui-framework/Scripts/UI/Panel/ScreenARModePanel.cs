@@ -41,7 +41,7 @@ namespace Holoi.HoloKit.App.UI
                 Debug.Log("StARButton is clicked.");
 
                 // switch to stAR mode
-                //GameRoot.Instance.SceneSystem.SetScene(new StARMainScene());
+                GameRoot.Instance.SceneSystem.SetScene(new StARMainScene());
             });
 
             UITool.GetOrAddComponentInChildren<Button>("RecordButton").onClick.AddListener(() =>

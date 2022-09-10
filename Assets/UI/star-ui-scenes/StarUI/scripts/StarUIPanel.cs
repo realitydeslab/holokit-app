@@ -1,23 +1,25 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace StarUI
 {
-    public class StarUIManager : MonoBehaviour
+    public class StarUIPanel : MonoBehaviour
     {
+
         [SerializeField] List<Transform> _baseUIElements;
         [SerializeField] List<Transform> _advanceUIElements;
 
         [Header("buttons")]
         [SerializeField] Button _more;
-        [SerializeField] Button _trigger;
 
         [Header("scrollbars")]
         [SerializeField] Scrollbar _volumeBar;
         [SerializeField] Scrollbar _recordBar;
         [SerializeField] Scrollbar _exitBar;
         [SerializeField] Scrollbar _boostBar;
+        [SerializeField] Scrollbar _triggerBar;
         [SerializeField] Scrollbar _spectatorBar;
         [SerializeField] Scrollbar _recalibrateBar;
         [SerializeField] Scrollbar _pauseBar;
@@ -31,6 +33,7 @@ namespace StarUI
         Animator _recordAnimator;
         Animator _exitAnimator;
         Animator _boostAnimator;
+        Animator _triggerAnimator;
 
         Animator _recalibrateAnimator;
         Animator _spectatorAnimator;
@@ -42,6 +45,7 @@ namespace StarUI
         Image _exitBG_L;
         Image _exitBG_R;
         Image _boostBG;
+        Image _triggerBG;
 
         Image _recalibrateBG;
         Image _spectatorBG;
@@ -53,6 +57,7 @@ namespace StarUI
         Material _exitMaterial_L;
         Material _exitMaterial_R;
         Material _boostMaterial;
+        Material _triggerMaterial;
 
         Material _recalibrateMaterial;
         Material _spectatorMaterial;
@@ -100,6 +105,10 @@ namespace StarUI
             _boostAnimator = _boostBar.GetComponent<Animator>();
             _boostBG = _boostBar.GetComponent<ScrollBarHelper>().BackGround;
             _boostMaterial = _boostBG.material;
+
+            _triggerAnimator = _triggerBar.GetComponent<Animator>();
+            _triggerBG = _triggerBar.GetComponent<ScrollBarHelper>().BackGround;
+            _triggerMaterial = _triggerBG.material;
 
             _exitAnimator = _exitBar.GetComponent<Animator>();
             _exitBG_L = _exitBar.GetComponent<ScrollBarHelper>().BackGround;
@@ -232,11 +241,11 @@ namespace StarUI
             _advance.gameObject.SetActive(false);
         }
 
-        public void TriggerOnClick()
-        {
-            Debug.Log("Trigger button clicked!");
+        //public void TriggerOnClick()
+        //{
+        //    Debug.Log("Trigger button clicked!");
 
-        }
+        //}
 
         public void ScrollBarPointerDown(Scrollbar scrollbar)
         {
@@ -272,7 +281,6 @@ namespace StarUI
                 case UIState.pause:
                     break;
             }
-
         }
 
         // record pointer
@@ -351,6 +359,23 @@ namespace StarUI
             Debug.Log("set volume value to: " + _value);
 
         }
+        // trigger bar
+        public void TriggerBarOnValueChanged()
+        {
+            _value = _triggerBar.value;
+            _triggerMaterial.SetFloat("_Offset", _value);
+
+            if (_value == 1)
+            {
+                TriggerBarOnLoaded();
+            }
+        }
+        public void TriggerBarOnLoaded()
+        {
+            _triggerBG.gameObject.SetActive(false);
+            _triggerAnimator.SetTrigger("OnLoaded");
+        }
+
         // boost bar
         public void BoostBarOnValueChanged()
         {

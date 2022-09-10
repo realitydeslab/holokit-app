@@ -37,7 +37,7 @@ public class RealityThumbnailContainer : MonoBehaviour
         _lightGroup.localPosition = _offset;
 
         //Debug.Log(_arrowPath.GetComponent<MeshRenderer>().material.GetVector("_Offset"));
-        Debug.Log(currentPostion * 4);
+        //Debug.Log(currentPostion * 4);
         _arrowPath.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_Offset", new Vector2(currentPostion*4,0));
 
         SetSelectPrefab();

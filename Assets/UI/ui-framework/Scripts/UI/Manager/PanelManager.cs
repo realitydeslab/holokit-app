@@ -9,8 +9,8 @@ namespace Holoi.HoloKit.App.UI
 {
     public class PanelManager
     {
-        private Stack<BasePanel> _panelStack;
-        private UIManager _uiManager;
+        public Stack<BasePanel> _panelStack;
+        public UIManager _uiManager;
         private BasePanel _panel;
 
         public PanelManager()
@@ -32,10 +32,10 @@ namespace Holoi.HoloKit.App.UI
             }
             else
             {
-                Debug.Log("_panelStack.Count = 0, do not need Pause the previous UI");
+                //Debug.Log("_panelStack.Count = 0, do not need Pause the previous UI");
             }
 
-            var panelGO = _uiManager.GetUIGO(nextPanel.UIType);
+            var panelGO = _uiManager.CreateUIGO(nextPanel.UIType);
             nextPanel.Initialize(new UITool(panelGO));
             nextPanel.Initialize(this);
             nextPanel.Initialize(_uiManager);
@@ -52,7 +52,17 @@ namespace Holoi.HoloKit.App.UI
                 _panelStack.Pop();
             }
             if (_panelStack.Count > 0)
+            {
                 _panelStack.Peek().OnResume();
+            }
+        }
+
+        public void PopAll()
+        {
+            while(_panelStack.Count > 0)
+            {
+                _panelStack.Pop().OnExit();
+            }
         }
 
         public BasePanel GetActivePanel()

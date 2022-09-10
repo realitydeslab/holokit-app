@@ -31,7 +31,7 @@ namespace StarUI
 
         public void EnableUILayout()
         {
-            FindObjectOfType<StarUIManager>().EnableUILayout();
+            FindObjectOfType<StarUIPanel>().EnableUILayout();
         }
     }
 }

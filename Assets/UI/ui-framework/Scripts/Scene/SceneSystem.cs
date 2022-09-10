@@ -6,13 +6,15 @@ namespace Holoi.HoloKit.App.UI
 {
     public class SceneSystem
     {
-        SceneState _sceneState;
+        Scene _scene;
 
-        public void SetScene(SceneState state)
+        public void SetScene(Scene scene)
         {
-            _sceneState?.OnEnter();
-            _sceneState = state;
-            _sceneState?.OnEnter();
+            //Debug.Log("scene exit");
+            _scene?.OnExit();
+            _scene = scene;
+            //Debug.Log("scene enter");
+            _scene?.OnEnter();
         }
     }
 }

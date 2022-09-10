@@ -16,7 +16,7 @@ namespace Holoi.HoloKit.App.UI
             _dicUI = new Dictionary<UIType, GameObject>();
         }
 
-        public GameObject GetUIGO(UIType type)
+        public GameObject CreateUIGO(UIType type)
         {
             var parent = GameObject.Find("Canvas");
 

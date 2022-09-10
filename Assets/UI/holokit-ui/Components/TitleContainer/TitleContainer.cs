@@ -18,7 +18,7 @@ public class TitleContainer : MonoBehaviour
 
         var text = _title.GetChild(0).GetComponent<TMPro.TMP_Text>().text;
         var width = _title.GetChild(0).GetComponent<TMPro.TMP_Text>().preferredWidth;
-        Debug.Log(text + ":" + width);
+        //Debug.Log(text + ":" + width);
 
         _arrow.GetComponent<RectTransform>().anchoredPosition = new Vector2(-1* width - 70 - 54, -137);
     }
