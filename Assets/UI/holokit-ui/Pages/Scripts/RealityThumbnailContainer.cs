@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
 
-[ExecuteInEditMode]
+
+//[ExecuteInEditMode]
 public class RealityThumbnailContainer : MonoBehaviour
 {
     Vector3 _translate = new Vector3(-0.03f, -0.77f, 7.89f);
