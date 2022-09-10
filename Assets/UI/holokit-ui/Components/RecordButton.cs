@@ -6,14 +6,16 @@ public class RecordButton : MonoBehaviour
     [SerializeField] Sprite _record;
     [SerializeField] Sprite _recording;
 
-    public void SetActive()
+    public void SetState(bool active)
     {
-        transform.Find("Image").GetComponent<Image>().sprite = _recording;
-    }
-
-    public void SetInactive()
-    {
-        transform.Find("Image").GetComponent<Image>().sprite = _record;
-
+        if (active)
+        {
+            transform.Find("Image").GetComponent<Image>().sprite = _recording;
+        }
+        else
+        {
+            transform.Find("Image").GetComponent<Image>().sprite = _record;
+        }
+        
     }
 }

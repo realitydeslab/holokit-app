@@ -19,7 +19,7 @@ namespace StarUI
         [SerializeField] static Vector2 _resolution11 = new Vector2(1792, 828);
         [SerializeField] static Vector2 _resolution11Pro = new Vector2(2436, 1125);
         [SerializeField] static Vector2 _resolution11ProMax = new Vector2(2688, 1242);
-
+            
         [SerializeField] static Vector2 _resolution12Mini = new Vector2(2340, 1080);
         [SerializeField] static Vector2 _resolution12 = new Vector2(2532, 1170);
         [SerializeField] static Vector2 _resolution12ProMax = new Vector2(2778, 1284);
@@ -36,7 +36,7 @@ namespace StarUI
                                              //static float iPhone12Mini = 5.42f; // 13Mini,
 
 
-        private void Start()
+        static void GetData()
         {
             _VPH = FindObjectOfType<ViewportHandler>();
             _CA = FindObjectOfType<CameraAnchor>();
@@ -56,13 +56,12 @@ namespace StarUI
             _VPH.UnitsSize = iPhoneXSMAx;
             var offset = (_resolutionXSMax.y - _resolutionX.y) / 2;
             _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 529.5f - offset, 0);
-            Debug.Log(offset);
-            Debug.Log(529.5f - offset);
         }
 
         [MenuItem("Tools/Update Resolution/12&12Pro&13&13Pro")]
         private static void UpdateResolution12()
         {
+            GetData();
             _VPH.UnitsSize = iPhoneXR;
             var offset = (_resolution12.y - _resolutionX.y) / 2;
             _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 529.5f - offset, 0);

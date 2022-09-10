@@ -61,6 +61,7 @@ public class HomeUIPanel : MonoBehaviour
             // create thumbnailPrefabs
             var realityThumbnailGO = Instantiate(realityCollection.realities[i].thumbnailPrefab, realityThumbnailContainer.transform.Find("Container").transform);
             realityThumbnailGO.transform.localPosition = new Vector3(i* _offset, 0, 0);
+            realityThumbnailGO.transform.localScale = Vector3.one * 0.28f;
             realityThumbnailGO.tag = "Reality Thumbnail";
             _realityThumbnailList.Add(realityThumbnailGO);
 
@@ -108,6 +109,7 @@ public class HomeUIPanel : MonoBehaviour
 
     public void GoToRealityDetailPanel()
     {
+        realityThumbnailContainer._arrowPath.gameObject.SetActive(false);
         transform.Find("HamburgerButton").gameObject.SetActive(false);
 
         for (int i = 0; i < _realityCount; i++)
@@ -122,11 +124,13 @@ public class HomeUIPanel : MonoBehaviour
             }
         }
 
-        //realityThumbnailContainer._offset = new Vector3(0,1,0);
+        realityThumbnailContainer._offset = new Vector3(0, 1.7f , 0);
     }
 
     public void GoToHomePanelLayout()
     {
+        realityThumbnailContainer._arrowPath.gameObject.SetActive(true);
+
         transform.Find("HamburgerButton").gameObject.SetActive(true);
 
         for (int i = 0; i < _realityCount; i++)
@@ -134,7 +138,7 @@ public class HomeUIPanel : MonoBehaviour
                 _realityThumbnailList[i].SetActive(true);
         }
 
-        realityThumbnailContainer._offset = new Vector3(0, 0, 0);
+        realityThumbnailContainer._offset = new Vector3(0, 0f, 0);
     }
 
     public void SetThumbnailState(bool state)

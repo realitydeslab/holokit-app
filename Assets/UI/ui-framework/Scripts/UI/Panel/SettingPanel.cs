@@ -19,6 +19,53 @@ namespace Holoi.HoloKit.App.UI
                 PanelManager.Pop();
             });
 
+            UITool.GetOrAddComponent<SettingUIPanel>().instruction.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("setting is clicked.");
+                // change the setting:
+
+            });
+
+            UITool.GetOrAddComponent<SettingUIPanel>().vibration.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("setting is clicked.");
+                // change the setting:
+
+            });
+
+            UITool.GetOrAddComponent<SettingUIPanel>().hdr.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("setting is clicked.");
+                // change the setting:
+
+            });
+
+            UITool.GetOrAddComponent<SettingUIPanel>().recordResolution.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("setting is clicked.");
+                // change the setting:
+
+            });
+
+            UITool.GetOrAddComponent<SettingUIPanel>().wifi.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("v is clicked.");
+                // change the setting:
+
+            });
+
+            UITool.GetOrAddComponent<SettingUIPanel>().showTechInfo.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("setting is clicked.");
+                // change the setting:
+
+            });
         }
     }
 }

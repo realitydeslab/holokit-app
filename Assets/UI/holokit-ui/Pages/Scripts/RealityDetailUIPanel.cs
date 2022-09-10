@@ -45,6 +45,6 @@ public class RealityDetailUIPanel : MonoBehaviour
     {
         var deltaY = _content.transform.position.y - _contentInitPositionY;
         var realityThumbnailContainer = FindObjectOfType<RealityThumbnailContainer>();
-        realityThumbnailContainer._offset = new Vector3(0, 1 + deltaY, 0);
+        realityThumbnailContainer._offset = new Vector3(0, 1.7f + deltaY, 0);
     }
 }

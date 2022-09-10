@@ -14,15 +14,18 @@ public class ScreenARModeUIPanel : MonoBehaviour
         recording,
     }
 
+    public State state;
+
     [Header("UI Elements")]
     public Transform scanContainer;
     public Transform spectator;
     public Transform stAR;
     public Transform recorder;
 
-    public void SetState(State state)
+    public void SetState(State currentState)
     {
-        switch (state)
+        state = currentState;
+        switch (currentState)
         {
             case State.idle:
                 scanContainer.gameObject.SetActive(false);
@@ -30,7 +33,7 @@ public class ScreenARModeUIPanel : MonoBehaviour
                 stAR.gameObject.SetActive(true);
                 recorder.gameObject.SetActive(true);
 
-                recorder.GetComponent<RecordButton>().SetInactive();
+                recorder.GetComponent<RecordButton>().SetState(false);
                 break;
             case State.scanning:
                 scanContainer.gameObject.SetActive(true);
@@ -55,6 +58,7 @@ public class ScreenARModeUIPanel : MonoBehaviour
 
                 scanContainer.Find("Scanning").gameObject.SetActive(false);
                 scanContainer.Find("Scanned").gameObject.SetActive(true);
+                StartCoroutine(ScannedCoroutine());
                 break;
             case State.recording:
                 scanContainer.gameObject.SetActive(false);
@@ -62,9 +66,14 @@ public class ScreenARModeUIPanel : MonoBehaviour
                 stAR.gameObject.SetActive(false);
                 recorder.gameObject.SetActive(true);
 
-                recorder.GetComponent<RecordButton>().SetActive();
+                recorder.GetComponent<RecordButton>().SetState(true);
                 break;
         }
     }
 
+    IEnumerator ScannedCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+        SetState(State.idle);
+    }
 }

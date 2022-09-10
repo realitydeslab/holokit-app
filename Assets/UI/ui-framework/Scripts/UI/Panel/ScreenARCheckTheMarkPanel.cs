@@ -25,6 +25,8 @@ namespace Holoi.HoloKit.App.UI
                 // here we do onclick event of this button
                 Debug.Log("CheckedButton is clicked.");
                 PanelManager.Pop();
+                PanelManager.Pop();
+                PanelManager.Pop();
 
                 Debug.Log(PanelManager.GetActivePanel().UIType.Name);
                 PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.scanned);

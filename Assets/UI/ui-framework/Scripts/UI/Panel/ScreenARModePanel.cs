@@ -49,7 +49,14 @@ namespace Holoi.HoloKit.App.UI
                 // here we do onclick event of this button
                 Debug.Log("RecordButton is clicked.");
                 // switch record button style:
-
+                if(UITool.GetOrAddComponent<ScreenARModeUIPanel>().state == ScreenARModeUIPanel.State.recording)
+                {
+                    UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.idle);
+                }
+                else
+                {
+                    UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.recording);
+                }
                 // start recording:
 
             });
