@@ -63,8 +63,8 @@ namespace Holoi.HoloKit.App.UI
             _text = GetComponentInChildren<TMPro.TMP_Text>();
 
 
-            //_text.font = SkinData.BoldSlanted;
-            //_text.characterSpacing = -1.94f;
+            _text.font = SkinData.BoldSlanted;
+            _text.characterSpacing = -1.94f;
             _button = GetComponent<Button>();
 
             //_button.transition = Selectable.Transition.SpriteSwap; // set transition mode
