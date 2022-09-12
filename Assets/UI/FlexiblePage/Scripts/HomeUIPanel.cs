@@ -37,7 +37,7 @@ public class HomeUIPanel : MonoBehaviour
 
     private void Awake()
     {
-        _realityCount = realityCollection.realities.Count;
+        _realityCount = realityCollection.Realities.Count;
         _canvas = FindObjectOfType<Canvas>();
         _realityThumbnailContainer = FindObjectOfType<RealityThumbnailContainer>();
         InitialCoverContent();
@@ -48,14 +48,14 @@ public class HomeUIPanel : MonoBehaviour
     {
         for (int i = 0; i < _realityCount; i++)
         {
-            var realityThumbnailGO = Instantiate(realityCollection.realities[i].thumbnailPrefab, _realityThumbnailContainer.transform);
+            var realityThumbnailGO = Instantiate(realityCollection.Realities[i].ThumbnailPrefab, _realityThumbnailContainer.transform);
             realityThumbnailGO.transform.position = new Vector3(i* _thumbnailSpacing, 0, 0);
             _realityThumbnailList.Add(realityThumbnailGO);
 
             var indexAndNameGO = Instantiate(_nameContainer, _nameScrollContainer);
 
-            indexAndNameGO.transform.Find("Index").GetComponent<TMPro.TMP_Text>().text = "Reality " + "#00" + realityCollection.realities[i].realityId;
-            indexAndNameGO.transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = realityCollection.realities[i].displayName;
+            indexAndNameGO.transform.Find("Index").GetComponent<TMPro.TMP_Text>().text = "Reality " + "#00" + realityCollection.Realities[i].RealityId;
+            indexAndNameGO.transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = realityCollection.Realities[i].DisplayName;
         }
     }
 

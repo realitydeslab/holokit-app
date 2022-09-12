@@ -20,12 +20,12 @@ public class RealityDetailUIPanel : MonoBehaviour
 
     private void Awake()
     {
-        _id.text = "Reality #" + reality.realityId;
+        _id.text = "Reality #" + reality.RealityId;
         _name.text = reality.name;
-        _version.text = reality.version;
+        _version.text = reality.Version;
         _lastUpdate.text = "2022. 09. 28";
-        _author.text = reality.author;
-        _description.text = reality.description;
+        _author.text = reality.Author;
+        _description.text = reality.Description;
     }
 
     private void Update()

@@ -6,34 +6,13 @@ using Unity.Netcode;
 
 namespace Netcode.Transports.MultipeerConnectivity
 {
-    public struct DataPacket
-    {
-        public int TransportID;
-        public byte[] Data;
-        public int Length;
-    }
-
     public class MultipeerConnectivityTransport : NetworkTransport
     {
         public override ulong ServerClientId => 0;
 
         public bool AutomaticAdvertisement = true;
 
-        private static bool s_isHost;
-
-        private static bool s_clientConnected;
-
-        private static List<int> s_connectedClientList = new();
-
-        private static bool s_connectedToHost;
-
-        private static bool s_clientDisconnected;
-
-        private static int s_disconnectedClientTransportID;
-
-        private static bool s_hostDisconnected;
-
-        private static readonly Queue<DataPacket> s_dataPacketQueue = new();
+        private static MultipeerConnectivityTransport s_instance;
 
         [DllImport("__Internal")]
         private static extern void MPC_Initialize(Action<int> OnClientConnected,
@@ -41,19 +20,6 @@ namespace Netcode.Transports.MultipeerConnectivity
                                                   Action<int, IntPtr, int> OnReceivedData,
                                                   Action<int> OnClientDisconnected,
                                                   Action OnHostDisconnected);
-
-        [AOT.MonoPInvokeCallback(typeof(Action<int>))]
-        private static void OnClientConnected(int transportID)
-        {
-            Debug.Log($"[MPCTransport] OnClientConnected {transportID}");
-        }
-
-        [AOT.MonoPInvokeCallback(typeof(Action))]
-        private static void OnConnectedToHost()
-        {
-            Debug.Log($"[MPCTransport] OnConnectedToHost");
-            s_connectedToHost = true;
-        }
 
         [DllImport("__Internal")]
         private static extern void MPC_StartAdvertising();
@@ -73,38 +39,51 @@ namespace Netcode.Transports.MultipeerConnectivity
         [DllImport("__Internal")]
         private static extern void MPC_SendData(int transportID, byte[] data, int length, bool reliable);
 
+        [AOT.MonoPInvokeCallback(typeof(Action<int>))]
+        private static void OnClientConnected(int transportID)
+        {
+            s_instance.InvokeOnTransportEvent(NetworkEvent.Connect, (ulong)transportID,
+                default, Time.realtimeSinceStartup);
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(Action))]
+        private static void OnConnectedToHost()
+        {
+            s_instance.InvokeOnTransportEvent(NetworkEvent.Connect, 0,
+                default, Time.realtimeSinceStartup);
+        }
+
         [AOT.MonoPInvokeCallback(typeof(Action<int, IntPtr, int>))]
         private static void OnReceivedData(int transportID, IntPtr dataPtr, int length)
         {
-            if (s_isHost && !s_connectedClientList.Contains(transportID))
-            {
-                s_connectedClientList.Add(transportID);
-                s_clientConnected = true;
-            }
             byte[] data = new byte[length];
             Marshal.Copy(dataPtr, data, 0, length);
-            DataPacket dataPacket = new DataPacket()
-            {
-                TransportID = transportID,
-                Data = data,
-                Length = length
-            };
-            s_dataPacketQueue.Enqueue(dataPacket);
+            s_instance.InvokeOnTransportEvent(NetworkEvent.Data, (ulong)transportID,
+                new ArraySegment<byte>(data, 0, length), Time.realtimeSinceStartup);
         }
 
         [AOT.MonoPInvokeCallback(typeof(Action<int>))]
         private static void OnClientDisconnected(int transportID)
         {
-            Debug.Log($"[MPCTransport] OnClientDisconnected {transportID}");
-            s_disconnectedClientTransportID = transportID;
-            s_clientDisconnected = true;
+            s_instance.InvokeOnTransportEvent(NetworkEvent.Disconnect, (ulong)transportID,
+                default, Time.realtimeSinceStartup);
         }
 
         [AOT.MonoPInvokeCallback(typeof(Action))]
         private static void OnHostDisconnected()
         {
-            Debug.Log("[MPCTransport] OnHostDisconnected");
-            s_hostDisconnected = true;
+            s_instance.InvokeOnTransportEvent(NetworkEvent.Disconnect, 0,
+                default, Time.realtimeSinceStartup);
+        }
+
+        private void Awake()
+        {
+            s_instance = this;
+        }
+
+        private void OnDestroy()
+        {
+            s_instance = null;
         }
 
         public override void Initialize(NetworkManager networkManager)
@@ -122,14 +101,12 @@ namespace Netcode.Transports.MultipeerConnectivity
             {
                 MPC_StartAdvertising();
             }
-            s_isHost = true;
             return true;
         }
 
         public override bool StartClient()
         {
             MPC_StartBrowsing();
-            s_isHost = false;
             return true;
         }
 
@@ -145,51 +122,6 @@ namespace Netcode.Transports.MultipeerConnectivity
 
         public override NetworkEvent PollEvent(out ulong transportId, out ArraySegment<byte> payload, out float receiveTime)
         {
-            if (s_connectedToHost)
-            {
-                s_connectedToHost = false;
-                transportId = 0;
-                payload = new ArraySegment<byte>();
-                receiveTime = Time.realtimeSinceStartup;
-                return NetworkEvent.Connect;
-            }
-
-            if (s_clientConnected)
-            {
-                s_clientConnected = false;
-                transportId = (ulong)s_connectedClientList[^1];
-                payload = new ArraySegment<byte>();
-                receiveTime = Time.realtimeSinceStartup;
-                return NetworkEvent.Connect;
-            }
-
-            if (s_dataPacketQueue.Count > 0)
-            {
-                DataPacket dataPacket = s_dataPacketQueue.Dequeue();
-                transportId = (ulong)dataPacket.TransportID;
-                payload = new ArraySegment<byte>(dataPacket.Data, 0, dataPacket.Length);
-                receiveTime = Time.realtimeSinceStartup;
-                return NetworkEvent.Data;
-            }
-
-            if (s_clientDisconnected)
-            {
-                s_clientDisconnected = false;
-                transportId = (ulong)s_disconnectedClientTransportID;
-                payload = new ArraySegment<byte>();
-                receiveTime = Time.realtimeSinceStartup;
-                return NetworkEvent.Disconnect;
-            }
-
-            if (s_hostDisconnected)
-            {
-                s_hostDisconnected = false;
-                transportId = 0;
-                payload = new ArraySegment<byte>();
-                receiveTime = Time.realtimeSinceStartup;
-                return NetworkEvent.Disconnect;
-            }
-
             transportId = 0;
             payload = new ArraySegment<byte>();
             receiveTime = Time.realtimeSinceStartup;
@@ -198,9 +130,7 @@ namespace Netcode.Transports.MultipeerConnectivity
 
         public override void Send(ulong transportId, ArraySegment<byte> data, NetworkDelivery networkDelivery)
         {
-            byte[] arr = new byte[data.Count];
-            Array.Copy(data.Array, data.Offset, arr, 0, data.Count);
-            MPC_SendData((int)transportId, arr, data.Count,
+            MPC_SendData((int)transportId, data.Array, data.Count,
                 !(networkDelivery == NetworkDelivery.Unreliable || networkDelivery == NetworkDelivery.UnreliableSequenced));
         }
 
@@ -222,10 +152,6 @@ namespace Netcode.Transports.MultipeerConnectivity
         public override void Shutdown()
         {
             Debug.Log("[MPCTransport] Shutdown");
-            s_clientConnected = false;
-            s_connectedClientList.Clear();
-            s_connectedToHost = false;
-            s_dataPacketQueue.Clear();
             MPC_Deinitialize();
         }
     }

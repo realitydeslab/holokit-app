@@ -6,7 +6,7 @@ using Holoi.AssetFoundation;
 namespace Holoi.Reality.MOFAThePuppetry
 {
 
-    [CreateAssetMenu(menuName = "ScriptableObjects/Reality/MOFAThePuppetrySetting")]
+    //[CreateAssetMenu(menuName = "ScriptableObjects/Reality/MOFAThePuppetrySetting")]
     public class MOFAThePuppetrySetting : ScriptableObject
     {
         public List<Emote> emotes;

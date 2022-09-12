@@ -30,7 +30,7 @@ namespace Holoi.HoloKit.App.UI
                 //GameRoot.Instance.SceneSystem.SetScene(new MainScene());
                 //UITool.GetOrAddComponent<HomeUIPanel>().SwitchToRealityDetailPageLayout();
                 var panel = new RealityDetailPanel();
-                panel.UITool.GetOrAddComponent<RealityDetailUIPanel>().reality = UITool.GetOrAddComponent<HomeUIPanel>().realityCollection.realities[UITool.GetOrAddComponent<HomeUIPanel>().CurrentIndex];
+                panel.UITool.GetOrAddComponent<RealityDetailUIPanel>().reality = UITool.GetOrAddComponent<HomeUIPanel>().realityCollection.Realities[UITool.GetOrAddComponent<HomeUIPanel>().CurrentIndex];
                 PanelManager.Push(panel);
             });
         }

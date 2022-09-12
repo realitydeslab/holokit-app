@@ -10,11 +10,11 @@ namespace Holoi.AssetFoundation
     [CreateAssetMenu(menuName = "ScriptableObjects/RealityList")]
     public class RealityList : ScriptableObject
     {
-        public List<Reality> realities;
+        public List<Reality> Realities;
 
         public List<Reality> FilterByTag(RealityTag tag)
         {
-            return realities.Where(collection => collection.realityTags.Contains(tag)).ToList();
+            return Realities.Where(collection => collection.RealityTags.Contains(tag)).ToList();
         }
     }
 }
