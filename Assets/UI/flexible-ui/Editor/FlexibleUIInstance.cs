@@ -31,6 +31,16 @@ public class FlexibleUIInstance : Editor
     {
         Create("Body2");
     }
+    [MenuItem("GameObject/HolikitX UI/Text/Menu Text", priority = 0)]
+    public static void AddMenuText()
+    {
+        Create("Menu Text");
+    }
+    [MenuItem("GameObject/HolikitX UI/Text/Debug Text", priority = 0)]
+    public static void AddDebugText()
+    {
+        Create("Debug Text");
+    }
     [MenuItem("GameObject/HolikitX UI/Button/Button", priority =0)]
     public static void AddButton()
     {

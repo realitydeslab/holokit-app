@@ -17,7 +17,7 @@ namespace Holoi.HoloKit.App.UI
                 // here we do onclick event of this button
                 Debug.Log("ExitButton is clicked.");
                 PanelManager.Pop();
-                PanelManager.GetActivePanel().UITool.GetOrAddComponent<HomeUIPanel>().HomePanelUIlayout();
+                //PanelManager.GetActivePanel().UITool.GetOrAddComponent<HomeUIPanel>().HomePanelUIlayout();
 
 
             });
@@ -26,7 +26,7 @@ namespace Holoi.HoloKit.App.UI
                 // here we do onclick event of this button
                 Debug.Log("RealityButton is clicked.");
                 PanelManager.Pop();
-                PanelManager.GetActivePanel().UITool.GetOrAddComponent<HomeUIPanel>().HomePanelUIlayout();
+                //PanelManager.GetActivePanel().UITool.GetOrAddComponent<HomeUIPanel>().HomePanelUIlayout();
             });
             UITool.GetOrAddComponentInChildren<Button>("ObjectButton").onClick.AddListener(() =>
             {

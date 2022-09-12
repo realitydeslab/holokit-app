@@ -2,31 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SignInUIPnael : MonoBehaviour
+namespace Holoi.HoloKit.App.UI
 {
-    [Header("UI Elements")]
-    [SerializeField] Transform _idleContainer;
-    [SerializeField] Transform _successContainer;
-
-    public enum State
+    public class SignInUIPnael : MonoBehaviour
     {
-        idle,
-        success
-    }
+        [Header("UI Elements")]
+        [SerializeField] Transform _idleContainer;
+        [SerializeField] Transform _successContainer;
 
-    public void SetState(State state)
-    {
-        switch (state)
+        public enum State
         {
-            case State.idle:
-                _idleContainer.gameObject.SetActive(true);
-                _successContainer.gameObject.SetActive(false);
-                break;
-            case State.success:
-                _idleContainer.gameObject.SetActive(false);
-                _successContainer.gameObject.SetActive(true);
-                break;
+            idle,
+            success
+        }
+
+        public void SetState(State state)
+        {
+            switch (state)
+            {
+                case State.idle:
+                    _idleContainer.gameObject.SetActive(true);
+                    _successContainer.gameObject.SetActive(false);
+                    break;
+                case State.success:
+                    _idleContainer.gameObject.SetActive(false);
+                    _successContainer.gameObject.SetActive(true);
+                    break;
+            }
         }
     }
-
 }

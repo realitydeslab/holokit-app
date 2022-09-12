@@ -24,6 +24,7 @@ namespace Holoi.HoloKit.App.UI
 
         public Stack<BasePanel> _panelStack;
         public UIManager _uiManager;
+        public GameObject _activePanel;
         private BasePanel _panel;
 
 

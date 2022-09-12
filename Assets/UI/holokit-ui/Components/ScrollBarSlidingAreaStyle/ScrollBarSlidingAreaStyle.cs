@@ -72,7 +72,7 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
         if(state == State.update)
         {
             _scrollValue = GetComponent<Scrollbar>().value;
-            Debug.Log(_scrollValue);
+            //Debug.Log(_scrollValue);
             _scrollValue = Mathf.Clamp01(_scrollValue);
             var currentIndex = Mathf.RoundToInt(_scrollValue * (count - 1)); // start from index 0!
             //Debug.Log(currentIndex);

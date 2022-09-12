@@ -18,15 +18,15 @@ namespace Holoi.HoloKit.App.UI
                 // here we do onclick event of this button
                 Debug.Log("Reality Detail BackButton is clicked.");
 
-                HomeUIPanel hup = Transform.FindObjectOfType<HomeUIPanel>();
-                if (hup != null)
-                {
-                    hup.HomePanelUIlayout();
-                }
-                else
-                {
-                    Debug.LogError("Not Found");
-                }
+                //HomeUIPanel hup = Transform.FindObjectOfType<HomeUIPanel>();
+                //if (hup != null)
+                //{
+                //    hup.HomePanelUIlayout();
+                //}
+                //else
+                //{
+                //    Debug.LogError("Not Found");
+                //}
                 PanelManager.Pop();
             });
 

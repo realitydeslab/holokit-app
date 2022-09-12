@@ -14,18 +14,10 @@ namespace Holoi.HoloKit.App.UI
         {
             UITool.FindChildGameObject("BackButton").GetComponent<Button>().onClick.AddListener(() =>
             { 
-            // here we do onclick event of this button
-            Debug.Log("BackButton is clicked.");
-            PanelManager.Pop();
+                // here we do onclick event of this button
+                Debug.Log("BackButton is clicked.");
+                PanelManager.Pop();
             });
-
-            //UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
-            //{
-            //// here we do onclick event of this button
-            //Debug.Log("BackButton is clicked.");
-            //    PanelManager.Pop();
-            //});
-
         }
     }
 }

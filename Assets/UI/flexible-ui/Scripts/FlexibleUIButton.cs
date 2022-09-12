@@ -60,18 +60,26 @@ namespace Holoi.HoloKit.App.UI
             }
             _image = GetComponent<Image>();
             _icon = transform.Find("Icon").GetComponent<Image>();
-            _text = GetComponentInChildren<TMPro.TMP_Text>();
 
+            if (transform.Find("Text") == null)
+            {
 
-            _text.font = SkinData.BoldSlanted;
-            _text.characterSpacing = -1.94f;
+            }
+            else
+            {
+                _text = transform.Find("Text").GetComponent<TMPro.TMP_Text>();
+                _text.font = SkinData.BoldSlanted;
+                _text.characterSpacing = -1.94f;
+            }
+            
+
             _button = GetComponent<Button>();
-
             //_button.transition = Selectable.Transition.SpriteSwap; // set transition mode
             _button.targetGraphic = _image;
+            //_button.spriteState = SkinData.ButtonSpriteState;
 
             _image.type = Image.Type.Sliced;
-            //_button.spriteState = SkinData.ButtonSpriteState;
+            
 
 
             switch (color)
@@ -83,14 +91,14 @@ namespace Holoi.HoloKit.App.UI
                         case State.Inactive:
                             _image.color = SkinData.DarkInactiveColor;
                             _icon.sprite = SkinData.WhiteArrow;
-                            _text.color = UnityEngine.Color.white;
-                            _text.text = _string;
+                            if(_text) _text.color = UnityEngine.Color.white;
+                            if(_text) _text.text = _string;
                             break;
                         case State.Active:
                             _image.color = SkinData.DarkActiveColor;
                             _icon.sprite = SkinData.WhiteArrow;
-                            _text.color = UnityEngine.Color.white;
-                            _text.text = _string;
+                            if (_text) _text.color = UnityEngine.Color.white;
+                            if (_text) _text.text = _string;
                             break;
                     }
                     break;
@@ -102,14 +110,14 @@ namespace Holoi.HoloKit.App.UI
                         case State.Inactive:
                             _image.color = SkinData.WhiteInactiveColor;
                             _icon.sprite = SkinData.BlackArrow;
-                            _text.color = UnityEngine.Color.black;
-                            _text.text = _string;
+                            if (_text) _text.color = UnityEngine.Color.black;
+                            if (_text) _text.text = _string;
                             break;
                         case State.Active:
                             _image.color = SkinData.WhiteActiveColor;
                             _icon.sprite = SkinData.BlackArrow;
-                            _text.color = UnityEngine.Color.black;
-                            _text.text = _string;
+                            if (_text) _text.color = UnityEngine.Color.black;
+                            if (_text) _text.text = _string;
                             break;
                     }
                     break;

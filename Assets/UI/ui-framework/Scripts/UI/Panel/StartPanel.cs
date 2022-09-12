@@ -19,15 +19,14 @@ namespace Holoi.HoloKit.App.UI
         public override void OnOpen()
         {
             _hup = UITool.GetOrAddComponent<HomeUIPanel>();
-            _hup.realityThumbnailContainer.clickEvent += EnterRealityDetailPanel;
+            _hup.realityThumbnailContainer.clickOnThumbnailsEvent += EnterRealityDetailPanel;
 
 
             UITool.GetOrAddComponentInChildren<Button>("HamburgerButton").onClick.AddListener(() =>
             {
-                _hup.OthersPanelUILayout();
                 var panel = new HamburgerPanel();
                 PanelManager.Push(panel);
-                _hup.OthersPanelUILayout();
+                //_hup.OthersPanelUILayout();
             });
 
             UITool.GetOrAddComponentInChildren<Button>("EnterButton").onClick.AddListener(() =>
@@ -50,12 +49,12 @@ namespace Holoi.HoloKit.App.UI
             newPanelUI.reality = _hup.realityCollection.realities[_hup.CurrentIndex];
             newPanelUI.UpdateInformation();
 
-            _hup.OthersPanelUILayout();
+            //_hup.OthersPanelUILayout();
         }
 
         public override void OnClose()
         {
-            _hup.realityThumbnailContainer.clickEvent -= EnterRealityDetailPanel;
+            _hup.realityThumbnailContainer.clickOnThumbnailsEvent -= EnterRealityDetailPanel;
             Debug.Log("HomePage Exit");
         }
     }
