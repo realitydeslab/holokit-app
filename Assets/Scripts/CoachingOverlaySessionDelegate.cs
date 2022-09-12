@@ -12,13 +12,11 @@ public class CoachingOverlaySessionDelegate : DefaultARKitSessionDelegate
 
     protected override void OnCoachingOverlayViewWillActivate(ARKitSessionSubsystem sessionSubsystem)
     {
-        Debug.Log("Coaching overlay view started");
         OnCoachingOverlayViewStarted?.Invoke();
     }
 
     protected override void OnCoachingOverlayViewDidDeactivate(ARKitSessionSubsystem sessionSubsystem)
     {
-        Debug.Log("Coaching overlay view ended");
         OnCoachingOverlayViewEnded?.Invoke();
     }
 }

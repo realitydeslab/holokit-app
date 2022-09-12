@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
+using Netcode.Transports.MultipeerConnectivity;
+using System;
+using Holoi.AssetFoundation;
 
 namespace Holoi.HoloKit.App
 {
@@ -12,13 +15,15 @@ namespace Holoi.HoloKit.App
 
         private static HoloKitApp _instance;
 
-        [SerializeField] private NetworkManager _networkManagerPrefab;
+        public NetworkManager NetworkManagerPrefab;
 
-        [SerializeField] private GameObject[] _networkPrefabs;
+        public Reality Reality;
 
-        [SerializeField] private RealityManager _realityManagerPrefab;
+        public bool IsHost => _isHost;
 
         public RealityManager RealityManager => _realityManager;
+
+        private bool _isHost;
 
         private RealityManager _realityManager;
 
@@ -35,14 +40,36 @@ namespace Holoi.HoloKit.App
             DontDestroyOnLoad(gameObject);
         }
 
-        private void InitializeNetworkManager()
+        public void InitializeNetworkManager()
         {
+            if (Reality == null)
+            {
+                Debug.Log("[HoloKitApp] There is no reality selected");
+                return;
+            }
+
+            if (Reality.realityManager == null)
+            {
+                Debug.Log($"[HoloKitApp] Reality {Reality.displayName} does not have a RealityManager");
+            }
+
+            RealityManager realityManager = Reality.realityManager.GetComponent<RealityManager>();
+            if (realityManager == null)
+            {
+                Debug.Log($"[HoloKitApp] Reality {Reality.displayName} does not have a RealityManager script");
+            }
+
             if (NetworkManager.Singleton == null)
             {
-                Instantiate(_networkManagerPrefab);
-                foreach (var networkPrefab in _networkPrefabs)
+                var networkManager = Instantiate(NetworkManagerPrefab);
+                networkManager.OnClientConnectedCallback += OnClientConnected;
+                networkManager.AddNetworkPrefab(Reality.realityManager);
+                foreach (var prefab in realityManager.NetworkPrefabs)
                 {
-                    NetworkManager.Singleton.AddNetworkPrefab(networkPrefab);
+                    if (prefab.TryGetComponent<NetworkObject>(out var _))
+                    {
+                        networkManager.AddNetworkPrefab(prefab);
+                    }
                 }
                 Debug.Log("[HoloKitApp] NetworkManager initialized");
             }
@@ -52,7 +79,7 @@ namespace Holoi.HoloKit.App
             }
         }
 
-        private void DeinitializeNetworkManager()
+        public void DeinitializeNetworkManager()
         {
             if (NetworkManager.Singleton != null)
             {
@@ -67,13 +94,21 @@ namespace Holoi.HoloKit.App
 
         public void EnterRealityAsHost()
         {
-            InitializeNetworkManager();
+            _isHost = true;
+            SceneManager.LoadScene(Reality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+        }
+
+        public void JoinRealityAsSpectator()
+        {
+            _isHost = false;
+            SceneManager.LoadScene(Reality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+        }
+
+        public void StartHost()
+        {
             if (NetworkManager.Singleton.StartHost())
             {
                 Debug.Log("[HoloKitApp] Host started");
-                var realityManager = Instantiate(_realityManagerPrefab);
-                realityManager.GetComponent<NetworkObject>().Spawn();
-                NetworkManager.Singleton.SceneManager.LoadScene("SampleRealityAR", LoadSceneMode.Single);
             }
             else
             {
@@ -81,14 +116,41 @@ namespace Holoi.HoloKit.App
             }
         }
 
-        public void JoinRealityAsSpectator()
+        public void StartClient()
         {
-            InitializeNetworkManager();
+            if (NetworkManager.Singleton.StartClient())
+            {
+                Debug.Log("[HoloKitApp] Client started");
+            }
+            else
+            {
+                Debug.Log("[HoloKitApp] Failed to start client");
+            }
         }
 
         public void SetRealityManager(RealityManager realityManager)
         {
             _realityManager = realityManager;
+        }
+
+        public void StartAdvertising()
+        {
+            MultipeerConnectivityTransport.StartAdvertising();
+        }
+
+        public void StopAdvertising()
+        {
+            MultipeerConnectivityTransport.StopAdvertising();
+        }
+
+        private void OnClientConnected(ulong clientId)
+        {
+            Debug.Log($"[HoloKitApp] OnClientConnected {clientId}");
+            if (_isHost && clientId == NetworkManager.Singleton.LocalClientId)
+            {
+                var realityManager = Instantiate(Reality.realityManager.GetComponent<NetworkObject>());
+                realityManager.Spawn();
+            }
         }
     }
 }

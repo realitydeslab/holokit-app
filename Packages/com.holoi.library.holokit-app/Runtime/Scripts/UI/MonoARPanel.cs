@@ -1,16 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
 namespace Holoi.HoloKit.App
 {
-    public class MonoARUIPanel : MonoBehaviour
+    public class MonoARPanel : MonoBehaviour
     {
         [SerializeField] private GameObject _mainWindow;
 
         [SerializeField] private GameObject _hostConnectionWindow;
 
         [SerializeField] private GameObject _clientConnectionWindow;
+
+        private void Start()
+        {
+            if (HoloKitApp.Instance.IsHost)
+            {
+                OpenMainWindow();
+            }
+            else
+            {
+                OpenClientConnectionWindow();
+            }
+        }
 
         private void OpenMainWindow()
         {
@@ -35,7 +48,7 @@ namespace Holoi.HoloKit.App
 
         public void StartSharingReality()
         {
-            HoloKitApp.Instance.RealityManager.StartSharingReality();
+            HoloKitApp.Instance.StartAdvertising();
             OpenHostConnectionWindow();
         }
 

@@ -28,5 +28,7 @@ namespace Holoi.AssetFoundation
         public List<MetaAvatarTag> compatibleMetaAvatarTags;
 
         public List<MetaObjectTag> compatibleMetaObjectTags;
+
+        public GameObject realityManager;
     }
 }
