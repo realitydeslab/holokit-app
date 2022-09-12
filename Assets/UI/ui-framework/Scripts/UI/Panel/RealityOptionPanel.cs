@@ -24,6 +24,8 @@ namespace Holoi.HoloKit.App.UI
                 // here we do onclick event of this button
                 Debug.Log("EnterScreenARButton is clicked.");
 
+                Debug.Log(PanelManager.Instance._panelStack.Count + " panels found.");
+
                 // enter screen ar scene:
                 GameRoot.Instance.SceneSystem.SetScene(new ScreenARMainScene());
 

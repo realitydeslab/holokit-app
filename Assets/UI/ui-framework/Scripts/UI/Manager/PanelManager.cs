@@ -125,6 +125,10 @@ namespace Holoi.HoloKit.App.UI
             {
                 Debug.Log($"push panel with name {panelList[i].UIType.Name}");
                 Push(panelList[i]);
+                if (panelList[i].UIType.Name == "StartPanel")
+                {
+                    panelList[i].UITool.GetOrAddComponent<HomeUIPanel>().RecoverHomePage();
+                }
             }
 
             Debug.Log($"recover panels with a number{num}");

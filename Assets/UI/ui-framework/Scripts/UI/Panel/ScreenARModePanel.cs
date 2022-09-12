@@ -18,7 +18,6 @@ namespace Holoi.HoloKit.App.UI
             {
                 // here we do onclick event of this button
                 Debug.Log("ExitButton is clicked. Exit from ScreenAR Mode to RealityOptionPanel.");
-                PanelManager.Pop();
                 // exit to start scene
                 GameRoot.Instance.SceneSystem.SetScene(new StartScene());
 

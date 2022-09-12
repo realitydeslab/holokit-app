@@ -52,7 +52,6 @@ namespace Holoi.HoloKit.App.UI
             _handle.GetComponent<ScrollBarSlidingAreaStyle>().Init(_realityCount);
         }
 
-
         private void Update()
         {
             
@@ -168,6 +167,12 @@ namespace Holoi.HoloKit.App.UI
             }
 
             realityThumbnailContainer._offset = new Vector3(0, 0f, 0);
+        }
+
+        public void RecoverHomePage()
+        {
+            _currentIndex = PanelManager.Instance._realityIndex;
+            UpdateScrollValue();
         }
     }
 }
