@@ -29,6 +29,8 @@ namespace Holoi.HoloKit.App.UI
                 // here we do onclick event of this button
                 Debug.Log("SpectatorButton is clicked.");
 
+                UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.spectatorConfrim);
+
                 var panel = new ScreenAROpenSpectatorPanel();
                 PanelManager.Push(panel);
             });

@@ -32,7 +32,10 @@ namespace Holoi.HoloKit.App.UI
 
         private void Update()
         {
-            _container.localPosition = new Vector3(-1 * currentPostion, 0, 0) + _offset;
+            _container.localPosition = new Vector3(-1 * currentPostion, 0, 0);
+            _container.position += _offset;
+            ;
+
             _lightGroup.localPosition = _offset;
 
             _arrowPath.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_Offset", new Vector2(currentPostion * 4, 0));

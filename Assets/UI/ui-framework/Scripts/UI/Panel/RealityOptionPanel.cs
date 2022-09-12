@@ -27,12 +27,6 @@ namespace Holoi.HoloKit.App.UI
                 // enter screen ar scene:
                 GameRoot.Instance.SceneSystem.SetScene(new ScreenARMainScene());
 
-                //var newPanel = new ScreenARModePanel();
-                //PanelManager.Push(newPanel);
-
-                //var samup = newPanel.UITool.GetOrAddComponent<ScreenARModeUIPanel>();
-                //samup.SetState(ScreenARModeUIPanel.State.idle);
-
             });
             UITool.GetOrAddComponentInChildren<Button>("SpectatorButton").onClick.AddListener(() =>
             {
@@ -41,8 +35,11 @@ namespace Holoi.HoloKit.App.UI
 
                 var newPanel = new ScreenARModePanel();
                 PanelManager.Push(newPanel);
-                var samup = newPanel.UITool.GetOrAddComponent<ScreenARModeUIPanel>();
-                samup.SetState(ScreenARModeUIPanel.State.scanning);
+                var screenARUI = newPanel.UITool.GetOrAddComponent<ScreenARModeUIPanel>();
+                screenARUI.SetState(ScreenARModeUIPanel.State.waitPlayerEnter);
+
+                var panel = new ScreenARWaitPlayerPanel();
+                PanelManager.Push(panel);
             });
         }
     }

@@ -10,10 +10,13 @@ namespace Holoi.HoloKit.App.UI
         public enum State
         {
             idle,
+            spectatorConfrim,
+            waitPlayerEnter,
+            showQRcode,
             scanning,
-            checking,
+            checkMark,
             scanned,
-            recording,
+            recording
         }
 
         public State state;
@@ -22,6 +25,7 @@ namespace Holoi.HoloKit.App.UI
         public Transform scanContainer;
         public Transform spectator;
         public Transform stAR;
+        public Transform exitButton;
         public Transform recorder;
 
         public void SetState(State currentState)
@@ -31,26 +35,30 @@ namespace Holoi.HoloKit.App.UI
             {
                 case State.idle:
                     scanContainer.gameObject.SetActive(false);
-                    spectator.gameObject.SetActive(true);
-                    stAR.gameObject.SetActive(true);
-                    recorder.gameObject.SetActive(true);
+                    SetToolState(true);
 
                     recorder.GetComponent<RecordButton>().SetState(false);
                     break;
+                case State.spectatorConfrim:
+                    SetToolState(false);
+                    break;
+                case State.waitPlayerEnter:
+                    SetToolState(false);
+                    break;
+                case State.showQRcode:
+                    SetToolState(false);
+                    break;
                 case State.scanning:
                     scanContainer.gameObject.SetActive(true);
-                    spectator.gameObject.SetActive(true);
-                    stAR.gameObject.SetActive(false);
-                    recorder.gameObject.SetActive(false);
+                    SetToolState(false);
 
                     scanContainer.Find("Scanning").gameObject.SetActive(true);
                     scanContainer.Find("Scanned").gameObject.SetActive(false);
                     break;
-                case State.checking:
+                case State.checkMark:
                     scanContainer.gameObject.SetActive(false);
-                    spectator.gameObject.SetActive(true);
-                    stAR.gameObject.SetActive(false);
-                    recorder.gameObject.SetActive(false);
+                    SetToolState(false);
+
                     break;
                 case State.scanned:
                     scanContainer.gameObject.SetActive(true);
@@ -77,6 +85,14 @@ namespace Holoi.HoloKit.App.UI
         {
             yield return new WaitForSeconds(1.5f);
             SetState(State.idle);
+        }
+
+        void SetToolState(bool state)
+        {
+            spectator.gameObject.SetActive(state);
+            stAR.gameObject.SetActive(state);
+            exitButton.gameObject.SetActive(state);
+            recorder.gameObject.SetActive(state);
         }
     }
 }

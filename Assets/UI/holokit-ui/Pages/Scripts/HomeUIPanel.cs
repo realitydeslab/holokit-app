@@ -97,6 +97,7 @@ namespace Holoi.HoloKit.App.UI
             _currentIndex = Mathf.RoundToInt(_scrollValue * (_realityCount - 1));
 
             realityThumbnailContainer.currentIndex = _currentIndex;
+            PanelManager.Instance._realityIndex = _currentIndex;
 
             // set value to thumbnails container
             var thumbnailContainerPosition = _scrollValue * (_realityCount - 1) * _offset;

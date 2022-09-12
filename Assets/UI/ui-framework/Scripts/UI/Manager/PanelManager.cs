@@ -26,6 +26,7 @@ namespace Holoi.HoloKit.App.UI
         public UIManager _uiManager;
         public GameObject _activePanel;
         private BasePanel _panel;
+        public int _realityIndex = 0;
 
 
         public PanelManager()
