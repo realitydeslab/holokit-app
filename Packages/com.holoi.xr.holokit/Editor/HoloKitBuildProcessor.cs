@@ -95,7 +95,6 @@ namespace HoloKit.Editor
 
                 PlistElementDict dictionary = entitlementDoc.root;
                 PlistElementArray array = dictionary.CreateArray("com.apple.developer.nfc.readersession.formats");
-                //array.values.Add(new PlistElementString("NDEF"));
                 array.values.Add(new PlistElementString("TAG"));
 
                 return entitlementDoc;

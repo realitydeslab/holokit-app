@@ -8,7 +8,7 @@ namespace StarUI
     {
         static ViewportHandler _VPH;
         static CameraAnchor _CA;
-        static StarUIManager _SUM;
+        static StarUIPanel _SUM;
 
         [SerializeField] static Vector2 _resolutionX = new Vector2(2436, 1125);
         [SerializeField] static Vector2 _resolutionXS = new Vector2(2436, 1125);
@@ -19,7 +19,7 @@ namespace StarUI
         [SerializeField] static Vector2 _resolution11 = new Vector2(1792, 828);
         [SerializeField] static Vector2 _resolution11Pro = new Vector2(2436, 1125);
         [SerializeField] static Vector2 _resolution11ProMax = new Vector2(2688, 1242);
-
+            
         [SerializeField] static Vector2 _resolution12Mini = new Vector2(2340, 1080);
         [SerializeField] static Vector2 _resolution12 = new Vector2(2532, 1170);
         [SerializeField] static Vector2 _resolution12ProMax = new Vector2(2778, 1284);
@@ -36,11 +36,11 @@ namespace StarUI
                                              //static float iPhone12Mini = 5.42f; // 13Mini,
 
 
-        private void Start()
+        static void GetData()
         {
             _VPH = FindObjectOfType<ViewportHandler>();
             _CA = FindObjectOfType<CameraAnchor>();
-            _SUM = FindObjectOfType<StarUIManager>();
+            _SUM = FindObjectOfType<StarUIPanel>();
         }
 
         [MenuItem("Tools/Update Resolution/X&XS&11Pro")]
@@ -48,31 +48,30 @@ namespace StarUI
         {
             _VPH.UnitsSize = iPhoneX;
             var offset = (_resolutionX.y - _resolutionX.y);
-            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 529.5f - offset, 0);
+            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 534.5f - offset, 0);
         }
         [MenuItem("Tools/Update Resolution/XSMax&11ProMax")]
         private static void UpdateResolutionXSMax()
         {
             _VPH.UnitsSize = iPhoneXSMAx;
             var offset = (_resolutionXSMax.y - _resolutionX.y) / 2;
-            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 529.5f - offset, 0);
-            Debug.Log(offset);
-            Debug.Log(529.5f - offset);
+            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 534.5f - offset, 0);
         }
 
         [MenuItem("Tools/Update Resolution/12&12Pro&13&13Pro")]
         private static void UpdateResolution12()
         {
+            GetData();
             _VPH.UnitsSize = iPhoneXR;
             var offset = (_resolution12.y - _resolutionX.y) / 2;
-            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 529.5f - offset, 0);
+            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 534.5f - offset, 0);
         }
         [MenuItem("Tools/Update Resolution/11&XR")]
         private static void UpdateResolution11()
         {
             _VPH.UnitsSize = iPhone11;
             var offset = 0;
-            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 529.5f - offset, 0);
+            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 534.5f - offset, 0);
         }
 
         [MenuItem("Tools/Update Resolution/12ProMax&13ProMax")]
@@ -80,7 +79,7 @@ namespace StarUI
         {
             _VPH.UnitsSize = iPhone12ProMax;
             var offset = (_resolution12ProMax.y - _resolutionX.y) / 2;
-            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 529.5f - offset, 0);
+            _SUM.GetComponent<RectTransform>().localPosition = new Vector3(0, 534.5f - offset, 0);
         }
     }
 }
