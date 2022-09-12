@@ -8,7 +8,7 @@ namespace Holoi.HoloKit.App
     {
         private void Start()
         {
-            StartCoroutine(StartNetworkWithDelay(3f));
+            StartCoroutine(StartNetworkWithDelay(0.5f));
         }
 
         private IEnumerator StartNetworkWithDelay(float t)
