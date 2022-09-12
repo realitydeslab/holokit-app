@@ -48,22 +48,22 @@ namespace Holoi.HoloKit.App
                 return;
             }
 
-            if (Reality.RealityManager == null)
+            if (Reality.realityManager == null)
             {
-                Debug.Log($"[HoloKitApp] Reality {Reality.DisplayName} does not have a RealityManager");
+                Debug.Log($"[HoloKitApp] Reality {Reality.displayName} does not have a RealityManager");
             }
 
-            RealityManager realityManager = Reality.RealityManager.GetComponent<RealityManager>();
+            RealityManager realityManager = Reality.realityManager.GetComponent<RealityManager>();
             if (realityManager == null)
             {
-                Debug.Log($"[HoloKitApp] Reality {Reality.DisplayName} does not have a RealityManager script");
+                Debug.Log($"[HoloKitApp] Reality {Reality.displayName} does not have a RealityManager script");
             }
 
             if (NetworkManager.Singleton == null)
             {
                 var networkManager = Instantiate(NetworkManagerPrefab);
                 networkManager.OnClientConnectedCallback += OnClientConnected;
-                networkManager.AddNetworkPrefab(Reality.RealityManager);
+                networkManager.AddNetworkPrefab(Reality.realityManager);
                 foreach (var prefab in realityManager.NetworkPrefabs)
                 {
                     if (prefab.TryGetComponent<NetworkObject>(out var _))
@@ -95,13 +95,13 @@ namespace Holoi.HoloKit.App
         public void EnterRealityAsHost()
         {
             _isHost = true;
-            SceneManager.LoadScene(Reality.RealityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+            SceneManager.LoadScene(Reality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
         }
 
         public void JoinRealityAsSpectator()
         {
             _isHost = false;
-            SceneManager.LoadScene(Reality.RealityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+            SceneManager.LoadScene(Reality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
         }
 
         public void StartHost()
@@ -148,7 +148,7 @@ namespace Holoi.HoloKit.App
             Debug.Log($"[HoloKitApp] OnClientConnected {clientId}");
             if (_isHost && clientId == NetworkManager.Singleton.LocalClientId)
             {
-                var realityManager = Instantiate(Reality.RealityManager.GetComponent<NetworkObject>());
+                var realityManager = Instantiate(Reality.realityManager.GetComponent<NetworkObject>());
                 realityManager.Spawn();
             }
         }

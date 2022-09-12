@@ -9,26 +9,26 @@ namespace Holoi.AssetFoundation
     [CreateAssetMenu(menuName = "ScriptableObjects/Reality")]
     public class Reality: ScriptableObject
     {
-        public string DisplayName;
+        public string displayName;
 
-        public string Description;
+        public string description;
 
-        public string RealityId;
+        public string realityId;
 
-        public string Author;
+        public string author;
 
-        public string Version;
+        public string version;
 
-        public GameObject ThumbnailPrefab;
+        public GameObject thumbnailPrefab;
 
-        public List<VideoClip> PreviewVideos;
+        public List<VideoClip> previewVideos;
 
-        public List<RealityTag> RealityTags;
+        public List<RealityTag> realityTags;
 
-        public List<MetaAvatarTag> CompatibleMetaAvatarTags;
+        public List<MetaAvatarTag> compatibleMetaAvatarTags;
 
-        public List<MetaObjectTag> CompatibleMetaObjectTags;
+        public List<MetaObjectTag> compatibleMetaObjectTags;
 
-        public GameObject RealityManager;
+        public GameObject realityManager;
     }
 }
