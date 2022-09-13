@@ -16,10 +16,12 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 // Spawn host's player
                 var hostPlayer = Instantiate(MofaPlayerPrefab);
+                hostPlayer.Team.Value = MofaTeam.Blue;
                 hostPlayer.GetComponent<NetworkObject>().Spawn();
 
                 // Spawn AI's player
                 var aiPlayer = Instantiate(MofaPlayerPrefab);
+                aiPlayer.Team.Value = MofaTeam.Red;
                 aiPlayer.GetComponent<NetworkObject>().SpawnWithOwnership(999);
             }
         }

@@ -10,12 +10,19 @@ namespace Holoi.Mofa.Base
     {
         public MofaPlayer MofaPlayerPrefab;
 
+        public LifeShield LifeShieldPrefab;
+
         public Dictionary<ulong, MofaPlayer> Players = new();
 
         public void SetPlayer(ulong clientId, MofaPlayer mofaPlayer)
         {
             Players[clientId] = mofaPlayer;
             mofaPlayer.transform.SetParent(transform);
+        }
+
+        public void SetLifeShield()
+        {
+
         }
 
         public void StartRound()

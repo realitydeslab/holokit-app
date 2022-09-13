@@ -15,7 +15,7 @@ namespace Holoi.HoloKit.App
 
         public override void OnNetworkSpawn()
         {
-            Debug.Log("[RealityManager] OnNetworkSpawn");
+            //Debug.Log("[RealityManager] OnNetworkSpawn");
             HoloKitApp.Instance.SetRealityManager(this);
         }
     }
