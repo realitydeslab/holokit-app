@@ -17,19 +17,13 @@ namespace Holoi.Mofa.Base
 
         [HideInInspector] public NetworkVariable<bool> RightDestroyed = new(false, NetworkVariableReadPermission.Everyone);
 
-        private readonly NetworkVariable<Vector3> _networkPosition = new(
-            Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
-        private readonly NetworkVariable<Quaternion> _networkRotation = new(
-            Quaternion.identity, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
         [SerializeField] private Material _blueMaterial;
 
         [SerializeField] private Material _redMaterial;
 
         [SerializeField] private AudioClip _hitSound;
 
-        [SerializeField] private Vector3 _centerEyeOffset;
+        public Vector3 CenterEyeOffset;
 
         private AudioSource _audioSource;
 
@@ -114,18 +108,11 @@ namespace Holoi.Mofa.Base
 
         private void Update()
         {
-            // Network inputs
             if (IsOwner)
             {
-                _networkPosition.Value = HoloKitCamera.Instance.CenterEyePose.position
-                    + HoloKitCamera.Instance.CenterEyePose.rotation * _centerEyeOffset;
-                _networkRotation.Value = HoloKitCamera.Instance.CenterEyePose.rotation;
-            }
-
-            // Apply network inputs on the server
-            if (IsServer)
-            {
-                transform.SetPositionAndRotation(_networkPosition.Value, _networkRotation.Value);
+                transform.SetPositionAndRotation(HoloKitCamera.Instance.CenterEyePose.position
+                    + HoloKitCamera.Instance.CenterEyePose.rotation * CenterEyeOffset,
+                    HoloKitCamera.Instance.CenterEyePose.rotation);
             }
         }
     }
