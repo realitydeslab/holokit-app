@@ -2,6 +2,7 @@ using UnityEditor;
 using System;
 using System.Linq;
 
+#if UNITY_EDITOR_OSX
 public class MacOSConfig
 {
     [InitializeOnLoadMethod]
@@ -19,3 +20,4 @@ public class MacOSConfig
         return commandLineArgs.Any(value => value == "-runTests");
     }
 }
+#endif
