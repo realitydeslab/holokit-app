@@ -19,7 +19,7 @@ namespace Holoi.Mofa.Base
 
         private AudioSource _audioSource;
 
-        private Dictionary<LifeShieldArea, LifeShieldFragment> _fragments = new();
+        private readonly Dictionary<LifeShieldArea, LifeShieldFragment> _fragments = new();
 
         private void Awake()
         {

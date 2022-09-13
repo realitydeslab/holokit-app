@@ -8,13 +8,13 @@ namespace Holoi.Mofa.Base
 {
     public class MofaPlayer : NetworkBehaviour
     {
-        public NetworkVariable<int> KillCount = new(0, NetworkVariableReadPermission.Everyone);
+        [HideInInspector] public NetworkVariable<int> KillCount = new(0, NetworkVariableReadPermission.Everyone);
 
-        public NetworkVariable<int> DeathCount = new(0, NetworkVariableReadPermission.Everyone);
+        [HideInInspector] public NetworkVariable<int> DeathCount = new(0, NetworkVariableReadPermission.Everyone);
 
-        public NetworkVariable<bool> Ready = new(false, NetworkVariableReadPermission.Everyone);
+        [HideInInspector] public NetworkVariable<bool> Ready = new(false, NetworkVariableReadPermission.Everyone);
 
-        public LifeShield LifeShield;
+        [HideInInspector] public LifeShield LifeShield;
 
         public override void OnNetworkSpawn()
         {
