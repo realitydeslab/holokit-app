@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.HoloKit.App;
+using HoloKit;
 
 namespace Holoi.Mofa.Base
 {
@@ -16,11 +17,19 @@ namespace Holoi.Mofa.Base
 
         [HideInInspector] public NetworkVariable<bool> RightDestroyed = new(false, NetworkVariableReadPermission.Everyone);
 
+        private readonly NetworkVariable<Vector3> _networkPosition = new(
+            Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+        private readonly NetworkVariable<Quaternion> _networkRotation = new(
+            Quaternion.identity, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
         [SerializeField] private Material _blueMaterial;
 
         [SerializeField] private Material _redMaterial;
 
         [SerializeField] private AudioClip _hitSound;
+
+        [SerializeField] private Vector3 _centerEyeOffset;
 
         private AudioSource _audioSource;
 
@@ -38,13 +47,12 @@ namespace Holoi.Mofa.Base
 
         public override void OnNetworkSpawn()
         {
-            TopDestroyed.OnValueChanged += OnTopDestroyed;
-            BotDestroyed.OnValueChanged += OnBotDestroyed;
-            LeftDestroyed.OnValueChanged += OnLeftDestroyed;
-            RightDestroyed.OnValueChanged += OnRightDestroyed;
+            Debug.Log($"[LifeShield] OnNetworkSpawn with ownership {OwnerClientId}");
+
+            var realityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            realityManager.SetLifeShield(this);
 
             // Setup color
-            var realityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             if (realityManager.Players[NetworkManager.LocalClientId].Team.Value == MofaTeam.Blue)
             {
                 _fragments[LifeShieldArea.Top].GetComponent<MeshRenderer>().material = _blueMaterial;
@@ -63,11 +71,19 @@ namespace Holoi.Mofa.Base
             // Hide local player's shield
             if (OwnerClientId == NetworkManager.Singleton.LocalClientId)
             {
-
+                _fragments[LifeShieldArea.Top].GetComponent<MeshRenderer>().enabled = false;
+                _fragments[LifeShieldArea.Bot].GetComponent<MeshRenderer>().enabled = false;
+                _fragments[LifeShieldArea.Left].GetComponent<MeshRenderer>().enabled = false;
+                _fragments[LifeShieldArea.Right].GetComponent<MeshRenderer>().enabled = false;
             }
 
             // TODO: Destroy fragments that have already been destroyed for late joined spectator.
 
+
+            TopDestroyed.OnValueChanged += OnTopDestroyed;
+            BotDestroyed.OnValueChanged += OnBotDestroyed;
+            LeftDestroyed.OnValueChanged += OnLeftDestroyed;
+            RightDestroyed.OnValueChanged += OnRightDestroyed;
         }
 
         private void OnTopDestroyed(bool oldValue, bool newValue)
@@ -94,6 +110,23 @@ namespace Holoi.Mofa.Base
         {
             _audioSource.clip = _hitSound;
             _audioSource.Play();
+        }
+
+        private void Update()
+        {
+            // Network inputs
+            if (IsOwner)
+            {
+                _networkPosition.Value = HoloKitCamera.Instance.CenterEyePose.position
+                    + HoloKitCamera.Instance.CenterEyePose.rotation * _centerEyeOffset;
+                _networkRotation.Value = HoloKitCamera.Instance.CenterEyePose.rotation;
+            }
+
+            // Apply network inputs on the server
+            if (IsServer)
+            {
+                transform.SetPositionAndRotation(_networkPosition.Value, _networkRotation.Value);
+            }
         }
     }
 }

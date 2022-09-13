@@ -138,6 +138,16 @@ namespace Holoi.HoloKit.App
             }
         }
 
+        public void Shutdown()
+        {
+            NetworkManager.Singleton.Shutdown();
+            if (_realityManager != null)
+            {
+                Destroy(_realityManager.gameObject);
+            }
+            DeinitializeNetworkManager();
+        }
+
         public void SetRealityManager(RealityManager realityManager)
         {
             _realityManager = realityManager;

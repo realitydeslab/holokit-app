@@ -20,9 +20,24 @@ namespace Holoi.Mofa.Base
             mofaPlayer.transform.SetParent(transform);
         }
 
-        public void SetLifeShield()
+        public void SetLifeShield(LifeShield lifeShield)
         {
+            MofaPlayer shieldOwner = Players[lifeShield.OwnerClientId];
+            shieldOwner.LifeShield = lifeShield;
+            lifeShield.transform.SetParent(shieldOwner.transform);
+        }
 
+        public void SpawnMofaPlayer(MofaTeam team, ulong ownerClientId)
+        {
+            var player = Instantiate(MofaPlayerPrefab);
+            player.Team.Value = team;
+            player.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
+        }
+
+        public void SpawnLifeShield(ulong ownerClientId)
+        {
+            var lifeShield = Instantiate(LifeShieldPrefab);
+            lifeShield.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
         }
 
         public void StartRound()
