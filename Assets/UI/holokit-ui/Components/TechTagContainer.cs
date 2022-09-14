@@ -7,12 +7,12 @@ namespace Holoi.HoloKit.App.UI
 {
     public class TechTagContainer : MonoBehaviour
     {
-        Holoi.AssetFoundation.Reality _reality;
+        public Holoi.AssetFoundation.Reality reality;
         [SerializeField] GameObject _techButtonPrefab;
 
         void Start()
         {
-            foreach (var tag in _reality.realityTags)
+            foreach (var tag in reality.realityTags)
             {
 
             }

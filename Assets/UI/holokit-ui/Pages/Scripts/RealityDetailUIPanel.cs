@@ -14,7 +14,7 @@ namespace Holoi.HoloKit.App.UI
         [SerializeField] FlexibleUIText _name;
         [SerializeField] FlexibleUIText _author;
         [SerializeField] FlexibleUIText _description;
-        [SerializeField] FlexibleUIText _technic;
+        [SerializeField] TechTagContainer _technicContainer;
         [SerializeField] FlexibleUIText _version;
         [SerializeField] Transform _videoContainer;
 
@@ -24,6 +24,7 @@ namespace Holoi.HoloKit.App.UI
         private void Awake()
         {
             _contentInitPositionY = _content.position.y;
+            _technicContainer.reality = reality;
         }
 
         private void Update()
