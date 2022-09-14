@@ -15,31 +15,25 @@ namespace Holoi.HoloKit.App.UI
         {
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {
-                // here we do onclick event of this button
                 Debug.Log("ExitButton is clicked.");
                 PanelManager.Pop();
             });
 
             UITool.GetOrAddComponentInChildren<Button>("CheckedButton").onClick.AddListener(() =>
             {
-                // here we do onclick event of this button
                 Debug.Log("CheckedButton is clicked.");
                 PanelManager.Pop();
-                PanelManager.Pop();
-                PanelManager.Pop();
 
-                Debug.Log(PanelManager.GetActivePanel().UIType.Name);
+                //Debug.Log(PanelManager.GetActivePanel().UIType.Name);
                 PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.scanned);
             });
 
             UITool.GetOrAddComponentInChildren<Button>("RescanButton").onClick.AddListener(() =>
             {
-                // here we do onclick event of this button
                 Debug.Log("RescanButton is clicked.");
                 PanelManager.Pop();
 
                 PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.scanning);
-
             });
 
         }

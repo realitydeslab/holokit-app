@@ -16,12 +16,6 @@ namespace Holoi.HoloKit.App.UI
 
         public override void OnOpen()
         {
-            UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
-            {
-                var panel = new HamburgerPanel();
-                PanelManager.Push(panel);
-            });
-
             UITool.GetOrAddComponentInChildren<Button>("SignInButton").onClick.AddListener(() =>
             {
                 PanelManager.Pop();

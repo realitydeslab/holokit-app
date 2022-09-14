@@ -112,10 +112,10 @@ namespace Holoi.HoloKit.App.UI
                     switch (font)
                     {
                         case Font.Normal:
-                            SetText(color, SkinData.Bold, 74, 1.5f, 0, 0);
+                            SetText(color, SkinData.Bold, 76, 0f, 0, 0);
                             break;
                         case Font.Slanted:
-                            SetText(color, SkinData.BoldSlanted, 74, 1.5f, 0, 0);
+                            SetText(color, SkinData.BoldSlanted, 76, 0f, 0, 0);
                             break;
                     }
                     break;
