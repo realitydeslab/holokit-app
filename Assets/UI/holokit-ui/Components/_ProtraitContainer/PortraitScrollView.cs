@@ -7,23 +7,37 @@ using Holoi.AssetFoundation;
 namespace Holoi.HoloKit.App.UI
 {
     [ExecuteInEditMode]
-    public class NFTPortraitContainer : MonoBehaviour
+    public class PortraitScrollView : MonoBehaviour
     {
+        [Header("Data Type")]
         public CollectionContainer.Type type;
+        [Header("Meta Datas")]
         public MetaObjectCollection metaObjectCollection;
         public MetaAvatarCollection metaAvatarCollection;
-        public int _currentIndex;
-
+        //public int _currentIndex;
+        [Header("Prefabs")]
         [SerializeField] GameObject _objectPortraitContainer;
+        [Header("UI Elements")]
         [SerializeField] Transform _content;
-        [SerializeField] float _portraitSize = 460;
-
+        [SerializeField] ScrollBarSlidingAreaStyle _scrollBar;
+        [SerializeField] float _portraitSize = 480;
+        [Header("Theme")]
+        public CollectionContainer.Theme theme;
         int _count = 0;
-        float _sliderValue;
+        //float _sliderValue;
 
         void Awake()
         {
-            //transform.GetComponent<RectTransform>().sizeDelta = new Vector2(_portraitSize, _portraitSize+72);
+
+            ClearPreviousGenerativeContent();
+            SetUIAppearance();
+            CreateScrollViewBasedOnType();
+
+            _scrollBar.Init(_count);
+        }
+
+        void ClearPreviousGenerativeContent()
+        {
             Debug.Log("update content!");
             // clear all gameobject
             var tempList = new List<Transform>();
@@ -42,8 +56,23 @@ namespace Holoi.HoloKit.App.UI
                     Destroy(child.gameObject);
                 }
             }
+        }
 
+        void SetUIAppearance()
+        {
+            switch (theme)
+            {
+                case CollectionContainer.Theme.Dark:
+                    _scrollBar.color = Color.white;
+                    break;
+                case CollectionContainer.Theme.Bright:
+                    _scrollBar.color = Color.black;
+                    break;
+            }
+        }
 
+        void CreateScrollViewBasedOnType()
+        {
             switch (type)
             {
                 case CollectionContainer.Type.objectContainer:
@@ -53,10 +82,6 @@ namespace Holoi.HoloKit.App.UI
                     CreatePortrait(metaAvatarCollection);
                     break;
             }
-
-            var slidingStyle = transform.Find("Scrollbar Horizontal").GetComponent<ScrollBarSlidingAreaStyle>();
-            slidingStyle.Init(_count);
-
         }
 
         void CreatePortrait(MetaObjectCollection moc)
@@ -85,7 +110,7 @@ namespace Holoi.HoloKit.App.UI
 
         void Update()
         {
-            _sliderValue = transform.Find("Scrollbar Horizontal").GetComponent<Scrollbar>().value;
+            //_sliderValue = transform.Find("Scrollbar Horizontal").GetComponent<Scrollbar>().value;
         }
     }
 }

@@ -10,7 +10,7 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
     [SerializeField] GameObject _slidingStylePrefab;
     [SerializeField] Sprite _selected;
     [SerializeField] Sprite _notSelected;
-    [SerializeField] Color _color = Color.black;
+    public Color color = Color.black;
     [SerializeField] float _spacing = 50;
     [SerializeField] float _offsetY = -50;
 
@@ -56,7 +56,7 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
             var go = Instantiate(_slidingStylePrefab, transform);
             go.transform.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(firstDotPosOffsetX + (_spacing * i), _offsetY, 0);
 
-            go.GetComponent<Image>().color = _color;
+            go.GetComponent<Image>().color = color;
             _dots.Add(go);
         }
 

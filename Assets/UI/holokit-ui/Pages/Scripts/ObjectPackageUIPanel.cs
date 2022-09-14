@@ -65,6 +65,11 @@ namespace Holoi.HoloKit.App.UI
             for (int i = 0; i < _count; i++)
             {
                 _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.objectContainer;
+                /*
+                 * wait add theme tag to collection
+                 * if(metaObjectCollection.themt == dark)
+                 * _collectionContainer.GetComponent<CollectionContainer>().theme = Darl;
+                */
                 _collectionContainer.GetComponent<CollectionContainer>().metaObjectCollection = mocl.list[i];
                 var collection = Instantiate(_collectionContainer, _content);
                 collection.GetComponent<RectTransform>().localScale = Vector3.one;
@@ -79,6 +84,11 @@ namespace Holoi.HoloKit.App.UI
             for (int i = 0; i < _count; i++)
             {
                 _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.avatarContainer;
+                /*
+                 * wait add theme tag to collection
+                 * if(metaObjectCollection.themt == dark)
+                 * _collectionContainer.GetComponent<CollectionContainer>().theme = Darl;
+                */
                 _collectionContainer.GetComponent<CollectionContainer>().metaAvatarCollection = macl.list[i];
                 var collection = Instantiate(_collectionContainer, _content);
                 collection.GetComponent<RectTransform>().localScale = Vector3.one;
