@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5912776338988280470
+--- !u!1 &5605601951325644458
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5912776338988280468}
-  - component: {fileID: 5912776338988280469}
-  - component: {fileID: 5912776338988280467}
+  - component: {fileID: 5605601951325644500}
+  - component: {fileID: 5605601951325644501}
+  - component: {fileID: 5605601951325644503}
+  - component: {fileID: 5605601951325644502}
   m_Layer: 0
-  m_Name: Mofa Training Reality Manager
+  m_Name: Mofa AI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5912776338988280468
+--- !u!4 &5605601951325644500
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5912776338988280470}
+  m_GameObject: {fileID: 5605601951325644458}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -33,13 +34,13 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5912776338988280469
+--- !u!114 &5605601951325644501
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5912776338988280470}
+  m_GameObject: {fileID: 5605601951325644458}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
@@ -49,26 +50,42 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &5912776338988280467
+--- !u!114 &5605601951325644503
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5912776338988280470}
+  m_GameObject: {fileID: 5605601951325644458}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a90598430990449d5aae45d9f9848d23, type: 3}
+  m_Script: {fileID: 11500000, guid: b0130bba435ba4eb596b1ed3184cc3c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneName: MofaTraining
-  NetworkPrefabs:
-  - {fileID: 7073433850997623658, guid: 5180be57b37b4499b813f534629c92ee, type: 3}
-  - {fileID: 5394364572405740581, guid: 798494e15804348a8b7ad3749ab6edb1, type: 3}
-  - {fileID: 5605601951325644458, guid: 20edfea54ed5a4954b363c02944ef2a2, type: 3}
-  IsFighting:
-    m_InternalValue: 0
-  MofaPlayerPrefab: {fileID: 5531124449187713469, guid: 5180be57b37b4499b813f534629c92ee, type: 3}
-  LifeShieldPrefab: {fileID: 2636417951307045499, guid: 798494e15804348a8b7ad3749ab6edb1, type: 3}
-  MofaAIPrefab: {fileID: 5605601951325644503, guid: 20edfea54ed5a4954b363c02944ef2a2, type: 3}
-  PlacementIndicatorPrefab: {fileID: 1658817115856872707, guid: b50408eb4abb147b296ac5f02d73ec99, type: 3}
+  AvatarList: {fileID: 11400000, guid: 3b2d1ecc6d7b84401a11a9c8be6d4fa8, type: 2}
+--- !u!114 &5605601951325644502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5605601951325644458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 0
+  Interpolate: 1

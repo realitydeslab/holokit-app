@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.HoloKit.App;
+using HoloKit;
 
 namespace Holoi.Mofa.Base
 {
@@ -31,6 +32,22 @@ namespace Holoi.Mofa.Base
 
             var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             mofaRealityManager.SetPlayer(OwnerClientId, this);
+        }
+
+        protected virtual void Update()
+        {
+            // Update NetworkTransform
+            if (IsOwner)
+            {
+                transform.SetPositionAndRotation(HoloKitCamera.Instance.CenterEyePose.position, HoloKitCamera.Instance.CenterEyePose.rotation);
+            }
+
+            // Set life shield transform on each client
+            if (LifeShield != null)
+            {
+                LifeShield.transform.SetPositionAndRotation(transform.position + transform.rotation * LifeShield.CenterEyeOffset,
+                    transform.rotation);
+            }
         }
     }
 }

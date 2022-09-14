@@ -105,15 +105,5 @@ namespace Holoi.Mofa.Base
             _audioSource.clip = _hitSound;
             _audioSource.Play();
         }
-
-        private void Update()
-        {
-            if (IsOwner)
-            {
-                transform.SetPositionAndRotation(HoloKitCamera.Instance.CenterEyePose.position
-                    + HoloKitCamera.Instance.CenterEyePose.rotation * CenterEyeOffset,
-                    HoloKitCamera.Instance.CenterEyePose.rotation);
-            }
-        }
     }
 }

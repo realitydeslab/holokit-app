@@ -13,13 +13,27 @@ namespace Holoi.Reality.MOFATheTraining
 {
     public class MofaTrainingRealityManager : MofaBaseRealityManager
     {
-        public MetaAvatarCollectionList AvatarList;
+        public MofaAI MofaAIPrefab;
 
         public GameObject PlacementIndicatorPrefab;
 
         private GameObject _placementIndicator;
 
         private ARRaycastManager _arRaycastManager;
+
+        private MofaAI _mofaAI;
+
+        private void Awake()
+        {
+            StARARPanel.OnTriggered += OnTriggered;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            StARARPanel.OnTriggered -= OnTriggered;
+        }
 
         public override void OnNetworkSpawn()
         {
@@ -29,9 +43,6 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 // Spawn host's player
                 SpawnMofaPlayer(MofaTeam.Blue, NetworkManager.LocalClientId);
-
-                // Spawn AI's player
-                SpawnMofaPlayer(MofaTeam.Red, 999);
 
                 // Spawn host's life shield
                 SpawnLifeShield(NetworkManager.LocalClientId);
@@ -70,16 +81,43 @@ namespace Holoi.Reality.MOFATheTraining
             }
         }
 
-        public void SpawnAvatar()
+        private void SpawnAvatarController()
         {
-            if (_placementIndicator == null || !_placementIndicator.activeSelf)
+            if (_placementIndicator.activeSelf)
             {
-                Debug.Log("[MOFATheTraining] Failed to spawn avatar");
-                return;
+                _mofaAI = Instantiate(MofaAIPrefab, _placementIndicator.transform.position, Quaternion.identity);
+                _mofaAI.Team.Value = MofaTeam.Red;
+                _mofaAI.GetComponent<NetworkObject>().Spawn();
+                Destroy(_placementIndicator);
+                _arRaycastManager.enabled = false;
+                HoloKitCamera.Instance.GetComponentInParent<ARPlaneManager>().enabled = false;
+                DestroyExistingARPlanes();
             }
+            else
+            {
+                Debug.Log("[MOFATheTraining] Failed to spawn AvatarController");
+            }
+        }
 
-            var avatar = Instantiate(AvatarList.list[0].metaAvatars[0].prefab,
-                _placementIndicator.transform.position, _placementIndicator.transform.rotation);
+        private void OnTriggered()
+        {
+            if (_mofaAI == null)
+            {
+                SpawnAvatarController();
+            }
+            else
+            {
+                Debug.Log("[MOFATheTraining] AvatarController already spawned");
+            }
+        }
+
+        private void DestroyExistingARPlanes()
+        {
+            var planes = FindObjectsOfType<ARPlane>();
+            foreach (var plane in planes)
+            {
+                Destroy(plane.gameObject);
+            }
         }
     }
 }
