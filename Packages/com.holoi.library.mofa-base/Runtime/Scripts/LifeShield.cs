@@ -47,7 +47,7 @@ namespace Holoi.Mofa.Base
             realityManager.SetLifeShield(this);
 
             // Setup color
-            if (realityManager.Players[NetworkManager.LocalClientId].Team.Value == MofaTeam.Blue)
+            if (realityManager.Players[OwnerClientId].Team.Value == MofaTeam.Blue)
             {
                 _fragments[LifeShieldArea.Top].GetComponent<MeshRenderer>().material = _blueMaterial;
                 _fragments[LifeShieldArea.Bot].GetComponent<MeshRenderer>().material = _blueMaterial;
@@ -78,6 +78,14 @@ namespace Holoi.Mofa.Base
             BotDestroyed.OnValueChanged += OnBotDestroyed;
             LeftDestroyed.OnValueChanged += OnLeftDestroyed;
             RightDestroyed.OnValueChanged += OnRightDestroyed;
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            TopDestroyed.OnValueChanged -= OnTopDestroyed;
+            BotDestroyed.OnValueChanged -= OnBotDestroyed;
+            LeftDestroyed.OnValueChanged -= OnLeftDestroyed;
+            RightDestroyed.OnValueChanged -= OnRightDestroyed;
         }
 
         private void OnTopDestroyed(bool oldValue, bool newValue)

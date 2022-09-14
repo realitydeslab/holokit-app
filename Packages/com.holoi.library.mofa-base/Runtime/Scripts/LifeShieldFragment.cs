@@ -21,11 +21,11 @@ namespace Holoi.Mofa.Base
     {
         public LifeShieldArea Area;
 
-        private LifeShield _lifeShield;
+        public LifeShield LifeShield;
 
         private void Awake()
         {
-            _lifeShield = GetComponentInParent<LifeShield>();
+            LifeShield = GetComponentInParent<LifeShield>();
         }
 
         public void OnHit()
@@ -33,38 +33,38 @@ namespace Holoi.Mofa.Base
             switch (Area)
             {
                 case LifeShieldArea.Center:
-                    _lifeShield.TopDestroyed.Value = true;
-                    _lifeShield.BotDestroyed.Value = true;
-                    _lifeShield.LeftDestroyed.Value = true;
-                    _lifeShield.RightDestroyed.Value = true;
+                    LifeShield.TopDestroyed.Value = true;
+                    LifeShield.BotDestroyed.Value = true;
+                    LifeShield.LeftDestroyed.Value = true;
+                    LifeShield.RightDestroyed.Value = true;
                     break;
                 case LifeShieldArea.Top:
-                    _lifeShield.TopDestroyed.Value = true;
+                    LifeShield.TopDestroyed.Value = true;
                     break;
                 case LifeShieldArea.TopRight:
-                    _lifeShield.TopDestroyed.Value = true;
-                    _lifeShield.RightDestroyed.Value = true;
+                    LifeShield.TopDestroyed.Value = true;
+                    LifeShield.RightDestroyed.Value = true;
                     break;
                 case LifeShieldArea.Right:
-                    _lifeShield.RightDestroyed.Value = true;
+                    LifeShield.RightDestroyed.Value = true;
                     break;
                 case LifeShieldArea.BotRight:
-                    _lifeShield.BotDestroyed.Value = true;
-                    _lifeShield.RightDestroyed.Value = true;
+                    LifeShield.BotDestroyed.Value = true;
+                    LifeShield.RightDestroyed.Value = true;
                     break;
                 case LifeShieldArea.Bot:
-                    _lifeShield.BotDestroyed.Value = true;
+                    LifeShield.BotDestroyed.Value = true;
                     break;
                 case LifeShieldArea.BotLeft:
-                    _lifeShield.BotDestroyed.Value = true;
-                    _lifeShield.LeftDestroyed.Value = true;
+                    LifeShield.BotDestroyed.Value = true;
+                    LifeShield.LeftDestroyed.Value = true;
                     break;
                 case LifeShieldArea.Left:
-                    _lifeShield.LeftDestroyed.Value = true;
+                    LifeShield.LeftDestroyed.Value = true;
                     break;
                 case LifeShieldArea.TopLeft:
-                    _lifeShield.TopDestroyed.Value = true;
-                    _lifeShield.LeftDestroyed.Value = true;
+                    LifeShield.TopDestroyed.Value = true;
+                    LifeShield.LeftDestroyed.Value = true;
                     break;
                 default:
                     break;

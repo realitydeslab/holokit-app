@@ -36,7 +36,7 @@ namespace Holoi.Mofa.Base
 
         protected virtual void Update()
         {
-            // Update NetworkTransform
+            // Update ClientNetworkTransform
             if (IsOwner)
             {
                 transform.SetPositionAndRotation(HoloKitCamera.Instance.CenterEyePose.position, HoloKitCamera.Instance.CenterEyePose.rotation);

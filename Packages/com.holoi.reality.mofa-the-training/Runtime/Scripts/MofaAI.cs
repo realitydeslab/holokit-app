@@ -17,13 +17,16 @@ namespace Holoi.Reality.MOFATheTraining
 
         public override void OnNetworkSpawn()
         {
-            Debug.Log($"[MofaAI] OnNetworkSpawned with ownership {OwnerClientId} and team {Team.Value}");
-
-            var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-            mofaRealityManager.SetPlayer(999, this);
+            base.OnNetworkSpawn();
 
             // Spawn avatar on each client locally
             SpawnAvatar();
+
+            if (IsServer)
+            {
+                var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+                mofaRealityManager.SpawnLifeShield(OwnerClientId);
+            }
         }
 
         private void SpawnAvatar()
@@ -41,6 +44,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         protected override void Update()
         {
+            // Update NetworkTransform
             if (IsServer)
             {
                 Quaternion lookAtRotation = Quaternion.LookRotation(HoloKitCamera.Instance.CenterEyePose.position - transform.position);
@@ -48,7 +52,17 @@ namespace Holoi.Reality.MOFATheTraining
             }
 
             // Set the avatar's transform on each client manually
-            _avatar.transform.rotation = transform.rotation;
+            if (_avatar != null)
+            {
+                _avatar.transform.SetPositionAndRotation(transform.position, transform.rotation);
+            }
+
+            // Set the life shield's transform on each client manually
+            if (LifeShield != null)
+            {
+                LifeShield.transform.SetPositionAndRotation(transform.position + transform.rotation * new Vector3(0f, 1f, 0.8f),
+                    transform.rotation);
+            }
         }
     }
 }

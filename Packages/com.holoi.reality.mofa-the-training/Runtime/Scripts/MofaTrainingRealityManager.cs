@@ -21,8 +21,6 @@ namespace Holoi.Reality.MOFATheTraining
 
         private ARRaycastManager _arRaycastManager;
 
-        private MofaAI _mofaAI;
-
         private void Awake()
         {
             StARARPanel.OnTriggered += OnTriggered;
@@ -81,13 +79,14 @@ namespace Holoi.Reality.MOFATheTraining
             }
         }
 
-        private void SpawnAvatarController()
+        private void SpawnMofaAI()
         {
             if (_placementIndicator.activeSelf)
             {
-                _mofaAI = Instantiate(MofaAIPrefab, _placementIndicator.transform.position, Quaternion.identity);
-                _mofaAI.Team.Value = MofaTeam.Red;
-                _mofaAI.GetComponent<NetworkObject>().Spawn();
+                var mofaAI = Instantiate(MofaAIPrefab, _placementIndicator.transform.position, Quaternion.identity);
+                mofaAI.Team.Value = MofaTeam.Red;
+                mofaAI.GetComponent<NetworkObject>().SpawnWithOwnership(999);
+
                 Destroy(_placementIndicator);
                 _arRaycastManager.enabled = false;
                 HoloKitCamera.Instance.GetComponentInParent<ARPlaneManager>().enabled = false;
@@ -101,13 +100,11 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void OnTriggered()
         {
-            if (_mofaAI == null)
+            if (Phase.Value == MofaPhase.Waiting)
             {
-                SpawnAvatarController();
-            }
-            else
-            {
-                Debug.Log("[MOFATheTraining] AvatarController already spawned");
+                SpawnMofaAI();
+                StartCoroutine(StartSingleRound());
+                return;
             }
         }
 
