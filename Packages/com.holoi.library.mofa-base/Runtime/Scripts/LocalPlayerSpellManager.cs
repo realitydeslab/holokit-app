@@ -16,6 +16,8 @@ namespace Holoi.Mofa.Base
 
     public class LocalPlayerSpellManager : MonoBehaviour
     {
+        public SpellList SpellList;
+
         [HideInInspector] public Spell BasicSpell;
 
         [HideInInspector] public Spell SecondarySpell;
@@ -103,7 +105,7 @@ namespace Holoi.Mofa.Base
             }
             else
             {
-                _mofaRealityManager.SpawnSpellServerRpc(BasicSpell,
+                _mofaRealityManager.SpawnSpellServerRpc(BasicSpell.Id,
                     HoloKitCamera.Instance.CenterEyePose.position, HoloKitCamera.Instance.CenterEyePose.rotation);
                 BasicSpellCharge -= BasicSpell.ChargeTime;
             }
@@ -125,7 +127,7 @@ namespace Holoi.Mofa.Base
             }
             else
             {
-                _mofaRealityManager.SpawnSpellServerRpc(SecondarySpell,
+                _mofaRealityManager.SpawnSpellServerRpc(SecondarySpell.Id,
                     HoloKitCamera.Instance.CenterEyePose.position, HoloKitCamera.Instance.CenterEyePose.rotation);
                 SecondarySpellCharge -= SecondarySpell.ChargeTime;
                 SecondarySpellUseCount++;

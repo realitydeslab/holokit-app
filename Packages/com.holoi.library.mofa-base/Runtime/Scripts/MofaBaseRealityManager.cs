@@ -120,9 +120,10 @@ namespace Holoi.Mofa.Base
         }
 
         [ServerRpc]
-        public void SpawnSpellServerRpc(Spell spell, Vector3 clientCenterEyePosition,
+        public void SpawnSpellServerRpc(int spellId, Vector3 clientCenterEyePosition,
             Quaternion clientCenterEyeRotation, ServerRpcParams serverRpcParams = default)
         {
+            Spell spell = LocalPlayerSpellManager.SpellList.List[spellId];
             var position = clientCenterEyePosition + clientCenterEyeRotation * spell.SpawnOffset;
             var rotation = clientCenterEyeRotation;
             if (spell.PerpendicularToGround)
