@@ -1,21 +1,24 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RecordButton : MonoBehaviour
+namespace Holoi.Library.HoloKitApp.UI
 {
-    [SerializeField] Sprite _record;
-    [SerializeField] Sprite _recording;
-
-    public void SetState(bool active)
+    public class RecordButton : MonoBehaviour
     {
-        if (active)
+        [SerializeField] Sprite _record;
+        [SerializeField] Sprite _recording;
+
+        public void SetState(bool active)
         {
-            transform.Find("Image").GetComponent<Image>().sprite = _recording;
+            if (active)
+            {
+                transform.Find("Image").GetComponent<Image>().sprite = _recording;
+            }
+            else
+            {
+                transform.Find("Image").GetComponent<Image>().sprite = _record;
+            }
+
         }
-        else
-        {
-            transform.Find("Image").GetComponent<Image>().sprite = _record;
-        }
-        
     }
 }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Holoi.AssetFoundation;
 using UnityEngine;
 
-namespace Holoi.HoloKit.App
+namespace Holoi.Library.HoloKitApp
 {
     //[CreateAssetMenu(menuName = "ScriptableObjects/HoloKitAppGlobalSettings")]
     //public class HoloKitAppGlobalSettings : ScriptableObject

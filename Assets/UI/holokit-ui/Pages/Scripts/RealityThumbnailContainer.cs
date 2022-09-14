@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     public class RealityThumbnailContainer : MonoBehaviour
     {

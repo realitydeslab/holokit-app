@@ -2,17 +2,17 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     public class FlexibleUIPlayButton : FlexibleUI
     {
-        public enum Color
+        public enum Theme
         {
-            Black,
-            White
+            Dark,
+            Bright
         }
 
-        [SerializeField] Color _color;
+        public Theme theme;
         Image _image;
 
         protected override void OnSkinUI()
@@ -21,13 +21,13 @@ namespace Holoi.HoloKit.App.UI
 
             _image = GetComponent<Image>();
 
-            switch (_color)
+            switch (theme)
             {
-                case Color.Black:
-                    _image.sprite = SkinData.PlayBlack;
-                    break;
-                case Color.White:
+                case Theme.Dark:
                     _image.sprite = SkinData.PlayWhite;
+                    break;
+                case Theme.Bright:
+                    _image.sprite = SkinData.PlayBlack;
                     break;
             }
         }

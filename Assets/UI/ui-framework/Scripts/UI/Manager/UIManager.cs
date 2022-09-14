@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 ///  save all UI data and create/detroy UI
 /// </summary>
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     public class UIManager
     {

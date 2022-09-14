@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Holoi.HoloKit.App.UI;
+using Holoi.Library.HoloKitApp.UI;
 
 public class SettingSwitchContainer : MonoBehaviour
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
-namespace Holoi.HoloKit.App
+namespace Holoi.Library.HoloKitApp
 {
     public class MonoARPanel : MonoBehaviour
     {

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Holoi.Mofa.Base;
-using Holoi.HoloKit.App;
+using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Reality.MOFATheTraining
 {

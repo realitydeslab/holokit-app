@@ -1,0 +1,33 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Holoi.Mofa.Base
+{
+    public enum SpellType
+    {
+        Basic = 0,
+        Secondary = 1
+    }
+
+    public class Spell : MonoBehaviour
+    {
+        public int Id;
+
+        public string Name;
+
+        public MagicSchool MagicSchool;
+
+        public SpellType SpellType;
+
+        public Vector3 SpawnOffset;
+
+        public bool PerpendicularToGround;
+
+        public float ChargeTime;
+
+        public int MaxChargeCount;
+
+        public int MaxUseCount;
+    }
+}

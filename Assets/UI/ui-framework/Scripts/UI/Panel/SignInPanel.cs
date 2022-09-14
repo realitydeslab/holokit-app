@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// HomePage displaly all realities and the entry to settings
 /// </summary>
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     public class SignInPanel : BasePanel
     {
@@ -16,12 +16,6 @@ namespace Holoi.HoloKit.App.UI
 
         public override void OnOpen()
         {
-            UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
-            {
-                var panel = new HamburgerPanel();
-                PanelManager.Push(panel);
-            });
-
             UITool.GetOrAddComponentInChildren<Button>("SignInButton").onClick.AddListener(() =>
             {
                 PanelManager.Pop();

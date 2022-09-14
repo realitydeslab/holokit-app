@@ -5,7 +5,7 @@ using Unity.Netcode;
 using System;
 using HoloKit;
 
-namespace Holoi.HoloKit.App
+namespace Holoi.Library.HoloKitApp
 {
     public abstract class RealityManager : NetworkBehaviour
     {

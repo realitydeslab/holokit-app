@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Holoi.AssetFoundation;
 
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     [ExecuteInEditMode]
     public class RealityDetailUIPanel : MonoBehaviour
@@ -10,13 +10,12 @@ namespace Holoi.HoloKit.App.UI
         public Holoi.AssetFoundation.Reality reality;
 
         [SerializeField] Transform _content;
-        [SerializeField] TMPro.TMP_Text _id;
-        [SerializeField] TMPro.TMP_Text _name;
-        [SerializeField] TMPro.TMP_Text _version;
-        [SerializeField] TMPro.TMP_Text _lastUpdate;
-        [SerializeField] TMPro.TMP_Text _author;
-        [SerializeField] TMPro.TMP_Text _description;
-        [SerializeField] TMPro.TMP_Text _technic;
+        [SerializeField] FlexibleUIText _id;
+        [SerializeField] FlexibleUIText _name;
+        [SerializeField] FlexibleUIText _author;
+        [SerializeField] FlexibleUIText _description;
+        [SerializeField] TechTagContainer _technicContainer;
+        [SerializeField] FlexibleUIText _version;
         [SerializeField] Transform _videoContainer;
 
         float _contentInitPositionY;
@@ -25,11 +24,19 @@ namespace Holoi.HoloKit.App.UI
         private void Awake()
         {
             _contentInitPositionY = _content.position.y;
+            _technicContainer.reality = reality;
         }
 
         private void Update()
         {
-            if (PanelManager.Instance.GetActivePanel().UIType.Name == "RealityDetailPanel")
+            if (Application.isPlaying)
+            {
+                if (PanelManager.Instance.GetActivePanel().UIType.Name == "RealityDetailPanel")
+                {
+                    UpdateThumbnailOffset();
+                }
+            }
+            else
             {
                 UpdateThumbnailOffset();
             }
@@ -37,12 +44,14 @@ namespace Holoi.HoloKit.App.UI
 
         public void UpdateInformation()
         {
-            _id.text = "Reality #" + reality.realityId;
-            _name.text = reality.name;
-            _version.text = reality.version;
-            _lastUpdate.text = "2022. 09. 28";
-            _author.text = reality.author;
-            _description.text = reality.description;
+            _id.text.text = "Reality #" + reality.realityId;
+            _name.text.text = reality.name;
+            _version.text.text = reality.version;
+            _author.text.text = reality.author;
+            _description.text.text = reality.description;
+            _description.GetComponent<RectTransform>().sizeDelta = new Vector2(
+                1002,
+                _description.text.preferredHeight);
         }
 
         void UpdateThumbnailOffset()

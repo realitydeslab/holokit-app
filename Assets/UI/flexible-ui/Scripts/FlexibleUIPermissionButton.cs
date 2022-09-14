@@ -2,25 +2,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     [RequireComponent(typeof(Button))]
     [RequireComponent(typeof(Image))]
     public class FlexibleUIPermissionButton : FlexibleUI
     {
-        //public enum Theme
-        //{
-        //    White,
-        //    Black
-        //}
-        public enum State
+        public enum GoOnState
         {
             Uncheck,
             Checked
         }
 
         //public Theme theme;
-        public State state;
+        public GoOnState state;
 
         Image _image;
         Image _icon;
@@ -50,7 +45,7 @@ namespace Holoi.HoloKit.App.UI
 
             switch (state)
             {
-                case State.Uncheck:
+                case GoOnState.Uncheck:
                     _image.color = SkinData.WhiteActiveColor;
                     _icon.sprite = SkinData.UnchenckCircle;
                     _icon.color = Color.black;
@@ -58,7 +53,7 @@ namespace Holoi.HoloKit.App.UI
                     _text.text = _string;
 
                     break;
-                case State.Checked:
+                case GoOnState.Checked:
                     _image.color = SkinData.DarkActiveColor;
                     _icon.sprite = SkinData.CheckedCircle;
                     _icon.color = Color.white;

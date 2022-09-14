@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
-namespace Holoi.HoloKit.App
+namespace Holoi.Library.HoloKitApp
 {
     [CreateAssetMenu(menuName = "ScriptableObjects/HoloKitAppGlobalSettings")]
     public class HoloKitAppGlobalSettings : ScriptableObject

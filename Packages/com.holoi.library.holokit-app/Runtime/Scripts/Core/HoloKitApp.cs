@@ -6,8 +6,9 @@ using UnityEngine.SceneManagement;
 using Netcode.Transports.MultipeerConnectivity;
 using System;
 using Holoi.AssetFoundation;
+using Unity.Netcode.Transports.UNET;
 
-namespace Holoi.HoloKit.App
+namespace Holoi.Library.HoloKitApp
 {
     public class HoloKitApp : MonoBehaviour
     {
@@ -80,6 +81,10 @@ namespace Holoi.HoloKit.App
             if (NetworkManager.Singleton == null)
             {
                 var networkManager = Instantiate(NetworkManagerPrefab);
+                if (HoloKitAppUtils.IsEditor)
+                {
+                    networkManager.NetworkConfig.NetworkTransport = networkManager.GetComponent<UNetTransport>();
+                }
                 networkManager.OnClientConnectedCallback += OnClientConnected;
                 networkManager.AddNetworkPrefab(CurrentReality.realityManager);
                 foreach (var prefab in realityManager.NetworkPrefabs)
@@ -136,6 +141,12 @@ namespace Holoi.HoloKit.App
             {
                 Debug.Log("[HoloKitApp] Failed to start client");
             }
+        }
+
+        public void Shutdown()
+        {
+            NetworkManager.Singleton.Shutdown();
+            DeinitializeNetworkManager();
         }
 
         public void SetRealityManager(RealityManager realityManager)

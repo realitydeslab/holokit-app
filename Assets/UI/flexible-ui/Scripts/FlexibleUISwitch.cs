@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     public class FlexibleUISwitch : FlexibleUI
     {

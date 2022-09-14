@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     [RequireComponent(typeof(Button))]
     [RequireComponent(typeof(Image))]
@@ -23,8 +23,8 @@ namespace Holoi.HoloKit.App.UI
 
         public enum State
         {
-            Inactive,
-            Active
+            Inactive = 1,
+            Active = 0
         }
 
         public Color color = Color.Black;
@@ -89,13 +89,13 @@ namespace Holoi.HoloKit.App.UI
                     switch (state)
                     {
                         case State.Inactive:
-                            _image.color = SkinData.DarkInactiveColor;
+                            _image.color = SkinData.holoGrey3;
                             _icon.sprite = SkinData.WhiteArrow;
                             if(_text) _text.color = UnityEngine.Color.white;
                             if(_text) _text.text = _string;
                             break;
                         case State.Active:
-                            _image.color = SkinData.DarkActiveColor;
+                            _image.color = SkinData.holoBlack;
                             _icon.sprite = SkinData.WhiteArrow;
                             if (_text) _text.color = UnityEngine.Color.white;
                             if (_text) _text.text = _string;
@@ -114,7 +114,7 @@ namespace Holoi.HoloKit.App.UI
                             if (_text) _text.text = _string;
                             break;
                         case State.Active:
-                            _image.color = SkinData.WhiteActiveColor;
+                            _image.color = SkinData. holoWhite;
                             _icon.sprite = SkinData.BlackArrow;
                             if (_text) _text.color = UnityEngine.Color.black;
                             if (_text) _text.text = _string;

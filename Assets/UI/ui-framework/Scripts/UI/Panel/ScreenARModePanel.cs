@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     public class ScreenARModePanel : BasePanel
     {
@@ -66,9 +66,15 @@ namespace Holoi.HoloKit.App.UI
                 // here we do onclick event of this button
                 Debug.Log("CheckMarkButton is clicked.");
 
-                var panel = new ScreenARCheckTheMarkPanel();
-                PanelManager.Push(panel);
+                GoToCheckTheMarkPanel();
             });
+        }
+
+        public void GoToCheckTheMarkPanel()
+        {
+            UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.checkMark);
+            var panel = new ScreenARCheckTheMarkPanel();
+            PanelManager.Push(panel);
         }
     }
 }

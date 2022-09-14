@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     public class ScreenARWaitPlayerPanel : BasePanel
     {
@@ -13,13 +13,6 @@ namespace Holoi.HoloKit.App.UI
 
         public override void OnOpen()
         {
-            UITool.GetOrAddComponentInChildren<Button>("ShareButton").onClick.AddListener(() =>
-            {
-                // here we do onclick event of this button
-                Debug.Log("ShareButton is clicked.");
-                var panel = new ScreenARShareQRPanel();
-                PanelManager.Push(panel);
-            });
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
@@ -27,6 +20,19 @@ namespace Holoi.HoloKit.App.UI
                 PanelManager.Pop();
             });
 
+            UITool.GetOrAddComponentInChildren<Button>("DebugButton").onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("DebugButton is clicked.");
+
+                PlayerEnteredReality();
+            });
+        }
+
+        public void PlayerEnteredReality()
+        {
+            PanelManager.Pop();
+            var panel = PanelManager.Instance.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().state = ScreenARModeUIPanel.State.scanning;
         }
     }
 }
