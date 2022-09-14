@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// panel manager, using a stack to pop and push panels for a smooth management
 /// </summary>
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     public class PanelManager
     {

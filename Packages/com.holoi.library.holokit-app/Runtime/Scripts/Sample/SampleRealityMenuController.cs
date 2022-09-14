@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Holoi.AssetFoundation;
 
-namespace Holoi.HoloKit.App.Sample
+namespace Holoi.Library.HoloKitApp.Sample
 {
     public class SampleRealityMenuController : MonoBehaviour
     {

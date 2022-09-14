@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Holoi.HoloKit.App
+namespace Holoi.Library.HoloKitApp
 {
     [CreateAssetMenu(menuName = "ScriptableObjects/HoloKitSocialAccounts")]
     public class HoloKitSocialAccounts : ScriptableObject

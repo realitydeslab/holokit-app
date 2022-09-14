@@ -28,8 +28,9 @@ namespace Holoi.Mofa.Base
             LifeShield = GetComponentInParent<LifeShield>();
         }
 
-        public void OnHit()
+        public void OnHit(ulong attackerClientId)
         {
+            LifeShield.LastAttackerClientId.Value = (int)attackerClientId;
             switch (Area)
             {
                 case LifeShieldArea.Center:

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     public class ScreenARMainScene : Scene
     {

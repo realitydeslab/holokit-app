@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     [CreateAssetMenu(menuName = "Flexible UI Data")]
     public class FlexibleUIData : ScriptableObject

@@ -10,9 +10,9 @@ namespace Holoi.Mofa.Base
     {
         public float Lifetime;
 
-        public float DestroyDelay;
-
         [SerializeField] private AudioClip _spawnSound;
+
+        [SerializeField] private float _destroyDelay;
 
         private float _spawnTime;
 
@@ -44,7 +44,7 @@ namespace Holoi.Mofa.Base
                 if (NetworkManager.ServerTime.TimeAsFloat - _spawnTime > Lifetime)
                 {
                     OnDeadClientRpc();
-                    Destroy(this, DestroyDelay);
+                    Destroy(this, _destroyDelay);
                 }
             }
         }

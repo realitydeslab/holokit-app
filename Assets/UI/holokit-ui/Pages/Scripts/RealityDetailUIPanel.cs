@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Holoi.AssetFoundation;
 
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     [ExecuteInEditMode]
     public class RealityDetailUIPanel : MonoBehaviour

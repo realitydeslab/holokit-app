@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using Holoi.HoloKit.App;
+using Holoi.Library.HoloKitApp;
 using System;
 
 namespace Holoi.Mofa.Base
@@ -11,9 +11,9 @@ namespace Holoi.Mofa.Base
     {
         public bool HitOnce = true;
 
-        public float DestroyDelay;
-
         [SerializeField] private AudioClip _hitSound;
+
+        [SerializeField] private float _destroyDelay;
 
         public event Action OnHit;
 
@@ -34,11 +34,11 @@ namespace Holoi.Mofa.Base
                 MofaTeam victimTeam = mofaRealityManager.Players[other.GetComponentInParent<NetworkObject>().OwnerClientId].Team.Value;
                 if (attackerTeam != victimTeam)
                 {
-                    damageable.OnHit();
+                    damageable.OnHit(OwnerClientId);
                     OnHitClientRpc();
                     if (HitOnce)
                     {
-                        Destroy(this, DestroyDelay);
+                        Destroy(this, _destroyDelay);
                     }
                 }
             }

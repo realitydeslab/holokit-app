@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// HomePage displaly all realities and the entry to settings
 /// </summary>
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     public class SignInPanel : BasePanel
     {

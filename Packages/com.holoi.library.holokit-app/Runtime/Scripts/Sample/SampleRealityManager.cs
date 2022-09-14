@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Holoi.HoloKit.App.Sample
+namespace Holoi.Library.HoloKitApp.Sample
 {
     public class SampleRealityManager : RealityManager
     {

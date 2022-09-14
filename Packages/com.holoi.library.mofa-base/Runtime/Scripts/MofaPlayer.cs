@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using Holoi.HoloKit.App;
+using Holoi.Library.HoloKitApp;
 using HoloKit;
 
 namespace Holoi.Mofa.Base

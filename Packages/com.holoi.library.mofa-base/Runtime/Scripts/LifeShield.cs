@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using Holoi.HoloKit.App;
-using HoloKit;
+using Holoi.Library.HoloKitApp;
+using System;
 
 namespace Holoi.Mofa.Base
 {
@@ -17,17 +17,25 @@ namespace Holoi.Mofa.Base
 
         [HideInInspector] public NetworkVariable<bool> RightDestroyed = new(false, NetworkVariableReadPermission.Everyone);
 
+        [HideInInspector] public NetworkVariable<int> LastAttackerClientId = new(0, NetworkVariableReadPermission.Everyone);
+
         [SerializeField] private Material _blueMaterial;
 
         [SerializeField] private Material _redMaterial;
 
         [SerializeField] private AudioClip _hitSound;
 
+        [SerializeField] private AudioClip _destroySound;
+
+        [SerializeField] private float _destroyDelay;
+
         public Vector3 CenterEyeOffset;
 
         private AudioSource _audioSource;
 
         private readonly Dictionary<LifeShieldArea, LifeShieldFragment> _fragments = new();
+
+        public static event Action<ulong> OnDead;
 
         private void Awake()
         {
@@ -43,11 +51,11 @@ namespace Holoi.Mofa.Base
         {
             Debug.Log($"[LifeShield] OnNetworkSpawn with ownership {OwnerClientId}");
 
-            var realityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-            realityManager.SetLifeShield(this);
+            var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            mofaRealityManager.SetLifeShield(this);
 
             // Setup color
-            if (realityManager.Players[OwnerClientId].Team.Value == MofaTeam.Blue)
+            if (mofaRealityManager.Players[OwnerClientId].Team.Value == MofaTeam.Blue)
             {
                 _fragments[LifeShieldArea.Top].GetComponent<MeshRenderer>().material = _blueMaterial;
                 _fragments[LifeShieldArea.Bot].GetComponent<MeshRenderer>().material = _blueMaterial;
@@ -91,27 +99,59 @@ namespace Holoi.Mofa.Base
         private void OnTopDestroyed(bool oldValue, bool newValue)
         {
             PlayHitSound();
+            IsDead();
         }
 
         private void OnBotDestroyed(bool oldValue, bool newValue)
         {
             PlayHitSound();
+            IsDead();
         }
 
         private void OnLeftDestroyed(bool oldValue, bool newValue)
         {
             PlayHitSound();
+            IsDead();
         }
 
         private void OnRightDestroyed(bool oldValue, bool newValue)
         {
             PlayHitSound();
+            IsDead();
+        }
+
+        private void IsDead()
+        {
+            if (TopDestroyed.Value && BotDestroyed.Value && LeftDestroyed.Value && RightDestroyed.Value)
+            {
+                OnDead?.Invoke(OwnerClientId);
+                PlayDestroySound();
+                if (IsServer)
+                {
+                    var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+                    mofaRealityManager.Players[(ulong)LastAttackerClientId.Value].KillCount.Value++;
+                    mofaRealityManager.Players[OwnerClientId].DeathCount.Value++;
+                    Destroy(this, _destroyDelay);
+                }
+            }
         }
 
         private void PlayHitSound()
         {
-            _audioSource.clip = _hitSound;
-            _audioSource.Play();
+            if (_hitSound != null)
+            {
+                _audioSource.clip = _hitSound;
+                _audioSource.Play();
+            }
+        }
+
+        private void PlayDestroySound()
+        {
+            if (_destroySound != null)
+            {
+                _audioSource.clip = _destroySound;
+                _audioSource.Play();
+            }
         }
     }
 }

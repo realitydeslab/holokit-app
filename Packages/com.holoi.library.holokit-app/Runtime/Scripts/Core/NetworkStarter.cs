@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Holoi.HoloKit.App
+namespace Holoi.Library.HoloKitApp
 {
     public class NetworkStarter : MonoBehaviour
     {
