@@ -12,14 +12,14 @@ namespace Holoi.HoloKit.App.UI
         public CollectionContainer.Type type;
         public MetaObjectCollection metaObjectCollection;
         public MetaAvatarCollection metaAvatarCollection;
+        public int _currentIndex;
+
         [SerializeField] GameObject _objectPortraitContainer;
         [SerializeField] Transform _content;
         [SerializeField] float _portraitSize = 460;
 
-
-
-        [Header("debug")]
         int _count = 0;
+        float _sliderValue;
 
         void Awake()
         {
@@ -54,11 +54,10 @@ namespace Holoi.HoloKit.App.UI
                     break;
             }
 
-            var ss = transform.Find("Scrollbar Horizontal").GetComponent<ScrollBarSlidingAreaStyle>();
-            ss.Init(_count);
+            var slidingStyle = transform.Find("Scrollbar Horizontal").GetComponent<ScrollBarSlidingAreaStyle>();
+            slidingStyle.Init(_count);
 
         }
-
 
         void CreatePortrait(MetaObjectCollection moc)
         {
@@ -86,7 +85,7 @@ namespace Holoi.HoloKit.App.UI
 
         void Update()
         {
-
+            _sliderValue = transform.Find("Scrollbar Horizontal").GetComponent<Scrollbar>().value;
         }
     }
 }

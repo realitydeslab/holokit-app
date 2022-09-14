@@ -114,7 +114,7 @@ namespace Holoi.HoloKit.App.UI
                             if (_text) _text.text = _string;
                             break;
                         case State.Active:
-                            _image.color = SkinData.WhiteActiveColor;
+                            _image.color = SkinData. WhiteActiveColor;
                             _icon.sprite = SkinData.BlackArrow;
                             if (_text) _text.color = UnityEngine.Color.black;
                             if (_text) _text.text = _string;

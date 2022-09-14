@@ -6,11 +6,21 @@ namespace Holoi.HoloKit.App.UI
     [CreateAssetMenu(menuName = "Flexible UI Data")]
     public class FlexibleUIData : ScriptableObject
     {
-        [Header("Theme Color")]
+        [Header("State Color")]
         public Color WhiteActiveColor;
         public Color WhiteInactiveColor;
         public Color DarkActiveColor;
         public Color DarkInactiveColor;
+
+        [Header("Holokit Color")]
+        public Color holoWhite = Color.white;
+        public Color holoGrey1 = new Color(243f / 255f, 243f / 255f, 243f / 255f);
+        public Color holoGrey2 = new Color(231f / 255f, 231f / 255f, 231f / 255f);
+        public Color holoGrey3 = new Color(199f / 255f, 199f / 255f, 199f / 255f);
+        public Color holoGrey4 = new Color(94f / 255f, 94f / 255f, 94f / 255f);
+        public Color holoOrange = new Color(1, 91 / 255f, 26 / 255f);
+        public Color holoBlack = Color.black;
+
 
         [Header("Icon List")]
         public Sprite WhiteArrow;
@@ -51,6 +61,28 @@ namespace Holoi.HoloKit.App.UI
         [Header("Play Sprites")]
         public Sprite PlayWhite;
         public Sprite PlayBlack;
+
+        [Header("Media Sprites")]
+        public Sprite YoutubeWhite;
+        public Sprite YoutubeBlack;
+        public Sprite TwitterWhite;
+        public Sprite TwitterBlack;
+        public Sprite DiscordWhite;
+        public Sprite DiscordBlack;
+        public Sprite MailWhite;
+        public Sprite MailBlack;
+        public Sprite AppleWhite;
+        public Sprite AppleBlack;
+        public Sprite InstagramWhite;
+        public Sprite InstagramBlack;
+        public Sprite TiktokWhite;
+        public Sprite TiktokBlack;
+        public Sprite FacebookWhite;
+        public Sprite FacebookBlack;
+        public Sprite LinkedinWhite;
+        public Sprite linkedinBlack;
+        public Sprite OpenseaWhite;
+        public Sprite OpenseaBlack;
     }
 
 }

@@ -10,8 +10,8 @@ namespace Holoi.HoloKit.App.UI
     {
         public enum Theme
         {
-            Default,
-            Contract
+            Dark,
+            Bright
         }
 
         public Theme theme;
@@ -31,13 +31,13 @@ namespace Holoi.HoloKit.App.UI
 
             switch (theme)
             {
-                case Theme.Default:
+                case Theme.Dark:
                     _image.sprite = SkinData.BackButtonSprite;
-                    _image.color = SkinData.WhiteActiveColor;
+                    _image.color = SkinData.holoWhite;
                     break;
-                case Theme.Contract:
+                case Theme.Bright:
                     _image.sprite = SkinData.BackButtonSprite;
-                    _image.color = SkinData.DarkActiveColor;
+                    _image.color = SkinData.holoBlack;
                     break;
             }
         }
