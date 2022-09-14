@@ -13,13 +13,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override void OnOpen()
         {
-            UITool.GetOrAddComponentInChildren<Button>("ShareButton").onClick.AddListener(() =>
-            {
-                // here we do onclick event of this button
-                Debug.Log("ShareButton is clicked.");
-                var panel = new ScreenARShareQRPanel();
-                PanelManager.Push(panel);
-            });
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
@@ -27,6 +20,19 @@ namespace Holoi.Library.HoloKitApp.UI
                 PanelManager.Pop();
             });
 
+            UITool.GetOrAddComponentInChildren<Button>("DebugButton").onClick.AddListener(() =>
+            {
+                // here we do onclick event of this button
+                Debug.Log("DebugButton is clicked.");
+
+                PlayerEnteredReality();
+            });
+        }
+
+        public void PlayerEnteredReality()
+        {
+            PanelManager.Pop();
+            var panel = PanelManager.Instance.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().state = ScreenARModeUIPanel.State.scanning;
         }
     }
 }

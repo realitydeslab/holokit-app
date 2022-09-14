@@ -71,26 +71,26 @@ namespace Holoi.Library.HoloKitApp.UI
             var NetworkButton = UITool.GetOrAddComponentInChildren<Button>("NetworkButton");
             NetworkButton.onClick.AddListener(() =>
             {
-                if (NetworkButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
+                if (NetworkButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.GoOnState.Checked)
                 {
-                    NetworkButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
+                    NetworkButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
                 }
                 else
                 {
-                    NetworkButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
+                    NetworkButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
                 }
             });
 
             var NotificationButton = UITool.GetOrAddComponentInChildren<Button>("NotificationButton");
             NotificationButton.onClick.AddListener(() =>
             {
-                if (NotificationButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
+                if (NotificationButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.GoOnState.Checked)
                 {
-                    NotificationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
+                    NotificationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
                 }
                 else
                 {
-                    NotificationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
+                    NotificationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
                 }
             });
 

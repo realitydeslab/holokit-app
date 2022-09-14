@@ -12,19 +12,19 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public enum State
         {
-            idle,
-            success
+            notSignIn = 0,
+            signedIn = 1
         }
 
         public void SetState(State state)
         {
             switch (state)
             {
-                case State.idle:
+                case State.notSignIn:
                     _idleContainer.gameObject.SetActive(true);
                     _successContainer.gameObject.SetActive(false);
                     break;
-                case State.success:
+                case State.signedIn:
                     _idleContainer.gameObject.SetActive(false);
                     _successContainer.gameObject.SetActive(true);
                     break;

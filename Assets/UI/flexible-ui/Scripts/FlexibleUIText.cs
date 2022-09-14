@@ -16,7 +16,8 @@ namespace Holoi.Library.HoloKitApp.UI
             body2 = 5,
             debug = 6,
             menu = 7,
-            loading =8
+            loading = 8,
+            techTag = 9
         }
 
         public enum Font
@@ -25,120 +26,173 @@ namespace Holoi.Library.HoloKitApp.UI
             Slanted = 1
         }
 
-        [SerializeField] Type _type;
-        [SerializeField] Font _font;
+        public enum HolokitColor
+        {
+            White = 0,
+            Grey1 = 1,
+            Grey2 = 2,
+            Grey3 = 3,
+            Grey4 = 4,
+            Black = 5,
+            Orange = 6
+        }
 
-        TMPro.TMP_Text _text;
 
+        public Type type;
+        public Font font;
+        public HolokitColor color;
+
+        [HideInInspector] public TMPro.TMP_Text text;
 
         protected override void OnSkinUI()
         {
             base.OnSkinUI();
 
-            _text = transform.Find("Text").GetComponent<TMPro.TMP_Text>();
-            _text.raycastTarget = true;
+            text = transform.Find("Text").GetComponent<TMPro.TMP_Text>();
+            //_text.raycastTarget = true;
 
-            switch (_type)
+            switch (type)
             {
                 case Type.H1:
-                    switch (_font)
+                    switch (font)
                     {
                         case Font.Normal:
-                            SetText(Color.black, SkinData.Bold, 96, -1.61f, 0, 16.67f);
+                            SetText(color, SkinData.Bold, 96, -1.61f, 0, 16.67f);
                             break;
                         case Font.Slanted:
-                            SetText(Color.black, SkinData.BoldSlanted, 96, -1.61f, 0, 16.67f);
+                            SetText(color, SkinData.BoldSlanted, 96, -1.61f, 0, 16.67f);
                             break;
                     }
                     break;
                 case Type.H2:
-                    switch (_font)
+                    switch (font)
                     {
                         case Font.Normal:
-                            SetText(Color.black, SkinData.Bold, 66, 0f, 0, 15);
+                            SetText(color, SkinData.Bold, 66, 0f, 0, 15);
                             break;
                         case Font.Slanted:
-                            SetText(Color.black, SkinData.BoldSlanted, 66, 0f, 0, 15);
+                            SetText(color, SkinData.BoldSlanted, 66, 0f, 0, 15);
                             break;
                     }
                     break;
                 case Type.H3:
-                    switch (_font)
+                    switch (font)
                     {
                         case Font.Normal:
-                            SetText(Color.black, SkinData.Bold, 41, 0.7f, 0, 0);
+                            SetText(color, SkinData.Bold, 41, 0.7f, 0, 0);
                             break;
                         case Font.Slanted:
-                            SetText(Color.black, SkinData.BoldSlanted, 41, 0.7f, 0, 0);
+                            SetText(color, SkinData.BoldSlanted, 41, 0.7f, 0, 0);
                             break;
                     }
                     break;
                 case Type.body1:
-                    switch (_font)
+                    switch (font)
                     {
                         case Font.Normal:
-                            SetText(Color.black, SkinData.Regular, 48, -1.34f, 1.06f, 39.78f);
+                            SetText(color, SkinData.Regular, 48, -1.34f, 1.06f, 39.78f);
                             break;
                         case Font.Slanted:
-                            SetText(Color.black, SkinData.RegularSlanted, 48, -1.34f, 1.06f, 39.78f);
+                            SetText(color, SkinData.RegularSlanted, 48, -1.34f, 1.06f, 39.78f);
                             break;
                     }
                     break;
                 case Type.body2:
-                    switch (_font)
+                    switch (font)
                     {
                         case Font.Normal:
-                            SetText(Color.black, SkinData.Regular, 42, -1.24f, 1.06f, 47.25f);
+                            SetText(color, SkinData.Regular, 42, -1.24f, 1.06f, 47.25f);
                             break;
                         case Font.Slanted:
-                            SetText(Color.black, SkinData.RegularSlanted, 42, -1.24f, 1.06f, 47.25f);
+                            SetText(color, SkinData.RegularSlanted, 42, -1.24f, 1.06f, 47.25f);
                             break;
                     }
                     break;
                 case Type.menu:
-                    switch (_font)
+                    switch (font)
                     {
                         case Font.Normal:
-                            SetText(Color.black, SkinData.Bold, 74, 1.5f, 0, 0);
+                            SetText(color, SkinData.Bold, 76, 0f, 0, 0);
                             break;
                         case Font.Slanted:
-                            SetText(Color.black, SkinData.BoldSlanted, 74, 1.5f, 0, 0);
+                            SetText(color, SkinData.BoldSlanted, 76, 0f, 0, 0);
                             break;
                     }
                     break;
                 case Type.loading:
-                    switch (_font)
+                    switch (font)
                     {
                         case Font.Normal:
-                            SetText(Color.black, SkinData.Bold, 88, .38f, 2.45f, 16.67f);
+                            SetText(color, SkinData.Bold, 88, .38f, 2.45f, 16.67f);
                             break;
                         case Font.Slanted:
-                            SetText(Color.black, SkinData.BoldSlanted, 88, .38f, 2.45f, 16.67f);
+                            SetText(color, SkinData.BoldSlanted, 88, .38f, 2.45f, 16.67f);
+                            break;
+                    }
+                    break;
+                case Type.techTag:
+                    switch (font)
+                    {
+                        case Font.Normal:
+                            SetText(color, SkinData.Bold, 30, 0f, 0f, 0f);
+                            break;
+                        case Font.Slanted:
+                            SetText(color, SkinData.BoldSlanted, 30, 0f, 0f, 0f);
                             break;
                     }
                     break;
                 case Type.debug:
-                    switch (_font)
+                    switch (font)
                     {
                         case Font.Normal:
-                            SetText(Color.black, SkinData.Thin, 30, 2.25f, 1.06f, 47.25f);
+                            SetText(color, SkinData.Thin, 30, 2.25f, 1.06f, 47.25f);
                             break;
                         case Font.Slanted:
-                            SetText(Color.black, SkinData.ThinSlanted, 30, 2.25f, 1.06f, 47.25f);
+                            SetText(color, SkinData.ThinSlanted, 30, 2.25f, 1.06f, 47.25f);
                             break;
                     }
                     break;
             }
         }
 
-        void SetText(Color color, TMPro.TMP_FontAsset font, float size, float cSpacing, float wSpacing, float lSpacing)
+        void SetText(HolokitColor hColor, TMPro.TMP_FontAsset font, float size, float cSpacing, float wSpacing, float lSpacing)
         {
-            //_text.color = color;
-            _text.font = font;
-            _text.fontSize = size;
-            _text.characterSpacing = cSpacing;
-            _text.wordSpacing = wSpacing;
-            _text.lineSpacing = lSpacing;
+            text.margin = new Vector4(0, 8.91f, 0, 0);
+            text.color = HolokitColor2Color(hColor);
+            text.font = font;
+            text.fontSize = size;
+            text.characterSpacing = cSpacing;
+            text.wordSpacing = wSpacing;
+            text.lineSpacing = lSpacing;
+        }
+
+        Color HolokitColor2Color(HolokitColor hColor)
+        {
+            switch (color)
+            {
+                case HolokitColor.White:
+                    return SkinData.holoWhite;
+                    break;
+                case HolokitColor.Grey1:
+                    return SkinData.holoGrey1;
+                    break;
+                case HolokitColor.Grey2:
+                    return SkinData.holoGrey2;
+                    break;
+                case HolokitColor.Grey3:
+                    return SkinData.holoGrey3;
+                    break;
+                case HolokitColor.Grey4:
+                    return SkinData.holoGrey4;
+                    break;
+                case HolokitColor.Black:
+                    return SkinData.holoBlack;
+                    break;
+                case HolokitColor.Orange:
+                    return SkinData.holoOrange;
+                    break;
+            }
+            return Color.white;
         }
     }
 

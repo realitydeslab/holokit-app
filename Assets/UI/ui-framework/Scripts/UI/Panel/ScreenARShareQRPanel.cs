@@ -15,8 +15,8 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {
-            // here we do onclick event of this button
-            Debug.Log("ExitButton is clicked.");
+                // here we do onclick event of this button
+                Debug.Log("ExitButton is clicked.");
                 PanelManager.Pop();
             });
 
@@ -25,11 +25,18 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 // here we do onclick event of this button
                 Debug.Log("CheckMarkButton is clicked.");
-
-                var panel = new ScreenARCheckTheMarkPanel();
-                PanelManager.Push(panel);
+                // create a debug list:
+                List<string> names = new List<string>();
+                names.Add("cool guy's iphone 14");
+                UpdateConnectedDeviceNameUI(names);
             });
 
+        }
+
+        public void UpdateConnectedDeviceNameUI(List<string> names)
+        {
+            PanelManager.Instance.GetActivePanel().UITool.GetOrAddComponent<ScreenARShareQRUIPanel>().connectedDeviceNames = names;
+            PanelManager.Instance.GetActivePanel().UITool.GetOrAddComponent<ScreenARShareQRUIPanel>().UpdateConnectedDeviceUI();
         }
     }
 }

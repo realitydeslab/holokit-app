@@ -9,32 +9,32 @@ public class FlexibleUIInstance : Editor
     [MenuItem("GameObject/HolikitX UI/Text/H1", priority = 0)]
     public static void AddH1()
     {
-        Create("H1");
+        Create("T-H1");
     }
     [MenuItem("GameObject/HolikitX UI/Text/H2", priority = 0)]
     public static void AddH2()
     {
-        Create("H2");
+        Create("T-H2");
     }
     [MenuItem("GameObject/HolikitX UI/Text/H3", priority = 0)]
     public static void AddH3()
     {
-        Create("H3");
+        Create("T-H3");
     }
     [MenuItem("GameObject/HolikitX UI/Text/Body1", priority = 0)]
     public static void AddBody1()
     {
-        Create("Body1");
+        Create("T-Body1");
     }
     [MenuItem("GameObject/HolikitX UI/Text/Body2", priority = 0)]
     public static void AddBody2()
     {
-        Create("Body2");
+        Create("T-Body2");
     }
     [MenuItem("GameObject/HolikitX UI/Text/Menu Text", priority = 0)]
     public static void AddMenuText()
     {
-        Create("Menu Text");
+        Create("T-Menu");
     }
     [MenuItem("GameObject/HolikitX UI/Text/Debug Text", priority = 0)]
     public static void AddDebugText()
@@ -44,7 +44,7 @@ public class FlexibleUIInstance : Editor
     [MenuItem("GameObject/HolikitX UI/Button/Button", priority =0)]
     public static void AddButton()
     {
-        Create("ButtonSample");
+        Create("DefaultButton");
     }
 
     [MenuItem("GameObject/HolikitX UI/Button/ExitButton", priority = 0)]
@@ -80,7 +80,7 @@ public class FlexibleUIInstance : Editor
     [MenuItem("GameObject/HolikitX UI/Media/MediaList", priority = 0)]
     public static void AddMedia()
     {
-        Create("MediaList");
+        Create("I-MediaList");
     }
     [MenuItem("GameObject/HolikitX UI/Button/PlayButton", priority = 0)]
     public static void AddPlayButton()
