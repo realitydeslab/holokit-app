@@ -7,11 +7,13 @@ namespace Holoi.HoloKit.App
 {
     public class MonoARPanel : MonoBehaviour
     {
-        [SerializeField] private GameObject _mainWindow;
+        [SerializeField] private GameObject _hostMainWindow;
+
+        [SerializeField] private GameObject _spectatorMainWindow;
 
         [SerializeField] private GameObject _hostConnectionWindow;
 
-        [SerializeField] private GameObject _clientConnectionWindow;
+        [SerializeField] private GameObject _spectatorConnectionWindow;
 
         private void Start()
         {
@@ -21,29 +23,29 @@ namespace Holoi.HoloKit.App
             }
             else
             {
-                OpenClientConnectionWindow();
+                OpenSpectatorConnectionWindow();
             }
         }
 
         private void OpenMainWindow()
         {
-            _mainWindow.SetActive(true);
+            _hostMainWindow.SetActive(true);
             _hostConnectionWindow.SetActive(false);
-            _clientConnectionWindow.SetActive(false);
+            _spectatorConnectionWindow.SetActive(false);
         }
 
         private void OpenHostConnectionWindow()
         {
-            _mainWindow.SetActive(false);
+            _hostMainWindow.SetActive(false);
             _hostConnectionWindow.SetActive(true);
-            _clientConnectionWindow.SetActive(false);
+            _spectatorConnectionWindow.SetActive(false);
         }
 
-        private void OpenClientConnectionWindow()
+        private void OpenSpectatorConnectionWindow()
         {
-            _mainWindow.SetActive(false);
+            _hostMainWindow.SetActive(false);
             _hostConnectionWindow.SetActive(false);
-            _clientConnectionWindow.SetActive(true);
+            _spectatorConnectionWindow.SetActive(true);
         }
 
         public void StartSharingReality()

@@ -123,7 +123,8 @@ namespace Netcode.Transports.MultipeerConnectivity
         public override NetworkEvent PollEvent(out ulong transportId, out ArraySegment<byte> payload, out float receiveTime)
         {
             transportId = 0;
-            payload = new ArraySegment<byte>();
+            payload = default;
+            //payload = new ArraySegment<byte>();
             receiveTime = Time.realtimeSinceStartup;
             return NetworkEvent.Nothing;
         }

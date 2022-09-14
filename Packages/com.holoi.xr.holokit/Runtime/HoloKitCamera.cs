@@ -143,6 +143,7 @@ namespace HoloKit
 
         private void OnRenderModeChanged()
         {
+            Debug.Log($"[HoloKitCamera] RenderMode changed to {_renderMode}");
             if (_renderMode == HoloKitRenderMode.Stereo)
             {
                 _monoCamera.enabled = false;

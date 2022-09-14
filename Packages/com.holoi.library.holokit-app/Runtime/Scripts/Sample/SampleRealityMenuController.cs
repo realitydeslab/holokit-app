@@ -11,18 +11,18 @@ namespace Holoi.HoloKit.App.Sample
 
         private void Start()
         {
-            HoloKitApp.Instance.Reality = _sampleReality;
+            HoloKitApp.Instance.CurrentReality = _sampleReality;
             HoloKitApp.Instance.InitializeNetworkManager();
         }
 
         public void EnterReality()
         {
-            HoloKitApp.Instance.EnterRealityAsHost();
+            //HoloKitApp.Instance.EnterRealityAsHost();
         }
 
         public void JoinReality()
         {
-            HoloKitApp.Instance.JoinRealityAsSpectator();
+            //HoloKitApp.Instance.JoinRealityAsSpectator();
         }
     }
 }
