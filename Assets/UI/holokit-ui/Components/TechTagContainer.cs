@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Holoi.AssetFoundation;
 
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     public class TechTagContainer : MonoBehaviour
     {
