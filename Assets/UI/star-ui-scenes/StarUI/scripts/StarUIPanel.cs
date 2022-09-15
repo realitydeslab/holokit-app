@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace StarUI
+namespace Holoi.HoloKit.App.UI
 {
     public class StarUIPanel : MonoBehaviour
     {
@@ -91,6 +91,13 @@ namespace StarUI
         }
 
         RecordState _recordState = RecordState.notReceivePointerUp;
+
+        //public enum ModelScaler
+        //{
+        //    X = 0,
+        //}
+
+        public List<float> modelScaler = new List<float> { 1, 1.2f};
 
         void Start()
         {

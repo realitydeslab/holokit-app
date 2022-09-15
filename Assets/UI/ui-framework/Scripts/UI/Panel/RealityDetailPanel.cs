@@ -13,6 +13,10 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override void OnOpen()
         {
+            if (UITool.GetOrAddComponentInChildren<Button>("BackButton") != null)
+            {
+                Debug.Log("Back button parent:" + UITool.GetOrAddComponentInChildren<Button>("BackButton").transform.parent.name);
+            }
             UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button

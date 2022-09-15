@@ -23,8 +23,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public enum State
         {
-            Inactive = 1,
-            Active = 0
+            Active = 0,
+            Inactive = 1
         }
 
         public Color color = Color.Black;

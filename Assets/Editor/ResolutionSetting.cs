@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace StarUI
+namespace Holoi.HoloKit.App.UI
 {
     [ExecuteInEditMode]
     public class ResolutionSetting : MonoBehaviour

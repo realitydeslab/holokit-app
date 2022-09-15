@@ -7,7 +7,7 @@ using Holoi.AssetFoundation;
 namespace Holoi.Library.HoloKitApp.UI
 {
     [ExecuteInEditMode]
-    public class PortraitScrollView : MonoBehaviour
+    public class PortraitScrollViewUI : MonoBehaviour
     {
         [Header("Data Type")]
         public CollectionContainer.Type type;

@@ -15,12 +15,19 @@ namespace Holoi.Library.HoloKitApp.UI
             Bright = 1
         }
 
+        public enum ActiveState
+        {
+            Active,
+            InActive
+        }
+
         public enum Type
         {
             objectContainer = 0,
             avatarContainer = 1
         }
 
+        //public int Index;
         [Header("Meta Data")]
         public MetaObjectCollection metaObjectCollection;
         public MetaAvatarCollection metaAvatarCollection;
@@ -34,13 +41,16 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeField] Image _background;
         [SerializeField] Image _divider;
         [SerializeField] Transform _scrollviewContainer;
-        [Header("Theme")]
+        [Header("Appearance")]
         public Theme theme;
+        public ActiveState activeState;
+
+        private Color holoGrey3 = new Color(199f / 255f, 199f / 255f, 199f / 255f);
 
         private void Awake()
         {
             ClearPreviousGenerativeContent();
-            SetUITheme();
+            UpdateUITheme();
             CreateScrollViewBasedOnType();
         }
 
@@ -66,21 +76,43 @@ namespace Holoi.Library.HoloKitApp.UI
             }
         }
 
-        void SetUITheme()
+        void UpdateUITheme()
         {
             switch (theme)
             {
                 case Theme.Dark:
                     _background.color = Color.black;
-                    _divider.color = Color.white;
-                    _title.color = FlexibleUIText.HolokitColor.White;
-                    _id.color = FlexibleUIText.HolokitColor.White;
+                    switch (activeState)
+                    {
+                        case ActiveState.Active:
+                            _divider.color = Color.black;
+                            _title.color = FlexibleUIText.HolokitColor.White;
+                            _id.color = FlexibleUIText.HolokitColor.White;
+                            break;
+                        case ActiveState.InActive:
+                            _divider.color = holoGrey3;
+                            _title.color = FlexibleUIText.HolokitColor.Grey3;
+                            _id.color = FlexibleUIText.HolokitColor.Grey3;
+                            break;
+                    }
+
                     break;
                 case Theme.Bright:
                     _background.color = Color.white;
-                    _divider.color = Color.black;
-                    _title.color = FlexibleUIText.HolokitColor.Black;
-                    _id.color = FlexibleUIText.HolokitColor.Black;
+                    switch (activeState)
+                    {
+                        case ActiveState.Active:
+                            _divider.color = Color.black;
+                            _title.color = FlexibleUIText.HolokitColor.Black;
+                            _id.color = FlexibleUIText.HolokitColor.Black;
+                            break;
+                        case ActiveState.InActive:
+                            _divider.color = holoGrey3;
+                            _title.color = FlexibleUIText.HolokitColor.Grey3;
+                            _id.color = FlexibleUIText.HolokitColor.Grey3;
+                            break;
+                    }
+
                     break;
             }
         }
@@ -108,9 +140,9 @@ namespace Holoi.Library.HoloKitApp.UI
             // create new by data
             for (int i = 0; i < 1; i++)
             {
-                _portraitScorllView.GetComponent<PortraitScrollView>().type =type;
-                _portraitScorllView.GetComponent<PortraitScrollView>().theme = theme;
-                _portraitScorllView.GetComponent<PortraitScrollView>().metaObjectCollection = moc;
+                _portraitScorllView.GetComponent<PortraitScrollViewUI>().type =type;
+                _portraitScorllView.GetComponent<PortraitScrollViewUI>().theme = theme;
+                _portraitScorllView.GetComponent<PortraitScrollViewUI>().metaObjectCollection = moc;
                 var portraitContainer = Instantiate(_portraitScorllView, _scrollviewContainer);
                 portraitContainer.GetComponent<RectTransform>().localScale = Vector3.one; // lock for a bug scale number around 250
 
@@ -125,9 +157,9 @@ namespace Holoi.Library.HoloKitApp.UI
             // create new by data
             for (int i = 0; i < 1; i++)
             {
-                _portraitScorllView.GetComponent<PortraitScrollView>().type = type;
-                _portraitScorllView.GetComponent<PortraitScrollView>().theme = theme;
-                _portraitScorllView.GetComponent<PortraitScrollView>().metaAvatarCollection = mac;
+                _portraitScorllView.GetComponent<PortraitScrollViewUI>().type = type;
+                _portraitScorllView.GetComponent<PortraitScrollViewUI>().theme = theme;
+                _portraitScorllView.GetComponent<PortraitScrollViewUI>().metaAvatarCollection = mac;
                 var portraitContainer = Instantiate(_portraitScorllView, _scrollviewContainer);
                 portraitContainer.GetComponent<RectTransform>().localScale = Vector3.one;
 
@@ -137,7 +169,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         void Update()
         {
-
+            UpdateUITheme();
         }
     }
 }

@@ -151,7 +151,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 }
             }
 
-            realityThumbnailContainer._offset = new Vector3(0, 1.7f, 0);
+            realityThumbnailContainer.offset = new Vector3(0, 1.7f, 0);
         }
 
         public void HomePanelUIlayout()
@@ -166,7 +166,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 _realityThumbnailList[i].SetActive(true);
             }
 
-            realityThumbnailContainer._offset = new Vector3(0, 0f, 0);
+            realityThumbnailContainer.offset = new Vector3(0, 0f, 0);
         }
 
         public void RecoverHomePage()
