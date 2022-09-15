@@ -32,7 +32,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
             ClearLastElements(_contentObj);
             ClearLastElements(_contentAva);
-
+            _scrollViewObjectCollection.GetComponent<CollectionScrollViewUI>().CollectionContainerList.Clear();
+            _scrollViewAvatarCollection.GetComponent<CollectionScrollViewUI>().CollectionContainerList.Clear();
 
             if (metaObjectCollections.Count > 0)
             {
@@ -50,6 +51,7 @@ namespace Holoi.Library.HoloKitApp.UI
                     var collectionContainer = Instantiate(_collectionContainer, _scrollViewObjectCollection.transform.Find("Viewport/Content"));
                     _collectionContainer.GetComponent<RectTransform>().localScale = Vector3.one;
                     collectionContainer.transform.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+                    _scrollViewObjectCollection.GetComponent<CollectionScrollViewUI>().CollectionContainerList.Add(collectionContainer);
                 }
             }
             else
@@ -71,6 +73,7 @@ namespace Holoi.Library.HoloKitApp.UI
                     var collectionContainer = Instantiate(_collectionContainer, _scrollViewAvatarCollection.transform.Find("Viewport/Content"));
                     _collectionContainer.GetComponent<RectTransform>().localScale = Vector3.one;
                     collectionContainer.transform.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+                    _scrollViewAvatarCollection.GetComponent<CollectionScrollViewUI>().CollectionContainerList.Add(collectionContainer);
                 }
 
             }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace StarUI
+namespace Holoi.HoloKit.App.UI
 {
     public class ScrollBarHelper : MonoBehaviour
     {

@@ -45,10 +45,12 @@ namespace Holoi.Library.HoloKitApp.UI
         public Theme theme;
         public ActiveState activeState;
 
+        private Color holoGrey3 = new Color(199f / 255f, 199f / 255f, 199f / 255f);
+
         private void Awake()
         {
             ClearPreviousGenerativeContent();
-            SetUITheme();
+            UpdateUITheme();
             CreateScrollViewBasedOnType();
         }
 
@@ -74,7 +76,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
         }
 
-        void SetUITheme()
+        void UpdateUITheme()
         {
             switch (theme)
             {
@@ -83,12 +85,12 @@ namespace Holoi.Library.HoloKitApp.UI
                     switch (activeState)
                     {
                         case ActiveState.Active:
-                            _divider.color = FlexibleUI.Instance.SkinData.holoWhite;
+                            _divider.color = Color.black;
                             _title.color = FlexibleUIText.HolokitColor.White;
                             _id.color = FlexibleUIText.HolokitColor.White;
                             break;
                         case ActiveState.InActive:
-                            _divider.color = FlexibleUI.Instance.SkinData.holoGrey3;
+                            _divider.color = holoGrey3;
                             _title.color = FlexibleUIText.HolokitColor.Grey3;
                             _id.color = FlexibleUIText.HolokitColor.Grey3;
                             break;
@@ -100,12 +102,12 @@ namespace Holoi.Library.HoloKitApp.UI
                     switch (activeState)
                     {
                         case ActiveState.Active:
-                            _divider.color = FlexibleUI.Instance.SkinData.holoBlack;
+                            _divider.color = Color.black;
                             _title.color = FlexibleUIText.HolokitColor.Black;
                             _id.color = FlexibleUIText.HolokitColor.Black;
                             break;
                         case ActiveState.InActive:
-                            _divider.color = FlexibleUI.Instance.SkinData.holoGrey3;
+                            _divider.color = holoGrey3;
                             _title.color = FlexibleUIText.HolokitColor.Grey3;
                             _id.color = FlexibleUIText.HolokitColor.Grey3;
                             break;
@@ -167,7 +169,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         void Update()
         {
-
+            UpdateUITheme();
         }
     }
 }

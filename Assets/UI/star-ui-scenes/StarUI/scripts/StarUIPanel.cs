@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace StarUI
+namespace Holoi.HoloKit.App.UI
 {
     public class StarUIPanel : MonoBehaviour
     {

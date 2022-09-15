@@ -7,18 +7,6 @@ namespace Holoi.Library.HoloKitApp.UI
     [ExecuteInEditMode]
     public class FlexibleUI : MonoBehaviour
     {
-        private static FlexibleUI _instance; // using instance to maintain the state of ui scenes.
-        public static FlexibleUI Instance
-        {
-            get
-            {
-                if (null == _instance)
-                {
-                    _instance = new FlexibleUI();
-                }
-                return _instance;
-            }
-        }
 
         public FlexibleUIData SkinData;
 
@@ -34,10 +22,10 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public virtual void Update()
         {
-            if (Application.isEditor)
-            {
-                OnSkinUI();
-            }
+            //if (Application.isEditor)
+            //{
+            //    OnSkinUI();
+            //}
         }
     }
 }

@@ -5,11 +5,12 @@ using UnityEngine.UI;
 
 namespace Holoi.HoloKit.App.UI
 {
+    [ExecuteInEditMode]
     public class CollectionScrollViewUI : MonoBehaviour
     {
         [HideInInspector] public int count;
         public int currentIndex;
-        public List<CollectionContainer> CollectionContainerList;
+        public List<GameObject> CollectionContainerList;
         [SerializeField] Scrollbar _scrollBar;
 
         
@@ -24,11 +25,11 @@ namespace Holoi.HoloKit.App.UI
             {
                 if(currentIndex == i)
                 {
-                    CollectionContainerList[i].activeState = CollectionContainer.ActiveState.Active;
+                    CollectionContainerList[i].GetComponent<CollectionContainer>().activeState = CollectionContainer.ActiveState.Active;
                 }
                 else
                 {
-                    CollectionContainerList[i].activeState = CollectionContainer.ActiveState.InActive;
+                    CollectionContainerList[i].GetComponent<CollectionContainer>().activeState = CollectionContainer.ActiveState.InActive;
                 }
             }
         }
