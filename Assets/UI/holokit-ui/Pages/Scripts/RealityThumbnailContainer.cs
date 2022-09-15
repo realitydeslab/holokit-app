@@ -10,7 +10,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public float currentPostion = 0;
 
-        public Vector3 _offset;
+        public Vector3 offset;
 
         [HideInInspector] public float currentIndex;
 
@@ -33,12 +33,11 @@ namespace Holoi.Library.HoloKitApp.UI
         private void Update()
         {
             _container.localPosition = new Vector3(-1 * currentPostion, 0, 0);
-            _container.position += _offset;
-            ;
+            _container.position += offset;;
 
-            _lightGroup.localPosition = _offset;
+            _lightGroup.position = offset;
 
-            _arrowPath.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_Offset", new Vector2(currentPostion * 4, 0));
+            _arrowPath.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_Offset", new Vector2(currentPostion * 1, 0));
 
             SetSelectedThumbnail();
             //GetTouchOnPrefabs();

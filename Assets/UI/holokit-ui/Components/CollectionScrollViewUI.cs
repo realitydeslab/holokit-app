@@ -1,0 +1,37 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Holoi.HoloKit.App.UI
+{
+    public class CollectionScrollViewUI : MonoBehaviour
+    {
+        [HideInInspector] public int count;
+        public int currentIndex;
+        public List<CollectionContainer> CollectionContainerList;
+        [SerializeField] Scrollbar _scrollBar;
+
+        
+        float value;
+
+        private void Update()
+        {
+            value = Mathf.Clamp01(_scrollBar.value);
+            currentIndex = Mathf.RoundToInt(value * (count - 1));
+
+            for (int i = 0; i < CollectionContainerList.Count; i++)
+            {
+                if(currentIndex == i)
+                {
+                    CollectionContainerList[i].activeState = CollectionContainer.ActiveState.Active;
+                }
+                else
+                {
+                    CollectionContainerList[i].activeState = CollectionContainer.ActiveState.InActive;
+                }
+            }
+        }
+    }
+
+}

@@ -17,7 +17,7 @@ namespace Holoi.HoloKit.App.UI
             ClearPreviousGenerativeContent();
             if (reality != null)
             {
-                CreateTechButtons(reality);
+                CreateTechTags(reality);
             }
             else
             {
@@ -45,15 +45,15 @@ namespace Holoi.HoloKit.App.UI
             }
         }
 
-        void CreateTechButtons(Holoi.AssetFoundation.Reality realitySample)
+        void CreateTechTags(Holoi.AssetFoundation.Reality realitySample)
         {
             foreach (var tag in realitySample.realityTags)
             {
-                CreateTechButton(tag);
+                CreateTechTag(tag);
             }
         }
 
-        void CreateTechButton(RealityTag tag)
+        void CreateTechTag(RealityTag tag)
         {
             _techButtonPrefab.GetComponent<FlexibleUITechButton>().tag = tag;
             var go = Instantiate(_techButtonPrefab, transform);

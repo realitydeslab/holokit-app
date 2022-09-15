@@ -58,7 +58,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             var deltaY = _content.transform.position.y - _contentInitPositionY;
             var realityThumbnailContainer = FindObjectOfType<RealityThumbnailContainer>();
-            realityThumbnailContainer._offset = new Vector3(0, 1.7f + deltaY, 0);
+            realityThumbnailContainer.offset = new Vector3(0, 1.7f + deltaY, 0);
         }
     }
 }
