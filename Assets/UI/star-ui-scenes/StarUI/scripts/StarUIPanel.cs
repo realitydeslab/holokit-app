@@ -92,6 +92,13 @@ namespace Holoi.HoloKit.App.UI
 
         RecordState _recordState = RecordState.notReceivePointerUp;
 
+        //public enum ModelScaler
+        //{
+        //    X = 0,
+        //}
+
+        public List<float> modelScaler = new List<float> { 1, 1.2f};
+
         void Start()
         {
             _volumeAnimator = _volumeBar.GetComponent<Animator>();

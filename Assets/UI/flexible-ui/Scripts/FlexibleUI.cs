@@ -22,10 +22,10 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public virtual void Update()
         {
-            //if (Application.isEditor)
-            //{
-            //    OnSkinUI();
-            //}
+            if (Application.isEditor)
+            {
+                OnSkinUI();
+            }
         }
     }
 }
