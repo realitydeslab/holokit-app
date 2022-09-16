@@ -21,7 +21,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Awake()
         {
-            DeletePreviousElement();
+            ClearPreviousGenerativeContent();
 
             switch (type)
             {
@@ -37,7 +37,7 @@ namespace Holoi.Library.HoloKitApp.UI
             CreateFooter();
         }
 
-        void DeletePreviousElement()
+        void ClearPreviousGenerativeContent()
         {
             var tempList = new List<Transform>();
             for (int i = 0; i < _content.childCount; i++)

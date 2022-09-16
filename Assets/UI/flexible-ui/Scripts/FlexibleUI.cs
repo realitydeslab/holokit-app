@@ -7,6 +7,7 @@ namespace Holoi.Library.HoloKitApp.UI
     [ExecuteInEditMode]
     public class FlexibleUI : MonoBehaviour
     {
+
         public FlexibleUIData SkinData;
 
         protected virtual void OnSkinUI()

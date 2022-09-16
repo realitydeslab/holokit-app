@@ -17,7 +17,8 @@ namespace Holoi.Library.HoloKitApp.UI
             debug = 6,
             menu = 7,
             loading = 8,
-            techTag = 9
+            techTag = 9,
+            starUI = 10
         }
 
         public enum Font
@@ -141,6 +142,17 @@ namespace Holoi.Library.HoloKitApp.UI
                             break;
                     }
                     break;
+                case Type.starUI:
+                    switch (font)
+                    {
+                        case Font.Normal:
+                            SetText(color, SkinData.Bold, 30, 0f, 0f, 0f);
+                            break;
+                        case Font.Slanted:
+                            SetText(color, SkinData.BoldSlanted, 30, 0f, 0f, 0f);
+                            break;
+                    }
+                    break;
                 case Type.debug:
                     switch (font)
                     {
@@ -166,7 +178,7 @@ namespace Holoi.Library.HoloKitApp.UI
             text.lineSpacing = lSpacing;
         }
 
-        Color HolokitColor2Color(HolokitColor hColor)
+        public Color HolokitColor2Color(HolokitColor hColor)
         {
             switch (color)
             {

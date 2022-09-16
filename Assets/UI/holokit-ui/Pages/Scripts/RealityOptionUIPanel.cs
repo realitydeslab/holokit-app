@@ -8,79 +8,78 @@ namespace Holoi.Library.HoloKitApp.UI
     [ExecuteInEditMode]
     public class RealityOptionUIPanel : MonoBehaviour
     {
-
+        [Header("Meta Datas")]
         public List<MetaObjectCollection> metaObjectCollections;
         public List<MetaAvatarCollection> metaAvatarCollections;
 
         [Header("Prefabs")]
-        [SerializeField] Transform _scrollViewCollectionObject;
-        [SerializeField] Transform _scrollViewCollectionAvatar;
         [SerializeField] GameObject _collectionContainer;
         [SerializeField] GameObject _buttonContainer;
-
-        int _count;
+        [Header("UI Elements")]
+        [SerializeField] Transform _scrollViewObjectCollection;
+        [SerializeField] Transform _scrollViewAvatarCollection;
         Transform _contentObj;
         Transform _contentAva;
+
+        int _objectCount;
+        int _avatarCount;
 
         private void Awake()
         {
 
-            _contentObj = _scrollViewCollectionObject.Find("Viewport/Content");
-            _contentAva = _scrollViewCollectionAvatar.Find("Viewport/Content");
+            _contentObj = _scrollViewObjectCollection.Find("Viewport/Content");
+            _contentAva = _scrollViewAvatarCollection.Find("Viewport/Content");
 
             ClearLastElements(_contentObj);
             ClearLastElements(_contentAva);
-            //ClearLastElements(transform.Find("Scroll View/Viewport/Content"));
-            // delete:
-
+            _scrollViewObjectCollection.GetComponent<CollectionScrollViewUI>().CollectionContainerList.Clear();
+            _scrollViewAvatarCollection.GetComponent<CollectionScrollViewUI>().CollectionContainerList.Clear();
 
             if (metaObjectCollections.Count > 0)
             {
-                _scrollViewCollectionObject.gameObject.SetActive(true);
-                _count = metaObjectCollections.Count;
-                //var _scrollViewObject = Instantiate(_collectionScrollContainer, _content);
-                //_scrollViewObject.transform.Find("YourObjectButton/Text").GetComponent<TMPro.TMP_Text>().text = "Your Object";
+                _objectCount = metaObjectCollections.Count;
 
-                for (int i = 0; i < _count; i++)
+                _scrollViewObjectCollection.gameObject.SetActive(true);
+                _scrollViewObjectCollection.GetComponent<CollectionScrollViewUI>().count = _objectCount;
+
+                for (int i = 0; i < _objectCount; i++)
                 {
 
                     // create new by data
                     _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.objectContainer;
                     _collectionContainer.GetComponent<CollectionContainer>().metaObjectCollection = metaObjectCollections[i];
-                    var collectionContainer = Instantiate(_collectionContainer, _scrollViewCollectionObject.transform.Find("Viewport/Content"));
+                    var collectionContainer = Instantiate(_collectionContainer, _scrollViewObjectCollection.transform.Find("Viewport/Content"));
                     _collectionContainer.GetComponent<RectTransform>().localScale = Vector3.one;
                     collectionContainer.transform.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+                    _scrollViewObjectCollection.GetComponent<CollectionScrollViewUI>().CollectionContainerList.Add(collectionContainer);
                 }
             }
             else
             {
-                _scrollViewCollectionObject.gameObject.SetActive(false);
+                _scrollViewObjectCollection.gameObject.SetActive(false);
 
             }
             if (metaAvatarCollections.Count > 0)
             {
-                _scrollViewCollectionAvatar.gameObject.SetActive(true);
+                _avatarCount = metaAvatarCollections.Count;
+                _scrollViewAvatarCollection.gameObject.SetActive(true);
+                _scrollViewAvatarCollection.GetComponent<CollectionScrollViewUI>().count = _avatarCount;
 
-                _count = metaAvatarCollections.Count;
-
-                //var _scrollViewAvatar = Instantiate(_collectionScrollContainer, _content);
-                //_scrollViewAvatar.transform.Find("YourObjectButton/Text").GetComponent<TMPro.TMP_Text>().text = "Your Avatar";
-
-
-                for (int i = 0; i < _count; i++)
+                for (int i = 0; i < _avatarCount; i++)
                 {
                     // create new by data
                     _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.avatarContainer;
                     _collectionContainer.GetComponent<CollectionContainer>().metaAvatarCollection = metaAvatarCollections[i];
-                    var collectionContainer = Instantiate(_collectionContainer, _scrollViewCollectionAvatar.transform.Find("Viewport/Content"));
+                    var collectionContainer = Instantiate(_collectionContainer, _scrollViewAvatarCollection.transform.Find("Viewport/Content"));
                     _collectionContainer.GetComponent<RectTransform>().localScale = Vector3.one;
                     collectionContainer.transform.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+                    _scrollViewAvatarCollection.GetComponent<CollectionScrollViewUI>().CollectionContainerList.Add(collectionContainer);
                 }
 
             }
             else
             {
-                _scrollViewCollectionAvatar.gameObject.SetActive(false);
+                _scrollViewAvatarCollection.gameObject.SetActive(false);
 
             }
 
@@ -100,14 +99,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
             for (int i = 0; i < content.childCount; i++)
             {
-                var child = content.GetChild(i);
-                if (child.name == "Object Scroll Snap Object" || child.name == "Object Scroll Snap Avatar")
-                {
-                }
-                else
-                {
-                    tempList.Add(content.GetChild(i));
-                }
+                tempList.Add(content.GetChild(i));
             }
 
             foreach (var child in tempList)

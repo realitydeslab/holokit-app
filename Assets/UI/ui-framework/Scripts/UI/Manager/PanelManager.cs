@@ -9,7 +9,7 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public class PanelManager
     {
-        public static PanelManager _instance; // using instance to maintain the state of ui scenes.
+        private static PanelManager _instance; // using instance to maintain the state of ui scenes.
         public static PanelManager Instance
         {
             get
