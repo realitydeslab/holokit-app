@@ -11,20 +11,25 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         [Header("Data Type")]
         public CollectionContainer.Type type;
+
         [Header("Meta Datas")]
         public MetaObjectCollection metaObjectCollection;
         public MetaAvatarCollection metaAvatarCollection;
-        //public int _currentIndex;
+        public int _activeIndex;
+        float _scrollValue;
+
         [Header("Prefabs")]
         [SerializeField] GameObject _objectPortraitContainer;
+
         [Header("UI Elements")]
         [SerializeField] Transform _content;
         [SerializeField] ScrollBarSlidingAreaStyle _scrollBar;
         [SerializeField] float _portraitSize = 480;
+
         [Header("Theme")]
         public CollectionContainer.Theme theme;
+
         int _count = 0;
-        //float _sliderValue;
 
         void Awake()
         {
@@ -110,7 +115,9 @@ namespace Holoi.Library.HoloKitApp.UI
 
         void Update()
         {
-            //_sliderValue = transform.Find("Scrollbar Horizontal").GetComponent<Scrollbar>().value;
+            _scrollValue = transform.Find("Scrollbar Horizontal").GetComponent<Scrollbar>().value;
+            _scrollValue = Mathf.Clamp01(_scrollValue);
+            _activeIndex = Mathf.RoundToInt(_scrollValue * (_count - 1));
         }
     }
 }

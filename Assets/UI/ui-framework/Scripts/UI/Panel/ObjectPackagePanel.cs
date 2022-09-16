@@ -27,10 +27,10 @@ namespace Holoi.Library.HoloKitApp.UI
                 {
                     // here we do onclick event of this button
                     Debug.Log("EnterDetailButton is clicked.");
+
                     var panel = new ObjectDetailPanel();
                     PanelManager.Push(panel);
-                    //panel.UITool.GetOrAddComponent<ObjectDetailUIPanel>().metaObject = button.GetComponent<ObjectPackageObjectButtonDescription>().metaObject;
-
+                    panel.UITool.GetOrAddComponent<ObjectDetailUIPanel>().metaObject = button.GetComponent<CollectionContainer>().activeObject;
                 });
             }
         }

@@ -1,8 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Holoi.AssetFoundation;
+using UnityEngine.UI.Extensions;
+
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -31,19 +32,28 @@ namespace Holoi.Library.HoloKitApp.UI
         [Header("Meta Data")]
         public MetaObjectCollection metaObjectCollection;
         public MetaAvatarCollection metaAvatarCollection;
+
         [Header("Container Type")]
         public Type type;
         [Header("Prefabs")]
         [SerializeField] GameObject _portraitScorllView;
+
         [Header("UI Elements")]
+        [SerializeField] Button _enterButton;
         [SerializeField] FlexibleUIText _title;
         [SerializeField] FlexibleUIText _id;
         [SerializeField] Image _background;
         [SerializeField] Image _divider;
         [SerializeField] Transform _scrollviewContainer;
         [Header("Appearance")]
+
         public Theme theme;
         public ActiveState activeState;
+
+
+        [HideInInspector] public MetaObject activeObject;
+        [HideInInspector] public MetaAvatar activeAvatar;
+        [HideInInspector] public int _activeIndex;
 
         private Color holoGrey3 = new Color(199f / 255f, 199f / 255f, 199f / 255f);
 
@@ -52,6 +62,15 @@ namespace Holoi.Library.HoloKitApp.UI
             ClearPreviousGenerativeContent();
             UpdateUITheme();
             CreateScrollViewBasedOnType();
+        }
+
+        private void Start()
+        {
+            _enterButton.onClick.AddListener(() => {
+
+                Debug.Log("enter button is clicked");
+
+            });
         }
 
         void ClearPreviousGenerativeContent()
@@ -138,16 +157,17 @@ namespace Holoi.Library.HoloKitApp.UI
             _id.text.text = moc.metaObjects[0].tokenId;
 
             // create new by data
-            for (int i = 0; i < 1; i++)
-            {
-                _portraitScorllView.GetComponent<PortraitScrollViewUI>().type =type;
-                _portraitScorllView.GetComponent<PortraitScrollViewUI>().theme = theme;
-                _portraitScorllView.GetComponent<PortraitScrollViewUI>().metaObjectCollection = moc;
-                var portraitContainer = Instantiate(_portraitScorllView, _scrollviewContainer);
-                portraitContainer.GetComponent<RectTransform>().localScale = Vector3.one; // lock for a bug scale number around 250
+            _portraitScorllView.GetComponent<PortraitScrollViewUI>().type = type;
+            _portraitScorllView.GetComponent<PortraitScrollViewUI>().theme = theme;
+            _portraitScorllView.GetComponent<PortraitScrollViewUI>().metaObjectCollection = moc;
+            var portraitContainer = Instantiate(_portraitScorllView, _scrollviewContainer);
+            portraitContainer.GetComponent<RectTransform>().localScale = Vector3.one; // lock for a bug scale number around 250
 
-                _id.text.text = "#" + metaObjectCollection.metaObjects[i].tokenId;
-            }
+            _id.text.text = "#" + metaObjectCollection.metaObjects[0].tokenId;
+
+            _enterButton.GetComponent<DragButton>().horizontalScrollSnap = portraitContainer.GetComponent<HorizontalScrollSnap>();
+            _enterButton.GetComponent<DragButton>().scorllRect = portraitContainer.GetComponent<ScrollRect>();
+
         }
         void CreatePotraitScorllView(MetaAvatarCollection mac)
         {
@@ -155,21 +175,34 @@ namespace Holoi.Library.HoloKitApp.UI
             _id.text.text = mac.metaAvatars[0].tokenId;
 
             // create new by data
-            for (int i = 0; i < 1; i++)
-            {
-                _portraitScorllView.GetComponent<PortraitScrollViewUI>().type = type;
-                _portraitScorllView.GetComponent<PortraitScrollViewUI>().theme = theme;
-                _portraitScorllView.GetComponent<PortraitScrollViewUI>().metaAvatarCollection = mac;
-                var portraitContainer = Instantiate(_portraitScorllView, _scrollviewContainer);
-                portraitContainer.GetComponent<RectTransform>().localScale = Vector3.one;
+            _portraitScorllView.GetComponent<PortraitScrollViewUI>().type = type;
+            _portraitScorllView.GetComponent<PortraitScrollViewUI>().theme = theme;
+            _portraitScorllView.GetComponent<PortraitScrollViewUI>().metaAvatarCollection = mac;
+            var portraitContainer = Instantiate(_portraitScorllView, _scrollviewContainer);
+            portraitContainer.GetComponent<RectTransform>().localScale = Vector3.one;
 
-                _id.text.text = "#" + mac.metaAvatars[i].tokenId;
-            }
+            _id.text.text = "#" + mac.metaAvatars[0].tokenId;
+
+            _enterButton.GetComponent<DragButton>().horizontalScrollSnap = portraitContainer.GetComponent<HorizontalScrollSnap>();
+            _enterButton.GetComponent<DragButton>().scorllRect = portraitContainer.GetComponent<ScrollRect>();
+
+
         }
 
         void Update()
         {
             UpdateUITheme();
+            _activeIndex = _portraitScorllView.GetComponent<PortraitScrollViewUI>()._activeIndex;
+
+            switch (type)
+            {
+                case Type.objectContainer:
+                    activeObject = metaObjectCollection.metaObjects[_activeIndex];
+                    break;
+                case Type.avatarContainer:
+                    activeAvatar = metaAvatarCollection.metaAvatars[_activeIndex];
+                    break;
+            }
         }
     }
 }

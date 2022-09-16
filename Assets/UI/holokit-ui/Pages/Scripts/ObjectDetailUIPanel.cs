@@ -9,6 +9,7 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         [Header("Data")]
         public MetaObject metaObject;
+        public MetaAvatar metaAvatar;
         [Header("Theme")]
         public Theme theme;
         [Header("UI Elements - Text")]
@@ -94,16 +95,33 @@ namespace Holoi.Library.HoloKitApp.UI
 
         void InitUIInfo()
         {
-            _ID.text.text = "#" + metaObject.tokenId;
-            _objectName.text.text = metaObject.name;
-            _collectionName.text.text = metaObject.collection.displayName;
-            _author.text.text = metaObject.collection.author;
-            _description.text.text = metaObject.collection.description;
-            _description.GetComponent<RectTransform>().sizeDelta = new Vector2(
-                1086,
-                _description.text.preferredHeight);
+            if (metaObject)
+            {
+                _ID.text.text = "#" + metaObject.tokenId;
+                _objectName.text.text = metaObject.name;
+                _collectionName.text.text = metaObject.collection.displayName;
+                _author.text.text = metaObject.collection.author;
+                _description.text.text = metaObject.collection.description;
+                _description.GetComponent<RectTransform>().sizeDelta = new Vector2(
+                    1086,
+                    _description.text.preferredHeight);
 
-            //_siteAddress.text.text = metaObject.collection.siteAddress;
+                //_siteAddress.text.text = metaObject.collection.siteAddress;
+            }
+            else
+            {
+                _ID.text.text = "#" + metaAvatar.tokenId;
+                _objectName.text.text = metaAvatar.name;
+                _collectionName.text.text = metaAvatar.collection.displayName;
+                _author.text.text = metaAvatar.collection.author;
+                _description.text.text = metaAvatar.collection.description;
+                _description.GetComponent<RectTransform>().sizeDelta = new Vector2(
+                    1086,
+                    _description.text.preferredHeight);
+
+                //_siteAddress.text.text = metaAvatar.collection.siteAddress;
+            }
+
         }
 
         void SetCollectState(CollectionState state)
