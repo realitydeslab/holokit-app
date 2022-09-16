@@ -29,20 +29,15 @@ namespace Holoi.Library.HoloKitApp.UI
                 //_hup.OthersPanelUILayout();
             });
 
-            UITool.GetOrAddComponentInChildren<Button>("EnterButton").onClick.AddListener(() =>
+            UITool.GetOrAddComponentInChildren<Button>("PlayButton").onClick.AddListener(() =>
             {
+                Debug.Log("PlayButton is clicked");
                 EnterRealityDetailPanel();
             });
-
-            //UITool.GetOrAddComponentInChildren<Button>("PlayButton").onClick.AddListener(() =>
-            //{
-
-            //});
         }
 
         void EnterRealityDetailPanel()
         {
-            Debug.Log("EnterRealityDetailPanel");
             var newPanel = new RealityDetailPanel();
             PanelManager.Push(newPanel);
             var newPanelUI = newPanel.UITool.GetOrAddComponent<RealityDetailUIPanel>();

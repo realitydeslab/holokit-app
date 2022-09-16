@@ -21,9 +21,14 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeField] Transform _lightGroup;
         public Transform _homePageDeco;
         [SerializeReference] Transform _arrowPath;
+        [SerializeReference] Transform _arrowEnter;
 
         //[Header("Rendering")]
 
+        private void Awake()
+        {
+            offset = Vector3.zero;
+        }
         private void Start()
         {
             transform.position = _translate;
@@ -41,6 +46,11 @@ namespace Holoi.Library.HoloKitApp.UI
 
             SetSelectedThumbnail();
             //GetTouchOnPrefabs();
+        }
+
+        public void PlayArrowEnterAnimation()
+        {
+            _arrowEnter.GetComponent<Animator>().SetTrigger("out");
         }
 
         public void SetSelectedThumbnail()
