@@ -9,9 +9,16 @@ namespace Holoi.Library.HoloKitApp
     {
         public static event Action OnTriggered;
 
+        public static event Action OnTriggered2;
+
         public void OnTriggerButtonPressed()
         {
             OnTriggered?.Invoke();
+        }
+
+        public void OnTrigger2ButtonPressed()
+        {
+            OnTriggered2?.Invoke();
         }
     }
 }

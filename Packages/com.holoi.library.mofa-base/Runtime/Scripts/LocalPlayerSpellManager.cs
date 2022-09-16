@@ -34,8 +34,6 @@ namespace Holoi.Mofa.Base
 
         private MofaBaseRealityManager _mofaRealityManager;
 
-        public static event Action<SpellType> OnSpawnSpellFailed;
-
         public float BasicSpellChargePercentage
         {
             get
@@ -53,6 +51,8 @@ namespace Holoi.Mofa.Base
         }
 
         public static event Action<ControllerState> OnControllerStateChanged;
+
+        public static event Action<SpellType> OnSpawnSpellFailed;
 
         private void Awake()
         {
@@ -177,7 +177,7 @@ namespace Holoi.Mofa.Base
                 return;
             }
 
-            if (SecondarySpellCharge < SecondarySpell.ChargeTime)
+            if (SecondarySpellCharge < SecondarySpell.ChargeTime && HoloKitHelper.IsRuntime)
             {
                 Debug.Log("[LocalPlayerSpellManager] Secondary spell not charged");
                 OnSpawnSpellFailed?.Invoke(SpellType.Secondary);

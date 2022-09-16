@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
 using HoloKit;
+using System;
 
 namespace Holoi.Mofa.Base
 {
@@ -26,12 +27,21 @@ namespace Holoi.Mofa.Base
 
         [HideInInspector] public LifeShield LifeShield;
 
+        public static event Action OnScoreChanged;
+
         public override void OnNetworkSpawn()
         {
             Debug.Log($"[MofaPlayer] OnNetworkSpawned with ownership {OwnerClientId} and team {Team.Value}");
 
             var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             mofaRealityManager.SetPlayer(OwnerClientId, this);
+
+            KillCount.OnValueChanged += OnScoreChangedFunc;
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            KillCount.OnValueChanged -= OnScoreChangedFunc;
         }
 
         protected virtual void Update()
@@ -48,6 +58,11 @@ namespace Holoi.Mofa.Base
                 LifeShield.transform.SetPositionAndRotation(transform.position + transform.rotation * LifeShield.CenterEyeOffset,
                     transform.rotation);
             }
+        }
+
+        private void OnScoreChangedFunc(int oldValue, int newValue)
+        {
+            OnScoreChanged?.Invoke();
         }
     }
 }

@@ -26,6 +26,7 @@ namespace Holoi.Reality.MOFATheTraining
             base.Awake();
 
             StARARPanel.OnTriggered += OnTriggered;
+            StARARPanel.OnTriggered2 += OnTriggered2;
         }
 
         public override void OnDestroy()
@@ -33,6 +34,7 @@ namespace Holoi.Reality.MOFATheTraining
             base.OnDestroy();
 
             StARARPanel.OnTriggered -= OnTriggered;
+            StARARPanel.OnTriggered2 -= OnTriggered2;
         }
 
         public override void OnNetworkSpawn()
@@ -120,6 +122,21 @@ namespace Holoi.Reality.MOFATheTraining
             if (Phase.Value == MofaPhase.Fighting)
             {
                 LocalPlayerSpellManager.SpawnBasicSpell();
+                return;
+            }
+
+            if (Phase.Value == MofaPhase.RoundData)
+            {
+                StartCoroutine(StartSingleRound());
+                return;
+            }
+        }
+
+        private void OnTriggered2()
+        {
+            if (Phase.Value == MofaPhase.Fighting)
+            {
+                LocalPlayerSpellManager.SpawnSecondarySpell();
             }
         }
 

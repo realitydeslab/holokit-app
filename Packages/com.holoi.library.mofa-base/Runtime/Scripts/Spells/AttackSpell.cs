@@ -48,7 +48,10 @@ namespace Holoi.Mofa.Base
         [ClientRpc]
         private void OnHitClientRpc()
         {
-            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
+            if (HitOnce)
+            {
+                GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
+            }
             OnHit?.Invoke();
             PlayHitSound();
         }
