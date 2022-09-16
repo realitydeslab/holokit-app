@@ -13,11 +13,14 @@ namespace HoloKit
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            HoloKitNFCSessionControllerAPI.RegisterNFCSessionControllerDelegates();
-            HoloKitARSessionControllerAPI.RegisterARSessionControllerDelegates();
-            HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
-            SceneManager.sceneUnloaded += OnSceneUnloaded;
-            HoloKitARSessionControllerAPI.SetSessionShouldAttemptRelocalization(_sessionShouldAttemptRelocalization);
+            if (HoloKitHelper.IsRuntime)
+            {
+                HoloKitNFCSessionControllerAPI.RegisterNFCSessionControllerDelegates();
+                HoloKitARSessionControllerAPI.RegisterARSessionControllerDelegates();
+                HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
+                HoloKitARSessionControllerAPI.SetSessionShouldAttemptRelocalization(_sessionShouldAttemptRelocalization);
+                SceneManager.sceneUnloaded += OnSceneUnloaded;
+            }
         }
 
         private void OnDestroy()
