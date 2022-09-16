@@ -4,6 +4,7 @@
 
 using System;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 namespace UnityEngine.UI.Extensions
 {
@@ -12,6 +13,8 @@ namespace UnityEngine.UI.Extensions
     public class HorizontalScrollSnap : ScrollSnapBase
     {
         private bool updated = true;
+        public UnityEvent OnNextScreenEvent;
+        public UnityEvent OnPreviousScreenEvent;
 
         void Start()
         {
@@ -275,10 +278,12 @@ namespace UnityEngine.UI.Extensions
                             if (_startPosition.x - _screensContainer.anchoredPosition.x > 0)
                             {
                                 NextScreen();
+                                OnNextScreenEvent?.Invoke();
                             }
                             else
                             {
                                 PreviousScreen();
+                                OnPreviousScreenEvent?.Invoke();
                             }
                         }
                         else
@@ -300,6 +305,8 @@ namespace UnityEngine.UI.Extensions
                                 else
                                 {
                                     NextScreen();
+                                    OnNextScreenEvent?.Invoke();
+
                                 }
                             }
                             else
@@ -311,6 +318,8 @@ namespace UnityEngine.UI.Extensions
                                 else
                                 {
                                     PreviousScreen();
+                                    OnPreviousScreenEvent?.Invoke();
+
                                 }
                             }
                         }

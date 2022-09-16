@@ -59,6 +59,7 @@ namespace Holoi.Library.HoloKitApp.UI
                     break;
             }
             _image = GetComponent<Image>();
+            _image.color = UnityEngine.Color.white;
             _icon = transform.Find("Icon").GetComponent<Image>();
 
             if (transform.Find("Text") == null)
@@ -74,7 +75,17 @@ namespace Holoi.Library.HoloKitApp.UI
             
 
             _button = GetComponent<Button>();
-            //_button.transition = Selectable.Transition.SpriteSwap; // set transition mode
+            _button.transition = Selectable.Transition.ColorTint; // set transition mode
+
+            var block = new ColorBlock();
+            block.normalColor = SkinData.holoBlack;
+            block.pressedColor = SkinData.holoBlack;
+            block.highlightedColor = SkinData.holoBlack;
+            block.pressedColor = SkinData.holoBlack;
+            block.selectedColor = SkinData.holoBlack;
+            block.disabledColor = SkinData.holoBlack;
+            block.colorMultiplier = 1;
+
             _button.targetGraphic = _image;
             //_button.spriteState = SkinData.ButtonSpriteState;
 
@@ -89,13 +100,19 @@ namespace Holoi.Library.HoloKitApp.UI
                     switch (state)
                     {
                         case State.Inactive:
-                            _image.color = SkinData.holoGrey3;
+                            block.normalColor = SkinData.holoGrey3;
+                            block.selectedColor = SkinData.holoGrey3;
+                            block.pressedColor = SkinData.holoGrey3;
+                            _button.colors = block;
                             _icon.sprite = SkinData.WhiteArrow;
                             if(_text) _text.color = UnityEngine.Color.white;
                             if(_text) _text.text = _string;
                             break;
                         case State.Active:
-                            _image.color = SkinData.holoBlack;
+                            block.normalColor = SkinData.holoBlack;
+                            block.selectedColor = SkinData.holoBlack;
+                            block.pressedColor = SkinData.holoGrey4;
+                            _button.colors = block;
                             _icon.sprite = SkinData.WhiteArrow;
                             if (_text) _text.color = UnityEngine.Color.white;
                             if (_text) _text.text = _string;
@@ -108,13 +125,19 @@ namespace Holoi.Library.HoloKitApp.UI
                     switch (state)
                     {
                         case State.Inactive:
-                            _image.color = SkinData.WhiteInactiveColor;
+                            block.normalColor = SkinData.WhiteInactiveColor;
+                            block.selectedColor = SkinData.WhiteInactiveColor;
+                            block.normalColor = SkinData.WhiteInactiveColor;
+                            _button.colors = block;
                             _icon.sprite = SkinData.BlackArrow;
                             if (_text) _text.color = UnityEngine.Color.black;
                             if (_text) _text.text = _string;
                             break;
                         case State.Active:
-                            _image.color = SkinData. holoWhite;
+                            block.normalColor = SkinData.holoWhite;
+                            block.selectedColor = SkinData.holoWhite;
+                            block.pressedColor = SkinData.holoGrey1;
+                            _button.colors = block;
                             _icon.sprite = SkinData.BlackArrow;
                             if (_text) _text.color = UnityEngine.Color.black;
                             if (_text) _text.text = _string;

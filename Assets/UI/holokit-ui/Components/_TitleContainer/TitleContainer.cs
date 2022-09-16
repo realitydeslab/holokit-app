@@ -14,12 +14,11 @@ public class TitleContainer : MonoBehaviour
     {
         _title = transform.Find("Title");
         _index = transform.Find("Index");
-        _arrow = transform.Find("Title/Arrow");
+        _arrow = transform.Find("Arrow");
 
-        var text = _title.GetChild(0).GetComponent<TMPro.TMP_Text>().text;
+        //var text = _title.GetChild(0).GetComponent<TMPro.TMP_Text>().text;
         var width = _title.GetChild(0).GetComponent<TMPro.TMP_Text>().preferredWidth;
-        //Debug.Log(text + ":" + width);
 
-        _arrow.GetComponent<RectTransform>().anchoredPosition = new Vector2(-1* width - 70 - 54, -137);
+        _arrow.GetComponent<RectTransform>().anchoredPosition = new Vector2(-1* width - 131 , -16);
     }
 }
