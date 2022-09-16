@@ -30,7 +30,11 @@ namespace Holoi.Library.HoloKitApp.UI
 
                     var panel = new ObjectDetailPanel();
                     PanelManager.Push(panel);
-                    panel.UITool.GetOrAddComponent<ObjectDetailUIPanel>().metaObject = button.GetComponent<CollectionContainer>().activeObject;
+
+                    panel.UITool.GetOrAddComponent<ObjectDetailUIPanel>().metaObject = null;
+                    panel.UITool.GetOrAddComponent<ObjectDetailUIPanel>().metaAvatar = null;
+
+                    panel.UITool.GetOrAddComponent<ObjectDetailUIPanel>().metaObject = button.transform.parent.GetComponent<CollectionContainer>().activeObject;
                 });
             }
         }
