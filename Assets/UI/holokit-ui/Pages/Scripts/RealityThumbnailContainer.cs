@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System;
 using UnityEngine;
 
@@ -5,17 +7,15 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public class RealityThumbnailContainer : MonoBehaviour
     {
-        Vector3 _translate = new Vector3(-0.03f, -0.77f, 7.89f);
-        Vector3 _rotate = new Vector3(-26.6f, -60.824f, 39.185f);
-
         public float currentPostion = 0;
+        public List<GameObject> _thumbnailList = new List<GameObject>();
+        [HideInInspector] public int activeIndex;
+        public event Action clickOnThumbnailsEvent;
 
+        [Header("Transfrom")]
         public Vector3 offset;
         public Vector3 scrollOffset;
-
-        [HideInInspector] public float currentIndex;
-
-        public event Action clickOnThumbnailsEvent;
+        public float rotateValue;
 
         [Header("UI Elements")]
         [SerializeField] Transform _container;
@@ -30,14 +30,18 @@ namespace Holoi.Library.HoloKitApp.UI
         Vector2 endPos = new Vector2();
         string message = new string("hello");
 
+        Vector3 _defaultTranslate = new Vector3(-0.03f, -0.77f, 7.89f);
+        Vector3 _defaultRotate = new Vector3(-26.6f, -60.824f, 39.185f);
+
         private void Awake()
         {
             offset = Vector3.zero;
+            scrollOffset = Vector3.zero;
         }
         private void Start()
         {
-            transform.position = _translate;
-            transform.rotation = Quaternion.Euler(_rotate);
+            transform.position = _defaultTranslate;
+            transform.rotation = Quaternion.Euler(_defaultRotate);
         }
 
         private void Update()
@@ -45,24 +49,40 @@ namespace Holoi.Library.HoloKitApp.UI
             _container.localPosition = new Vector3(-1 * currentPostion, 0, 0);
             _container.position += (offset + scrollOffset);
 
-            _lightGroup.position = (offset + scrollOffset);
+            _lightGroup.localPosition = Vector3.zero;
+            _lightGroup.position += scrollOffset;
 
             _arrowPath.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_Offset", new Vector2(currentPostion * 1, 0));
 
-            SetSelectedThumbnail();
-            GetTouchClickOnPrefabs();
+            
+            if(PanelManager.Instance.GetActivePanel().UIType.Name == "StartPanel")
+            {
+                SetSelectedThumbnail();
+                GetTouchClickOnPrefabs();
+            }else if (PanelManager.Instance.GetActivePanel().UIType.Name == "RealityDetailPanel")
+            {
+                UpdateThumbnailRotation(rotateValue);
+            }
         }
 
-        public void PlayArrowEnterAnimation()
+        public void TriggerArrowEnterAnimation()
         {
             _arrowEnter.GetComponent<Animator>().SetTrigger("out");
+        }
+
+        // scrollValue(-.5f ~ 1.5f)
+        void UpdateThumbnailRotation(float scrollValue)
+        {
+            var valueFixer = scrollValue - 1f;
+            // the active thumbnail, set rotate on its local axis for a value = eular
+            _thumbnailList[activeIndex].transform.localRotation = Quaternion.Euler(new Vector3(0, scrollValue * 15f, 0));
         }
 
         public void SetSelectedThumbnail()
         {
             for (int i = 0; i < _container.childCount; i++)
             {
-                if (i == currentIndex)
+                if (i == activeIndex)
                 {
                     var go = _container.GetChild(i).gameObject;
                     go.layer = 3;

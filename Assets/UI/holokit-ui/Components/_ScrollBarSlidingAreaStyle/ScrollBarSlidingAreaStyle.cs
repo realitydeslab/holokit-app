@@ -29,9 +29,9 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
     List<GameObject> _dots = new List<GameObject>();
 
 
-    public void Init(int num)
+    public void Init(int count)
     {
-        objectCount = num;
+        objectCount = count;
         ClearLastContent(transform);
 
         Debug.Log("slidingbar count: " + objectCount);

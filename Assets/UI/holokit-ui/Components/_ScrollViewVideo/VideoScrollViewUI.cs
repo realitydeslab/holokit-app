@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
+using System.IO;
 
 /// <summary>
 /// 1. when user slider screen to video container, the first video plays
@@ -50,28 +51,11 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Awake()
         {
-            if (_videoUrl == null)
-            {
-                _videoUrl = new List<string>();
-                for (int i = 0; i < _videoCount; i++)
-                {
-                    _videoUrl.Add("./Video");
-                }
-            }
-            else
-            {
-
-            }
-
             DeletePreviousElement(_content);
 
-            for (int i = 0; i < _videoCount; i++)
-            {
-                var go = Instantiate(_videoObject, _content);
-                //go.GetComponent<VideoPlayer>().url = _videoUrl[i];
-                _videoObjectList.Add(go);
-            }
+            UpdateVideos();
         }
+
 
         private void Update()
         {
@@ -79,13 +63,25 @@ namespace Holoi.Library.HoloKitApp.UI
             SetVideoState();
         }
 
+        void UpdateVideos()
+        {
+            _videoObjectList.Clear();
+            for (int i = 0; i < _videoCount; i++)
+            {
+                var go = Instantiate(_videoObject, _content);
+                //go.GetComponent<VideoPlayer>().url = _videoUrl[i];
+                _videoObjectList.Add(go);
+            }
+
+            _scrollBar.GetComponent<ScrollBarSlidingAreaStyle>().Init(_videoCount);
+        }
+
         private void SetContainerState()
         {
-            // if video scroll container is visible:
             if (_parentScrollBar.value < 0.25f)
             {
                 _state = State.visible;
-            }
+            }else
             {
                 _state = State.inVisible;
             }
