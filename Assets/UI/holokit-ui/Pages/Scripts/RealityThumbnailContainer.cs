@@ -11,6 +11,7 @@ namespace Holoi.Library.HoloKitApp.UI
         public float currentPostion = 0;
 
         public Vector3 offset;
+        public Vector3 scrollOffset;
 
         [HideInInspector] public float currentIndex;
 
@@ -23,7 +24,11 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeReference] Transform _arrowPath;
         [SerializeReference] Transform _arrowEnter;
 
-        //[Header("Rendering")]
+        [Header("Touch Detection")]
+        Vector2 startPos = new Vector2();
+        Vector2 direction = new Vector2();
+        Vector2 endPos = new Vector2();
+        string message = new string("hello");
 
         private void Awake()
         {
@@ -38,14 +43,14 @@ namespace Holoi.Library.HoloKitApp.UI
         private void Update()
         {
             _container.localPosition = new Vector3(-1 * currentPostion, 0, 0);
-            _container.position += offset;;
+            _container.position += (offset + scrollOffset);
 
-            _lightGroup.position = offset;
+            _lightGroup.position = (offset + scrollOffset);
 
             _arrowPath.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_Offset", new Vector2(currentPostion * 1, 0));
 
             SetSelectedThumbnail();
-            //GetTouchOnPrefabs();
+            GetTouchClickOnPrefabs();
         }
 
         public void PlayArrowEnterAnimation()
@@ -55,13 +60,10 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void SetSelectedThumbnail()
         {
-            //Debug.Log("SetSelectPrefab");
             for (int i = 0; i < _container.childCount; i++)
             {
                 if (i == currentIndex)
                 {
-                    //Debug.Log("set index layer" + transform.GetChild(i).name);
-
                     var go = _container.GetChild(i).gameObject;
                     go.layer = 3;
 
@@ -83,35 +85,58 @@ namespace Holoi.Library.HoloKitApp.UI
             }
         }
 
-        public void GetTouchOnPrefabs()
+        public void GetTouchClickOnPrefabs()
         {
             if (Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
-                Debug.Log("get touch 0");
-                //Check for mouse click 
-                if (touch.phase == TouchPhase.Ended)
+
+                // Handle finger movements based on TouchPhase
+                switch (touch.phase)
                 {
-                    RaycastHit raycastHit;
-                    Ray ray = Camera.main.ScreenPointToRay(touch.position);
-                    if (Physics.Raycast(ray, out raycastHit, 100f))
-                    {
-                        if (raycastHit.transform != null)
+                    //When a touch has first been detected, change the message and record the starting position
+                    case TouchPhase.Began:
+                        // Record initial touch position.
+                        startPos = touch.position;
+                        message = "Begun ";
+                        break;
+
+                    //Determine if the touch is a moving touch
+                    case TouchPhase.Moved:
+                        // Determine direction by comparing the current touch position with the initial one
+                        direction = touch.position - startPos;
+                        message = "Moving ";
+                        break;
+
+                    case TouchPhase.Ended:
+                        // Report that the touch has ended when it ends
+                        endPos = touch.position;
+                        message = "Ending ";
+
+                        if (Vector2.Distance(endPos, startPos) < 10f)
                         {
-                            //Our custom method. 
-                            CurrentClickedGameObject(raycastHit.transform.gameObject);
+                            // should be a click:
+                            RaycastHit raycastHit;
+                            Ray ray = Camera.main.ScreenPointToRay(touch.position);
+                            if (Physics.Raycast(ray, out raycastHit, 100f))
+                            {
+                                if (raycastHit.transform != null)
+                                {
+                                    //Our custom method. 
+                                    CurrentClickedGameObject(raycastHit.transform.gameObject);
+                                }
+                            }
                         }
-                    }
+
+                        break;
                 }
             }
         }
 
         public void CurrentClickedGameObject(GameObject gameObject)
         {
-            Debug.Log("hit sth");
             if (gameObject.tag == "Reality Thumbnail")
             {
-                Debug.Log("hit target");
                 clickOnThumbnailsEvent?.Invoke();
             }
         }

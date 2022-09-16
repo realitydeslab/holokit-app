@@ -16,13 +16,13 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         [Header("Data")]
         List<string> _videoUrl;
-        // Videos
         [Header("Prefabs")]
         [SerializeField] GameObject _videoObject;
         [Header("UI Elements")]
         List<GameObject> _videoObjectList = new List<GameObject>();
         [SerializeField] Transform _content;
         [SerializeField] Scrollbar _scrollBar;
+        [SerializeField] Scrollbar _parentScrollBar;
 
         [Header("Debug")]
         [SerializeField] int _videoCount;
@@ -35,6 +35,8 @@ namespace Holoi.Library.HoloKitApp.UI
             visible,
             inVisible 
         }
+
+        State _state = State.inVisible;
 
         private void OnEnable()
         {
@@ -58,7 +60,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
             else
             {
-                // wait to finish:
+
             }
 
             DeletePreviousElement(_content);
@@ -70,9 +72,23 @@ namespace Holoi.Library.HoloKitApp.UI
                 _videoObjectList.Add(go);
             }
         }
-        private void SetActive()
+
+        private void Update()
+        {
+            SetContainerState();
+            SetVideoState();
+        }
+
+        private void SetContainerState()
         {
             // if video scroll container is visible:
+            if (_parentScrollBar.value < 0.25f)
+            {
+                _state = State.visible;
+            }
+            {
+                _state = State.inVisible;
+            }
         }
 
         void DeletePreviousElement(Transform content)
@@ -97,25 +113,32 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void SetVideoState()
         {
-            _scrollValue = _scrollBar.value;
-            _scrollValue = Mathf.Clamp01(_scrollValue);
-            _activeIndex = Mathf.RoundToInt(_scrollValue * (_videoCount - 1));
-
-            for (int i = 0; i < _videoCount; i++)
+            switch (_state)
             {
-                if(_activeIndex == i)
-                {
-                    _videoObjectList[i].GetComponent<VideoPlayer>().Play();
-                }
-                else
-                {
-                    _videoObjectList[i].GetComponent<VideoPlayer>().Stop();
-                }
-            }
-        }
+                case State.visible:
+                    _scrollValue = _scrollBar.value;
+                    _scrollValue = Mathf.Clamp01(_scrollValue);
+                    _activeIndex = Mathf.RoundToInt(_scrollValue * (_videoCount - 1));
 
-        private void Update()
-        {
+                    for (int i = 0; i < _videoCount; i++)
+                    {
+                        if (_activeIndex == i)
+                        {
+                            if(!_videoObjectList[i].GetComponent<VideoPlayer>().isPlaying) _videoObjectList[i].GetComponent<VideoPlayer>().Play();
+                        }
+                        else
+                        {
+                            if (_videoObjectList[i].GetComponent<VideoPlayer>().isPlaying) _videoObjectList[i].GetComponent<VideoPlayer>().Stop();
+                        }
+                    }
+                    break;
+                case State.inVisible:
+                    for (int i = 0; i < _videoCount; i++)
+                    {
+                        _videoObjectList[i].GetComponent<VideoPlayer>().Stop();
+                    }
+                    break;
+            }
 
         }
     }

@@ -23,8 +23,14 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Awake()
         {
-            _contentInitPositionY = _content.position.y;
             _technicContainer.reality = reality;
+        }
+
+        private void Start()
+        {
+            _contentInitPositionY = _content.position.y;
+            Debug.Log($"_contentInitPositionY{_contentInitPositionY}");
+
         }
 
         private void Update()
@@ -33,12 +39,12 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 if (PanelManager.Instance.GetActivePanel().UIType.Name == "RealityDetailPanel")
                 {
-                    UpdateThumbnailOffset();
+                    UpdateThumbnailScrollOffset();
                 }
             }
             else
             {
-                UpdateThumbnailOffset();
+                UpdateThumbnailScrollOffset();
             }
         }
 
@@ -54,11 +60,13 @@ namespace Holoi.Library.HoloKitApp.UI
                 _description.text.preferredHeight);
         }
 
-        void UpdateThumbnailOffset()
+        void UpdateThumbnailScrollOffset()
         {
             var deltaY = _content.transform.position.y - _contentInitPositionY;
+            Debug.Log($"deltaY{deltaY}");
             var realityThumbnailContainer = FindObjectOfType<RealityThumbnailContainer>();
-            realityThumbnailContainer.offset = new Vector3(0, 1.7f + deltaY, 0);
+            realityThumbnailContainer.scrollOffset = new Vector3(0, deltaY, 0);
+            Debug.Log("UpdateThumbnailScrollOffset");
         }
     }
 }
