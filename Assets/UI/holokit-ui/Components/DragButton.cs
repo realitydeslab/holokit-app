@@ -13,7 +13,7 @@ public class DragButton : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     public void OnBeginDrag(PointerEventData eventData)
     {
         Debug.Log("OnBeginDrag");
-        GetComponent<Button>().enabled = false;
+        if(GetComponent<Button>()) GetComponent<Button>().enabled = false;
         if (scorllRect != null)
         {
             scorllRect.OnBeginDrag(eventData);
@@ -42,7 +42,8 @@ public class DragButton : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        GetComponent<Button>().enabled = true;
+        if (GetComponent<Button>()) GetComponent<Button>().enabled = true;
+
 
         Debug.Log("OnEndDrag");
         if (scorllRect != null)
