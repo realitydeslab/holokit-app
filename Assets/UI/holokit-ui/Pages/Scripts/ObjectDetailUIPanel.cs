@@ -47,7 +47,7 @@ namespace Holoi.Library.HoloKitApp.UI
         
 
 
-        private void Awake()
+        private void Start()
         {
             InitUIInfo();
             SetCollectState(state);
