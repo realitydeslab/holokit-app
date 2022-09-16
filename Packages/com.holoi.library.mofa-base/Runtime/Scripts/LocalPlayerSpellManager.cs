@@ -56,9 +56,27 @@ namespace Holoi.Mofa.Base
 
         private void Awake()
         {
-            // TODO: Setup two spells
+            SetupSpells();
 
             _mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+        }
+
+        private void SetupSpells()
+        {
+            foreach (var spell in SpellList.List)
+            {
+                if (spell.MagicSchool.Id == 0)
+                {
+                    if (spell.SpellType == SpellType.Basic)
+                    {
+                        BasicSpell = spell;
+                    }
+                    else
+                    {
+                        SecondarySpell = spell;
+                    }
+                }
+            }
         }
 
         private void FixedUpdate()

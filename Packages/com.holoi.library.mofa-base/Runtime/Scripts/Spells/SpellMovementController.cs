@@ -9,12 +9,9 @@ namespace Holoi.Mofa.Base
     {
         public float Speed;
 
-        private void FixedUpdate()
+        private void Start()
         {
-            if (IsServer)
-            {
-                transform.position += Speed * Time.fixedDeltaTime * transform.forward;
-            }
+            GetComponent<Rigidbody>().velocity = Speed * transform.forward;
         }
     }
 }

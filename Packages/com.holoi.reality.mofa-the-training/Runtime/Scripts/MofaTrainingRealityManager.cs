@@ -113,6 +113,12 @@ namespace Holoi.Reality.MOFATheTraining
                 }
                 return;
             }
+
+            if (Phase.Value == MofaPhase.Fighting)
+            {
+                Debug.Log("[MofaTraining] Cast spell");
+                LocalPlayerSpellManager.SpawnBasicSpell();
+            }
         }
 
         private void DestroyExistingARPlanes()

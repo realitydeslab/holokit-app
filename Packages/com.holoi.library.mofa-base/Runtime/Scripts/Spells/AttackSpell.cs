@@ -38,6 +38,7 @@ namespace Holoi.Mofa.Base
                     OnHitClientRpc();
                     if (HitOnce)
                     {
+                        GetComponent<Collider>().enabled = false;
                         Destroy(this, _destroyDelay);
                     }
                 }
