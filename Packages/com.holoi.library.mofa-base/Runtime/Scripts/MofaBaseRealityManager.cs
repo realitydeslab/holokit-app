@@ -46,7 +46,7 @@ namespace Holoi.Mofa.Base
         {
             base.OnNetworkSpawn();
 
-            LocalPlayerSpellManager = Instantiate(LocalPlayerSpellManagerPrefab);
+            SpawnLocalPlayerSpellManager();
             Phase.OnValueChanged += OnPhaseChanged;
         }
 
@@ -78,6 +78,12 @@ namespace Holoi.Mofa.Base
                     OnRoundDataDisplayed?.Invoke();
                     break;
             }
+        }
+
+        private void SpawnLocalPlayerSpellManager()
+        {
+            LocalPlayerSpellManager = Instantiate(LocalPlayerSpellManagerPrefab);
+            LocalPlayerSpellManager.transform.SetParent(transform);
         }
 
         public void SetPlayer(ulong clientId, MofaPlayer mofaPlayer)

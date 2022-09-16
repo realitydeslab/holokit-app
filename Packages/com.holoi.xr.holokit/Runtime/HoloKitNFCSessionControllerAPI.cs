@@ -39,7 +39,10 @@ namespace HoloKit
 
         public static void SkipNFCSessionWithPassword(string password, HoloKitType holoKitType, float ipd, float farClipPlane)
         {
-            HoloKitSDK_SkipNFCSessionWithPassword(password, (int)holoKitType, ipd, farClipPlane);
+            if (HoloKitHelper.IsRuntime)
+            {
+                HoloKitSDK_SkipNFCSessionWithPassword(password, (int)holoKitType, ipd, farClipPlane);
+            }
         }
 
         public static void RegisterNFCSessionControllerDelegates()
