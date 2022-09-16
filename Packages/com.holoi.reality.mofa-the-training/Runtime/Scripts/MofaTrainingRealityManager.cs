@@ -114,6 +114,7 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 if (SpawnMofaAI())
                 {
+                    SpawnMofaFightingPanel();
                     StartCoroutine(StartSingleRound());
                 }
                 return;

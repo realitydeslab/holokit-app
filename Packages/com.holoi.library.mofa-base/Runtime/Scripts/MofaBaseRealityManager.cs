@@ -30,6 +30,8 @@ namespace Holoi.Mofa.Base
 
         [HideInInspector] public LocalPlayerSpellManager LocalPlayerSpellManager;
 
+        public MofaFightingPanel MofaFightingPanelPrefab;
+
         public Dictionary<ulong, MofaPlayer> Players = new();
 
         public static event Action<MofaPhase> OnPhaseChanged;
@@ -135,6 +137,11 @@ namespace Holoi.Mofa.Base
         {
             yield return new WaitForSeconds(3f - LifeShield.DestroyDelay);
             SpawnLifeShield(ownerClientId);
+        }
+
+        public void SpawnMofaFightingPanel()
+        {
+            Instantiate(MofaFightingPanelPrefab);
         }
     }
 }
