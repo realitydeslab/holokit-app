@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
 using Holoi.AssetFoundation;
 
 namespace Holoi.Library.HoloKitApp.UI
@@ -27,16 +28,28 @@ namespace Holoi.Library.HoloKitApp.UI
 
         int _realityCount;
 
-        int _currentIndex = 0;
+        int _activeIndex = 0;
 
         public int CurrentIndex
         {
-            get { return _currentIndex; }
+            get { return _activeIndex; }
         }
 
         float _scrollValue;
 
         float _offset = 4f;
+
+        private void OnEnable()
+        {
+            _horizentalScrollContainer.GetComponent<HorizontalScrollSnap>().OnNextScreenEvent.AddListener(realityThumbnailContainer.PlayArrowEnterAnimation);
+            _horizentalScrollContainer.GetComponent<HorizontalScrollSnap>().OnPreviousScreenEvent.AddListener(realityThumbnailContainer.PlayArrowEnterAnimation);
+        }
+
+        private void OnDisable()
+        {
+            _horizentalScrollContainer.GetComponent<HorizontalScrollSnap>().OnNextScreenEvent.RemoveListener(realityThumbnailContainer.PlayArrowEnterAnimation);
+            _horizentalScrollContainer.GetComponent<HorizontalScrollSnap>().OnPreviousScreenEvent.RemoveListener(realityThumbnailContainer.PlayArrowEnterAnimation);
+        }
 
         private void Awake()
         {
@@ -50,6 +63,11 @@ namespace Holoi.Library.HoloKitApp.UI
             InitialCoverContent();
 
             _handle.GetComponent<ScrollBarSlidingAreaStyle>().Init(_realityCount);
+        }
+
+        private void Start()
+        {
+
         }
 
         private void Update()
@@ -93,10 +111,10 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             _scrollValue = _horizentalScrollContainer.Find("Scrollbar Horizontal").GetComponent<Scrollbar>().value;
             _scrollValue = Mathf.Clamp01(_scrollValue);
-            _currentIndex = Mathf.RoundToInt(_scrollValue * (_realityCount - 1));
+            _activeIndex = Mathf.RoundToInt(_scrollValue * (_realityCount - 1));
 
-            realityThumbnailContainer.currentIndex = _currentIndex;
-            PanelManager.Instance._realityIndex = _currentIndex;
+            realityThumbnailContainer.currentIndex = _activeIndex;
+            PanelManager.Instance._realityIndex = _activeIndex;
 
             // set value to thumbnails container
             var thumbnailContainerPosition = _scrollValue * (_realityCount - 1) * _offset;
@@ -141,7 +159,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
             for (int i = 0; i < _realityCount; i++)
             {
-                if (i == _currentIndex)
+                if (i == _activeIndex)
                 {
                     _realityThumbnailList[i].SetActive(true);
                 }
@@ -171,7 +189,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void RecoverHomePage()
         {
-            _currentIndex = PanelManager.Instance._realityIndex;
+            _activeIndex = PanelManager.Instance._realityIndex;
             UpdateScrollValue();
         }
     }
