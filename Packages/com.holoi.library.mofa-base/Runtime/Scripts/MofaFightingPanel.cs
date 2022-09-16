@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HoloKit;
 
 namespace Holoi.Mofa.Base
 {
@@ -11,5 +12,10 @@ namespace Holoi.Mofa.Base
         public GameObject Reticle;
 
         public GameObject Status;
+
+        private void Awake()
+        {
+            transform.SetParent(HoloKitCamera.Instance.CenterEyePose);
+        }
     }
 }
