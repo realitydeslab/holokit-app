@@ -24,7 +24,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         Canvas _canvas;
 
-        List<GameObject> _realityThumbnailList = new List<GameObject>();
+        //List<GameObject> _thumbnailList = new List<GameObject>();
 
         int _realityCount;
 
@@ -38,17 +38,18 @@ namespace Holoi.Library.HoloKitApp.UI
         float _scrollValue;
 
         float _offset = 4f;
+        public Vector3 _eular;
 
         private void OnEnable()
         {
-            _horizentalScrollContainer.GetComponent<HorizontalScrollSnap>().OnNextScreenEvent.AddListener(realityThumbnailContainer.PlayArrowEnterAnimation);
-            _horizentalScrollContainer.GetComponent<HorizontalScrollSnap>().OnPreviousScreenEvent.AddListener(realityThumbnailContainer.PlayArrowEnterAnimation);
+            _horizentalScrollContainer.GetComponent<HorizontalScrollSnap>().OnNextScreenEvent.AddListener(realityThumbnailContainer.TriggerArrowEnterAnimation);
+            _horizentalScrollContainer.GetComponent<HorizontalScrollSnap>().OnPreviousScreenEvent.AddListener(realityThumbnailContainer.TriggerArrowEnterAnimation);
         }
 
         private void OnDisable()
         {
-            _horizentalScrollContainer.GetComponent<HorizontalScrollSnap>().OnNextScreenEvent.RemoveListener(realityThumbnailContainer.PlayArrowEnterAnimation);
-            _horizentalScrollContainer.GetComponent<HorizontalScrollSnap>().OnPreviousScreenEvent.RemoveListener(realityThumbnailContainer.PlayArrowEnterAnimation);
+            _horizentalScrollContainer.GetComponent<HorizontalScrollSnap>().OnNextScreenEvent.RemoveListener(realityThumbnailContainer.TriggerArrowEnterAnimation);
+            _horizentalScrollContainer.GetComponent<HorizontalScrollSnap>().OnPreviousScreenEvent.RemoveListener(realityThumbnailContainer.TriggerArrowEnterAnimation);
         }
 
         private void Awake()
@@ -91,6 +92,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         void InitialCoverContent()
         {
+            realityThumbnailContainer._thumbnailList.Clear();
             for (int i = 0; i < _realityCount; i++)
             {
                 // create thumbnailPrefabs
@@ -98,7 +100,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 realityThumbnailGO.transform.localPosition = new Vector3(i * _offset, 0, 0);
                 realityThumbnailGO.transform.localScale = Vector3.one * 0.28f;
                 realityThumbnailGO.tag = "Reality Thumbnail";
-                _realityThumbnailList.Add(realityThumbnailGO);
+                realityThumbnailContainer._thumbnailList.Add(realityThumbnailGO);
 
                 // create titles
                 _prefabTitle.transform.Find("Index").GetChild(0).GetComponent<TMPro.TMP_Text>().text = "Reality " + "#00" + realityCollection.realities[i].realityId;
@@ -113,7 +115,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _scrollValue = Mathf.Clamp01(_scrollValue);
             _activeIndex = Mathf.RoundToInt(_scrollValue * (_realityCount - 1));
 
-            realityThumbnailContainer.currentIndex = _activeIndex;
+            realityThumbnailContainer.activeIndex = _activeIndex;
             PanelManager.Instance._realityIndex = _activeIndex;
 
             // set value to thumbnails container
@@ -161,11 +163,11 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 if (i == _activeIndex)
                 {
-                    _realityThumbnailList[i].SetActive(true);
+                    realityThumbnailContainer._thumbnailList[i].SetActive(true);
                 }
                 else
                 {
-                    _realityThumbnailList[i].SetActive(false);
+                    realityThumbnailContainer._thumbnailList[i].SetActive(false);
                 }
             }
 
@@ -181,10 +183,11 @@ namespace Holoi.Library.HoloKitApp.UI
 
             for (int i = 0; i < _realityCount; i++)
             {
-                _realityThumbnailList[i].SetActive(true);
+                realityThumbnailContainer._thumbnailList[i].SetActive(true);
             }
 
             realityThumbnailContainer.offset = new Vector3(0, 0f, 0);
+            realityThumbnailContainer.scrollOffset = new Vector3(0, 0f, 0);
         }
 
         public void RecoverHomePage()

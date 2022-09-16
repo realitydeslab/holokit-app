@@ -10,7 +10,7 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         static readonly string _path = "Prefabs/UI/Panels/AvatarDetailPanel";
         public AvatarDetailPanel() : base(new UIType(_path)) { }
-        public MetaObject metaObject;
+        public MetaAvatar metaAvatar;
 
         public override void OnOpen()
         {
