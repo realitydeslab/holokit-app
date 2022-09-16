@@ -8,6 +8,11 @@ namespace Holoi.Mofa.Base
     public class MofaFightingPanelScores : MonoBehaviour
     {
         private MofaBaseRealityManager _mofaRealityManager;
+        [Header("UI Elenments")]
+        [SerializeField] TMPro.TMP_Text _yourScore;
+        [SerializeField] TMPro.TMP_Text _enemyScore;
+        [SerializeField] TMPro.TMP_Text _gameTime;
+        float _timeCounter = 80;
 
         private void Awake()
         {
@@ -45,8 +50,8 @@ namespace Holoi.Mofa.Base
             Debug.Log($"[MofaFightingPanel] Blue {blueTeamScore} : Red {redTeamScore}");
 
             // SIZHENGTODO: 更新比分面板
-            // blueTeamScore 为此时蓝队比分
-            // redTeamScore 为此时红队比分
+            _yourScore.text = "" + blueTeamScore;
+            _enemyScore.text = "" + redTeamScore;
         }
 
         private void OnPhaseChanged(MofaPhase mofaPhase)
@@ -54,7 +59,21 @@ namespace Holoi.Mofa.Base
             if (mofaPhase == MofaPhase.Fighting)
             {
                 // SIZHENGTODO: 计时开始，80s一局
+                _timeCounter = 80;
             }
+        }
+
+        private void Update()
+        {
+            if(_timeCounter > 0)
+            {
+                _timeCounter -= Time.deltaTime;
+            }
+            else
+            {
+                _timeCounter = 0;
+            }
+            _gameTime.text = "" + Mathf.Ceil(_timeCounter);
         }
     }
 }
