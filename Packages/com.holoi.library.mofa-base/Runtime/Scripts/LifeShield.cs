@@ -27,11 +27,11 @@ namespace Holoi.Mofa.Base
 
         [SerializeField] private AudioClip _destroySound;
 
-        [SerializeField] private float _destroyDelay;
-
         public Vector3 CenterEyeOffset;
 
         private AudioSource _audioSource;
+
+        public static float DestroyDelay = 1f;
 
         private readonly Dictionary<LifeShieldArea, LifeShieldFragment> _fragments = new();
 
@@ -98,24 +98,88 @@ namespace Holoi.Mofa.Base
 
         private void OnTopDestroyed(bool oldValue, bool newValue)
         {
+            if (IsServer)
+            {
+                if (_fragments[LifeShieldArea.Top].TryGetComponent<Collider>(out var topCollider))
+                {
+                    topCollider.enabled = false;
+                }
+                if (_fragments[LifeShieldArea.TopLeft].TryGetComponent<Collider>(out var topLeftCollider))
+                {
+                    topLeftCollider.enabled = false;
+                }
+                if (_fragments[LifeShieldArea.TopRight].TryGetComponent<Collider>(out var topRightCollider))
+                {
+                    topRightCollider.enabled = false;
+                }
+            }
+            _fragments[LifeShieldArea.Top].GetComponent<MeshRenderer>().enabled = false;
             PlayHitSound();
             IsDead();
         }
 
         private void OnBotDestroyed(bool oldValue, bool newValue)
         {
+            if (IsServer)
+            {
+                if (_fragments[LifeShieldArea.Bot].TryGetComponent<Collider>(out var botCollider))
+                {
+                    botCollider.enabled = false;
+                }
+                if (_fragments[LifeShieldArea.BotLeft].TryGetComponent<Collider>(out var botLeftCollider))
+                {
+                    botLeftCollider.enabled = false;
+                }
+                if (_fragments[LifeShieldArea.BotRight].TryGetComponent<Collider>(out var botRightCollider))
+                {
+                    botRightCollider.enabled = false;
+                }
+            }
+            _fragments[LifeShieldArea.Bot].GetComponent<MeshRenderer>().enabled = false;
             PlayHitSound();
             IsDead();
         }
 
         private void OnLeftDestroyed(bool oldValue, bool newValue)
         {
+            if (IsServer)
+            {
+                if (_fragments[LifeShieldArea.Left].TryGetComponent<Collider>(out var leftCollider))
+                {
+                    leftCollider.enabled = false;
+                }
+                if (_fragments[LifeShieldArea.TopLeft].TryGetComponent<Collider>(out var topLeftCollider))
+                {
+                    topLeftCollider.enabled = false;
+                }
+                if (_fragments[LifeShieldArea.BotLeft].TryGetComponent<Collider>(out var botLeftCollider))
+                {
+                    botLeftCollider.enabled = false;
+                }
+            }
+            _fragments[LifeShieldArea.Left].GetComponent<MeshRenderer>().enabled = false;
             PlayHitSound();
             IsDead();
         }
 
         private void OnRightDestroyed(bool oldValue, bool newValue)
         {
+            if (IsServer)
+            {
+                if (_fragments[LifeShieldArea.Right].TryGetComponent<Collider>(out var rightCollider))
+                {
+                    rightCollider.enabled = false;
+                }
+                if (_fragments[LifeShieldArea.TopRight].TryGetComponent<Collider>(out var topRightCollider))
+                {
+                    topRightCollider.enabled = false;
+                }
+                if (_fragments[LifeShieldArea.BotRight].TryGetComponent<Collider>(out var botRightCollider))
+                {
+                    botRightCollider.enabled = false;
+                }
+            }
+            _fragments[LifeShieldArea.Right].GetComponent<MeshRenderer>().enabled = false;
             PlayHitSound();
             IsDead();
         }
@@ -129,9 +193,12 @@ namespace Holoi.Mofa.Base
                 if (IsServer)
                 {
                     var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-                    mofaRealityManager.Players[(ulong)LastAttackerClientId.Value].KillCount.Value++;
-                    mofaRealityManager.Players[OwnerClientId].DeathCount.Value++;
-                    Destroy(this, _destroyDelay);
+                    if (mofaRealityManager.Phase.Value == MofaPhase.Fighting || mofaRealityManager.Phase.Value == MofaPhase.RoundOver)
+                    {
+                        mofaRealityManager.Players[(ulong)LastAttackerClientId.Value].KillCount.Value++;
+                        mofaRealityManager.Players[OwnerClientId].DeathCount.Value++;
+                    }
+                    Destroy(gameObject, DestroyDelay);
                 }
             }
         }

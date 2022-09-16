@@ -57,8 +57,13 @@ namespace Holoi.Mofa.Base
         private void Awake()
         {
             SetupSpells();
-
             _mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
+        }
+
+        private void OnDestroy()
+        {
+            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
         }
 
         private void SetupSpells()
@@ -76,6 +81,28 @@ namespace Holoi.Mofa.Base
                         SecondarySpell = spell;
                     }
                 }
+            }
+        }
+
+        private void OnPhaseChanged(MofaPhase newPhase)
+        {
+            switch (newPhase)
+            {
+                case MofaPhase.Waiting:
+                    break;
+                case MofaPhase.Countdown:
+                    Reset();
+                    break;
+                case MofaPhase.Fighting:
+                    Active = true;
+                    break;
+                case MofaPhase.RoundOver:
+                    Active = false;
+                    break;
+                case MofaPhase.RoundResult:
+                    break;
+                case MofaPhase.RoundData:
+                    break;
             }
         }
 
@@ -116,6 +143,12 @@ namespace Holoi.Mofa.Base
 
         public void SpawnBasicSpell()
         {
+            if (!Active)
+            {
+                Debug.Log("[LocalPlayerSpellManager] Not active");
+                return;
+            }
+
             if (BasicSpellCharge < BasicSpell.ChargeTime)
             {
                 Debug.Log("[LocalPlayerSpellManager] Basic spell not charged");
@@ -131,6 +164,12 @@ namespace Holoi.Mofa.Base
 
         public void SpawnSecondarySpell()
         {
+            if (!Active)
+            {
+                Debug.Log("[LocalPlayerSpellManager] Not active");
+                return;
+            }
+
             if (SecondarySpellUseCount > SecondarySpell.MaxUseCount)
             {
                 Debug.Log("[LocalPlayerSpellManager] Exceed secondary spell use count");

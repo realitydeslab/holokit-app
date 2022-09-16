@@ -6,6 +6,6 @@ namespace Holoi.Mofa.Base
 {
     public interface IDamageable
     {
-        public void OnHit(ulong attackerClientId);
+        public void OnDamaged(ulong attackerClientId);
     }
 }

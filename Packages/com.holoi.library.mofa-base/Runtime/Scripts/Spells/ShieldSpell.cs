@@ -32,7 +32,7 @@ namespace Holoi.Mofa.Base
             }
         }
 
-        public void OnHit(ulong clientId)
+        public void OnDamaged(ulong clientId)
         {
             _currentHealth.Value--;
             if (_currentHealth.Value > 0)
@@ -43,7 +43,7 @@ namespace Holoi.Mofa.Base
             {
                 OnBeingDestroyedClientRpc();
                 GetComponent<Collider>().enabled = false;
-                Destroy(this, _destroyDelay);
+                Destroy(gameObject, _destroyDelay);
             }
         }
 

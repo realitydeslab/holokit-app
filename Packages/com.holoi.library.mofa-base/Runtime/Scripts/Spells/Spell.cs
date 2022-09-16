@@ -29,5 +29,10 @@ namespace Holoi.Mofa.Base
         public int MaxChargeCount;
 
         public int MaxUseCount;
+
+        private void Start()
+        {
+            Debug.Log($"[Spell] {Name} spawned with ownership {GetComponent<Unity.Netcode.NetworkObject>().OwnerClientId}");
+        }
     }
 }

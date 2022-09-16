@@ -21,8 +21,10 @@ namespace Holoi.Reality.MOFATheTraining
 
         private ARRaycastManager _arRaycastManager;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             StARARPanel.OnTriggered += OnTriggered;
         }
 
@@ -48,7 +50,8 @@ namespace Holoi.Reality.MOFATheTraining
 
             if (IsServer)
             {
-                _placementIndicator = Instantiate(PlacementIndicatorPrefab, Vector3.zero, Quaternion.identity);
+                var placementIndicatorInitialPos = HoloKitHelper.IsRuntime ? Vector3.zero : new Vector3(0f, 0f, 5f);
+                _placementIndicator = Instantiate(PlacementIndicatorPrefab, placementIndicatorInitialPos, Quaternion.identity);
                 _arRaycastManager = HoloKitCamera.Instance.GetComponentInParent<ARRaycastManager>();
             }
         }
@@ -116,7 +119,6 @@ namespace Holoi.Reality.MOFATheTraining
 
             if (Phase.Value == MofaPhase.Fighting)
             {
-                Debug.Log("[MofaTraining] Cast spell");
                 LocalPlayerSpellManager.SpawnBasicSpell();
             }
         }
