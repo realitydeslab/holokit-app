@@ -47,8 +47,12 @@ namespace Holoi.Reality.MOFATheTraining
             // Update NetworkTransform
             if (IsServer)
             {
-                Quaternion lookAtRotation = Quaternion.LookRotation(HoloKitCamera.Instance.CenterEyePose.position - transform.position);
-                transform.rotation = MofaUtils.GetHorizontalRotation(lookAtRotation);
+                Vector3 lookAtVector = HoloKitCamera.Instance.CenterEyePose.position - transform.position;
+                if (lookAtVector != Vector3.zero)
+                {
+                    Quaternion lookAtRotation = Quaternion.LookRotation(lookAtVector);
+                    transform.rotation = MofaUtils.GetHorizontalRotation(lookAtRotation);
+                }
             }
 
             // Set the avatar's transform on each client manually

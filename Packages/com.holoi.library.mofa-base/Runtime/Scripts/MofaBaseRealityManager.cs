@@ -32,52 +32,41 @@ namespace Holoi.Mofa.Base
 
         public Dictionary<ulong, MofaPlayer> Players = new();
 
-        public static event Action OnCoutdownStarted;
+        public static event Action<MofaPhase> OnPhaseChanged;
 
-        public static event Action OnRoundStarted;
+        protected virtual void Awake()
+        {
+            LifeShield.OnDead += OnLifeShieldDead;
+        }
 
-        public static event Action OnRoundEnded;
-
-        public static event Action OnRoundResultDisplayed;
-
-        public static event Action OnRoundDataDisplayed;
+        public override void OnDestroy()
+        {
+            LifeShield.OnDead -= OnLifeShieldDead;
+        }
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
 
-            LocalPlayerSpellManager = Instantiate(LocalPlayerSpellManagerPrefab);
-            Phase.OnValueChanged += OnPhaseChanged;
+            SpawnLocalPlayerSpellManager();
+            Phase.OnValueChanged += OnPhaseChangedFunc;
         }
 
         public override void OnNetworkDespawn()
         {
-            Phase.OnValueChanged -= OnPhaseChanged;
+            Phase.OnValueChanged -= OnPhaseChangedFunc;
         }
 
-        private void OnPhaseChanged(MofaPhase oldValue, MofaPhase newValue)
+        private void OnPhaseChangedFunc(MofaPhase oldValue, MofaPhase newValue)
         {
             Debug.Log($"[MOFABase] Phase changed to {newValue}");
-            switch (newValue)
-            {
-                case MofaPhase.Waiting:
-                    break;
-                case MofaPhase.Countdown:
-                    OnCoutdownStarted?.Invoke();
-                    break;
-                case MofaPhase.Fighting:
-                    OnRoundStarted?.Invoke();
-                    break;
-                case MofaPhase.RoundOver:
-                    OnRoundEnded?.Invoke();
-                    break;
-                case MofaPhase.RoundResult:
-                    OnRoundResultDisplayed?.Invoke();
-                    break;
-                case MofaPhase.RoundData:
-                    OnRoundDataDisplayed?.Invoke();
-                    break;
-            }
+            OnPhaseChanged?.Invoke(newValue);
+        }
+
+        private void SpawnLocalPlayerSpellManager()
+        {
+            LocalPlayerSpellManager = Instantiate(LocalPlayerSpellManagerPrefab);
+            LocalPlayerSpellManager.transform.SetParent(transform);
         }
 
         public void SetPlayer(ulong clientId, MofaPlayer mofaPlayer)
@@ -132,6 +121,20 @@ namespace Holoi.Mofa.Base
             }
             var spellInstance = Instantiate(spell, position, rotation);
             spellInstance.GetComponent<NetworkObject>().SpawnWithOwnership(serverRpcParams.Receive.SenderClientId);
+        }
+
+        private void OnLifeShieldDead(ulong ownerClientId)
+        {
+            if (IsServer)
+            {
+                StartCoroutine(RespawnLifeShield(ownerClientId));
+            }
+        }
+
+        private IEnumerator RespawnLifeShield(ulong ownerClientId)
+        {
+            yield return new WaitForSeconds(3f - LifeShield.DestroyDelay);
+            SpawnLifeShield(ownerClientId);
         }
     }
 }

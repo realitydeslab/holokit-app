@@ -21,8 +21,10 @@ namespace Holoi.Reality.MOFATheTraining
 
         private ARRaycastManager _arRaycastManager;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             StARARPanel.OnTriggered += OnTriggered;
         }
 
@@ -48,7 +50,8 @@ namespace Holoi.Reality.MOFATheTraining
 
             if (IsServer)
             {
-                _placementIndicator = Instantiate(PlacementIndicatorPrefab, new Vector3(0f, 100f, 0f), Quaternion.identity);
+                var placementIndicatorInitialPos = HoloKitHelper.IsRuntime ? Vector3.zero : new Vector3(0f, 0f, 5f);
+                _placementIndicator = Instantiate(PlacementIndicatorPrefab, placementIndicatorInitialPos, Quaternion.identity);
                 _arRaycastManager = HoloKitCamera.Instance.GetComponentInParent<ARRaycastManager>();
             }
         }
@@ -57,29 +60,32 @@ namespace Holoi.Reality.MOFATheTraining
         {
             if (_placementIndicator != null)
             {
-                Vector3 horizontalForward = MofaUtils.GetHorizontalForward(HoloKitCamera.Instance.CenterEyePose);
-                Vector3 rayOrigin = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * 1.5f; // TODO: Changeable
-                Ray ray = new(rayOrigin, Vector3.down);
-                List<ARRaycastHit> hits = new();
-                if (_arRaycastManager.Raycast(ray, hits, TrackableType.Planes))
+                if (HoloKitHelper.IsRuntime)
                 {
-                    foreach (var hit in hits)
+                    Vector3 horizontalForward = MofaUtils.GetHorizontalForward(HoloKitCamera.Instance.CenterEyePose);
+                    Vector3 rayOrigin = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * 1.5f; // TODO: Changeable
+                    Ray ray = new(rayOrigin, Vector3.down);
+                    List<ARRaycastHit> hits = new();
+                    if (_arRaycastManager.Raycast(ray, hits, TrackableType.Planes))
                     {
-                        var arPlane = hit.trackable.GetComponent<ARPlane>();
-                        if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
+                        foreach (var hit in hits)
                         {
-                            Vector3 position = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * 3f; // TODO: Changeable
-                            _placementIndicator.transform.position = new Vector3(position.x, hit.pose.position.y, position.z);
-                            _placementIndicator.SetActive(true);
-                            return;
+                            var arPlane = hit.trackable.GetComponent<ARPlane>();
+                            if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
+                            {
+                                Vector3 position = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * 3f; // TODO: Changeable
+                                _placementIndicator.transform.position = new Vector3(position.x, hit.pose.position.y, position.z);
+                                _placementIndicator.SetActive(true);
+                                return;
+                            }
                         }
                     }
+                    _placementIndicator.SetActive(false);
                 }
-                _placementIndicator.SetActive(false);
             }
         }
 
-        private void SpawnMofaAI()
+        private bool SpawnMofaAI()
         {
             if (_placementIndicator.activeSelf)
             {
@@ -91,10 +97,12 @@ namespace Holoi.Reality.MOFATheTraining
                 _arRaycastManager.enabled = false;
                 HoloKitCamera.Instance.GetComponentInParent<ARPlaneManager>().enabled = false;
                 DestroyExistingARPlanes();
+                return true;
             }
             else
             {
                 Debug.Log("[MOFATheTraining] Failed to spawn AvatarController");
+                return false;
             }
         }
 
@@ -102,9 +110,16 @@ namespace Holoi.Reality.MOFATheTraining
         {
             if (Phase.Value == MofaPhase.Waiting)
             {
-                SpawnMofaAI();
-                StartCoroutine(StartSingleRound());
+                if (SpawnMofaAI())
+                {
+                    StartCoroutine(StartSingleRound());
+                }
                 return;
+            }
+
+            if (Phase.Value == MofaPhase.Fighting)
+            {
+                LocalPlayerSpellManager.SpawnBasicSpell();
             }
         }
 

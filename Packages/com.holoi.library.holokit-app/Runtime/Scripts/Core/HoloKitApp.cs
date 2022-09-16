@@ -7,6 +7,7 @@ using Netcode.Transports.MultipeerConnectivity;
 using System;
 using Holoi.AssetFoundation;
 using Unity.Netcode.Transports.UNET;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -81,7 +82,7 @@ namespace Holoi.Library.HoloKitApp
             if (NetworkManager.Singleton == null)
             {
                 var networkManager = Instantiate(NetworkManagerPrefab);
-                if (HoloKitAppUtils.IsEditor)
+                if (HoloKitHelper.IsEditor)
                 {
                     networkManager.NetworkConfig.NetworkTransport = networkManager.GetComponent<UNetTransport>();
                 }

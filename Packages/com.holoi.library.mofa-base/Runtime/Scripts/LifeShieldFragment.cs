@@ -21,14 +21,14 @@ namespace Holoi.Mofa.Base
     {
         public LifeShieldArea Area;
 
-        public LifeShield LifeShield;
+        [HideInInspector] public LifeShield LifeShield;
 
         private void Awake()
         {
             LifeShield = GetComponentInParent<LifeShield>();
         }
 
-        public void OnHit(ulong attackerClientId)
+        public void OnDamaged(ulong attackerClientId)
         {
             LifeShield.LastAttackerClientId.Value = (int)attackerClientId;
             switch (Area)

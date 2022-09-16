@@ -44,7 +44,7 @@ namespace Holoi.Mofa.Base
                 if (NetworkManager.ServerTime.TimeAsFloat - _spawnTime > Lifetime)
                 {
                     OnDeadClientRpc();
-                    Destroy(this, _destroyDelay);
+                    Destroy(gameObject, _destroyDelay);
                 }
             }
         }
