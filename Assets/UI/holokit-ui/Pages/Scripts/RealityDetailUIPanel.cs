@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Holoi.AssetFoundation;
@@ -8,11 +9,11 @@ namespace Holoi.Library.HoloKitApp.UI
     public class RealityDetailUIPanel : MonoBehaviour
     {
         public AssetFoundation.Reality reality;
-        MetaObjectCollectionList availableMetaObjectCollectionList;
-        MetaAvatarCollectionList availableMetaAvatarCollectionList;
+        public MetaObjectCollectionList availableMetaObjectCollectionList;
+        public MetaAvatarCollectionList availableMetaAvatarCollectionList;
 
-        MetaObjectCollectionList realityMetaObjectCollectionList;
-        MetaAvatarCollectionList realityMetaAvatarCollectionList;
+        public List<MetaObjectCollection> realityMetaObjectCollectionList;
+        public List<MetaAvatarCollection> realityMetaAvatarCollectionList;
 
         [Header("Rotate Helper")]
         [SerializeField] ScrollRect _rotateHelperScrollRect;
@@ -32,7 +33,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Awake()
         {
-            _technicContainer.reality = reality;
         }
 
         private void Start()
@@ -57,6 +57,10 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void SetUIInfo()
         {
+            Debug.Log("SetUIInfo");
+            _technicContainer.reality = reality;
+            _technicContainer.SetUIInfo();
+
             _id.text.text = "Reality #" + reality.realityId;
             _name.text.text = reality.name;
             _version.text.text = reality.version;
@@ -65,6 +69,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _description.GetComponent<RectTransform>().sizeDelta = new Vector2(
                 1002,
                 _description.text.preferredHeight);
+            UpdateRealityCollections(); 
         }
 
         void UpdateThumbnailPosition()
@@ -75,10 +80,20 @@ namespace Holoi.Library.HoloKitApp.UI
             realityThumbnailContainer.rotateValue = _rotateHelperScrollBar.value;
         }
 
-        void GetRealityCollections()
+        void UpdateRealityCollections()
         {
+            Debug.Log("UpdateRealityCollections");
             var objectTags = reality.compatibleMetaObjectTags;
             var avatarTags = reality.compatibleMetaAvatarTags;
+            Debug.Log($"objectTags: {objectTags.Count}");
+            Debug.Log($"avatarTags: {avatarTags.Count}");
+
+            availableMetaAvatarCollectionList.list = new List<MetaAvatarCollection>();
+            availableMetaObjectCollectionList.list = new List<MetaObjectCollection>();
+
+
+            realityMetaAvatarCollectionList = new List<MetaAvatarCollection>();
+            realityMetaObjectCollectionList = new List<MetaObjectCollection>();
 
             foreach (var tag in avatarTags)
             {
@@ -86,7 +101,12 @@ namespace Holoi.Library.HoloKitApp.UI
                 {
                     if (availableMetaAvatarCollectionList.list[i].tags.Contains(tag))
                     {
-                        realityMetaAvatarCollectionList.list.Add(availableMetaAvatarCollectionList.list[i]);
+                        Debug.Log(availableMetaAvatarCollectionList.list[i].name + "Contains Tag: " + tag.name + ", add to List");
+                        realityMetaAvatarCollectionList.Add(availableMetaAvatarCollectionList.list[i]);
+                    }
+                    else
+                    {
+                        Debug.Log(availableMetaAvatarCollectionList.list[i].name + "Do not Contains Tag: " + tag.name + "");
                     }
                 }
             }
@@ -97,7 +117,13 @@ namespace Holoi.Library.HoloKitApp.UI
                 {
                     if (availableMetaObjectCollectionList.list[i].tags.Contains(tag))
                     {
-                        realityMetaObjectCollectionList.list.Add(availableMetaObjectCollectionList.list[i]);
+                        Debug.Log(availableMetaObjectCollectionList.list[i].name + "Contains Tag: " + tag.name + ", add to List");
+
+                        realityMetaObjectCollectionList.Add(availableMetaObjectCollectionList.list[i]);
+                    }
+                    else
+                    {
+                        Debug.Log(availableMetaObjectCollectionList.list[i].name + "Do not Contains Tag: " + tag.name + "");
                     }
                 }
             }

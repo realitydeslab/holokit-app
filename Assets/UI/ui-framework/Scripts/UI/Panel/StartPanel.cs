@@ -44,8 +44,6 @@ namespace Holoi.Library.HoloKitApp.UI
             realityDetailPanelUI.reality = HoloKitApp.Instance.CurrentReality;
 
             realityDetailPanelUI.SetUIInfo();
-
-
         }
 
         public override void OnClose()

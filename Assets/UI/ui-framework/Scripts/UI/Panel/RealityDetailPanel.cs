@@ -13,15 +13,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override void OnOpen()
         {
-            if (UITool.GetOrAddComponentInChildren<Button>("BackButton") != null)
-            {
-                Debug.Log("Back button parent:" + UITool.GetOrAddComponentInChildren<Button>("BackButton").transform.parent.name);
-            }
             UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
             {
-                // here we do onclick event of this button
-                Debug.Log("Reality Detail BackButton is clicked.");
-
                 PanelManager.Pop();
             });
 
@@ -30,17 +23,16 @@ namespace Holoi.Library.HoloKitApp.UI
                 // here we do onclick event of this button
                 Debug.Log("PlayButton is clicked.");
 
-                var panel = new RealityOptionPanel();
-                PanelManager.Push(panel);
+                RealityDetailUIPanel realityDetailUI = PanelManager.Instance.GetActivePanel().UITool.GetOrAddComponent<RealityDetailUIPanel>();
 
-                // filter all object list with tag:
-                MetaObjectCollectionList MOCL = new MetaObjectCollectionList();
+                var realityOptionPanel = new RealityOptionPanel();
+                PanelManager.Push(realityOptionPanel);
 
-                // filter all ava list with tag:
-                MetaAvatarCollectionList MACL = new MetaAvatarCollectionList();
-
-                panel.UITool.GetOrAddComponent<RealityOptionUIPanel>().metaObjectCollections = MOCL.list;
-                panel.UITool.GetOrAddComponent<RealityOptionUIPanel>().metaAvatarCollections = MACL.list;
+                var realityOptionUI = realityOptionPanel.UITool.GetOrAddComponent<RealityOptionUIPanel>();
+                realityOptionUI.realityMetaObjectCollections = realityDetailUI.realityMetaObjectCollectionList;
+                realityOptionUI.realityMetaAvatarCollections = realityDetailUI.realityMetaAvatarCollectionList;
+                realityOptionUI.SetUIInfo();
+                realityOptionUI.SetUIButtons();
             });
         }
     }

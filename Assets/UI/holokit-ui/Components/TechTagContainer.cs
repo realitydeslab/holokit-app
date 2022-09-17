@@ -14,6 +14,10 @@ namespace Holoi.Library.HoloKitApp.UI
         private void Awake()
         {
             ClearPreviousGenerativeContent();
+        }
+
+        public void SetUIInfo()
+        {
             if (reality != null)
             {
                 CreateTechTags(reality);
@@ -44,7 +48,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
         }
 
-        void CreateTechTags(Holoi.AssetFoundation.Reality realitySample)
+        void CreateTechTags(AssetFoundation.Reality realitySample)
         {
             foreach (var tag in realitySample.realityTags)
             {
