@@ -29,6 +29,16 @@ namespace Holoi.Mofa.Base
 
         public static event Action OnScoreChanged;
 
+        protected virtual void Awake()
+        {
+            MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
+        }
+
+        public override void OnDestroy()
+        {
+            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
+        }
+
         public override void OnNetworkSpawn()
         {
             Debug.Log($"[MofaPlayer] OnNetworkSpawned with ownership {OwnerClientId} and team {Team.Value}");
@@ -63,6 +73,18 @@ namespace Holoi.Mofa.Base
         private void OnScoreChangedFunc(int oldValue, int newValue)
         {
             OnScoreChanged?.Invoke();
+        }
+
+        private void OnPhaseChanged(MofaPhase mofaPhase)
+        {
+            if (IsServer)
+            {
+                if (mofaPhase == MofaPhase.Countdown)
+                {
+                    KillCount.Value = 0;
+                    DeathCount.Value = 0;
+                }
+            }
         }
     }
 }
