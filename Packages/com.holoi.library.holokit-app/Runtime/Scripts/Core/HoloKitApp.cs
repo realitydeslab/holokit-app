@@ -66,7 +66,7 @@ namespace Holoi.Library.HoloKitApp
                 return;
             }
             _isHost = true;
-            SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+            //SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
         }
 
         public void JoinRealityAsSpectator()
@@ -77,7 +77,7 @@ namespace Holoi.Library.HoloKitApp
                 return;
             }
             _isHost = false;
-            SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+            //SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
         }
 
         public void InitializeNetworkManager()

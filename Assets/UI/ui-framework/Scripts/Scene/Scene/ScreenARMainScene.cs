@@ -7,8 +7,9 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public class ScreenARMainScene : Scene
     {
-        readonly string _sceneName = "ScreenARMain";
+        public string _sceneName = "ScreenARMain";
         PanelManager _panelManager;
+
         public override void OnEnter()
         {
             _panelManager = PanelManager.Instance;

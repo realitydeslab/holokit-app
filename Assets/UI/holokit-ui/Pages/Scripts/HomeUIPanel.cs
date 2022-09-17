@@ -18,7 +18,7 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeField] GameObject _prefabTitle;
 
         [Header("UI Elements")]
-        [SerializeField] Transform _verticleScrollContainer;
+        [SerializeField] Transform _scrollViewTitles;
         [SerializeField] Transform _titleScrollContent;
         [SerializeField] Transform _horizentalScrollContainer;
         [SerializeField] Transform _handle;
@@ -122,7 +122,7 @@ namespace Holoi.Library.HoloKitApp.UI
             var thumbnailContainerPosition = _scrollValue * (_realityCount - 1) * _offset;
             realityThumbnailContainer.currentPostion = thumbnailContainerPosition;
             // set valut to name container, to slide the name with thumbnails
-            _verticleScrollContainer.GetComponent<ScrollRect>().verticalNormalizedPosition = 1 - _scrollValue;
+            _scrollViewTitles.GetComponent<ScrollRect>().verticalNormalizedPosition = _scrollValue;
         }
 
         void DeletePreviousElement(Transform content)

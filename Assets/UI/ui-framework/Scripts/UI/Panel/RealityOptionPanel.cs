@@ -30,7 +30,11 @@ namespace Holoi.Library.HoloKitApp.UI
                 // enter screen ar scene:
                 HoloKitApp.Instance.EnterRealityAsHost();
                 var sceneName = HoloKitApp.Instance.CurrentReality.realityManager.GetComponent<RealityManager>().SceneName;
-                GameRoot.Instance.SceneSystem.SetScene(new ScreenARMainScene());
+
+                var scene = new ScreenARMainScene();
+                scene._sceneName = sceneName;
+
+                GameRoot.Instance.SceneSystem.SetScene(scene);
             });
             UITool.GetOrAddComponentInChildren<Button>("SpectatorButton").onClick.AddListener(() =>
             {
