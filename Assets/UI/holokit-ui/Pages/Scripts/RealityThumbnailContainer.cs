@@ -59,9 +59,10 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 SetSelectedThumbnail();
                 GetTouchClickOnPrefabs();
-                rotateValue = 0;
+                rotateValue = 0.5f;
                 UpdateThumbnailRotation(rotateValue);
-            }else if (PanelManager.Instance.GetActivePanel().UIType.Name == "RealityDetailPanel")
+            }
+            else if (PanelManager.Instance.GetActivePanel().UIType.Name == "RealityDetailPanel")
             {
                 UpdateThumbnailRotation(rotateValue);
             }
