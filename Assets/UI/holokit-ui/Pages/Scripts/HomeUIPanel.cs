@@ -152,6 +152,23 @@ namespace Holoi.Library.HoloKitApp.UI
             transform.Find("HamburgerButton").gameObject.SetActive(false);
         }
 
+        public void HomePanelUIlayout()
+        {
+            realityThumbnailContainer.gameObject.SetActive(true);
+            realityThumbnailContainer._homePageDeco.gameObject.SetActive(true);
+
+            transform.Find("HamburgerButton").gameObject.SetActive(true);
+
+            for (int i = 0; i < _realityCount; i++)
+            {
+                realityThumbnailContainer._thumbnailList[i].SetActive(true);
+            }
+
+            realityThumbnailContainer.offset = new Vector3(0, 0f, 0);
+            realityThumbnailContainer.scrollOffset = new Vector3(0, 0f, 0);
+            realityThumbnailContainer.rotateValue = 0;
+        }
+
         public void DetailsPanelUILayout()
         {
             realityThumbnailContainer.gameObject.SetActive(true);
@@ -172,22 +189,6 @@ namespace Holoi.Library.HoloKitApp.UI
             }
 
             realityThumbnailContainer.offset = new Vector3(0, 1.7f, 0);
-        }
-
-        public void HomePanelUIlayout()
-        {
-            realityThumbnailContainer.gameObject.SetActive(true);
-            realityThumbnailContainer._homePageDeco.gameObject.SetActive(true);
-
-            transform.Find("HamburgerButton").gameObject.SetActive(true);
-
-            for (int i = 0; i < _realityCount; i++)
-            {
-                realityThumbnailContainer._thumbnailList[i].SetActive(true);
-            }
-
-            realityThumbnailContainer.offset = new Vector3(0, 0f, 0);
-            realityThumbnailContainer.scrollOffset = new Vector3(0, 0f, 0);
         }
 
         public void RecoverHomePage()

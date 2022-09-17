@@ -59,9 +59,15 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 SetSelectedThumbnail();
                 GetTouchClickOnPrefabs();
+                rotateValue = 0;
+                UpdateThumbnailRotation(rotateValue);
             }else if (PanelManager.Instance.GetActivePanel().UIType.Name == "RealityDetailPanel")
             {
                 UpdateThumbnailRotation(rotateValue);
+            }
+            else
+            {
+
             }
         }
 
@@ -74,8 +80,7 @@ namespace Holoi.Library.HoloKitApp.UI
         void UpdateThumbnailRotation(float scrollValue)
         {
             var valueFixer = scrollValue - 0.5f;
-            // the active thumbnail, set rotate on its local axis for a value = eular
-            _thumbnailList[activeIndex].transform.localRotation = Quaternion.Euler(new Vector3(0, scrollValue * 25f, 0));
+            _thumbnailList[activeIndex].transform.localRotation = Quaternion.Euler(new Vector3(0, valueFixer * 25f, 0));
         }
 
         public void SetSelectedThumbnail()
