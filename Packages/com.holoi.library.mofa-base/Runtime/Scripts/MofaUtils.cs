@@ -12,6 +12,11 @@ namespace Holoi.Mofa.Base
             return new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
         }
 
+        public static Vector3 GetHorizontalRight(Transform transform)
+        {
+            return new Vector3(transform.right.x, 0f, transform.right.z).normalized;
+        }
+
         public static Quaternion GetHorizontalRotation(Quaternion rotation)
         {
             Vector3 cameraEuler = rotation.eulerAngles;

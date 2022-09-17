@@ -13,7 +13,22 @@ namespace Holoi.Reality.MOFATheTraining
     {
         public MetaAvatarCollectionList AvatarList;
 
+        public float Speed;
+
         private GameObject _avatar;
+
+        private MofaBaseRealityManager _mofaRealityManager;
+
+        private Vector3 _initialPos;
+
+        private Vector3 _destPos;
+
+        protected override void Awake()
+        {
+            base.Awake();
+
+            _mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+        }
 
         public override void OnNetworkSpawn()
         {
@@ -26,6 +41,9 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
                 mofaRealityManager.SpawnLifeShield(OwnerClientId);
+
+                _initialPos = transform.position;
+                _destPos = transform.position;
             }
         }
 
@@ -47,11 +65,28 @@ namespace Holoi.Reality.MOFATheTraining
             // Update NetworkTransform
             if (IsServer)
             {
+                // Rotation
                 Vector3 lookAtVector = HoloKitCamera.Instance.CenterEyePose.position - transform.position;
                 if (lookAtVector != Vector3.zero)
                 {
                     Quaternion lookAtRotation = Quaternion.LookRotation(lookAtVector);
                     transform.rotation = MofaUtils.GetHorizontalRotation(lookAtRotation);
+                }
+
+                // Position
+                if (_mofaRealityManager.Phase.Value == MofaPhase.Fighting)
+                {
+                    if (Vector3.Distance(transform.position, _destPos) < 0.1f)
+                    {
+                        // Find a new destination position
+                        GetNextDestPos();
+                    }
+                    else
+                    {
+                        // Approaching to the destination
+                        var vec = Speed * (_destPos - transform.position).normalized;
+                        transform.position += new Vector3(vec.x, 0f, vec.z);
+                    }
                 }
             }
 
@@ -67,6 +102,16 @@ namespace Holoi.Reality.MOFATheTraining
                 LifeShield.transform.SetPositionAndRotation(transform.position + transform.rotation * new Vector3(0f, 1f, 0.8f),
                     transform.rotation);
             }
+        }
+
+        private void GetNextDestPos()
+        {
+            var horizontalForward = MofaUtils.GetHorizontalForward(transform);
+            var horizontalRight = MofaUtils.GetHorizontalRight(transform);
+            float forwardVar = Random.Range(-3f, 3f);
+            float rightVar = Random.Range(-3f, 3f);
+
+            _destPos = _initialPos + horizontalForward * forwardVar + horizontalRight * rightVar;
         }
     }
 }

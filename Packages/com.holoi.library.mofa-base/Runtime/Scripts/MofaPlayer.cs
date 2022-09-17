@@ -75,7 +75,7 @@ namespace Holoi.Mofa.Base
             OnScoreChanged?.Invoke();
         }
 
-        private void OnPhaseChanged(MofaPhase mofaPhase)
+        protected virtual void OnPhaseChanged(MofaPhase mofaPhase)
         {
             if (IsServer)
             {
