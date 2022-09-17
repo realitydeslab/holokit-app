@@ -13,8 +13,6 @@ namespace Holoi.Reality.MOFATheTraining
     {
         public MetaAvatarCollectionList AvatarList;
 
-        public float Speed;
-
         private GameObject _avatar;
 
         private MofaBaseRealityManager _mofaRealityManager;
@@ -22,6 +20,8 @@ namespace Holoi.Reality.MOFATheTraining
         private Vector3 _initialPos;
 
         private Vector3 _destPos;
+
+        private float _speed = 0.3f;
 
         protected override void Awake()
         {
@@ -60,7 +60,7 @@ namespace Holoi.Reality.MOFATheTraining
             }
         }
 
-        protected override void Update()
+        protected override void FixedUpdate()
         {
             // Update NetworkTransform
             if (IsServer)
@@ -84,8 +84,7 @@ namespace Holoi.Reality.MOFATheTraining
                     else
                     {
                         // Approaching to the destination
-                        var vec = Speed * (_destPos - transform.position).normalized;
-                        transform.position += new Vector3(vec.x, 0f, vec.z);
+                        transform.position += _speed * Time.fixedDeltaTime * (_destPos - transform.position).normalized;
                     }
                 }
             }

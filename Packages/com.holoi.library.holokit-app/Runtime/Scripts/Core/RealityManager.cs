@@ -13,10 +13,12 @@ namespace Holoi.Library.HoloKitApp
 
         public List<GameObject> NetworkPrefabs;
 
+        public static event Action<RealityManager> OnRealityManagerSpawned;
+
         public override void OnNetworkSpawn()
         {
-            //Debug.Log("[RealityManager] OnNetworkSpawn");
             HoloKitApp.Instance.SetRealityManager(this);
+            OnRealityManagerSpawned?.Invoke(this);
         }
     }
 }

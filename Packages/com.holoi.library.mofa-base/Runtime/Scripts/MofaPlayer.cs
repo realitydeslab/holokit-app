@@ -54,7 +54,7 @@ namespace Holoi.Mofa.Base
             KillCount.OnValueChanged -= OnScoreChangedFunc;
         }
 
-        protected virtual void Update()
+        protected virtual void FixedUpdate()
         {
             // Update ClientNetworkTransform
             if (IsOwner)

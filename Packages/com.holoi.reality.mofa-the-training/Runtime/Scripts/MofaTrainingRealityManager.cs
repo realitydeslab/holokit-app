@@ -52,7 +52,7 @@ namespace Holoi.Reality.MOFATheTraining
 
             if (IsServer)
             {
-                var placementIndicatorInitialPos = HoloKitHelper.IsRuntime ? Vector3.zero : new Vector3(0f, 0f, 5f);
+                var placementIndicatorInitialPos = HoloKitHelper.IsRuntime ? Vector3.zero : new Vector3(0f, -1f, 5f);
                 _placementIndicator = Instantiate(PlacementIndicatorPrefab, placementIndicatorInitialPos, Quaternion.identity);
                 _arRaycastManager = HoloKitCamera.Instance.GetComponentInParent<ARRaycastManager>();
             }
@@ -114,7 +114,6 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 if (SpawnMofaAI())
                 {
-                    SpawnMofaFightingPanel();
                     StartCoroutine(StartSingleRound());
                 }
                 return;
