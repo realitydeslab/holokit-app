@@ -7,7 +7,12 @@ namespace Holoi.Library.HoloKitApp.UI
     [ExecuteInEditMode]
     public class RealityDetailUIPanel : MonoBehaviour
     {
-        public Holoi.AssetFoundation.Reality reality;
+        public AssetFoundation.Reality reality;
+        MetaObjectCollectionList availableMetaObjectCollectionList;
+        MetaAvatarCollectionList availableMetaAvatarCollectionList;
+
+        MetaObjectCollectionList realityMetaObjectCollectionList;
+        MetaAvatarCollectionList realityMetaAvatarCollectionList;
 
         [Header("Rotate Helper")]
         [SerializeField] ScrollRect _rotateHelperScrollRect;
@@ -50,7 +55,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
         }
 
-        public void UpdateInformation()
+        public void SetUIInfo()
         {
             _id.text.text = "Reality #" + reality.realityId;
             _name.text.text = reality.name;
@@ -68,6 +73,34 @@ namespace Holoi.Library.HoloKitApp.UI
             var realityThumbnailContainer = FindObjectOfType<RealityThumbnailContainer>();
             realityThumbnailContainer.scrollOffset = new Vector3(0, deltaY, 0);
             realityThumbnailContainer.rotateValue = _rotateHelperScrollBar.value;
+        }
+
+        void GetRealityCollections()
+        {
+            var objectTags = reality.compatibleMetaObjectTags;
+            var avatarTags = reality.compatibleMetaAvatarTags;
+
+            foreach (var tag in avatarTags)
+            {
+                for (int i = 0; i < availableMetaAvatarCollectionList.list.Count; i++)
+                {
+                    if (availableMetaAvatarCollectionList.list[i].tags.Contains(tag))
+                    {
+                        realityMetaAvatarCollectionList.list.Add(availableMetaAvatarCollectionList.list[i]);
+                    }
+                }
+            }
+
+            foreach (var tag in objectTags)
+            {
+                for (int i = 0; i < availableMetaObjectCollectionList.list.Count; i++)
+                {
+                    if (availableMetaObjectCollectionList.list[i].tags.Contains(tag))
+                    {
+                        realityMetaObjectCollectionList.list.Add(availableMetaObjectCollectionList.list[i]);
+                    }
+                }
+            }
         }
     }
 }

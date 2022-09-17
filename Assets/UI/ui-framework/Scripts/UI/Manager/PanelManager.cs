@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using HoloKit;
+using Holoi.AssetFoundation;
 
 /// <summary>
 /// panel manager, using a stack to pop and push panels for a smooth management
@@ -34,6 +37,29 @@ namespace Holoi.Library.HoloKitApp.UI
             _panelStack = new Stack<BasePanel>();
             _uiManager = new UIManager();
         }
+
+        //[Header("")]
+        public static Action OnStartedSharingReality;
+        public static Action OnStoppedSharingReality;
+
+        public static Action<RenderMode> OnRenderModeChange;
+        public static Action OnExitReality;
+
+        public static Action OnStartedRecording;
+        public static Action OnStoppedRecording;
+
+
+        public static Action<AssetFoundation.Reality> OnEnteredRealityAsHost;
+        public static Action<AssetFoundation.Reality> OnJoinedRealityAsSpectator;
+
+        // star action
+        public static Action OnStARTriggered;
+        public static Action OnStARBoosted;
+        public static Action OnStARExit;
+        public static Action OnStARStartedRecording;
+        public static Action OnStARStoppedRecording;
+        public static Action OnStARStartedPause;
+        public static Action OnStARStoppedPause;
 
         /// <summary>
         ///  create a ui panel, and push it to stack

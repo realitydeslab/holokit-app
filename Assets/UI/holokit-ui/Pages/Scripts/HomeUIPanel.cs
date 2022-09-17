@@ -11,7 +11,8 @@ namespace Holoi.Library.HoloKitApp.UI
     public class HomeUIPanel : MonoBehaviour
     {
         public RealityList realityCollection;
-        public RealityThumbnailContainer realityThumbnailContainer;
+
+        [HideInInspector] public RealityThumbnailContainer realityThumbnailContainer;
 
         [Header("Prefabs")]
         [SerializeField] GameObject _prefabTitle;
@@ -23,8 +24,6 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeField] Transform _handle;
 
         Canvas _canvas;
-
-        //List<GameObject> _thumbnailList = new List<GameObject>();
 
         int _realityCount;
 
@@ -38,7 +37,8 @@ namespace Holoi.Library.HoloKitApp.UI
         float _scrollValue;
 
         float _offset = 4f;
-        public Vector3 _eular;
+
+        [HideInInspector] public Vector3 _eular;
 
         private void OnEnable()
         {

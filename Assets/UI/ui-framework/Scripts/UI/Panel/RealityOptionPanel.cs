@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -24,24 +25,29 @@ namespace Holoi.Library.HoloKitApp.UI
                 // here we do onclick event of this button
                 Debug.Log("EnterScreenARButton is clicked.");
 
-                Debug.Log(PanelManager.Instance._panelStack.Count + " panels found.");
+                //Debug.Log(PanelManager.Instance._panelStack.Count + " panels found.");
 
                 // enter screen ar scene:
+                HoloKitApp.Instance.EnterRealityAsHost();
+                var sceneName = HoloKitApp.Instance.CurrentReality.realityManager.GetComponent<RealityManager>().SceneName;
                 GameRoot.Instance.SceneSystem.SetScene(new ScreenARMainScene());
-
             });
             UITool.GetOrAddComponentInChildren<Button>("SpectatorButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("SpectatorButton is clicked.");
 
-                var newPanel = new ScreenARModePanel();
-                PanelManager.Push(newPanel);
-                var screenARUI = newPanel.UITool.GetOrAddComponent<ScreenARModeUIPanel>();
-                screenARUI.SetState(ScreenARModeUIPanel.State.waitPlayerEnter);
+                //var newPanel = new ScreenARModePanel();
+                //PanelManager.Push(newPanel);
+                //var screenARUI = newPanel.UITool.GetOrAddComponent<ScreenARModeUIPanel>();
+                //screenARUI.SetState(ScreenARModeUIPanel.State.waitPlayerEnter);
 
-                var panel = new ScreenARWaitPlayerPanel();
-                PanelManager.Push(panel);
+                //var panel = new ScreenARWaitPlayerPanel();
+                //PanelManager.Push(panel);
+
+                HoloKitApp.Instance.JoinRealityAsSpectator();
+                var sceneName = HoloKitApp.Instance.CurrentReality.realityManager.GetComponent<RealityManager>().SceneName;
+                GameRoot.Instance.SceneSystem.SetScene(new ScreenARMainScene());
             });
         }
     }

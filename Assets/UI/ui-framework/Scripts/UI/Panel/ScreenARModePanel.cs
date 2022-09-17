@@ -10,7 +10,6 @@ namespace Holoi.Library.HoloKitApp.UI
         static readonly string _path = "Prefabs/UI/Panels/ScreenARModePanel";
         public ScreenARModePanel() : base(new UIType(_path)) { }
 
-        public UnityEvent EnterRealityEvents;
 
         public override void OnOpen()
         {

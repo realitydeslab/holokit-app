@@ -46,18 +46,16 @@ namespace Holoi.Library.HoloKitApp
             DontDestroyOnLoad(gameObject);
         }
 
-        public void EnterRealityAsHost(Reality reality)
+        public void EnterRealityAsHost()
         {
-            CurrentReality = reality;
             _isHost = true;
-            SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+            //SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
         }
 
-        public void JoinRealityAsSpectator(Reality reality)
+        public void JoinRealityAsSpectator()
         {
-            CurrentReality = reality;
             _isHost = false;
-            SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+            //SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
         }
 
         public void InitializeNetworkManager()

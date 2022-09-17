@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -11,6 +12,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public ScreenAROpenSpectatorPanel() : base(new UIType(_path)) { }
 
+
         public override void OnOpen()
         {
             UITool.GetOrAddComponentInChildren<Button>("ShareButton").onClick.AddListener(() =>
@@ -19,6 +21,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 Debug.Log("ShareButton is clicked.");
                 var panel = new ScreenARShareQRPanel();
                 PanelManager.Push(panel);
+                PanelManager.OnStartedSharingReality?.Invoke();
             });
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {

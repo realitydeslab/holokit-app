@@ -7,10 +7,11 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public class StARMainScene : Scene
     {
-        readonly string _sceneName = "StARMain";
+        public string _sceneName = "StARMain";
         PanelManager _panelManager;
         public override void OnEnter()
         {
+
             _panelManager = PanelManager.Instance;
             if (SceneManager.GetActiveScene().name != _sceneName)
             {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
+using Holoi.Library.HoloKitApp;
 
 /// <summary>
 /// HomePage displaly all realities and the entry to settings
@@ -14,42 +14,43 @@ namespace Holoi.Library.HoloKitApp.UI
         static readonly string _path = "Prefabs/UI/Panels/StartPanel";
         public StartPanel() : base(new UIType(_path)) { }
 
-        HomeUIPanel _hup;
+        HomeUIPanel _homeUIPanel;
 
         public override void OnOpen()
         {
-            _hup = UITool.GetOrAddComponent<HomeUIPanel>();
-            _hup.realityThumbnailContainer.clickOnThumbnailsEvent += EnterRealityDetailPanel;
+            _homeUIPanel = UITool.GetOrAddComponent<HomeUIPanel>();
+            _homeUIPanel.realityThumbnailContainer.OnThumbnailClickedEvent += EnterRealityDetailPanel;
 
 
             UITool.GetOrAddComponentInChildren<Button>("HamburgerButton").onClick.AddListener(() =>
             {
                 var panel = new HamburgerPanel();
                 PanelManager.Push(panel);
-                //_hup.OthersPanelUILayout();
             });
-
-            //UITool.GetOrAddComponentInChildren<Button>("PlayButton").onClick.AddListener(() =>
-            //{
-            //    Debug.Log("PlayButton is clicked");
-            //    EnterRealityDetailPanel();
-            //});
         }
 
         void EnterRealityDetailPanel()
         {
-            var newPanel = new RealityDetailPanel();
-            PanelManager.Push(newPanel);
-            var newPanelUI = newPanel.UITool.GetOrAddComponent<RealityDetailUIPanel>();
-            newPanelUI.reality = _hup.realityCollection.realities[_hup.CurrentIndex];
-            newPanelUI.UpdateInformation();
+            var currentReality = _homeUIPanel.realityCollection.realities[_homeUIPanel.CurrentIndex];
+            // set CurrentReality to this selected reality
+            HoloKitApp.Instance.CurrentReality = currentReality;
 
-            //_hup.OthersPanelUILayout();
+            var realityDetailPanel = new RealityDetailPanel();
+
+            PanelManager.Push(realityDetailPanel);
+
+            var realityDetailPanelUI = realityDetailPanel.UITool.GetOrAddComponent<RealityDetailUIPanel>();
+
+            realityDetailPanelUI.reality = HoloKitApp.Instance.CurrentReality;
+
+            realityDetailPanelUI.SetUIInfo();
+
+
         }
 
         public override void OnClose()
         {
-            _hup.realityThumbnailContainer.clickOnThumbnailsEvent -= EnterRealityDetailPanel;
+            _homeUIPanel.realityThumbnailContainer.OnThumbnailClickedEvent -= EnterRealityDetailPanel;
             Debug.Log("HomePage Exit");
         }
     }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Holoi.AssetFoundation;
+using Holoi.Library.HoloKitApp;
+
 namespace Holoi.Library.HoloKitApp.UI
 {
     [ExecuteInEditMode]
@@ -20,6 +22,9 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeField] Transform _scrollViewAvatarCollection;
         Transform _contentObj;
         Transform _contentAva;
+
+        [Header("UI Elements")]
+        [SerializeField] HoloKitAppLocalPlayerPreferences holoKitAppLocalPlayerPreferences;
 
         int _objectCount;
         int _avatarCount;
@@ -44,7 +49,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
                 for (int i = 0; i < _objectCount; i++)
                 {
-
                     // create new by data
                     _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.objectContainer;
                     _collectionContainer.GetComponent<CollectionContainer>().metaObjectCollection = metaObjectCollections[i];
@@ -91,6 +95,13 @@ namespace Holoi.Library.HoloKitApp.UI
 
             // create footer:
 
+        }
+
+        void SetSelectState()
+        {
+            var _reality = HoloKitApp.Instance.CurrentReality;
+            var cObject = holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaObject;
+            var cAvatar = holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaAvatar;
         }
 
         void ClearLastElements(Transform content)

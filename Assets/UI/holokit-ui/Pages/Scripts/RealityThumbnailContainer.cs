@@ -10,7 +10,7 @@ namespace Holoi.Library.HoloKitApp.UI
         public float currentPostion = 0;
         public List<GameObject> _thumbnailList = new List<GameObject>();
         [HideInInspector] public int activeIndex;
-        public event Action clickOnThumbnailsEvent;
+        public event Action OnThumbnailClickedEvent;
 
         [Header("Transfrom")]
         public Vector3 offset;
@@ -28,7 +28,6 @@ namespace Holoi.Library.HoloKitApp.UI
         Vector2 startPos = new Vector2();
         Vector2 direction = new Vector2();
         Vector2 endPos = new Vector2();
-        string message = new string("hello");
 
         Vector3 _defaultTranslate = new Vector3(-0.03f, -0.77f, 7.89f);
         Vector3 _defaultRotate = new Vector3(-26.6f, -60.824f, 39.185f);
@@ -37,6 +36,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             offset = Vector3.zero;
             scrollOffset = Vector3.zero;
+            rotateValue = 0;
         }
         private void Start()
         {
@@ -118,20 +118,17 @@ namespace Holoi.Library.HoloKitApp.UI
                     case TouchPhase.Began:
                         // Record initial touch position.
                         startPos = touch.position;
-                        message = "Begun ";
                         break;
 
                     //Determine if the touch is a moving touch
                     case TouchPhase.Moved:
                         // Determine direction by comparing the current touch position with the initial one
                         direction = touch.position - startPos;
-                        message = "Moving ";
                         break;
 
                     case TouchPhase.Ended:
                         // Report that the touch has ended when it ends
                         endPos = touch.position;
-                        message = "Ending ";
 
                         if (Vector2.Distance(endPos, startPos) < 10f)
                         {
@@ -157,7 +154,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             if (gameObject.tag == "Reality Thumbnail")
             {
-                clickOnThumbnailsEvent?.Invoke();
+                OnThumbnailClickedEvent?.Invoke();
             }
         }
     }
