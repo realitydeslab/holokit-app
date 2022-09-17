@@ -85,45 +85,55 @@ namespace Holoi.Library.HoloKitApp.UI
             Debug.Log("UpdateRealityCollections");
             var objectTags = reality.compatibleMetaObjectTags;
             var avatarTags = reality.compatibleMetaAvatarTags;
-            Debug.Log($"objectTags: {objectTags.Count}");
-            Debug.Log($"avatarTags: {avatarTags.Count}");
-
-            availableMetaAvatarCollectionList.list = new List<MetaAvatarCollection>();
-            availableMetaObjectCollectionList.list = new List<MetaObjectCollection>();
-
+            //Debug.Log($"objectTags: {objectTags.Count}");
+            //Debug.Log($"avatarTags: {avatarTags.Count}");
 
             realityMetaAvatarCollectionList = new List<MetaAvatarCollection>();
             realityMetaObjectCollectionList = new List<MetaObjectCollection>();
 
-            foreach (var tag in avatarTags)
+            if (availableMetaAvatarCollectionList.list.Count == 0)
             {
-                for (int i = 0; i < availableMetaAvatarCollectionList.list.Count; i++)
+                Debug.Log("there is no available avatar collection");
+            }
+            else
+            {
+                foreach (var tag in avatarTags)
                 {
-                    if (availableMetaAvatarCollectionList.list[i].tags.Contains(tag))
+                    for (int i = 0; i < availableMetaAvatarCollectionList.list.Count; i++)
                     {
-                        Debug.Log(availableMetaAvatarCollectionList.list[i].name + "Contains Tag: " + tag.name + ", add to List");
-                        realityMetaAvatarCollectionList.Add(availableMetaAvatarCollectionList.list[i]);
-                    }
-                    else
-                    {
-                        Debug.Log(availableMetaAvatarCollectionList.list[i].name + "Do not Contains Tag: " + tag.name + "");
+                        if (availableMetaAvatarCollectionList.list[i].tags.Contains(tag))
+                        {
+                            Debug.Log(availableMetaAvatarCollectionList.list[i].name + "Contains Tag: " + tag.name + ", add to List");
+                            realityMetaAvatarCollectionList.Add(availableMetaAvatarCollectionList.list[i]);
+                        }
+                        else
+                        {
+                            Debug.Log(availableMetaAvatarCollectionList.list[i].name + "Do not Contains Tag: " + tag.name + "");
+                        }
                     }
                 }
             }
 
-            foreach (var tag in objectTags)
+            if (availableMetaObjectCollectionList.list.Count == 0)
             {
-                for (int i = 0; i < availableMetaObjectCollectionList.list.Count; i++)
+                Debug.Log("there is no available object collection");
+            }
+            else
+            {
+                foreach (var tag in objectTags)
                 {
-                    if (availableMetaObjectCollectionList.list[i].tags.Contains(tag))
+                    for (int i = 0; i < availableMetaObjectCollectionList.list.Count; i++)
                     {
-                        Debug.Log(availableMetaObjectCollectionList.list[i].name + "Contains Tag: " + tag.name + ", add to List");
+                        if (availableMetaObjectCollectionList.list[i].tags.Contains(tag))
+                        {
+                            Debug.Log(availableMetaObjectCollectionList.list[i].name + "Contains Tag: " + tag.name + ", add to List");
 
-                        realityMetaObjectCollectionList.Add(availableMetaObjectCollectionList.list[i]);
-                    }
-                    else
-                    {
-                        Debug.Log(availableMetaObjectCollectionList.list[i].name + "Do not Contains Tag: " + tag.name + "");
+                            realityMetaObjectCollectionList.Add(availableMetaObjectCollectionList.list[i]);
+                        }
+                        else
+                        {
+                            Debug.Log(availableMetaObjectCollectionList.list[i].name + "Do not Contains Tag: " + tag.name + "");
+                        }
                     }
                 }
             }
