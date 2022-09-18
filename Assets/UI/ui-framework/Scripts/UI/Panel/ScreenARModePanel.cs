@@ -27,7 +27,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 // here we do onclick event of this button
                 Debug.Log("SpectatorButton is clicked.");
 
-                UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.spectatorConfrim);
+                UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.comfirmingOpenSpectator);
 
                 var panel = new ScreenAROpenSpectatorPanel();
                 PanelManager.Push(panel);
@@ -71,7 +71,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void GoToCheckTheMarkPanel()
         {
-            UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.checkMark);
+            UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.checkingMark);
             var panel = new ScreenARCheckTheMarkPanel();
             PanelManager.Push(panel);
         }

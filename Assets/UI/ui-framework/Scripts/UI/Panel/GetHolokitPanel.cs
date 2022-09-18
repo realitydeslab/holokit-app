@@ -12,7 +12,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override void OnOpen()
         {
-            if (UITool.FindChildGameObject("BackButton"))
+            if (UITool.FindGameObjectInChindren("BackButton"))
             {
                 Debug.Log("find button");
             }
@@ -20,13 +20,13 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 Debug.Log("not find button");
             }
-            UITool.FindChildGameObject("BackButton").GetComponent<Button>().onClick.AddListener(() =>
+            UITool.FindGameObjectInChindren("BackButton").GetComponent<Button>().onClick.AddListener(() =>
             { 
                 // here we do onclick event of this button
                 Debug.Log("BackButton is clicked.");
                 PanelManager.Pop();
             });
-            UITool.FindChildGameObject("Order Button").GetComponent<Button>().onClick.AddListener(() =>
+            UITool.FindGameObjectInChindren("Order Button").GetComponent<Button>().onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("Order Button is clicked.");

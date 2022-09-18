@@ -55,6 +55,24 @@ namespace Holoi.Library.HoloKitApp.UI
             }
         }
 
+        public virtual void OnPause(bool disablePanel)
+        {
+            Debug.Log($"{UIType.Name} panel is paused");
+            if (UITool == null)
+            {
+                Debug.LogError($"{UIType.Name}: not found UITool");
+            }
+            else if (UITool.GetOrAddComponent<CanvasGroup>() == null)
+            {
+                Debug.Log($"warning: {UIType.Name} not found CanvasGroup");
+            }
+            else
+            {
+                UITool.GetOrAddComponent<CanvasGroup>().blocksRaycasts = false;
+                UITool.ActivePanelGO.SetActive(disablePanel);
+            }
+        }
+
         public virtual void OnResume()
         {
             Debug.Log($"{UIType.Name} panel is resume");
@@ -63,16 +81,18 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 Debug.LogError("not found UITool");
             }
-            else if(UITool.GetOrAddComponent<CanvasGroup>() == null)
+            else if (UITool.GetOrAddComponent<CanvasGroup>() == null)
             {
                 Debug.Log($"warning: {UIType.Name} not found CanvasGroup");
 
             }
             else
             {
+                if (UITool.ActivePanelGO.activeSelf == false) UITool.ActivePanelGO.SetActive(true);
                 UITool.GetOrAddComponent<CanvasGroup>().blocksRaycasts = true;
             }
         }
+
         public virtual void OnClose()
         {
             Debug.Log($"{UIType.Name} close");

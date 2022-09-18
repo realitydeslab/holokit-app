@@ -43,7 +43,7 @@ namespace Holoi.Library.HoloKitApp.UI
             
         }
 
-        public GameObject FindChildGameObject(string name)
+        public GameObject FindGameObjectInChindren(string name)
         {
             Transform[] children;
 
@@ -87,7 +87,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public T GetOrAddComponentInChildren<T>(string name) where T : Component
         {
-            var child = FindChildGameObject(name);
+            var child = FindGameObjectInChindren(name);
             if (child != null)
             {
                 if (child.GetComponent<T>() == null)

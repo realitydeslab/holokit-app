@@ -12,7 +12,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override void OnOpen()
         {
-            UITool.FindChildGameObject("BackButton").GetComponent<Button>().onClick.AddListener(() =>
+            UITool.FindGameObjectInChindren("BackButton").GetComponent<Button>().onClick.AddListener(() =>
             { 
                 // here we do onclick event of this button
                 Debug.Log("BackButton is clicked.");

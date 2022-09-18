@@ -21,7 +21,7 @@ namespace Holoi.Library.HoloKitApp.UI
             });
 
             // debug for scanning -> check mark
-            UITool.GetOrAddComponentInChildren<Button>("CheckMarkButton").onClick.AddListener(() =>
+            UITool.GetOrAddComponentInChildren<Button>("Fake Connect").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("CheckMarkButton is clicked.");
@@ -31,6 +31,14 @@ namespace Holoi.Library.HoloKitApp.UI
                 UpdateConnectedDeviceNameUI(names);
             });
 
+            UITool.GetOrAddComponentInChildren<Button>("Check Mark").onClick.AddListener(() =>
+            {
+                //PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.checkMark);
+                // here we do onclick event of this button
+                Debug.Log("DebugButton is clicked.");
+                var panel = new ScreenARCheckTheMarkPanel();
+                PanelManager.Push(panel, false);
+            });
         }
 
         public void UpdateConnectedDeviceNameUI(List<string> names)

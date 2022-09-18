@@ -9,6 +9,19 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public class UIManager
     {
+        private static UIManager _instance; // using instance to maintain the state of ui scenes.
+        public static UIManager Instance
+        {
+            get
+            {
+                if (null == _instance)
+                {
+                    _instance = new UIManager();
+                }
+                return _instance;
+            }
+        }
+
         private Dictionary<UIType, GameObject> _dicUI;
 
         public UIManager()
@@ -39,7 +52,7 @@ namespace Holoi.Library.HoloKitApp.UI
             ui.name = type.Name;
             _dicUI.Add(type, ui);
             return ui;
-    }
+        }
 
         public void DestroyUI(UIType type)
         {
@@ -50,5 +63,17 @@ namespace Holoi.Library.HoloKitApp.UI
                 _dicUI.Remove(type);
             }
         }
+
+        public GameObject GetPanel(string panelName)
+        {
+            foreach (var panel in _dicUI)
+            {
+                if(panel.Key.Name == panelName)
+                {
+                    return panel.Value;
+                }
+            }
+            return null;
+        } 
     }
 }

@@ -99,6 +99,40 @@ namespace Holoi.Library.HoloKitApp.UI
             _panelStack.Push(nextPanel);
         }
 
+        public void Push(BasePanel nextPanel, bool disableOldPanel)
+        {
+            if (_panelStack.Count > 0)
+            {
+                _panel = _panelStack.Peek();
+                _panel.OnPause(disableOldPanel);
+            }
+            else
+            {
+                //Debug.Log("_panelStack.Count = 0, do not need Pause the previous UI");
+            }
+
+            Debug.Log("Push() panelGO Create");
+            var panelGO = _uiManager.CreateUIGO(nextPanel.UIType);
+            Debug.Log($"Push() panelGO Create Done with {panelGO.name}");
+
+            nextPanel.Initialize(new UITool(panelGO));
+            nextPanel.Initialize(this);
+            nextPanel.Initialize(_uiManager);
+
+            if (nextPanel.UITool.ActivePanelGO == null)
+            {
+                Debug.LogError("ActivePanelGO NULL!!!");
+            }
+            else
+            {
+                Debug.Log("push new panel with a go:" + nextPanel.UITool.ActivePanelGO.name);
+            }
+
+            nextPanel.OnOpen();
+
+            _panelStack.Push(nextPanel);
+        }
+
         public void Pop()
         {
             if (_panelStack.Count > 0)

@@ -8,7 +8,7 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeField] Sprite _record;
         [SerializeField] Sprite _recording;
 
-        public void SetState(bool active)
+        public void StartRecording(bool active)
         {
             if (active)
             {

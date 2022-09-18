@@ -22,18 +22,28 @@ namespace Holoi.Library.HoloKitApp.UI
             UITool.GetOrAddComponentInChildren<Button>("CheckedButton").onClick.AddListener(() =>
             {
                 Debug.Log("CheckedButton is clicked.");
-                PanelManager.Pop();
-
-                //Debug.Log(PanelManager.GetActivePanel().UIType.Name);
-                PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.scanned);
+                while(PanelManager.GetActivePanel().UIType.Name != "ScreenARModePanel")
+                {
+                    PanelManager.Pop();
+                }
+                Debug.Log( "now we are in: " + PanelManager.GetActivePanel().UIType.Name);
+                // now we should in ScreenArModePanel:
+                PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.@checked);
             });
 
             UITool.GetOrAddComponentInChildren<Button>("RescanButton").onClick.AddListener(() =>
             {
                 Debug.Log("RescanButton is clicked.");
-                PanelManager.Pop();
+                while (PanelManager.GetActivePanel().UIType.Name != "ScreenARShareQRPanel")
+                {
+                    PanelManager.Pop();
+                }
+                Debug.Log("now we are in: " + PanelManager.GetActivePanel().UIType.Name);
 
-                PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.scanning);
+                // now we should in ScreenArShareQRPanel:
+                PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARShareQRUIPanel>().ClearConnectedDeviceUI();
+
+                UIManager.GetPanel("ScreenARModePanel").GetComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.waittingScanned);
             });
 
         }

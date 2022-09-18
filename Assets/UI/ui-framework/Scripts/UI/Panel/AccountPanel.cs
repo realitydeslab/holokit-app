@@ -18,12 +18,12 @@ namespace Holoi.Library.HoloKitApp.UI
                 PanelManager.Pop();
             });
 
-            UITool.FindChildGameObject("LogButton").GetComponent<Button>().onClick.AddListener(() =>
+            UITool.FindGameObjectInChindren("LogButton").GetComponent<Button>().onClick.AddListener(() =>
             {
                 Debug.Log("LogButton is clicked.");
             });
 
-            UITool.FindChildGameObject("ScanButton").GetComponent<Button>().onClick.AddListener(() =>
+            UITool.FindGameObjectInChindren("ScanButton").GetComponent<Button>().onClick.AddListener(() =>
             {
                 Debug.Log("ScanButton is clicked.");
             });

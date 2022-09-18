@@ -28,10 +28,21 @@ namespace Holoi.Library.HoloKitApp.UI
 
         }
 
+        public void ClearConnectedDeviceUI()
+        {
+            connectedDeviceNames.Clear();
+            UpdateConnectedDeviceUI();
+        }
+
         public void UpdateConnectedDeviceUI()
         {
             if (connectedDeviceNames.Count > 0)
             {
+                while (connectedDeviceNames.Count < 3)
+                {
+                    connectedDeviceNames.Add(" ");
+                }
+
                 _devieceContainer.gameObject.SetActive(true);
                 _devieceContainerSpacing.gameObject.SetActive(true);
                 _scrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(1170, _height2);
