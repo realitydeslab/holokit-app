@@ -8,6 +8,13 @@ namespace Holoi.Library.HoloKitApp.UI
     public class ScreenARMainScene : Scene
     {
         public string _sceneName = "ScreenARMain";
+        public enum State
+        {
+            screenAR = 0,
+            spectator = 1
+        }
+        public State openState = State.screenAR;
+
         PanelManager _panelManager;
 
         public override void OnEnter()
@@ -28,14 +35,23 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             SceneManager.sceneLoaded -= SceneLoaded;
             _panelManager.Pop();
-            Debug.Log($"exit screen ar, panel count: {PanelManager.Instance._panelStack.Count}");
+            //Debug.Log($"exit screen ar, panel count: {PanelManager.Instance._panelStack.Count}");
         }
 
         private void SceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode load)
         {
-            _panelManager.Push(new ScreenARModePanel());
-            Debug.Log($"{_sceneName} scene is loaded.");
-            Debug.Log(PanelManager.Instance._panelStack.Count);
+            switch (openState)
+            {
+                case State.screenAR:
+                    _panelManager.Push(new ScreenARModePanel());
+                    break;
+                case State.spectator:
+                    _panelManager.Push(new ScreenARModePanel());
+                    _panelManager.Push(new ScreenARWaitPlayerPanel());
+                    break;
+            }
+            //Debug.Log($"{_sceneName} scene is loaded.");
+            //Debug.Log(PanelManager.Instance._panelStack.Count);
         }
     }
 }

@@ -47,11 +47,16 @@ namespace Holoi.Library.HoloKitApp.UI
                 //screenARUI.SetState(ScreenARModeUIPanel.State.waitPlayerEnter);
 
                 //var panel = new ScreenARWaitPlayerPanel();
-                //PanelManager.Push(panel);
+                //PanelManager.Push(panel); 
 
                 HoloKitApp.Instance.JoinRealityAsSpectator();
                 var sceneName = HoloKitApp.Instance.CurrentReality.realityManager.GetComponent<RealityManager>().SceneName;
-                GameRoot.Instance.SceneSystem.SetScene(new ScreenARMainScene());
+
+                var scene = new ScreenARMainScene();
+                scene._sceneName = sceneName;
+                scene.openState = ScreenARMainScene.State.spectator;
+
+                GameRoot.Instance.SceneSystem.SetScene(scene);
             });
         }
     }

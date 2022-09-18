@@ -27,6 +27,7 @@ namespace Holoi.Library.HoloKitApp.UI
             // notRecording = idle
         }
 
+        //[HideInInspector]
         public State state;
 
         [Header("UI Elements")]

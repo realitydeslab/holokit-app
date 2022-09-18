@@ -32,7 +32,8 @@ namespace Holoi.Library.HoloKitApp.UI
         public void PlayerEnteredReality()
         {
             PanelManager.Pop();
-            var panel = PanelManager.Instance.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().state = ScreenARModeUIPanel.State.waittingScanned;
+            var panel = PanelManager.Instance.GetActivePanel();
+            panel.UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.scanningQRcode);
         }
     }
 }
