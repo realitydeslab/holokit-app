@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,11 +14,57 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override void OnOpen()
         {
-            UITool.GetOrAddComponentInChildren<Scrollbar>("Exit Bar").onValueChanged.AddListener((value) =>
+            var stARUIPanel = UITool.GetOrAddComponent<StarUIPanel>();
+            stARUIPanel.more.onClick.AddListener(() =>
             {
-                if(value == 1)
+                Debug.Log("More Button On Click!");
+                // trigger action here:
+
+            });
+            stARUIPanel.exitBar.onValueChanged.AddListener((value) =>
+            {
+                if (value == 1)
                 {
-                    GameRoot.Instance.SceneSystem.SetScene(new StartScene());
+                    // trigger action here:
+                }
+            });
+            stARUIPanel.volumeBar.onValueChanged.AddListener((value) =>
+            {
+                Debug.Log("current volume: " + value);
+            });
+            stARUIPanel.recordBar.onValueChanged.AddListener((value) =>
+            {
+                if (value == 1)
+                {
+                    // trigger action here:
+                }
+            });
+            stARUIPanel.triggerBar.onValueChanged.AddListener((value) =>
+            {
+                if (value == 1)
+                {
+                    // trigger action here:
+                }
+            });
+            stARUIPanel.boostBar.onValueChanged.AddListener((value) =>
+            {
+                if (value == 1)
+                {
+                    // trigger action here:
+                }
+            });
+            stARUIPanel.recalibrateBar.onValueChanged.AddListener((value) =>
+            {
+                if (value == 1)
+                {
+                    // trigger action here:
+                }
+            });
+            stARUIPanel.pauseBar.onValueChanged.AddListener((value) =>
+            {
+                if (value == 1)
+                {
+                    // trigger action here:
                 }
             });
         }

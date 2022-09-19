@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Holoi.HoloKit.App.UI
+namespace Holoi.Library.HoloKitApp.UI
 {
     public class StarUIPanel : MonoBehaviour
     {
@@ -12,17 +12,17 @@ namespace Holoi.HoloKit.App.UI
         [SerializeField] List<Transform> _advanceUIElements;
 
         [Header("buttons")]
-        [SerializeField] Button _more;
+        public Button more;
 
         [Header("scrollbars")]
-        [SerializeField] Scrollbar _volumeBar;
-        [SerializeField] Scrollbar _recordBar;
-        [SerializeField] Scrollbar _exitBar;
-        [SerializeField] Scrollbar _boostBar;
-        [SerializeField] Scrollbar _triggerBar;
-        [SerializeField] Scrollbar _spectatorBar;
-        [SerializeField] Scrollbar _recalibrateBar;
-        [SerializeField] Scrollbar _pauseBar;
+        public Scrollbar volumeBar;
+        public Scrollbar recordBar;
+        public Scrollbar exitBar;
+        public Scrollbar boostBar;
+        public Scrollbar triggerBar;
+        //public Scrollbar spectatorBar;
+        public Scrollbar recalibrateBar;
+        public Scrollbar pauseBar;
 
         [Header("groups")]
         [SerializeField] Transform _base;
@@ -36,7 +36,7 @@ namespace Holoi.HoloKit.App.UI
         Animator _triggerAnimator;
 
         Animator _recalibrateAnimator;
-        Animator _spectatorAnimator;
+        //Animator _spectatorAnimator;
         Animator _pauseAnimator;
 
         // images
@@ -48,7 +48,7 @@ namespace Holoi.HoloKit.App.UI
         Image _triggerBG;
 
         Image _recalibrateBG;
-        Image _spectatorBG;
+        //Image _spectatorBG;
         Image _pauseBG;
 
         // materials
@@ -60,7 +60,7 @@ namespace Holoi.HoloKit.App.UI
         Material _triggerMaterial;
 
         Material _recalibrateMaterial;
-        Material _spectatorMaterial;
+        //Material _spectatorMaterial;
         Material _pauseMaterial;
 
         float _value;
@@ -101,52 +101,52 @@ namespace Holoi.HoloKit.App.UI
 
         void Start()
         {
-            _volumeAnimator = _volumeBar.GetComponent<Animator>();
-            _volumeBG = _volumeBar.GetComponent<ScrollBarHelper>().BackGround;
+            _volumeAnimator = volumeBar.GetComponent<Animator>();
+            _volumeBG = volumeBar.GetComponent<ScrollBarHelper>().BackGround;
             _volumeMaterial = _volumeBG.material;
 
-            _recordAnimator = _recordBar.GetComponent<Animator>();
-            _recordBG = _recordBar.GetComponent<ScrollBarHelper>().BackGround;
+            _recordAnimator = recordBar.GetComponent<Animator>();
+            _recordBG = recordBar.GetComponent<ScrollBarHelper>().BackGround;
             _recordMaterial = _recordBG.material;
 
-            _boostAnimator = _boostBar.GetComponent<Animator>();
-            _boostBG = _boostBar.GetComponent<ScrollBarHelper>().BackGround;
+            _boostAnimator = boostBar.GetComponent<Animator>();
+            _boostBG = boostBar.GetComponent<ScrollBarHelper>().BackGround;
             _boostMaterial = _boostBG.material;
 
-            _triggerAnimator = _triggerBar.GetComponent<Animator>();
-            _triggerBG = _triggerBar.GetComponent<ScrollBarHelper>().BackGround;
+            _triggerAnimator = triggerBar.GetComponent<Animator>();
+            _triggerBG = triggerBar.GetComponent<ScrollBarHelper>().BackGround;
             _triggerMaterial = _triggerBG.material;
 
-            _exitAnimator = _exitBar.GetComponent<Animator>();
-            _exitBG_L = _exitBar.GetComponent<ScrollBarHelper>().BackGround;
+            _exitAnimator = exitBar.GetComponent<Animator>();
+            _exitBG_L = exitBar.GetComponent<ScrollBarHelper>().BackGround;
             _exitMaterial_L = _exitBG_L.material;
-            _exitBG_R = _exitBar.GetComponent<ScrollBarHelper>().ExtraBackGround;
+            _exitBG_R = exitBar.GetComponent<ScrollBarHelper>().ExtraBackGround;
             _exitMaterial_R = _exitBG_R.material;
 
-            _recalibrateAnimator = _recalibrateBar.GetComponent<Animator>();
-            _recalibrateBG = _recalibrateBar.GetComponent<ScrollBarHelper>().BackGround;
+            _recalibrateAnimator = recalibrateBar.GetComponent<Animator>();
+            _recalibrateBG = recalibrateBar.GetComponent<ScrollBarHelper>().BackGround;
             _recalibrateMaterial = _recalibrateBG.material;
 
-            _spectatorAnimator = _spectatorBar.GetComponent<Animator>();
-            _spectatorBG = _spectatorBar.GetComponent<ScrollBarHelper>().BackGround;
-            _spectatorMaterial = _spectatorBG.material;
+            //_spectatorAnimator = spectatorBar.GetComponent<Animator>();
+            //_spectatorBG = spectatorBar.GetComponent<ScrollBarHelper>().BackGround;
+            //_spectatorMaterial = _spectatorBG.material;
 
-            _pauseAnimator = _pauseBar.GetComponent<Animator>();
-            _pauseBG = _pauseBar.GetComponent<ScrollBarHelper>().BackGround;
+            _pauseAnimator = pauseBar.GetComponent<Animator>();
+            _pauseBG = pauseBar.GetComponent<ScrollBarHelper>().BackGround;
             _pauseMaterial = _pauseBG.material;
         }
 
         void Update()
         {
-            if (Input.GetKeyUp(KeyCode.S))
-            {
-                SpectatorDone();
-            }
+            //if (Input.GetKeyUp(KeyCode.S))
+            //{
+            //    SpectatorDone();
+            //}
 
-            if (Input.GetKeyUp(KeyCode.R))
-            {
-                RecalibrateDone();
-            }
+            //if (Input.GetKeyUp(KeyCode.R))
+            //{
+            //    RecalibrateDone();
+            //}
         }
 
         public void EnableUILayout()
@@ -359,7 +359,7 @@ namespace Holoi.HoloKit.App.UI
         // volume bar
         public void VolumeBarOnValueChange()
         {
-            _value = _volumeBar.value;
+            _value = volumeBar.value;
             _volumeMaterial.SetFloat("_Offset", _value);
 
             // to do: set volume value with _value
@@ -369,7 +369,7 @@ namespace Holoi.HoloKit.App.UI
         // trigger bar
         public void TriggerBarOnValueChanged()
         {
-            _value = _triggerBar.value;
+            _value = triggerBar.value;
             _triggerMaterial.SetFloat("_Offset", _value);
 
             if (_value == 1)
@@ -386,7 +386,7 @@ namespace Holoi.HoloKit.App.UI
         // boost bar
         public void BoostBarOnValueChanged()
         {
-            _value = _boostBar.value;
+            _value = boostBar.value;
             _boostMaterial.SetFloat("_Offset", _value);
 
             if (_value == 1)
@@ -403,7 +403,7 @@ namespace Holoi.HoloKit.App.UI
         // exit bar
         public void ExitBarOnValueChanged()
         {
-            _value = _exitBar.value;
+            _value = exitBar.value;
             _exitMaterial_L.SetFloat("_Offset", _value);
             _exitMaterial_R.SetFloat("_Offset", _value);
 
@@ -422,7 +422,7 @@ namespace Holoi.HoloKit.App.UI
         // record bar
         public void RecordBarOnValueChanged()
         {
-            _value = _recordBar.value;
+            _value = recordBar.value;
             _recordMaterial.SetFloat("_Offset", _value);
 
             if (_value == 1)
@@ -452,7 +452,7 @@ namespace Holoi.HoloKit.App.UI
         // pause bar
         public void PauseBarOnValueChanged()
         {
-            _value = _pauseBar.value;
+            _value = pauseBar.value;
             _pauseMaterial.SetFloat("_Offset", _value);
 
             if (_value == 1)
@@ -467,9 +467,10 @@ namespace Holoi.HoloKit.App.UI
         }
 
         // spectator bar
+        /*
         public void SpectatorBarOnValueChanged()
         {
-            _value = _spectatorBar.value;
+            _value = spectatorBar.value;
             _spectatorMaterial.SetFloat("_Offset", _value);
 
             if (_value == 1)
@@ -488,12 +489,13 @@ namespace Holoi.HoloKit.App.UI
             //EnableUILayout();
             _uiState = UIState.idle;
             _spectatorAnimator.SetTrigger("OnDone");
-            _spectatorBar.value = 0;
+            spectatorBar.value = 0;
         }
+        */
         // recalibrate bar
         public void RecalibrateBarOnValueChanged()
         {
-            _value = _recalibrateBar.value;
+            _value = recalibrateBar.value;
             _recalibrateMaterial.SetFloat("_Offset", _value);
 
             if (_value == 1)
@@ -512,8 +514,7 @@ namespace Holoi.HoloKit.App.UI
             //EnableUILayout();
             _uiState = UIState.idle;
             _recalibrateAnimator.SetTrigger("OnDone");
-            _recalibrateBar.value = 0;
-
+            recalibrateBar.value = 0;
         }
     }
 }
