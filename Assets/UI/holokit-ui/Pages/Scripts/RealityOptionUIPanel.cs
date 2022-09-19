@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Holoi.AssetFoundation;
 using Holoi.Library.HoloKitApp;
+using UnityEngine.UI.Extensions;
+
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -45,7 +47,14 @@ namespace Holoi.Library.HoloKitApp.UI
             _scrollViewObjectCollection.GetComponent<CollectionScrollViewUI>().CollectionContainerList.Clear();
             _scrollViewAvatarCollection.GetComponent<CollectionScrollViewUI>().CollectionContainerList.Clear();
 
+            if (Application.isEditor)
+            {
+                SetUIInfo();
+            }
+            else
+            {
 
+            }
             //SetUIInfo();
             //SetUIButtons();
         }
@@ -64,6 +73,11 @@ namespace Holoi.Library.HoloKitApp.UI
                     // create new by data
                     _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.objectContainer;
                     _collectionContainer.GetComponent<CollectionContainer>().metaObjectCollection = realityMetaObjectCollections[i];
+
+                    _collectionContainer.GetComponent<CollectionContainer>().emptyDragButton.GetComponent<DragButton>().horizontalScrollSnap =
+                        _scrollViewObjectCollection.GetComponent<HorizontalScrollSnap>(); ;
+                    _collectionContainer.GetComponent<CollectionContainer>().emptyDragButton.GetComponent<DragButton>().scorllRect =
+                        _scrollViewObjectCollection.GetComponent<ScrollRect>();
                     var collectionContainer = Instantiate(_collectionContainer, _scrollViewObjectCollection.transform.Find("Viewport/Content"));
                     _collectionContainer.GetComponent<RectTransform>().localScale = Vector3.one;
                     collectionContainer.transform.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;

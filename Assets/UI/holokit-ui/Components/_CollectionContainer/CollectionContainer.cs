@@ -39,7 +39,8 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeField] GameObject _portraitScorllView;
 
         [Header("UI Elements")]
-        [SerializeField] Button _enterButton;
+        public Button emptyDragButton;
+        [SerializeField] Button _protraitDragButton;
         [SerializeField] FlexibleUIText _title;
         [SerializeField] FlexibleUIText _id;
         [SerializeField] Image _background;
@@ -66,7 +67,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
-            _enterButton.onClick.AddListener(() => {
+            emptyDragButton.onClick.AddListener(() => {
 
                 Debug.Log("enter button is clicked");
 
@@ -165,8 +166,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
             _id.text.text = "#" + metaObjectCollection.metaObjects[0].tokenId;
 
-            _enterButton.GetComponent<DragButton>().horizontalScrollSnap = portraitContainer.GetComponent<HorizontalScrollSnap>();
-            _enterButton.GetComponent<DragButton>().scorllRect = portraitContainer.GetComponent<ScrollRect>();
+            _protraitDragButton.GetComponent<DragButton>().horizontalScrollSnap = portraitContainer.GetComponent<HorizontalScrollSnap>();
+            _protraitDragButton.GetComponent<DragButton>().scorllRect = portraitContainer.GetComponent<ScrollRect>();
 
         }
         void CreatePotraitScorllView(MetaAvatarCollection mac)
@@ -183,10 +184,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
             _id.text.text = "#" + mac.metaAvatars[0].tokenId;
 
-            _enterButton.GetComponent<DragButton>().horizontalScrollSnap = portraitContainer.GetComponent<HorizontalScrollSnap>();
-            _enterButton.GetComponent<DragButton>().scorllRect = portraitContainer.GetComponent<ScrollRect>();
-
-
+            _protraitDragButton.GetComponent<DragButton>().horizontalScrollSnap = portraitContainer.GetComponent<HorizontalScrollSnap>();
+            _protraitDragButton.GetComponent<DragButton>().scorllRect = portraitContainer.GetComponent<ScrollRect>();
         }
 
         void Update()
