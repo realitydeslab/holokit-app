@@ -34,7 +34,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 var panel = new ScreenAROpenSpectatorPanel();
                 PanelManager.Push(panel);
 
-                PanelManager.OnStartedSharingReality?.Invoke();
+                //PanelManager.OnStartedSharingReality?.Invoke();
             });
 
             UITool.GetOrAddComponentInChildren<Button>("StARButton").onClick.AddListener(() =>
