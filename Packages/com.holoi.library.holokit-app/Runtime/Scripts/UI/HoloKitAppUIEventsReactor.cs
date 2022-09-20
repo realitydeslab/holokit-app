@@ -2,15 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HoloKit;
-using Holoi.Library.HoloKitApp;
+using System;
 
 namespace Holoi.Library.HoloKitApp
 {
     public class HoloKitAppUIEventsReactor : MonoBehaviour
     {
+        public static event Action OnTriggered;
+
         private void Awake()
         {
-            
+            UI.PanelManager.OnRenderModeChanged += OnRenderModeChanged;
+            UI.PanelManager.OnStartedSharingReality += OnStartedSharingReality;
+            UI.PanelManager.OnStoppedSharingReality += OnStoppedSharingReality;
+            UI.PanelManager.OnStARTriggered += OnTriggeredFunc;
         }
 
         private void OnDestroy()
@@ -41,5 +46,32 @@ namespace Holoi.Library.HoloKitApp
         {
             HoloKitApp.Instance.StopAdvertising();
         }
+
+        private void OnTriggeredFunc()
+        {
+            OnTriggered?.Invoke();
+        }
+
+        private void OnBoostedFunc()
+        {
+
+        }
+
+        private void OnExitReality()
+        {
+
+        }
+
+        private void OnStartedRecording()
+        {
+
+        }
+
+        private void OnStoppedRecording()
+        {
+
+        }
+
+
     }
 }

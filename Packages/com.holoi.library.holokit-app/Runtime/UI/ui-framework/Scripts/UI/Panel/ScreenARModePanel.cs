@@ -48,7 +48,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 var panel = new StARModePanel();
                 PanelManager.Push(panel, false);
 
-                PanelManager.OnRenderModeChange?.Invoke(HoloKit.HoloKitRenderMode.Stereo);
+                PanelManager.OnRenderModeChanged?.Invoke(HoloKit.HoloKitRenderMode.Stereo);
             });
 
             UITool.GetOrAddComponentInChildren<Button>("RecordButton").onClick.AddListener(() =>

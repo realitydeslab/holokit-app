@@ -18,7 +18,7 @@ namespace HoloKit
         [AOT.MonoPInvokeCallback(typeof(Action<bool>))]
         private static void OnNFCSessionCompletedDelegate(bool success, IntPtr cameraDataPtr)
         {
-            if (success && cameraDataPtr != null)
+            if (success && HoloKitHelper.IsRuntime)
             {
                 HoloKitCameraData cameraData = ParseHoloKitCameraData(cameraDataPtr);
                 if (HoloKitCamera.Instance != null)

@@ -42,7 +42,7 @@ namespace Holoi.Library.HoloKitApp.UI
         public static Action OnStartedSharingReality;
         public static Action OnStoppedSharingReality;
 
-        public static Action<HoloKit.HoloKitRenderMode> OnRenderModeChange;
+        public static Action<HoloKit.HoloKitRenderMode> OnRenderModeChanged;
         public static Action OnExitReality;
 
         public static Action OnStartedRecording;
@@ -55,9 +55,9 @@ namespace Holoi.Library.HoloKitApp.UI
         // star action
         public static Action OnStARTriggered;
         public static Action OnStARBoosted;
-        public static Action OnStARExit;
-        public static Action OnStARStartedRecording;
-        public static Action OnStARStoppedRecording;
+        public static Action OnStARExit; // 这个和 OnRenderModeChanged 重复了
+        public static Action OnStARStartedRecording; // 这个和 OnStartedRecording 重复了
+        public static Action OnStARStoppedRecording; // 这个和 OnStoppedRecording 重复了
         public static Action OnStARStartedPause;
         public static Action OnStARStoppedPause;
 

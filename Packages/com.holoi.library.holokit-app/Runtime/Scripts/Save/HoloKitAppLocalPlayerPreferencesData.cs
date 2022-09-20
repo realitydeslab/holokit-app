@@ -9,7 +9,7 @@ namespace Holoi.Library.HoloKitApp
     [Serializable]
     public class HoloKitAppLocalPlayerPreferencesData
     {
-        public Dictionary<Reality, RealityPreference> RealityPreferences;
+        public Dictionary<string, RealityPreference> RealityPreferences;
 
         public HoloKitAppLocalPlayerPreferencesData(HoloKitAppLocalPlayerPreferences LocalPlayerPreferences)
         {

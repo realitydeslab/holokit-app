@@ -152,9 +152,10 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             var _reality = HoloKitApp.Instance.CurrentReality;
 
-            if (holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaObject)
+            var metaObject = holoKitAppLocalPlayerPreferences.GetRealityPreferencedObject(_reality);
+            if (metaObject != null)
             {
-                var selectedObject = holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaObject;
+                var selectedObject = metaObject;
                 _objectDefaultIndex = GetIndex(selectedObject);
                 _scrollBarObjectCollection.value = ScrollBarIndexToValue(_objectDefaultIndex, _objectCount);
                 Debug.Log($"_scrollBarObjectCollection.value = {_scrollBarObjectCollection.value}");
@@ -167,9 +168,10 @@ namespace Holoi.Library.HoloKitApp.UI
                 _scrollBarObjectCollection.value = 0;
             }
 
-            if (holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaAvatar)
+            var metaAvatar = holoKitAppLocalPlayerPreferences.GetRealityPreferencedAvatar(_reality);
+            if (metaAvatar != null)
             {
-                var selectedAvatar = holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaAvatar;
+                var selectedAvatar = metaAvatar;
                 _avatarDefaultIndex = GetIndex(selectedAvatar);
                 _scrollBarAvatarCollection.value = ScrollBarIndexToValue(_avatarDefaultIndex, _avatarCount);
                 Debug.Log($"_scrollBarAvatarCollection.value = {_scrollBarAvatarCollection.value}");
