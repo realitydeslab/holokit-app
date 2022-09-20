@@ -33,8 +33,11 @@ namespace HoloKit
 
         public static void StartNFCSession(HoloKitType holoKitType, float ipd, float farClipPlane)
         {
-            string alertMessage = "Please put your iPhone onto the HoloKit";
-            HoloKitSDK_StartNFCSession(alertMessage, (int)holoKitType, ipd, farClipPlane);
+            if (HoloKitHelper.IsRuntime)
+            {
+                string alertMessage = "Please put your iPhone onto the HoloKit";
+                HoloKitSDK_StartNFCSession(alertMessage, (int)holoKitType, ipd, farClipPlane);
+            }
         }
 
         public static void SkipNFCSessionWithPassword(string password, HoloKitType holoKitType, float ipd, float farClipPlane)
@@ -42,6 +45,10 @@ namespace HoloKit
             if (HoloKitHelper.IsRuntime)
             {
                 HoloKitSDK_SkipNFCSessionWithPassword(password, (int)holoKitType, ipd, farClipPlane);
+            }
+            else
+            {
+                OnNFCSessionCompletedDelegate(true, (IntPtr)null);
             }
         }
 
