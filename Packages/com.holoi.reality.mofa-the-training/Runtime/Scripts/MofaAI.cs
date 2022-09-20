@@ -112,5 +112,27 @@ namespace Holoi.Reality.MOFATheTraining
 
             _destPos = _initialPos + horizontalForward * forwardVar + horizontalRight * rightVar;
         }
+
+        protected override void OnPhaseChanged(MofaPhase mofaPhase)
+        {
+            base.OnPhaseChanged(mofaPhase);
+
+            if (IsServer)
+            {
+                if (mofaPhase == MofaPhase.Fighting)
+                {
+
+                }
+                else if (mofaPhase == MofaPhase.RoundOver)
+                {
+
+                }
+            }
+        }
+
+        private IEnumerator StartSpellAI()
+        {
+            yield return new WaitForSeconds(1f);
+        }
     }
 }

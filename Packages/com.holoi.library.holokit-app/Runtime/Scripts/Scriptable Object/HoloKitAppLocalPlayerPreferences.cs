@@ -41,7 +41,8 @@ namespace Holoi.Library.HoloKitApp
             }
             else
             {
-                // Set default preferences
+                RealityPreferences = new();
+;                // Set default preferences
                 foreach (var reality in _realityList.realities)
                 {
                     // Set the default avatar
