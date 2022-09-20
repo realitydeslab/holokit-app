@@ -193,7 +193,7 @@ namespace Holoi.Reality.MOFATheTraining
                 }
                 else // Basic spell
                 {
-                    StartCoroutine(SpawnSpellWithDelay(SpellType.Secondary));
+                    StartCoroutine(SpawnSpellWithDelay(SpellType.Basic));
                 }
                 yield return new WaitForSeconds(2.5f);
             }
@@ -225,7 +225,7 @@ namespace Holoi.Reality.MOFATheTraining
             if (LifeShield != null && hostLifeShield != null)
             {
                 Vector3 avatarCenterEyePos = transform.position + transform.rotation * new Vector3(0f, 1.2f, 1f); // TODO: Give a better offset
-                Quaternion rotation = Quaternion.LookRotation(hostLifeShield.transform.position - transform.position);
+                Quaternion rotation = Quaternion.LookRotation(hostLifeShield.transform.position - avatarCenterEyePos);
                 // TODO: Random deviation
 
                 _mofaRealityManager.SpawnSpellServerRpc(spellType == SpellType.Basic ? _basicSpell.Id : _secondarySpell.Id,
