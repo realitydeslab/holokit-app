@@ -18,6 +18,8 @@ namespace Holoi.Library.HoloKitApp.UI
                 // here we do onclick event of this button
                 Debug.Log("ExitButton is clicked.");
                 PanelManager.Pop();
+
+                PanelManager.OnStoppedSharingReality?.Invoke();
             });
 
             // debug for scanning -> check mark

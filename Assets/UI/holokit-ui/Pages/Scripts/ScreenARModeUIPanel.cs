@@ -27,8 +27,15 @@ namespace Holoi.Library.HoloKitApp.UI
             // notRecording = idle
         }
 
+        public enum ShareState
+        {
+            idle = 0,
+            share = 1
+        }
+
         //[HideInInspector]
         public State state;
+        public ShareState shareState = ShareState.idle;
 
         [Header("UI Elements")]
         public Transform scanContainer;
