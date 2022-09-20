@@ -30,6 +30,7 @@ namespace Holoi.Library.HoloKitApp.UI
                     PanelManager.Pop();
 
                     PanelManager.OnStARExit?.Invoke();
+                    PanelManager.OnRenderModeChange?.Invoke(HoloKit.HoloKitRenderMode.Mono);
                 }
             });
             stARUIPanel.volumeBar.onValueChanged.AddListener((value) =>
