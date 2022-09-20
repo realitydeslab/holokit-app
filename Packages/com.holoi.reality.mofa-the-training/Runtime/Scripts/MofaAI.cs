@@ -6,12 +6,22 @@ using Holoi.AssetFoundation;
 using HoloKit;
 using Holoi.Mofa.Base;
 using Holoi.Library.HoloKitApp;
+using System;
 
 namespace Holoi.Reality.MOFATheTraining
 {
+    public enum AIAttackState
+    {
+        Nothing = 0,
+        BasicSpell = 1,
+        SecondarySpell = 2
+    }
+
     public class MofaAI : MofaPlayer
     {
         public MetaAvatarCollectionList AvatarList;
+
+        public SpellList SpellList;
 
         private GameObject _avatar;
 
@@ -22,6 +32,16 @@ namespace Holoi.Reality.MOFATheTraining
         private Vector3 _destPos;
 
         private float _speed = 0.3f;
+
+        private AIAttackState _lastAIAttackState;
+
+        private Coroutine _attackAICoroutine;
+
+        private Spell _basicSpell;
+
+        private Spell _secondarySpell;
+
+        public static event Action<SpellType> OnAISpawnedSpell;
 
         protected override void Awake()
         {
@@ -107,8 +127,8 @@ namespace Holoi.Reality.MOFATheTraining
         {
             var horizontalForward = MofaUtils.GetHorizontalForward(transform);
             var horizontalRight = MofaUtils.GetHorizontalRight(transform);
-            float forwardVar = Random.Range(-3f, 3f);
-            float rightVar = Random.Range(-3f, 3f);
+            float forwardVar = UnityEngine.Random.Range(-3f, 3f);
+            float rightVar = UnityEngine.Random.Range(-3f, 3f);
 
             _destPos = _initialPos + horizontalForward * forwardVar + horizontalRight * rightVar;
         }
@@ -121,18 +141,97 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 if (mofaPhase == MofaPhase.Fighting)
                 {
-
+                    SetupSpellsForAI();
+                    _attackAICoroutine = StartCoroutine(AttackAI());
                 }
                 else if (mofaPhase == MofaPhase.RoundOver)
                 {
-
+                    StopCoroutine(_attackAICoroutine);
                 }
             }
         }
 
-        private IEnumerator StartSpellAI()
+        private void SetupSpellsForAI()
         {
-            yield return new WaitForSeconds(1f);
+            foreach (var spell in SpellList.List)
+            {
+                if (spell.MagicSchool.Id == 0)
+                {
+                    if (spell.SpellType == SpellType.Basic)
+                    {
+                        _basicSpell = spell;
+                    }
+                    else
+                    {
+                        _secondarySpell = spell;
+                    }
+                }
+            }
+        }
+
+        private IEnumerator AttackAI()
+        {
+            yield return new WaitForSeconds(UnityEngine.Random.Range(1f, 5f));
+
+            while(true)
+            {
+                float random = UnityEngine.Random.Range(0f, 1f);
+                if (random < 0.2f) // Do nothing
+                {
+                    if (_lastAIAttackState == AIAttackState.Nothing)
+                    {
+                        StartCoroutine(SpawnSpellWithDelay(SpellType.Basic));
+                    }
+                    else
+                    {
+                        _lastAIAttackState = AIAttackState.Nothing;
+                    }
+                }
+                else if (random > 0.8) // Secondary spell
+                {
+
+                }
+                else // Basic spell
+                {
+                    StartCoroutine(SpawnSpellWithDelay(SpellType.Secondary));
+                }
+                yield return new WaitForSeconds(2.5f);
+            }
+        }
+
+        private IEnumerator SpawnSpellWithDelay(SpellType spellType)
+        {
+            OnAISpawnedSpellClientRpc(spellType);
+            if (spellType == SpellType.Basic)
+            {
+                yield return new WaitForSeconds(0.3f);
+            }
+            else
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
+            SpawnSpell(spellType);
+        }
+
+        [ClientRpc]
+        private void OnAISpawnedSpellClientRpc(SpellType spellType)
+        {
+            OnAISpawnedSpell?.Invoke(spellType);
+        }
+        
+        private void SpawnSpell(SpellType spellType)
+        {
+            var hostLifeShield = _mofaRealityManager.Players[0].LifeShield;
+            if (LifeShield != null && hostLifeShield != null)
+            {
+                Vector3 avatarCenterEyePos = transform.position + transform.rotation * new Vector3(0f, 1.2f, 1f); // TODO: Give a better offset
+                Quaternion rotation = Quaternion.LookRotation(hostLifeShield.transform.position - transform.position);
+                // TODO: Random deviation
+
+                _mofaRealityManager.SpawnSpellServerRpc(spellType == SpellType.Basic ? _basicSpell.Id : _secondarySpell.Id,
+                    avatarCenterEyePos, rotation, OwnerClientId);
+                _lastAIAttackState = spellType == SpellType.Basic ? AIAttackState.BasicSpell : AIAttackState.SecondarySpell;
+            }
         }
     }
 }

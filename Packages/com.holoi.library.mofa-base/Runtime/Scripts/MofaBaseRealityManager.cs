@@ -110,7 +110,7 @@ namespace Holoi.Mofa.Base
 
         [ServerRpc]
         public void SpawnSpellServerRpc(int spellId, Vector3 clientCenterEyePosition,
-            Quaternion clientCenterEyeRotation, ServerRpcParams serverRpcParams = default)
+            Quaternion clientCenterEyeRotation, ulong ownerClientId)
         {
             Spell spell = LocalPlayerSpellManager.SpellList.List[spellId];
             var position = clientCenterEyePosition + clientCenterEyeRotation * spell.SpawnOffset;
@@ -120,7 +120,7 @@ namespace Holoi.Mofa.Base
                 rotation = MofaUtils.GetHorizontalRotation(rotation);
             }
             var spellInstance = Instantiate(spell, position, rotation);
-            spellInstance.GetComponent<NetworkObject>().SpawnWithOwnership(serverRpcParams.Receive.SenderClientId);
+            spellInstance.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
         }
 
         private void OnLifeShieldDead(ulong ownerClientId)
