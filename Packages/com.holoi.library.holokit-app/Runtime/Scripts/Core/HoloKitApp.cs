@@ -51,6 +51,7 @@ namespace Holoi.Library.HoloKitApp
         private void Start()
         {
             LocalPlayerPreferences.Load();
+            Screen.orientation = ScreenOrientation.Portrait;
         }
 
         private void OnApplicationQuit()
