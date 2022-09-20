@@ -59,8 +59,15 @@ namespace Holoi.Library.HoloKitApp.UI
             //SetUIButtons();
         }
 
+        private void Update()
+        {
+            Debug.Log($"_scrollBarObjectCollection {_scrollBarObjectCollection.value} ");
+            Debug.Log($"_scrollBarAvatarCollection {_scrollBarAvatarCollection.value} ");
+        }
+
         public void SetUIInfo()
         {
+            Debug.Log("Set Option Page UI Info");
             if (realityMetaObjectCollections.Count > 0)
             {
                 _objectCount = realityMetaObjectCollections.Count;
@@ -78,6 +85,7 @@ namespace Holoi.Library.HoloKitApp.UI
                         _scrollViewObjectCollection.GetComponent<HorizontalScrollSnap>(); ;
                     _collectionContainer.GetComponent<CollectionContainer>().emptyDragButton.GetComponent<DragButton>().scorllRect =
                         _scrollViewObjectCollection.GetComponent<ScrollRect>();
+
                     var collectionContainer = Instantiate(_collectionContainer, _scrollViewObjectCollection.transform.Find("Viewport/Content"));
                     _collectionContainer.GetComponent<RectTransform>().localScale = Vector3.one;
                     collectionContainer.transform.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
@@ -99,6 +107,12 @@ namespace Holoi.Library.HoloKitApp.UI
                     // create new by data
                     _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.avatarContainer;
                     _collectionContainer.GetComponent<CollectionContainer>().metaAvatarCollection = realityMetaAvatarCollections[i];
+
+                    _collectionContainer.GetComponent<CollectionContainer>().emptyDragButton.GetComponent<DragButton>().horizontalScrollSnap =
+                        _scrollViewAvatarCollection.GetComponent<HorizontalScrollSnap>(); ;
+                    _collectionContainer.GetComponent<CollectionContainer>().emptyDragButton.GetComponent<DragButton>().scorllRect =
+                        _scrollViewAvatarCollection.GetComponent<ScrollRect>();
+
                     var collectionContainer = Instantiate(_collectionContainer, _scrollViewAvatarCollection.transform.Find("Viewport/Content"));
                     _collectionContainer.GetComponent<RectTransform>().localScale = Vector3.one;
                     collectionContainer.transform.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
@@ -111,11 +125,18 @@ namespace Holoi.Library.HoloKitApp.UI
                 _scrollViewAvatarCollection.gameObject.SetActive(false);
             }
 
-            SetSelectState();
+            ScrollBarSetInitValue();
         }
 
         public void SetUIButtons()
         {
+
+            var sceneName = HoloKitApp.Instance.CurrentReality.realityManager.GetComponent<RealityManager>().SceneName;
+
+            var scene = new ScreenARMainScene();
+
+            scene._sceneName = sceneName;
+
             // Create Buttons base on what scene this reality have:
 
             // var buttonContainer = Instantiate(_buttonContainer, _content);
@@ -127,26 +148,52 @@ namespace Holoi.Library.HoloKitApp.UI
             // Create Footer:
         }
 
-        void SetSelectState()
+        void ScrollBarSetInitValue()
         {
             var _reality = HoloKitApp.Instance.CurrentReality;
-            //Debug.Log("CurrentReality" + _reality.name);
-            Debug.Log(holoKitAppLocalPlayerPreferences);
-            Debug.Log(holoKitAppLocalPlayerPreferences.RealityPreferences[_reality]);
 
-            var selectedObject = holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaObject;
-            var selectedAvatar = holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaAvatar;
+            if (holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaObject)
+            {
+                var selectedObject = holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaObject;
+                _objectDefaultIndex = GetIndex(selectedObject);
+                _scrollBarObjectCollection.value = ScrollBarIndexToValue(_objectDefaultIndex, _objectCount);
+                Debug.Log($"_scrollBarObjectCollection.value = {_scrollBarObjectCollection.value}");
 
-            _objectDefaultIndex = GetIndex(selectedObject);
-            _avatarDefaultIndex = GetIndex(selectedAvatar);
+            }
+            else
+            {
+                Debug.Log("not found object");
 
-            _scrollBarObjectCollection.value = ScrollBarIndexToValue(_objectDefaultIndex, _objectCount);
-            _scrollBarAvatarCollection.value = ScrollBarIndexToValue(_avatarDefaultIndex, _avatarCount);
+                _scrollBarObjectCollection.value = 0;
+            }
+
+            if (holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaAvatar)
+            {
+                var selectedAvatar = holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaAvatar;
+                _avatarDefaultIndex = GetIndex(selectedAvatar);
+                _scrollBarAvatarCollection.value = ScrollBarIndexToValue(_avatarDefaultIndex, _avatarCount);
+                Debug.Log($"_scrollBarAvatarCollection.value = {_scrollBarAvatarCollection.value}");
+
+            }
+            else
+            {
+                Debug.Log("not found avatar");
+                _scrollBarAvatarCollection.value = 0;
+            }
         }
 
         float ScrollBarIndexToValue(int index, int count)
         {
-            float value = index / (count - 1f);
+            float value;
+            if (count > 1)
+            {
+                value = index / (count - 1f);
+            }
+            else
+            {
+                value = 0;
+            }
+            Debug.Log($"index to value: {value}");
             return value;
         }
 
@@ -158,6 +205,7 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 if (metaItem == collection.metaObjects[i])
                 {
+                    Debug.Log($"selected object is the {i}");
                     return i;
                 }
             }
@@ -173,6 +221,8 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 if (metaItem == collection.metaAvatars[i])
                 {
+                    Debug.Log($"selected avatar is the {i}");
+
                     return i;
                 }
             }
