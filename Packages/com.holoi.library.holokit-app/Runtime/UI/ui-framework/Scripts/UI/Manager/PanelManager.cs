@@ -55,9 +55,6 @@ namespace Holoi.Library.HoloKitApp.UI
         // star action
         public static Action OnStARTriggered;
         public static Action OnStARBoosted;
-        public static Action OnStARExit; // 这个和 OnRenderModeChanged 重复了
-        public static Action OnStARStartedRecording; // 这个和 OnStartedRecording 重复了
-        public static Action OnStARStoppedRecording; // 这个和 OnStoppedRecording 重复了
         public static Action OnStARStartedPause;
         public static Action OnStARStoppedPause;
 

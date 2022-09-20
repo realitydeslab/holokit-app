@@ -10,17 +10,30 @@ namespace Holoi.Library.HoloKitApp
     {
         public static event Action OnTriggered;
 
+        public static event Action OnBoosted;
+
         private void Awake()
         {
             UI.PanelManager.OnRenderModeChanged += OnRenderModeChanged;
             UI.PanelManager.OnStartedSharingReality += OnStartedSharingReality;
             UI.PanelManager.OnStoppedSharingReality += OnStoppedSharingReality;
             UI.PanelManager.OnStARTriggered += OnTriggeredFunc;
+            UI.PanelManager.OnStARBoosted += OnBoostedFunc;
+            UI.PanelManager.OnStartedRecording += OnStartedRecording;
+            UI.PanelManager.OnStoppedRecording += OnStoppedRecording;
+            UI.PanelManager.OnExitReality += OnExitReality;
         }
 
         private void OnDestroy()
         {
-            
+            UI.PanelManager.OnRenderModeChanged -= OnRenderModeChanged;
+            UI.PanelManager.OnStartedSharingReality -= OnStartedSharingReality;
+            UI.PanelManager.OnStoppedSharingReality -= OnStoppedSharingReality;
+            UI.PanelManager.OnStARTriggered -= OnTriggeredFunc;
+            UI.PanelManager.OnStARBoosted -= OnBoostedFunc;
+            UI.PanelManager.OnStartedRecording -= OnStartedRecording;
+            UI.PanelManager.OnStoppedRecording -= OnStoppedRecording;
+            UI.PanelManager.OnExitReality -= OnExitReality;
         }
 
         private void OnRenderModeChanged(HoloKitRenderMode renderMode)
@@ -54,7 +67,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnBoostedFunc()
         {
-
+            OnBoosted?.Invoke();
         }
 
         private void OnExitReality()

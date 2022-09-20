@@ -25,16 +25,16 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.Awake();
 
-            StARARPanel.OnTriggered += OnTriggered;
-            StARARPanel.OnTriggered2 += OnTriggered2;
+            HoloKitAppUIEventsReactor.OnTriggered += OnTriggered;
+            HoloKitAppUIEventsReactor.OnBoosted += OnBoosted;
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
 
-            StARARPanel.OnTriggered -= OnTriggered;
-            StARARPanel.OnTriggered2 -= OnTriggered2;
+            HoloKitAppUIEventsReactor.OnTriggered -= OnTriggered;
+            HoloKitAppUIEventsReactor.OnBoosted -= OnBoosted;
         }
 
         public override void OnNetworkSpawn()
@@ -132,7 +132,7 @@ namespace Holoi.Reality.MOFATheTraining
             }
         }
 
-        private void OnTriggered2()
+        private void OnBoosted()
         {
             if (Phase.Value == MofaPhase.Fighting)
             {

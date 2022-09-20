@@ -29,7 +29,6 @@ namespace Holoi.Library.HoloKitApp.UI
                     Debug.Log("BackButton is clicked.");
                     PanelManager.Pop();
 
-                    PanelManager.OnStARExit?.Invoke();
                     PanelManager.OnRenderModeChanged?.Invoke(HoloKit.HoloKitRenderMode.Mono);
                 }
             });
