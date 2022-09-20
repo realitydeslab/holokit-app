@@ -28,6 +28,8 @@ namespace Holoi.Library.HoloKitApp.UI
                     // trigger action here:
                     Debug.Log("BackButton is clicked.");
                     PanelManager.Pop();
+
+                    PanelManager.OnStARExit?.Invoke();
                 }
             });
             stARUIPanel.volumeBar.onValueChanged.AddListener((value) =>
@@ -39,6 +41,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 if (value == 1)
                 {
                     // trigger action here:
+                    PanelManager.OnStartedRecording?.Invoke();
                 }
             });
             stARUIPanel.triggerBar.onValueChanged.AddListener((value) =>
@@ -46,6 +49,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 if (value == 1)
                 {
                     // trigger action here:
+                    PanelManager.OnStARTriggered?.Invoke();
                 }
             });
             stARUIPanel.boostBar.onValueChanged.AddListener((value) =>
@@ -53,6 +57,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 if (value == 1)
                 {
                     // trigger action here:
+                    PanelManager.OnStARBoosted?.Invoke();
                 }
             });
             stARUIPanel.recalibrateBar.onValueChanged.AddListener((value) =>
@@ -67,6 +72,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 if (value == 1)
                 {
                     // trigger action here:
+                    PanelManager.OnStARStartedPause?.Invoke();
                 }
             });
         }

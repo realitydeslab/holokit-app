@@ -19,7 +19,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 Debug.Log("ExitButton is clicked. Exit from ScreenAR Mode to RealityOptionPanel.");
                 // exit to start scene
                 GameRoot.Instance.SceneSystem.SetScene(new StartScene());
-
+                PanelManager.OnExitReality?.Invoke();
             });
 
             UITool.GetOrAddComponentInChildren<Button>("SpectatorButton").onClick.AddListener(() =>
@@ -43,6 +43,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
                 var panel = new StARModePanel();
                 PanelManager.Push(panel, false);
+
+                PanelManager.OnRenderModeChange?.Invoke(HoloKit.HoloKitRenderMode.Stereo);
             });
 
             UITool.GetOrAddComponentInChildren<Button>("RecordButton").onClick.AddListener(() =>
@@ -53,10 +55,12 @@ namespace Holoi.Library.HoloKitApp.UI
                 if(UITool.GetOrAddComponent<ScreenARModeUIPanel>().state == ScreenARModeUIPanel.State.recording)
                 {
                     UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.idle);
+                    PanelManager.OnStoppedRecording?.Invoke();
                 }
                 else
                 {
                     UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.recording);
+                    PanelManager.OnStartedRecording?.Invoke();
                 }
                 // start recording:
 

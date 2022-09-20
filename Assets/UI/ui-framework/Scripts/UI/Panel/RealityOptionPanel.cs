@@ -35,6 +35,9 @@ namespace Holoi.Library.HoloKitApp.UI
                 scene._sceneName = sceneName;
 
                 GameRoot.Instance.SceneSystem.SetScene(scene);
+
+                // events invoke:
+                PanelManager.OnEnteredRealityAsHost?.Invoke(HoloKitApp.Instance.CurrentReality);
             });
             UITool.GetOrAddComponentInChildren<Button>("SpectatorButton").onClick.AddListener(() =>
             {
@@ -57,6 +60,9 @@ namespace Holoi.Library.HoloKitApp.UI
                 scene.openState = ScreenARMainScene.State.spectator;
 
                 GameRoot.Instance.SceneSystem.SetScene(scene);
+
+                // events invoke:
+                PanelManager.OnJoinedRealityAsSpectator?.Invoke(HoloKitApp.Instance.CurrentReality);
             });
         }
     }

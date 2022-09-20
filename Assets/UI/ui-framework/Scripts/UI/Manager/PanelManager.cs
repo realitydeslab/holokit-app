@@ -42,7 +42,7 @@ namespace Holoi.Library.HoloKitApp.UI
         public static Action OnStartedSharingReality;
         public static Action OnStoppedSharingReality;
 
-        public static Action<RenderMode> OnRenderModeChange;
+        public static Action<HoloKit.HoloKitRenderMode> OnRenderModeChange;
         public static Action OnExitReality;
 
         public static Action OnStartedRecording;
