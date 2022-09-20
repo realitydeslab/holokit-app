@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 
+#if UNITY_EDITOR
 public class FlexibleUIInstance : Editor
 {
     [MenuItem("GameObject/HolikitX UI/Text/H1", priority = 0)]
@@ -106,3 +107,4 @@ public class FlexibleUIInstance : Editor
         return instance;
     }
 }
+#endif
