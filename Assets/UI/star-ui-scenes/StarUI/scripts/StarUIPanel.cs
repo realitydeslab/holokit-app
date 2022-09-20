@@ -417,6 +417,8 @@ namespace Holoi.Library.HoloKitApp.UI
             //_exitBG_L.gameObject.SetActive(false);
             //_exitBG_R.gameObject.SetActive(false);
             // do exit the star:
+            _exitMaterial_L.SetFloat("_Offset", 0);
+            _exitMaterial_R.SetFloat("_Offset", 0);
             Debug.Log("Now we exit from star mode");
         }
         // record bar

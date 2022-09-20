@@ -26,6 +26,8 @@ namespace Holoi.Library.HoloKitApp.UI
                 if (value == 1)
                 {
                     // trigger action here:
+                    Debug.Log("BackButton is clicked.");
+                    PanelManager.Pop();
                 }
             });
             stARUIPanel.volumeBar.onValueChanged.AddListener((value) =>
