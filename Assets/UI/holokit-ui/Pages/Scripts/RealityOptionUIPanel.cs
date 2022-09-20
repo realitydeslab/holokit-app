@@ -134,16 +134,8 @@ namespace Holoi.Library.HoloKitApp.UI
             Debug.Log(holoKitAppLocalPlayerPreferences);
             Debug.Log(holoKitAppLocalPlayerPreferences.RealityPreferences[_reality]);
 
-            if (holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaObject == null)
-            {
-                Debug.Log("fuck");
-            }
-
             var selectedObject = holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaObject;
             var selectedAvatar = holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaAvatar;
-
-            Debug.Log($"[RealityOptionUIPanel] selectedObject {selectedObject.collection} : {selectedObject.tokenId}");
-            Debug.Log($"[RealityOptionUIPanel] selectedAvatar {selectedAvatar.collection} : {selectedAvatar.tokenId}");
 
             _objectDefaultIndex = GetIndex(selectedObject);
             _avatarDefaultIndex = GetIndex(selectedAvatar);
