@@ -42,7 +42,7 @@ namespace Holoi.Library.HoloKitApp
             else
             {
                 RealityPreferences = new();
-;                // Set default preferences
+                // Set default preferences
                 foreach (var reality in _realityList.realities)
                 {
                     // Set the default avatar
@@ -52,6 +52,7 @@ namespace Holoi.Library.HoloKitApp
                         if (reality.IsCompatibleWithMetaAvatarCollection(avatarCollection))
                         {
                             metaAvatar = avatarCollection.coverMetaAvatar;
+                            break;
                         }
                     }
 
@@ -62,6 +63,7 @@ namespace Holoi.Library.HoloKitApp
                         if (reality.IsCompatibleWithMetaObjectCollection(objectCollection))
                         {
                             metaObject = objectCollection.coverMetaObject;
+                            break;
                         }
                     }
 

@@ -111,7 +111,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 _scrollViewAvatarCollection.gameObject.SetActive(false);
             }
 
-            //SetSelectState();
+            SetSelectState();
         }
 
         public void SetUIButtons()
@@ -133,6 +133,11 @@ namespace Holoi.Library.HoloKitApp.UI
             //Debug.Log("CurrentReality" + _reality.name);
             Debug.Log(holoKitAppLocalPlayerPreferences);
             Debug.Log(holoKitAppLocalPlayerPreferences.RealityPreferences[_reality]);
+
+            if (holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaObject == null)
+            {
+                Debug.Log("fuck");
+            }
 
             var selectedObject = holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaObject;
             var selectedAvatar = holoKitAppLocalPlayerPreferences.RealityPreferences[_reality].MetaAvatar;
