@@ -59,15 +59,14 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void UpdateAllPermissionButtons()
         {
-            Debug.Log("[Permissions] UpdateAllPermissionButtons");
             HoloKitAppPermissionStatus cameraPermissionStatus = HoloKitAppPermissionsManager.GetCameraPermissionStatus();
             HoloKitAppPermissionStatus microphonePermissionStatus = HoloKitAppPermissionsManager.GetMicrophonePermissionStatus();
             HoloKitAppPermissionStatus photoLibraryAddPermissionStatus = HoloKitAppPermissionsManager.GetPhotoLibraryAddPermissionStatus();
             HoloKitAppPermissionStatus locationPermissionStatus = HoloKitAppPermissionsManager.GetLocationPermissionStatus();
-            Debug.Log($"[CameraPermission] {cameraPermissionStatus}");
-            Debug.Log($"[Microphone] {microphonePermissionStatus}");
-            Debug.Log($"[Photo] {photoLibraryAddPermissionStatus}");
-            Debug.Log($"[Location] {locationPermissionStatus}");
+            //Debug.Log($"[CameraPermission] {cameraPermissionStatus}");
+            //Debug.Log($"[Microphone] {microphonePermissionStatus}");
+            //Debug.Log($"[Photo] {photoLibraryAddPermissionStatus}");
+            //Debug.Log($"[Location] {locationPermissionStatus}");
 
             UpdateAllPermissionButtonsVisual(cameraPermissionStatus, microphonePermissionStatus, photoLibraryAddPermissionStatus, locationPermissionStatus);
             UpdateAllPermissionButtonsFunction(cameraPermissionStatus, microphonePermissionStatus, photoLibraryAddPermissionStatus, locationPermissionStatus);
@@ -80,12 +79,10 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             if (cameraPermissionStatus == HoloKitAppPermissionStatus.Granted)
             {
-                Debug.Log("Camera checked");
                 _cameraButton.GetComponent<FlexibleUIPermissionButton>().SetUIAppearance(FlexibleUIPermissionButton.State.Checked);
             }
             else
             {
-                Debug.Log("Camera uncheck");
                 _cameraButton.GetComponent<FlexibleUIPermissionButton>().SetUIAppearance(FlexibleUIPermissionButton.State.Uncheck);
             }
 

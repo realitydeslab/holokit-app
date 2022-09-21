@@ -8,6 +8,7 @@ using System;
 using Holoi.AssetFoundation;
 using Unity.Netcode.Transports.UNET;
 using HoloKit;
+using Holoi.Library.Permissions;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -52,6 +53,7 @@ namespace Holoi.Library.HoloKitApp
         {
             LocalPlayerPreferences.Load();
             Screen.orientation = ScreenOrientation.Portrait;
+            PermissionsAPI.Initialize();
         }
 
         private void OnApplicationQuit()
