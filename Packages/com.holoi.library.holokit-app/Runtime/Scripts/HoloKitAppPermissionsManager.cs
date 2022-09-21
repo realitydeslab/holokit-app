@@ -19,7 +19,7 @@ namespace Holoi.Library.HoloKitApp
         {
             if (HoloKitHelper.IsEditor)
             {
-                return true;
+                return false;
             }
 
             if (GetCameraPermissionStatus() != HoloKitAppPermissionStatus.Granted)
@@ -43,6 +43,11 @@ namespace Holoi.Library.HoloKitApp
 
         public static HoloKitAppPermissionStatus GetCameraPermissionStatus()
         {
+            if (HoloKitHelper.IsEditor)
+            {
+                return HoloKitAppPermissionStatus.Granted;
+            }
+
             CameraPermissionStatus status = PermissionsAPI.GetCameraPermissionStatus();
             switch (status)
             {
@@ -61,6 +66,11 @@ namespace Holoi.Library.HoloKitApp
 
         public static HoloKitAppPermissionStatus GetMicrophonePermissionStatus()
         {
+            if (HoloKitHelper.IsEditor)
+            {
+                return HoloKitAppPermissionStatus.Granted;
+            }
+
             MicrophonePermissionStatus status = PermissionsAPI.GetMicrophonePermissionStatus();
             switch (status)
             {
@@ -77,6 +87,11 @@ namespace Holoi.Library.HoloKitApp
 
         public static HoloKitAppPermissionStatus GetPhotoLibraryAddPermissionStatus()
         {
+            if (HoloKitHelper.IsEditor)
+            {
+                return HoloKitAppPermissionStatus.Granted;
+            }
+
             PhotoLibraryPermissionStatus status = PermissionsAPI.GetPhotoLibraryAddPermissionStatus();
             switch (status)
             {
@@ -97,6 +112,11 @@ namespace Holoi.Library.HoloKitApp
 
         public static HoloKitAppPermissionStatus GetLocationPermissionStatus()
         {
+            if (HoloKitHelper.IsEditor)
+            {
+                return HoloKitAppPermissionStatus.Granted;
+            }
+
             LocationPermissionStatus status = PermissionsAPI.GetLocationPermissionStatus();
             switch (status)
             {
