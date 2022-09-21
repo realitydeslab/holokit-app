@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
-    public class PermissionsPanel : MonoBehaviour
+    public class PermissionUIPanel : MonoBehaviour
     {
         [SerializeField] Button _camButton;
         [SerializeField] Button _microButton;

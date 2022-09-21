@@ -19,6 +19,7 @@ namespace Holoi.Library.HoloKitApp.UI
             var cameraButton = UITool.GetOrAddComponentInChildren<Button>("CameraButton");
             cameraButton.onClick.AddListener(() =>
             {
+                // yc todo:
                 //if (cameraButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
                 //{
                 //    cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
@@ -32,6 +33,7 @@ namespace Holoi.Library.HoloKitApp.UI
             var microphoneButton = UITool.GetOrAddComponentInChildren<Button>("MicrophoneButton");
             microphoneButton.onClick.AddListener(() =>
             {
+                // yc todo:
                 //if (microphoneButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
                 //{
                 //    microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
@@ -45,6 +47,7 @@ namespace Holoi.Library.HoloKitApp.UI
             var photoButton = UITool.GetOrAddComponentInChildren<Button>("PhotoButton");
             photoButton.onClick.AddListener(() =>
             {
+                // yc todo:
                 //if (photoButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
                 //{
                 //    photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
@@ -55,9 +58,10 @@ namespace Holoi.Library.HoloKitApp.UI
                 //}
             });
 
-            var LocationButton = UITool.GetOrAddComponentInChildren<Button>("LocationButton");
-            LocationButton.onClick.AddListener(() =>
+            var locationButton = UITool.GetOrAddComponentInChildren<Button>("LocationButton");
+            locationButton.onClick.AddListener(() =>
             {
+                // yc todo:
                 //if (LocationButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
                 //{
                 //    LocationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
@@ -110,6 +114,46 @@ namespace Holoi.Library.HoloKitApp.UI
                 PanelManager.Push(panel);
             });
 
+
+            void UpdateAllPermisionButtons()
+            {
+                // yc todo:
+                if (true)
+                {
+                    cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
+                }
+                else
+                {
+                    cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+                }
+
+                if (true)
+                {
+                    microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
+                }
+                else
+                {
+                    microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+                }
+
+                if (true)
+                {
+                    photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
+                }
+                else
+                {
+                    photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+                }
+
+                if (true)
+                {
+                    locationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
+                }
+                else
+                {
+                    locationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+                }
+            }
         }
 
     }
