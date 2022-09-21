@@ -78,6 +78,9 @@ namespace Holoi.Library.HoloKitApp.UI
 
                 GoToCheckTheMarkPanel();
             });
+
+            // check mark event here
+            // HoloKitApp.Instance. 
         }
 
         public void GoToCheckTheMarkPanel()

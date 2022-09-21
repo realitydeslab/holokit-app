@@ -27,6 +27,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
                 PlayerEnteredReality();
             });
+
+            HoloKitApp.Instance.OnConnectedAsSpectator += PlayerEnteredReality;
         }
 
         public void PlayerEnteredReality()
@@ -34,6 +36,12 @@ namespace Holoi.Library.HoloKitApp.UI
             PanelManager.Pop();
             var panel = PanelManager.Instance.GetActivePanel();
             panel.UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.scanningQRcode);
+        }
+
+        public override void OnClose()
+        {
+            base.OnClose();
+            HoloKitApp.Instance.OnConnectedAsSpectator -= PlayerEnteredReality;
         }
     }
 }
