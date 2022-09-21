@@ -23,24 +23,24 @@ namespace Holoi.Library.HoloKitApp.UI
             });
 
             // debug for scanning -> check mark
-            UITool.GetOrAddComponentInChildren<Button>("Fake Connect").onClick.AddListener(() =>
-            {
-                // here we do onclick event of this button
-                Debug.Log("CheckMarkButton is clicked.");
-                // create a debug list:
-                List<string> names = new List<string>();
-                names.Add("cool guy's iphone 14");
-                UpdateConnectedDeviceNameUI(names);
-            });
+            //UITool.GetOrAddComponentInChildren<Button>("Fake Connect").onClick.AddListener(() =>
+            //{
+            //    // here we do onclick event of this button
+            //    Debug.Log("CheckMarkButton is clicked.");
+            //    // create a debug list:
+            //    List<string> names = new List<string>();
+            //    names.Add("cool guy's iphone 14");
+            //    UpdateConnectedDeviceNameUI(names);
+            //});
 
-            UITool.GetOrAddComponentInChildren<Button>("Check Mark").onClick.AddListener(() =>
-            {
-                //PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.checkMark);
-                // here we do onclick event of this button
-                Debug.Log("DebugButton is clicked.");
-                var panel = new ScreenARCheckTheMarkPanel();
-                PanelManager.Push(panel, false);
-            });
+            //UITool.GetOrAddComponentInChildren<Button>("Check Mark").onClick.AddListener(() =>
+            //{
+            //    //PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.checkMark);
+            //    // here we do onclick event of this button
+            //    Debug.Log("DebugButton is clicked.");
+            //    var panel = new ScreenARCheckTheMarkPanel();
+            //    PanelManager.Push(panel, false);
+            //});
         }
 
         public void UpdateConnectedDeviceNameUI(List<string> names)

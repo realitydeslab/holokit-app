@@ -48,8 +48,23 @@ namespace Holoi.Mofa.Base
             Debug.Log($"[MofaFightingPanel] Blue {blueTeamScore} : Red {redTeamScore}");
 
             // SIZHENGTODO: 更新比分面板
-            _yourScore.text = "" + blueTeamScore;
-            _enemyScore.text = "" + redTeamScore;
+            if (blueTeamScore < 10)
+            {
+                _yourScore.text = "0" + blueTeamScore;
+            }
+            else
+            {
+                _yourScore.text = "" + blueTeamScore;
+            }
+
+            if (redTeamScore < 10)
+            {
+                _enemyScore.text = "0" + redTeamScore;
+            }
+            else
+            {
+                _enemyScore.text = "" + redTeamScore;
+            }
         }
     }
 }

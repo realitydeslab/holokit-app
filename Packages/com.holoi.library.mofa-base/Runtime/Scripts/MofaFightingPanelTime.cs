@@ -39,7 +39,7 @@ namespace Holoi.Mofa.Base
             {
                 _timeCounter = 0;
             }
-            _gameTime.text = "" + Mathf.Ceil(_timeCounter);
+            _gameTime.text = "" + Mathf.Ceil(_timeCounter) + "s";
         }
     }
 }
