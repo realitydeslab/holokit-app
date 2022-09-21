@@ -81,38 +81,39 @@ namespace Holoi.Library.HoloKitApp.UI
             if (cameraPermissionStatus == HoloKitAppPermissionStatus.Granted)
             {
                 Debug.Log("Camera checked");
-                _cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
+                _cameraButton.GetComponent<FlexibleUIPermissionButton>().SetUIAppearance(FlexibleUIPermissionButton.State.Checked);
             }
             else
             {
-                _cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+                Debug.Log("Camera uncheck");
+                _cameraButton.GetComponent<FlexibleUIPermissionButton>().SetUIAppearance(FlexibleUIPermissionButton.State.Uncheck);
             }
 
             if (microphonePermissionStatus == HoloKitAppPermissionStatus.Granted)
             {
-                _microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
+                _microphoneButton.GetComponent<FlexibleUIPermissionButton>().SetUIAppearance(FlexibleUIPermissionButton.State.Checked);
             }
             else
             {
-                _microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+                _microphoneButton.GetComponent<FlexibleUIPermissionButton>().SetUIAppearance(FlexibleUIPermissionButton.State.Uncheck);
             }
 
             if (photoLibraryAddPermissionStatus == HoloKitAppPermissionStatus.Granted)
             {
-                _photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
+                _photoButton.GetComponent<FlexibleUIPermissionButton>().SetUIAppearance(FlexibleUIPermissionButton.State.Checked);
             }
             else
             {
-                _photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+                _photoButton.GetComponent<FlexibleUIPermissionButton>().SetUIAppearance(FlexibleUIPermissionButton.State.Uncheck);
             }
 
             if (locationPermissionStatus == HoloKitAppPermissionStatus.Granted)
             {
-                _locationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
+                _locationButton.GetComponent<FlexibleUIPermissionButton>().SetUIAppearance(FlexibleUIPermissionButton.State.Checked);
             }
             else
             {
-                _locationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+                _locationButton.GetComponent<FlexibleUIPermissionButton>().SetUIAppearance(FlexibleUIPermissionButton.State.Uncheck);
             }
 
             if (cameraPermissionStatus == HoloKitAppPermissionStatus.Granted &&
@@ -120,11 +121,11 @@ namespace Holoi.Library.HoloKitApp.UI
                 photoLibraryAddPermissionStatus == HoloKitAppPermissionStatus.Granted &&
                 locationPermissionStatus == HoloKitAppPermissionStatus.Granted)
             {
-                _doneButton.GetComponent<FlexibleUIButton>().state = FlexibleUIButton.State.Active;
+                _doneButton.GetComponent<FlexibleUIButton>().SetUIAppearance(FlexibleUIButton.State.Active);
             }
             else
             {
-                _doneButton.GetComponent<FlexibleUIButton>().state = FlexibleUIButton.State.Inactive;
+                _doneButton.GetComponent<FlexibleUIButton>().SetUIAppearance(FlexibleUIButton.State.Inactive);
             }
         }
 

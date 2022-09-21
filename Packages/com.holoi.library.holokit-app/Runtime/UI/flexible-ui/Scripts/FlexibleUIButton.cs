@@ -45,6 +45,13 @@ namespace Holoi.Library.HoloKitApp.UI
         protected override void OnSkinUI()
         {
             base.OnSkinUI();
+            SetUIAppearance(state);
+        }
+
+
+        public void SetUIAppearance(State _state)
+        {
+            state = _state;
 
             switch (size)
             {
@@ -72,7 +79,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 _text.font = SkinData.BoldSlanted;
                 _text.characterSpacing = -1.94f;
             }
-            
+
 
             _button = GetComponent<Button>();
             _button.transition = Selectable.Transition.ColorTint; // set transition mode
@@ -90,13 +97,13 @@ namespace Holoi.Library.HoloKitApp.UI
             //_button.spriteState = SkinData.ButtonSpriteState;
 
             _image.type = Image.Type.Sliced;
-            
+
 
 
             switch (color)
             {
                 case Color.Black:
-                    _image.sprite = SkinData.ButtonSprite;  
+                    _image.sprite = SkinData.ButtonSprite;
                     switch (state)
                     {
                         case State.Inactive:
@@ -105,8 +112,8 @@ namespace Holoi.Library.HoloKitApp.UI
                             block.pressedColor = SkinData.holoGrey3;
                             _button.colors = block;
                             _icon.sprite = SkinData.WhiteArrow;
-                            if(_text) _text.color = UnityEngine.Color.white;
-                            if(_text) _text.text = _string;
+                            if (_text) _text.color = UnityEngine.Color.white;
+                            if (_text) _text.text = _string;
                             break;
                         case State.Active:
                             block.normalColor = SkinData.holoBlack;

@@ -8,14 +8,14 @@ namespace Holoi.Library.HoloKitApp.UI
     [RequireComponent(typeof(Image))]
     public class FlexibleUIPermissionButton : FlexibleUI
     {
-        public enum GoOnState
+        public enum State
         {
             Uncheck,
             Checked
         }
 
         //public Theme theme;
-        public GoOnState state;
+        public State state;
 
         Image _image;
         Image _icon;
@@ -28,7 +28,12 @@ namespace Holoi.Library.HoloKitApp.UI
         protected override void OnSkinUI()
         {
             base.OnSkinUI();
+            SetUIAppearance(state);
+        }
 
+        public void SetUIAppearance(State _state)
+        {
+            state = _state;
             _image = GetComponent<Image>();
             _icon = transform.Find("Icon").GetComponent<Image>();
             _text = transform.Find("Text").GetComponent<TMPro.TMP_Text>();
@@ -41,11 +46,9 @@ namespace Holoi.Library.HoloKitApp.UI
             _image.type = Image.Type.Sliced;
             //_button.spriteState = SkinData.ButtonSpriteState;
 
-
-
             switch (state)
             {
-                case GoOnState.Uncheck:
+                case State.Uncheck:
                     _image.color = SkinData.WhiteActiveColor;
                     _icon.sprite = SkinData.UnchenckCircle;
                     _icon.color = Color.black;
@@ -53,7 +56,7 @@ namespace Holoi.Library.HoloKitApp.UI
                     _text.text = _string;
 
                     break;
-                case GoOnState.Checked:
+                case State.Checked:
                     _image.color = SkinData.DarkActiveColor;
                     _icon.sprite = SkinData.CheckedCircle;
                     _icon.color = Color.white;
@@ -61,7 +64,6 @@ namespace Holoi.Library.HoloKitApp.UI
                     _text.text = _string;
                     break;
             }
-        
         }
     }
 
