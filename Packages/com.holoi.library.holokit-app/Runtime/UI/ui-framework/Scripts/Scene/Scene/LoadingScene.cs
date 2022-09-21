@@ -28,9 +28,9 @@ namespace Holoi.Library.HoloKitApp.UI
         public override void OnExit()
         {
             SceneManager.sceneLoaded -= SceneLoaded;
-            Debug.Log($"panel with {_panelManager._panelStack.Count} left");
+            //Debug.Log($"panel with {_panelManager._panelStack.Count} left");
             //_panelManager.PopAll();
-            Debug.Log($"exit scene, pop all panel with {_panelManager._panelStack.Count} left");
+            //Debug.Log($"exit scene, pop all panel with {_panelManager._panelStack.Count} left");
         }
 
         private void SceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode load)

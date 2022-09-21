@@ -57,7 +57,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void SetUIInfo()
         {
-            Debug.Log("SetUIInfo");
+            //Debug.Log("SetUIInfo");
             _technicContainer.reality = reality;
             _technicContainer.SetUIInfo();
 
@@ -82,7 +82,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         void UpdateRealityCollections()
         {
-            Debug.Log("UpdateRealityCollections");
+            //Debug.Log("UpdateRealityCollections");
             var objectTags = reality.compatibleMetaObjectTags;
             var avatarTags = reality.compatibleMetaAvatarTags;
             //Debug.Log($"objectTags: {objectTags.Count}");
@@ -103,12 +103,12 @@ namespace Holoi.Library.HoloKitApp.UI
                     {
                         if (availableMetaAvatarCollectionList.list[i].tags.Contains(tag))
                         {
-                            Debug.Log(availableMetaAvatarCollectionList.list[i].name + "Contains Tag: " + tag.name + ", add to List");
+                            //Debug.Log(availableMetaAvatarCollectionList.list[i].name + "Contains Tag: " + tag.name + ", add to List");
                             realityMetaAvatarCollectionList.Add(availableMetaAvatarCollectionList.list[i]);
                         }
                         else
                         {
-                            Debug.Log(availableMetaAvatarCollectionList.list[i].name + "Do not Contains Tag: " + tag.name + "");
+                            //Debug.Log(availableMetaAvatarCollectionList.list[i].name + "Do not Contains Tag: " + tag.name + "");
                         }
                     }
                 }
@@ -126,13 +126,13 @@ namespace Holoi.Library.HoloKitApp.UI
                     {
                         if (availableMetaObjectCollectionList.list[i].tags.Contains(tag))
                         {
-                            Debug.Log(availableMetaObjectCollectionList.list[i].name + "Contains Tag: " + tag.name + ", add to List");
+                            //Debug.Log(availableMetaObjectCollectionList.list[i].name + "Contains Tag: " + tag.name + ", add to List");
 
                             realityMetaObjectCollectionList.Add(availableMetaObjectCollectionList.list[i]);
                         }
                         else
                         {
-                            Debug.Log(availableMetaObjectCollectionList.list[i].name + "Do not Contains Tag: " + tag.name + "");
+                            //Debug.Log(availableMetaObjectCollectionList.list[i].name + "Do not Contains Tag: " + tag.name + "");
                         }
                     }
                 }

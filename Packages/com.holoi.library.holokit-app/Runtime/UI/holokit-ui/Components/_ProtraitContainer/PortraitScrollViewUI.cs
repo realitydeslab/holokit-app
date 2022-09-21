@@ -43,7 +43,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         void ClearPreviousGenerativeContent()
         {
-            Debug.Log("update content!");
+            //Debug.Log("update content!");
             // clear all gameobject
             var tempList = new List<Transform>();
             for (int i = 0; i < _content.childCount; i++)

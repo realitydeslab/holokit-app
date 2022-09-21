@@ -14,7 +14,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("OnBeginDrag");
+        //Debug.Log("OnBeginDrag");
         if(GetComponent<Button>()) GetComponent<Button>().enabled = false;
         if (scorllRect != null)
         {
@@ -29,7 +29,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("OnDrag");
+        //Debug.Log("OnDrag");
 
         if (scorllRect != null)
         {
@@ -47,7 +47,7 @@ namespace Holoi.Library.HoloKitApp.UI
         if (GetComponent<Button>()) GetComponent<Button>().enabled = true;
 
 
-        Debug.Log("OnEndDrag");
+        //Debug.Log("OnEndDrag");
         if (scorllRect != null)
         {
             scorllRect.OnEndDrag(eventData);
@@ -60,15 +60,15 @@ namespace Holoi.Library.HoloKitApp.UI
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown");
+        //Debug.Log("OnPointerDown");
     }
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("OnPointerUp");
+        //Debug.Log("OnPointerUp");
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("OnPointerClick");
+        //Debug.Log("OnPointerClick");
     }
 }
 }

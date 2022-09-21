@@ -21,7 +21,7 @@ namespace Holoi.Library.HoloKitApp.UI
             UITool.GetOrAddComponentInChildren<Button>("PlayButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
-                Debug.Log("PlayButton is clicked.");
+                //Debug.Log("PlayButton is clicked.");
 
                 RealityDetailUIPanel realityDetailUI = PanelManager.Instance.GetActivePanel().UITool.GetOrAddComponent<RealityDetailUIPanel>();
 

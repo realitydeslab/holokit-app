@@ -40,7 +40,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public virtual void OnPause()
         {
-            Debug.Log($"{UIType.Name} panel is paused");
+            //Debug.Log($"{UIType.Name} panel is paused");
             if (UITool == null)
             {
                 Debug.LogError($"{UIType.Name}: not found UITool");
@@ -75,7 +75,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public virtual void OnResume()
         {
-            Debug.Log($"{UIType.Name} panel is resume");
+            //Debug.Log($"{UIType.Name} panel is resume");
 
             if (UITool == null)
             {
@@ -95,7 +95,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public virtual void OnClose()
         {
-            Debug.Log($"{UIType.Name} close");
+            //Debug.Log($"{UIType.Name} close");
             UIManager.DestroyUI(UIType);
         }
     }

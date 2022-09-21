@@ -61,13 +61,13 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Update()
         {
-            Debug.Log($"_scrollBarObjectCollection {_scrollBarObjectCollection.value} ");
-            Debug.Log($"_scrollBarAvatarCollection {_scrollBarAvatarCollection.value} ");
+            //Debug.Log($"_scrollBarObjectCollection {_scrollBarObjectCollection.value} ");
+            //Debug.Log($"_scrollBarAvatarCollection {_scrollBarAvatarCollection.value} ");
         }
 
         public void SetUIInfo()
         {
-            Debug.Log("Set Option Page UI Info");
+            //Debug.Log("Set Option Page UI Info");
             if (realityMetaObjectCollections.Count > 0)
             {
                 _objectCount = realityMetaObjectCollections.Count;
@@ -158,7 +158,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 var selectedObject = metaObject;
                 _objectDefaultIndex = GetIndex(selectedObject);
                 _scrollBarObjectCollection.value = ScrollBarIndexToValue(_objectDefaultIndex, _objectCount);
-                Debug.Log($"_scrollBarObjectCollection.value = {_scrollBarObjectCollection.value}");
+                //Debug.Log($"_scrollBarObjectCollection.value = {_scrollBarObjectCollection.value}");
 
             }
             else
@@ -174,7 +174,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 var selectedAvatar = metaAvatar;
                 _avatarDefaultIndex = GetIndex(selectedAvatar);
                 _scrollBarAvatarCollection.value = ScrollBarIndexToValue(_avatarDefaultIndex, _avatarCount);
-                Debug.Log($"_scrollBarAvatarCollection.value = {_scrollBarAvatarCollection.value}");
+                //Debug.Log($"_scrollBarAvatarCollection.value = {_scrollBarAvatarCollection.value}");
 
             }
             else
@@ -195,7 +195,7 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 value = 0;
             }
-            Debug.Log($"index to value: {value}");
+            //Debug.Log($"index to value: {value}");
             return value;
         }
 
@@ -207,7 +207,7 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 if (metaItem == collection.metaObjects[i])
                 {
-                    Debug.Log($"selected object is the {i}");
+                    //Debug.Log($"selected object is the {i}");
                     return i;
                 }
             }
@@ -223,7 +223,7 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 if (metaItem == collection.metaAvatars[i])
                 {
-                    Debug.Log($"selected avatar is the {i}");
+                    //Debug.Log($"selected avatar is the {i}");
 
                     return i;
                 }

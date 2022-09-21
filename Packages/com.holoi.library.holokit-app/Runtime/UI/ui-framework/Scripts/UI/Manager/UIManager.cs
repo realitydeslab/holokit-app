@@ -46,9 +46,9 @@ namespace Holoi.Library.HoloKitApp.UI
                 //return _dicUI[type];
             }
 
-            Debug.Log("create panel ui go:");
+            //Debug.Log("create panel ui go:");
             GameObject ui = GameObject.Instantiate(Resources.Load<GameObject>(type.Path), parent.transform);
-            Debug.Log("create panel ui go done!");
+            //Debug.Log("create panel ui go done!");
             ui.name = type.Name;
             _dicUI.Add(type, ui);
             return ui;
@@ -58,7 +58,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             if (_dicUI.ContainsKey(type))
             {
-                Debug.Log($"delete dic with {type.Name}");
+                //Debug.Log($"delete dic with {type.Name}");
                 GameObject.Destroy(_dicUI[type]);
                 _dicUI.Remove(type);
             }

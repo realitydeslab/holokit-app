@@ -34,7 +34,7 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
         objectCount = count;
         ClearLastContent(transform);
 
-        Debug.Log("slidingbar count: " + objectCount);
+        //Debug.Log("slidingbar count: " + objectCount);
 
         float firstDotPosOffsetX = 0;
         float paddingCount = 0;
@@ -52,7 +52,7 @@ public class ScrollBarSlidingAreaStyle : MonoBehaviour
 
         for (int i = 0; i < objectCount; i++)
         {
-            Debug.Log("create sliding bar, parent: " + transform.parent.name);
+            //Debug.Log("create sliding bar, parent: " + transform.parent.name);
             var go = Instantiate(_slidingStylePrefab, transform);
             go.transform.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(firstDotPosOffsetX + (_spacing * i), _offsetY, 0);
 

@@ -16,7 +16,7 @@ namespace Holoi.Library.HoloKitApp.UI
             UITool.GetOrAddComponentInChildren<Button>("BackButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
-                Debug.Log("Optional BackButton is clicked.");
+                //Debug.Log("Optional BackButton is clicked.");
                 PanelManager.Pop();
             });
 
