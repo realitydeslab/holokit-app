@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Holoi.Library.Permissions;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -14,21 +15,26 @@ namespace Holoi.Library.HoloKitApp
 
     public static class HoloKitAppPermissionsManager
     {
-        public static bool AreMandatoryPermissionsGranted()
+        public static bool MandatoryPermissionsGranted()
         {
-            if (PermissionsAPI.GetCameraPermissionStatus() != CameraPermissionStatus.Granted)
+            if (HoloKitHelper.IsEditor)
+            {
+                return true;
+            }
+
+            if (GetCameraPermissionStatus() != HoloKitAppPermissionStatus.Granted)
             {
                 return false;
             }
-            if (PermissionsAPI.GetMicrophonePermissionStatus() != MicrophonePermissionStatus.Granted)
+            if (GetMicrophonePermissionStatus() != HoloKitAppPermissionStatus.Granted)
             {
                 return false;
             }
-            if (PermissionsAPI.GetPhotoLibraryAddPermissionStatus() != PhotoLibraryPermissionStatus.Granted)
+            if (GetPhotoLibraryAddPermissionStatus() != HoloKitAppPermissionStatus.Granted)
             {
                 return false;
             }
-            if (PermissionsAPI.GetLocationPermissionStatus() != LocationPermissionStatus.AuthorizedWhenInUse)
+            if (GetLocationPermissionStatus() != HoloKitAppPermissionStatus.Granted)
             {
                 return false;
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using Holoi.Library.Permissions;
 
 /// <summary>
 /// HomePage displaly all realities and the entry to settings
@@ -14,147 +15,236 @@ namespace Holoi.Library.HoloKitApp.UI
         static readonly string _path = "Prefabs/UI/Panels/PermissionPanel";
         public PermissionPanel() : base(new UIType(_path)) { }
 
+        private Button _cameraButton;
+
+        private Button _microphoneButton;
+
+        private Button _photoButton;
+
+        private Button _locationButton;
+
+        private Button _networkButton;
+
+        private Button _notificationButton;
+
+        private Button _doneButton;
+
         public override void OnOpen()
         {
-            var cameraButton = UITool.GetOrAddComponentInChildren<Button>("CameraButton");
-            cameraButton.onClick.AddListener(() =>
+            PermissionsAPI.OnRequestCameraPermissionCompleted += OnCameraPermissionStatusUpdated;
+            PermissionsAPI.OnRequestMicrophonePermissionCompleted += OnMicrophonePermissionStatusUpdated;
+            PermissionsAPI.OnRequestPhotoLibraryAddPermissionCompleted += OnPhotoLibraryAddPermissionStatusUpdate;
+            PermissionsAPI.OnLocationPermissionStatusChanged += OnLocationPermissionStatusUpdated;
+
+            _cameraButton = UITool.GetOrAddComponentInChildren<Button>("CameraButton");
+            _microphoneButton = UITool.GetOrAddComponentInChildren<Button>("MicrophoneButton");
+            _photoButton = UITool.GetOrAddComponentInChildren<Button>("PhotoButton");
+            _locationButton = UITool.GetOrAddComponentInChildren<Button>("LocationButton");
+            _networkButton = UITool.GetOrAddComponentInChildren<Button>("NetworkButton");
+            _notificationButton = UITool.GetOrAddComponentInChildren<Button>("NotificationButton");
+            _doneButton = UITool.GetOrAddComponentInChildren<Button>("DoneButton");
+
+            UpdateAllPermissionButtons();
+        }
+
+        public override void OnClose()
+        {
+            base.OnClose();
+
+            PermissionsAPI.OnRequestCameraPermissionCompleted -= OnCameraPermissionStatusUpdated;
+            PermissionsAPI.OnRequestMicrophonePermissionCompleted -= OnMicrophonePermissionStatusUpdated;
+            PermissionsAPI.OnRequestPhotoLibraryAddPermissionCompleted -= OnPhotoLibraryAddPermissionStatusUpdate;
+            PermissionsAPI.OnLocationPermissionStatusChanged -= OnLocationPermissionStatusUpdated;
+        }
+
+        public void UpdateAllPermissionButtons()
+        {
+            Debug.Log("[Permissions] UpdateAllPermissionButtons");
+            HoloKitAppPermissionStatus cameraPermissionStatus = HoloKitAppPermissionsManager.GetCameraPermissionStatus();
+            HoloKitAppPermissionStatus microphonePermissionStatus = HoloKitAppPermissionsManager.GetMicrophonePermissionStatus();
+            HoloKitAppPermissionStatus photoLibraryAddPermissionStatus = HoloKitAppPermissionsManager.GetPhotoLibraryAddPermissionStatus();
+            HoloKitAppPermissionStatus locationPermissionStatus = HoloKitAppPermissionsManager.GetLocationPermissionStatus();
+            Debug.Log($"[CameraPermission] {cameraPermissionStatus}");
+            Debug.Log($"[Microphone] {microphonePermissionStatus}");
+            Debug.Log($"[Photo] {photoLibraryAddPermissionStatus}");
+            Debug.Log($"[Location] {locationPermissionStatus}");
+
+            UpdateAllPermissionButtonsVisual(cameraPermissionStatus, microphonePermissionStatus, photoLibraryAddPermissionStatus, locationPermissionStatus);
+            UpdateAllPermissionButtonsFunction(cameraPermissionStatus, microphonePermissionStatus, photoLibraryAddPermissionStatus, locationPermissionStatus);
+        }
+
+        private void UpdateAllPermissionButtonsVisual(HoloKitAppPermissionStatus cameraPermissionStatus,
+                                           HoloKitAppPermissionStatus microphonePermissionStatus,
+                                           HoloKitAppPermissionStatus photoLibraryAddPermissionStatus,
+                                           HoloKitAppPermissionStatus locationPermissionStatus)
+        {
+            if (cameraPermissionStatus == HoloKitAppPermissionStatus.Granted)
             {
-                // yc todo:
-                //if (cameraButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
-                //{
-                //    cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
-                //}
-                //else
-                //{
-                //    cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
-                //}
-            });
-
-            var microphoneButton = UITool.GetOrAddComponentInChildren<Button>("MicrophoneButton");
-            microphoneButton.onClick.AddListener(() =>
+                Debug.Log("Camera checked");
+                _cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
+            }
+            else
             {
-                // yc todo:
-                //if (microphoneButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
-                //{
-                //    microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
-                //}
-                //else
-                //{
-                //    microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
-                //}
-            });
+                _cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+            }
 
-            var photoButton = UITool.GetOrAddComponentInChildren<Button>("PhotoButton");
-            photoButton.onClick.AddListener(() =>
+            if (microphonePermissionStatus == HoloKitAppPermissionStatus.Granted)
             {
-                // yc todo:
-                //if (photoButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
-                //{
-                //    photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
-                //}
-                //else
-                //{
-                //    photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
-                //}
-            });
-
-            var locationButton = UITool.GetOrAddComponentInChildren<Button>("LocationButton");
-            locationButton.onClick.AddListener(() =>
+                _microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
+            }
+            else
             {
-                // yc todo:
-                //if (LocationButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.State.Checked)
-                //{
-                //    LocationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Uncheck;
-                //}
-                //else
-                //{
-                //    LocationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.State.Checked;
-                //}
-            });
+                _microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+            }
 
-            var NetworkButton = UITool.GetOrAddComponentInChildren<Button>("NetworkButton");
-            NetworkButton.onClick.AddListener(() =>
+            if (photoLibraryAddPermissionStatus == HoloKitAppPermissionStatus.Granted)
             {
-                if (NetworkButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.GoOnState.Checked)
-                {
-                    NetworkButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
-                }
-                else
-                {
-                    NetworkButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
-                }
-            });
-
-            var NotificationButton = UITool.GetOrAddComponentInChildren<Button>("NotificationButton");
-            NotificationButton.onClick.AddListener(() =>
+                _photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
+            }
+            else
             {
-                if (NotificationButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.GoOnState.Checked)
-                {
-                    NotificationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
-                }
-                else
-                {
-                    NotificationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
-                }
-            });
+                _photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+            }
 
-            var DoneButton = UITool.GetOrAddComponentInChildren<Button>("DoneButton");
-            DoneButton.onClick.AddListener(() =>
+            if (locationPermissionStatus == HoloKitAppPermissionStatus.Granted)
             {
-                if (DoneButton.GetComponent<FlexibleUIButton>().state == FlexibleUIButton.State.Active)
-                {
-                    DoneButton.GetComponent<FlexibleUIButton>().state = FlexibleUIButton.State.Inactive;
-                }
-                else
-                {
-                    DoneButton.GetComponent<FlexibleUIButton>().state = FlexibleUIButton.State.Active;
-                }
-
-                var panel = new SignInPanel();
-                PanelManager.Push(panel);
-            });
-
-
-            void UpdateAllPermisionButtons()
+                _locationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
+            }
+            else
             {
-                // yc todo:
-                if (true)
-                {
-                    cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
-                }
-                else
-                {
-                    cameraButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
-                }
+                _locationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+            }
 
-                if (true)
-                {
-                    microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
-                }
-                else
-                {
-                    microphoneButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
-                }
-
-                if (true)
-                {
-                    photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
-                }
-                else
-                {
-                    photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
-                }
-
-                if (true)
-                {
-                    locationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
-                }
-                else
-                {
-                    locationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
-                }
+            if (cameraPermissionStatus == HoloKitAppPermissionStatus.Granted &&
+                microphonePermissionStatus == HoloKitAppPermissionStatus.Granted &&
+                photoLibraryAddPermissionStatus == HoloKitAppPermissionStatus.Granted &&
+                locationPermissionStatus == HoloKitAppPermissionStatus.Granted)
+            {
+                _doneButton.GetComponent<FlexibleUIButton>().state = FlexibleUIButton.State.Active;
+            }
+            else
+            {
+                _doneButton.GetComponent<FlexibleUIButton>().state = FlexibleUIButton.State.Inactive;
             }
         }
 
+        private void UpdateAllPermissionButtonsFunction(HoloKitAppPermissionStatus cameraPermissionStatus,
+                                                        HoloKitAppPermissionStatus microphonePermissionStatus,
+                                                        HoloKitAppPermissionStatus photoLibraryAddPermissionStatus,
+                                                        HoloKitAppPermissionStatus locationPermissionStatus)
+        {
+            _cameraButton.onClick.AddListener(() =>
+            {
+                switch (cameraPermissionStatus)
+                {
+                    case HoloKitAppPermissionStatus.NotDetermined:
+                        PermissionsAPI.RequestCameraPermission();
+                        break;
+                    case HoloKitAppPermissionStatus.Denied:
+                        PermissionsAPI.OpenAppSettings();
+                        break;
+                    case HoloKitAppPermissionStatus.Granted:
+                        break;
+                }
+            });
+
+            _microphoneButton.onClick.AddListener(() =>
+            {
+                switch (microphonePermissionStatus)
+                {
+                    case HoloKitAppPermissionStatus.NotDetermined:
+                        PermissionsAPI.RequestMicrophonePermission();
+                        break;
+                    case HoloKitAppPermissionStatus.Denied:
+                        PermissionsAPI.OpenAppSettings();
+                        break;
+                    case HoloKitAppPermissionStatus.Granted:
+                        break;
+                }
+            });
+
+            _photoButton.onClick.AddListener(() =>
+            {
+                switch (photoLibraryAddPermissionStatus)
+                {
+                    case HoloKitAppPermissionStatus.NotDetermined:
+                        PermissionsAPI.RequestPhotoLibraryAddPermission();
+                        break;
+                    case HoloKitAppPermissionStatus.Denied:
+                        PermissionsAPI.OpenAppSettings();
+                        break;
+                    case HoloKitAppPermissionStatus.Granted:
+                        break;
+                }
+            });
+
+            _locationButton.onClick.AddListener(() =>
+            {
+                switch (locationPermissionStatus)
+                {
+                    case HoloKitAppPermissionStatus.NotDetermined:
+                        PermissionsAPI.RequestLocationWhenInUsePermission();
+                        break;
+                    case HoloKitAppPermissionStatus.Denied:
+                        PermissionsAPI.OpenAppSettings();
+                        break;
+                    case HoloKitAppPermissionStatus.Granted:
+                        break;
+                }
+            });
+
+            //_networkButton.onClick.AddListener(() =>
+            //{
+            //    if (_networkButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.GoOnState.Checked)
+            //    {
+            //        _networkButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+            //    }
+            //    else
+            //    {
+            //        _networkButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
+            //    }
+            //});
+
+            //_notificationButton.onClick.AddListener(() =>
+            //{
+            //    if (_notificationButton.GetComponent<FlexibleUIPermissionButton>().state == FlexibleUIPermissionButton.GoOnState.Checked)
+            //    {
+            //        _notificationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+            //    }
+            //    else
+            //    {
+            //        _notificationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
+            //    }
+            //});
+
+            _doneButton.onClick.AddListener(() =>
+            {
+                if (_doneButton.GetComponent<FlexibleUIButton>().state == FlexibleUIButton.State.Active)
+                {
+                    var panel = new SignInPanel();
+                    PanelManager.Push(panel);
+                }
+            });
+        }
+
+        private void OnCameraPermissionStatusUpdated(bool granted)
+        {
+            UpdateAllPermissionButtons();
+        }
+
+        private void OnMicrophonePermissionStatusUpdated(bool granted)
+        {
+            UpdateAllPermissionButtons();
+        }
+
+        private void OnPhotoLibraryAddPermissionStatusUpdate(PhotoLibraryPermissionStatus status)
+        {
+            UpdateAllPermissionButtons();
+        }
+
+        private void OnLocationPermissionStatusUpdated(LocationPermissionStatus status)
+        {
+            UpdateAllPermissionButtons();
+        }
     }
 }

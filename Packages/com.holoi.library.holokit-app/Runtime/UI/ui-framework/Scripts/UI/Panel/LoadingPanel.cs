@@ -18,7 +18,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             UITool.GetOrAddComponentInChildren<Button>("DebugButton").onClick.AddListener(() =>
             {
-                if (HoloKitAppPermissionsManager.AreMandatoryPermissionsGranted())
+                if (HoloKitAppPermissionsManager.MandatoryPermissionsGranted())
                 {
                     var panel = new StartPanel();
                     PanelManager.Push(panel);

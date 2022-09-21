@@ -7,55 +7,13 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public class PermissionUIPanel : MonoBehaviour
     {
-        [SerializeField] Button _camButton;
-        [SerializeField] Button _microButton;
-        [SerializeField] Button _photoButton;
-        [SerializeField] Button _locationButton;
-
-        private void Start()
+        private void OnApplicationPause(bool pause)
         {
-            // yc todo:
-            _camButton.onClick.AddListener(() => {
-                // todo:
-            });
-        }
-
-        void UpdateAllPermisionButtons()
-        {
-            if (true)
+            Debug.Log($"OnApplicationQuit {pause}");
+            if (!pause)
             {
-                _camButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
-            }
-            else
-            {
-                _camButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
-            }
-
-            if (true)
-            {
-                _microButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
-            }
-            else
-            {
-                _microButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
-            }
-
-            if (true)
-            {
-                _photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
-            }
-            else
-            {
-                _photoButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
-            }
-
-            if (true)
-            {
-                _locationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Checked;
-            }
-            else
-            {
-                _locationButton.GetComponent<FlexibleUIPermissionButton>().state = FlexibleUIPermissionButton.GoOnState.Uncheck;
+                var permissionPanel = PanelManager.Instance.GetActivePanel() as PermissionPanel;
+                permissionPanel.UpdateAllPermissionButtons();
             }
         }
     }
