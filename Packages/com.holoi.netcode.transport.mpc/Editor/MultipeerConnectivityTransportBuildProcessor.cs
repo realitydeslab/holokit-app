@@ -14,7 +14,7 @@ namespace Netcode.Transports.MultipeerConnectivity.Editor
             {
                 // For info.plist
                 string plistPath = buildPath + "/Info.plist";
-                PlistDocument plist = new PlistDocument();
+                PlistDocument plist = new();
                 plist.ReadFromFile(plistPath);
                 PlistElementDict rootDict = plist.root;
 
