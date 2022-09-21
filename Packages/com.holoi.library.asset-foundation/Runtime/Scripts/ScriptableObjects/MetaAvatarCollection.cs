@@ -8,6 +8,8 @@ namespace Holoi.AssetFoundation
     [CreateAssetMenu(menuName = "ScriptableObjects/MetaAvatarCollection")]
     public class MetaAvatarCollection : ScriptableObject
     {
+        public string id;
+
         public List<MetaAvatar> metaAvatars;
 
         public MetaAvatar coverMetaAvatar;

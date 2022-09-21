@@ -12,12 +12,14 @@ namespace Holoi.Reality.MOFATheTraining
 
         public void EnterReality()
         {
-            HoloKitApp.Instance.EnterRealityAsHost(Reality);
+            HoloKitApp.Instance.CurrentReality = Reality;
+            HoloKitApp.Instance.EnterRealityAsHost();
         }
 
         public void JoinReality()
         {
-            HoloKitApp.Instance.JoinRealityAsSpectator(Reality);
+            HoloKitApp.Instance.CurrentReality = Reality;
+            HoloKitApp.Instance.JoinRealityAsSpectator();
         }
     }
 }

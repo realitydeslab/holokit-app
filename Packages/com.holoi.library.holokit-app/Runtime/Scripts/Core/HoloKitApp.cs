@@ -19,6 +19,8 @@ namespace Holoi.Library.HoloKitApp
 
         public NetworkManager NetworkManagerPrefab;
 
+        public HoloKitAppLocalPlayerPreferences LocalPlayerPreferences;
+
         [HideInInspector] public Reality CurrentReality;
 
         public bool IsHost => _isHost;
@@ -46,18 +48,37 @@ namespace Holoi.Library.HoloKitApp
             DontDestroyOnLoad(gameObject);
         }
 
-        public void EnterRealityAsHost(Reality reality)
+        private void Start()
         {
-            CurrentReality = reality;
-            _isHost = true;
-            SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+            LocalPlayerPreferences.Load();
+            Screen.orientation = ScreenOrientation.Portrait;
         }
 
-        public void JoinRealityAsSpectator(Reality reality)
+        private void OnApplicationQuit()
         {
-            CurrentReality = reality;
+            LocalPlayerPreferences.Save();
+        }
+
+        public void EnterRealityAsHost()
+        {
+            if (CurrentReality == null)
+            {
+                Debug.Log("[HoloKitApp] Failed to enter reality since CurrentReality is null");
+                return;
+            }
+            _isHost = true;
+            //SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+        }
+
+        public void JoinRealityAsSpectator()
+        {
+            if (CurrentReality == null)
+            {
+                Debug.Log("[HoloKitApp] Failed to join reality since CurrentReality is null");
+                return;
+            }
             _isHost = false;
-            SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+            //SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
         }
 
         public void InitializeNetworkManager()

@@ -25,16 +25,16 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.Awake();
 
-            StARARPanel.OnTriggered += OnTriggered;
-            StARARPanel.OnTriggered2 += OnTriggered2;
+            HoloKitAppUIEventsReactor.OnTriggered += OnTriggered;
+            HoloKitAppUIEventsReactor.OnBoosted += OnBoosted;
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
 
-            StARARPanel.OnTriggered -= OnTriggered;
-            StARARPanel.OnTriggered2 -= OnTriggered2;
+            HoloKitAppUIEventsReactor.OnTriggered -= OnTriggered;
+            HoloKitAppUIEventsReactor.OnBoosted -= OnBoosted;
         }
 
         public override void OnNetworkSpawn()
@@ -52,7 +52,7 @@ namespace Holoi.Reality.MOFATheTraining
 
             if (IsServer)
             {
-                var placementIndicatorInitialPos = HoloKitHelper.IsRuntime ? Vector3.zero : new Vector3(0f, 0f, 5f);
+                var placementIndicatorInitialPos = HoloKitHelper.IsRuntime ? Vector3.zero : new Vector3(0f, -1f, 5f);
                 _placementIndicator = Instantiate(PlacementIndicatorPrefab, placementIndicatorInitialPos, Quaternion.identity);
                 _arRaycastManager = HoloKitCamera.Instance.GetComponentInParent<ARRaycastManager>();
             }
@@ -114,7 +114,6 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 if (SpawnMofaAI())
                 {
-                    SpawnMofaFightingPanel();
                     StartCoroutine(StartSingleRound());
                 }
                 return;
@@ -133,7 +132,7 @@ namespace Holoi.Reality.MOFATheTraining
             }
         }
 
-        private void OnTriggered2()
+        private void OnBoosted()
         {
             if (Phase.Value == MofaPhase.Fighting)
             {

@@ -7,6 +7,9 @@ using System;
 
 namespace Holoi.Mofa.Base
 {
+    [RequireComponent(typeof(NetworkObject))]
+    [RequireComponent(typeof(AudioSource))]
+    [RequireComponent(typeof(Collider))]
     public class AttackSpell : NetworkBehaviour
     {
         public bool HitOnce = true;

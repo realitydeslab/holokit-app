@@ -7,6 +7,8 @@ namespace Holoi.AssetFoundation
     [CreateAssetMenu(menuName = "ScriptableObjects/MetaObjectCollection")]
     public class MetaObjectCollection : ScriptableObject
     {
+        public string id;
+
         public List<MetaObject> metaObjects;
 
         public MetaObject coverMetaObject;

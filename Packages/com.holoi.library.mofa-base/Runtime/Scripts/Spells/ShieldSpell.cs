@@ -6,14 +6,23 @@ using System;
 
 namespace Holoi.Mofa.Base
 {
+    [RequireComponent(typeof(NetworkObject))]
+    [RequireComponent(typeof(AudioSource))]
+    [RequireComponent(typeof(Collider))]
     public class ShieldSpell : NetworkBehaviour, IDamageable
     {
         // How many times this shield can block attack
         public int MaxHealth;
 
+        [SerializeField] private AudioClip _beingHitSound;
+
+        [SerializeField] private AudioClip _beingDestroyedSound;
+
         [SerializeField] private float _destroyDelay;
 
         private NetworkVariable<int> _currentHealth;
+
+        private AudioSource _audioSource;
 
         public event Action OnBeingHit;
 
@@ -22,6 +31,7 @@ namespace Holoi.Mofa.Base
         private void Awake()
         {
             _currentHealth = new(MaxHealth, NetworkVariableReadPermission.Everyone);
+            _audioSource = GetComponent<AudioSource>();
         }
 
         public override void OnNetworkSpawn()
@@ -51,12 +61,32 @@ namespace Holoi.Mofa.Base
         private void OnBeingHitClientRpc()
         {
             OnBeingHit?.Invoke();
+            PlayBeingHitSound();
         }
 
         [ClientRpc]
         private void OnBeingDestroyedClientRpc()
         {
             OnBeingDestroyed?.Invoke();
+            PlayBeingDestroyedSound();
+        }
+
+        private void PlayBeingHitSound()
+        {
+            if (_beingHitSound != null)
+            {
+                _audioSource.clip = _beingHitSound;
+                _audioSource.Play();
+            }
+        }
+
+        private void PlayBeingDestroyedSound()
+        {
+            if (_beingDestroyedSound != null)
+            {
+                _audioSource.clip = _beingDestroyedSound;
+                _audioSource.Play();
+            }
         }
     }
 }

@@ -6,6 +6,8 @@ using System;
 
 namespace Holoi.Mofa.Base
 {
+    [RequireComponent(typeof(NetworkObject))]
+    [RequireComponent(typeof(AudioSource))]
     public class SpellLifetimeController : NetworkBehaviour
     {
         public float Lifetime;

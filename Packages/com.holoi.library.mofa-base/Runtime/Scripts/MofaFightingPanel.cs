@@ -9,13 +9,10 @@ namespace Holoi.Mofa.Base
     {
         public GameObject Scores;
 
+        public GameObject Time;
+
         public GameObject Reticle;
 
         public GameObject Status;
-
-        private void Awake()
-        {
-            transform.SetParent(HoloKitCamera.Instance.CenterEyePose);
-        }
     }
 }

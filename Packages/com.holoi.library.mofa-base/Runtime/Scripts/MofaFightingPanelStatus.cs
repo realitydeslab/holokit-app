@@ -45,8 +45,8 @@ namespace Holoi.Mofa.Base
 
         private void Update()
         {
-            _attackBar.SetFloat("Loading", _mofaRealityManager.LocalPlayerSpellManager.BasicSpellChargePercentage);
-            _ultimateBar.SetFloat("Loading", _mofaRealityManager.LocalPlayerSpellManager.SecondarySpellChargePercentage);
+            //_attackBar.SetFloat("Loading", _mofaRealityManager.LocalPlayerSpellManager.BasicSpellChargePercentage);
+            //_ultimateBar.SetFloat("Loading", _mofaRealityManager.LocalPlayerSpellManager.SecondarySpellChargePercentage);
             // SIZHENGTODO: 更新充能
             // _mofaRealityManager.LocalPlayerSpellManager.SecondarySpellUseCount 此为二技能已经使用过的次数
             // _mofaRealityManager.LocalPlayerSpellManager.SecondarySpell.MaxUseCount 此为二技能的最大使用次数

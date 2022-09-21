@@ -11,24 +11,22 @@ namespace Holoi.Mofa.Base
         [Header("UI Elenments")]
         [SerializeField] TMPro.TMP_Text _yourScore;
         [SerializeField] TMPro.TMP_Text _enemyScore;
-        [SerializeField] TMPro.TMP_Text _gameTime;
-        float _timeCounter = 80;
-
-        private void Awake()
-        {
-            _mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-        }
 
         private void OnEnable()
         {
             MofaPlayer.OnScoreChanged += OnScoreChanged;
-            MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
+            RealityManager.OnRealityManagerSpawned += OnRealityManagerSpawned;
         }
 
         private void OnDisable()
         {
             MofaPlayer.OnScoreChanged -= OnScoreChanged;
-            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
+            RealityManager.OnRealityManagerSpawned -= OnRealityManagerSpawned;
+        }
+
+        private void OnRealityManagerSpawned(RealityManager realityManager)
+        {
+            _mofaRealityManager = realityManager as MofaBaseRealityManager;
         }
 
         private void OnScoreChanged()
@@ -52,28 +50,6 @@ namespace Holoi.Mofa.Base
             // SIZHENGTODO: 更新比分面板
             _yourScore.text = "" + blueTeamScore;
             _enemyScore.text = "" + redTeamScore;
-        }
-
-        private void OnPhaseChanged(MofaPhase mofaPhase)
-        {
-            if (mofaPhase == MofaPhase.Fighting)
-            {
-                // SIZHENGTODO: 计时开始，80s一局
-                _timeCounter = 80;
-            }
-        }
-
-        private void Update()
-        {
-            if(_timeCounter > 0)
-            {
-                _timeCounter -= Time.deltaTime;
-            }
-            else
-            {
-                _timeCounter = 0;
-            }
-            _gameTime.text = "" + Mathf.Ceil(_timeCounter);
         }
     }
 }

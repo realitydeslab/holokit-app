@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using Holoi.Library.HoloKitApp;
 using HoloKit;
+using Unity.Netcode;
 
 namespace Holoi.Mofa.Base
 {
@@ -157,7 +158,9 @@ namespace Holoi.Mofa.Base
             else
             {
                 _mofaRealityManager.SpawnSpellServerRpc(BasicSpell.Id,
-                    HoloKitCamera.Instance.CenterEyePose.position, HoloKitCamera.Instance.CenterEyePose.rotation);
+                    HoloKitCamera.Instance.CenterEyePose.position,
+                    HoloKitCamera.Instance.CenterEyePose.rotation,
+                    NetworkManager.Singleton.LocalClientId);
                 BasicSpellCharge -= BasicSpell.ChargeTime;
             }
         }
@@ -185,7 +188,9 @@ namespace Holoi.Mofa.Base
             else
             {
                 _mofaRealityManager.SpawnSpellServerRpc(SecondarySpell.Id,
-                    HoloKitCamera.Instance.CenterEyePose.position, HoloKitCamera.Instance.CenterEyePose.rotation);
+                    HoloKitCamera.Instance.CenterEyePose.position,
+                    HoloKitCamera.Instance.CenterEyePose.rotation,
+                    NetworkManager.Singleton.LocalClientId);
                 SecondarySpellCharge -= SecondarySpell.ChargeTime;
                 SecondarySpellUseCount++;
             }

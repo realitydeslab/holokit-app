@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -18,7 +19,7 @@ namespace Holoi.Library.HoloKitApp
 
         public static HoloKitAppLocalPlayerPreferencesData LoadLocalPlayerPreferences()
         {
-            if (File.Exists(s_savePath))
+            if (HoloKitHelper.IsRuntime && File.Exists(s_savePath))
             {
                 BinaryFormatter formatter = new();
                 FileStream stream = new(s_savePath, FileMode.Open);
