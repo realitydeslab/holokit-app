@@ -16,7 +16,7 @@ namespace Holoi.Library.HoloKitApp
 
         public static event Action<RealityManager> OnRealityManagerSpawned;
 
-        public static event Action OnScannedQRCode;
+        public static event Action OnFinishedScanningQRCode;
 
         protected virtual void Awake()
         {
@@ -47,7 +47,8 @@ namespace Holoi.Library.HoloKitApp
 
         private void StopScanningQRCode()
         {
-
+            var arTrackedImageManager = HoloKitCamera.Instance.GetComponentInParent<ARTrackedImageManager>();
+            arTrackedImageManager.enabled = false;
         }
     }
 }
