@@ -29,6 +29,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 Debug.Log( "now we are in: " + PanelManager.GetActivePanel().UIType.Name);
                 // now we should in ScreenArModePanel:
                 PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.@checked);
+                PanelManager.OnMarkChecked?.Invoke();
             });
 
             UITool.GetOrAddComponentInChildren<Button>("RescanButton").onClick.AddListener(() =>
@@ -42,8 +43,9 @@ namespace Holoi.Library.HoloKitApp.UI
 
                 // now we should in ScreenArShareQRPanel:
                 PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARShareQRUIPanel>().ClearConnectedDeviceUI();
-
                 UIManager.GetPanel("ScreenARModePanel").GetComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.waittingScanned);
+
+                PanelManager.OnStartedReScan?.Invoke();
             });
 
         }
