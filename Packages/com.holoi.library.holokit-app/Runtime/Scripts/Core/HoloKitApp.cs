@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
-using Netcode.Transports.MultipeerConnectivity;
 using System;
 using Holoi.AssetFoundation;
 using Unity.Netcode.Transports.UNET;
@@ -53,7 +52,10 @@ namespace Holoi.Library.HoloKitApp
         {
             LocalPlayerPreferences.Load();
             Screen.orientation = ScreenOrientation.Portrait;
-            PermissionsAPI.Initialize();
+            if (HoloKitHelper.IsRuntime)
+            {
+                PermissionsAPI.Initialize();
+            }
         }
 
         private void OnApplicationQuit()
@@ -176,22 +178,6 @@ namespace Holoi.Library.HoloKitApp
         public void SetRealityManager(RealityManager realityManager)
         {
             _realityManager = realityManager;
-        }
-
-        public void StartAdvertising()
-        {
-            if (HoloKitHelper.IsRuntime)
-            {
-                MultipeerConnectivityTransport.StartAdvertising();
-            }
-        }
-
-        public void StopAdvertising()
-        {
-            if (HoloKitHelper.IsRuntime)
-            {
-                MultipeerConnectivityTransport.StopAdvertising();
-            }
         }
 
         private void OnClientConnected(ulong clientId)

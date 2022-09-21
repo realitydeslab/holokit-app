@@ -5,6 +5,7 @@ using Unity.Netcode;
 using System;
 using HoloKit;
 using UnityEngine.XR.ARFoundation;
+using Netcode.Transports.MultipeerConnectivity;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -13,6 +14,8 @@ namespace Holoi.Library.HoloKitApp
         public string SceneName;
 
         public List<GameObject> NetworkPrefabs;
+
+        private bool _isAdvertising;
 
         private Vector3 _lastImagePosition;
 
@@ -26,9 +29,17 @@ namespace Holoi.Library.HoloKitApp
 
         private const int ImageStabilizationFrameNum = 80;
 
+        private readonly Vector3 QRCodeToCameraOffset = new(-0.02f, 0.1f, 0.01f);
+
+        private NetworkVariable<Vector3> _hostCameraPosition = new(Vector3.zero, NetworkVariableReadPermission.Everyone);
+
+        private NetworkVariable<Quaternion> _hostCameraRotation = new(Quaternion.identity, NetworkVariableReadPermission.Everyone);
+
         public static event Action<RealityManager> OnRealityManagerSpawned;
 
         public static event Action OnFinishedScanningQRCode;
+
+        public static event Action OnQRCodeStabilizationFailed;
 
         protected virtual void Awake()
         {
@@ -51,6 +62,24 @@ namespace Holoi.Library.HoloKitApp
             StartScanningQRCode();
         }
 
+        public void StartAdvertising()
+        {
+            if (HoloKitHelper.IsRuntime)
+            {
+                _isAdvertising = true;
+                MultipeerConnectivityTransport.StartAdvertising();
+            }
+        }
+
+        public void StopAdvertising()
+        {
+            if (HoloKitHelper.IsRuntime)
+            {
+                _isAdvertising = false;
+                MultipeerConnectivityTransport.StopAdvertising();
+            }
+        }
+
         private void StartScanningQRCode()
         {
             var arTrackedImageManager = HoloKitCamera.Instance.GetComponentInParent<ARTrackedImageManager>(true);
@@ -63,6 +92,7 @@ namespace Holoi.Library.HoloKitApp
         {
             foreach (var image in args.added)
             {
+                Debug.Log("[RealityManager] QRCode image added");
                 _imageStablizationFrameCount = 0;
             }
 
@@ -78,15 +108,24 @@ namespace Holoi.Library.HoloKitApp
                     Quaternion.Angle(image.transform.rotation, _lastImageRotation) < ImageStablizationRotationThreshold)
                 {
                     _imageStablizationFrameCount++;
-                    Debug.Log($"[RealityManager] image stablization frame count {_imageStablizationFrameCount}");
+                    //Debug.Log($"[RealityManager] image stablization frame count {_imageStablizationFrameCount}");
                     if (_imageStablizationFrameCount == ImageStabilizationFrameNum)
                     {
+                        Quaternion localHostCameraRotation = Quaternion.Euler(90f, 0f, 0f) * image.transform.rotation;
+                        Vector3 localHostCameraPosition = image.transform.position + localHostCameraRotation * QRCodeToCameraOffset;
 
+                        Quaternion originRotation = Quaternion.Inverse(_hostCameraRotation.Value) * localHostCameraRotation;
+                        Vector3 originPosition = localHostCameraPosition + originRotation * _hostCameraPosition.Value;
+                        HoloKitARSessionControllerAPI.ResetOrigin(originPosition, HoloKitAppUtils.GetHorizontalRotation(originRotation));
+                        StopScanningQRCode();
+                        OnFinishedScanningQRCode?.Invoke();
                     }
                 }
                 else
                 {
                     _imageStablizationFrameCount = 0;
+                    Debug.Log("[RealityManager] QRCode stabilization failed");
+                    OnQRCodeStabilizationFailed?.Invoke();
                 }
             }
         }
@@ -98,6 +137,16 @@ namespace Holoi.Library.HoloKitApp
             arTrackedImageManager.enabled = false;
         }
 
-
+        protected virtual void FixedUpdate()
+        {
+            if (IsServer)
+            {
+                if (_isAdvertising)
+                {
+                    _hostCameraPosition.Value = HoloKitCamera.Instance.CenterEyePose.position;
+                    _hostCameraRotation.Value = HoloKitCamera.Instance.CenterEyePose.rotation;
+                }
+            }
+        }
     }
 }

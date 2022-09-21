@@ -52,12 +52,12 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnStartedSharingReality()
         {
-            HoloKitApp.Instance.StartAdvertising();
+            HoloKitApp.Instance.RealityManager.StartAdvertising();
         }
 
         private void OnStoppedSharingReality()
         {
-            HoloKitApp.Instance.StopAdvertising();
+            HoloKitApp.Instance.RealityManager.StopAdvertising();
         }
 
         private void OnTriggeredFunc()
