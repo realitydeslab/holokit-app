@@ -71,16 +71,16 @@ namespace Holoi.Library.HoloKitApp.UI
             });
 
             // debug for scanning -> check mark
-            UITool.GetOrAddComponentInChildren<Button>("CheckMarkButton").onClick.AddListener(() =>
-            {
-                // here we do onclick event of this button
-                Debug.Log("CheckMarkButton is clicked.");
+            //UITool.GetOrAddComponentInChildren<Button>("CheckMarkButton").onClick.AddListener(() =>
+            //{
+            //    // here we do onclick event of this button
+            //    Debug.Log("CheckMarkButton is clicked.");
 
-                GoToCheckTheMarkPanel();
-            });
+            //    GoToCheckTheMarkPanel();
+            //});
 
             // check mark event here
-            // HoloKitApp.Instance. 
+            RealityManager.OnFinishedScanningQRCode += GoToCheckTheMarkPanel;
         }
 
         public void GoToCheckTheMarkPanel()
@@ -88,6 +88,14 @@ namespace Holoi.Library.HoloKitApp.UI
             UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.checkingMark);
             var panel = new ScreenARCheckTheMarkPanel();
             PanelManager.Push(panel);
+        }
+
+        public override void OnClose()
+        {
+            base.OnClose();
+
+            RealityManager.OnFinishedScanningQRCode -= GoToCheckTheMarkPanel;
+
         }
     }
 }
