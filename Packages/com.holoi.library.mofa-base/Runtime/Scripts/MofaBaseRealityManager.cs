@@ -34,13 +34,15 @@ namespace Holoi.Mofa.Base
 
         public static event Action<MofaPhase> OnPhaseChanged;
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             LifeShield.OnDead += OnLifeShieldDead;
         }
 
         public override void OnDestroy()
         {
+            base.OnDestroy();
             LifeShield.OnDead -= OnLifeShieldDead;
         }
 

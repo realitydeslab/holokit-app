@@ -178,12 +178,18 @@ namespace Holoi.Library.HoloKitApp
 
         public void StartAdvertising()
         {
-            MultipeerConnectivityTransport.StartAdvertising();
+            if (HoloKitHelper.IsRuntime)
+            {
+                MultipeerConnectivityTransport.StartAdvertising();
+            }
         }
 
         public void StopAdvertising()
         {
-            MultipeerConnectivityTransport.StopAdvertising();
+            if (HoloKitHelper.IsRuntime)
+            {
+                MultipeerConnectivityTransport.StopAdvertising();
+            }
         }
 
         private void OnClientConnected(ulong clientId)

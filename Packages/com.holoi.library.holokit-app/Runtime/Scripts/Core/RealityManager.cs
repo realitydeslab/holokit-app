@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.Netcode;
 using System;
 using HoloKit;
+using UnityEngine.XR.ARFoundation;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -15,10 +16,38 @@ namespace Holoi.Library.HoloKitApp
 
         public static event Action<RealityManager> OnRealityManagerSpawned;
 
+        public static event Action OnScannedQRCode;
+
+        protected virtual void Awake()
+        {
+            HoloKitApp.Instance.OnConnectedAsSpectator += OnConnectedAsSpectator;
+        }
+
+        public override void OnDestroy()
+        {
+            HoloKitApp.Instance.OnConnectedAsSpectator -= OnConnectedAsSpectator;
+        }
+
         public override void OnNetworkSpawn()
         {
             HoloKitApp.Instance.SetRealityManager(this);
             OnRealityManagerSpawned?.Invoke(this);
+        }
+
+        private void OnConnectedAsSpectator()
+        {
+            StartScanningQRCode();
+        }
+
+        private void StartScanningQRCode()
+        {
+            var arTrackedImageManager = HoloKitCamera.Instance.GetComponentInParent<ARTrackedImageManager>(true);
+            arTrackedImageManager.enabled = true;
+        }
+
+        private void StopScanningQRCode()
+        {
+
         }
     }
 }
