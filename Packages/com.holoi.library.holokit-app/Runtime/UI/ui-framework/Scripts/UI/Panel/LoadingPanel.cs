@@ -18,8 +18,17 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             UITool.GetOrAddComponentInChildren<Button>("DebugButton").onClick.AddListener(() =>
             {
-                var panel = new PermissionPanel();
-                PanelManager.Push(panel);
+                // yc todo:
+                if (true)
+                {
+                    var panel = new StartPanel();
+                    PanelManager.Push(panel);
+                }
+                else
+                {
+                    var panel = new PermissionPanel();
+                    PanelManager.Push(panel);
+                }
             });
         }
 
