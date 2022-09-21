@@ -57,7 +57,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public virtual void OnPause(bool disablePanel)
         {
-            Debug.Log($"{UIType.Name} panel is paused");
+            //Debug.Log($"{UIType.Name} panel is paused");
             if (UITool == null)
             {
                 Debug.LogError($"{UIType.Name}: not found UITool");
@@ -100,4 +100,3 @@ namespace Holoi.Library.HoloKitApp.UI
         }
     }
 }
-
