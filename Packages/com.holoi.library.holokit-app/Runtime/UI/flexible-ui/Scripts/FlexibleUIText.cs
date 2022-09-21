@@ -18,7 +18,8 @@ namespace Holoi.Library.HoloKitApp.UI
             menu = 7,
             loading = 8,
             techTag = 9,
-            starUI = 10
+            starUI = 10,
+            mofaUI = 11
         }
 
         public enum Font
@@ -150,6 +151,17 @@ namespace Holoi.Library.HoloKitApp.UI
                             break;
                         case Font.Slanted:
                             SetText(color, SkinData.BoldSlanted, 30, 0f, 0f, 0f);
+                            break;
+                    }
+                    break;
+                case Type.mofaUI:
+                    switch (font)
+                    {
+                        case Font.Normal:
+                            SetText(color, SkinData.Bold, 39, 0f, 0f, 0f);
+                            break;
+                        case Font.Slanted:
+                            SetText(color, SkinData.BoldSlanted, 39, 0f, 0f, 0f);
                             break;
                     }
                     break;
