@@ -67,11 +67,6 @@ namespace Holoi.Library.HoloKitApp
         {
             HoloKitApp.Instance.SetRealityManager(this);
             OnRealityManagerSpawned?.Invoke(this);
-
-            if (!IsServer)
-            {
-                OnSpectatorJoinedServerRpc(SystemInfo.deviceName);
-            }
         }
 
         private void OnConnectedAsSpectator()
@@ -99,11 +94,14 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         private void OnSpectatorJoinedServerRpc(string spectatorDeviceName, ServerRpcParams serverRpcParams = default)
         {
-            _connectedSpectatorDevices.Add(serverRpcParams.Receive.SenderClientId, spectatorDeviceName);
-            UpdateSpectatorDeviceList();
+            if (!_connectedSpectatorDevices.ContainsKey(serverRpcParams.Receive.SenderClientId))
+            {
+                _connectedSpectatorDevices.Add(serverRpcParams.Receive.SenderClientId, spectatorDeviceName);
+                UpdateSpectatorDeviceList();
+            }           
         }
 
         private void OnSpectatorDisconnected(ulong clientId)
@@ -134,7 +132,7 @@ namespace Holoi.Library.HoloKitApp
             arTrackedImageManager.enabled = true;
         }
 
-        // TODO: Design a better localization algorithm
+        // AMBER TODO: Make a better localization algorithm
         private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args)
         {
             foreach (var image in args.added)
@@ -158,22 +156,23 @@ namespace Holoi.Library.HoloKitApp
                     //Debug.Log($"[RealityManager] image stablization frame count {_imageStablizationFrameCount}");
                     if (_imageStablizationFrameCount == ImageStabilizationFrameNum)
                     {
+                        Debug.Log("[RealityManager] QRCode stabilization succeeded");
                         Quaternion localHostCameraRotation = Quaternion.Euler(90f, 0f, 0f) * image.transform.rotation;
                         Vector3 localHostCameraPosition = image.transform.position + localHostCameraRotation * QRCodeToCameraOffset;
-
                         Quaternion originRotation = Quaternion.Inverse(_hostCameraRotation.Value) * localHostCameraRotation;
                         Vector3 originPosition = localHostCameraPosition + originRotation * _hostCameraPosition.Value;
                         HoloKitARSessionControllerAPI.ResetOrigin(originPosition, HoloKitAppUtils.GetHorizontalRotation(originRotation));
+
                         StopScanningQRCode();
                         OnFinishedScanningQRCode?.Invoke();
                         SpawnPhoneAlignmentMark();
-                        Debug.Log("[RealityManager] QRCode stabilization succeeded");
+                        OnSpectatorJoinedServerRpc(SystemInfo.deviceName);
                     }
                 }
                 else
                 {
-                    _imageStablizationFrameCount = 0;
                     Debug.Log("[RealityManager] QRCode stabilization failed");
+                    _imageStablizationFrameCount = 0;
                     OnQRCodeStabilizationFailed?.Invoke();
                 }
             }
@@ -195,6 +194,14 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
+        private void DestroyPhoneAlignmentMark()
+        {
+            if (_phoneAlignmentMark != null)
+            {
+                Destroy(_phoneAlignmentMark);
+            }
+        }
+
         protected virtual void FixedUpdate()
         {
             if (IsServer)
@@ -212,6 +219,17 @@ namespace Holoi.Library.HoloKitApp
                     _phoneAlignmentMark.transform.SetPositionAndRotation(_hostCameraPosition.Value, _hostCameraRotation.Value);
                 }
             }
+        }
+
+        public void CheckAlignmentMark()
+        {
+            DestroyPhoneAlignmentMark();
+        }
+
+        public void RescanQRCode()
+        {
+            DestroyPhoneAlignmentMark();
+            StartScanningQRCode();
         }
     }
 }

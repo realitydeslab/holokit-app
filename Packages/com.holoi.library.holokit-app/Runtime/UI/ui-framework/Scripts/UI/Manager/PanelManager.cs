@@ -52,9 +52,8 @@ namespace Holoi.Library.HoloKitApp.UI
         public static Action<AssetFoundation.Reality> OnEnteredRealityAsHost;
         public static Action<AssetFoundation.Reality> OnJoinedRealityAsSpectator;
 
-        public static Action OnMarkChecked;
-        public static Action OnStartedReScan;
-
+        public static Action OnAlignmentMarkChecked;
+        public static Action OnRescanQRCode;
 
         // star action
         public static Action OnStARTriggered;

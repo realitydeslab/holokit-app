@@ -22,6 +22,8 @@ namespace Holoi.Library.HoloKitApp
             UI.PanelManager.OnStartedRecording += OnStartedRecording;
             UI.PanelManager.OnStoppedRecording += OnStoppedRecording;
             UI.PanelManager.OnExitReality += OnExitReality;
+            UI.PanelManager.OnAlignmentMarkChecked += OnAlignmentMarkChecked;
+            UI.PanelManager.OnRescanQRCode += OnRescanQRCode;
         }
 
         private void OnDestroy()
@@ -34,6 +36,8 @@ namespace Holoi.Library.HoloKitApp
             UI.PanelManager.OnStartedRecording -= OnStartedRecording;
             UI.PanelManager.OnStoppedRecording -= OnStoppedRecording;
             UI.PanelManager.OnExitReality -= OnExitReality;
+            UI.PanelManager.OnAlignmentMarkChecked -= OnAlignmentMarkChecked;
+            UI.PanelManager.OnRescanQRCode -= OnRescanQRCode;
         }
 
         private void OnRenderModeChanged(HoloKitRenderMode renderMode)
@@ -86,6 +90,14 @@ namespace Holoi.Library.HoloKitApp
 
         }
 
+        private void OnAlignmentMarkChecked()
+        {
+            HoloKitApp.Instance.RealityManager.CheckAlignmentMark();
+        }
 
+        private void OnRescanQRCode()
+        {
+            HoloKitApp.Instance.RealityManager.RescanQRCode();
+        }
     }
 }
