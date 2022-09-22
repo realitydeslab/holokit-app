@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
+using Unity.Netcode;
 
 namespace Holoi.Mofa.Base
 {
@@ -12,37 +13,47 @@ namespace Holoi.Mofa.Base
 
         private void OnEnable()
         {
-            //yc todo:
             LifeShield.OnTopDestroyed += OnShieldTopDestoryed;
-            LifeShield.OnRightDestroyed += OnShieldTopDestoryed;
-            LifeShield.OnLeftDestroyed += OnShieldTopDestoryed;
-            LifeShield.OnBotDestroyed += OnShieldTopDestoryed;
+            LifeShield.OnRightDestroyed += OnShieldRightDestoryed;
+            LifeShield.OnLeftDestroyed += OnShieldLeftDestoryed;
+            LifeShield.OnBotDestroyed += OnShieldBotDestoryed;
         }
 
         private void OnDisable()
         {
-            //yc todo:
             LifeShield.OnTopDestroyed -= OnShieldTopDestoryed;
-            LifeShield.OnRightDestroyed -= OnShieldTopDestoryed;
-            LifeShield.OnLeftDestroyed -= OnShieldTopDestoryed;
-            LifeShield.OnBotDestroyed -= OnShieldTopDestoryed;
+            LifeShield.OnRightDestroyed -= OnShieldRightDestoryed;
+            LifeShield.OnLeftDestroyed -= OnShieldLeftDestoryed;
+            LifeShield.OnBotDestroyed -= OnShieldBotDestoryed;
         }
 
-        void OnShieldTopDestoryed(ulong id)
+        void OnShieldTopDestoryed(ulong ownerClientId)
         {
-            _debrisExplosion[0].SetActive(true);
+            if (ownerClientId == GetComponentInParent<NetworkObject>().OwnerClientId)
+            {
+                _debrisExplosion[0].SetActive(true);
+            }
         }
-        void OnShieldRightDestoryed(ulong id)
+        void OnShieldRightDestoryed(ulong ownerClientId)
         {
-            _debrisExplosion[1].SetActive(true);
+            if (ownerClientId == GetComponentInParent<NetworkObject>().OwnerClientId)
+            {
+                _debrisExplosion[1].SetActive(true);
+            }
         }
-        void OnShieldLeftDestoryed(ulong id)
+        void OnShieldLeftDestoryed(ulong ownerClientId)
         {
-            _debrisExplosion[2].SetActive(true);
+            if (ownerClientId == GetComponentInParent<NetworkObject>().OwnerClientId)
+            {
+                _debrisExplosion[2].SetActive(true);
+            }
         }
-        void OnShieldBotDestoryed(ulong id)
+        void OnShieldBotDestoryed(ulong ownerClientId)
         {
-            _debrisExplosion[3].SetActive(true);
+            if (ownerClientId == GetComponentInParent<NetworkObject>().OwnerClientId)
+            {
+                _debrisExplosion[3].SetActive(true);
+            }
         }
     }
 }
