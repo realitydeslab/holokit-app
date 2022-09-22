@@ -100,6 +100,7 @@ namespace Holoi.Mofa.Base
         protected IEnumerator StartSingleRound()
         {
             Phase.Value = MofaPhase.Countdown;
+            RespawnEachPlayersLifeShield();
             yield return new WaitForSeconds(3f);
             Phase.Value = MofaPhase.Fighting;
             yield return new WaitForSeconds(80f);
@@ -108,6 +109,19 @@ namespace Holoi.Mofa.Base
             Phase.Value = MofaPhase.RoundResult;
             yield return new WaitForSeconds(3f);
             Phase.Value = MofaPhase.RoundData;
+        }
+
+        private void RespawnEachPlayersLifeShield()
+        {
+            foreach (var clientId in Players.Keys)
+            {
+                var lifeShield = Players[clientId].LifeShield;
+                if (lifeShield != null)
+                {
+                    Destroy(lifeShield.gameObject);
+                }
+                SpawnLifeShield(clientId);
+            }
         }
 
         [ServerRpc]

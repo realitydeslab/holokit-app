@@ -21,6 +21,8 @@ namespace Holoi.Reality.MOFATheTraining
 
         private ARRaycastManager _arRaycastManager;
 
+        private MofaAI _mofaAI;
+
         protected override void Awake()
         {
             base.Awake();
@@ -48,6 +50,8 @@ namespace Holoi.Reality.MOFATheTraining
                 SpawnMofaPlayer(MofaTeam.Blue, NetworkManager.LocalClientId);
                 // Spawn host's life shield
                 SpawnLifeShield(NetworkManager.LocalClientId);
+
+                SpawnMofaAI();
             }
 
             if (IsServer)
@@ -87,34 +91,42 @@ namespace Holoi.Reality.MOFATheTraining
             }
         }
 
-        private bool SpawnMofaAI()
+        private void SpawnMofaAI()
         {
-            if (_placementIndicator.activeSelf)
-            {
-                var mofaAI = Instantiate(MofaAIPrefab, _placementIndicator.transform.position, Quaternion.identity);
-                mofaAI.Team.Value = MofaTeam.Red;
-                mofaAI.GetComponent<NetworkObject>().SpawnWithOwnership(999);
-
-                Destroy(_placementIndicator);
-                _arRaycastManager.enabled = false;
-                HoloKitCamera.Instance.GetComponentInParent<ARPlaneManager>().enabled = false;
-                DestroyExistingARPlanes();
-                return true;
-            }
-            else
-            {
-                Debug.Log("[MOFATheTraining] Failed to spawn AvatarController");
-                return false;
-            }
+            _mofaAI = Instantiate(MofaAIPrefab);
+            _mofaAI.Team.Value = MofaTeam.Red;
+            _mofaAI.GetComponent<NetworkObject>().SpawnWithOwnership(999);
         }
 
         private void OnTriggered()
         {
             if (Phase.Value == MofaPhase.Waiting)
             {
-                if (SpawnMofaAI())
+                if (_placementIndicator.activeSelf)
                 {
+                    _mofaAI.InitialPosition.Value = _placementIndicator.transform.position;
+                    Destroy(_placementIndicator);
                     StartCoroutine(StartSingleRound());
+                }
+                else
+                {
+                    Debug.Log("[MOFATheTraining] Cannot start game in current position");
+                }
+                return;
+            }
+
+            if (Phase.Value == MofaPhase.Countdown)
+            {
+                var arRaycastManager = HoloKitCamera.Instance.GetComponentInParent<ARRaycastManager>();
+                if (arRaycastManager != null)
+                {
+                    arRaycastManager.enabled = false;
+                }
+                var arPlaneManager = HoloKitCamera.Instance.GetComponentInParent<ARPlaneManager>();
+                if (arPlaneManager != null)
+                {
+                    arPlaneManager.enabled = false;
+                    DestroyExistingARPlanes();
                 }
                 return;
             }

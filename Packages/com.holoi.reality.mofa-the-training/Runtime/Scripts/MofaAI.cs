@@ -31,9 +31,9 @@ namespace Holoi.Reality.MOFATheTraining
 
         private MofaBaseRealityManager _mofaRealityManager;
 
-        private Vector3 _initialPos;
+        public readonly NetworkVariable<Vector3> InitialPosition = new(Vector3.zero, NetworkVariableReadPermission.Everyone);
 
-        private Vector3 _destPos;
+        private Vector3 _destPosition;
 
         private readonly float _speed = 0.3f;
 
@@ -68,17 +68,20 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.OnNetworkSpawn();
 
-            // Spawn avatar on each client locally
+            InitialPosition.OnValueChanged += OnInitialPositionChanged;
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+
+            InitialPosition.OnValueChanged -= OnInitialPositionChanged;
+        }
+
+        private void OnInitialPositionChanged(Vector3 oldValue, Vector3 newValue)
+        {
             SpawnAvatar();
-
-            if (IsServer)
-            {
-                var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-                //mofaRealityManager.SpawnLifeShield(OwnerClientId);
-
-                _initialPos = transform.position;
-                _destPos = transform.position;
-            }
+            _destPosition = newValue;
         }
 
         private void SpawnAvatar()
@@ -86,15 +89,11 @@ namespace Holoi.Reality.MOFATheTraining
             if (_avatar == null)
             {
                 _avatar = Instantiate(AvatarList.list[0].metaAvatars[0].prefab,
-                transform.position, Quaternion.identity);
+                            transform.position, Quaternion.identity);
                 // Setup avatar's components
                 _avatar.transform.SetParent(transform);
                 _animator = _avatar.GetComponent<Animator>();
                 _animator.runtimeAnimatorController = _mofaAvatarRuntimeAnimatorController;
-            }
-            else
-            {
-                Debug.Log("[AvatarController] Avatar already spawned");
             }
         }
 
@@ -114,7 +113,7 @@ namespace Holoi.Reality.MOFATheTraining
                 // Position
                 if (_mofaRealityManager.Phase.Value == MofaPhase.Fighting)
                 {
-                    if (Vector3.Distance(transform.position, _destPos) < 0.1f)
+                    if (Vector3.Distance(transform.position, _destPosition) < 0.1f)
                     {
                         // Find a new destination position
                         GetNextDestPos();
@@ -122,7 +121,7 @@ namespace Holoi.Reality.MOFATheTraining
                     else
                     {
                         // Approaching to the destination
-                        transform.position += _speed * Time.fixedDeltaTime * (_destPos - transform.position).normalized;
+                        transform.position += _speed * Time.fixedDeltaTime * (_destPosition - transform.position).normalized;
                     }
                 }
             }
@@ -136,7 +135,7 @@ namespace Holoi.Reality.MOFATheTraining
             float forwardVar = UnityEngine.Random.Range(-3f, 3f);
             float rightVar = UnityEngine.Random.Range(-3f, 3f);
 
-            _destPos = _initialPos + horizontalForward * forwardVar + horizontalRight * rightVar;
+            _destPosition = InitialPosition.Value + horizontalForward * forwardVar + horizontalRight * rightVar;
         }
 
         protected override void OnPhaseChanged(MofaPhase mofaPhase)
