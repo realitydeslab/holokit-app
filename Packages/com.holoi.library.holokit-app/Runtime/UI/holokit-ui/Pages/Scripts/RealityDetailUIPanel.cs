@@ -8,7 +8,7 @@ namespace Holoi.Library.HoloKitApp.UI
     [ExecuteInEditMode]
     public class RealityDetailUIPanel : MonoBehaviour
     {
-        public AssetFoundation.Reality reality;
+        public Reality reality;
         public MetaObjectCollectionList availableMetaObjectCollectionList;
         public MetaAvatarCollectionList availableMetaAvatarCollectionList;
 
@@ -67,7 +67,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _author.text.text = reality.author;
             _description.text.text = reality.description;
             _description.GetComponent<RectTransform>().sizeDelta = new Vector2(
-                1002,
+                1086,
                 _description.text.preferredHeight);
             UpdateRealityCollections(); 
         }

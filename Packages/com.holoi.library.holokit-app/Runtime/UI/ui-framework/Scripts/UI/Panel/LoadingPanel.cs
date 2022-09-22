@@ -20,6 +20,7 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 if (HoloKitAppPermissionsManager.MandatoryPermissionsGranted())
                 {
+                    PanelManager.Pop();
                     var panel = new StartPanel();
                     PanelManager.Push(panel);
                 }
