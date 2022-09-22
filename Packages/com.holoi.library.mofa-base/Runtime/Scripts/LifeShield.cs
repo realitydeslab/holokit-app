@@ -35,6 +35,14 @@ namespace Holoi.Mofa.Base
 
         private readonly Dictionary<LifeShieldArea, LifeShieldFragment> _fragments = new();
 
+        public static event Action<ulong> OnTopDestroyed;
+
+        public static event Action<ulong> OnBotDestroyed;
+
+        public static event Action<ulong> OnLeftDestroyed;
+
+        public static event Action<ulong> OnRightDestroyed;
+
         public static event Action<ulong> OnDead;
 
         private void Awake()
@@ -82,21 +90,21 @@ namespace Holoi.Mofa.Base
             // TODO: Destroy fragments that have already been destroyed for late joined spectator.
 
 
-            TopDestroyed.OnValueChanged += OnTopDestroyed;
-            BotDestroyed.OnValueChanged += OnBotDestroyed;
-            LeftDestroyed.OnValueChanged += OnLeftDestroyed;
-            RightDestroyed.OnValueChanged += OnRightDestroyed;
+            TopDestroyed.OnValueChanged += OnTopDestroyedFunc;
+            BotDestroyed.OnValueChanged += OnBotDestroyedFunc;
+            LeftDestroyed.OnValueChanged += OnLeftDestroyedFunc;
+            RightDestroyed.OnValueChanged += OnRightDestroyedFunc;
         }
 
         public override void OnNetworkDespawn()
         {
-            TopDestroyed.OnValueChanged -= OnTopDestroyed;
-            BotDestroyed.OnValueChanged -= OnBotDestroyed;
-            LeftDestroyed.OnValueChanged -= OnLeftDestroyed;
-            RightDestroyed.OnValueChanged -= OnRightDestroyed;
+            TopDestroyed.OnValueChanged -= OnTopDestroyedFunc;
+            BotDestroyed.OnValueChanged -= OnBotDestroyedFunc;
+            LeftDestroyed.OnValueChanged -= OnLeftDestroyedFunc;
+            RightDestroyed.OnValueChanged -= OnRightDestroyedFunc;
         }
 
-        private void OnTopDestroyed(bool oldValue, bool newValue)
+        private void OnTopDestroyedFunc(bool oldValue, bool newValue)
         {
             if (IsServer)
             {
@@ -114,11 +122,12 @@ namespace Holoi.Mofa.Base
                 }
             }
             _fragments[LifeShieldArea.Top].GetComponent<MeshRenderer>().enabled = false;
+            OnTopDestroyed?.Invoke(OwnerClientId);
             PlayHitSound();
             IsDead();
         }
 
-        private void OnBotDestroyed(bool oldValue, bool newValue)
+        private void OnBotDestroyedFunc(bool oldValue, bool newValue)
         {
             if (IsServer)
             {
@@ -136,11 +145,12 @@ namespace Holoi.Mofa.Base
                 }
             }
             _fragments[LifeShieldArea.Bot].GetComponent<MeshRenderer>().enabled = false;
+            OnBotDestroyed?.Invoke(OwnerClientId);
             PlayHitSound();
             IsDead();
         }
 
-        private void OnLeftDestroyed(bool oldValue, bool newValue)
+        private void OnLeftDestroyedFunc(bool oldValue, bool newValue)
         {
             if (IsServer)
             {
@@ -158,11 +168,12 @@ namespace Holoi.Mofa.Base
                 }
             }
             _fragments[LifeShieldArea.Left].GetComponent<MeshRenderer>().enabled = false;
+            OnLeftDestroyed?.Invoke(OwnerClientId);
             PlayHitSound();
             IsDead();
         }
 
-        private void OnRightDestroyed(bool oldValue, bool newValue)
+        private void OnRightDestroyedFunc(bool oldValue, bool newValue)
         {
             if (IsServer)
             {
@@ -180,6 +191,7 @@ namespace Holoi.Mofa.Base
                 }
             }
             _fragments[LifeShieldArea.Right].GetComponent<MeshRenderer>().enabled = false;
+            OnRightDestroyed?.Invoke(OwnerClientId);
             PlayHitSound();
             IsDead();
         }
@@ -192,6 +204,7 @@ namespace Holoi.Mofa.Base
                 PlayDestroySound();
                 if (IsServer)
                 {
+                    _fragments[LifeShieldArea.Center].GetComponent<Collider>().enabled = false;
                     var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
                     if (mofaRealityManager.Phase.Value == MofaPhase.Fighting || mofaRealityManager.Phase.Value == MofaPhase.RoundOver)
                     {

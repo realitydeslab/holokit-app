@@ -30,6 +30,7 @@ namespace Holoi.Mofa.Base
 
         public void OnDamaged(ulong attackerClientId)
         {
+            Debug.Log($"[LifeShieldFragment] OnDamaged {Area}");
             LifeShield.LastAttackerClientId.Value = (int)attackerClientId;
             switch (Area)
             {

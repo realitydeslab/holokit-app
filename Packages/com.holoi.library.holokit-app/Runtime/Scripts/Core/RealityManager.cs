@@ -19,7 +19,7 @@ namespace Holoi.Library.HoloKitApp
 
         private bool _isAdvertising;
 
-        private Dictionary<ulong, string> _connectedSpectatorDevices = new();
+        private readonly Dictionary<ulong, string> _connectedSpectatorDevices = new();
 
         private Vector3 _lastImagePosition;
 
@@ -35,9 +35,9 @@ namespace Holoi.Library.HoloKitApp
 
         private readonly Vector3 QRCodeToCameraOffset = new(-0.02f, 0.1f, 0.01f);
 
-        private NetworkVariable<Vector3> _hostCameraPosition = new(Vector3.zero, NetworkVariableReadPermission.Everyone);
+        private readonly NetworkVariable<Vector3> _hostCameraPosition = new(Vector3.zero, NetworkVariableReadPermission.Everyone);
 
-        private NetworkVariable<Quaternion> _hostCameraRotation = new(Quaternion.identity, NetworkVariableReadPermission.Everyone);
+        private readonly NetworkVariable<Quaternion> _hostCameraRotation = new(Quaternion.identity, NetworkVariableReadPermission.Everyone);
 
         private GameObject _phoneAlignmentMark;
 
