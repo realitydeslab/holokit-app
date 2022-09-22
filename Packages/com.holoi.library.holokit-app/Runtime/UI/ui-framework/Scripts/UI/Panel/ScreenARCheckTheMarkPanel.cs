@@ -27,6 +27,7 @@ namespace Holoi.Library.HoloKitApp.UI
                     PanelManager.Pop();
                 }
                 Debug.Log( "now we are in: " + PanelManager.GetActivePanel().UIType.Name);
+
                 // now we should in ScreenArModePanel:
                 PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.@checked);
                 PanelManager.OnAlignmentMarkChecked?.Invoke();
@@ -47,7 +48,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
                 PanelManager.OnRescanQRCode?.Invoke();
             });
-
         }
     }
 }

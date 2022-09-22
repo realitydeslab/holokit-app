@@ -55,8 +55,6 @@ namespace Holoi.Library.HoloKitApp.UI
             {
 
             }
-            //SetUIInfo();
-            //SetUIButtons();
         }
 
         private void Update()
@@ -125,7 +123,9 @@ namespace Holoi.Library.HoloKitApp.UI
                 _scrollViewAvatarCollection.gameObject.SetActive(false);
             }
 
-            ScrollBarSetInitValue();
+            //ScrollBarSetInitValue();
+            //_scrollBarObjectCollection.value = 0;
+            //_scrollBarAvatarCollection.value = 0;
         }
 
         public void SetUIButtons()
