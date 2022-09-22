@@ -18,9 +18,11 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             UITool.GetOrAddComponentInChildren<Button>("SignInButton").onClick.AddListener(() =>
             {
-                PanelManager.Pop();
-                PanelManager.Pop();
-                PanelManager.Pop();
+                while (PanelManager._panelStack.Count>0)
+                {
+                    PanelManager.Pop();
+                }
+
                 var panel = new StartPanel();
                 PanelManager.Push(panel);
             });
