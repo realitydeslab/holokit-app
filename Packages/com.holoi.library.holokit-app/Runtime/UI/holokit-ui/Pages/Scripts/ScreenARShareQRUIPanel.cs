@@ -31,11 +31,12 @@ namespace Holoi.Library.HoloKitApp.UI
         public void ClearConnectedDeviceUI()
         {
             connectedDeviceNames.Clear();
-            UpdateConnectedDeviceUI();
+            UpdateConnectedDeviceUI(connectedDeviceNames);
         }
 
-        public void UpdateConnectedDeviceUI()
+        public void UpdateConnectedDeviceUI(List<string> names)
         {
+            connectedDeviceNames = names;
             if (connectedDeviceNames.Count > 0)
             {
                 while (connectedDeviceNames.Count < 3)
