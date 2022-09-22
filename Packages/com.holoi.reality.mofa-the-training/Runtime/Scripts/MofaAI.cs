@@ -23,6 +23,10 @@ namespace Holoi.Reality.MOFATheTraining
 
         public SpellList SpellList;
 
+        [SerializeField] private RuntimeAnimatorController _mofaAvatarRuntimeAnimatorController;
+
+        private Animator _animator;
+
         private GameObject _avatar;
 
         private MofaBaseRealityManager _mofaRealityManager;
@@ -31,7 +35,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         private Vector3 _destPos;
 
-        private float _speed = 0.3f;
+        private readonly float _speed = 0.3f;
 
         private AIAttackState _lastAIAttackState;
 
@@ -40,6 +44,16 @@ namespace Holoi.Reality.MOFATheTraining
         private Spell _basicSpell;
 
         private Spell _secondarySpell;
+
+        private bool _notFirstAnimationFrame;
+
+        private Vector3 _lastFrameForward;
+
+        private Vector3 _lastFrameRight;
+
+        private Vector3 _lastFramePosition;
+
+        private readonly Vector4 _velocityRemap = new(-.02f, .02f, -1f, 1f);
 
         public static event Action<SpellType> OnAISpawnedSpell;
 
@@ -53,6 +67,7 @@ namespace Holoi.Reality.MOFATheTraining
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+
 
             // Spawn avatar on each client locally
             SpawnAvatar();
@@ -73,6 +88,10 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 _avatar = Instantiate(AvatarList.list[0].metaAvatars[0].prefab,
                 transform.position, Quaternion.identity);
+                // Setup avatar's components
+                _avatar.transform.SetParent(transform);
+                _animator = _avatar.GetComponent<Animator>();
+                _animator.runtimeAnimatorController = _mofaAvatarRuntimeAnimatorController;
             }
             else
             {
@@ -108,19 +127,7 @@ namespace Holoi.Reality.MOFATheTraining
                     }
                 }
             }
-
-            // Set the avatar's transform on each client manually
-            if (_avatar != null)
-            {
-                _avatar.transform.SetPositionAndRotation(transform.position, transform.rotation);
-            }
-
-            // Set the life shield's transform on each client manually
-            if (LifeShield != null)
-            {
-                LifeShield.transform.SetPositionAndRotation(transform.position + transform.rotation * new Vector3(0f, 1f, 0.8f),
-                    transform.rotation);
-            }
+            UpdateAvatarMovementAnimation();
         }
 
         private void GetNextDestPos()
@@ -217,6 +224,7 @@ namespace Holoi.Reality.MOFATheTraining
         private void OnAISpawnedSpellClientRpc(SpellType spellType)
         {
             OnAISpawnedSpell?.Invoke(spellType);
+            PlayAvatarCastSpellAnimation(spellType);
         }
         
         private void SpawnSpell(SpellType spellType)
@@ -231,6 +239,50 @@ namespace Holoi.Reality.MOFATheTraining
                 _mofaRealityManager.SpawnSpellServerRpc(spellType == SpellType.Basic ? _basicSpell.Id : _secondarySpell.Id,
                     avatarCenterEyePos, rotation, OwnerClientId);
                 _lastAIAttackState = spellType == SpellType.Basic ? AIAttackState.BasicSpell : AIAttackState.SecondarySpell;
+            }
+        }
+
+        private void UpdateAvatarMovementAnimation()
+        {
+            if (_notFirstAnimationFrame)
+            {
+                // Calculate the relative z and x velocity
+                Vector3 distFromLastFrame = transform.position - _lastFramePosition;
+                float z = Vector3.Dot(distFromLastFrame, _lastFrameForward);
+                float x = Vector3.Dot(distFromLastFrame, _lastFrameRight);
+
+                var staticThreshold = 0.001667f; // if velocity < 0.1m/s, we regard it static.
+                z = MofaTrainingUtils.InverseClamp(z, -1 * staticThreshold, 1 * staticThreshold);
+                x = MofaTrainingUtils.InverseClamp(x, -1 * staticThreshold, 1 * staticThreshold);
+
+                z = MofaTrainingUtils.Remap(z, _velocityRemap.x, _velocityRemap.y, _velocityRemap.z, _velocityRemap.w, true);
+                x = MofaTrainingUtils.Remap(x, _velocityRemap.x, _velocityRemap.y, _velocityRemap.z, _velocityRemap.w, true);
+
+                _animator.SetFloat("Velocity Z", z);
+                _animator.SetFloat("Velocity X", x);
+            }
+            else
+            {
+                _notFirstAnimationFrame = true;
+            }
+
+            // Save data for next frame calculation
+            _lastFrameForward = transform.forward;
+            _lastFrameRight = transform.right;
+            _lastFramePosition = transform.position;
+
+        }
+
+        private void PlayAvatarCastSpellAnimation(SpellType spellType)
+        {
+            if (spellType == SpellType.Basic)
+            {
+
+                _animator.SetTrigger("Attack A");
+            }
+            else
+            {
+                _animator.SetTrigger("Attack B");
             }
         }
     }

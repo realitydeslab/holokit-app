@@ -27,8 +27,6 @@ namespace Holoi.Mofa.Base
 
         [SerializeField] private AudioClip _beingDestroyedSound;
 
-        public Vector3 CenterEyeOffset;
-
         private AudioSource _audioSource;
 
         public static float DestroyDelay = 1f;

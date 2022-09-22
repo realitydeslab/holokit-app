@@ -82,6 +82,7 @@ namespace Holoi.Mofa.Base
             MofaPlayer shieldOwner = Players[lifeShield.OwnerClientId];
             shieldOwner.LifeShield = lifeShield;
             lifeShield.transform.SetParent(shieldOwner.transform);
+            lifeShield.transform.localPosition = shieldOwner.LifeShieldOffest;
         }
 
         public void SpawnMofaPlayer(MofaTeam team, ulong ownerClientId)

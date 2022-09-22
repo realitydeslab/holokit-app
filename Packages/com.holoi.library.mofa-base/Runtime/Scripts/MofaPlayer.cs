@@ -17,6 +17,8 @@ namespace Holoi.Mofa.Base
 
     public class MofaPlayer : NetworkBehaviour
     {
+        public Vector3 LifeShieldOffest; 
+
         [HideInInspector] public NetworkVariable<MofaTeam> Team = new(0, NetworkVariableReadPermission.Everyone);
 
         [HideInInspector] public NetworkVariable<int> KillCount = new(0, NetworkVariableReadPermission.Everyone);
@@ -60,13 +62,6 @@ namespace Holoi.Mofa.Base
             if (IsOwner)
             {
                 transform.SetPositionAndRotation(HoloKitCamera.Instance.CenterEyePose.position, HoloKitCamera.Instance.CenterEyePose.rotation);
-            }
-
-            // Set life shield transform on each client
-            if (LifeShield != null)
-            {
-                LifeShield.transform.SetPositionAndRotation(transform.position + transform.rotation * LifeShield.CenterEyeOffset,
-                    transform.rotation);
             }
         }
 
