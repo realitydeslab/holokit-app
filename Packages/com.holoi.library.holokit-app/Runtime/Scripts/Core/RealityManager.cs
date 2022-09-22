@@ -124,6 +124,7 @@ namespace Holoi.Library.HoloKitApp
                         StopScanningQRCode();
                         OnFinishedScanningQRCode?.Invoke();
                         SpawnPhoneAlignmentMark();
+                        Debug.Log("[RealityManager] QRCode stabilization succeeded");
                     }
                 }
                 else
