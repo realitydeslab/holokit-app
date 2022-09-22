@@ -19,6 +19,8 @@ namespace Holoi.Library.HoloKitApp
 
         private bool _isAdvertising;
 
+        private Dictionary<ulong, string> _connectedSpectatorDevices = new();
+
         private Vector3 _lastImagePosition;
 
         private Quaternion _lastImageRotation;
@@ -41,6 +43,8 @@ namespace Holoi.Library.HoloKitApp
 
         public static event Action<RealityManager> OnRealityManagerSpawned;
 
+        public static event Action<List<string>> OnSpectatorDeviceListUpdated;
+
         public static event Action OnFinishedScanningQRCode;
 
         public static event Action OnQRCodeStabilizationFailed;
@@ -53,12 +57,21 @@ namespace Holoi.Library.HoloKitApp
         public override void OnDestroy()
         {
             HoloKitApp.Instance.OnConnectedAsSpectator -= OnConnectedAsSpectator;
+            if (_isAdvertising)
+            {
+                StopAdvertising();
+            }
         }
 
         public override void OnNetworkSpawn()
         {
             HoloKitApp.Instance.SetRealityManager(this);
             OnRealityManagerSpawned?.Invoke(this);
+
+            if (!IsServer)
+            {
+                OnSpectatorJoinedServerRpc(SystemInfo.deviceName);
+            }
         }
 
         private void OnConnectedAsSpectator()
@@ -70,6 +83,7 @@ namespace Holoi.Library.HoloKitApp
         {
             if (HoloKitHelper.IsRuntime)
             {
+                NetworkManager.OnClientDisconnectCallback += OnSpectatorDisconnected;
                 _isAdvertising = true;
                 MultipeerConnectivityTransport.StartAdvertising();
             }
@@ -79,9 +93,38 @@ namespace Holoi.Library.HoloKitApp
         {
             if (HoloKitHelper.IsRuntime)
             {
+                NetworkManager.OnClientDisconnectCallback -= OnSpectatorDisconnected;
                 _isAdvertising = false;
                 MultipeerConnectivityTransport.StopAdvertising();
             }
+        }
+
+        [ServerRpc]
+        private void OnSpectatorJoinedServerRpc(string spectatorDeviceName, ServerRpcParams serverRpcParams = default)
+        {
+            _connectedSpectatorDevices.Add(serverRpcParams.Receive.SenderClientId, spectatorDeviceName);
+            UpdateSpectatorDeviceList();
+        }
+
+        private void OnSpectatorDisconnected(ulong clientId)
+        {
+            if (_connectedSpectatorDevices.ContainsKey(clientId))
+            {
+                _connectedSpectatorDevices.Remove(clientId);
+                UpdateSpectatorDeviceList();
+            }
+        }
+
+        private void UpdateSpectatorDeviceList()
+        {
+            List<string> spectatorDeviceList = new();
+            Debug.Log("[RealityManager] OnSpectatorDeviceListUpdated");
+            foreach (var spectatorDevice in _connectedSpectatorDevices.Values)
+            {
+                Debug.Log($"[RealityManager] Device name: {spectatorDevice}");
+                spectatorDeviceList.Add(spectatorDevice);
+            }
+            OnSpectatorDeviceListUpdated?.Invoke(spectatorDeviceList);
         }
 
         private void StartScanningQRCode()
