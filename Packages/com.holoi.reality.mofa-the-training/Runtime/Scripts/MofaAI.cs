@@ -68,14 +68,13 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.OnNetworkSpawn();
 
-
             // Spawn avatar on each client locally
             SpawnAvatar();
 
             if (IsServer)
             {
                 var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-                mofaRealityManager.SpawnLifeShield(OwnerClientId);
+                //mofaRealityManager.SpawnLifeShield(OwnerClientId);
 
                 _initialPos = transform.position;
                 _destPos = transform.position;

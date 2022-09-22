@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -35,7 +36,14 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             PanelManager.Pop();
             var panel = PanelManager.Instance.GetActivePanel();
-            panel.UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.scanningQRcode);
+            if (HoloKitHelper.IsRuntime)
+            {
+                panel.UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.scanningQRcode);
+            }
+            else
+            {
+                PanelManager.Pop();
+            }
         }
 
         public override void OnClose()

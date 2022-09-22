@@ -43,9 +43,9 @@ namespace Holoi.Reality.MOFATheTraining
 
             if (IsServer)
             {
+                SpawnLocalPlayerSpellManager();
                 // Spawn host's player
                 SpawnMofaPlayer(MofaTeam.Blue, NetworkManager.LocalClientId);
-
                 // Spawn host's life shield
                 SpawnLifeShield(NetworkManager.LocalClientId);
             }

@@ -150,7 +150,7 @@ namespace Holoi.Library.HoloKitApp
             }
             else
             {
-                Debug.Log("[HoloKitAppPermission] Received: " + request.downloadHandler.text);
+                //Debug.Log("[HoloKitAppPermission] Received: " + request.downloadHandler.text);
             }
         }
     }

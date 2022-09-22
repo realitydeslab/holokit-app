@@ -50,7 +50,6 @@ namespace Holoi.Mofa.Base
         {
             base.OnNetworkSpawn();
 
-            SpawnLocalPlayerSpellManager();
             Phase.OnValueChanged += OnPhaseChangedFunc;
         }
 
@@ -65,7 +64,7 @@ namespace Holoi.Mofa.Base
             OnPhaseChanged?.Invoke(newValue);
         }
 
-        private void SpawnLocalPlayerSpellManager()
+        protected void SpawnLocalPlayerSpellManager()
         {
             LocalPlayerSpellManager = Instantiate(LocalPlayerSpellManagerPrefab);
             LocalPlayerSpellManager.transform.SetParent(transform);

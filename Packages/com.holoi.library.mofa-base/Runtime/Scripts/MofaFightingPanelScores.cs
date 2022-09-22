@@ -45,7 +45,7 @@ namespace Holoi.Mofa.Base
                 }
             }
 
-            Debug.Log($"[MofaFightingPanel] Blue {blueTeamScore} : Red {redTeamScore}");
+            //Debug.Log($"[MofaFightingPanel] Blue {blueTeamScore} : Red {redTeamScore}");
 
             // SIZHENGTODO: 更新比分面板
             if (blueTeamScore < 10)
