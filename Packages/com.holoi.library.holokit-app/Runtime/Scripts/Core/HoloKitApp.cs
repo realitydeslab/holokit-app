@@ -56,6 +56,7 @@ namespace Holoi.Library.HoloKitApp
             {
                 PermissionsAPI.Initialize();
             }
+            StartCoroutine(HoloKitAppPermissionsManager.RequestWirelessDataPermission());
         }
 
         private void OnApplicationQuit()

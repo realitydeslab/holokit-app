@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Holoi.Library.Permissions;
 using HoloKit;
+using UnityEngine.Networking;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -134,6 +135,22 @@ namespace Holoi.Library.HoloKitApp
                     return HoloKitAppPermissionStatus.Granted;
                 default:
                     return HoloKitAppPermissionStatus.Denied;
+            }
+        }
+
+        public static IEnumerator RequestWirelessDataPermission()
+        {
+            yield return new WaitForSeconds(0.2f); // TODO: To make sure the UI has already popped up
+            UnityWebRequest request = UnityWebRequest.Get("http://holoi.com");
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                Debug.Log("[HoloKitAppPermission] Error While Sending: " + request.error);
+            }
+            else
+            {
+                Debug.Log("[HoloKitAppPermission] Received: " + request.downloadHandler.text);
             }
         }
     }
