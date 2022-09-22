@@ -23,9 +23,9 @@ namespace Holoi.Mofa.Base
 
         [SerializeField] private Material _redMaterial;
 
-        [SerializeField] private AudioClip _hitSound;
+        [SerializeField] private AudioClip _beingHitSound;
 
-        [SerializeField] private AudioClip _destroySound;
+        [SerializeField] private AudioClip _beingDestroyedSound;
 
         public Vector3 CenterEyeOffset;
 
@@ -205,18 +205,18 @@ namespace Holoi.Mofa.Base
 
         private void PlayHitSound()
         {
-            if (_hitSound != null)
+            if (_beingHitSound != null)
             {
-                _audioSource.clip = _hitSound;
+                _audioSource.clip = _beingHitSound;
                 _audioSource.Play();
             }
         }
 
         private void PlayDestroySound()
         {
-            if (_destroySound != null)
+            if (_beingDestroyedSound != null)
             {
-                _audioSource.clip = _destroySound;
+                _audioSource.clip = _beingDestroyedSound;
                 _audioSource.Play();
             }
         }

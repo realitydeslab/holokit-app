@@ -15,6 +15,8 @@ namespace Holoi.Library.HoloKitApp
 
         public List<GameObject> NetworkPrefabs;
 
+        [SerializeField] private GameObject _phoneAlignmentMarkPrefab;
+
         private bool _isAdvertising;
 
         private Vector3 _lastImagePosition;
@@ -34,6 +36,8 @@ namespace Holoi.Library.HoloKitApp
         private NetworkVariable<Vector3> _hostCameraPosition = new(Vector3.zero, NetworkVariableReadPermission.Everyone);
 
         private NetworkVariable<Quaternion> _hostCameraRotation = new(Quaternion.identity, NetworkVariableReadPermission.Everyone);
+
+        private GameObject _phoneAlignmentMark;
 
         public static event Action<RealityManager> OnRealityManagerSpawned;
 
@@ -119,6 +123,7 @@ namespace Holoi.Library.HoloKitApp
                         HoloKitARSessionControllerAPI.ResetOrigin(originPosition, HoloKitAppUtils.GetHorizontalRotation(originRotation));
                         StopScanningQRCode();
                         OnFinishedScanningQRCode?.Invoke();
+                        SpawnPhoneAlignmentMark();
                     }
                 }
                 else
@@ -137,6 +142,15 @@ namespace Holoi.Library.HoloKitApp
             arTrackedImageManager.enabled = false;
         }
 
+        // We only need to spawn this on client machine locally
+        private void SpawnPhoneAlignmentMark()
+        {
+            if (_phoneAlignmentMark == null)
+            {
+                _phoneAlignmentMark = Instantiate(_phoneAlignmentMarkPrefab);
+            }
+        }
+
         protected virtual void FixedUpdate()
         {
             if (IsServer)
@@ -145,6 +159,13 @@ namespace Holoi.Library.HoloKitApp
                 {
                     _hostCameraPosition.Value = HoloKitCamera.Instance.CenterEyePose.position;
                     _hostCameraRotation.Value = HoloKitCamera.Instance.CenterEyePose.rotation;
+                }
+            }
+            else
+            {
+                if (_phoneAlignmentMark != null)
+                {
+                    _phoneAlignmentMark.transform.SetPositionAndRotation(_hostCameraPosition.Value, _hostCameraRotation.Value);
                 }
             }
         }
