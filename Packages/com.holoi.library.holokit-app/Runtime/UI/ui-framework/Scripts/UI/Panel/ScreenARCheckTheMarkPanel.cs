@@ -13,6 +13,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override void OnOpen()
         {
+            
+
             UITool.GetOrAddComponentInChildren<Button>("ExitButton").onClick.AddListener(() =>
             {
                 Debug.Log("ExitButton is clicked.");
@@ -33,18 +35,21 @@ namespace Holoi.Library.HoloKitApp.UI
                 PanelManager.OnAlignmentMarkChecked?.Invoke();
             });
 
+            // this panel is only for client to confirm the connection
             UITool.GetOrAddComponentInChildren<Button>("RescanButton").onClick.AddListener(() =>
             {
                 Debug.Log("RescanButton is clicked.");
-                while (PanelManager.GetActivePanel().UIType.Name != "ScreenARShareQRPanel")
+
+                while (PanelManager.GetActivePanel().UIType.Name != "ScreenARModePanel")
                 {
+                    //Debug.Log($"pop {PanelManager.GetActivePanel().UIType.Name} panel");
                     PanelManager.Pop();
                 }
                 Debug.Log("now we are in: " + PanelManager.GetActivePanel().UIType.Name);
 
                 // now we should in ScreenArShareQRPanel:
-                PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARShareQRUIPanel>().ClearConnectedDeviceUI();
-                UIManager.GetPanel("ScreenARModePanel").GetComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.waittingScanned);
+                //PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARShareQRUIPanel>().ClearConnectedDeviceUI();
+                PanelManager.GetActivePanel().UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.scanningQRcode);
 
                 PanelManager.OnRescanQRCode?.Invoke();
             });
