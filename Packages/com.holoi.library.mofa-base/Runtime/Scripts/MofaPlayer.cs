@@ -11,8 +11,7 @@ namespace Holoi.Mofa.Base
     public enum MofaTeam
     {
         Blue = 0,
-        Red = 1,
-        Spectator = 2
+        Red = 1
     }
 
     public class MofaPlayer : NetworkBehaviour

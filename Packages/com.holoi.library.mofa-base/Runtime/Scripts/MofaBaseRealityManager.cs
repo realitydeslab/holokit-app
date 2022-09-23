@@ -18,6 +18,13 @@ namespace Holoi.Mofa.Base
         RoundData = 5
     }
 
+    public enum MofaRoundResult
+    {
+        BlueTeamWins,
+        RedTeamWins,
+        Draw
+    }
+
     public abstract class MofaBaseRealityManager : RealityManager
     {
         [HideInInspector] public NetworkVariable<MofaPhase> Phase = new(0, NetworkVariableReadPermission.Everyone);
@@ -152,6 +159,61 @@ namespace Holoi.Mofa.Base
         {
             yield return new WaitForSeconds(3f - LifeShield.DestroyDelay);
             SpawnLifeShield(ownerClientId);
+        }
+
+        public int GetTeamScore(MofaTeam team)
+        {
+            int teamScore = 0;
+            foreach (var mofaPlayer in Players.Values)
+            {
+                if (mofaPlayer.Team.Value == team)
+                {
+                    teamScore += mofaPlayer.KillCount.Value;
+                }
+            }
+            return teamScore;
+        }
+
+        public MofaRoundResult GetRoundResult()
+        {
+            int blueTeamScore = 0;
+            int redTeamScore = 0;
+            foreach (var mofaPlayer in Players.Values)
+            {
+                if (mofaPlayer.Team.Value == MofaTeam.Blue)
+                {
+                    blueTeamScore += mofaPlayer.KillCount.Value;
+                }
+                else // Red
+                {
+                    redTeamScore += mofaPlayer.KillCount.Value;
+                }
+            }
+
+            if (blueTeamScore > redTeamScore)
+            {
+                return MofaRoundResult.BlueTeamWins;
+            }
+            else if (redTeamScore > blueTeamScore)
+            {
+                return MofaRoundResult.RedTeamWins;
+            }
+            else
+            {
+                return MofaRoundResult.Draw;
+            }
+        }
+
+        public MofaPlayer GetLocalPlayer()
+        {
+            if (Players.ContainsKey(NetworkManager.LocalClientId))
+            {
+                return Players[NetworkManager.LocalClientId];
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
