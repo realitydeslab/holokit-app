@@ -79,8 +79,10 @@ namespace Holoi.Reality.MOFATheTraining
                             var arPlane = hit.trackable.GetComponent<ARPlane>();
                             if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
                             {
-                                Vector3 position = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * 3f; // TODO: Changeable
+                                Vector3 position = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * 5; // TODO: Changeable
                                 _placementIndicator.transform.position = new Vector3(position.x, hit.pose.position.y, position.z);
+                                Vector3 forwardVector = HoloKitCamera.Instance.CenterEyePose.position - _placementIndicator.transform.position;
+                                _placementIndicator.transform.rotation = MofaUtils.GetHorizontalLookRotation(forwardVector);
                                 _placementIndicator.SetActive(true);
                                 return;
                             }
@@ -104,7 +106,7 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 if (_placementIndicator.activeSelf)
                 {
-                    _mofaAI.InitialPosition.Value = _placementIndicator.transform.position;
+                    _mofaAI.OnPositionInitializedClientRpc(_placementIndicator.transform.position, _placementIndicator.transform.rotation);
                     Destroy(_placementIndicator);
                     StartCoroutine(StartSingleRound());
                 }

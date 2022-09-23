@@ -22,5 +22,11 @@ namespace Holoi.Mofa.Base
             Vector3 cameraEuler = rotation.eulerAngles;
             return Quaternion.Euler(new Vector3(0f, cameraEuler.y, 0f));
         }
+
+        public static Quaternion GetHorizontalLookRotation(Vector3 forward)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(forward);
+            return GetHorizontalRotation(lookRotation);
+        }
     }
 }

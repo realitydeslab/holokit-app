@@ -31,7 +31,11 @@ namespace Holoi.Reality.MOFATheTraining
 
         private MofaBaseRealityManager _mofaRealityManager;
 
-        public readonly NetworkVariable<Vector3> InitialPosition = new(Vector3.zero, NetworkVariableReadPermission.Everyone);
+        private Vector3 _initialPosition;
+
+        private Vector3 _initialForward;
+
+        private Vector3 _initialRight;
 
         private Vector3 _destPosition;
 
@@ -68,20 +72,33 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.OnNetworkSpawn();
 
-            InitialPosition.OnValueChanged += OnInitialPositionChanged;
+            
         }
 
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
 
-            InitialPosition.OnValueChanged -= OnInitialPositionChanged;
+            
         }
 
-        private void OnInitialPositionChanged(Vector3 oldValue, Vector3 newValue)
+        [ClientRpc]
+        public void OnPositionInitializedClientRpc(Vector3 initialPosition, Quaternion initialRotation)
         {
-            transform.position = newValue;
-            _destPosition = newValue;
+            if (IsServer)
+            {
+                GameObject go = new();
+                go.transform.SetPositionAndRotation(initialPosition, initialRotation);
+
+                _initialPosition = go.transform.position;
+                _initialForward = go.transform.forward;
+                _initialRight = go.transform.right;
+                
+                _destPosition = go.transform.position;
+                transform.position = go.transform.position;
+
+                Destroy(go);
+            }
             SpawnAvatar();
         }
 
@@ -93,6 +110,8 @@ namespace Holoi.Reality.MOFATheTraining
                             transform.position, Quaternion.identity);
                 // Setup avatar's components
                 _avatar.transform.SetParent(transform);
+                _avatar.transform.localPosition = Vector3.zero;
+                _avatar.transform.localRotation = Quaternion.identity;
                 _animator = _avatar.GetComponent<Animator>();
                 _animator.runtimeAnimatorController = _mofaAvatarRuntimeAnimatorController;
             }
@@ -101,14 +120,14 @@ namespace Holoi.Reality.MOFATheTraining
         protected override void FixedUpdate()
         {
             // Update NetworkTransform
+
             if (IsServer)
             {
                 // Rotation
-                Vector3 lookAtVector = HoloKitCamera.Instance.CenterEyePose.position - transform.position;
-                if (lookAtVector != Vector3.zero)
+                Vector3 forwardVector = HoloKitCamera.Instance.CenterEyePose.position - transform.position;
+                if (forwardVector != Vector3.zero)
                 {
-                    Quaternion lookAtRotation = Quaternion.LookRotation(lookAtVector);
-                    transform.rotation = MofaUtils.GetHorizontalRotation(lookAtRotation);
+                    transform.rotation = MofaUtils.GetHorizontalLookRotation(forwardVector);
                 }
 
                 // Position
@@ -135,12 +154,10 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void GetNextDestPos()
         {
-            var horizontalForward = MofaUtils.GetHorizontalForward(transform);
-            var horizontalRight = MofaUtils.GetHorizontalRight(transform);
-            float forwardVar = UnityEngine.Random.Range(-3f, 3f);
-            float rightVar = UnityEngine.Random.Range(-3f, 3f);
+            float forwardVar = UnityEngine.Random.Range(-2.4f, 1.8f); // TODO: Adjust avatar movement area
+            float rightVar = UnityEngine.Random.Range(-2.7f, 2.7f);
 
-            _destPosition = InitialPosition.Value + horizontalForward * forwardVar + horizontalRight * rightVar;
+            _destPosition = _initialPosition + _initialForward * forwardVar + _initialRight * rightVar;
         }
 
         protected override void OnPhaseChanged(MofaPhase mofaPhase)
