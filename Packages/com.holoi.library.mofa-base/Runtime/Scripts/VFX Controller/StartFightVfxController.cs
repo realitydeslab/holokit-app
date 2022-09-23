@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Holoi.Library.HoloKitApp
+namespace Holoi.Mofa.Base
 {
     public class StartFightVfxController : MonoBehaviour
     {
