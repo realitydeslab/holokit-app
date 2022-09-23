@@ -8,7 +8,8 @@ namespace Holoi.Mofa.Base
 {
     public class LifeShieldVFXController : MonoBehaviour
     {
-        //[SerializeField] LifeShield _lifeShieldController;
+        [SerializeField] LifeShield _lifeShield;
+
         [SerializeField] List<GameObject> _debrisExplosion; // 0 1 2 3 = top rigt left bot
 
         private void OnEnable()
@@ -29,28 +30,28 @@ namespace Holoi.Mofa.Base
 
         void OnShieldTopDestoryed(ulong ownerClientId)
         {
-            if (ownerClientId == GetComponentInParent<NetworkObject>().OwnerClientId)
+            if (ownerClientId == _lifeShield.OwnerClientId)
             {
                 _debrisExplosion[0].SetActive(true);
             }
         }
         void OnShieldRightDestoryed(ulong ownerClientId)
         {
-            if (ownerClientId == GetComponentInParent<NetworkObject>().OwnerClientId)
+            if (ownerClientId == _lifeShield.OwnerClientId)
             {
                 _debrisExplosion[1].SetActive(true);
             }
         }
         void OnShieldLeftDestoryed(ulong ownerClientId)
         {
-            if (ownerClientId == GetComponentInParent<NetworkObject>().OwnerClientId)
+            if (ownerClientId == _lifeShield.OwnerClientId)
             {
                 _debrisExplosion[2].SetActive(true);
             }
         }
         void OnShieldBotDestoryed(ulong ownerClientId)
         {
-            if (ownerClientId == GetComponentInParent<NetworkObject>().OwnerClientId)
+            if (ownerClientId == _lifeShield.OwnerClientId)
             {
                 _debrisExplosion[3].SetActive(true);
             }

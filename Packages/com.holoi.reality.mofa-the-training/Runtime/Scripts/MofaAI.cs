@@ -80,8 +80,9 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void OnInitialPositionChanged(Vector3 oldValue, Vector3 newValue)
         {
-            SpawnAvatar();
+            transform.position = newValue;
             _destPosition = newValue;
+            SpawnAvatar();
         }
 
         private void SpawnAvatar()
@@ -125,7 +126,11 @@ namespace Holoi.Reality.MOFATheTraining
                     }
                 }
             }
-            UpdateAvatarMovementAnimation();
+
+            if (_animator != null)
+            {
+                UpdateAvatarMovementAnimation();
+            }
         }
 
         private void GetNextDestPos()

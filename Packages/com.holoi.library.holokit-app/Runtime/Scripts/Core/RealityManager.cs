@@ -157,11 +157,16 @@ namespace Holoi.Library.HoloKitApp
                     if (_imageStablizationFrameCount == ImageStabilizationFrameNum)
                     {
                         Debug.Log("[RealityManager] QRCode stabilization succeeded");
-                        Quaternion localHostCameraRotation = Quaternion.Euler(90f, 0f, 0f) * image.transform.rotation;
-                        Vector3 localHostCameraPosition = image.transform.position + localHostCameraRotation * QRCodeToCameraOffset;
+                        GameObject go = new();
+                        go.transform.SetPositionAndRotation(image.transform.position, image.transform.rotation);
+                        go.transform.Rotate(go.transform.right, 90f);
+                        Vector3 localHostCameraPosition = go.transform.position + go.transform.rotation * QRCodeToCameraOffset;
+                        Quaternion localHostCameraRotation = go.transform.rotation;
+                        Destroy(go);
+
                         Quaternion originRotation = Quaternion.Inverse(_hostCameraRotation.Value) * localHostCameraRotation;
                         Vector3 originPosition = localHostCameraPosition + originRotation * _hostCameraPosition.Value;
-                        HoloKitARSessionControllerAPI.ResetOrigin(originPosition, HoloKitAppUtils.GetHorizontalRotation(originRotation));
+                        HoloKitARSessionControllerAPI.ResetOrigin(originPosition, originRotation);
 
                         StopScanningQRCode();
                         OnFinishedScanningQRCode?.Invoke();

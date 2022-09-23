@@ -48,8 +48,10 @@ namespace Holoi.Mofa.Base
             _audioSource = GetComponent<AudioSource>();
             for (int i = 0; i < transform.childCount; i++)
             {
-                var fragment = transform.GetChild(i).GetComponent<LifeShieldFragment>();
-                _fragments.Add(fragment.Area, fragment);
+                if (transform.GetChild(i).TryGetComponent<LifeShieldFragment>(out var fragment))
+                {
+                    _fragments.Add(fragment.Area, fragment);
+                } 
             }
         }
 
