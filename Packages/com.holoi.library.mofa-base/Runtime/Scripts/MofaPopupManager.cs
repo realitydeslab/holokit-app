@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HoloKit;
 using Holoi.Library.HoloKitApp;
+using Unity.Netcode;
 
 namespace Holoi.Mofa.Base
 {
@@ -29,17 +30,32 @@ namespace Holoi.Mofa.Base
         private void Awake()
         {
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
-
-            _mofaFightingPanel = HoloKitCamera.Instance.CenterEyePose.GetComponentInChildren<MofaFightingPanel>();
+            LifeShield.OnDead += OnLifeShieldDestroyed;
         }
 
         private void OnDestroy()
         {
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
+            LifeShield.OnDead -= OnLifeShieldDestroyed;
         }
 
         private IEnumerator SpawnPopup(GameObject popupPrefab, float destroyDelay)
         {
+            if (_mofaFightingPanel == null)
+            {
+                if (HoloKitHelper.IsRuntime)
+                {
+                    _mofaFightingPanel = HoloKitCamera.Instance.CenterEyePose.GetComponentInChildren<MofaFightingPanel>();
+                }
+                else
+                {
+                    _mofaFightingPanel = HoloKitCamera.Instance.GetComponentInChildren<MofaFightingPanel>();
+                }
+            }
+            if (popupPrefab == null)
+            {
+                yield return null;
+            }
             if (_currentPopup != null)
             {
                 Destroy(_currentPopup);
@@ -119,6 +135,15 @@ namespace Holoi.Mofa.Base
         private void OnRoundData()
         {
             StartCoroutine(SpawnPopup(_summaryBoardPrefab, 30f));
+            // TODO: Display detailed data
+        }
+
+        private void OnLifeShieldDestroyed(ulong ownerClientId)
+        {
+            if (ownerClientId == NetworkManager.Singleton.LocalClientId)
+            {
+                StartCoroutine(SpawnPopup(_deathPrefab, 3f));
+            }
         }
     }
 }
