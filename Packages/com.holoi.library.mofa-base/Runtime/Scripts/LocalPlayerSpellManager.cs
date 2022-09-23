@@ -60,11 +60,15 @@ namespace Holoi.Mofa.Base
             SetupSpells();
             _mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
+            LifeShield.OnSpawned += OnLifeShieldSpawned;
+            LifeShield.OnDead += OnLifeShieldDestroyed;
         }
 
         private void OnDestroy()
         {
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
+            LifeShield.OnSpawned -= OnLifeShieldSpawned;
+            LifeShield.OnDead -= OnLifeShieldDestroyed;
         }
 
         private void SetupSpells()
@@ -193,6 +197,25 @@ namespace Holoi.Mofa.Base
                     NetworkManager.Singleton.LocalClientId);
                 SecondarySpellCharge -= SecondarySpell.ChargeTime;
                 SecondarySpellUseCount++;
+            }
+        }
+
+        private void OnLifeShieldSpawned(ulong ownerClientId)
+        {
+            if (ownerClientId == NetworkManager.Singleton.LocalClientId)
+            {
+                if (_mofaRealityManager.Phase.Value == MofaPhase.Fighting)
+                {
+                    Active = true;
+                }
+            }
+        }
+
+        private void OnLifeShieldDestroyed(ulong ownerClientId)
+        {
+            if (ownerClientId == NetworkManager.Singleton.LocalClientId)
+            {
+                Active = false;
             }
         }
     }

@@ -41,6 +41,8 @@ namespace Holoi.Mofa.Base
 
         public static event Action<ulong> OnRightDestroyed;
 
+        public static event Action<ulong> OnSpawned;
+
         public static event Action<ulong> OnDead;
 
         private void Awake()
@@ -94,6 +96,8 @@ namespace Holoi.Mofa.Base
             BotDestroyed.OnValueChanged += OnBotDestroyedFunc;
             LeftDestroyed.OnValueChanged += OnLeftDestroyedFunc;
             RightDestroyed.OnValueChanged += OnRightDestroyedFunc;
+
+            OnSpawned?.Invoke(OwnerClientId);
         }
 
         public override void OnNetworkDespawn()
