@@ -14,6 +14,8 @@ namespace Holoi.Library.HoloKitApp
         [HideInInspector] public int VideoHeight = 2532;
         [HideInInspector] public Camera RecordCamera;
         public bool RecordMicrophone;
+        public Camera WatermarkCamera;
+        public GameObject DynamicWatermark;
 
         private MP4Recorder _recorder;
         private CameraInput _cameraInput;
@@ -50,6 +52,8 @@ namespace Holoi.Library.HoloKitApp
             {
                 RecordCamera.enabled = true;
             }
+            WatermarkCamera.gameObject.SetActive(true);
+            DynamicWatermark.SetActive(true);
         }
 
         public void StartRecording()
@@ -63,7 +67,7 @@ namespace Holoi.Library.HoloKitApp
             var clock = new RealtimeClock();
             _recorder = new MP4Recorder(VideoWidth, VideoHeight, frameRate, sampleRate, channelCount, audioBitRate: 96_000);
             // Create recording inputs
-            _cameraInput = new CameraInput(_recorder, clock, RecordCamera);
+            _cameraInput = new CameraInput(_recorder, clock, new Camera[] { RecordCamera, WatermarkCamera });
             _cameraInput.HDR = true;
             _audioInput = RecordMicrophone ? new AudioInput(_recorder, clock, _microphoneSource, true) : null;
             // Unmute microphone
@@ -85,6 +89,8 @@ namespace Holoi.Library.HoloKitApp
             {
                 RecordCamera.enabled = false;
             }
+            WatermarkCamera.gameObject.SetActive(false);
+            DynamicWatermark.SetActive(false);
 
             // Save to Photo Library
             var payload = new NatSuite.Sharing.SavePayload();
