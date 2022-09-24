@@ -106,7 +106,7 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 if (_placementIndicator.activeSelf)
                 {
-                    _mofaAI.OnPositionInitializedClientRpc(_placementIndicator.transform.position, _placementIndicator.transform.rotation);
+                    _mofaAI.InitializeAvatarPositionClientRpc(_placementIndicator.transform.position, _placementIndicator.transform.rotation);
                     Destroy(_placementIndicator);
                     StartCoroutine(StartSingleRound());
                 }

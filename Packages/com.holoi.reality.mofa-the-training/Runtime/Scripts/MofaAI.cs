@@ -83,7 +83,7 @@ namespace Holoi.Reality.MOFATheTraining
         }
 
         [ClientRpc]
-        public void OnPositionInitializedClientRpc(Vector3 initialPosition, Quaternion initialRotation)
+        public void InitializeAvatarPositionClientRpc(Vector3 initialPosition, Quaternion initialRotation)
         {
             if (IsServer)
             {

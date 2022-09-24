@@ -82,12 +82,26 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnStartedRecording()
         {
-
+            if (HoloKitHelper.IsRuntime)
+            {
+                FindObjectOfType<HoloKitAppRecorder>().StartRecording();
+            }
+            else
+            {
+                Debug.Log("[HoloKitApp] You can only record video on iOS devices");
+            }
         }
 
         private void OnStoppedRecording()
         {
-
+            if (HoloKitHelper.IsRuntime)
+            {
+                FindObjectOfType<HoloKitAppRecorder>().StopRecording();
+            }
+            else
+            {
+                Debug.Log("[HoloKitApp] You can only record video on iOS devices");
+            }
         }
 
         private void OnAlignmentMarkChecked()
