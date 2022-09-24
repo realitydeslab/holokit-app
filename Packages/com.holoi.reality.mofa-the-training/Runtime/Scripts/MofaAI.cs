@@ -128,7 +128,6 @@ namespace Holoi.Reality.MOFATheTraining
         protected override void FixedUpdate()
         {
             // Update NetworkTransform
-
             if (IsServer)
             {
                 // Rotation
@@ -277,18 +276,21 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 // Calculate the relative z and x velocity
                 Vector3 distFromLastFrame = transform.position - _lastFramePosition;
-                float z = Vector3.Dot(distFromLastFrame, _lastFrameForward);
-                float x = Vector3.Dot(distFromLastFrame, _lastFrameRight);
+                if (distFromLastFrame != Vector3.zero)
+                {
+                    float z = Vector3.Dot(distFromLastFrame, _lastFrameForward);
+                    float x = Vector3.Dot(distFromLastFrame, _lastFrameRight);
 
-                var staticThreshold = 0.001667f; // if velocity < 0.1m/s, we regard it static.
-                z = MofaTrainingUtils.InverseClamp(z, -1 * staticThreshold, 1 * staticThreshold);
-                x = MofaTrainingUtils.InverseClamp(x, -1 * staticThreshold, 1 * staticThreshold);
+                    var staticThreshold = 0.001667f; // if velocity < 0.1m/s, we regard it static.
+                    z = MofaTrainingUtils.InverseClamp(z, -1 * staticThreshold, 1 * staticThreshold);
+                    x = MofaTrainingUtils.InverseClamp(x, -1 * staticThreshold, 1 * staticThreshold);
 
-                z = MofaTrainingUtils.Remap(z, _velocityRemap.x, _velocityRemap.y, _velocityRemap.z, _velocityRemap.w, true);
-                x = MofaTrainingUtils.Remap(x, _velocityRemap.x, _velocityRemap.y, _velocityRemap.z, _velocityRemap.w, true);
+                    z = MofaTrainingUtils.Remap(z, _velocityRemap.x, _velocityRemap.y, _velocityRemap.z, _velocityRemap.w, true);
+                    x = MofaTrainingUtils.Remap(x, _velocityRemap.x, _velocityRemap.y, _velocityRemap.z, _velocityRemap.w, true);
 
-                _animator.SetFloat("Velocity Z", z);
-                _animator.SetFloat("Velocity X", x);
+                    _animator.SetFloat("Velocity Z", z);
+                    _animator.SetFloat("Velocity X", x);
+                }
             }
             else
             {
@@ -299,7 +301,6 @@ namespace Holoi.Reality.MOFATheTraining
             _lastFrameForward = transform.forward;
             _lastFrameRight = transform.right;
             _lastFramePosition = transform.position;
-
         }
 
         private void PlayAvatarCastSpellAnimation(SpellType spellType)

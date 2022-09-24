@@ -153,7 +153,6 @@ namespace Holoi.Library.HoloKitApp
                     Quaternion.Angle(image.transform.rotation, _lastImageRotation) < ImageStablizationRotationThreshold)
                 {
                     _imageStablizationFrameCount++;
-                    //Debug.Log($"[RealityManager] image stablization frame count {_imageStablizationFrameCount}");
                     if (_imageStablizationFrameCount == ImageStabilizationFrameNum)
                     {
                         Debug.Log("[RealityManager] QRCode stabilization succeeded");
@@ -165,8 +164,9 @@ namespace Holoi.Library.HoloKitApp
                         Destroy(go);
 
                         Quaternion originRotation = Quaternion.Inverse(_hostCameraRotation.Value) * localHostCameraRotation;
-                        Vector3 originPosition = localHostCameraPosition + originRotation * _hostCameraPosition.Value;
-                        HoloKitARSessionControllerAPI.ResetOrigin(originPosition, originRotation);
+                        Vector3 originPosition = localHostCameraPosition + originRotation * -_hostCameraPosition.Value;
+                        //HoloKitARSessionControllerAPI.ResetOrigin(originPosition, originRotation);
+                        HoloKitARSessionControllerAPI.ResetOrigin(originPosition, HoloKitAppUtils.GetHorizontalRotation(originRotation));
 
                         StopScanningQRCode();
                         OnFinishedScanningQRCode?.Invoke();
