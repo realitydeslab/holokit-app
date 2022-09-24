@@ -7,7 +7,6 @@ namespace Holoi.Mofa.Base
 {
     public class MofaFightingPanelScores : MonoBehaviour
     {
-        private MofaBaseRealityManager _mofaRealityManager;
         [Header("UI Elenments")]
         [SerializeField] TMPro.TMP_Text _yourScore;
         [SerializeField] TMPro.TMP_Text _enemyScore;
@@ -15,25 +14,19 @@ namespace Holoi.Mofa.Base
         private void OnEnable()
         {
             MofaPlayer.OnScoreChanged += OnScoreChanged;
-            RealityManager.OnRealityManagerSpawned += OnRealityManagerSpawned;
         }
 
         private void OnDisable()
         {
             MofaPlayer.OnScoreChanged -= OnScoreChanged;
-            RealityManager.OnRealityManagerSpawned -= OnRealityManagerSpawned;
-        }
-
-        private void OnRealityManagerSpawned(RealityManager realityManager)
-        {
-            _mofaRealityManager = realityManager as MofaBaseRealityManager;
         }
 
         private void OnScoreChanged()
         {
             int blueTeamScore = 0;
             int redTeamScore = 0;
-            foreach (var mofaPlayer in _mofaRealityManager.Players.Values)
+            var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            foreach (var mofaPlayer in mofaRealityManager.Players.Values)
             {
                 if (mofaPlayer.Team.Value == MofaTeam.Blue)
                 {
@@ -45,9 +38,6 @@ namespace Holoi.Mofa.Base
                 }
             }
 
-            //Debug.Log($"[MofaFightingPanel] Blue {blueTeamScore} : Red {redTeamScore}");
-
-            // SIZHENGTODO: 更新比分面板
             if (blueTeamScore < 10)
             {
                 _yourScore.text = "0" + blueTeamScore;

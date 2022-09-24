@@ -215,5 +215,10 @@ namespace Holoi.Mofa.Base
                 return null;
             }
         }
+
+        public bool IsLocalPlayerSpectator()
+        {
+            return !Players.ContainsKey(NetworkManager.LocalClientId);
+        }
     }
 }

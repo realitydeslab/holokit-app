@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Mofa.Base
 {
@@ -39,7 +40,7 @@ namespace Holoi.Mofa.Base
                     PlayRoundOverSound();
                     break;
                 case MofaPhase.RoundResult:
-                    // TODO: Victory or Defeat
+                    OnRoundResult();
                     break;
                 case MofaPhase.RoundData:
                     break;
@@ -97,6 +98,52 @@ namespace Holoi.Mofa.Base
             {
                 _effectAudioSource.clip = _mofaAudioEffectList.DefeatSound;
                 _effectAudioSource.Play();
+            }
+        }
+
+        private void PlayDrawSound()
+        {
+            if (_mofaAudioEffectList.DrawSound != null)
+            {
+                _effectAudioSource.clip = _mofaAudioEffectList.DrawSound;
+                _effectAudioSource.Play();
+            }
+        }
+
+        private void OnRoundResult()
+        {
+            var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            if (mofaRealityManager.IsLocalPlayerSpectator())
+            {
+                return;
+            }
+            var localPlayer = mofaRealityManager.GetLocalPlayer();
+            var roundResult = mofaRealityManager.GetRoundResult();
+            switch (roundResult)
+            {
+                case MofaRoundResult.BlueTeamWins:
+                    if (localPlayer.Team.Value == MofaTeam.Blue)
+                    {
+                        PlayVictorySound();
+                    }
+                    else
+                    {
+                        PlayDefeatSound();
+                    }
+                    break;
+                case MofaRoundResult.RedTeamWins:
+                    if (localPlayer.Team.Value == MofaTeam.Blue)
+                    {
+                        PlayDefeatSound();
+                    }
+                    else
+                    {
+                        PlayVictorySound();
+                    }
+                    break;
+                case MofaRoundResult.Draw:
+                    PlayDrawSound();
+                    break;
             }
         }
     }

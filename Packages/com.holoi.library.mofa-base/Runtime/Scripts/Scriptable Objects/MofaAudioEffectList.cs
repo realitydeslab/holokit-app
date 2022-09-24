@@ -18,5 +18,7 @@ namespace Holoi.Mofa.Base
         public AudioClip VictorySound;
 
         public AudioClip DefeatSound;
+
+        public AudioClip DrawSound;
     }
 }
