@@ -72,14 +72,14 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.OnNetworkSpawn();
 
-            
+            NetworkManager.NetworkTickSystem.Tick += OnNetworkTick;
         }
 
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
 
-            
+            NetworkManager.NetworkTickSystem.Tick -= OnNetworkTick;
         }
 
         [ClientRpc]
@@ -117,6 +117,14 @@ namespace Holoi.Reality.MOFATheTraining
             }
         }
 
+        private void OnNetworkTick()
+        {
+            if (!IsServer)
+            {
+                UpdateAvatarMovementAnimation();
+            }
+        }
+
         protected override void FixedUpdate()
         {
             // Update NetworkTransform
@@ -142,13 +150,9 @@ namespace Holoi.Reality.MOFATheTraining
                     {
                         // Approaching to the destination
                         transform.position += _speed * Time.fixedDeltaTime * (_destPosition - transform.position).normalized;
+                        UpdateAvatarMovementAnimation();
                     }
                 }
-            }
-
-            if (_animator != null)
-            {
-                UpdateAvatarMovementAnimation();
             }
         }
 
@@ -264,6 +268,11 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void UpdateAvatarMovementAnimation()
         {
+            if (_animator == null)
+            {
+                return;
+            }
+
             if (_notFirstAnimationFrame)
             {
                 // Calculate the relative z and x velocity

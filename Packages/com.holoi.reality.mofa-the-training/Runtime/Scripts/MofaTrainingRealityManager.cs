@@ -27,6 +27,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.Awake();
 
+            MofaBaseRealityManager.OnPhaseChanged += OnPhaseChangedFunc;
             HoloKitAppUIEventsReactor.OnTriggered += OnTriggered;
             HoloKitAppUIEventsReactor.OnBoosted += OnBoosted;
         }
@@ -35,6 +36,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.OnDestroy();
 
+            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChangedFunc;
             HoloKitAppUIEventsReactor.OnTriggered -= OnTriggered;
             HoloKitAppUIEventsReactor.OnBoosted -= OnBoosted;
         }
@@ -117,6 +119,21 @@ namespace Holoi.Reality.MOFATheTraining
                 return;
             }
 
+            if (Phase.Value == MofaPhase.Fighting)
+            {
+                LocalPlayerSpellManager.SpawnBasicSpell();
+                return;
+            }
+
+            if (Phase.Value == MofaPhase.RoundData)
+            {
+                StartCoroutine(StartSingleRound());
+                return;
+            }
+        }
+
+        private void OnPhaseChangedFunc(MofaPhase mofaPhase)
+        {
             if (Phase.Value == MofaPhase.Countdown)
             {
                 var arRaycastManager = HoloKitCamera.Instance.GetComponentInParent<ARRaycastManager>();
@@ -130,18 +147,6 @@ namespace Holoi.Reality.MOFATheTraining
                     arPlaneManager.enabled = false;
                     DestroyExistingARPlanes();
                 }
-                return;
-            }
-
-            if (Phase.Value == MofaPhase.Fighting)
-            {
-                LocalPlayerSpellManager.SpawnBasicSpell();
-                return;
-            }
-
-            if (Phase.Value == MofaPhase.RoundData)
-            {
-                StartCoroutine(StartSingleRound());
                 return;
             }
         }
