@@ -17,6 +17,8 @@ namespace Holoi.Library.HoloKitApp
         public Camera WatermarkCamera;
         public GameObject DynamicWatermark;
 
+        public bool IsRecording => _cameraInput != null;
+
         private MP4Recorder _recorder;
         private CameraInput _cameraInput;
         private AudioInput _audioInput;
@@ -56,6 +58,16 @@ namespace Holoi.Library.HoloKitApp
             DynamicWatermark.SetActive(true);
         }
 
+        private void ReleaseRecorderParams()
+        {
+            if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Stereo)
+            {
+                RecordCamera.enabled = false;
+            }
+            WatermarkCamera.gameObject.SetActive(false);
+            DynamicWatermark.SetActive(false);
+        }
+
         public void StartRecording()
         {
             PrepareRecorderParams();
@@ -85,17 +97,12 @@ namespace Holoi.Library.HoloKitApp
             // Playback recording
             Debug.Log($"Saved recording to: {path}");
 
-            if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Stereo)
-            {
-                RecordCamera.enabled = false;
-            }
-            WatermarkCamera.gameObject.SetActive(false);
-            DynamicWatermark.SetActive(false);
-
             // Save to Photo Library
             var payload = new NatSuite.Sharing.SavePayload();
             payload.AddMedia(path);
             await payload.Commit();
+
+            ReleaseRecorderParams();
         }
     }
 }

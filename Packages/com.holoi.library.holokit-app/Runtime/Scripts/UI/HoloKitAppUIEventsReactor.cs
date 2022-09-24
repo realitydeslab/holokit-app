@@ -66,7 +66,6 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnTriggeredFunc()
         {
-            Debug.Log("[HoloKitAppUIEventsReactor] OnTriggeredFunc");
             OnTriggered?.Invoke();
         }
 
@@ -77,7 +76,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnExitReality()
         {
-
+            HoloKitApp.Instance.Shutdown();
         }
 
         private void OnStartedRecording()

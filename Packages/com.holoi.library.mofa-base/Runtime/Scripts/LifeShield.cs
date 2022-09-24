@@ -81,7 +81,8 @@ namespace Holoi.Mofa.Base
             }
 
             // Hide local player's shield
-            if (OwnerClientId == NetworkManager.Singleton.LocalClientId)
+            Debug.Log($"[LifeShield] ownerClientId {OwnerClientId} and localClientId {NetworkManager.LocalClientId}");
+            if (OwnerClientId == NetworkManager.LocalClientId)
             {
                 _fragments[LifeShieldArea.Top].GetComponent<MeshRenderer>().enabled = false;
                 _fragments[LifeShieldArea.Bot].GetComponent<MeshRenderer>().enabled = false;
@@ -110,6 +111,11 @@ namespace Holoi.Mofa.Base
 
         private void OnTopDestroyedFunc(bool oldValue, bool newValue)
         {
+            if (!newValue)
+            {
+                return;
+            }
+
             if (IsServer)
             {
                 if (_fragments[LifeShieldArea.Top].TryGetComponent<Collider>(out var topCollider))
@@ -133,6 +139,11 @@ namespace Holoi.Mofa.Base
 
         private void OnBotDestroyedFunc(bool oldValue, bool newValue)
         {
+            if (!newValue)
+            {
+                return;
+            }
+
             if (IsServer)
             {
                 if (_fragments[LifeShieldArea.Bot].TryGetComponent<Collider>(out var botCollider))
@@ -156,6 +167,11 @@ namespace Holoi.Mofa.Base
 
         private void OnLeftDestroyedFunc(bool oldValue, bool newValue)
         {
+            if (!newValue)
+            {
+                return;
+            }
+
             if (IsServer)
             {
                 if (_fragments[LifeShieldArea.Left].TryGetComponent<Collider>(out var leftCollider))
@@ -179,6 +195,11 @@ namespace Holoi.Mofa.Base
 
         private void OnRightDestroyedFunc(bool oldValue, bool newValue)
         {
+            if (!newValue)
+            {
+                return;
+            }
+
             if (IsServer)
             {
                 if (_fragments[LifeShieldArea.Right].TryGetComponent<Collider>(out var rightCollider))
