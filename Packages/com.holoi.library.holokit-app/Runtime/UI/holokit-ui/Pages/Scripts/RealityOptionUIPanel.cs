@@ -47,14 +47,14 @@ namespace Holoi.Library.HoloKitApp.UI
             _scrollViewObjectCollection.GetComponent<CollectionScrollViewUI>().CollectionContainerList.Clear();
             _scrollViewAvatarCollection.GetComponent<CollectionScrollViewUI>().CollectionContainerList.Clear();
 
-            if (Application.isEditor)
-            {
-                SetUIInfo();
-            }
-            else
-            {
+            //if (Application.isEditor)
+            //{
+            //    SetUIInfo();
+            //}
+            //else
+            //{
 
-            }
+            //}
         }
 
         private void Update()

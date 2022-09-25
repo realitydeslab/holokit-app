@@ -96,7 +96,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
         }
 
-        void UpdateUITheme()
+        public void UpdateUITheme()
         {
             switch (theme)
             {
