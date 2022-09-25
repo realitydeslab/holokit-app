@@ -4,7 +4,7 @@ using UnityEngine;
 using Holoi.Library.HoloKitApp;
 using UnityEngine.VFX;
 
-namespace Holoi.Mofa.Base
+namespace Holoi.Library.MOFABase
 {
     public class MofaFightingPanelStatus : MonoBehaviour
     {
@@ -17,7 +17,7 @@ namespace Holoi.Mofa.Base
 
         private void Awake()
         {
-            _mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            _mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
         }
 
         private void OnEnable()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
-namespace Holoi.Mofa.Base
+namespace Holoi.Library.MOFABase
 {
     public class SpellMovementController : NetworkBehaviour
     {

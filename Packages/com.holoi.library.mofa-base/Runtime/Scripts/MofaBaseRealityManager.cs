@@ -6,7 +6,7 @@ using Holoi.Library.HoloKitApp;
 using System;
 using HoloKit;
 
-namespace Holoi.Mofa.Base
+namespace Holoi.Library.MOFABase
 {
     public enum MofaPhase
     {

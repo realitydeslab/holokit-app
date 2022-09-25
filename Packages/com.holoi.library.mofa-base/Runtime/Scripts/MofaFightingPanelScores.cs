@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Holoi.Library.HoloKitApp;
 
-namespace Holoi.Mofa.Base
+namespace Holoi.Library.MOFABase
 {
     public class MofaFightingPanelScores : MonoBehaviour
     {
@@ -25,7 +25,7 @@ namespace Holoi.Mofa.Base
         {
             int blueTeamScore = 0;
             int redTeamScore = 0;
-            var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             foreach (var mofaPlayer in mofaRealityManager.Players.Values)
             {
                 if (mofaPlayer.Team.Value == MofaTeam.Blue)

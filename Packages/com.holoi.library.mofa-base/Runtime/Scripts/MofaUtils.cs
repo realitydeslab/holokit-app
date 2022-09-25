@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
-namespace Holoi.Mofa.Base
+namespace Holoi.Library.MOFABase
 {
     public static class MofaUtils
     {

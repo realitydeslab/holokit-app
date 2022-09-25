@@ -5,7 +5,7 @@ using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
 using System;
 
-namespace Holoi.Mofa.Base
+namespace Holoi.Library.MOFABase
 {
     public class LifeShield : NetworkBehaviour
     {
@@ -61,7 +61,7 @@ namespace Holoi.Mofa.Base
         {
             Debug.Log($"[LifeShield] OnNetworkSpawn with ownership {OwnerClientId}");
 
-            var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             mofaRealityManager.SetLifeShield(this);
 
             // Setup color
@@ -230,7 +230,7 @@ namespace Holoi.Mofa.Base
                 if (IsServer)
                 {
                     _fragments[LifeShieldArea.Center].GetComponent<Collider>().enabled = false;
-                    var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+                    var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
                     if (mofaRealityManager.Phase.Value == MofaPhase.Fighting || mofaRealityManager.Phase.Value == MofaPhase.RoundOver)
                     {
                         mofaRealityManager.Players[(ulong)LastAttackerClientId.Value].KillCount.Value++;

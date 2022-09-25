@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Holoi.Library.HoloKitApp;
 
-namespace Holoi.Mofa.Base
+namespace Holoi.Library.MOFABase
 {
     public class MofaAudioEffectManager : MonoBehaviour
     {
@@ -112,7 +112,7 @@ namespace Holoi.Mofa.Base
 
         private void OnRoundResult()
         {
-            var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             if (mofaRealityManager.IsLocalPlayerSpectator())
             {
                 return;

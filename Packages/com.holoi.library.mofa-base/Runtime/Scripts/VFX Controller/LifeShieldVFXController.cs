@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using Unity.Netcode;
 
-namespace Holoi.Mofa.Base
+namespace Holoi.Library.MOFABase
 {
     public class LifeShieldVFXController : MonoBehaviour
     {

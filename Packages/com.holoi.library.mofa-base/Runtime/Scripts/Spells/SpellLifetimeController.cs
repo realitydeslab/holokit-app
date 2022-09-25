@@ -4,7 +4,7 @@ using UnityEngine;
 using Unity.Netcode;
 using System;
 
-namespace Holoi.Mofa.Base
+namespace Holoi.Library.MOFABase
 {
     [RequireComponent(typeof(NetworkObject))]
     [RequireComponent(typeof(AudioSource))]

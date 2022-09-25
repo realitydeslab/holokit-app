@@ -6,7 +6,7 @@ using Holoi.Library.HoloKitApp;
 using HoloKit;
 using Unity.Netcode;
 
-namespace Holoi.Mofa.Base
+namespace Holoi.Library.MOFABase
 {
     public enum ControllerState
     {
@@ -58,7 +58,7 @@ namespace Holoi.Mofa.Base
         private void Awake()
         {
             SetupSpells();
-            _mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            _mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
             LifeShield.OnSpawned += OnLifeShieldSpawned;
             LifeShield.OnDead += OnLifeShieldDestroyed;

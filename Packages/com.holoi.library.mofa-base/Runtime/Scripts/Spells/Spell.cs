@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Holoi.Mofa.Base
+namespace Holoi.Library.MOFABase
 {
     public enum SpellType
     {

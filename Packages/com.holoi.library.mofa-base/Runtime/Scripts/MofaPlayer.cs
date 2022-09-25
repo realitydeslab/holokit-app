@@ -6,7 +6,7 @@ using Holoi.Library.HoloKitApp;
 using HoloKit;
 using System;
 
-namespace Holoi.Mofa.Base
+namespace Holoi.Library.MOFABase
 {
     public enum MofaTeam
     {
@@ -44,7 +44,7 @@ namespace Holoi.Mofa.Base
         {
             Debug.Log($"[MofaPlayer] OnNetworkSpawned with ownership {OwnerClientId} and team {Team.Value}");
 
-            var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             mofaRealityManager.SetPlayer(OwnerClientId, this);
 
             KillCount.OnValueChanged += OnScoreChangedFunc;

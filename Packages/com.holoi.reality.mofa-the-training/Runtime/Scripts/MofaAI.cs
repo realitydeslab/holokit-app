@@ -4,7 +4,7 @@ using UnityEngine;
 using Unity.Netcode;
 using Holoi.AssetFoundation;
 using HoloKit;
-using Holoi.Mofa.Base;
+using Holoi.Library.MOFABase;
 using Holoi.Library.HoloKitApp;
 using System;
 

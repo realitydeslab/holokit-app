@@ -5,7 +5,7 @@ using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
 using System;
 
-namespace Holoi.Mofa.Base
+namespace Holoi.Library.MOFABase
 {
     [RequireComponent(typeof(NetworkObject))]
     [RequireComponent(typeof(AudioSource))]
@@ -32,7 +32,7 @@ namespace Holoi.Mofa.Base
         {
             if (other.TryGetComponent<IDamageable>(out var damageable))
             {
-                var mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+                var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
                 MofaTeam attackerTeam = mofaRealityManager.Players[OwnerClientId].Team.Value;
                 MofaTeam victimTeam = mofaRealityManager.Players[other.GetComponentInParent<NetworkObject>().OwnerClientId].Team.Value;
                 if (attackerTeam != victimTeam)
