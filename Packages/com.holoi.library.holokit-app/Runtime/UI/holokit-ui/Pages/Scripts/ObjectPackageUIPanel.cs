@@ -14,6 +14,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         int _count;
 
+        [SerializeField] ScrollRect _scrollView;
         [SerializeField] Transform _content;
 
         [SerializeField] GameObject _collectionContainer;
@@ -71,6 +72,8 @@ namespace Holoi.Library.HoloKitApp.UI
                  * _collectionContainer.GetComponent<CollectionContainer>().theme = Darl;
                 */
                 _collectionContainer.GetComponent<CollectionContainer>().metaObjectCollection = mocl.list[i];
+                _collectionContainer.GetComponent<CollectionContainer>().emptyDragButton.
+                    GetComponent<DragButton>().scorllRect = _scrollView;
                 var collection = Instantiate(_collectionContainer, _content);
                 collection.GetComponent<RectTransform>().localScale = Vector3.one;
             }
@@ -90,6 +93,8 @@ namespace Holoi.Library.HoloKitApp.UI
                  * _collectionContainer.GetComponent<CollectionContainer>().theme = Darl;
                 */
                 _collectionContainer.GetComponent<CollectionContainer>().metaAvatarCollection = macl.list[i];
+                _collectionContainer.GetComponent<CollectionContainer>().emptyDragButton.
+                    GetComponent<DragButton>().scorllRect = _scrollView;
                 var collection = Instantiate(_collectionContainer, _content);
                 collection.GetComponent<RectTransform>().localScale = Vector3.one;
             }
