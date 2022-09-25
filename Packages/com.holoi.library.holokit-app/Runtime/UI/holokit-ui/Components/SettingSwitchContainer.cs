@@ -6,20 +6,21 @@ using Holoi.Library.HoloKitApp.UI;
 
 public class SettingSwitchContainer : MonoBehaviour
 {
-    Button _switchButton;
+   public Button switchButton;
+
     private void Awake()
     {
-        _switchButton = transform.Find("Switch").GetComponent<Button>();
+        switchButton = transform.Find("Switch").GetComponent<Button>();
 
-        _switchButton.onClick.AddListener(() =>
+        switchButton.onClick.AddListener(() =>
         {
-            if(_switchButton.GetComponent<FlexibleUISwitch>().state == FlexibleUISwitch.State.Close)
+            if(switchButton.GetComponent<FlexibleUISwitch>().state == FlexibleUISwitch.State.Close)
             {
-                _switchButton.GetComponent<FlexibleUISwitch>().state = FlexibleUISwitch.State.Open;
+                switchButton.GetComponent<FlexibleUISwitch>().state = FlexibleUISwitch.State.Open;
             }
             else
             {
-                _switchButton.GetComponent<FlexibleUISwitch>().state = FlexibleUISwitch.State.Close;
+                switchButton.GetComponent<FlexibleUISwitch>().state = FlexibleUISwitch.State.Close;
             }
 
         });

@@ -19,7 +19,8 @@ namespace Holoi.Library.HoloKitApp.UI
                 PanelManager.Pop();
             });
 
-            UITool.GetOrAddComponent<SettingUIPanel>().instruction.GetComponent<Button>().onClick.AddListener(() =>
+            UITool.GetOrAddComponent<SettingUIPanel>().instruction.GetComponent<SettingSwitchContainer>()
+                .switchButton.onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("setting is clicked.");
@@ -27,7 +28,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
             });
 
-            UITool.GetOrAddComponent<SettingUIPanel>().vibration.GetComponent<Button>().onClick.AddListener(() =>
+            UITool.GetOrAddComponent<SettingUIPanel>().vibration.GetComponent<SettingSwitchContainer>()
+                .switchButton.onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("setting is clicked.");
@@ -35,7 +37,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
             });
 
-            UITool.GetOrAddComponent<SettingUIPanel>().hdr.GetComponent<Button>().onClick.AddListener(() =>
+            UITool.GetOrAddComponent<SettingUIPanel>().hdr.GetComponent<SettingSwitchContainer>()
+                .switchButton.onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("setting is clicked.");
@@ -43,7 +46,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
             });
 
-            UITool.GetOrAddComponent<SettingUIPanel>().recordResolution.GetComponent<Button>().onClick.AddListener(() =>
+            UITool.GetOrAddComponent<SettingUIPanel>().recordResolution.GetComponent<SettingSwitchContainer>()
+                .switchButton.onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("setting is clicked.");
@@ -51,7 +55,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
             });
 
-            UITool.GetOrAddComponent<SettingUIPanel>().wifi.GetComponent<Button>().onClick.AddListener(() =>
+            UITool.GetOrAddComponent<SettingUIPanel>().wifi.GetComponent<SettingSwitchContainer>()
+                .switchButton.onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("v is clicked.");
@@ -59,7 +64,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
             });
 
-            UITool.GetOrAddComponent<SettingUIPanel>().showTechInfo.GetComponent<Button>().onClick.AddListener(() =>
+            UITool.GetOrAddComponent<SettingUIPanel>().showTechInfo.GetComponent<SettingSwitchContainer>()
+                .switchButton.onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("setting is clicked.");
