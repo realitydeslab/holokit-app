@@ -127,5 +127,31 @@ namespace Holoi.Library.HoloKitApp
             }
             return null;
         }
+
+        public List<MetaAvatarCollection> GetCompatibleMetaAvatarCollectionList(Reality reality)
+        {
+            List<MetaAvatarCollection> list = new();
+            foreach (var avatarCollection in _avatarCollectionList.list)
+            {
+                if (reality.IsCompatibleWithMetaAvatarCollection(avatarCollection))
+                {
+                    list.Add(avatarCollection);
+                }
+            }
+            return list;
+        }
+
+        public List<MetaObjectCollection> GetCompatibleMetaObjectCollectionList(Reality reality)
+        {
+            List<MetaObjectCollection> list = new();
+            foreach (var objectCollection in _objectCollectionList.list)
+            {
+                if (reality.IsCompatibleWithMetaObjectCollection(objectCollection))
+                {
+                    list.Add(objectCollection);
+                }
+            }
+            return list;
+        }
     }
 }

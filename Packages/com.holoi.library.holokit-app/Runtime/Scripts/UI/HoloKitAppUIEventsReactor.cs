@@ -49,7 +49,7 @@ namespace Holoi.Library.HoloKitApp
             }
             else
             {
-                HoloKitCamera.Instance.RenderMode = HoloKitRenderMode.Stereo;
+                HoloKitCamera.Instance.RenderMode = HoloKitRenderMode.Mono;
                 Screen.orientation = ScreenOrientation.Portrait;
             }
         }
