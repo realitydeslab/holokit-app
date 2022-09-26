@@ -86,26 +86,31 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void SetSelectedThumbnail()
         {
+
+
+
             for (int i = 0; i < _container.childCount; i++)
             {
                 if (i == activeIndex)
                 {
-                    var go = _container.GetChild(i).gameObject;
-                    go.layer = 3;
+                    var parent = _container.GetChild(i).gameObject;
+                    parent.layer = 3;
 
-                    foreach (Transform child in go.transform)
+                    var transformList = parent.GetComponentsInChildren<Transform>();
+                    foreach (var go in transformList)
                     {
-                        child.gameObject.layer = 3;
+                        go.gameObject.layer = 3;
                     }
                 }
                 else
                 {
-                    var go = _container.GetChild(i).gameObject;
-                    go.layer = 0;
+                    var parent = _container.GetChild(i).gameObject;
+                    parent.layer = 0;
 
-                    foreach (Transform child in go.transform)
+                    var transformList = parent.GetComponentsInChildren<Transform>();
+                    foreach (var go in transformList)
                     {
-                        child.gameObject.layer = 0;
+                        go.gameObject.layer = 0;
                     }
                 }
             }
