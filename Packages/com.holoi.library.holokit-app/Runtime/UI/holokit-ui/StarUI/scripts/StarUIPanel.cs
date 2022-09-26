@@ -13,13 +13,13 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [Header("buttons")]
         public Button more;
+        public Button triggerButton;
 
         [Header("scrollbars")]
         public Scrollbar volumeBar;
         public Scrollbar recordBar;
         public Scrollbar exitBar;
         public Scrollbar boostBar;
-        public Scrollbar triggerBar;
         //public Scrollbar spectatorBar;
         public Scrollbar recalibrateBar;
         public Scrollbar pauseBar;
@@ -118,8 +118,8 @@ namespace Holoi.Library.HoloKitApp.UI
             _boostBG = boostBar.GetComponent<ScrollBarHelper>().BackGround;
             _boostMaterial = _boostBG.material;
 
-            _triggerAnimator = triggerBar.GetComponent<Animator>();
-            _triggerBG = triggerBar.GetComponent<ScrollBarHelper>().BackGround;
+            _triggerAnimator = triggerButton.GetComponent<Animator>();
+            _triggerBG = triggerButton.GetComponent<ScrollBarHelper>().BackGround;
             _triggerMaterial = _triggerBG.material;
 
             _exitAnimator = exitBar.GetComponent<Animator>();
@@ -253,11 +253,11 @@ namespace Holoi.Library.HoloKitApp.UI
             _advance.gameObject.SetActive(false);
         }
 
-        //public void TriggerOnClick()
-        //{
-        //    Debug.Log("Trigger button clicked!");
-
-        //}
+        public void TriggerOnClick()
+        {
+            _triggerBG.gameObject.SetActive(false);
+            _triggerAnimator.SetTrigger("OnLoaded");
+        }
 
         public void ScrollBarPointerDown(Scrollbar scrollbar)
         {
@@ -370,22 +370,6 @@ namespace Holoi.Library.HoloKitApp.UI
             // to do: set volume value with _value
             Debug.Log("set volume value to: " + _value);
 
-        }
-        // trigger bar
-        public void TriggerBarOnValueChanged()
-        {
-            _value = triggerBar.value;
-            _triggerMaterial.SetFloat("_Offset", _value);
-
-            if (_value == 1)
-            {
-                TriggerBarOnLoaded();
-            }
-        }
-        public void TriggerBarOnLoaded()
-        {
-            _triggerBG.gameObject.SetActive(false);
-            _triggerAnimator.SetTrigger("OnLoaded");
         }
 
         // boost bar

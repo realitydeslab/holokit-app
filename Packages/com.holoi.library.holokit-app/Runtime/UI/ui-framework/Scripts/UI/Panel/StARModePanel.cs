@@ -44,13 +44,10 @@ namespace Holoi.Library.HoloKitApp.UI
                     PanelManager.OnStartedRecording?.Invoke();
                 }
             });
-            stARUIPanel.triggerBar.onValueChanged.AddListener((value) =>
+            stARUIPanel.triggerButton.onClick.AddListener(() =>
             {
-                if (value == 1)
-                {
-                    // trigger action here:
-                    PanelManager.OnStARTriggered?.Invoke();
-                }
+                // trigger action here:
+                PanelManager.OnStARTriggered?.Invoke();
             });
             stARUIPanel.boostBar.onValueChanged.AddListener((value) =>
             {
