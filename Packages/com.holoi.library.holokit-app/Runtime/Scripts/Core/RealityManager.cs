@@ -15,8 +15,6 @@ namespace Holoi.Library.HoloKitApp
 
         public List<GameObject> NetworkPrefabs;
 
-        [SerializeField] private GameObject _phoneAlignmentMarkPrefab;
-
         private bool _isAdvertising;
 
         private readonly Dictionary<ulong, string> _connectedSpectatorDevices = new();
@@ -195,7 +193,7 @@ namespace Holoi.Library.HoloKitApp
         {
             if (_phoneAlignmentMark == null)
             {
-                _phoneAlignmentMark = Instantiate(_phoneAlignmentMarkPrefab);
+                _phoneAlignmentMark = Instantiate(HoloKitApp.Instance.PhoneAlignmentMarkPrefab);
             }
         }
 

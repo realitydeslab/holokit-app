@@ -21,6 +21,8 @@ namespace Holoi.Library.HoloKitApp
 
         public HoloKitAppLocalPlayerPreferences LocalPlayerPreferences;
 
+        public GameObject PhoneAlignmentMarkPrefab;
+
         [HideInInspector] public Reality CurrentReality;
 
         public bool IsHost => _isHost;
