@@ -17,8 +17,10 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 // here we do onclick event of this button
                 Debug.Log("ExitButton is clicked.");
-                PanelManager.Pop();
-
+                while(PanelManager.GetActivePanel().UIType.Name != "ScreenARModePanel")
+                {
+                    PanelManager.Pop();
+                }
                 PanelManager.OnStoppedSharingReality?.Invoke();
             });
 
