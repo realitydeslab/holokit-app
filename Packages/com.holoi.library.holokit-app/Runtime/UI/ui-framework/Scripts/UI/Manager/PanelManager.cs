@@ -77,9 +77,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 //Debug.Log("_panelStack.Count = 0, do not need Pause the previous UI");
             }
 
-            //Debug.Log("Push() panelGO Create");
             var panelGO = _uiManager.CreateUIGO(nextPanel.UIType);
-            //Debug.Log($"Push() panelGO Create Done with {panelGO.name}");
 
             nextPanel.Initialize(new UITool(panelGO));
             nextPanel.Initialize(this);
@@ -111,9 +109,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 //Debug.Log("_panelStack.Count = 0, do not need Pause the previous UI");
             }
 
-            //Debug.Log("Push() panelGO Create");
             var panelGO = _uiManager.CreateUIGO(nextPanel.UIType);
-            //Debug.Log($"Push() panelGO Create Done with {panelGO.name}");
 
             nextPanel.Initialize(new UITool(panelGO));
             nextPanel.Initialize(this);

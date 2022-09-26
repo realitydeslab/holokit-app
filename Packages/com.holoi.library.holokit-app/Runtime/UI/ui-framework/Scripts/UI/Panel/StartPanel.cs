@@ -38,12 +38,6 @@ namespace Holoi.Library.HoloKitApp.UI
             var realityDetailPanel = new RealityDetailPanel();
 
             PanelManager.Push(realityDetailPanel);
-
-            var realityDetailPanelUI = realityDetailPanel.UITool.GetOrAddComponent<RealityDetailUIPanel>();
-
-            realityDetailPanelUI.reality = HoloKitApp.Instance.CurrentReality;
-
-            realityDetailPanelUI.SetUIInfo();
         }
 
         public override void OnClose()

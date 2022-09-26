@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
-using System.IO;
 
 /// <summary>
 /// 1. when user slider screen to video container, the first video plays
@@ -27,26 +26,34 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [Header("Debug")]
         [SerializeField] int _videoCount;
+        int _readyCount;
 
         float _scrollValue;
         int _activeIndex;
 
-        enum State
+        enum VisibleState
         {
             visible,
             inVisible 
         }
 
-        State _state = State.inVisible;
+        enum VideoState
+        {
+            notReady,
+            ready,
+        }
+
+        VisibleState _visibleState = VisibleState.inVisible;
+        VideoState _videoState = VideoState.notReady;
 
         private void OnEnable()
         {
-            transform.GetComponent<HorizontalScrollSnap>().OnNextScreenEvent.AddListener(SetVideoState);
+            transform.GetComponent<HorizontalScrollSnap>().OnNextScreenEvent.AddListener(UpdateVideoState);
         }
 
         private void OnDisable()
         {
-            transform.GetComponent<HorizontalScrollSnap>().OnNextScreenEvent.RemoveListener(SetVideoState);
+            transform.GetComponent<HorizontalScrollSnap>().OnNextScreenEvent.RemoveListener(UpdateVideoState);
         }
 
         private void Awake()
@@ -56,11 +63,43 @@ namespace Holoi.Library.HoloKitApp.UI
             UpdateVideos();
         }
 
+        private void Start()
+        {
+
+        }
 
         private void Update()
         {
-            SetContainerState();
-            SetVideoState();
+            switch (_videoState)
+            {
+                case VideoState.notReady:
+                    foreach (var video in _videoObjectList)
+                    {
+                        var vp = video.GetComponent<VideoPlayer>();
+                        if (vp.frame == 1)
+                        {
+                            vp.Stop();
+                            _readyCount ++;
+                        }
+                        else
+                        {
+
+                        }
+                    }
+
+                    if(_readyCount == _videoCount)
+                    {
+                        _videoState = VideoState.ready;
+                    }
+
+                    break;
+                case VideoState.ready:
+
+                    UpdateContainerState();
+                    UpdateVideoState();
+
+                    break;
+            }
         }
 
         void UpdateVideos()
@@ -71,20 +110,30 @@ namespace Holoi.Library.HoloKitApp.UI
                 var go = Instantiate(_videoObject, _content);
                 //go.GetComponent<VideoPlayer>().url = _videoUrl[i];
                 _videoObjectList.Add(go);
+                go.GetComponent<VideoPlayer>().Play();
             }
 
             _scrollBar.GetComponent<ScrollBarSlidingAreaStyle>().Init(_videoCount);
         }
 
-        private void SetContainerState()
+        private void UpdateContainerState()
         {
-            if (_parentScrollBar.value < 0.25f)
+            if (PanelManager.Instance.GetActivePanel().UIType.Name == "RealityDetailPanel")
             {
-                _state = State.visible;
-            }else
-            {
-                _state = State.inVisible;
+                if (_parentScrollBar.value < 0.25f)
+                {
+                    _visibleState = VisibleState.visible;
+                }
+                else
+                {
+                    _visibleState = VisibleState.inVisible;
+                }
             }
+            else
+            {
+                _visibleState = VisibleState.inVisible;
+            }
+
         }
 
         void DeletePreviousElement(Transform content)
@@ -107,11 +156,11 @@ namespace Holoi.Library.HoloKitApp.UI
             }
         }
 
-        public void SetVideoState()
+        public void UpdateVideoState()
         {
-            switch (_state)
+            switch (_visibleState)
             {
-                case State.visible:
+                case VisibleState.visible:
                     _scrollValue = _scrollBar.value;
                     _scrollValue = Mathf.Clamp01(_scrollValue);
                     _activeIndex = Mathf.RoundToInt(_scrollValue * (_videoCount - 1));
@@ -128,7 +177,7 @@ namespace Holoi.Library.HoloKitApp.UI
                         }
                     }
                     break;
-                case State.inVisible:
+                case VisibleState.inVisible:
                     for (int i = 0; i < _videoCount; i++)
                     {
                         _videoObjectList[i].GetComponent<VideoPlayer>().Stop();

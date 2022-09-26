@@ -93,6 +93,9 @@ namespace Holoi.Library.HoloKitApp.UI
         void InitialCoverContent()
         {
             realityThumbnailContainer._thumbnailList.Clear();
+
+            List<GameObject> tempTitleList = new List<GameObject>(); 
+
             for (int i = 0; i < _realityCount; i++)
             {
                 // create thumbnailPrefabs
@@ -106,7 +109,19 @@ namespace Holoi.Library.HoloKitApp.UI
                 _prefabTitle.transform.Find("Index").GetChild(0).GetComponent<TMPro.TMP_Text>().text = "Reality " + "#00" + realityCollection.realities[i].realityId;
                 _prefabTitle.transform.Find("Title").GetChild(0).GetComponent<TMPro.TMP_Text>().text = realityCollection.realities[i].displayName;
                 var titleGO = Instantiate(_prefabTitle, _titleScrollContent);
+                tempTitleList.Add(titleGO);
             }
+
+            // re-set sibling index: iphone revert
+            if (Application.isMobilePlatform)
+            {
+                Debug.Log("reset siblings on mobile platform");
+                for (int i = 0; i < tempTitleList.Count; i++)
+                {
+                    tempTitleList[i].transform.SetSiblingIndex(tempTitleList.Count - 1 - i);
+                }
+            }
+            Debug.Log("first sibling:" + _titleScrollContent.GetChild(0).Find("Title/Text").GetComponent<TMPro.TMP_Text>().text);
         }
 
         void UpdateScrollValue()

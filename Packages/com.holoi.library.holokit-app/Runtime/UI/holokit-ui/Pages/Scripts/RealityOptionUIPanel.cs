@@ -47,20 +47,19 @@ namespace Holoi.Library.HoloKitApp.UI
             _scrollViewObjectCollection.GetComponent<CollectionScrollViewUI>().CollectionContainerList.Clear();
             _scrollViewAvatarCollection.GetComponent<CollectionScrollViewUI>().CollectionContainerList.Clear();
 
-            //if (Application.isEditor)
-            //{
-            //    SetUIInfo();
-            //}
-            //else
-            //{
-
-            //}
+            if (Application.isPlaying)
+            {
+                
+            }
+            else
+            {
+                SetUIInfo();
+            }
         }
 
         private void Update()
         {
-            //Debug.Log($"_scrollBarObjectCollection {_scrollBarObjectCollection.value} ");
-            //Debug.Log($"_scrollBarAvatarCollection {_scrollBarAvatarCollection.value} ");
+
         }
 
         public void SetUIInfo()
@@ -123,9 +122,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 _scrollViewAvatarCollection.gameObject.SetActive(false);
             }
 
-            //ScrollBarSetInitValue();
-            //_scrollBarObjectCollection.value = 0;
-            //_scrollBarAvatarCollection.value = 0;
+            ScrollBarSetInitValue();
         }
 
         public void SetUIButtons()

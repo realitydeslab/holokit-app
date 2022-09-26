@@ -8,7 +8,8 @@ namespace Holoi.Library.HoloKitApp.UI
     [ExecuteInEditMode]
     public class RealityDetailUIPanel : MonoBehaviour
     {
-        public Reality reality;
+        [SerializeField] Reality _reality;
+
         public MetaObjectCollectionList availableMetaObjectCollectionList;
         public MetaAvatarCollectionList availableMetaAvatarCollectionList;
 
@@ -38,7 +39,17 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
+            if(HoloKitApp.Instance.CurrentReality == null)
+            {
+                Debug.Log("error: current relity is null");
+            }
+            else
+            {
+                _reality = HoloKitApp.Instance.CurrentReality;
+            }
             _contentInitPositionY = _content.position.y;
+
+            SetUIInfo();
         }
 
         private void Update()
@@ -59,14 +70,14 @@ namespace Holoi.Library.HoloKitApp.UI
         public void SetUIInfo()
         {
             //Debug.Log("SetUIInfo");
-            _technicContainer.reality = reality;
+            _technicContainer.reality = _reality;
             _technicContainer.SetUIInfo();
 
-            _id.text.text = "Reality #" + reality.realityId;
-            _name.text.text = reality.name;
-            _version.text.text = reality.version;
-            _author.text.text = reality.author;
-            _description.text.text = reality.description;
+            _id.text.text = "Reality #" + _reality.realityId;
+            _name.text.text = _reality.name;
+            _version.text.text = _reality.version;
+            _author.text.text = _reality.author;
+            _description.text.text = _reality.description;
             _description.GetComponent<RectTransform>().sizeDelta = new Vector2(
                 1086,
                 _description.text.preferredHeight);
@@ -85,8 +96,8 @@ namespace Holoi.Library.HoloKitApp.UI
         void UpdateRealityCollections()
         {
             //Debug.Log("UpdateRealityCollections");
-            var objectTags = reality.compatibleMetaObjectTags;
-            var avatarTags = reality.compatibleMetaAvatarTags;
+            var objectTags = _reality.compatibleMetaObjectTags;
+            var avatarTags = _reality.compatibleMetaAvatarTags;
             //Debug.Log($"objectTags: {objectTags.Count}");
             //Debug.Log($"avatarTags: {avatarTags.Count}");
 
