@@ -9,7 +9,20 @@ namespace Holoi.Reality.MOFO
 {
     public class MofoRealityManager : RealityManager
     {
-        public NetworkVariable<Vector3> NetworkHandPosition = new(Vector3.zero, NetworkVariableReadPermission.Everyone);
+        [SerializeField] private NetworkObject _networkHandPrefab;
+
+        private NetworkObject _networkHand;
+
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+
+            if (IsServer)
+            {
+                _networkHand = Instantiate(_networkHandPrefab);
+                _networkHand.Spawn();
+            }
+        }
 
         protected override void FixedUpdate()
         {
@@ -17,7 +30,10 @@ namespace Holoi.Reality.MOFO
 
             if (IsServer)
             {
-
+                if (HoloKitHandTracker.Instance.Valid)
+                {
+                    //_networkHand.transform.position = HoloKitHandTracker.Instance.GetHandJointPosition(HandJoint.Index3);
+                }
             }
         }
     }
