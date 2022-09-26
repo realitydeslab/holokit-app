@@ -99,6 +99,11 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public List<float> modelScaler = new List<float> { 1, 1.2f};
 
+        private void Awake()
+        {
+            
+        }
+
         void Start()
         {
             _volumeAnimator = volumeBar.GetComponent<Animator>();

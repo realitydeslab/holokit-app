@@ -17,7 +17,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [Header("Rotate Helper")]
         [SerializeField] ScrollRect _rotateHelperScrollRect;
-        [SerializeField] Scrollbar _rotateHelperScrollBar;
+        [SerializeField] Scrollbar _horizentalScrollBar;
+        [SerializeField] Scrollbar _veticalScrollBar;
         [Header("UI Elements")]
         [SerializeField] Transform _content;
         [SerializeField] FlexibleUIText _id;
@@ -69,7 +70,8 @@ namespace Holoi.Library.HoloKitApp.UI
             _description.GetComponent<RectTransform>().sizeDelta = new Vector2(
                 1086,
                 _description.text.preferredHeight);
-            UpdateRealityCollections(); 
+            UpdateRealityCollections();
+            _horizentalScrollBar.value = 0.422f; // default rotation value
         }
 
         void UpdateThumbnailPosition()
@@ -77,7 +79,7 @@ namespace Holoi.Library.HoloKitApp.UI
             var deltaY = _content.transform.position.y - _contentInitPositionY;
             var realityThumbnailContainer = FindObjectOfType<RealityThumbnailContainer>();
             realityThumbnailContainer.scrollOffset = new Vector3(0, deltaY, 0);
-            realityThumbnailContainer.rotateValue = _rotateHelperScrollBar.value;
+            realityThumbnailContainer.rotateValue = new Vector2(_horizentalScrollBar.value, _veticalScrollBar.value);
         }
 
         void UpdateRealityCollections()
@@ -103,12 +105,10 @@ namespace Holoi.Library.HoloKitApp.UI
                     {
                         if (availableMetaAvatarCollectionList.list[i].tags.Contains(tag))
                         {
-                            //Debug.Log(availableMetaAvatarCollectionList.list[i].name + "Contains Tag: " + tag.name + ", add to List");
                             realityMetaAvatarCollectionList.Add(availableMetaAvatarCollectionList.list[i]);
                         }
                         else
                         {
-                            //Debug.Log(availableMetaAvatarCollectionList.list[i].name + "Do not Contains Tag: " + tag.name + "");
                         }
                     }
                 }
@@ -126,13 +126,11 @@ namespace Holoi.Library.HoloKitApp.UI
                     {
                         if (availableMetaObjectCollectionList.list[i].tags.Contains(tag))
                         {
-                            //Debug.Log(availableMetaObjectCollectionList.list[i].name + "Contains Tag: " + tag.name + ", add to List");
-
                             realityMetaObjectCollectionList.Add(availableMetaObjectCollectionList.list[i]);
                         }
                         else
                         {
-                            //Debug.Log(availableMetaObjectCollectionList.list[i].name + "Do not Contains Tag: " + tag.name + "");
+
                         }
                     }
                 }

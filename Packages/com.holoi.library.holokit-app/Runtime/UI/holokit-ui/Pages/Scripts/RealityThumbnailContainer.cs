@@ -13,9 +13,9 @@ namespace Holoi.Library.HoloKitApp.UI
         public event Action OnThumbnailClickedEvent;
 
         [Header("Transfrom")]
-        public Vector3 offset;
+        Vector3 _offset;
         public Vector3 scrollOffset;
-        public float rotateValue;
+        public Vector2 rotateValue;
 
         [Header("UI Elements")]
         [SerializeField] Transform _container;
@@ -34,9 +34,9 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Awake()
         {
-            offset = Vector3.zero;
+            _offset = Vector3.zero;
             scrollOffset = Vector3.zero;
-            rotateValue = 0;
+            rotateValue = Vector2.zero;
         }
         private void Start()
         {
@@ -47,23 +47,27 @@ namespace Holoi.Library.HoloKitApp.UI
         private void Update()
         {
             _container.localPosition = new Vector3(-1 * currentPostion, 0, 0);
-            _container.position += (offset + scrollOffset);
+            _container.position += (_offset + scrollOffset);
 
             _lightGroup.localPosition = Vector3.zero;
             _lightGroup.position += scrollOffset;
 
             _arrowPath.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_Offset", new Vector2(currentPostion * 1, 0));
 
-            
-            if(PanelManager.Instance.GetActivePanel().UIType.Name == "StartPanel")
+
+            if (PanelManager.Instance.GetActivePanel().UIType.Name == "StartPanel")
             {
+                _offset = Vector3.zero;
+                rotateValue = new Vector2(0.422f, 0.5f);
+
                 SetSelectedThumbnail();
                 GetTouchClickOnPrefabs();
-                rotateValue = 0.5f;
                 UpdateThumbnailRotation(rotateValue);
             }
             else if (PanelManager.Instance.GetActivePanel().UIType.Name == "RealityDetailPanel")
             {
+                _offset = new Vector3(0, .47f, 0);
+                //rotateValue = 0.5f;
                 UpdateThumbnailRotation(rotateValue);
             }
             else
@@ -78,10 +82,19 @@ namespace Holoi.Library.HoloKitApp.UI
         }
 
         // scrollValue(-.5f ~ 1.5f)
-        void UpdateThumbnailRotation(float scrollValue)
+        void UpdateThumbnailRotation(Vector2 value)
         {
-            var valueFixer = scrollValue - 0.5f;
-            _thumbnailList[activeIndex].transform.localRotation = Quaternion.Euler(new Vector3(0, valueFixer * 25f, 0));
+            // box should have y rotate value form -38 ~ 52;
+            var clampX = Mathf.Clamp01(value.x);
+            var clampY = Mathf.Clamp01(value.y);
+            var valueFixerX = Remap(clampX,0,1,-38f, 52f);
+            var valueFixerY = Remap(clampY, 0,1,-10f, 10f);
+            _thumbnailList[activeIndex].transform.localRotation = Quaternion.Euler(new Vector3(0, valueFixerX, 0));
+        }
+
+        float Remap(float x, float inMin, float inMax, float outMin, float outMax)
+        {
+            return (x - inMin) / inMax * (outMax - outMin) + outMin;
         }
 
         public void SetSelectedThumbnail()
