@@ -28,11 +28,11 @@ namespace Holoi.Library.HoloKitApp.UI
                 var realityOptionPanel = new RealityOptionPanel();
                 PanelManager.Push(realityOptionPanel);
 
-                var realityOptionUI = realityOptionPanel.UITool.GetOrAddComponent<RealityOptionUIPanel>();
-                realityOptionUI.realityMetaObjectCollections = realityDetailUI.realityMetaObjectCollectionList;
-                realityOptionUI.realityMetaAvatarCollections = realityDetailUI.realityMetaAvatarCollectionList;
-                realityOptionUI.SetUIInfo();
-                realityOptionUI.SetUIButtons();
+                //var realityOptionUI = realityOptionPanel.UITool.GetOrAddComponent<RealityOptionUIPanel>();
+                //realityOptionUI.realityMetaObjectCollections = realityDetailUI.realityCompatibleMetaObjectCollectionList;
+                //realityOptionUI.realityMetaAvatarCollections = realityDetailUI.realityCompatibleMetaAvatarCollectionList;
+                //realityOptionUI.SetUIInfo();
+                //realityOptionUI.SetUIButtons();
             });
         }
     }

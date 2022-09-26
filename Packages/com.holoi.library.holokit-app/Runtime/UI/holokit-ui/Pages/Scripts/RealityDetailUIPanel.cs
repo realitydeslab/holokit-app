@@ -13,8 +13,8 @@ namespace Holoi.Library.HoloKitApp.UI
         public MetaObjectCollectionList availableMetaObjectCollectionList;
         public MetaAvatarCollectionList availableMetaAvatarCollectionList;
 
-        public List<MetaObjectCollection> realityMetaObjectCollectionList;
-        public List<MetaAvatarCollection> realityMetaAvatarCollectionList;
+        public List<MetaObjectCollection> realityCompatibleMetaObjectCollectionList;
+        public List<MetaAvatarCollection> realityCompatibleMetaAvatarCollectionList;
 
         [Header("Rotate Helper")]
         [SerializeField] ScrollRect _rotateHelperScrollRect;
@@ -69,7 +69,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void SetUIInfo()
         {
-            //Debug.Log("SetUIInfo");
             _technicContainer.reality = _reality;
             _technicContainer.SetUIInfo();
 
@@ -81,7 +80,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _description.GetComponent<RectTransform>().sizeDelta = new Vector2(
                 1086,
                 _description.text.preferredHeight);
-            UpdateRealityCollections();
+            //UpdateRealityCompatibleCollections();
             _horizentalScrollBar.value = 0.422f; // default rotation value
         }
 
@@ -93,59 +92,59 @@ namespace Holoi.Library.HoloKitApp.UI
             realityThumbnailContainer.rotateValue = new Vector2(_horizentalScrollBar.value, _veticalScrollBar.value);
         }
 
-        void UpdateRealityCollections()
-        {
-            //Debug.Log("UpdateRealityCollections");
-            var objectTags = _reality.compatibleMetaObjectTags;
-            var avatarTags = _reality.compatibleMetaAvatarTags;
-            //Debug.Log($"objectTags: {objectTags.Count}");
-            //Debug.Log($"avatarTags: {avatarTags.Count}");
+        //void UpdateRealityCompatibleCollections()
+        //{
+        //    //Debug.Log("UpdateRealityCollections");
+        //    var objectTags = _reality.compatibleMetaObjectTags;
+        //    var avatarTags = _reality.compatibleMetaAvatarTags;
+        //    //Debug.Log($"objectTags: {objectTags.Count}");
+        //    //Debug.Log($"avatarTags: {avatarTags.Count}");
 
-            realityMetaAvatarCollectionList = new List<MetaAvatarCollection>();
-            realityMetaObjectCollectionList = new List<MetaObjectCollection>();
+        //    realityCompatibleMetaAvatarCollectionList = new List<MetaAvatarCollection>();
+        //    realityCompatibleMetaObjectCollectionList = new List<MetaObjectCollection>();
 
-            if (availableMetaAvatarCollectionList.list.Count == 0)
-            {
-                Debug.Log("there is no available avatar collection");
-            }
-            else
-            {
-                foreach (var tag in avatarTags)
-                {
-                    for (int i = 0; i < availableMetaAvatarCollectionList.list.Count; i++)
-                    {
-                        if (availableMetaAvatarCollectionList.list[i].tags.Contains(tag))
-                        {
-                            realityMetaAvatarCollectionList.Add(availableMetaAvatarCollectionList.list[i]);
-                        }
-                        else
-                        {
-                        }
-                    }
-                }
-            }
+        //    if (availableMetaAvatarCollectionList.list.Count == 0)
+        //    {
+        //        Debug.Log("there is no available avatar collection");
+        //    }
+        //    else
+        //    {
+        //        foreach (var tag in avatarTags)
+        //        {
+        //            for (int i = 0; i < availableMetaAvatarCollectionList.list.Count; i++)
+        //            {
+        //                if (availableMetaAvatarCollectionList.list[i].tags.Contains(tag))
+        //                {
+        //                    realityCompatibleMetaAvatarCollectionList.Add(availableMetaAvatarCollectionList.list[i]);
+        //                }
+        //                else
+        //                {
+        //                }
+        //            }
+        //        }
+        //    }
 
-            if (availableMetaObjectCollectionList.list.Count == 0)
-            {
-                Debug.Log("there is no available object collection");
-            }
-            else
-            {
-                foreach (var tag in objectTags)
-                {
-                    for (int i = 0; i < availableMetaObjectCollectionList.list.Count; i++)
-                    {
-                        if (availableMetaObjectCollectionList.list[i].tags.Contains(tag))
-                        {
-                            realityMetaObjectCollectionList.Add(availableMetaObjectCollectionList.list[i]);
-                        }
-                        else
-                        {
+        //    if (availableMetaObjectCollectionList.list.Count == 0)
+        //    {
+        //        Debug.Log("there is no available object collection");
+        //    }
+        //    else
+        //    {
+        //        foreach (var tag in objectTags)
+        //        {
+        //            for (int i = 0; i < availableMetaObjectCollectionList.list.Count; i++)
+        //            {
+        //                if (availableMetaObjectCollectionList.list[i].tags.Contains(tag))
+        //                {
+        //                    realityCompatibleMetaObjectCollectionList.Add(availableMetaObjectCollectionList.list[i]);
+        //                }
+        //                else
+        //                {
 
-                        }
-                    }
-                }
-            }
-        }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

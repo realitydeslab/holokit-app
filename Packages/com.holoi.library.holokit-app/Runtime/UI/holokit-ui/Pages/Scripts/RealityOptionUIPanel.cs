@@ -13,8 +13,8 @@ namespace Holoi.Library.HoloKitApp.UI
     public class RealityOptionUIPanel : MonoBehaviour
     {
         [Header("Meta Datas")]
-        public List<MetaObjectCollection> realityMetaObjectCollections;
-        public List<MetaAvatarCollection> realityMetaAvatarCollections;
+         List<MetaObjectCollection> _realityCompatibleMetaObjectCollections;
+         List<MetaAvatarCollection> _realityCompatibleMetaAvatarCollections;
 
         [Header("Prefabs")]
         [SerializeField] GameObject _collectionContainer;
@@ -55,6 +55,16 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 SetUIInfo();
             }
+
+            // todo: sizheng
+            _realityCompatibleMetaObjectCollections = ;
+            _realityCompatibleMetaAvatarCollections = ;
+        }
+
+        private void Start()
+        {
+            SetUIInfo();
+            SetUIButtons();
         }
 
         private void Update()
@@ -65,9 +75,9 @@ namespace Holoi.Library.HoloKitApp.UI
         public void SetUIInfo()
         {
             //Debug.Log("Set Option Page UI Info");
-            if (realityMetaObjectCollections.Count > 0)
+            if (_realityCompatibleMetaObjectCollections.Count > 0)
             {
-                _objectCount = realityMetaObjectCollections.Count;
+                _objectCount = _realityCompatibleMetaObjectCollections.Count;
 
                 _scrollViewObjectCollection.gameObject.SetActive(true);
                 _scrollViewObjectCollection.GetComponent<CollectionScrollViewUI>().count = _objectCount;
@@ -76,7 +86,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 {
                     // create new by data
                     _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.objectContainer;
-                    _collectionContainer.GetComponent<CollectionContainer>().metaObjectCollection = realityMetaObjectCollections[i];
+                    _collectionContainer.GetComponent<CollectionContainer>().metaObjectCollection = _realityCompatibleMetaObjectCollections[i];
 
                     _collectionContainer.GetComponent<CollectionContainer>().emptyDragButton.GetComponent<DragButton>().horizontalScrollSnap =
                         _scrollViewObjectCollection.GetComponent<HorizontalScrollSnap>(); ;
@@ -93,9 +103,9 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 _scrollViewObjectCollection.gameObject.SetActive(false);
             }
-            if (realityMetaAvatarCollections.Count > 0)
+            if (_realityCompatibleMetaAvatarCollections.Count > 0)
             {
-                _avatarCount = realityMetaAvatarCollections.Count;
+                _avatarCount = _realityCompatibleMetaAvatarCollections.Count;
                 _scrollViewAvatarCollection.gameObject.SetActive(true);
                 _scrollViewAvatarCollection.GetComponent<CollectionScrollViewUI>().count = _avatarCount;
 
@@ -103,7 +113,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 {
                     // create new by data
                     _collectionContainer.GetComponent<CollectionContainer>().type = CollectionContainer.Type.avatarContainer;
-                    _collectionContainer.GetComponent<CollectionContainer>().metaAvatarCollection = realityMetaAvatarCollections[i];
+                    _collectionContainer.GetComponent<CollectionContainer>().metaAvatarCollection = _realityCompatibleMetaAvatarCollections[i];
 
                     _collectionContainer.GetComponent<CollectionContainer>().emptyDragButton.GetComponent<DragButton>().horizontalScrollSnap =
                         _scrollViewAvatarCollection.GetComponent<HorizontalScrollSnap>(); ;
