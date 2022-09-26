@@ -57,8 +57,8 @@ namespace Holoi.Library.HoloKitApp.UI
             }
 
             // todo: sizheng
-            _realityCompatibleMetaObjectCollections = ;
-            _realityCompatibleMetaAvatarCollections = ;
+            _realityCompatibleMetaObjectCollections = holoKitAppLocalPlayerPreferences.GetCompatibleMetaObjectCollectionList(HoloKitApp.Instance.CurrentReality);
+            _realityCompatibleMetaAvatarCollections = holoKitAppLocalPlayerPreferences.GetCompatibleMetaAvatarCollectionList(HoloKitApp.Instance.CurrentReality);
         }
 
         private void Start()

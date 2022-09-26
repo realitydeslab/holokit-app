@@ -60,7 +60,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 _offset = Vector3.zero;
                 rotateValue = new Vector2(0.422f, 0.5f);
 
-                SetSelectedThumbnail();
+                //SetSelectedThumbnail();
                 GetTouchClickOnPrefabs();
                 UpdateThumbnailRotation(rotateValue);
             }
@@ -99,9 +99,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void SetSelectedThumbnail()
         {
-
-
-
             for (int i = 0; i < _container.childCount; i++)
             {
                 if (i == activeIndex)
