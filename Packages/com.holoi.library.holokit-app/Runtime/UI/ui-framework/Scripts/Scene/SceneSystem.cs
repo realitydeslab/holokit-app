@@ -10,10 +10,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void SetScene(Scene scene)
         {
-            //Debug.Log("scene exit");
             _scene?.OnExit();
             _scene = scene;
-            //Debug.Log("scene enter");
             _scene?.OnEnter();
         }
     }

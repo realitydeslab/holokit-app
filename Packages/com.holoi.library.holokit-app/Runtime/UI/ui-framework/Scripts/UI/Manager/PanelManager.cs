@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using HoloKit;
-using Holoi.AssetFoundation;
 
 /// <summary>
 /// panel manager, using a stack to pop and push panels for a smooth management
@@ -30,7 +28,6 @@ namespace Holoi.Library.HoloKitApp.UI
         public GameObject _activePanel;
         private BasePanel _panel;
         public int _realityIndex = 0;
-
 
         public PanelManager()
         {
@@ -175,8 +172,6 @@ namespace Holoi.Library.HoloKitApp.UI
                 _panelStack.Pop().OnClose();
             }
 
-            Debug.Log($"panel number after pop {_panelStack.Count}");
-
             for (int i = 0; i < num; i++)
             {
                 Debug.Log($"push panel with name {panelList[i].UIType.Name}");
@@ -186,8 +181,6 @@ namespace Holoi.Library.HoloKitApp.UI
                     panelList[i].UITool.GetOrAddComponent<HomeUIPanel>().RecoverHomePage();
                 }
             }
-
-            Debug.Log($"recover panels with a number{num}");
         }
     }
 }

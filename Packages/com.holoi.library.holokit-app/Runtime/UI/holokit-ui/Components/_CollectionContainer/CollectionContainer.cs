@@ -170,10 +170,26 @@ namespace Holoi.Library.HoloKitApp.UI
             _protraitDragButton.GetComponent<DragButton>().scorllRect = portraitContainer.GetComponent<ScrollRect>();
 
         }
+
         void CreatePotraitScorllView(MetaAvatarCollection mac)
         {
-            _title.text.text = mac.displayName;
-            _id.text.text = mac.metaAvatars[0].tokenId;
+            if (mac.displayName == null)
+            {
+                _title.text.text = mac.displayName;
+            }
+            else
+            {
+                _title.text.text = "null";
+            }
+
+            if (mac.metaAvatars[0].tokenId !=null)
+            {
+                _id.text.text = mac.metaAvatars[0].tokenId;
+            }
+            else
+            {
+                _id.text.text = "0";
+            }
 
             // create new by data
             _portraitScorllView.GetComponent<PortraitScrollViewUI>().type = type;

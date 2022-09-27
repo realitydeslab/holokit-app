@@ -24,8 +24,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void Initialize(PanelManager panelManager)
         {
-            //PanelManager = panelManager;
-            PanelManager = PanelManager.Instance;
+            PanelManager = panelManager;
         }
 
         public void Initialize(UIManager uiManager)

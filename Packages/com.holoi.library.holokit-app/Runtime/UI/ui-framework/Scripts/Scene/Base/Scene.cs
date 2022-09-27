@@ -8,5 +8,4 @@ namespace Holoi.Library.HoloKitApp.UI
         public abstract void OnEnter();
         public abstract void OnExit();
     }
-
 }

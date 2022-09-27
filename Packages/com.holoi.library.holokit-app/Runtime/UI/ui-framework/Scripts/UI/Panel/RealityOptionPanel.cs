@@ -19,13 +19,10 @@ namespace Holoi.Library.HoloKitApp.UI
                 //Debug.Log("Optional BackButton is clicked.");
                 PanelManager.Pop();
             });
-
             UITool.GetOrAddComponentInChildren<Button>("EnterScreenARButton").onClick.AddListener(() =>
             {
                 // here we do onclick event of this button
                 Debug.Log("EnterScreenARButton is clicked.");
-
-                //Debug.Log(PanelManager.Instance._panelStack.Count + " panels found.");
 
                 // enter screen ar scene:
                 HoloKitApp.Instance.EnterRealityAsHost();
@@ -43,14 +40,6 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 // here we do onclick event of this button
                 Debug.Log("SpectatorButton is clicked.");
-
-                //var newPanel = new ScreenARModePanel();
-                //PanelManager.Push(newPanel);
-                //var screenARUI = newPanel.UITool.GetOrAddComponent<ScreenARModeUIPanel>();
-                //screenARUI.SetState(ScreenARModeUIPanel.State.waitPlayerEnter);
-
-                //var panel = new ScreenARWaitPlayerPanel();
-                //PanelManager.Push(panel); 
 
                 HoloKitApp.Instance.JoinRealityAsSpectator();
                 var sceneName = HoloKitApp.Instance.CurrentReality.realityManager.GetComponent<RealityManager>().SceneName;

@@ -35,7 +35,6 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             SceneManager.sceneLoaded -= SceneLoaded;
             _panelManager.Pop();
-            //Debug.Log($"exit screen ar, panel count: {PanelManager.Instance._panelStack.Count}");
         }
 
         private void SceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode load)
@@ -50,8 +49,6 @@ namespace Holoi.Library.HoloKitApp.UI
                     _panelManager.Push(new ScreenARWaitPlayerPanel());
                     break;
             }
-            //Debug.Log($"{_sceneName} scene is loaded.");
-            //Debug.Log(PanelManager.Instance._panelStack.Count);
         }
     }
 }

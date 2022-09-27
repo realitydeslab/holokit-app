@@ -24,6 +24,9 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeReference] Transform _arrowPath;
         [SerializeReference] Transform _arrowEnter;
 
+        [Header("Prefabs")]
+        public GameObject realitySampleBox;
+
         [Header("Touch Detection")]
         Vector2 startPos = new Vector2();
         Vector2 direction = new Vector2();

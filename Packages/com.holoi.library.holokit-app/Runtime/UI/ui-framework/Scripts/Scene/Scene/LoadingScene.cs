@@ -9,6 +9,7 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         readonly string _sceneName = "Loading";
         PanelManager _panelManager;
+
         public override void OnEnter()
         {
             _panelManager = PanelManager.Instance;
@@ -33,7 +34,7 @@ namespace Holoi.Library.HoloKitApp.UI
         private void SceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode load)
         {
             _panelManager.Push(new LoadingPanel());
-            Debug.Log($"{_sceneName} scene is loaded.");
+            //Debug.Log($"{_sceneName} scene is loaded.");
         }
     }
 }

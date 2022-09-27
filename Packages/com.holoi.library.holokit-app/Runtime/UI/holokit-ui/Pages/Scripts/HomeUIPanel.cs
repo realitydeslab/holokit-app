@@ -99,7 +99,15 @@ namespace Holoi.Library.HoloKitApp.UI
             for (int i = 0; i < _realityCount; i++)
             {
                 // create thumbnailPrefabs
-                var realityThumbnailGO = Instantiate(realityCollection.realities[i].thumbnailPrefab, realityThumbnailContainer.transform.Find("Container").transform);
+                GameObject realityThumbnailGO;
+                if (realityCollection.realities[i].thumbnailPrefab != null)
+                {
+                    realityThumbnailGO = Instantiate(realityCollection.realities[i].thumbnailPrefab, realityThumbnailContainer.transform.Find("Container").transform);
+                }
+                else
+                {
+                    realityThumbnailGO = Instantiate(realityThumbnailContainer.realitySampleBox, realityThumbnailContainer.transform.Find("Container").transform);
+                }
                 realityThumbnailGO.transform.localPosition = new Vector3(i * _offset, 0, 0);
                 realityThumbnailGO.transform.localScale = Vector3.one * 0.28f;
                 realityThumbnailGO.tag = "Reality Thumbnail";
