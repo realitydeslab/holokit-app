@@ -20,8 +20,11 @@ namespace Holoi.Library.HoloKitApp.UI
         [Header("UI Elements")]
         [SerializeField] Transform _scrollViewTitles;
         [SerializeField] Transform _titleScrollContent;
+        [Header("Scroll Helper")]
         [SerializeField] Transform _horizentalScrollContainer;
+        Transform _content;
         [SerializeField] Transform _handle;
+        [SerializeField] GameObject _helperPanelPrefab;
 
         Canvas _canvas;
 
@@ -58,8 +61,12 @@ namespace Holoi.Library.HoloKitApp.UI
             _canvas = FindObjectOfType<Canvas>();
             realityThumbnailContainer = FindObjectOfType<RealityThumbnailContainer>();
 
+
+            _content = _horizentalScrollContainer.Find("Content");
+
             DeletePreviousElement(_titleScrollContent);
             DeletePreviousElement(realityThumbnailContainer.transform.Find("Container").transform);
+            DeletePreviousElement(_content);
 
             InitialCoverContent();
 
@@ -73,14 +80,14 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Update()
         {
-            
+
             if (PanelManager.Instance.GetActivePanel().UIType.Name == "StartPanel")
             {
                 UpdateScrollValue();
 
                 HomePanelUIlayout();
             }
-            else if(PanelManager.Instance.GetActivePanel().UIType.Name == "RealityDetailPanel")
+            else if (PanelManager.Instance.GetActivePanel().UIType.Name == "RealityDetailPanel")
             {
                 DetailsPanelUILayout();
             }
@@ -94,7 +101,13 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             realityThumbnailContainer._thumbnailList.Clear();
 
-            List<GameObject> tempTitleList = new List<GameObject>(); 
+            List<GameObject> tempTitleList = new List<GameObject>();
+
+            // init scroll hepler to scroll over all reality thumbnail box
+            for (int i = 0; i < _realityCount; i++)
+            {
+                var go = Instantiate(_helperPanelPrefab, _content);
+            }
 
             for (int i = 0; i < _realityCount; i++)
             {

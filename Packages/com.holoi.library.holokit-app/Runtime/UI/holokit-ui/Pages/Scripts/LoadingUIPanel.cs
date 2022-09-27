@@ -1,24 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LoadingUIPanel : MonoBehaviour
+namespace Holoi.Library.HoloKitApp.UI
 {
-    [SerializeField] Image _banner;
-    [SerializeField] AnimationCurve _curve;
-
-    float _time;
-    float _duration = 2;
-
-    private void Start()
+    public class LoadingUIPanel : MonoBehaviour
     {
-        _time = Time.time;
-    }
-    private void Update()
-    {
-        var sampler = (Time.time - _time) / _duration;
-        var value = _curve.Evaluate(sampler);
-        _banner.materialForRendering.SetVector("_Offset", new Vector2(value, 0));
+        public event Action OnAnimationTrigger;
+
+        public void AnimationTrigger()
+        {
+            OnAnimationTrigger?.Invoke();
+        }
+
     }
 }

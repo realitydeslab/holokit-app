@@ -39,8 +39,6 @@ namespace Holoi.Library.HoloKitApp.UI
                 }
                 return _activePanelGO.GetComponent<T>();
             }
-
-            
         }
 
         public GameObject FindGameObjectInChindren(string name)
@@ -56,7 +54,6 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 children = _activePanelGO.GetComponentsInChildren<Transform>();
             }
-            
 
             foreach (var child in children)
             {
@@ -66,7 +63,6 @@ namespace Holoi.Library.HoloKitApp.UI
                 }
             }
 
-            Debug.LogError($"{_activePanelGO.name} does not exist a child named: { name }");
             return null;
         }
 
@@ -82,6 +78,7 @@ namespace Holoi.Library.HoloKitApp.UI
                     childrenList.Add(child.gameObject);
                 }
             }
+
             return childrenList;
         }
 
@@ -100,6 +97,32 @@ namespace Holoi.Library.HoloKitApp.UI
                 Debug.LogError("GetOrAddComponentInChildren with a result: null found.");
             }
             return null;
+        }
+
+        public List<T> GetComponentsInChildren<T>(string name) where T : Component
+        {
+            var children = FindGameObjectsInChildren(name);
+            List<T> TList = new List<T>();
+
+            foreach (var child in children)
+            {
+                if (child != null)
+                {
+                    if (child.GetComponent<T>() == null)
+                    {
+
+                    }
+                    else
+                    {
+                        TList.Add(child.GetComponent<T>());
+                    }
+                }
+                else
+                {
+                    Debug.LogError("GetComponentsInChildren with a result: null found.");
+                }
+            }
+            return TList;
         }
     }
 }

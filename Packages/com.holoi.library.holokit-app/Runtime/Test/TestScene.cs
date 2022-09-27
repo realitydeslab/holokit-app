@@ -5,9 +5,9 @@ using UnityEngine.SceneManagement;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
-    public class LoadingScene : Scene
+    public class TestScene : Scene
     {
-        readonly string _sceneName = "Loading";
+        readonly string _sceneName = "TestScene";
         PanelManager _panelManager;
 
         public override void OnEnter()
@@ -22,7 +22,6 @@ namespace Holoi.Library.HoloKitApp.UI
             else
             {
                 _panelManager.Push(new LoadingPanel());
-
             }
         }
 
@@ -33,8 +32,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void SceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode load)
         {
-            _panelManager.Push(new LoadingPanel());
-            //Debug.Log($"{_sceneName} scene is loaded.");
+            _panelManager.Push(new TestSceneHomePagePanel());
         }
     }
 }

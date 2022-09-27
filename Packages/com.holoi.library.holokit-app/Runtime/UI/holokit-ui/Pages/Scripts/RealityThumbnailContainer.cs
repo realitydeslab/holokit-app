@@ -7,9 +7,9 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public class RealityThumbnailContainer : MonoBehaviour
     {
+        [HideInInspector] public int activeIndex;
         public float currentPostion = 0;
         public List<GameObject> _thumbnailList = new List<GameObject>();
-        [HideInInspector] public int activeIndex;
         public event Action OnThumbnailClickedEvent;
 
         [Header("Transfrom")]
@@ -90,8 +90,8 @@ namespace Holoi.Library.HoloKitApp.UI
             // box should have y rotate value form -38 ~ 52;
             var clampX = Mathf.Clamp01(value.x);
             var clampY = Mathf.Clamp01(value.y);
-            var valueFixerX = Remap(clampX,0,1,-38f, 52f);
-            var valueFixerY = Remap(clampY, 0,1,-10f, 10f);
+            var valueFixerX = Remap(clampX, 0, 1, -38f, 52f);
+            var valueFixerY = Remap(clampY, 0, 1, -10f, 10f);
             _thumbnailList[activeIndex].transform.localRotation = Quaternion.Euler(new Vector3(0, valueFixerX, 0));
         }
 
@@ -147,7 +147,7 @@ namespace Holoi.Library.HoloKitApp.UI
                     //Determine if the touch is a moving touch
                     case TouchPhase.Moved:
                         // Determine direction by comparing the current touch position with the initial one
-                        direction = touch.position - startPos;
+                        // direction = touch.position - startPos;
                         break;
 
                     case TouchPhase.Ended:

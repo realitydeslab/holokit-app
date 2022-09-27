@@ -32,7 +32,8 @@ namespace Holoi.Library.HoloKitApp.UI
         void EnterRealityDetailPanel()
         {
             var currentReality = _homeUIPanel.realityCollection.realities[_homeUIPanel.CurrentIndex];
-            // set CurrentReality to this selected reality
+
+            // set CurrentReality with current selected reality:
             HoloKitApp.Instance.CurrentReality = currentReality;
 
             var realityDetailPanel = new RealityDetailPanel();

@@ -16,19 +16,24 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override void OnOpen()
         {
-            UITool.GetOrAddComponentInChildren<Button>("DebugButton").onClick.AddListener(() =>
+            var loadingUIPanel = UITool.GetOrAddComponent<LoadingUIPanel>();
+
+            loadingUIPanel.OnAnimationTrigger += LoadingDone;
+
+        }
+
+        public void LoadingDone()
+        {
+            if (HoloKitAppPermissionsManager.MandatoryPermissionsGranted())
             {
-                if (HoloKitAppPermissionsManager.MandatoryPermissionsGranted())
-                {
-                    PanelManager.Pop();
-                    PanelManager.Push(new StartPanel());
-                }
-                else
-                {
-                    var panel = new PermissionPanel();
-                    PanelManager.Push(panel);
-                }
-            });
+                PanelManager.Pop();
+                PanelManager.Push(new StartPanel());
+            }
+            else
+            {
+                var panel = new PermissionPanel();
+                PanelManager.Push(panel);
+            }
         }
     }
 }

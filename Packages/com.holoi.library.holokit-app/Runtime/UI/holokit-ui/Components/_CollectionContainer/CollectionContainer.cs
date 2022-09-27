@@ -67,7 +67,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
-            emptyDragButton.onClick.AddListener(() => {
+            emptyDragButton.onClick.AddListener(() =>
+            {
 
                 Debug.Log("enter button is clicked");
 
@@ -173,7 +174,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         void CreatePotraitScorllView(MetaAvatarCollection mac)
         {
-            if (mac.displayName == null)
+            if (mac.displayName != null)
             {
                 _title.text.text = mac.displayName;
             }
@@ -182,14 +183,23 @@ namespace Holoi.Library.HoloKitApp.UI
                 _title.text.text = "null";
             }
 
-            if (mac.metaAvatars[0].tokenId !=null)
+            if (mac.metaAvatars.Count > 0)
             {
-                _id.text.text = mac.metaAvatars[0].tokenId;
+                if (mac.metaAvatars[0].tokenId != null)
+                {
+                    _id.text.text = "#" + mac.metaAvatars[0].tokenId;
+                }
+                else
+                {
+                    _id.text.text = "#" + "null";
+                }
             }
             else
             {
-                _id.text.text = "0";
+                _id.text.text = "#" + "null";
             }
+
+
 
             // create new by data
             _portraitScorllView.GetComponent<PortraitScrollViewUI>().type = type;
@@ -197,8 +207,6 @@ namespace Holoi.Library.HoloKitApp.UI
             _portraitScorllView.GetComponent<PortraitScrollViewUI>().metaAvatarCollection = mac;
             var portraitContainer = Instantiate(_portraitScorllView, _scrollviewContainer);
             portraitContainer.GetComponent<RectTransform>().localScale = Vector3.one;
-
-            _id.text.text = "#" + mac.metaAvatars[0].tokenId;
 
             _protraitDragButton.GetComponent<DragButton>().horizontalScrollSnap = portraitContainer.GetComponent<HorizontalScrollSnap>();
             _protraitDragButton.GetComponent<DragButton>().scorllRect = portraitContainer.GetComponent<ScrollRect>();
@@ -212,10 +220,12 @@ namespace Holoi.Library.HoloKitApp.UI
             switch (type)
             {
                 case Type.objectContainer:
-                    activeObject = metaObjectCollection.metaObjects[_activeIndex];
+                    if (metaObjectCollection.metaObjects.Count > 0)
+                        activeObject = metaObjectCollection.metaObjects[_activeIndex];
                     break;
                 case Type.avatarContainer:
-                    activeAvatar = metaAvatarCollection.metaAvatars[_activeIndex];
+                    if (metaAvatarCollection.metaAvatars.Count > 0)
+                        activeAvatar = metaAvatarCollection.metaAvatars[_activeIndex];
                     break;
             }
         }

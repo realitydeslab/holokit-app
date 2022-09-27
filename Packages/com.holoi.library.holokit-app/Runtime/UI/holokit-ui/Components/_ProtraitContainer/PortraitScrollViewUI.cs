@@ -97,6 +97,7 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 var go = Instantiate(_objectPortraitContainer, _content);
                 go.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(_portraitSize, _portraitSize);
+                go.transform.Find("Image").GetComponent<RectTransform>().sizeDelta = new Vector2(_portraitSize, _portraitSize);
                 go.transform.Find("Image").GetComponent<Image>().sprite = moc.metaObjects[i].image;
             }
         }
