@@ -32,6 +32,8 @@ namespace Holoi.AssetFoundation
 
         public GameObject realityManager;
 
+        public string waterMarkField = "";
+
         public bool IsCompatibleWithMetaAvatarCollection(MetaAvatarCollection avatarCollection)
         {
             int count = 0;
