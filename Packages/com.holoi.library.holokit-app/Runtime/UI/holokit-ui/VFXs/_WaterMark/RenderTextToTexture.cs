@@ -87,11 +87,13 @@ namespace Holoi.Library.HoloKitApp.UI
 
             Graphics.CopyTexture(sampleTex, tempTex);
 
-            foreach (var mat in mr.materials)
-            {
-                Debug.Log("set mat");
-                mat.mainTexture = tempTex;
-            }
+            //foreach (var mat in mr.materials)
+            //{
+            //    Debug.Log("set mat");
+            //    mat.mainTexture = tempTex;
+            //}
+
+            mr.materials[0].mainTexture = tempTex;
 
             targetCam.gameObject.SetActive(false);
             inputText.gameObject.SetActive(false);
