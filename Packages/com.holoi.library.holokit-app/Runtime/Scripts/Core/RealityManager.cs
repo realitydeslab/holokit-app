@@ -9,6 +9,12 @@ using Netcode.Transports.MultipeerConnectivity;
 
 namespace Holoi.Library.HoloKitApp
 {
+    public struct TimedCameraPose
+    {
+        public Matrix4x4 DisplayMatrix;
+        public long Timestamp;
+    }
+
     public abstract class RealityManager : NetworkBehaviour
     {
         public string SceneName;
@@ -78,6 +84,7 @@ namespace Holoi.Library.HoloKitApp
             {
                 NetworkManager.OnClientDisconnectCallback += OnSpectatorDisconnected;
                 _isAdvertising = true;
+                //HoloKitCamera.Instance.GetComponent<ARCameraManager>().frameReceived += OnArFrameReceived;
                 MultipeerConnectivityTransport.StartAdvertising();
             }
         }
@@ -88,8 +95,29 @@ namespace Holoi.Library.HoloKitApp
             {
                 NetworkManager.OnClientDisconnectCallback -= OnSpectatorDisconnected;
                 _isAdvertising = false;
+                //HoloKitCamera.Instance.GetComponent<ARCameraManager>().frameReceived -= OnArFrameReceived;
                 MultipeerConnectivityTransport.StopAdvertising();
             }
+        }
+
+        private void OnArFrameReceived(ARCameraFrameEventArgs args)
+        {
+            if (args.displayMatrix.HasValue)
+            {
+                Debug.Log($"{args.displayMatrix}");
+            }
+
+            //if (args.displayMatrix != null && args.timestampNs != null)
+            //{
+            //    Matrix4x4 displayMatrix = (Matrix4x4)args.displayMatrix;
+            //    UpdateHostCameraPoseClientRpc(displayMatrix.GetPosition(), displayMatrix.rotation, (long)args.timestampNs);
+            //}
+        }
+
+        [ClientRpc]
+        private void UpdateHostCameraPoseClientRpc(Vector3 position, Quaternion rotation, long timestamp)
+        {
+            Debug.Log($"[OnHostCameraPoseUpdated] position: {position}, rotation: {rotation} and timestamp: {timestamp}");
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -213,12 +241,15 @@ namespace Holoi.Library.HoloKitApp
                 {
                     _hostCameraPosition.Value = HoloKitCamera.Instance.CenterEyePose.position;
                     _hostCameraRotation.Value = HoloKitCamera.Instance.CenterEyePose.rotation;
+
+                    // TODO: RPC instead
                 }
             }
             else
             {
                 if (_phoneAlignmentMark != null)
                 {
+                    Debug.Log($"host camera pose {_hostCameraPosition.Value} {_hostCameraRotation.Value}");
                     _phoneAlignmentMark.transform.SetPositionAndRotation(_hostCameraPosition.Value, _hostCameraRotation.Value);
                 }
             }
