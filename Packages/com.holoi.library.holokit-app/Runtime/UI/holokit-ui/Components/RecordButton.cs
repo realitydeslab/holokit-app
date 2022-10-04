@@ -18,7 +18,6 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 transform.Find("Image").GetComponent<Image>().sprite = _record;
             }
-
         }
     }
 }

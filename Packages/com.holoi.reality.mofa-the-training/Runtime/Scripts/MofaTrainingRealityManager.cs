@@ -8,6 +8,7 @@ using HoloKit;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using Holoi.AssetFoundation;
+using Holoi.Library.HoloKitApp.UI;
 
 namespace Holoi.Reality.MOFATheTraining
 {
@@ -28,8 +29,8 @@ namespace Holoi.Reality.MOFATheTraining
             base.Awake();
 
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChangedFunc;
-            HoloKitAppUIEventsReactor.OnTriggered += OnTriggered;
-            HoloKitAppUIEventsReactor.OnBoosted += OnBoosted;
+            HoloKitAppUIEventManager.OnTriggered += OnTriggered;
+            HoloKitAppUIEventManager.OnBoosted += OnBoosted;
         }
 
         public override void OnDestroy()
@@ -37,8 +38,8 @@ namespace Holoi.Reality.MOFATheTraining
             base.OnDestroy();
 
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChangedFunc;
-            HoloKitAppUIEventsReactor.OnTriggered -= OnTriggered;
-            HoloKitAppUIEventsReactor.OnBoosted -= OnBoosted;
+            HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
+            HoloKitAppUIEventManager.OnBoosted -= OnBoosted;
         }
 
         public override void OnNetworkSpawn()

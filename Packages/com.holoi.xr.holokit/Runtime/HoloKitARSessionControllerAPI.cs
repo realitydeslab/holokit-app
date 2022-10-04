@@ -112,7 +112,11 @@ namespace HoloKit {
             Action<string, int> OnCurrentARWorldMapSaved,
             Action<bool, string, IntPtr, int> OnGotARWorldMapFromDisk,
             Action OnARWorldMapLoaded,
-            Action OnRelocalizationSucceeded);
+            Action OnRelocalizationSucceeded,
+            Action<double, IntPtr> OnARSessionUpdatedFrame);
+
+        [DllImport("__Internal")]
+        private static extern double HoloKitSDK_GetSystemUptime();
 
         [AOT.MonoPInvokeCallback(typeof(Action<int>))]
         private static void OnThermalStateChangedDelegate(int state)
@@ -169,6 +173,19 @@ namespace HoloKit {
             OnRelocalizationSucceeded?.Invoke();
         }
 
+        [AOT.MonoPInvokeCallback(typeof(Action<double, IntPtr>))]
+        private static void OnARSessionUpdatedFrameDelegate(double timestamp, IntPtr matrixPtr)
+        {
+            // TODO:
+            float[] matrix = new float[16];
+            Marshal.Copy(matrixPtr, matrix, 0, 16);
+            for (int i = 0; i < 16; i++)
+            {
+                Debug.Log($"Unity {matrix[i]}");
+            }
+            // Right handedness to left handedness
+        }
+
         public static event Action<ThermalState> OnThermalStateChanged;
 
         public static event Action<CameraTrackingState> OnCameraChangedTrackingState;
@@ -186,6 +203,8 @@ namespace HoloKit {
         public static event Action OnRelocalizationStarted;
 
         public static event Action OnRelocalizationSucceeded;
+
+        public static event Action<double, Matrix4x4> OnARSessionUpdatedFrame;
 
         private static XRSessionSubsystem GetLoadedXRSessionSubsystem()
         {
@@ -292,7 +311,8 @@ namespace HoloKit {
                 OnCurrentARWorldMapSavedDelegate,
                 OnGotARWorldMapFromDiskDelegate,
                 OnARWorldMapLoadedDelegate,
-                OnRelocalizationSucceededDelegate);
+                OnRelocalizationSucceededDelegate,
+                OnARSessionUpdatedFrameDelegate);
             }
         }
 
@@ -360,6 +380,11 @@ namespace HoloKit {
             float[] p = { position.x, position.y, position.z };
             float[] r = { rotation.x, rotation.y, rotation.z, rotation.w };
             HoloKitSDK_ResetOrigin(p, r);
+        }
+
+        public static double GetSystemUptime()
+        {
+            return HoloKitSDK_GetSystemUptime();
         }
     }
 }

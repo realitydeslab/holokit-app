@@ -1,0 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Holoi.Library.HoloKitApp.UI
+{
+    public abstract class HoloKitAppUIPanel : MonoBehaviour
+    {
+        public abstract string UIPanelName { get; }
+    }
+}

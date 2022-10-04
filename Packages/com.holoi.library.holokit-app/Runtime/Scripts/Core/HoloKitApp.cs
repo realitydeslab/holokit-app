@@ -8,6 +8,7 @@ using Holoi.AssetFoundation;
 using Unity.Netcode.Transports.UNET;
 using HoloKit;
 using Holoi.Library.Permissions;
+using UnityEngine.XR.ARFoundation;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -48,6 +49,59 @@ namespace Holoi.Library.HoloKitApp
                 _instance = this;
             }
             DontDestroyOnLoad(gameObject);
+
+            if (HoloKitHelper.IsRuntime)
+            {
+                HoloKitNFCSessionControllerAPI.RegisterNFCSessionControllerDelegates();
+                HoloKitARSessionControllerAPI.RegisterARSessionControllerDelegates();
+                HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
+                HoloKitARSessionControllerAPI.SetSessionShouldAttemptRelocalization(false);
+            }
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneUnloaded += OnSceneUnloaded;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        {
+            foreach (var reality in LocalPlayerPreferences.RealityList.realities)
+            {
+                if (reality.realityManager == null)
+                {
+                    continue;
+                }
+
+                if (reality.realityManager.GetComponent<RealityManager>().SceneName.Equals(scene.name))
+                {
+                    UI.HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR");
+                    return;
+                }
+            }
+        }
+
+        private void OnSceneUnloaded(Scene scene)
+        {
+            foreach (var reality in LocalPlayerPreferences.RealityList.realities)
+            {
+                if (reality.realityManager == null)
+                {
+                    continue;
+                }
+
+                if (reality.realityManager.GetComponent<RealityManager>().SceneName.Equals(scene.name))
+                {
+                    // Pop AR UI Panels
+                    UI.HoloKitAppUIPanelManager.Instance.OnARSceneUnloaded();
+
+                    // Reset ARSession
+                    if (HoloKitHelper.IsRuntime)
+                    {
+                        LoaderUtility.Deinitialize();
+                        LoaderUtility.Initialize();
+                        HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
+                    }
+                    return;
+                }
+            }
         }
 
         private void Start()
@@ -59,6 +113,12 @@ namespace Holoi.Library.HoloKitApp
                 PermissionsAPI.Initialize();
             }
             StartCoroutine(HoloKitAppPermissionsManager.RequestWirelessDataPermission());
+        }
+
+        private void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneUnloaded -= OnSceneUnloaded;
         }
 
         private void OnApplicationQuit()
@@ -74,7 +134,7 @@ namespace Holoi.Library.HoloKitApp
                 return;
             }
             _isHost = true;
-            //SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+            SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
         }
 
         public void JoinRealityAsSpectator()
@@ -85,10 +145,10 @@ namespace Holoi.Library.HoloKitApp
                 return;
             }
             _isHost = false;
-            //SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+            SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
         }
 
-        public void InitializeNetworkManager()
+        private void InitializeNetworkManager()
         {
             if (CurrentReality == null)
             {
@@ -131,7 +191,7 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
-        public void DeinitializeNetworkManager()
+        private void DeinitializeNetworkManager()
         {
             if (NetworkManager.Singleton != null)
             {
@@ -176,6 +236,8 @@ namespace Holoi.Library.HoloKitApp
         {
             NetworkManager.Singleton.Shutdown();
             DeinitializeNetworkManager();
+
+            SceneManager.LoadSceneAsync(UI.HoloKitAppUIPanelManager.Instance.InitialScene, LoadSceneMode.Single);
         }
 
         public void SetRealityManager(RealityManager realityManager)

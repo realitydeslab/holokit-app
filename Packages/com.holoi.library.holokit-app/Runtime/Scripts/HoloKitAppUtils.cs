@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -10,6 +11,11 @@ namespace Holoi.Library.HoloKitApp
         {
             Vector3 cameraEuler = rotation.eulerAngles;
             return Quaternion.Euler(new Vector3(0f, cameraEuler.y, 0f));
+        }
+
+        public static double DegreeToRadians(double degree)
+        {
+            return Math.PI * degree / 180.0;
         }
     }
 }

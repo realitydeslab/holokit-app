@@ -21,11 +21,11 @@ namespace Holoi.Library.HoloKitApp
     [CreateAssetMenu(menuName = "ScriptableObjects/HoloKitAppLocalPlayerPreferences")]
     public class HoloKitAppLocalPlayerPreferences : ScriptableObject
     {
-        [SerializeField] private RealityList _realityList;
+        public RealityList RealityList;
 
-        [SerializeField] private MetaAvatarCollectionList _avatarCollectionList;
+        public MetaAvatarCollectionList AvatarCollectionList;
 
-        [SerializeField] private MetaObjectCollectionList _objectCollectionList;
+        public MetaObjectCollectionList ObjectCollectionList;
 
         public Dictionary<string, RealityPreference> RealityPreferences;
 
@@ -48,12 +48,12 @@ namespace Holoi.Library.HoloKitApp
             {
                 RealityPreferences = new();
                 // Set default preferences
-                foreach (var reality in _realityList.realities)
+                foreach (var reality in RealityList.realities)
                 {
                     // Set the default avatar
                     string metaAvatarCollectionId = null;
                     string metaAvatarTokenId = null;
-                    foreach (var avatarCollection in _avatarCollectionList.list)
+                    foreach (var avatarCollection in AvatarCollectionList.list)
                     {
                         if (reality.IsCompatibleWithMetaAvatarCollection(avatarCollection))
                         {
@@ -66,7 +66,7 @@ namespace Holoi.Library.HoloKitApp
                     // Set the default object
                     string metaObjectCollectionId = null;
                     string metaObjectTokenId = null;
-                    foreach (var objectCollection in _objectCollectionList.list)
+                    foreach (var objectCollection in ObjectCollectionList.list)
                     {
                         if (reality.IsCompatibleWithMetaObjectCollection(objectCollection))
                         {
@@ -92,7 +92,7 @@ namespace Holoi.Library.HoloKitApp
         {
             string avatarCollectionId = RealityPreferences[reality.realityId].MetaAvatarCollectionId;
             string avatarTokenId = RealityPreferences[reality.realityId].MetaAvatarTokenId;
-            foreach (var avatarCollection in _avatarCollectionList.list)
+            foreach (var avatarCollection in AvatarCollectionList.list)
             {
                 if (avatarCollection.id.Equals(avatarCollectionId))
                 {
@@ -112,7 +112,7 @@ namespace Holoi.Library.HoloKitApp
         {
             string objectCollectionId = RealityPreferences[reality.realityId].MetaObjectCollectionId;
             string objectTokenId = RealityPreferences[reality.realityId].MetaObjectTokenId;
-            foreach (var objectCollection in _objectCollectionList.list)
+            foreach (var objectCollection in ObjectCollectionList.list)
             {
                 if (objectCollection.id.Equals(objectCollectionId))
                 {
@@ -131,7 +131,7 @@ namespace Holoi.Library.HoloKitApp
         public List<MetaAvatarCollection> GetCompatibleMetaAvatarCollectionList(Reality reality)
         {
             List<MetaAvatarCollection> list = new();
-            foreach (var avatarCollection in _avatarCollectionList.list)
+            foreach (var avatarCollection in AvatarCollectionList.list)
             {
                 if (reality.IsCompatibleWithMetaAvatarCollection(avatarCollection))
                 {
@@ -144,7 +144,7 @@ namespace Holoi.Library.HoloKitApp
         public List<MetaObjectCollection> GetCompatibleMetaObjectCollectionList(Reality reality)
         {
             List<MetaObjectCollection> list = new();
-            foreach (var objectCollection in _objectCollectionList.list)
+            foreach (var objectCollection in ObjectCollectionList.list)
             {
                 if (reality.IsCompatibleWithMetaObjectCollection(objectCollection))
                 {

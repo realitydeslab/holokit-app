@@ -4,40 +4,32 @@ using UnityEngine;
 using HoloKit;
 using System;
 
-namespace Holoi.Library.HoloKitApp
+namespace Holoi.Library.HoloKitApp.UI
 {
-    public class HoloKitAppUIEventsReactor : MonoBehaviour
+    public class HoloKitAppUIEventReactor : MonoBehaviour
     {
-        public static event Action OnTriggered;
-
-        public static event Action OnBoosted;
-
         private void Awake()
         {
-            UI.PanelManager.OnRenderModeChanged += OnRenderModeChanged;
-            UI.PanelManager.OnStartedSharingReality += OnStartedSharingReality;
-            UI.PanelManager.OnStoppedSharingReality += OnStoppedSharingReality;
-            UI.PanelManager.OnStARTriggered += OnTriggeredFunc;
-            UI.PanelManager.OnStARBoosted += OnBoostedFunc;
-            UI.PanelManager.OnStartedRecording += OnStartedRecording;
-            UI.PanelManager.OnStoppedRecording += OnStoppedRecording;
-            UI.PanelManager.OnExitReality += OnExitReality;
-            UI.PanelManager.OnAlignmentMarkChecked += OnAlignmentMarkChecked;
-            UI.PanelManager.OnRescanQRCode += OnRescanQRCode;
+            HoloKitAppUIEventManager.OnRenderModeChanged += OnRenderModeChanged;
+            HoloKitAppUIEventManager.OnStartedAdvertising += OnStartedSharingReality;
+            HoloKitAppUIEventManager.OnStoppedAdvertising += OnStoppedSharingReality;
+            HoloKitAppUIEventManager.OnStartedRecording += OnStartedRecording;
+            HoloKitAppUIEventManager.OnStoppedRecording += OnStoppedRecording;
+            HoloKitAppUIEventManager.OnExit += OnExitReality;
+            HoloKitAppUIEventManager.OnAlignmentMarkChecked += OnAlignmentMarkChecked;
+            HoloKitAppUIEventManager.OnRescanQRCode += OnRescanQRCode;
         }
 
         private void OnDestroy()
         {
-            UI.PanelManager.OnRenderModeChanged -= OnRenderModeChanged;
-            UI.PanelManager.OnStartedSharingReality -= OnStartedSharingReality;
-            UI.PanelManager.OnStoppedSharingReality -= OnStoppedSharingReality;
-            UI.PanelManager.OnStARTriggered -= OnTriggeredFunc;
-            UI.PanelManager.OnStARBoosted -= OnBoostedFunc;
-            UI.PanelManager.OnStartedRecording -= OnStartedRecording;
-            UI.PanelManager.OnStoppedRecording -= OnStoppedRecording;
-            UI.PanelManager.OnExitReality -= OnExitReality;
-            UI.PanelManager.OnAlignmentMarkChecked -= OnAlignmentMarkChecked;
-            UI.PanelManager.OnRescanQRCode -= OnRescanQRCode;
+            HoloKitAppUIEventManager.OnRenderModeChanged -= OnRenderModeChanged;
+            HoloKitAppUIEventManager.OnStartedAdvertising -= OnStartedSharingReality;
+            HoloKitAppUIEventManager.OnStoppedAdvertising -= OnStoppedSharingReality;
+            HoloKitAppUIEventManager.OnStartedRecording -= OnStartedRecording;
+            HoloKitAppUIEventManager.OnStoppedRecording -= OnStoppedRecording;
+            HoloKitAppUIEventManager.OnExit -= OnExitReality;
+            HoloKitAppUIEventManager.OnAlignmentMarkChecked -= OnAlignmentMarkChecked;
+            HoloKitAppUIEventManager.OnRescanQRCode -= OnRescanQRCode;
         }
 
         private void OnRenderModeChanged(HoloKitRenderMode renderMode)
@@ -62,16 +54,6 @@ namespace Holoi.Library.HoloKitApp
         private void OnStoppedSharingReality()
         {
             HoloKitApp.Instance.RealityManager.StopAdvertising();
-        }
-
-        private void OnTriggeredFunc()
-        {
-            OnTriggered?.Invoke();
-        }
-
-        private void OnBoostedFunc()
-        {
-            OnBoosted?.Invoke();
         }
 
         private void OnExitReality()
