@@ -17,7 +17,7 @@ namespace Holoi.Library.HoloKitApp.UI
             // If local device is spectator
             if (!HoloKitApp.Instance.IsHost)
             {
-                HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR_ScanQRCode");
+                HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR_WaitingForConnection");
             }
         }
 

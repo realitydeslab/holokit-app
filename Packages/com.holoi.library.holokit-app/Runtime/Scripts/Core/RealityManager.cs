@@ -123,11 +123,6 @@ namespace Holoi.Library.HoloKitApp
         {
             HoloKitApp.Instance.SetRealityManager(this);
             OnRealityManagerSpawned?.Invoke();
-
-            if (!HoloKitApp.Instance.IsHost && HoloKitHelper.IsEditor)
-            {
-                OnFinishedScanningQRCode?.Invoke();
-            }
         }
 
         public void StartAdvertising()

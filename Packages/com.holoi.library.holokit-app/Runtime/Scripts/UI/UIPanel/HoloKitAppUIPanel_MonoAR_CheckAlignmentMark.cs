@@ -14,6 +14,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             HoloKitAppUIPanelManager.Instance.PopUIPanel();
             HoloKitAppUIPanelManager.Instance.PopUIPanel();
+            HoloKitAppUIPanelManager.Instance.PopUIPanel();
             HoloKitAppUIEventManager.OnAlignmentMarkChecked?.Invoke();
         }
 

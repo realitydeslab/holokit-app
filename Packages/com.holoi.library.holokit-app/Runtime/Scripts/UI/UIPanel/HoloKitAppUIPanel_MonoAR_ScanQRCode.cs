@@ -20,6 +20,11 @@ namespace Holoi.Library.HoloKitApp.UI
             RealityManager.OnFinishedScanningQRCode -= OnFinishedScanningQRCode;
         }
 
+        private void Start()
+        {
+            OnFinishedScanningQRCode();
+        }
+
         private void OnFinishedScanningQRCode()
         {
             HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR_CheckAlignmentMark");
