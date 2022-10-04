@@ -123,6 +123,11 @@ namespace Holoi.Library.HoloKitApp
         {
             HoloKitApp.Instance.SetRealityManager(this);
             OnRealityManagerSpawned?.Invoke();
+
+            if (!HoloKitApp.Instance.IsHost && HoloKitHelper.IsEditor)
+            {
+                OnFinishedScanningQRCode?.Invoke();
+            }
         }
 
         public void StartAdvertising()
@@ -353,7 +358,14 @@ namespace Holoi.Library.HoloKitApp
 
                 if (_currentClientSyncPhase == ClientSyncPhase.NotStarted)
                 {
-                    StartClientCalibration();
+                    if (HoloKitHelper.IsRuntime)
+                    {
+                        StartClientCalibration();
+                    }
+                    else
+                    {
+                        _currentClientSyncPhase = ClientSyncPhase.PoseSynced;
+                    }
                 }
                 else if (_currentClientSyncPhase == ClientSyncPhase.SyncingTimestamp)
                 {

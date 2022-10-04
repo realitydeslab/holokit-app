@@ -12,15 +12,15 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Awake()
         {
-            RealityManager.OnRealityManagerSpawned += OnLocalClientConnected;
+            RealityManager.OnFinishedScanningQRCode += OnFinishedScanningQRCode;
         }
 
         private void OnDestroy()
         {
-            RealityManager.OnRealityManagerSpawned -= OnLocalClientConnected;
+            RealityManager.OnFinishedScanningQRCode -= OnFinishedScanningQRCode;
         }
 
-        private void OnLocalClientConnected()
+        private void OnFinishedScanningQRCode()
         {
             HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR_CheckAlignmentMark");
         }
