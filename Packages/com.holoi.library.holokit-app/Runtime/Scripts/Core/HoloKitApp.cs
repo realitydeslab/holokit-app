@@ -17,11 +17,15 @@ namespace Holoi.Library.HoloKitApp
 
         private static HoloKitApp _instance;
 
+        [Header("Prefabs")]
         public NetworkManager NetworkManagerPrefab;
 
-        public HoloKitAppLocalPlayerPreferences LocalPlayerPreferences;
+        public NetworkHostCameraPose NetworkHostCameraPosePrefab;
 
         public GameObject PhoneAlignmentMarkPrefab;
+
+        [Header("Scriptable Objects")]
+        public HoloKitAppLocalPlayerPreferences LocalPlayerPreferences;
 
         [HideInInspector] public Reality CurrentReality;
 
@@ -188,6 +192,7 @@ namespace Holoi.Library.HoloKitApp
                     networkManager.NetworkConfig.NetworkTransport = networkManager.GetComponent<UNetTransport>();
                 }
                 networkManager.OnClientConnectedCallback += OnClientConnected;
+                networkManager.AddNetworkPrefab(NetworkHostCameraPosePrefab.gameObject);
                 networkManager.AddNetworkPrefab(CurrentReality.realityManager);
                 foreach (var prefab in realityManager.NetworkPrefabs)
                 {

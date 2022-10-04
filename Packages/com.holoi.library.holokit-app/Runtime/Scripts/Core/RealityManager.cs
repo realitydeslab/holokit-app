@@ -47,28 +47,14 @@ namespace Holoi.Library.HoloKitApp
 
         private readonly Dictionary<ulong, string> _connectedSpectatorDevices = new();
 
-        private Vector3 _lastImagePosition;
-
-        private Quaternion _lastImageRotation;
-
-        private int _imageStablizationFrameCount = 0;
-
-        private const float ImageStablizationPositionThreshold = 0.03f;
-
-        private const float ImageStablizationRotationThreshold = 7;
-
-        private const int ImageStabilizationFrameNum = 80;
-
-        private readonly Vector3 QRCodeToCameraOffset = new(-0.02f, 0.1f, 0.01f); // TODO: Compute this
-
-        private readonly NetworkVariable<Vector3> _hostCameraPosition = new(Vector3.zero, NetworkVariableReadPermission.Everyone);
-
-        private readonly NetworkVariable<Quaternion> _hostCameraRotation = new(Quaternion.identity, NetworkVariableReadPermission.Everyone);
-
         private GameObject _phoneAlignmentMark;
 
-        #region Sync
-        private Queue<double> _timestampOffsetQueue = new();
+        #region Pose synchronization
+        private NetworkHostCameraPose _networkHostCameraPose;
+
+        public Vector3 CameraToQRCodeOffset;
+
+        private readonly Queue<double> _timestampOffsetQueue = new();
 
         private const int TimestampOffsetQueueStablizationThreshold = 10;
 
@@ -78,19 +64,19 @@ namespace Holoi.Library.HoloKitApp
 
         private ClientSyncPhase _currentClientSyncPhase;
 
-        private Queue<ServerTimedCameraPose> _serverTimedCameraPoseQueue = new();
+        private readonly Queue<ServerTimedCameraPose> _serverTimedCameraPoseQueue = new();
 
         private const double ServerTimedCameraPoseExpirationDuration = 0.6;
 
         private double _lastClientFrameTimestamp;
 
-        private Queue<ImagePositionPair> _clientImagePositionPairQueue = new();
+        private readonly Queue<ImagePositionPair> _clientImagePositionPairQueue = new();
 
         private const double MaxTimestampDiff = 0.04;
 
         private const int ClientImagePositionPairQueueThreshold = 10;
 
-        private Queue<CalibrationResult> _calibrationResultQueue = new();
+        private readonly Queue<CalibrationResult> _calibrationResultQueue = new();
 
         private const int CalibrationResultThreshold = 10;
 
@@ -133,18 +119,46 @@ namespace Holoi.Library.HoloKitApp
                 _isAdvertising = true;
                 _serverTimedCameraPoseQueue.Clear();
                 HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnServerARSessionUpdatedFrame;
+                HoloKitARSessionControllerAPI.RegisterARSessionUpdatedFrameDelegate();
                 MultipeerConnectivityTransport.StartAdvertising();
             }
+            SpawnNetworkHostCameraPose();
         }
 
         public void StopAdvertising()
         {
+            DestroyNetworkHostCameraPose();
             if (HoloKitHelper.IsRuntime)
             {
                 NetworkManager.OnClientDisconnectCallback -= OnSpectatorDisconnected;
                 _isAdvertising = false;
+                HoloKitARSessionControllerAPI.RegisterARSessionUpdatedFrameDelegate();
                 HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnServerARSessionUpdatedFrame;
                 MultipeerConnectivityTransport.StopAdvertising();
+            }
+        }
+
+        public void SetNetworkHostCameraPose(NetworkHostCameraPose networkHostCameraPose)
+        {
+            _networkHostCameraPose = networkHostCameraPose;
+            _networkHostCameraPose.transform.SetParent(transform);
+            Debug.Log("Fare");
+        }
+
+        private void SpawnNetworkHostCameraPose()
+        {
+            if (_networkHostCameraPose == null)
+            {
+                var instance = Instantiate(HoloKitApp.Instance.NetworkHostCameraPosePrefab);
+                instance.GetComponent<NetworkObject>().Spawn();
+            }
+        }
+
+        private void DestroyNetworkHostCameraPose()
+        {
+            if (_networkHostCameraPose != null)
+            {
+                Destroy(_networkHostCameraPose.gameObject);
             }
         }
 
@@ -188,7 +202,7 @@ namespace Holoi.Library.HoloKitApp
                 if (timeDiff < minTimestampDiff)
                 {
                     minTimestampDiff = timeDiff;
-                    nearestImagePosition = timedCameraPose.PoseMatrix.GetPosition() + timedCameraPose.PoseMatrix.rotation * QRCodeToCameraOffset;
+                    nearestImagePosition = timedCameraPose.PoseMatrix.GetPosition() + timedCameraPose.PoseMatrix.rotation * CameraToQRCodeOffset;
                 }
             }
 
@@ -341,11 +355,7 @@ namespace Holoi.Library.HoloKitApp
         {
             if (IsServer)
             {
-                //if (_isAdvertising)
-                //{
-                //    //_hostCameraPosition.Value = HoloKitCamera.Instance.CenterEyePose.position;
-                //    //_hostCameraRotation.Value = HoloKitCamera.Instance.CenterEyePose.rotation;
-                //}
+               
             }
             else
             {
@@ -371,19 +381,16 @@ namespace Holoi.Library.HoloKitApp
                     _currentClientSyncPhase = ClientSyncPhase.ScanningQRCode;
                     StartScanningQRCode();
                 }
-
-                if (_phoneAlignmentMark != null)
-                {
-                    Debug.Log($"host camera pose {_hostCameraPosition.Value} {_hostCameraRotation.Value}");
-                    _phoneAlignmentMark.transform.SetPositionAndRotation(_hostCameraPosition.Value, _hostCameraRotation.Value);
-                }
             }
         }
 
-        [ClientRpc]
-        private void UpdateHostCameraPoseClientRpc(Vector3 position, Quaternion rotation, long timestamp)
+        private void Update()
         {
-            Debug.Log($"[OnHostCameraPoseUpdated] position: {position}, rotation: {rotation} and timestamp: {timestamp}");
+            if (_phoneAlignmentMark != null)
+            {
+                _phoneAlignmentMark.transform.SetPositionAndRotation(_networkHostCameraPose.transform.position,
+                                                                     _networkHostCameraPose.transform.rotation);
+            }
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -438,55 +445,11 @@ namespace Holoi.Library.HoloKitApp
             _lastClientFrameTimestamp = timestamp;
         }
 
-        // AMBER TODO: Make a better localization algorithm
         private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args)
         {
-            //foreach (var image in args.added)
-            //{
-            //    Debug.Log("[RealityManager] QRCode image added");
-            //    _imageStablizationFrameCount = 0;
-            //}
-
             foreach (var image in args.updated)
             {
                 OnRequestServerImagePositionServerRpc(_lastClientFrameTimestamp + _timestmapOffsetToServer, image.transform.position);
-                //if (_imageStablizationFrameCount == 0)
-                //{
-                //    _lastImagePosition = image.transform.position;
-                //    _lastImageRotation = image.transform.rotation;
-                //}
-
-                //if (Vector3.Distance(image.transform.position, _lastImagePosition) < ImageStablizationPositionThreshold &&
-                //    Quaternion.Angle(image.transform.rotation, _lastImageRotation) < ImageStablizationRotationThreshold)
-                //{
-                //    _imageStablizationFrameCount++;
-                //    if (_imageStablizationFrameCount == ImageStabilizationFrameNum)
-                //    {
-                //        Debug.Log("[RealityManager] QRCode stabilization succeeded");
-                //        GameObject go = new();
-                //        go.transform.SetPositionAndRotation(image.transform.position, image.transform.rotation);
-                //        go.transform.Rotate(go.transform.right, 90f);
-                //        Vector3 localHostCameraPosition = go.transform.position + go.transform.rotation * QRCodeToCameraOffset;
-                //        Quaternion localHostCameraRotation = go.transform.rotation;
-                //        Destroy(go);
-
-                //        Quaternion originRotation = Quaternion.Inverse(_hostCameraRotation.Value) * localHostCameraRotation;
-                //        Vector3 originPosition = localHostCameraPosition + originRotation * -_hostCameraPosition.Value;
-                //        //HoloKitARSessionControllerAPI.ResetOrigin(originPosition, originRotation);
-                //        HoloKitARSessionControllerAPI.ResetOrigin(originPosition, HoloKitAppUtils.GetHorizontalRotation(originRotation));
-
-                //        StopScanningQRCode();
-                //        OnFinishedScanningQRCode?.Invoke();
-                //        SpawnPhoneAlignmentMark();
-                //        OnSpectatorJoinedServerRpc(SystemInfo.deviceName);
-                //    }
-                //}
-                //else
-                //{
-                //    Debug.Log("[RealityManager] QRCode stabilization failed");
-                //    _imageStablizationFrameCount = 0;
-                //    OnQRCodeStabilizationFailed?.Invoke();
-                //}
             }
         }
 

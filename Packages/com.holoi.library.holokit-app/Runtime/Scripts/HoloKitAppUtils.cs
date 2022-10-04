@@ -13,9 +13,14 @@ namespace Holoi.Library.HoloKitApp
             return Quaternion.Euler(new Vector3(0f, cameraEuler.y, 0f));
         }
 
-        public static double DegreeToRadians(double degree)
+        public static double DegreeToRadian(double degree)
         {
             return Math.PI * degree / 180.0;
+        }
+
+        public static float PixelToMeter(int pixel)
+        {
+            return pixel / Screen.dpi / 39.3701f;
         }
     }
 }
