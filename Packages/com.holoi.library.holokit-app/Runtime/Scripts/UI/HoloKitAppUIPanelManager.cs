@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -49,6 +48,7 @@ namespace Holoi.Library.HoloKitApp.UI
                     return;
                 }
             }
+            Debug.Log($"[HoloKitAppUIPanelManager] Cannot find UIPanel with name {uiPanelName}");
         }
 
         private void PushUIPanel(HoloKitAppUIPanel uiPanel)
@@ -57,9 +57,10 @@ namespace Holoi.Library.HoloKitApp.UI
             uiPanelInstance.transform.SetParent(_canvas.transform);
             uiPanelInstance.transform.localPosition = Vector3.zero;
             uiPanelInstance.transform.localRotation = Quaternion.identity;
+            uiPanelInstance.transform.localScale = Vector3.one;
 
-            // Inactivate the previous UIPanels
-            if (_uiPanelStack.TryPeek(out var previousUIPanel)) {
+            // Inactivate the previous UIPanel
+            if (uiPanel.OverlayPreviousPanel && _uiPanelStack.TryPeek(out var previousUIPanel)) {
                 previousUIPanel.gameObject.SetActive(false);
             }
             _uiPanelStack.Push(uiPanelInstance);

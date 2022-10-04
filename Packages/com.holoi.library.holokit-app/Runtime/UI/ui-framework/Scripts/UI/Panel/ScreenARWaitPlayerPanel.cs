@@ -29,7 +29,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 PlayerEnteredReality();
             });
 
-            HoloKitApp.Instance.OnConnectedAsSpectator += PlayerEnteredReality;
+            //HoloKitApp.Instance.OnConnectedAsSpectator += PlayerEnteredReality;
         }
 
         public void PlayerEnteredReality()
@@ -49,7 +49,7 @@ namespace Holoi.Library.HoloKitApp.UI
         public override void OnClose()
         {
             base.OnClose();
-            HoloKitApp.Instance.OnConnectedAsSpectator -= PlayerEnteredReality;
+            //HoloKitApp.Instance.OnConnectedAsSpectator -= PlayerEnteredReality;
         }
     }
 }

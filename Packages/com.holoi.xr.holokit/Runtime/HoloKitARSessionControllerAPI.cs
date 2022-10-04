@@ -176,14 +176,18 @@ namespace HoloKit {
         [AOT.MonoPInvokeCallback(typeof(Action<double, IntPtr>))]
         private static void OnARSessionUpdatedFrameDelegate(double timestamp, IntPtr matrixPtr)
         {
-            // TODO:
             float[] matrix = new float[16];
             Marshal.Copy(matrixPtr, matrix, 0, 16);
-            for (int i = 0; i < 16; i++)
+
+            Matrix4x4 leftHandedMatrix = new();
+            for (int i = 0; i < 4; i++)
             {
-                Debug.Log($"Unity {matrix[i]}");
+                for (int j = 0; j < 4; j++)
+                {
+                    leftHandedMatrix[i, j] = matrix[(4 * i) + j];
+                }
             }
-            // Right handedness to left handedness
+            OnARSessionUpdatedFrame(timestamp, leftHandedMatrix);
         }
 
         public static event Action<ThermalState> OnThermalStateChanged;

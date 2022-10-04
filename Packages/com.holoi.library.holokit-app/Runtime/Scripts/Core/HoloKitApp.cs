@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
-using System;
 using Holoi.AssetFoundation;
 using Unity.Netcode.Transports.UNET;
 using HoloKit;
@@ -34,10 +33,6 @@ namespace Holoi.Library.HoloKitApp
 
         private RealityManager _realityManager;
 
-        public event Action OnConnectedAsHost;
-
-        public event Action OnConnectedAsSpectator;
-
         private void Awake()
         {
             if (_instance != null && _instance != this)
@@ -50,6 +45,7 @@ namespace Holoi.Library.HoloKitApp
             }
             DontDestroyOnLoad(gameObject);
 
+            // Initialize HoloKit SDK
             if (HoloKitHelper.IsRuntime)
             {
                 HoloKitNFCSessionControllerAPI.RegisterNFCSessionControllerDelegates();
@@ -73,6 +69,10 @@ namespace Holoi.Library.HoloKitApp
                 if (reality.realityManager.GetComponent<RealityManager>().SceneName.Equals(scene.name))
                 {
                     UI.HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR");
+
+                    // Wait and start network
+                    StartCoroutine(StartNetworkWithDelay(0.5f));
+
                     return;
                 }
             }
@@ -101,6 +101,19 @@ namespace Holoi.Library.HoloKitApp
                     }
                     return;
                 }
+            }
+        }
+
+        private IEnumerator StartNetworkWithDelay(float t)
+        {
+            yield return new WaitForSeconds(t);
+            if (_isHost)
+            {
+                StartHost();
+            }
+            else
+            {
+                StartClient();
             }
         }
 
@@ -254,11 +267,6 @@ namespace Holoi.Library.HoloKitApp
                 {
                     var realityManager = Instantiate(CurrentReality.realityManager.GetComponent<NetworkObject>());
                     realityManager.Spawn();
-                    OnConnectedAsHost?.Invoke();
-                }
-                else
-                {
-                    OnConnectedAsSpectator?.Invoke();
                 }
             }
         }

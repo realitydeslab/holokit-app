@@ -97,7 +97,8 @@ namespace Holoi.Library.HoloKitApp
         private const double CalibrationThetaStablizationStandardDeviation = 0.1 * Math.PI / 180.0; // In radians
         #endregion
 
-        public static event Action<RealityManager> OnRealityManagerSpawned;
+        // OnLocalClientConnected
+        public static event Action OnRealityManagerSpawned;
 
         public static event Action<List<string>> OnSpectatorDeviceListUpdated;
 
@@ -121,7 +122,7 @@ namespace Holoi.Library.HoloKitApp
         public override void OnNetworkSpawn()
         {
             HoloKitApp.Instance.SetRealityManager(this);
-            OnRealityManagerSpawned?.Invoke(this);
+            OnRealityManagerSpawned?.Invoke();
         }
 
         public void StartAdvertising()

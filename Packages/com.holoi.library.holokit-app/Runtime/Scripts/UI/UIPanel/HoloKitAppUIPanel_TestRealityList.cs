@@ -9,6 +9,8 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         public override string UIPanelName => "TestRealityList";
 
+        public override bool OverlayPreviousPanel => true;
+
         [SerializeField] private HoloKitAppLocalPlayerPreferences _localPlayerPreferences;
 
         public void OnEnterRealityAsHost(string realityDisplayName)
