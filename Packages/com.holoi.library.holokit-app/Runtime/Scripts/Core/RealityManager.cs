@@ -7,6 +7,8 @@ using System;
 using HoloKit;
 using UnityEngine.XR.ARFoundation;
 using Netcode.Transports.MultipeerConnectivity;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -43,11 +45,13 @@ namespace Holoi.Library.HoloKitApp
 
         public List<GameObject> NetworkPrefabs;
 
+        [SerializeField] private UniversalRenderPipelineAsset _urpAsset;
+
         private bool _isAdvertising;
 
         private readonly Dictionary<ulong, string> _connectedSpectatorDevices = new();
 
-        public Vector3 CameraToQRCodeOffset;
+        [HideInInspector] public Vector3 CameraToQRCodeOffset;
 
         private NetworkHostCameraPose _networkHostCameraPose;
 
@@ -62,7 +66,10 @@ namespace Holoi.Library.HoloKitApp
 
         public static event Action OnQRCodeStabilizationFailed;
 
-        protected virtual void Awake() { }
+        protected virtual void Awake()
+        {
+            SetupURPAsset();
+        }
 
         protected virtual void Start() { }
 
@@ -121,6 +128,14 @@ namespace Holoi.Library.HoloKitApp
                     _currentClientSyncPhase = ClientSyncPhase.ScanningQRCode;
                     StartScanningQRCode();
                 }
+            }
+        }
+
+        private void SetupURPAsset()
+        {
+            if (_urpAsset != null)
+            {
+                GraphicsSettings.renderPipelineAsset = _urpAsset;
             }
         }
 
