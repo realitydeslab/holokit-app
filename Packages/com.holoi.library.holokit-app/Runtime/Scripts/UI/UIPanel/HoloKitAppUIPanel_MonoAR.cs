@@ -10,7 +10,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
-        [SerializeField] private HoloKitAppUIPanel_MonoAR_RecordButton _recordButton;
+        [SerializeField] private HoloKitAppUIComponent_MonoAR_RecordButton _recordButton;
 
         private void Start()
         {
@@ -28,8 +28,10 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnStarButtonPressed()
         {
-            // TODO: Enter Star Mode
-
+            // Enter Star Mode
+            Screen.orientation = ScreenOrientation.LandscapeLeft;
+            HoloKitAppUIPanelManager.Instance.PushUIPanel("StarAR");
+            HoloKitAppUIEventManager.OnRenderModeChanged?.Invoke(HoloKit.HoloKitRenderMode.Stereo);
         }
 
         public void OnExitButtonPressed()

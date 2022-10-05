@@ -12,11 +12,15 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public List<HoloKitAppUIPanel> UIPanelList;
 
-        public string InitialScene;
+        public string InitialSceneName;
+
+        [SerializeField] private string _initialUIPanelName;
+
+        [SerializeField] private Canvas _2dCanvas;
+
+        [SerializeField] private Canvas _starCanvas;
 
         private readonly Stack<HoloKitAppUIPanel> _uiPanelStack = new();
-
-        private Canvas _canvas;
 
         private void Awake()
         {
@@ -33,8 +37,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
-            _canvas = GetComponentInChildren<Canvas>();
-            PushUIPanel(InitialScene);
+            PushUIPanel(_initialUIPanelName);
         }
 
         public void PushUIPanel(string uiPanelName)
@@ -54,7 +57,14 @@ namespace Holoi.Library.HoloKitApp.UI
         private void PushUIPanel(HoloKitAppUIPanel uiPanel)
         {
             var uiPanelInstance = Instantiate(uiPanel);
-            uiPanelInstance.transform.SetParent(_canvas.transform);
+            if (uiPanel.UIPanelName.Equals("StarAR"))
+            {
+                uiPanelInstance.transform.SetParent(_starCanvas.transform);
+            }
+            else
+            {
+                uiPanelInstance.transform.SetParent(_2dCanvas.transform);
+            }
             uiPanelInstance.transform.localPosition = Vector3.zero;
             uiPanelInstance.transform.localRotation = Quaternion.identity;
             uiPanelInstance.transform.localScale = Vector3.one;

@@ -2,20 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Holoi.Library.HoloKitApp
+namespace Holoi.Library.HoloKitApp.UI
 {
-    public class HoloKitAppUIPanel_StarAR : MonoBehaviour
+    public class HoloKitAppUIPanel_StarAR : HoloKitAppUIPanel
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
+        public override string UIPanelName => "StarAR";
 
-        // Update is called once per frame
-        void Update()
+        public override bool OverlayPreviousPanel => true;
+
+        private void Awake()
         {
-        
+            int a = Screen.width;
+            int b = Screen.height;
+            GetComponent<RectTransform>().sizeDelta = new Vector3(a > b ? a : b, a < b ? a : b);
         }
     }
 }

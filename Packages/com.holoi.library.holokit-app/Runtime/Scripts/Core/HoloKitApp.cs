@@ -255,7 +255,7 @@ namespace Holoi.Library.HoloKitApp
             NetworkManager.Singleton.Shutdown();
             DeinitializeNetworkManager();
 
-            SceneManager.LoadSceneAsync(UI.HoloKitAppUIPanelManager.Instance.InitialScene, LoadSceneMode.Single);
+            SceneManager.LoadSceneAsync(UI.HoloKitAppUIPanelManager.Instance.InitialSceneName, LoadSceneMode.Single);
         }
 
         public void SetRealityManager(RealityManager realityManager)

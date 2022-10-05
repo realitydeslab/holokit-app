@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
-    public class HoloKitAppUIPanel_MonoAR_RecordButton : MonoBehaviour
+    public class HoloKitAppUIComponent_MonoAR_RecordButton : MonoBehaviour
     {
         [HideInInspector] public bool IsRecording = false;
 
