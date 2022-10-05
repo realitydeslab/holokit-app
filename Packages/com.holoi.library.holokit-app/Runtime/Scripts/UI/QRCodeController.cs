@@ -21,7 +21,7 @@ namespace Holoi.Library.HoloKitApp.UI
             Vector3 phoneModelCameraOffset = new(originalPhoneModelCameraOffset.y, -originalPhoneModelCameraOffset.x, originalPhoneModelCameraOffset.z);
 
             Vector3 cameraToQRCodeOffset = leftEdgeCenterToQRCodeOffset + phoneModelCameraOffset;
-            Debug.Log($"CameraToQRCodeOffset: {cameraToQRCodeOffset}");
+            Debug.Log($"CameraToQRCodeOffset: {cameraToQRCodeOffset:F4}");
             HoloKitApp.Instance.RealityManager.CameraToQRCodeOffset = cameraToQRCodeOffset;
         }
     }
