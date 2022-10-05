@@ -1,7 +1,8 @@
+using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -21,6 +22,24 @@ namespace Holoi.Library.HoloKitApp
         public static float PixelToMeter(int pixel)
         {
             return pixel / Screen.dpi / 39.3701f;
+        }
+
+        public static double CalculateStdDev(IEnumerable<double> values)
+        {
+            double ret = 0;
+
+            if (values.Count() > 0)
+            {
+                // Compute the Average
+                double avg = values.Average();
+
+                // Perform the Sum of (value-avg)^2
+                double sum = values.Sum(d => Math.Pow(d - avg, 2));
+
+                // Put it all together
+                ret = Math.Sqrt(sum / values.Count());
+            }
+            return ret;
         }
     }
 }

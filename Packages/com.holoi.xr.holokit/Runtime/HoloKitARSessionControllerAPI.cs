@@ -398,7 +398,14 @@ namespace HoloKit {
 
         public static double GetSystemUptime()
         {
-            return HoloKitSDK_GetSystemUptime();
+            if (HoloKitHelper.IsRuntime)
+            {
+                return HoloKitSDK_GetSystemUptime();
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

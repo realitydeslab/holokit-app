@@ -65,8 +65,10 @@ namespace Holoi.Reality.MOFATheTraining
             }
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
+
             if (_placementIndicator != null)
             {
                 if (HoloKitHelper.IsRuntime)

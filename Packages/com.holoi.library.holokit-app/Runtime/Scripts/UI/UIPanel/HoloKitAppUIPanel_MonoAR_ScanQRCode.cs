@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -22,7 +23,10 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
-            OnFinishedScanningQRCode();
+            if (HoloKitHelper.IsEditor)
+            {
+                OnFinishedScanningQRCode();
+            }
         }
 
         private void OnFinishedScanningQRCode()
