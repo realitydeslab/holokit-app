@@ -35,7 +35,7 @@ namespace HoloKit
         {
             float width = HoloKitSDK_GetHoloKitModelPhoneFrameWidth((int)holokitType);
             float height = HoloKitSDK_GetHoloKitModelPhoneFrameHeight((int)holokitType);
-            return new Vector2(width, height);
+            return new Vector2(width, height + 0.005f); // Add an extra height
         }
 
         public static float GetHoloKitModelHorizontalAlignmentMarkerOffset(HoloKitType holokitType)

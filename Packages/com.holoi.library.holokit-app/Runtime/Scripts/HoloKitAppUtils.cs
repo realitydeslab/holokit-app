@@ -19,14 +19,14 @@ namespace Holoi.Library.HoloKitApp
             return Math.PI * degree / 180.0;
         }
 
-        public static float PixelToMeter(int pixel)
+        public static float PixelToMeter(float pixel)
         {
             return pixel / Screen.dpi / 39.3701f;
         }
 
-        public static int MeterToPixel(float meter)
+        public static float MeterToPixel(float meter)
         {
-            return Mathf.CeilToInt(meter * Screen.dpi * 39.3701f);
+            return meter * Screen.dpi * 39.3701f;
         }
 
         public static double CalculateStdDev(IEnumerable<double> values)

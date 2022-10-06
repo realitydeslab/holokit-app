@@ -19,7 +19,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
                 // Adjust marker length
                 Vector2 phoneFrameSize = HoloKitOpticsAPI.GetHoloKitModelPhoneFrameSize(HoloKitType.HoloKitX);
-                int phoneFramePixelHeight = HoloKitAppUtils.MeterToPixel(phoneFrameSize.y + 0.005f);
+                float phoneFramePixelHeight = HoloKitAppUtils.MeterToPixel(phoneFrameSize.y);
                 float screenHeight = Screen.width > Screen.height ? Screen.height : Screen.width;
                 rectTransform.sizeDelta = new Vector2(3, screenHeight - phoneFramePixelHeight);
 
