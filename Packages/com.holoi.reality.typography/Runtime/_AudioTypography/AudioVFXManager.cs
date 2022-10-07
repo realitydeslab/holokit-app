@@ -7,20 +7,88 @@ public class AudioVFXManager : MonoBehaviour
 {
     public Transform _handPositionSample;
     [SerializeField] private float multipier;
+    [SerializeField] AudioSource _as;
+
+    bool _interactiveScale = false;
+    bool _lockScale = false;
+
+    private void OnEnable()
+    {
+        HoloKitHandTracker.OnHandValidityChanged += HandValidityChanged;
+    }
+
+    private void OnDisable()
+    {
+        HoloKitHandTracker.OnHandValidityChanged -= HandValidityChanged;
+    }
+
+    public void HandValidityChanged(bool valid)
+    {
+        if (valid)
+        {
+            _interactiveScale = true;
+
+        }
+        else
+        {
+
+        }
+    }
+
+    public void LockScale()
+    {
+        if (_lockScale)
+        {
+            _lockScale = false;
+
+        }
+        else
+        {
+            _lockScale = true;
+        }
+    }
 
     private void Update()
     {
-        //Vector2 centerEyeOnPlane = new Vector2(HoloKitCamera.Instance.CenterEyePose.position.x, HoloKitCamera.Instance.CenterEyePose.position.y);
+        if (!_lockScale)
+        {
+            if (_interactiveScale)
+            {
+                Vector3 handOnPlane = Vector3.ProjectOnPlane(_handPositionSample.position, HoloKitCamera.Instance.CenterEyePose.forward);
+
+                var dist = Vector2.Distance(Vector2.zero, new Vector2(handOnPlane.x, handOnPlane.y));
+
+                transform.localScale = Vector3.one * dist * multipier;
+            }
+            else
+            {
+
+            }
+
+        }
+        else
+        {
+
+        }
 
 
-        Vector3 handOnPlane = Vector3.ProjectOnPlane(_handPositionSample.position, HoloKitCamera.Instance.CenterEyePose.forward);
+    }
 
-        var dist = Vector2.Distance(Vector2.zero, new Vector2(handOnPlane.x, handOnPlane.y));
+    public void PlayMusic()
+    {
+        if (_as.isPlaying)
+        {
+            _as.Pause();
+        }
+        else
+        {
+            _as.Play();
+        }
+    }
 
-        transform.localScale = Vector3.one * dist * multipier;
-
-        //Debug.Log($"centerEyeOnPlane{centerEyeOnPlane}");
-        Debug.Log($"handOnPlane{handOnPlane}");
-        Debug.Log($"dist{dist}");
+    public void ResetMusic()
+    {
+        _as.Stop();
+        //_as.Play();
     }
 }
