@@ -7,11 +7,17 @@ using UnityEngine.XR.ARFoundation.Samples;
 
 public class MeshTypographySceneManager : MonoBehaviour
 {
+
+    private void Awake()
+    {
+        var _videoEnhancementMode = VideoEnhancementMode.HighResWithHDR;
+        HoloKitARSessionControllerAPI.SetVideoEnhancementMode(_videoEnhancementMode); 
+    }
     void Start()
     {
-        FindObjectOfType<ARPlaneManager>(true).enabled = true;
-        FindObjectOfType<ARMeshManager>(true).enabled = true;
-        FindObjectOfType<ToggleMeshClassification>(true).enabled = true;
+        //FindObjectOfType<ARPlaneManager>(true).enabled = true;
+        //FindObjectOfType<ARMeshManager>(true).enabled = true;
+        //FindObjectOfType<ToggleMeshClassification>(true).enabled = true;
     }
 
     public void OnMeshingDone()
