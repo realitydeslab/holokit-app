@@ -5,7 +5,7 @@ using Holoi.Library.HoloKitApp;
 using Unity.Netcode;
 using HoloKit;
 
-namespace Holoi.Reality.TypoSpace
+namespace Holoi.Reality.TypoGraphy
 {
     public class TypoSpaceRealityManager : RealityManager
     {

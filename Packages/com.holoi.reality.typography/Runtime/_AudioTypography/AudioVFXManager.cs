@@ -3,92 +3,95 @@ using System.Collections.Generic;
 using UnityEngine;
 using HoloKit;
 
-public class AudioVFXManager : MonoBehaviour
+namespace Holoi.Reality.TypoGraphy
 {
-    public Transform _handPositionSample;
-    [SerializeField] private float multipier;
-    [SerializeField] AudioSource _as;
-
-    bool _interactiveScale = false;
-    bool _lockScale = false;
-
-    private void OnEnable()
+    public class AudioVFXManager : MonoBehaviour
     {
-        HoloKitHandTracker.OnHandValidityChanged += HandValidityChanged;
-    }
+        public Transform _handPositionSample;
+        [SerializeField] private float multipier;
+        [SerializeField] AudioSource _as;
 
-    private void OnDisable()
-    {
-        HoloKitHandTracker.OnHandValidityChanged -= HandValidityChanged;
-    }
+        bool _interactiveScale = false;
+        bool _lockScale = false;
 
-    public void HandValidityChanged(bool valid)
-    {
-        if (valid)
+        private void OnEnable()
         {
-            _interactiveScale = true;
-
+            HoloKitHandTracker.OnHandValidityChanged += HandValidityChanged;
         }
-        else
-        {
 
+        private void OnDisable()
+        {
+            HoloKitHandTracker.OnHandValidityChanged -= HandValidityChanged;
         }
-    }
 
-    public void LockScale()
-    {
-        if (_lockScale)
+        public void HandValidityChanged(bool valid)
         {
-            _lockScale = false;
-
-        }
-        else
-        {
-            _lockScale = true;
-        }
-    }
-
-    private void Update()
-    {
-        if (!_lockScale)
-        {
-            if (_interactiveScale)
+            if (valid)
             {
-                Vector3 handOnPlane = Vector3.ProjectOnPlane(_handPositionSample.position, HoloKitCamera.Instance.CenterEyePose.forward);
+                _interactiveScale = true;
 
-                var dist = Vector2.Distance(Vector2.zero, new Vector2(handOnPlane.x, handOnPlane.y));
+            }
+            else
+            {
 
-                transform.localScale = Vector3.one * dist * multipier;
+            }
+        }
+
+        public void LockScale()
+        {
+            if (_lockScale)
+            {
+                _lockScale = false;
+
+            }
+            else
+            {
+                _lockScale = true;
+            }
+        }
+
+        private void Update()
+        {
+            if (!_lockScale)
+            {
+                if (_interactiveScale)
+                {
+                    Vector3 handOnPlane = Vector3.ProjectOnPlane(_handPositionSample.position, HoloKitCamera.Instance.CenterEyePose.forward);
+
+                    var dist = Vector2.Distance(Vector2.zero, new Vector2(handOnPlane.x, handOnPlane.y));
+
+                    transform.localScale = Vector3.one * dist * multipier;
+                }
+                else
+                {
+
+                }
+
             }
             else
             {
 
             }
 
+
         }
-        else
+
+        public void PlayMusic()
         {
-
+            if (_as.isPlaying)
+            {
+                _as.Pause();
+            }
+            else
+            {
+                _as.Play();
+            }
         }
 
-
-    }
-
-    public void PlayMusic()
-    {
-        if (_as.isPlaying)
+        public void ResetMusic()
         {
-            _as.Pause();
+            _as.Stop();
+            //_as.Play();
         }
-        else
-        {
-            _as.Play();
-        }
-    }
-
-    public void ResetMusic()
-    {
-        _as.Stop();
-        //_as.Play();
     }
 }

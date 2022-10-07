@@ -224,7 +224,10 @@ VisualEffect:
         m_Name: V Direction
         m_Overridden: 1
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 1, y: 1, z: 1, w: 1}
+        m_Name: Color
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
@@ -382,6 +385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb59e501097714a80a90f7976bd6ebba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _HHT: {fileID: 751015011}
   _HGM: {fileID: 890379355}
   _vfxs:
   - {fileID: 459535399}
@@ -840,9 +844,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Freeze
+  m_text: 'Hide
 
-    VFX'
+    Joint'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1012,7 +1016,10 @@ VisualEffect:
         m_Name: V Direction
         m_Overridden: 1
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 1, y: 1, z: 1, w: 1}
+        m_Name: Color
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
@@ -1148,7 +1155,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 485048747}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 176031587}
+        m_TargetAssemblyTypeName: Holoi.Reality.TypoGraphy.FingerTextManager, Holoi.Reality.Typography
+        m_MethodName: HideJoint
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &485048747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1356,6 +1375,17 @@ MonoBehaviour:
   m_EnvironmentDepthMode: 3
   m_EnvironmentDepthTemporalSmoothing: 1
   m_OcclusionPreferenceMode: 1
+--- !u!114 &751015011 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 193546642362784935, guid: 33703e991f67b48bc95296635ea2bc41, type: 3}
+  m_PrefabInstance: {fileID: 1147827204}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147827205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 198b8f12a899d438cbed1d2344af69c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &890379355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1636,7 +1666,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 193546642362784935, guid: 33703e991f67b48bc95296635ea2bc41, type: 3}
       propertyPath: _visible
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 193546642362784935, guid: 33703e991f67b48bc95296635ea2bc41, type: 3}
       propertyPath: _fadeOutDelay
@@ -1903,7 +1933,10 @@ VisualEffect:
         m_Name: V Direction
         m_Overridden: 1
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 1, y: 1, z: 1, w: 1}
+        m_Name: Color
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
@@ -2025,7 +2058,10 @@ VisualEffect:
         m_Name: V Direction
         m_Overridden: 1
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 1, y: 1, z: 1, w: 1}
+        m_Name: Color
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
@@ -2251,7 +2287,10 @@ VisualEffect:
         m_Name: V Direction
         m_Overridden: 1
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 1, y: 1, z: 1, w: 1}
+        m_Name: Color
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
@@ -2614,7 +2653,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2010761506
 MonoBehaviour:
   m_ObjectHideFlags: 0
