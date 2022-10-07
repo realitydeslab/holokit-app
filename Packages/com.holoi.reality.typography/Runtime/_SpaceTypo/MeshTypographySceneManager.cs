@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using HoloKit;
 using UnityEngine.XR.ARFoundation.Samples;
 
 public class MeshTypographySceneManager : MonoBehaviour
 {
+    [SerializeField] Button _onMeshingDoneButton;
+    [SerializeField] GameObject _onStartTip;
 
     private void Awake()
     {
@@ -15,6 +18,10 @@ public class MeshTypographySceneManager : MonoBehaviour
     }
     void Start()
     {
+        _onMeshingDoneButton.interactable = false;
+
+        StartCoroutine(WaitAndEnableMeshingDoneButton());
+
         //FindObjectOfType<ARPlaneManager>(true).enabled = true;
         //FindObjectOfType<ARMeshManager>(true).enabled = true;
         //FindObjectOfType<ToggleMeshClassification>(true).enabled = true;
@@ -25,5 +32,12 @@ public class MeshTypographySceneManager : MonoBehaviour
         FindObjectOfType<ARPlaneManager>(true).enabled = false;
         FindObjectOfType<ARMeshManager>(true).enabled = false;
         FindObjectOfType<ToggleMeshClassification>(true).enabled = false;
+    }
+
+    IEnumerator WaitAndEnableMeshingDoneButton()
+    {
+        yield return new WaitForSeconds(4.5f);
+        _onStartTip.gameObject.SetActive(false);
+        _onMeshingDoneButton.interactable = true;
     }
 }
