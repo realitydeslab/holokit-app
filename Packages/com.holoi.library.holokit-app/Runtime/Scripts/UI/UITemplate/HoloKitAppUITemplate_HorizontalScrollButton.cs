@@ -46,6 +46,7 @@ namespace Holoi.Library.HoloKitApp.UI
                         OnRecovered();
                     }
                 }
+
             }
         }
 
@@ -61,6 +62,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         protected virtual void OnSelected()
         {
+            Handheld.Vibrate();
             _selected = true;
             _mask.enabled = false;
             _arrowUntriggered.sprite = _arrowRightStroke;
@@ -69,6 +71,10 @@ namespace Holoi.Library.HoloKitApp.UI
         protected virtual void OnUnselected()
         {
             _selected = false;
+            if (_scrollRect.horizontalScrollbar.value == _initialHorizontalScrollValue)
+            {
+                OnRecovered();
+            }
         }
 
         protected virtual void OnRecovered()
