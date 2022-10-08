@@ -9,15 +9,15 @@ namespace Holoi.Library.MOFABase
     public class MofaFightingPanelStatus : MonoBehaviour
     {
         private MofaBaseRealityManager _mofaRealityManager;
+
         [SerializeField] Animator _animator;
         [Header("UI Elements")]
         [SerializeField] VisualEffect _attackBar;
         [SerializeField] VisualEffect _ultimateBar;
 
-
         private void Awake()
         {
-            _mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            //_mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
         }
 
         private void OnEnable()
