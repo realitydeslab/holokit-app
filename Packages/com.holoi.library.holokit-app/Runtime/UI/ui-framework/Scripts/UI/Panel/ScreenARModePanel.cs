@@ -71,7 +71,7 @@ namespace Holoi.Library.HoloKitApp.UI
             });
 
             // check mark event here
-            RealityManager.OnFinishedScanningQRCode += GoToCheckTheMarkPanel;
+            //RealityManager.OnFinishedScanningQRCode += GoToCheckTheMarkPanel;
         }
 
         public void GoToCheckTheMarkPanel()
@@ -86,7 +86,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             base.OnClose();
 
-            RealityManager.OnFinishedScanningQRCode -= GoToCheckTheMarkPanel;
+            //RealityManager.OnFinishedScanningQRCode -= GoToCheckTheMarkPanel;
 
         }
     }

@@ -30,7 +30,7 @@ namespace Holoi.AssetFoundation
 
         public List<MetaObjectTag> compatibleMetaObjectTags;
 
-        public GameObject realityManager;
+        public SceneField scene;
 
         public string waterMarkField = "";
 

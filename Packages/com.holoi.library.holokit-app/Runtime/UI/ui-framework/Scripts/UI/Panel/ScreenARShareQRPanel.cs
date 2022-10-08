@@ -24,7 +24,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 PanelManager.OnStoppedSharingReality?.Invoke();
             });
 
-            RealityManager.OnSpectatorDeviceListUpdated += UpdateConnectedDeviceNameUI;
+            //RealityManager.OnSpectatorDeviceListUpdated += UpdateConnectedDeviceNameUI;
         }
 
         public void UpdateConnectedDeviceNameUI(List<string> names)
@@ -35,7 +35,7 @@ namespace Holoi.Library.HoloKitApp.UI
         public override void OnClose()
         {
             base.OnClose();
-            RealityManager.OnSpectatorDeviceListUpdated -= UpdateConnectedDeviceNameUI;
+            //RealityManager.OnSpectatorDeviceListUpdated -= UpdateConnectedDeviceNameUI;
 
         }
     }

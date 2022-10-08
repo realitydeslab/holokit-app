@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
-using Holoi.AssetFoundation;
 using Unity.Netcode.Transports.UNET;
-using HoloKit;
-using Holoi.Library.Permissions;
 using UnityEngine.XR.ARFoundation;
+using Holoi.AssetFoundation;
+using Holoi.Library.Permissions;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -18,25 +18,43 @@ namespace Holoi.Library.HoloKitApp
         private static HoloKitApp _instance;
 
         [Header("Prefabs")]
-        public NetworkManager NetworkManagerPrefab;
+        [SerializeField] private NetworkManager _networkManagerPrefab;
 
-        public NetworkHostCameraPose NetworkHostCameraPosePrefab;
+        [SerializeField] private HoloKitAppMultiplayerManager _multiplayerManagerPrefab;
 
-        public GameObject PhoneAlignmentMarkPrefab;
+        [SerializeField] private HoloKitAppRecorder _recorderPrefab;
 
         [Header("Scriptable Objects")]
-        public HoloKitAppLocalPlayerPreferences LocalPlayerPreferences;
+        public HoloKitAppGlobalSettings GlobalSettings;
 
-        [HideInInspector] public Reality CurrentReality;
+        public Reality CurrentReality
+        {
+            get => _currentReality;
+            set
+            {
+                _currentReality = value;
+            }
+        }
 
         public bool IsHost => _isHost;
 
+        public HoloKitAppMultiplayerManager MultiplayerManager => _multiplayerManager;
+
+        public HoloKitAppRecorder Recorder => _recorder;
+
         public RealityManager RealityManager => _realityManager;
+
+        private Reality _currentReality;
 
         private bool _isHost;
 
+        private HoloKitAppMultiplayerManager _multiplayerManager;
+
+        private HoloKitAppRecorder _recorder;
+
         private RealityManager _realityManager;
 
+        #region Mono
         private void Awake()
         {
             if (_instance != null && _instance != this)
@@ -49,6 +67,8 @@ namespace Holoi.Library.HoloKitApp
             }
             DontDestroyOnLoad(gameObject);
 
+            // Set screen orientation
+            Screen.orientation = ScreenOrientation.Portrait;
             // Initialize HoloKit SDK
             if (HoloKitHelper.IsRuntime)
             {
@@ -57,26 +77,57 @@ namespace Holoi.Library.HoloKitApp
                 HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
                 HoloKitARSessionControllerAPI.SetSessionShouldAttemptRelocalization(false);
             }
+            // Trigger WirelessData permission
+            if (HoloKitHelper.IsRuntime)
+            {
+                PermissionsAPI.Initialize();
+            }
+            StartCoroutine(HoloKitAppPermissionsManager.RequestWirelessDataPermission());
+            // Load Global Settings
+            GlobalSettings.Load();
+            // Register scene management delegates
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
         }
 
+        private void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        }
+
+        private void OnApplicationQuit()
+        {
+            GlobalSettings.Save();
+        }
+        #endregion
+
+        #region Reality Scene Management
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
-            foreach (var reality in LocalPlayerPreferences.RealityList.realities)
+            foreach (var reality in GlobalSettings.GetAllRealities())
             {
-                if (reality.realityManager == null)
+                if (reality.scene == null)
                 {
                     continue;
                 }
 
-                if (reality.realityManager.GetComponent<RealityManager>().SceneName.Equals(scene.name))
+                if (reality.scene.SceneName.Equals(scene.name))
                 {
-                    UI.HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR");
-
+                    // Find RealityManager reference
+                    _realityManager = FindObjectOfType<RealityManager>();
+                    if (_realityManager == null)
+                    {
+                        Debug.LogError("[HoloKitApp] There is no RealityManager in the scene");
+                        return;
+                    }
+                    // Setup URP Asset
+                    _realityManager.SetupURPAsset();
                     // Wait and start network
                     StartCoroutine(StartNetworkWithDelay(0.5f));
 
+                    // Push AR UI Panel
+                    UI.HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR");
                     return;
                 }
             }
@@ -84,14 +135,14 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnSceneUnloaded(Scene scene)
         {
-            foreach (var reality in LocalPlayerPreferences.RealityList.realities)
+            foreach (var reality in GlobalSettings.RealityList.realities)
             {
-                if (reality.realityManager == null)
+                if (reality.scene == null)
                 {
                     continue;
                 }
 
-                if (reality.realityManager.GetComponent<RealityManager>().SceneName.Equals(scene.name))
+                if (reality.scene.SceneName.Equals(scene.name))
                 {
                     // Pop AR UI Panels
                     UI.HoloKitAppUIPanelManager.Instance.OnARSceneUnloaded();
@@ -108,41 +159,6 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
-        private IEnumerator StartNetworkWithDelay(float t)
-        {
-            yield return new WaitForSeconds(t);
-            if (_isHost)
-            {
-                StartHost();
-            }
-            else
-            {
-                StartClient();
-            }
-        }
-
-        private void Start()
-        {
-            LocalPlayerPreferences.Load();
-            Screen.orientation = ScreenOrientation.Portrait;
-            if (HoloKitHelper.IsRuntime)
-            {
-                PermissionsAPI.Initialize();
-            }
-            StartCoroutine(HoloKitAppPermissionsManager.RequestWirelessDataPermission());
-        }
-
-        private void OnDestroy()
-        {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-            SceneManager.sceneUnloaded -= OnSceneUnloaded;
-        }
-
-        private void OnApplicationQuit()
-        {
-            LocalPlayerPreferences.Save();
-        }
-
         public void EnterRealityAsHost()
         {
             if (CurrentReality == null)
@@ -151,7 +167,7 @@ namespace Holoi.Library.HoloKitApp
                 return;
             }
             _isHost = true;
-            SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+            SceneManager.LoadScene(CurrentReality.scene.SceneName, LoadSceneMode.Single);
         }
 
         public void JoinRealityAsSpectator()
@@ -162,51 +178,49 @@ namespace Holoi.Library.HoloKitApp
                 return;
             }
             _isHost = false;
-            SceneManager.LoadScene(CurrentReality.realityManager.GetComponent<RealityManager>().SceneName, LoadSceneMode.Single);
+            SceneManager.LoadScene(CurrentReality.scene.SceneName, LoadSceneMode.Single);
+        }
+        #endregion
+
+        #region Network Lifecycle
+        private IEnumerator StartNetworkWithDelay(float t)
+        {
+            yield return new WaitForSeconds(t);
+            InitializeNetworkManager();
+            if (_isHost)
+            {
+                StartHost();
+            }
+            else
+            {
+                StartClient();
+            }
         }
 
         private void InitializeNetworkManager()
         {
-            if (CurrentReality == null)
+            if (NetworkManager.Singleton != null)
             {
-                Debug.Log("[HoloKitApp] There is no reality selected");
-                return;
+                DeinitializeNetworkManager();
             }
 
-            if (CurrentReality.realityManager == null)
+            var networkManager = Instantiate(_networkManagerPrefab);
+            if (HoloKitHelper.IsEditor)
             {
-                Debug.Log($"[HoloKitApp] Reality {CurrentReality.displayName} does not have a RealityManager");
+                networkManager.NetworkConfig.NetworkTransport = networkManager.GetComponent<UNetTransport>();
             }
-
-            RealityManager realityManager = CurrentReality.realityManager.GetComponent<RealityManager>();
-            if (realityManager == null)
+            foreach (var prefab in _realityManager.NetworkPrefabs)
             {
-                Debug.Log($"[HoloKitApp] Reality {CurrentReality.displayName} does not have a RealityManager script");
-            }
-
-            if (NetworkManager.Singleton == null)
-            {
-                var networkManager = Instantiate(NetworkManagerPrefab);
-                if (HoloKitHelper.IsEditor)
+                if (prefab.TryGetComponent<NetworkObject>(out var _))
                 {
-                    networkManager.NetworkConfig.NetworkTransport = networkManager.GetComponent<UNetTransport>();
+                    networkManager.AddNetworkPrefab(prefab);
                 }
-                networkManager.OnClientConnectedCallback += OnClientConnected;
-                networkManager.AddNetworkPrefab(NetworkHostCameraPosePrefab.gameObject);
-                networkManager.AddNetworkPrefab(CurrentReality.realityManager);
-                foreach (var prefab in realityManager.NetworkPrefabs)
+                else
                 {
-                    if (prefab.TryGetComponent<NetworkObject>(out var _))
-                    {
-                        networkManager.AddNetworkPrefab(prefab);
-                    }
+                    Debug.Log($"[HoloKitApp] NetworkPrefab {prefab.name} does not have a NetworkObject component");
                 }
-                Debug.Log("[HoloKitApp] NetworkManager initialized");
             }
-            else
-            {
-                Debug.Log("[HoloKitApp] NetworkManager already initialized");
-            }
+            Debug.Log("[HoloKitApp] NetworkManager initialized");
         }
 
         private void DeinitializeNetworkManager()
@@ -216,19 +230,23 @@ namespace Holoi.Library.HoloKitApp
                 Destroy(NetworkManager.Singleton.gameObject);
                 Debug.Log("[HoloKitApp] NetworkManager deinitialized");
             }
-            else
-            {
-                Debug.Log("[HoloKitApp] There is no NetworkManager to destroy");
-            }
         }
 
-        public void StartHost()
+        private void StartHost()
         {
-            InitializeNetworkManager();
+            if (NetworkManager.Singleton == null)
+            {
+                Debug.Log("[HoloKitApp] Failed to start host because NetworkManager is not initialized");
+            }
 
             if (NetworkManager.Singleton.StartHost())
             {
                 Debug.Log("[HoloKitApp] Host started");
+
+                var multiplayerManagerInstance = Instantiate(_multiplayerManagerPrefab);
+                multiplayerManagerInstance.GetComponent<NetworkObject>().Spawn();
+
+                _recorder = Instantiate(_recorderPrefab);
             }
             else
             {
@@ -236,13 +254,18 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
-        public void StartClient()
+        private void StartClient()
         {
-            InitializeNetworkManager();
+            if (NetworkManager.Singleton == null)
+            {
+                Debug.Log("[HoloKitApp] Failed to start host because NetworkManager is not initialized");
+            }
 
             if (NetworkManager.Singleton.StartClient())
             {
                 Debug.Log("[HoloKitApp] Client started");
+
+                _recorder = Instantiate(_recorderPrefab);
             }
             else
             {
@@ -250,30 +273,18 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
+        public void SetMultiplayerManager(HoloKitAppMultiplayerManager multiplayerManager)
+        {
+            _multiplayerManager = multiplayerManager;
+        }
+
         public void Shutdown()
         {
             NetworkManager.Singleton.Shutdown();
             DeinitializeNetworkManager();
 
-            SceneManager.LoadSceneAsync(UI.HoloKitAppUIPanelManager.Instance.InitialSceneName, LoadSceneMode.Single);
+            SceneManager.LoadSceneAsync("Start", LoadSceneMode.Single);
         }
-
-        public void SetRealityManager(RealityManager realityManager)
-        {
-            _realityManager = realityManager;
-        }
-
-        private void OnClientConnected(ulong clientId)
-        {
-            Debug.Log($"[HoloKitApp] OnClientConnected {clientId}");
-            if (clientId == NetworkManager.Singleton.LocalClientId)
-            {
-                if (_isHost)
-                {
-                    var realityManager = Instantiate(CurrentReality.realityManager.GetComponent<NetworkObject>());
-                    realityManager.Spawn();
-                }
-            }
-        }
+        #endregion
     }
 }

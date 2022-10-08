@@ -24,10 +24,8 @@ namespace Holoi.Reality.MOFO
             }
         }
 
-        protected override void FixedUpdate()
+        private void FixedUpdate()
         {
-            base.FixedUpdate();
-
             if (IsServer)
             {
                 if (HoloKitHandTracker.Instance.Valid)

@@ -10,7 +10,7 @@ namespace Holoi.Library.HoloKitApp
     {
         public override void OnNetworkSpawn()
         {
-            HoloKitApp.Instance.RealityManager.SetNetworkHostCameraPose(this);
+            HoloKitApp.Instance.MultiplayerManager.SetNetworkHostCameraPose(this);
         }
 
         private void FixedUpdate()

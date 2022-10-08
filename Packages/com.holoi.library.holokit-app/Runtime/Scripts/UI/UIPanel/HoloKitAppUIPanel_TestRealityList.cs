@@ -11,7 +11,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
-        [SerializeField] private HoloKitAppLocalPlayerPreferences _localPlayerPreferences;
+        [SerializeField] private HoloKitAppGlobalSettings _localPlayerPreferences;
 
         public void OnEnterRealityAsHost(string realityDisplayName)
         {

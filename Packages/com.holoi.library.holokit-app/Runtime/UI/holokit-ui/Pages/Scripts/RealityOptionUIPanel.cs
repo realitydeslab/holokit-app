@@ -28,7 +28,7 @@ namespace Holoi.Library.HoloKitApp.UI
         Transform _contentAva;
 
         [Header("UI Elements")]
-        [SerializeField] HoloKitAppLocalPlayerPreferences holoKitAppLocalPlayerPreferences;
+        [SerializeField] HoloKitAppGlobalSettings holoKitAppLocalPlayerPreferences;
 
         int _objectCount;
         int _avatarCount;
@@ -138,11 +138,11 @@ namespace Holoi.Library.HoloKitApp.UI
         public void SetUIButtons()
         {
 
-            var sceneName = HoloKitApp.Instance.CurrentReality.realityManager.GetComponent<RealityManager>().SceneName;
+            //var sceneName = HoloKitApp.Instance.CurrentReality.realityManager.GetComponent<RealityManager>().SceneName;
 
-            var scene = new ScreenARMainScene();
+            //var scene = new ScreenARMainScene();
 
-            scene._sceneName = sceneName;
+            //scene._sceneName = sceneName;
 
             // Create Buttons base on what scene this reality have:
 

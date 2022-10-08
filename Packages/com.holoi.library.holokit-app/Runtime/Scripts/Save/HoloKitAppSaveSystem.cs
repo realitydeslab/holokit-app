@@ -9,7 +9,7 @@ namespace Holoi.Library.HoloKitApp
     {
         private static readonly string s_savePath = Application.persistentDataPath + "/LocalPlayerPreferences.save";
 
-        public static void SaveLocalPlayerPreferences(HoloKitAppLocalPlayerPreferencesData data)
+        public static void SaveGlobalSettings(HoloKitAppGlobalSettingsData data)
         {
             BinaryFormatter formatter = new();
             FileStream stream = new(s_savePath, FileMode.Create);
@@ -17,13 +17,13 @@ namespace Holoi.Library.HoloKitApp
             stream.Close();
         }
 
-        public static HoloKitAppLocalPlayerPreferencesData LoadLocalPlayerPreferences()
+        public static HoloKitAppGlobalSettingsData LoadGlobalSettings()
         {
             if (HoloKitHelper.IsRuntime && File.Exists(s_savePath))
             {
                 BinaryFormatter formatter = new();
                 FileStream stream = new(s_savePath, FileMode.Open);
-                HoloKitAppLocalPlayerPreferencesData data = formatter.Deserialize(stream) as HoloKitAppLocalPlayerPreferencesData;
+                HoloKitAppGlobalSettingsData data = formatter.Deserialize(stream) as HoloKitAppGlobalSettingsData;
                 stream.Close();
                 return data;
             }

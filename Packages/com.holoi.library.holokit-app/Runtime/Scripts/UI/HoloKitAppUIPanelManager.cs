@@ -12,11 +12,9 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public List<HoloKitAppUIPanel> UIPanelList;
 
-        public string InitialSceneName;
+        [SerializeField] private bool _test;
 
-        [SerializeField] private string _initialUIPanelName;
-
-        [SerializeField] private Canvas _2dCanvas;
+        [SerializeField] private Canvas _portraitCanvas;
 
         [SerializeField] private Canvas _starCanvas;
 
@@ -37,7 +35,14 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
-            PushUIPanel(_initialUIPanelName);
+            if (_test)
+            {
+                PushUIPanel("TestRealityList");
+            }
+            else
+            {
+                // TODO: Load main UI panel
+            }
         }
 
         public void PushUIPanel(string uiPanelName)
@@ -63,7 +68,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
             else
             {
-                uiPanelInstance.transform.SetParent(_2dCanvas.transform);
+                uiPanelInstance.transform.SetParent(_portraitCanvas.transform);
             }
             uiPanelInstance.transform.localPosition = Vector3.zero;
             uiPanelInstance.transform.localRotation = Quaternion.identity;

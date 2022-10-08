@@ -26,10 +26,10 @@ namespace Holoi.Library.HoloKitApp.UI
 
                 // enter screen ar scene:
                 HoloKitApp.Instance.EnterRealityAsHost();
-                var sceneName = HoloKitApp.Instance.CurrentReality.realityManager.GetComponent<RealityManager>().SceneName;
+                //var sceneName = HoloKitApp.Instance.CurrentReality.realityManager.GetComponent<RealityManager>().SceneName;
 
                 var scene = new ScreenARMainScene();
-                scene._sceneName = sceneName;
+                //scene._sceneName = sceneName;
 
                 GameRoot.Instance.SceneSystem.SetScene(scene);
 
@@ -42,13 +42,13 @@ namespace Holoi.Library.HoloKitApp.UI
                 Debug.Log("SpectatorButton is clicked.");
 
                 HoloKitApp.Instance.JoinRealityAsSpectator();
-                var sceneName = HoloKitApp.Instance.CurrentReality.realityManager.GetComponent<RealityManager>().SceneName;
+                //var sceneName = HoloKitApp.Instance.CurrentReality.realityManager.GetComponent<RealityManager>().SceneName;
 
-                var scene = new ScreenARMainScene();
-                scene._sceneName = sceneName;
-                scene.openState = ScreenARMainScene.State.spectator;
+                //var scene = new ScreenARMainScene();
+                //scene._sceneName = sceneName;
+                //scene.openState = ScreenARMainScene.State.spectator;
 
-                GameRoot.Instance.SceneSystem.SetScene(scene);
+                //GameRoot.Instance.SceneSystem.SetScene(scene);
 
                 // events invoke:
                 PanelManager.OnJoinedRealityAsSpectator?.Invoke(HoloKitApp.Instance.CurrentReality);

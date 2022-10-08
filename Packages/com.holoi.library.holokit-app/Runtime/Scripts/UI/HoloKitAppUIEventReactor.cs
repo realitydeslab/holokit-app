@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using HoloKit;
-using System;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -48,12 +45,12 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnStartedSharingReality()
         {
-            HoloKitApp.Instance.RealityManager.StartAdvertising();
+            HoloKitApp.Instance.MultiplayerManager.StartAdvertising();
         }
 
         private void OnStoppedSharingReality()
         {
-            HoloKitApp.Instance.RealityManager.StopAdvertising();
+            HoloKitApp.Instance.MultiplayerManager.StopAdvertising();
         }
 
         private void OnExitReality()
@@ -65,7 +62,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             if (HoloKitHelper.IsRuntime)
             {
-                FindObjectOfType<HoloKitAppRecorder>().StartRecording();
+                HoloKitApp.Instance.Recorder.StartRecording();
             }
             else
             {
@@ -77,7 +74,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             if (HoloKitHelper.IsRuntime)
             {
-                FindObjectOfType<HoloKitAppRecorder>().StopRecording();
+                HoloKitApp.Instance.Recorder.StopRecording();
             }
             else
             {
@@ -87,12 +84,12 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnAlignmentMarkChecked()
         {
-            HoloKitApp.Instance.RealityManager.CheckAlignmentMark();
+            HoloKitApp.Instance.MultiplayerManager.CheckAlignmentMark();
         }
 
         private void OnRescanQRCode()
         {
-            HoloKitApp.Instance.RealityManager.RescanQRCode();
+            HoloKitApp.Instance.MultiplayerManager.RescanQRCode();
         }
     }
 }

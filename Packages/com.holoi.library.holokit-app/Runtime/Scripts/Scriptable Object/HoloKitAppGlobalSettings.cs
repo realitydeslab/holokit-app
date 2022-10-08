@@ -1,8 +1,8 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Holoi.AssetFoundation;
-using System;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -18,10 +18,12 @@ namespace Holoi.Library.HoloKitApp
         public string MetaObjectTokenId;
     }
 
-    [CreateAssetMenu(menuName = "ScriptableObjects/HoloKitAppLocalPlayerPreferences")]
-    public class HoloKitAppLocalPlayerPreferences : ScriptableObject
+    [CreateAssetMenu(menuName = "ScriptableObjects/HoloKitAppGlobalSettings")]
+    public class HoloKitAppGlobalSettings : ScriptableObject
     {
         public RealityList RealityList;
+
+        public RealityList TestRealityList;
 
         public MetaAvatarCollectionList AvatarCollectionList;
 
@@ -32,14 +34,14 @@ namespace Holoi.Library.HoloKitApp
         // Call this function when application quits.
         public void Save()
         {
-            HoloKitAppLocalPlayerPreferencesData data = new(this);
-            HoloKitAppSaveSystem.SaveLocalPlayerPreferences(data);
+            HoloKitAppGlobalSettingsData data = new(this);
+            HoloKitAppSaveSystem.SaveGlobalSettings(data);
         }
 
         // Call this function when application starts.
         public void Load()
         {
-            HoloKitAppLocalPlayerPreferencesData data = HoloKitAppSaveSystem.LoadLocalPlayerPreferences();
+            HoloKitAppGlobalSettingsData data = HoloKitAppSaveSystem.LoadGlobalSettings();
             if (data != null)
             {
                 RealityPreferences = data.RealityPreferences;
@@ -152,6 +154,14 @@ namespace Holoi.Library.HoloKitApp
                 }
             }
             return list;
+        }
+
+        public List<Reality> GetAllRealities()
+        {
+            List<Reality> wholeList = new(RealityList.realities);
+            wholeList.AddRange(TestRealityList.realities);
+            wholeList = wholeList.Distinct().ToList();
+            return wholeList;
         }
     }
 }

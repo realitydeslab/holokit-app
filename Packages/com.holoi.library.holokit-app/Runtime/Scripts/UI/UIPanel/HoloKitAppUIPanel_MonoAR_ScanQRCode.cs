@@ -13,12 +13,12 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Awake()
         {
-            RealityManager.OnFinishedScanningQRCode += OnFinishedScanningQRCode;
+            HoloKitAppMultiplayerManager.OnFinishedScanningQRCode += OnFinishedScanningQRCode;
         }
 
         private void OnDestroy()
         {
-            RealityManager.OnFinishedScanningQRCode -= OnFinishedScanningQRCode;
+            HoloKitAppMultiplayerManager.OnFinishedScanningQRCode -= OnFinishedScanningQRCode;
         }
 
         private void Start()

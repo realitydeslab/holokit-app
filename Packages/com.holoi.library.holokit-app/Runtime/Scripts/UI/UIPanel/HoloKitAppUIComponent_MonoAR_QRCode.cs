@@ -6,7 +6,7 @@ using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
-    public class QRCodeController : MonoBehaviour
+    public class HoloKitAppUIComponent_MonoAR_QRCode : MonoBehaviour
     {
         private void Start()
         {
@@ -22,7 +22,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
             Vector3 cameraToQRCodeOffset = leftEdgeCenterToQRCodeOffset + phoneModelCameraOffset;
             Debug.Log($"CameraToQRCodeOffset: {cameraToQRCodeOffset:F4}");
-            HoloKitApp.Instance.RealityManager.CameraToQRCodeOffset = cameraToQRCodeOffset;
+            HoloKitApp.Instance.MultiplayerManager.CameraToQRCodeOffset = cameraToQRCodeOffset;
         }
     }
 }
