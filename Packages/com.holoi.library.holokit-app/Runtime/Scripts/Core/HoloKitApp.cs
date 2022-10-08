@@ -238,6 +238,10 @@ namespace Holoi.Library.HoloKitApp
             {
                 networkManager.NetworkConfig.NetworkTransport = networkManager.GetComponent<UNetTransport>();
             }
+            else
+            {
+                Destroy(networkManager.GetComponent<UNetTransport>());
+            }
             foreach (var prefab in _realityManager.NetworkPrefabs)
             {
                 if (prefab.TryGetComponent<NetworkObject>(out var _))
