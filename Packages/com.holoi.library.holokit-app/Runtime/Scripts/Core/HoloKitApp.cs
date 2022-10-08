@@ -1,10 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Unity.Netcode;
 using UnityEngine.SceneManagement;
-using Unity.Netcode.Transports.UNET;
 using UnityEngine.XR.ARFoundation;
+using Unity.Netcode;
+using Unity.Netcode.Transports.UNET;
 using Holoi.AssetFoundation;
 using Holoi.Library.Permissions;
 using HoloKit;
@@ -26,6 +25,9 @@ namespace Holoi.Library.HoloKitApp
 
         [Header("Scriptable Objects")]
         public HoloKitAppGlobalSettings GlobalSettings;
+
+        [Header("Debug")]
+        [SerializeField] private bool _test;
 
         public Reality CurrentReality
         {
@@ -88,6 +90,24 @@ namespace Holoi.Library.HoloKitApp
             // Register scene management delegates
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
+            // Push UI panel if not in a reality scene
+            if (IsRealityScene(SceneManager.GetActiveScene()))
+            {
+                // Now it is in debug mode
+                _isHost = true;
+            }
+            else
+            {
+                // Push initial UI panel
+                if (_test)
+                {
+                    UI.HoloKitAppUIPanelManager.Instance.PushUIPanel("TestRealityList");
+                }
+                else
+                {
+                    // TODO: Load main UI panel
+                }
+            }
         }
 
         private void OnDestroy()
@@ -105,57 +125,65 @@ namespace Holoi.Library.HoloKitApp
         #region Reality Scene Management
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
-            foreach (var reality in GlobalSettings.GetAllRealities())
+            if (IsRealityScene(scene))
             {
-                if (reality.scene == null)
-                {
-                    continue;
-                }
-
-                if (reality.scene.SceneName.Equals(scene.name))
-                {
-                    // Find RealityManager reference
-                    _realityManager = FindObjectOfType<RealityManager>();
-                    if (_realityManager == null)
-                    {
-                        Debug.LogError("[HoloKitApp] There is no RealityManager in the scene");
-                        return;
-                    }
-                    // Setup URP Asset
-                    _realityManager.SetupURPAsset();
-                    // Wait and start network
-                    StartCoroutine(StartNetworkWithDelay(0.5f));
-
-                    // Push AR UI Panel
-                    UI.HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR");
-                    return;
-                }
+                InitializeRealityScene();
             }
         }
 
         private void OnSceneUnloaded(Scene scene)
         {
-            foreach (var reality in GlobalSettings.RealityList.realities)
+            if (IsRealityScene(scene))
             {
-                if (reality.scene == null)
-                {
-                    continue;
-                }
+                DeinitializeRealityScene();
+            }
+        }
+
+        private bool IsRealityScene(Scene scene)
+        {
+            foreach (var reality in GlobalSettings.GetAllRealities())
+            {
+                if (reality.scene == null) { continue; }
 
                 if (reality.scene.SceneName.Equals(scene.name))
                 {
-                    // Pop AR UI Panels
-                    UI.HoloKitAppUIPanelManager.Instance.OnARSceneUnloaded();
-
-                    // Reset ARSession
-                    if (HoloKitHelper.IsRuntime)
-                    {
-                        LoaderUtility.Deinitialize();
-                        LoaderUtility.Initialize();
-                        HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
-                    }
-                    return;
+                    return true;
                 }
+            }
+            return false;
+        }
+
+        private void InitializeRealityScene()
+        {
+            // Find RealityManager reference
+            _realityManager = FindObjectOfType<RealityManager>();
+            if (_realityManager == null)
+            {
+                Debug.LogError("[HoloKitApp] There is no RealityManager in the scene");
+                return;
+            }
+            // Setup URP Asset
+            _realityManager.SetupURPAsset();
+
+            // Wait and start network
+            StartCoroutine(StartNetworkWithDelay(0.5f));
+
+            // Push AR UI Panel
+            UI.HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR");
+            return;
+        }
+
+        private void DeinitializeRealityScene()
+        {
+            // Pop AR UI Panels
+            UI.HoloKitAppUIPanelManager.Instance.OnARSceneUnloaded();
+
+            // Reset ARSession
+            if (HoloKitHelper.IsRuntime)
+            {
+                LoaderUtility.Deinitialize();
+                LoaderUtility.Initialize();
+                HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
             }
         }
 

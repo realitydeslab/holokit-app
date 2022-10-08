@@ -12,8 +12,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public List<HoloKitAppUIPanel> UIPanelList;
 
-        [SerializeField] private bool _test;
-
         [SerializeField] private Canvas _portraitCanvas;
 
         [SerializeField] private Canvas _starCanvas;
@@ -30,19 +28,7 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 _instance = this;
             }
-            DontDestroyOnLoad(gameObject);
-        }
-
-        private void Start()
-        {
-            if (_test)
-            {
-                PushUIPanel("TestRealityList");
-            }
-            else
-            {
-                // TODO: Load main UI panel
-            }
+            //DontDestroyOnLoad(gameObject);
         }
 
         public void PushUIPanel(string uiPanelName)
