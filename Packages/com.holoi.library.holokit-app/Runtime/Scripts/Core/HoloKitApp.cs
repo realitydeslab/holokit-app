@@ -27,6 +27,7 @@ namespace Holoi.Library.HoloKitApp
         public HoloKitAppGlobalSettings GlobalSettings;
 
         [Header("Debug")]
+        // Set this to true to load TestRealityList at the beginning
         [SerializeField] private bool _test;
 
         public Reality CurrentReality

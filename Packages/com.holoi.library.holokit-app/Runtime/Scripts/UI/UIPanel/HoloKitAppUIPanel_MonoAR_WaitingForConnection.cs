@@ -12,12 +12,12 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Awake()
         {
-            //RealityManager.OnRealityManagerSpawned += OnLocalClientConnected;
+            HoloKitAppMultiplayerManager.OnLocalClientConnected += OnLocalClientConnected;
         }
 
         private void OnDestroy()
         {
-            //RealityManager.OnRealityManagerSpawned -= OnLocalClientConnected;
+            HoloKitAppMultiplayerManager.OnLocalClientConnected -= OnLocalClientConnected;
         }
 
         private void OnLocalClientConnected()

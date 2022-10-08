@@ -49,6 +49,8 @@ namespace Holoi.Library.HoloKitApp
 
         private readonly Dictionary<ulong, string> _connectedSpectatorDevices = new();
 
+        public static event Action OnLocalClientConnected;
+
         public static event Action<List<string>> OnSpectatorDeviceListUpdated;
 
         public static event Action OnFinishedScanningQRCode;
@@ -58,14 +60,12 @@ namespace Holoi.Library.HoloKitApp
         #region Mono
         public override void OnNetworkSpawn()
         {
-            Debug.Log("[MultiplayerManager] OnNetworkSpawn");
             HoloKitApp.Instance.SetMultiplayerManager(this);
+            OnLocalClientConnected?.Invoke();
         }
 
         private void Update()
         {
-            //Debug.Log($"SystemUptime: {HoloKitARSessionControllerAPI.GetSystemUptime()}");
-
             if (_phoneAlignmentMark != null)
             {
                 _phoneAlignmentMark.transform.SetPositionAndRotation(_networkHostCameraPose.transform.position,
@@ -75,11 +75,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void FixedUpdate()
         {
-            if (IsServer)
-            {
-
-            }
-            else
+            if (!IsServer)
             {
                 if (!IsSpawned) { return; }
 
