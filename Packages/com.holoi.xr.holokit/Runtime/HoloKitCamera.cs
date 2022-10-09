@@ -108,9 +108,13 @@ namespace HoloKit
 
         public float AlignmentMarkerOffset => _alignmentMarkerOffset;
 
+        public float ARSessionStartTime => _arSessionStartTime;
+
         private HoloKitRenderMode _renderMode = HoloKitRenderMode.Mono;
 
         private float _alignmentMarkerOffset;
+
+        private float _arSessionStartTime;
 
         private ARCameraBackground _arCameraBackground;
 
@@ -139,6 +143,7 @@ namespace HoloKit
             {
                 _debugCenterEye = Instantiate(_debugCenterEyePrefab);
             }
+            _arSessionStartTime = Time.time;
         }
 
         private void OnDestroy()

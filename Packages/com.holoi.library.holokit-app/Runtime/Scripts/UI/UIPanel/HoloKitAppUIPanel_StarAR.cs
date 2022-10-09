@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Holoi.Library.HoloKitApp.UI
@@ -10,6 +11,10 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private GameObject _horizontalAlignmentMarker;
 
+        [SerializeField] private GameObject _mainWindow;
+
+        [SerializeField] private GameObject _moreWindow;
+
         [SerializeField] private GameObject _triggerButton;
 
         [SerializeField] private GameObject _boostButton;
@@ -17,6 +22,8 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeField] private GameObject _exitButton;
 
         [SerializeField] private GameObject _recordButton;
+
+        [SerializeField] private GameObject _moreButton;
 
         private void Awake()
         {
@@ -31,6 +38,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _boostButton.SetActive(false);
             _exitButton.SetActive(false);
             _recordButton.SetActive(false);
+            _moreButton.SetActive(false);
         }
 
         public void OnTriggerButtonReleased()
@@ -39,6 +47,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _boostButton.SetActive(true);
             _exitButton.SetActive(true);
             _recordButton.SetActive(true);
+            _moreButton.SetActive(true);
         }
 
         public void OnBoostButtonPressed()
@@ -47,6 +56,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _triggerButton.SetActive(false);
             _exitButton.SetActive(false);
             _recordButton.SetActive(false);
+            _moreButton.SetActive(false);
         }
 
         public void OnBoostButtonReleased()
@@ -55,6 +65,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _triggerButton.SetActive(true);
             _exitButton.SetActive(true);
             _recordButton.SetActive(true);
+            _moreButton.SetActive(true);
         }
 
         public void OnExitButtonPressed()
@@ -63,6 +74,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _triggerButton.SetActive(false);
             _boostButton.SetActive(false);
             _recordButton.SetActive(false);
+            _moreButton.SetActive(false);
         }
 
         public void OnExitButtonReleased()
@@ -71,6 +83,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _triggerButton.SetActive(true);
             _boostButton.SetActive(true);
             _recordButton.SetActive(true);
+            _moreButton.SetActive(true);
         }
 
         public void OnRecordButtonPressed()
@@ -79,6 +92,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _triggerButton.SetActive(false);
             _boostButton.SetActive(false);
             _exitButton.SetActive(false);
+            _moreButton.SetActive(false);
         }
 
         public void OnRecordButtonReleased()
@@ -87,6 +101,23 @@ namespace Holoi.Library.HoloKitApp.UI
             _triggerButton.SetActive(true);
             _boostButton.SetActive(true);
             _exitButton.SetActive(true);
+            _moreButton.SetActive(true);
+        }
+
+        public void OnMoreButtonPressed()
+        {
+            _horizontalAlignmentMarker.SetActive(false);
+            _mainWindow.SetActive(false);
+            _moreWindow.SetActive(true);
+            StartCoroutine(StartMoreButtonCoolingDown());
+        }
+
+        private IEnumerator StartMoreButtonCoolingDown()
+        {
+            yield return new WaitForSeconds(6f);
+            _horizontalAlignmentMarker.SetActive(true);
+            _mainWindow.SetActive(true);
+            _moreWindow.SetActive(false);
         }
     }
 }

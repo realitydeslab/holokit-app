@@ -17,9 +17,8 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             base.Awake();
 
-            float horizontalOffsetPixel = HoloKitAppUtils.MeterToPixel(HorizontalOffset);
-            Debug.Log($"Boost button offset: {horizontalOffsetPixel}");
-            GetComponent<RectTransform>().anchoredPosition = new Vector2(horizontalOffsetPixel, 0f);
+            //float horizontalOffsetPixel = HoloKitAppUtils.MeterToPixel(HorizontalOffset);
+            //GetComponent<RectTransform>().anchoredPosition = new Vector2(horizontalOffsetPixel, 0f);
         }
 
         protected override void OnSelected()

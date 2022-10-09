@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -17,9 +15,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Awake()
         {
-            float horizontalOffsetPixel = HoloKitAppUtils.MeterToPixel(HorizontalOffset);
-            Debug.Log($"Trigger button offset: {horizontalOffsetPixel}");
-            GetComponent<RectTransform>().anchoredPosition = new Vector2(horizontalOffsetPixel, 0f);
+            //float horizontalOffsetPixel = HoloKitAppUtils.MeterToPixel(HorizontalOffset);
+            //GetComponent<RectTransform>().anchoredPosition = new Vector2(horizontalOffsetPixel, 0f);
 
             _untriggered.SetActive(true);
             _triggered.SetActive(false);
