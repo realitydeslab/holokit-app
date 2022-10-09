@@ -75,7 +75,7 @@ namespace UnityEngine.XR.ARFoundation.Samples
                     _process += 0.001f;
                     if (_process > 1) _process = 1;
                     boneController.SkinnerVfx.transform.localPosition = new Vector3(0.5f, 0, 0);
-                    boneController.SkinnerVfx.SetFloat("Spawn Rate", _process);
+                    //boneController.SkinnerVfx.SetFloat("Spawn Rate", _process);
 
                     //boneController.SkinnerVfx.transform.InverseTransformPoint(HoloKitCamera.Instance.CenterEyePose.right * 0.5f);
                 }
