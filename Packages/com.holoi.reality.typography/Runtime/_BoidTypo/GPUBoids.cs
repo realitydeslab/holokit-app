@@ -73,7 +73,12 @@ namespace BoidsSimulationOnGPU
         #region Accessors
 
         // Boidの基本データを格納したバッファを取得
-        public GraphicsBuffer GetBoidDataBuffer()
+        public GraphicsBuffer GetBoidPositionDataBuffer()
+        {
+            return this._boidPositionBuffer != null ? this._boidPositionBuffer : null;
+        }
+
+        public GraphicsBuffer GetBoidVelocityDataBuffer()
         {
             return this._boidPositionBuffer != null ? this._boidPositionBuffer : null;
         }

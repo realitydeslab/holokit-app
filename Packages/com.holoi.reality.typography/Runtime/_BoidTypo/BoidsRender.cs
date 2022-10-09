@@ -75,7 +75,7 @@ namespace BoidsSimulationOnGPU
 
             // Boidデータを格納したバッファをマテリアルにセット
             InstanceRenderMaterial.SetBuffer("_BoidDataBuffer",
-                GPUBoidsScript.GetBoidDataBuffer());
+                GPUBoidsScript.GetBoidPositionDataBuffer());
             // Boidオブジェクトスケールをセット
             InstanceRenderMaterial.SetVector("_ObjectScale", ObjectScale);
             // 境界領域を定義

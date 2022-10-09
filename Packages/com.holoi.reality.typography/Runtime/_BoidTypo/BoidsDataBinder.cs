@@ -23,7 +23,7 @@ sealed class VFXBoidsDataBinder : VFXBinderBase
         => Source != null && component.HasGraphicsBuffer(_property);
 
     public override void UpdateBinding(VisualEffect component)
-        => component.SetGraphicsBuffer(_property, Source.GetBoidDataBuffer());
+        => component.SetGraphicsBuffer(_property, Source.GetBoidPositionDataBuffer());
 
     public override string ToString()
         => $"BoidsData : '{_property}' -> {Source?.name ?? "(null)"}";

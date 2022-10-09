@@ -14,7 +14,8 @@ namespace Holoi.Reality.Typography
 
         void Update()
         {
-            _vfx.SetGraphicsBuffer("DataSet", _boids.GetBoidDataBuffer());
+            _vfx.SetGraphicsBuffer("PositionDataBuffer", _boids.GetBoidPositionDataBuffer());
+            _vfx.SetGraphicsBuffer("VelocityDataBuffer", _boids.GetBoidVelocityDataBuffer());
         }
     }
 }
