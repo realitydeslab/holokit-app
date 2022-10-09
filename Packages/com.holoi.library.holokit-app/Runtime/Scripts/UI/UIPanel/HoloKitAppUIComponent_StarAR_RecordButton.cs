@@ -81,7 +81,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 _recordText.color = _activeColor;
                 _dotImage.color = _activeColor;
                 _triggeredText.text = "Recording Started";
-                HoloKitAppUIEventManager.OnStartedAdvertising?.Invoke();
+                HoloKitAppUIEventManager.OnStartedRecording?.Invoke();
             }
         }
     }

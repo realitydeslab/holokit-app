@@ -29,7 +29,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4147209789885557453}
   m_Father: {fileID: 9186413053739398045}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -91,12 +92,12 @@ MonoBehaviour:
   m_RenderShadows: 1
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
-  m_CameraType: 0
+  m_CameraType: 1
   m_Cameras: []
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 64
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 0
@@ -139,7 +140,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4486747784133917010}
-  - {fileID: 4147209789885557453}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -155,19 +155,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5efc001d93e24ab3a5ba49d81a00e0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VideoWidth: 1170
-  VideoHeight: 2532
-  RecordCamera: {fileID: 0}
-  RecordMicrophone: 1
-  WatermarkCamera: {fileID: 5604912994278655786}
-  DynamicWatermark: {fileID: 4147209789885557452}
-  CameraToWatermarkOffset: {x: 0, y: 0, z: 5}
+  _recordMicrophone: 1
+  _watermarkCamera: {fileID: 5604912994278655786}
+  _watermark: {fileID: 4147209789885557452}
 --- !u!1001 &363266741632297099
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 9186413053739398045}
+    m_TransformParent: {fileID: 4486747784133917010}
     m_Modifications:
     - target: {fileID: 4361538849652939953, guid: 59b259b6d32704adabb7f23378ff6a8e, type: 3}
       propertyPath: m_Layer
@@ -179,31 +175,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4361538850910257734, guid: 59b259b6d32704adabb7f23378ff6a8e, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4361538850910257734, guid: 59b259b6d32704adabb7f23378ff6a8e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4361538850910257734, guid: 59b259b6d32704adabb7f23378ff6a8e, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4361538850910257734, guid: 59b259b6d32704adabb7f23378ff6a8e, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4361538850910257734, guid: 59b259b6d32704adabb7f23378ff6a8e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.15
       objectReference: {fileID: 0}
     - target: {fileID: 4361538850910257734, guid: 59b259b6d32704adabb7f23378ff6a8e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.45
       objectReference: {fileID: 0}
     - target: {fileID: 4361538850910257734, guid: 59b259b6d32704adabb7f23378ff6a8e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.45
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4361538850910257734, guid: 59b259b6d32704adabb7f23378ff6a8e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -239,7 +235,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4361538850910257735, guid: 59b259b6d32704adabb7f23378ff6a8e, type: 3}
       propertyPath: m_Name
-      value: WaterMark
+      value: Watermark
       objectReference: {fileID: 0}
     - target: {fileID: 4361538850910257735, guid: 59b259b6d32704adabb7f23378ff6a8e, type: 3}
       propertyPath: m_Layer
@@ -247,7 +243,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4361538850910257735, guid: 59b259b6d32704adabb7f23378ff6a8e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4950857848675916638, guid: 59b259b6d32704adabb7f23378ff6a8e, type: 3}
       propertyPath: m_Layer

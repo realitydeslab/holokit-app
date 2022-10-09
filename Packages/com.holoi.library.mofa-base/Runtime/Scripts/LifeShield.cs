@@ -81,7 +81,6 @@ namespace Holoi.Library.MOFABase
             }
 
             // Hide local player's shield
-            Debug.Log($"[LifeShield] ownerClientId {OwnerClientId} and localClientId {NetworkManager.LocalClientId}");
             if (OwnerClientId == NetworkManager.LocalClientId)
             {
                 _fragments[LifeShieldArea.Top].GetComponent<MeshRenderer>().enabled = false;
