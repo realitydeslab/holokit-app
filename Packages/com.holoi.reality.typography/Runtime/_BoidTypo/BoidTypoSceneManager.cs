@@ -79,7 +79,7 @@ namespace Holoi.Reality.Typography
                 }
                 else
                 {
-                    offsetZ = ((_verticalDistance - 0.5f) / _verticalDistance) * _directDistance;
+                    offsetZ = ((_verticalDistance - 0.25f - 0.5f) / _verticalDistance) * _directDistance; // o.5f is compersation of un-accurate
                 }
 
                 _boids.GetComponent<FollowMovementManager>().Offset =
