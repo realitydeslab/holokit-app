@@ -1,19 +1,17 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Holoi.Library.MOFABase;
-using Unity.Netcode;
-using Holoi.Library.HoloKitApp;
-using HoloKit;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
-using Holoi.AssetFoundation;
+using Unity.Netcode;
+using Holoi.Library.MOFABase;
 using Holoi.Library.HoloKitApp.UI;
+using HoloKit;
 
 namespace Holoi.Reality.MOFATheTraining
 {
     public class MofaTrainingRealityManager : MofaBaseRealityManager
     {
+        [Header("MOFA The Training")]
         public MofaAI MofaAIPrefab;
 
         public GameObject PlacementIndicatorPrefab;

@@ -1,13 +1,13 @@
-using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
 {
     public static class HoloKitAppSaveSystem
     {
-        private static readonly string s_savePath = Application.persistentDataPath + "/LocalPlayerPreferences.save";
+        private static readonly string s_savePath = Application.persistentDataPath + "/HoloKitAppGlobalSettings.save";
 
         public static void SaveGlobalSettings(HoloKitAppGlobalSettingsData data)
         {

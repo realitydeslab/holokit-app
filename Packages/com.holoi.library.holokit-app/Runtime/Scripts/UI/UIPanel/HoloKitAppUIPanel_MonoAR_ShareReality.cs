@@ -12,13 +12,13 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnShareRealityButtonPressed()
         {
-            HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR_ShareQRCode");
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ShareQRCode");
             HoloKitAppUIEventManager.OnStartedAdvertising?.Invoke();
         }
 
         public void OnExitButtonPressed()
         {
-            HoloKitAppUIPanelManager.Instance.PopUIPanel();
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
         }
     }
 }

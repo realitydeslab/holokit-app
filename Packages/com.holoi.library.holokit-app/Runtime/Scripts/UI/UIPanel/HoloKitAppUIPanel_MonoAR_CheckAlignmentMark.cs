@@ -12,15 +12,15 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnCheckedButtonPressed()
         {
-            HoloKitAppUIPanelManager.Instance.PopUIPanel();
-            HoloKitAppUIPanelManager.Instance.PopUIPanel();
-            HoloKitAppUIPanelManager.Instance.PopUIPanel();
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitAppUIEventManager.OnAlignmentMarkChecked?.Invoke();
         }
 
         public void OnRescanButtonPressed()
         {
-            HoloKitAppUIPanelManager.Instance.PopUIPanel();
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitAppUIEventManager.OnRescanQRCode?.Invoke();
         }
     }

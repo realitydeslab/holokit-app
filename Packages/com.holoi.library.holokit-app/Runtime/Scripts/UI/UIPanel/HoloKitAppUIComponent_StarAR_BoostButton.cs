@@ -5,8 +5,10 @@ using UnityEngine.EventSystems;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
-    public class HoloKitAppUIComponent_StarAR_BoostButton : HoloKitAppUITemplate_HorizontalScrollButton
+    public class HoloKitAppUIComponent_StarAR_BoostButton : HoloKitAppUITemplate_StarAR_HorizontalScrollButton
     {
+        public override bool SwipeRight => true;
+
         [SerializeField] private HoloKitAppUIPanel_StarAR _starARPanel;
 
         private const float HorizontalOffset = 0.018f;
@@ -32,6 +34,13 @@ namespace Holoi.Library.HoloKitApp.UI
             base.OnRecovered();
 
             _starARPanel.OnBoostButtonReleased();
+        }
+
+        protected override void OnTriggerred()
+        {
+            base.OnTriggerred();
+
+            HoloKitAppUIEventManager.OnBoosted?.Invoke();
         }
     }
 }

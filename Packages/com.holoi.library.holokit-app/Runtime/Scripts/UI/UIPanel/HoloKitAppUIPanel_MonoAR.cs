@@ -17,20 +17,20 @@ namespace Holoi.Library.HoloKitApp.UI
             // If local device is spectator
             if (!HoloKitApp.Instance.IsHost)
             {
-                HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR_WaitingForConnection");
+                HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_WaitingForConnection");
             }
         }
 
         public void OnSpectatorButtonPressed()
         {
-            HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR_ShareReality");
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ShareReality");
         }
 
         public void OnStarButtonPressed()
         {
             // Enter Star Mode
             Screen.orientation = ScreenOrientation.LandscapeLeft;
-            HoloKitAppUIPanelManager.Instance.PushUIPanel("StarAR");
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("StarAR");
             HoloKitAppUIEventManager.OnRenderModeChanged?.Invoke(HoloKit.HoloKitRenderMode.Stereo);
         }
 

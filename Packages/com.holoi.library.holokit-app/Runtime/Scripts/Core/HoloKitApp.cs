@@ -26,6 +26,9 @@ namespace Holoi.Library.HoloKitApp
         [Header("Scriptable Objects")]
         public HoloKitAppGlobalSettings GlobalSettings;
 
+        [Header("UI")]
+        public UI.HoloKitAppUIPanelManager UIPanelManager;
+
         [Header("Debug")]
         // Set this to true to load TestRealityList at the beginning
         [SerializeField] private bool _test;
@@ -91,23 +94,15 @@ namespace Holoi.Library.HoloKitApp
             // Register scene management delegates
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
-            // Push UI panel if not in a reality scene
-            if (IsRealityScene(SceneManager.GetActiveScene()))
+
+            // Push initial UI panel
+            if (_test)
             {
-                // Now it is in debug mode
-                _isHost = true;
+                UIPanelManager.PushUIPanel("TestRealityList");
             }
             else
             {
-                // Push initial UI panel
-                if (_test)
-                {
-                    UI.HoloKitAppUIPanelManager.Instance.PushUIPanel("TestRealityList");
-                }
-                else
-                {
-                    // TODO: Load main UI panel
-                }
+                // TODO: Load main UI panel
             }
         }
 
@@ -142,16 +137,17 @@ namespace Holoi.Library.HoloKitApp
 
         private bool IsRealityScene(Scene scene)
         {
-            foreach (var reality in GlobalSettings.GetAllRealities())
-            {
-                if (reality.scene == null) { continue; }
+            //foreach (var reality in GlobalSettings.GetAllRealities())
+            //{
+            //    if (reality.scene == null) { continue; }
 
-                if (reality.scene.SceneName.Equals(scene.name))
-                {
-                    return true;
-                }
-            }
-            return false;
+            //    if (reality.scene.SceneName.Equals(scene.name))
+            //    {
+            //        return true;
+            //    }
+            //}
+            //return false;
+            return !scene.name.Equals("Start");
         }
 
         private void InitializeRealityScene()
@@ -170,14 +166,14 @@ namespace Holoi.Library.HoloKitApp
             StartCoroutine(StartNetworkWithDelay(0.5f));
 
             // Push AR UI Panel
-            UI.HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR");
+            UIPanelManager.PushUIPanel("MonoAR");
             return;
         }
 
         private void DeinitializeRealityScene()
         {
             // Pop AR UI Panels
-            UI.HoloKitAppUIPanelManager.Instance.OnARSceneUnloaded();
+            UIPanelManager.OnARSceneUnloaded();
 
             // Reset ARSession
             if (HoloKitHelper.IsRuntime)

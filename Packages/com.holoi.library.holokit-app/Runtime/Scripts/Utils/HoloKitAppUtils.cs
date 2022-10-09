@@ -46,5 +46,11 @@ namespace Holoi.Library.HoloKitApp
             }
             return ret;
         }
+
+        public static string SecondToMMSS(float time)
+        {
+            TimeSpan timeSpan = TimeSpan.FromSeconds(time);
+            return timeSpan.Minutes.ToString("00") + ":" + timeSpan.Seconds.ToString("00");
+        }
     }
 }

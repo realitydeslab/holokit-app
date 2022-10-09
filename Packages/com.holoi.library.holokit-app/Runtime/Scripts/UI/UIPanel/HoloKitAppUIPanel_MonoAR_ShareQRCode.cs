@@ -13,8 +13,8 @@ namespace Holoi.Library.HoloKitApp.UI
         public void OnExitButtonPressed()
         {
             HoloKitAppUIEventManager.OnStoppedAdvertising?.Invoke();
-            HoloKitAppUIPanelManager.Instance.PopUIPanel();
-            HoloKitAppUIPanelManager.Instance.PopUIPanel();
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
         }
     }
 }

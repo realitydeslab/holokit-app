@@ -29,6 +29,7 @@ namespace Holoi.Library.MOFABase
     {
         [HideInInspector] public NetworkVariable<MofaPhase> Phase = new(0, NetworkVariableReadPermission.Everyone);
 
+        [Header("MOFA Base")]
         public MofaPlayer MofaPlayerPrefab;
 
         public LifeShield LifeShieldPrefab;

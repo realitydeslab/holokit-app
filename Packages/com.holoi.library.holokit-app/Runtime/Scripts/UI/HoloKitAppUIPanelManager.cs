@@ -6,9 +6,9 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIPanelManager : MonoBehaviour
     {
-        public static HoloKitAppUIPanelManager Instance { get { return _instance; } }
+        //public static HoloKitAppUIPanelManager Instance { get { return _instance; } }
 
-        private static HoloKitAppUIPanelManager _instance;
+        //private static HoloKitAppUIPanelManager _instance;
 
         public List<HoloKitAppUIPanel> UIPanelList;
 
@@ -20,14 +20,14 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Awake()
         {
-            if (_instance != null && _instance != this)
-            {
-                Destroy(gameObject);
-            }
-            else
-            {
-                _instance = this;
-            }
+            //if (_instance != null && _instance != this)
+            //{
+            //    Destroy(gameObject);
+            //}
+            //else
+            //{
+            //    _instance = this;
+            //}
             //DontDestroyOnLoad(gameObject);
         }
 

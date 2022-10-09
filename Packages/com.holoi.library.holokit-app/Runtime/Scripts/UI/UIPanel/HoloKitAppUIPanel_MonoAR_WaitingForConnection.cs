@@ -22,12 +22,12 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnLocalClientConnected()
         {
-            HoloKitAppUIPanelManager.Instance.PushUIPanel("MonoAR_ScanQRCode");
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ScanQRCode");
         }
 
         public void OnExitButtonPressed()
         {
-            HoloKitAppUIPanelManager.Instance.PopUIPanel();
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitAppUIEventManager.OnExit?.Invoke();
         }
     }
