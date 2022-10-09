@@ -71,7 +71,9 @@ namespace UnityEngine.XR.ARFoundation.Samples
                         boneController.SkinnerVfx.SetSkinnedMeshRenderer("SkinnedMeshRenderer", boneController.SkinnerMeshRendererRef);
                     }
 
-                    _process += Time.deltaTime* 0.5f;
+                    //_process += Time.deltaTime* 0.5f;
+                    _process += 0.001f;
+                    if (_process > 1) _process = 1;
                     boneController.SkinnerVfx.transform.localPosition = new Vector3(0.5f, 0, 0);
                     boneController.SkinnerVfx.SetFloat("Spawn Rate", _process);
 
