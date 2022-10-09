@@ -80,7 +80,7 @@ namespace BoidsSimulationOnGPU
 
         public GraphicsBuffer GetBoidVelocityDataBuffer()
         {
-            return this._boidPositionBuffer != null ? this._boidPositionBuffer : null;
+            return this._boidVelocityBuffer != null ? this._boidVelocityBuffer : null;
         }
 
         // オブジェクト数を取得
