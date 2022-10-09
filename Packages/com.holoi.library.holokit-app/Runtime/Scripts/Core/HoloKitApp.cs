@@ -52,7 +52,7 @@ namespace Holoi.Library.HoloKitApp
 
         private Reality _currentReality;
 
-        private bool _isHost;
+        private bool _isHost = true;
 
         private HoloKitAppMultiplayerManager _multiplayerManager;
 
@@ -95,14 +95,17 @@ namespace Holoi.Library.HoloKitApp
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
 
-            // Push initial UI panel
-            if (_test)
+            if (!IsRealityScene(SceneManager.GetActiveScene()))
             {
-                UIPanelManager.PushUIPanel("TestRealityList");
-            }
-            else
-            {
-                // TODO: Load main UI panel
+                // Push initial UI panel
+                if (_test)
+                {
+                    UIPanelManager.PushUIPanel("TestRealityList");
+                }
+                else
+                {
+                    // TODO: Load main UI panel
+                }
             }
         }
 
@@ -137,17 +140,17 @@ namespace Holoi.Library.HoloKitApp
 
         private bool IsRealityScene(Scene scene)
         {
-            //foreach (var reality in GlobalSettings.GetAllRealities())
-            //{
-            //    if (reality.scene == null) { continue; }
+            foreach (var reality in GlobalSettings.GetAllRealities())
+            {
+                if (reality.scene == null) { continue; }
 
-            //    if (reality.scene.SceneName.Equals(scene.name))
-            //    {
-            //        return true;
-            //    }
-            //}
-            //return false;
-            return !scene.name.Equals("Start");
+                if (reality.scene.SceneName.Equals(scene.name))
+                {
+                    return true;
+                }
+            }
+            return false;
+            //return !scene.name.Equals("Start");
         }
 
         private void InitializeRealityScene()
