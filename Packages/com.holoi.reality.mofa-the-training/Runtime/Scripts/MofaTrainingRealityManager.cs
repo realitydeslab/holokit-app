@@ -44,6 +44,8 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.OnNetworkSpawn();
 
+            Debug.Log("[MofaTrainingRealityManager] OnNetworkSpawn");
+
             if (IsServer)
             {
                 SpawnLocalPlayerSpellManager();

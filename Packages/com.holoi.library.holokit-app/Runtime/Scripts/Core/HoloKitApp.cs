@@ -166,6 +166,9 @@ namespace Holoi.Library.HoloKitApp
             // Setup URP Asset
             _realityManager.SetupURPAsset();
 
+            // Initialize NetworkManager
+            InitializeNetworkManager();
+
             // Wait and start network
             StartCoroutine(StartNetworkWithDelay(0.5f));
 
@@ -215,7 +218,6 @@ namespace Holoi.Library.HoloKitApp
         private IEnumerator StartNetworkWithDelay(float t)
         {
             yield return new WaitForSeconds(t);
-            InitializeNetworkManager();
             if (_isHost)
             {
                 StartHost();

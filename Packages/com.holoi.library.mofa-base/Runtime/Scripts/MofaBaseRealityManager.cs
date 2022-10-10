@@ -80,16 +80,23 @@ namespace Holoi.Library.MOFABase
         public void SetPlayer(ulong clientId, MofaPlayer mofaPlayer)
         {
             Players[clientId] = mofaPlayer;
-            mofaPlayer.transform.SetParent(transform);
+            // The setter of parenting can neither be the parent nor the child
+            //if (IsServer)
+            //{
+            //    mofaPlayer.transform.SetParent(transform);
+            //}
         }
 
         public void SetLifeShield(LifeShield lifeShield)
         {
             MofaPlayer shieldOwner = Players[lifeShield.OwnerClientId];
             shieldOwner.LifeShield = lifeShield;
-            lifeShield.transform.SetParent(shieldOwner.transform);
-            lifeShield.transform.localPosition = shieldOwner.LifeShieldOffest;
-            lifeShield.transform.localRotation = Quaternion.identity;
+            if (IsServer)
+            {
+                lifeShield.transform.SetParent(shieldOwner.transform);
+                lifeShield.transform.localPosition = shieldOwner.LifeShieldOffest;
+                lifeShield.transform.localRotation = Quaternion.identity;
+            }
         }
 
         public void SpawnMofaPlayer(MofaTeam team, ulong ownerClientId)

@@ -71,6 +71,7 @@ namespace Holoi.Reality.MOFATheTraining
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+            Debug.Log("[MofaAI] OnNetworkSpawn");
 
             NetworkManager.NetworkTickSystem.Tick += OnNetworkTick;
         }
