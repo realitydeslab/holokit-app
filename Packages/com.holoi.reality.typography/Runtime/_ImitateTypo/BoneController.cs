@@ -9,7 +9,6 @@ namespace UnityEngine.XR.ARFoundation.Samples
 {
     public class BoneController : MonoBehaviour
     {
-        public SkinnedMeshRenderer SkinnerMeshRendererRef;
         public VisualEffect SkinnerVfx;
 
         // 3D joint skeleton
@@ -162,10 +161,22 @@ namespace UnityEngine.XR.ARFoundation.Samples
                 var bone = m_BoneMapping[i];
                 if (bone != null)
                 {
-
-                    //bone.transform.localPosition = Vector3.Scale(joint.localPose.position, new Vector3(1, 1, 1)) * 100;
-                    bone.transform.localPosition = joint.localPose.position;
+                    bone.transform.localPosition = Vector3.Scale(joint.localPose.position, new Vector3(-1, 1, -1));
+                    //bone.transform.localPosition = joint.localPose.position;
                     bone.transform.localRotation = joint.localPose.rotation;
+
+                    //if(i==2 || i == 7)
+                    //{
+                    //    bone.transform.localRotation = joint.localPose.rotation * Quaternion.Euler(0,0,180);
+                    //}
+                    if( i == 100 )
+                    {
+                        bone.transform.localRotation = joint.localPose.rotation;
+                    }
+                    else
+                    {
+                        bone.transform.localRotation = joint.localPose.rotation * Quaternion.Euler(0, 0, -180);
+                    }
                 }
             }
         }

@@ -66,11 +66,6 @@ namespace UnityEngine.XR.ARFoundation.Samples
                     boneController = newSkeletonGO.GetComponent<BoneController>();
                     m_SkeletonTracker.Add(humanBody.trackableId, boneController);
 
-                    if (boneController.SkinnerVfx.GetSkinnedMeshRenderer("SkinnedMeshRenderer") == null)
-                    {
-                        boneController.SkinnerVfx.SetSkinnedMeshRenderer("SkinnedMeshRenderer", boneController.SkinnerMeshRendererRef);
-                    }
-
                     //_process += Time.deltaTime* 0.5f;
                     _process += 0.001f;
                     if (_process > 1) _process = 1;
