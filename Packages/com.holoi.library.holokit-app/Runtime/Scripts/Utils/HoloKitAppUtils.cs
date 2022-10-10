@@ -58,5 +58,21 @@ namespace Holoi.Library.HoloKitApp
             yield return new WaitForSeconds(t);
             toDo();
         }
+
+        public static string IntToStringF3(int num)
+        {
+            if (num < 10)
+            {
+                return "00" + num.ToString();
+            }
+            else if (num < 100)
+            {
+                return "0" + num.ToString();
+            }
+            else
+            {
+                return num.ToString();
+            }
+        }
     }
 }

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Holoi.AssetFoundation;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -11,29 +8,26 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
-        [SerializeField] private HoloKitAppGlobalSettings _localPlayerPreferences;
+        [SerializeField] private HoloKitAppUIComponent_RealitySlot _realitySlotPrefab;
 
-        public void OnEnterRealityAsHost(string realityDisplayName)
+        [SerializeField] private RectTransform _listRoot;
+
+        private void Start()
         {
-            foreach (var reality in _localPlayerPreferences.RealityList.realities)
+            for (int i = 0; i < _listRoot.childCount; i++)
             {
-                if (reality.displayName.Equals(realityDisplayName))
-                {
-                    HoloKitApp.Instance.CurrentReality = reality;
-                    HoloKitApp.Instance.EnterRealityAsHost();
-                }
+                Destroy(_listRoot.GetChild(i).gameObject);
             }
-        }
 
-        public void OnJoinRealityAsSpectator(string realityDisplayName)
-        {
-            foreach (var reality in _localPlayerPreferences.RealityList.realities)
+            int realityIndex = 0;
+            foreach (var reality in HoloKitApp.Instance.GlobalSettings.TestRealityList.realities)
             {
-                if (reality.displayName.Equals(realityDisplayName))
-                {
-                    HoloKitApp.Instance.CurrentReality = reality;
-                    HoloKitApp.Instance.JoinRealityAsSpectator();
-                }
+                realityIndex++;
+                var realitySlotInstance = Instantiate(_realitySlotPrefab);
+                realitySlotInstance.transform.SetParent(_listRoot);
+                realitySlotInstance.transform.localPosition = Vector3.zero;
+                realitySlotInstance.transform.localScale = Vector3.one;
+                realitySlotInstance.Init(reality, realityIndex);
             }
         }
     }
