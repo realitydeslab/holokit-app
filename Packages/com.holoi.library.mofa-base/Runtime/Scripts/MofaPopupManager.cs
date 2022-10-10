@@ -43,7 +43,7 @@ namespace Holoi.Library.MOFABase
         {
             if (_mofaFightingPanel == null)
             {
-                if (HoloKitHelper.IsRuntime)
+                if (HoloKitUtils.IsRuntime)
                 {
                     _mofaFightingPanel = HoloKitCamera.Instance.CenterEyePose.GetComponentInChildren<MofaFightingPanel>();
                 }

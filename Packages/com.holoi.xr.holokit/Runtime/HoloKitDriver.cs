@@ -4,7 +4,7 @@ using UnityEngine.XR.ARFoundation;
 
 namespace HoloKit
 {
-    public class HoloKitUtility : MonoBehaviour
+    public class HoloKitDriver : MonoBehaviour
     {
         [SerializeField] private string[] _arSceneNames;
 
@@ -13,7 +13,7 @@ namespace HoloKit
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 HoloKitNFCSessionControllerAPI.RegisterNFCSessionControllerDelegates();
                 HoloKitARSessionControllerAPI.RegisterARSessionControllerDelegates();

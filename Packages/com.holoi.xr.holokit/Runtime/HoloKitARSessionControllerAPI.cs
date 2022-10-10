@@ -46,20 +46,9 @@ namespace HoloKit {
 
         public static string ARWorldMapName => s_arWorldMapName;
 
-        public static bool UnityARSessionIntercepted
-        {
-            get => s_unityARSessionIntercepted;
-            set
-            {
-                s_unityARSessionIntercepted = value;
-            }
-        }
-
         private static byte[] s_arWorldMapData;
 
         private static string s_arWorldMapName;
-
-        private static bool s_unityARSessionIntercepted;
 
         [DllImport("__Internal")]
         private static extern void HoloKitSDK_InterceptUnityARSessionDelegate(IntPtr ptr);
@@ -223,18 +212,15 @@ namespace HoloKit {
             return null;
         }
 
+        // This function can only be called once per ARSession.
+        // Errors will occur if this function is called improperly. Be very careful on this.
         public static void InterceptUnityARSessionDelegate()
         {
-            if (s_unityARSessionIntercepted)
-            {
-                Debug.Log("[HoloKitARSessionControllerAPI] Unity ARSession already intercepted");
-                return;
-            }
-            s_unityARSessionIntercepted = true;
             var xrSessionSubsystem = GetLoadedXRSessionSubsystem();
             if (xrSessionSubsystem != null)
             {
                 HoloKitSDK_InterceptUnityARSessionDelegate(xrSessionSubsystem.nativePtr);
+                Debug.Log("[HoloKitARSessionControllerAPI] Unity ARSession intercepted");
             }
         }
 
@@ -298,7 +284,7 @@ namespace HoloKit {
 
         public static void SetVideoEnhancementMode(VideoEnhancementMode mode)
         {
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 HoloKitSDK_SetVideoEnhancementMode((int)mode);
             }
@@ -306,7 +292,7 @@ namespace HoloKit {
 
         public static void RegisterARSessionControllerDelegates()
         {
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 HoloKitSDK_RegisterARSessionControllerDelegates(
                 OnThermalStateChangedDelegate,
@@ -398,7 +384,7 @@ namespace HoloKit {
 
         public static double GetSystemUptime()
         {
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 return HoloKitSDK_GetSystemUptime();
             }

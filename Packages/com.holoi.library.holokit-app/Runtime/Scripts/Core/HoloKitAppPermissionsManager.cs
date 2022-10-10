@@ -17,7 +17,7 @@ namespace Holoi.Library.HoloKitApp
     {
         public static bool MandatoryPermissionsGranted()
         {
-            if (HoloKitHelper.IsEditor)
+            if (HoloKitUtils.IsEditor)
             {
                 return false;
             }
@@ -43,7 +43,7 @@ namespace Holoi.Library.HoloKitApp
 
         public static HoloKitAppPermissionStatus GetCameraPermissionStatus()
         {
-            if (HoloKitHelper.IsEditor)
+            if (HoloKitUtils.IsEditor)
             {
                 return HoloKitAppPermissionStatus.Granted;
             }
@@ -66,7 +66,7 @@ namespace Holoi.Library.HoloKitApp
 
         public static HoloKitAppPermissionStatus GetMicrophonePermissionStatus()
         {
-            if (HoloKitHelper.IsEditor)
+            if (HoloKitUtils.IsEditor)
             {
                 return HoloKitAppPermissionStatus.Granted;
             }
@@ -87,7 +87,7 @@ namespace Holoi.Library.HoloKitApp
 
         public static HoloKitAppPermissionStatus GetPhotoLibraryAddPermissionStatus()
         {
-            if (HoloKitHelper.IsEditor)
+            if (HoloKitUtils.IsEditor)
             {
                 return HoloKitAppPermissionStatus.Granted;
             }
@@ -112,7 +112,7 @@ namespace Holoi.Library.HoloKitApp
 
         public static HoloKitAppPermissionStatus GetLocationPermissionStatus()
         {
-            if (HoloKitHelper.IsEditor)
+            if (HoloKitUtils.IsEditor)
             {
                 return HoloKitAppPermissionStatus.Granted;
             }

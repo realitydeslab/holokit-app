@@ -11,9 +11,9 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Awake()
         {
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
-                if (HoloKitHelper.IsRuntime)
+                if (HoloKitUtils.IsRuntime)
                 {
                     Vector2 phoneFrameSize = HoloKitOpticsAPI.GetHoloKitModelPhoneFrameSize(HoloKitType.HoloKitX);
                     float phoneFramePixelHeight = HoloKitAppUtils.MeterToPixel(phoneFrameSize.y);

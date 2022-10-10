@@ -18,7 +18,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnEnable()
         {
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 OnThermalStateChanged(HoloKitARSessionControllerAPI.GetThermalState());
                 HoloKitARSessionControllerAPI.OnThermalStateChanged += OnThermalStateChanged;
@@ -27,7 +27,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnDisable()
         {
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 HoloKitARSessionControllerAPI.OnThermalStateChanged -= OnThermalStateChanged;
             }

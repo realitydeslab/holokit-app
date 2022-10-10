@@ -184,7 +184,7 @@ namespace Holoi.Library.MOFABase
                 return;
             }
 
-            if (SecondarySpellCharge < SecondarySpell.ChargeTime && HoloKitHelper.IsRuntime)
+            if (SecondarySpellCharge < SecondarySpell.ChargeTime && HoloKitUtils.IsRuntime)
             {
                 Debug.Log("[LocalPlayerSpellManager] Secondary spell not charged");
                 OnSpawnSpellFailed?.Invoke(SpellType.Secondary);

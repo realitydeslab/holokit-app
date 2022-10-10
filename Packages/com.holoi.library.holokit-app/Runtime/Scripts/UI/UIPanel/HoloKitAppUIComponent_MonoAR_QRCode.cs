@@ -10,7 +10,7 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         private void Start()
         {
-            if (HoloKitHelper.IsEditor) { return; }
+            if (HoloKitUtils.IsEditor) { return; }
 
             // Calculate correct camera to QR code offset
             Vector3 leftEdgeCenterToQRCodeOffset = Vector3.zero;

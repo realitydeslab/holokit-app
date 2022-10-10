@@ -36,7 +36,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             PanelManager.Pop();
             var panel = PanelManager.Instance.GetActivePanel();
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 panel.UITool.GetOrAddComponent<ScreenARModeUIPanel>().SetState(ScreenARModeUIPanel.State.scanningQRcode);
             }

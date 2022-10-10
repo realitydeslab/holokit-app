@@ -23,7 +23,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
-            if (HoloKitHelper.IsEditor)
+            if (HoloKitUtils.IsEditor)
             {
                 OnFinishedScanningQRCode();
             }

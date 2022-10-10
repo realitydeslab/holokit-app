@@ -19,7 +19,7 @@ namespace Holoi.Library.HoloKitApp
 
         public static HoloKitAppGlobalSettingsData LoadGlobalSettings()
         {
-            if (HoloKitHelper.IsRuntime && File.Exists(s_savePath))
+            if (HoloKitUtils.IsRuntime && File.Exists(s_savePath))
             {
                 BinaryFormatter formatter = new();
                 FileStream stream = new(s_savePath, FileMode.Open);

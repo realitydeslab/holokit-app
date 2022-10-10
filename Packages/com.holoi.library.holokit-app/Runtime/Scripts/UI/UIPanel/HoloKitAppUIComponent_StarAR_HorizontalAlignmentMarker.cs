@@ -9,7 +9,7 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         private void Awake()
         {
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 var rectTransform = GetComponent<RectTransform>();
                 // Adjust marker position

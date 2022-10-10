@@ -6,7 +6,7 @@ namespace HoloKit
     {
         private void Awake()
         {
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnARSessionUpdatedFrame;
                 HoloKitARSessionControllerAPI.RegisterARSessionUpdatedFrameDelegate();
@@ -15,7 +15,7 @@ namespace HoloKit
 
         private void OnDestroy()
         {
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 HoloKitARSessionControllerAPI.UnregisterARSessionUpdatedFrameDelegate();
                 HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnARSessionUpdatedFrame;

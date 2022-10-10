@@ -60,7 +60,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnStartedRecording()
         {
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 HoloKitApp.Instance.Recorder.StartRecording();
             }
@@ -72,7 +72,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnStoppedRecording()
         {
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 HoloKitApp.Instance.Recorder.StopRecording();
             }

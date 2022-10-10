@@ -65,7 +65,7 @@ namespace HoloKit
         {
             get
             {
-                if (HoloKitHelper.IsRuntime)
+                if (HoloKitUtils.IsRuntime)
                 {
                     return _centerEyePose;
                 }
@@ -139,7 +139,7 @@ namespace HoloKit
 
         private void Start()
         {
-            if (HoloKitHelper.IsEditor)
+            if (HoloKitUtils.IsEditor)
             {
                 _debugCenterEye = Instantiate(_debugCenterEyePrefab);
             }

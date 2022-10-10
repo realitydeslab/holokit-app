@@ -81,7 +81,7 @@ namespace Holoi.Library.HoloKitApp
 
                 if (_currentClientSyncPhase == ClientSyncPhase.NotStarted)
                 {
-                    if (HoloKitHelper.IsRuntime)
+                    if (HoloKitUtils.IsRuntime)
                     {
                         StartClientCalibration();
                     }
@@ -105,7 +105,7 @@ namespace Holoi.Library.HoloKitApp
 
         public void StartAdvertising()
         {
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 _serverTimedCameraPoseQueue.Clear();
                 HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnServerARSessionUpdatedFrame;
@@ -117,7 +117,7 @@ namespace Holoi.Library.HoloKitApp
 
         public void StopAdvertising()
         {
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 HoloKitARSessionControllerAPI.RegisterARSessionUpdatedFrameDelegate();
                 HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnServerARSessionUpdatedFrame;

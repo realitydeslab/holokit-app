@@ -57,7 +57,7 @@ namespace Holoi.Reality.MOFATheTraining
 
             if (IsServer)
             {
-                var placementIndicatorInitialPos = HoloKitHelper.IsRuntime ? Vector3.zero : new Vector3(0f, -1f, 5f);
+                var placementIndicatorInitialPos = HoloKitUtils.IsRuntime ? Vector3.zero : new Vector3(0f, -1f, 5f);
                 _placementIndicator = Instantiate(PlacementIndicatorPrefab, placementIndicatorInitialPos, Quaternion.identity);
                 _arRaycastManager = HoloKitCamera.Instance.GetComponentInParent<ARRaycastManager>();
             }
@@ -67,7 +67,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             if (_placementIndicator != null)
             {
-                if (HoloKitHelper.IsRuntime)
+                if (HoloKitUtils.IsRuntime)
                 {
                     Vector3 horizontalForward = MofaUtils.GetHorizontalForward(HoloKitCamera.Instance.CenterEyePose);
                     Vector3 rayOrigin = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * 1.5f; // TODO: Changeable

@@ -66,6 +66,7 @@ namespace Holoi.Library.HoloKitApp
             if (_instance != null && _instance != this)
             {
                 Destroy(gameObject);
+                return;
             }
             else
             {
@@ -76,7 +77,7 @@ namespace Holoi.Library.HoloKitApp
             // Set screen orientation
             Screen.orientation = ScreenOrientation.Portrait;
             // Initialize HoloKit SDK
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 HoloKitNFCSessionControllerAPI.RegisterNFCSessionControllerDelegates();
                 HoloKitARSessionControllerAPI.RegisterARSessionControllerDelegates();
@@ -84,7 +85,7 @@ namespace Holoi.Library.HoloKitApp
                 HoloKitARSessionControllerAPI.SetSessionShouldAttemptRelocalization(false);
             }
             // Trigger WirelessData permission
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 PermissionsAPI.Initialize();
             }
@@ -175,12 +176,11 @@ namespace Holoi.Library.HoloKitApp
 
         private void DeinitializeRealityScene()
         {
-            Debug.Log("[HoloKitApp] DeinitializeRealityScene");
             // Pop AR UI Panels
             UIPanelManager.OnARSceneUnloaded();
 
             // Reset ARSession
-            if (HoloKitHelper.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 LoaderUtility.Deinitialize();
                 LoaderUtility.Initialize();
@@ -234,7 +234,7 @@ namespace Holoi.Library.HoloKitApp
             }
 
             var networkManager = Instantiate(_networkManagerPrefab);
-            if (HoloKitHelper.IsEditor)
+            if (HoloKitUtils.IsEditor)
             {
                 networkManager.NetworkConfig.NetworkTransport = networkManager.GetComponent<UNetTransport>();
             }
