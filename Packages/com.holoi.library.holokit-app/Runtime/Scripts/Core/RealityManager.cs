@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 
 namespace Holoi.Library.HoloKitApp
 {
-    public class RealityManager : NetworkBehaviour
+    public abstract class RealityManager : NetworkBehaviour
     {
         public List<GameObject> NetworkPrefabs;
 

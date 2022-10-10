@@ -175,6 +175,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void DeinitializeRealityScene()
         {
+            Debug.Log("[HoloKitApp] DeinitializeRealityScene");
             // Pop AR UI Panels
             UIPanelManager.OnARSceneUnloaded();
 
