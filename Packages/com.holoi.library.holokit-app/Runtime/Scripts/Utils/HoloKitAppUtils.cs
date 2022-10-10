@@ -52,5 +52,11 @@ namespace Holoi.Library.HoloKitApp
             TimeSpan timeSpan = TimeSpan.FromSeconds(time);
             return timeSpan.Minutes.ToString("00") + ":" + timeSpan.Seconds.ToString("00");
         }
+
+        public static IEnumerator WaitAndDo(float t, Action toDo)
+        {
+            yield return new WaitForSeconds(t);
+            toDo();
+        }
     }
 }
