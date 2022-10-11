@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MofaFightingView: View {
     
-    @EnvironmentObject var mofaWatchManager: MofaWatchManager
+    @EnvironmentObject var mofaWatchManager: MofaWatchAppManager
     
     @State var isFighting: Bool = false
     
@@ -55,6 +55,6 @@ struct MofaFightingView: View {
 
 struct MofaFightingView_Previews: PreviewProvider {
     static var previews: some View {
-        MofaFightingView().environmentObject(MofaWatchManager())
+        MofaFightingView().environmentObject(MofaWatchAppManager())
     }
 }

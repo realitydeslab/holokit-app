@@ -1,13 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
-using UnityEditor.iOS.Xcode.Extensions;
 using UnityEngine;
-using UnityEditor.Build;
-using System.Reflection;
 
 namespace Holoi.Library.HoloKitApp.Editor
 {
@@ -25,7 +21,7 @@ namespace Holoi.Library.HoloKitApp.Editor
         {
             string packageName = UnityEngine.Application.identifier;
 
-            PBXProject project = new PBXProject();
+            PBXProject project = new();
             string projectPath = PBXProject.GetPBXProjectPath(buildPath);
             project.ReadFromFile(projectPath);
 
@@ -37,7 +33,8 @@ namespace Holoi.Library.HoloKitApp.Editor
             if (watchAppTargetGuid != null)
             {
                 Debug.Log(watchAppTargetGuid);
-            } else
+            }
+            else
             {
                 watchAppTargetGuid = project.AddTarget(WatchAppTargetName, ".app", "com.apple.product-type.application");
             }
@@ -50,9 +47,12 @@ namespace Holoi.Library.HoloKitApp.Editor
             project.AddResourcesBuildPhase(watchAppTargetGuid);
             project.AddFrameworksBuildPhase(watchAppTargetGuid);
 
-            // TODO: Might be wrong
-            string sectionGuid = project.AddCopyFilesBuildPhase(mainTargetGuid, "Embed Watch Content", "$(CONTENTS_FOLDER_PATH)/WatchApp", "16");
-            project.AddFileToBuildSection(mainTargetGuid, sectionGuid, project.GetTargetProductFileRef(watchAppTargetGuid));
+            // Prevent duplication
+            if (project.GetCopyFilesBuildPhaseByTarget(mainTargetGuid, "Embed Watch Content", "$(CONTENTS_FOLDER_PATH)/Watch", "16") == null)
+            {
+                string sectionGuid = project.AddCopyFilesBuildPhase(mainTargetGuid, "Embed Watch Content", "$(CONTENTS_FOLDER_PATH)/Watch", "16");
+                project.AddFileToBuildSection(mainTargetGuid, sectionGuid, project.GetTargetProductFileRef(watchAppTargetGuid));
+            }
 
             // Copy Files
             string sourcePathPrefix = $"WatchApp/{WatchAppTargetName}";
@@ -80,9 +80,9 @@ namespace Holoi.Library.HoloKitApp.Editor
 
                 // Code
                 "HoloKitWatchApp.swift",
-                "Foundation/HoloKitAppWatchManager.swift",
+                "Foundation/HoloKitWatchAppManager.swift",
                 "Foundation/Views/HomeView.swift",
-                "MOFA/MofaWatchManager.swift",
+                "MOFA/MofaWatchAppManager.swift",
                 "MOFA/Views/MofaFightingView.swift",
                 "MOFA/Views/MofaHandednessView.swift",
                 "MOFA/Views/MofaHomeView.swift",

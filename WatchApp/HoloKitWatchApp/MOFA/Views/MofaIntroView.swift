@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MofaIntroView: View {
     
-    @EnvironmentObject var mofaWatchManager: MofaWatchManager
+    @EnvironmentObject var mofaWatchManager: MofaWatchAppManager
     
     var body: some View {
         VStack {
@@ -38,6 +38,6 @@ struct MofaIntroView: View {
 
 struct MofaIntroView_Previews: PreviewProvider {
     static var previews: some View {
-        MofaIntroView().environmentObject(MofaWatchManager())
+        MofaIntroView().environmentObject(MofaWatchAppManager())
     }
 }

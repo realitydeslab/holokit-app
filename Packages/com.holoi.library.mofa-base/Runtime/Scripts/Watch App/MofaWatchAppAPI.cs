@@ -10,17 +10,17 @@ namespace Holoi.Library.MOFABase
         ChangeToGround = 2
     }
 
-    public static class MofaWatchAPI
+    public static class MofaWatchAppAPI
     {
         [DllImport("__Internal")]
-        private static extern void MofaWatch_Initialize(Action OnReceivedStartRoundMessage,
+        private static extern void MofaWatchApp_Initialize(Action OnReceivedStartRoundMessage,
                                                         Action<int> OnReceivedWatchInput);
 
         [DllImport("__Internal")]
-        private static extern void MofaWatch_QueryWatchState();
+        private static extern void MofaWatchApp_QueryWatchState();
 
         [DllImport("__Internal")]
-        private static extern void MofaWatch_SendRoundResultDataMessage(int roundResult, int kill, float hitRate);
+        private static extern void MofaWatchApp_SendRoundResultDataMessage(int roundResult, int kill, float hitRate);
 
         [AOT.MonoPInvokeCallback(typeof(Action))]
         private static void OnReceivedStartRoundMessageFunc()
@@ -40,18 +40,18 @@ namespace Holoi.Library.MOFABase
 
         public static void Initialize()
         {
-            MofaWatch_Initialize(OnReceivedStartRoundMessageFunc,
+            MofaWatchApp_Initialize(OnReceivedStartRoundMessageFunc,
                                  OnReceivedWatchInputFunc);
         }
 
         public static void QueryWatchState()
         {
-            MofaWatch_QueryWatchState();
+            MofaWatchApp_QueryWatchState();
         }
 
         public static void SendRoundResultDataMessage(int roundResult, int kill, float hitRate)
         {
-            MofaWatch_SendRoundResultDataMessage(roundResult, kill, hitRate);
+            MofaWatchApp_SendRoundResultDataMessage(roundResult, kill, hitRate);
         }
     }
 }

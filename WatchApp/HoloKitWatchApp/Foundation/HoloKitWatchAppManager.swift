@@ -6,10 +6,9 @@ import HealthKit
 enum Reality: Int {
     case nothing = 0
     case mofaTheTraining = 1
-    case mofaTheDuel = 2
 }
 
-class HoloKitAppWatchManager: NSObject, ObservableObject {
+class HoloKitWatchAppManager: NSObject, ObservableObject {
     
     @Published var currentReality: Reality = .nothing
     
@@ -31,13 +30,14 @@ class HoloKitAppWatchManager: NSObject, ObservableObject {
 }
 
 // MARK: - WCSessionDelegate
-extension HoloKitAppWatchManager: WCSessionDelegate {
+extension HoloKitWatchAppManager: WCSessionDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         if let realityId = message["RealityId"] as? Int {
+            print("Received realityId: \(realityId)")
             if let reality = Reality(rawValue: realityId) {
                 self.currentReality = reality
             }

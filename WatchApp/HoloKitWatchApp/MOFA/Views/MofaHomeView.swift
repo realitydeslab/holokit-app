@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MofaHomeView: View {
     
-    @EnvironmentObject var mofaWatchManager: MofaWatchManager
+    @EnvironmentObject var mofaWatchManager: MofaWatchAppManager
     
     var body: some View {
         if (self.mofaWatchManager.currentView == .introView) {
@@ -19,6 +19,6 @@ struct MofaHomeView: View {
 
 struct MofaHomeView_Previews: PreviewProvider {
     static var previews: some View {
-        MofaHomeView().environmentObject(MofaWatchManager())
+        MofaHomeView().environmentObject(MofaWatchAppManager())
     }
 }

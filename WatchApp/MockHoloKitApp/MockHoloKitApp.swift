@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct MockHoloKitApp: App {
+    
+    @State var holokitWatchAppManager = MockHoloKitWatchAppManager()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(holokitWatchAppManager)
         }
     }
 }

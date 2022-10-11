@@ -30,7 +30,7 @@ enum MofaRoundResult: Int {
     case draw = 2
 }
 
-class MofaWatchManager: NSObject, ObservableObject {
+class MofaWatchAppManager: NSObject, ObservableObject {
     
     @Published var currentView: MofaView = .introView
     
@@ -258,7 +258,7 @@ class MofaWatchManager: NSObject, ObservableObject {
 }
 
 // MARK: - WCSessionDelegate
-extension MofaWatchManager: WCSessionDelegate {
+extension MofaWatchAppManager: WCSessionDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         
     }
@@ -290,7 +290,7 @@ extension MofaWatchManager: WCSessionDelegate {
 }
 
 // MARK: - HKWorkoutSessionDelegate
-extension MofaWatchManager: HKWorkoutSessionDelegate {
+extension MofaWatchAppManager: HKWorkoutSessionDelegate {
     func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {
         //print("workoutSessionDidChangeTo \(toState) from \(fromState)")
         DispatchQueue.main.async {
@@ -315,7 +315,7 @@ extension MofaWatchManager: HKWorkoutSessionDelegate {
 }
 
 // MARK: - HKLiveWorkoutBuilderDelegate
-extension MofaWatchManager: HKLiveWorkoutBuilderDelegate {
+extension MofaWatchAppManager: HKLiveWorkoutBuilderDelegate {
     func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {
         //print("event: \(String(describing: workoutBuilder.workoutEvents.last?.type))")
     }
@@ -335,7 +335,7 @@ extension MofaWatchManager: HKLiveWorkoutBuilderDelegate {
 }
 
 // MARK: - Math
-extension MofaWatchManager {
+extension MofaWatchAppManager {
     func rad2deg(_ number: Double) -> Double {
         return number * 180 / .pi
     }

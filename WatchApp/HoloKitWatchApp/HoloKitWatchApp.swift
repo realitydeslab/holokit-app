@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct HoloKitWatchApp: App {
-    @StateObject private var holokitAppWatch = HoloKitAppWatchManager()
+    @StateObject private var holokitAppWatch = HoloKitWatchAppManager()
 
     //@StateObject private var mofaWatchManager = MofaWatchManager()
     

@@ -1,10 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
-using System;
-using HoloKit;
+using Holoi.Library.HoloKitApp.Watch;
 
 namespace Holoi.Library.MOFABase
 {
@@ -44,6 +44,7 @@ namespace Holoi.Library.MOFABase
 
         protected virtual void Awake()
         {
+            HoloKitWatchAppAPI.InitializeWithRealityId(1); // MOFA is temporarily 1
             LifeShield.OnDead += OnLifeShieldDead;
         }
 

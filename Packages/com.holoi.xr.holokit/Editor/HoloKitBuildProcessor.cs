@@ -48,15 +48,16 @@ namespace HoloKit.Editor
             private static void AddXcodeBuildSettings(string pathToBuiltProject)
             {
                 string projPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
-                PBXProject proj = new PBXProject();
+                PBXProject proj = new();
                 proj.ReadFromString(File.ReadAllText(projPath));
 
                 string mainTargetGuid = proj.GetUnityMainTargetGuid();
                 string unityFrameworkTargetGuid = proj.GetUnityFrameworkTargetGuid();
 
+                proj.SetBuildProperty(mainTargetGuid, "SUPPORTED_PLATFORMS", "iphonesimulator iphoneos");
+                proj.SetBuildProperty(unityFrameworkTargetGuid, "SUPPORTED_PLATFORMS", "iphonesimulator iphoneos");
                 proj.SetBuildProperty(mainTargetGuid, "ENABLE_BITCODE", "NO");
                 proj.SetBuildProperty(unityFrameworkTargetGuid, "ENABLE_BITCODE", "NO");
-
                 proj.AddBuildProperty(unityFrameworkTargetGuid, "LIBRARY_SEARCH_PATHS", "$(SDKROOT)/usr/lib/swift");
                 proj.SetBuildProperty(mainTargetGuid, "SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD", "NO");
 

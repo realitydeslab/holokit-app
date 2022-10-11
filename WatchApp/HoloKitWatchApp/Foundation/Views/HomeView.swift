@@ -2,9 +2,9 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @EnvironmentObject var holokitAppWatchManager: HoloKitAppWatchManager
+    @EnvironmentObject var holokitAppWatchManager: HoloKitWatchAppManager
 
-    @StateObject private var mofaWatchManager = MofaWatchManager()
+    @StateObject private var mofaWatchManager = MofaWatchAppManager()
     
     var body: some View {
         if (self.holokitAppWatchManager.currentReality == .nothing) {
@@ -20,8 +20,6 @@ struct HomeView: View {
                 .onAppear {
                     self.mofaWatchManager.InitializeMofaWCSessionDelegate()
                 }
-        } else if (self.holokitAppWatchManager.currentReality == .mofaTheDuel) {
-            
         }
     }
     
@@ -34,6 +32,6 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView().environmentObject(HoloKitAppWatchManager())
+        HomeView().environmentObject(HoloKitWatchAppManager())
     }
 }

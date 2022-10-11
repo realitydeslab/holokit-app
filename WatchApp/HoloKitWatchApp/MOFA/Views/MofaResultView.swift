@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MofaResultView: View {
     
-    @EnvironmentObject var mofaWatchManager: MofaWatchManager
+    @EnvironmentObject var mofaWatchManager: MofaWatchAppManager
     
     @State var result: Bool = true
     
@@ -69,6 +69,6 @@ struct MofaResultView: View {
 
 struct MofaResultView_Previews: PreviewProvider {
     static var previews: some View {
-        MofaResultView().environmentObject(MofaWatchManager())
+        MofaResultView().environmentObject(MofaWatchAppManager())
     }
 }

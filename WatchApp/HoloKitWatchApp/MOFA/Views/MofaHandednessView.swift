@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MofaHandednessView: View {
     
-    @EnvironmentObject var mofaWatchManager: MofaWatchManager
+    @EnvironmentObject var mofaWatchManager: MofaWatchAppManager
 
     var body: some View {
         VStack {
@@ -92,6 +92,6 @@ struct MofaHandednessView: View {
 
 struct MofaHandednessView_Previews: PreviewProvider {
     static var previews: some View {
-        MofaHandednessView().environmentObject(MofaWatchManager())
+        MofaHandednessView().environmentObject(MofaWatchAppManager())
     }
 }
