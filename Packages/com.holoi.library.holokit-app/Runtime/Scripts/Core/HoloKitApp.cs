@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
@@ -170,7 +169,13 @@ namespace Holoi.Library.HoloKitApp
             InitializeNetworkManager();
 
             // Wait and start network
-            StartCoroutine(StartNetworkWithDelay(0.5f));
+            StartCoroutine(HoloKitAppUtils.WaitAndDo(0.5f, () =>
+            {
+                if (_isHost)
+                    StartHost();
+                else
+                    StartClient();
+            }));
 
             // Push AR UI Panel
             UIPanelManager.PushUIPanel("MonoAR");
@@ -215,19 +220,6 @@ namespace Holoi.Library.HoloKitApp
         #endregion
 
         #region Network Lifecycle
-        private IEnumerator StartNetworkWithDelay(float t)
-        {
-            yield return new WaitForSeconds(t);
-            if (_isHost)
-            {
-                StartHost();
-            }
-            else
-            {
-                StartClient();
-            }
-        }
-
         private void InitializeNetworkManager()
         {
             if (NetworkManager.Singleton != null)

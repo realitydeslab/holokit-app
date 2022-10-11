@@ -57,6 +57,8 @@ namespace Holoi.Library.HoloKitApp
 
         public static event Action OnQRCodeStabilizationFailed;
 
+        public static event Action OnAlignmentMarkChecked;
+
         #region Mono
         public override void OnNetworkSpawn()
         {
@@ -482,6 +484,7 @@ namespace Holoi.Library.HoloKitApp
         public void CheckAlignmentMark()
         {
             DestroyPhoneAlignmentMark();
+            OnAlignmentMarkChecked?.Invoke();
         }
 
         public void RescanQRCode()
