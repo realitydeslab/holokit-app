@@ -6,7 +6,7 @@ using UnityEngine.XR.ARSubsystems;
 using HoloKit;
 using UnityEngine.VFX;
 
-namespace UnityEngine.XR.ARFoundation.Samples
+namespace Holoi.Reality.TypoGraphy
 {
     public class HumanBodyTracker : MonoBehaviour
     {

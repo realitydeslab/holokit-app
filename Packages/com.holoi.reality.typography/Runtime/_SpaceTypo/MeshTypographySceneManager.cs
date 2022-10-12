@@ -4,40 +4,42 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using HoloKit;
-using UnityEngine.XR.ARFoundation.Samples;
 
-public class MeshTypographySceneManager : MonoBehaviour
+namespace Holoi.Reality.TypoGraphy
 {
-    [SerializeField] Button _onMeshingDoneButton;
-    [SerializeField] GameObject _onStartTip;
-
-    private void Awake()
+    public class MeshTypographySceneManager : MonoBehaviour
     {
-        var _videoEnhancementMode = VideoEnhancementMode.HighResWithHDR;
-        HoloKitARSessionControllerAPI.SetVideoEnhancementMode(_videoEnhancementMode); 
-    }
-    void Start()
-    {
-        _onMeshingDoneButton.interactable = false;
+        [SerializeField] Button _onMeshingDoneButton;
+        [SerializeField] GameObject _onStartTip;
 
-        StartCoroutine(WaitAndEnableMeshingDoneButton());
+        private void Awake()
+        {
+            var _videoEnhancementMode = VideoEnhancementMode.HighResWithHDR;
+            HoloKitARSessionControllerAPI.SetVideoEnhancementMode(_videoEnhancementMode);
+        }
+        void Start()
+        {
+            _onMeshingDoneButton.interactable = false;
 
-        //FindObjectOfType<ARPlaneManager>(true).enabled = true;
-        //FindObjectOfType<ARMeshManager>(true).enabled = true;
-        //FindObjectOfType<ToggleMeshClassification>(true).enabled = true;
-    }
+            StartCoroutine(WaitAndEnableMeshingDoneButton());
 
-    public void OnMeshingDone()
-    {
-        FindObjectOfType<ARPlaneManager>(true).enabled = false;
-        FindObjectOfType<ARMeshManager>(true).enabled = false;
-        FindObjectOfType<ToggleMeshClassification>(true).enabled = false;
-    }
+            //FindObjectOfType<ARPlaneManager>(true).enabled = true;
+            //FindObjectOfType<ARMeshManager>(true).enabled = true;
+            //FindObjectOfType<ToggleMeshClassification>(true).enabled = true;
+        }
 
-    IEnumerator WaitAndEnableMeshingDoneButton()
-    {
-        yield return new WaitForSeconds(4.5f);
-        _onStartTip.gameObject.SetActive(false);
-        _onMeshingDoneButton.interactable = true;
+        public void OnMeshingDone()
+        {
+            FindObjectOfType<ARPlaneManager>(true).enabled = false;
+            FindObjectOfType<ARMeshManager>(true).enabled = false;
+            FindObjectOfType<ToggleMeshClassification>(true).enabled = false;
+        }
+
+        IEnumerator WaitAndEnableMeshingDoneButton()
+        {
+            yield return new WaitForSeconds(4.5f);
+            _onStartTip.gameObject.SetActive(false);
+            _onMeshingDoneButton.interactable = true;
+        }
     }
 }

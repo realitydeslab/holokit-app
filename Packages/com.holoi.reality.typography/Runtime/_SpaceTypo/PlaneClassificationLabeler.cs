@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-namespace UnityEngine.XR.ARFoundation.Samples
+namespace Holoi.Reality.TypoGraphy
 {
     /// <summary>
     /// Manages the label and plane material color for each recognized plane based on

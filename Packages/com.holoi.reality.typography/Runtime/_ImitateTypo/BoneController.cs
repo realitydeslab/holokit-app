@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.VFX;
 
-namespace UnityEngine.XR.ARFoundation.Samples
+namespace Holoi.Reality.TypoGraphy
 {
     public class BoneController : MonoBehaviour
     {
