@@ -7,7 +7,9 @@ namespace Holoi.Reality.QuantumBuddhas
 {
     public class QuantumBuddhasSceneManager : MonoBehaviour
     {
-        public List<VisualEffect> _vfxs = new List<VisualEffect>();
+        [SerializeField] List<VisualEffect> _vfxs = new List<VisualEffect>();
+        [SerializeField] 
+
         int _amount = 0;
         int _index = 0;
         Animator _animator;

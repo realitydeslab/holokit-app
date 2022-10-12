@@ -186,7 +186,8 @@ namespace HoloKit
         {
             if (!_hand.activeSelf)
             {
-                return Vector3.zero;
+                Transform centerEye = HoloKitCamera.Instance.CenterEyePose;
+                return centerEye.position - centerEye.up;
             }
 
             return _handJoints[(int)joint].position;
