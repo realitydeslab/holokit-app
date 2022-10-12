@@ -5,33 +5,35 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using HoloKit;
 
-[ExecuteInEditMode]
-public class ARRayCastController : MonoBehaviour
+namespace Holoi.Library.HoloKitApp
 {
-
-    [Header("Editor Mode")]
-    public bool HitDebug = false;
-
-    [Header("Events")]
-    public UnityEvent HitEvent;
-
-    public UnityEvent NotHitEvent;
-
-    private Transform _centerEye;
-
-    private ARRaycastManager _arRaycastManager;
-
-    bool _isHit = false;
-
-
-    void Start()
+    [ExecuteInEditMode]
+    public class ARRayCastController : MonoBehaviour
     {
-        _centerEye = HoloKitCamera.Instance.CenterEyePose;
-        _arRaycastManager = FindObjectOfType<ARRaycastManager>();
-    }
 
-    void Update()
-    {
+        [Header("Editor Mode")]
+        public bool HitDebug = false;
+
+        [Header("Events")]
+        public UnityEvent HitEvent;
+
+        public UnityEvent NotHitEvent;
+
+        private Transform _centerEye;
+
+        private ARRaycastManager _arRaycastManager;
+
+        bool _isHit = false;
+
+
+        void Start()
+        {
+            _centerEye = HoloKitCamera.Instance.CenterEyePose;
+            _arRaycastManager = FindObjectOfType<ARRaycastManager>();
+        }
+
+        void Update()
+        {
 #if UNITY_IOS && !UNITY_EDITOR
 
         Vector3 horizontalForward = new Vector3(_centerEye.forward.x, 0, _centerEye.forward.z);
@@ -79,16 +81,17 @@ public class ARRayCastController : MonoBehaviour
         }
 
 #else
-        
-        if (HitDebug)
-        {
-            HitEvent?.Invoke();
-        }
-        else
-        {
-            transform.position = new Vector3(0, -1, 1.5f);
-            NotHitEvent?.Invoke();
-        }
+
+            if (HitDebug)
+            {
+                HitEvent?.Invoke();
+            }
+            else
+            {
+                transform.position = new Vector3(0, -1, 1.5f);
+                NotHitEvent?.Invoke();
+            }
 #endif
+        }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 using UnityEngine.Events;
 
-namespace HolokitApp.ARUI
+namespace Holoi.Library.HoloKitApp
 {
     [RequireComponent(typeof(HoverableObject), typeof(Animator))]
     public class LoadButtonController : MonoBehaviour
@@ -28,9 +28,10 @@ namespace HolokitApp.ARUI
         }
         private void OnEnable()
         {
-            // reset all 
+            // reset animations: 
             _animator.Rebind();
             _animator.Update(0f);
+            // reset properties: 
             _triggered = false;
             _process = 0;
         }

@@ -605,6 +605,7 @@ GameObject:
   - component: {fileID: 431890914}
   - component: {fileID: 431890915}
   - component: {fileID: 431890916}
+  - component: {fileID: 431890917}
   m_Layer: 0
   m_Name: RaycastPlacement
   m_TagString: Untagged
@@ -712,7 +713,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 431890910}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.01, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -764,6 +765,26 @@ MonoBehaviour:
   m_Property:
     m_Name: Hit Position_position
   Target: {fileID: 1861859817}
+--- !u!95 &431890917
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431890910}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b62d0fbb48f884a2e82eb1909744c330, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &855576648
 GameObject:
   m_ObjectHideFlags: 0
@@ -783,7 +804,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &855576649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -875,13 +896,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 855576648}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
   m_LocalPosition: {x: 0, y: 0.573, z: 1.707}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_Father: {fileID: 939423145}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &855576653
 MonoBehaviour:
@@ -932,6 +953,38 @@ Transform:
   - {fileID: 275482711}
   m_Father: {fileID: 2068233601}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &939423144
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 939423145}
+  m_Layer: 0
+  m_Name: test objects disable when build
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &939423145
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939423144}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 855576652}
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &983176252
 GameObject:
@@ -1067,7 +1120,10 @@ MonoBehaviour:
   - {fileID: 2504822778040029694}
   - {fileID: 2504822778040029692}
   - {fileID: 2504822778040029691}
-  _amount: 0
+  _placementLoadButton: {fileID: 8760063833723034937}
+  _arRaycastController: {fileID: 1861859818}
+  _offset: {x: 0, y: 0, z: 0}
+  _targetGameObject: {fileID: 2143471665}
 --- !u!1 &1471329335
 GameObject:
   m_ObjectHideFlags: 0
@@ -1475,21 +1531,61 @@ MonoBehaviour:
   HitEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 1391990757}
+        m_TargetAssemblyTypeName: Holoi.Reality.QuantumBuddhas.QuantumBuddhasSceneManager,
+          Holoi.Reality.QuantumBuddhas
+        m_MethodName: SetPlacementLoadButton
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 431890914}
+        m_TargetAssemblyTypeName: Holoi.Library.HoloKitApp.RaycastPlacmentVfxController,
+          Holoi.Library.HoloKitApp
+        m_MethodName: OnHit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  NotHitEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1391990757}
+        m_TargetAssemblyTypeName: Holoi.Reality.QuantumBuddhas.QuantumBuddhasSceneManager,
+          Holoi.Reality.QuantumBuddhas
+        m_MethodName: SetPlacementLoadButton
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  NotHitEvent:
-    m_PersistentCalls:
-      m_Calls: []
+      - m_Target: {fileID: 431890914}
+        m_TargetAssemblyTypeName: Holoi.Library.HoloKitApp.RaycastPlacmentVfxController,
+          Holoi.Library.HoloKitApp
+        m_MethodName: OnNotHit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1868868440
 GameObject:
   m_ObjectHideFlags: 0
@@ -1650,32 +1746,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2504822779368527981, guid: 6fe50cf1a5dd04298aa36ee8a21ddb0e, type: 3}
   m_PrefabInstance: {fileID: 2504822778040029690}
   m_PrefabAsset: {fileID: 0}
---- !u!1773428102 &2143471667
-ParentConstraint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2143471665}
-  m_Enabled: 1
-  m_Weight: 1
-  m_TranslationAtRest: {x: 0, y: -1, z: 1.5}
-  m_RotationAtRest: {x: 0, y: 180, z: 0}
-  m_TranslationOffsets:
-  - {x: 0, y: 0, z: 0}
-  m_RotationOffsets:
-  - {x: 0, y: 180, z: 0}
-  m_AffectTranslationX: 1
-  m_AffectTranslationY: 1
-  m_AffectTranslationZ: 1
-  m_AffectRotationX: 1
-  m_AffectRotationY: 1
-  m_AffectRotationZ: 1
-  m_IsContraintActive: 1
-  m_IsLocked: 1
-  m_Sources:
-  - sourceTransform: {fileID: 1391990756}
-    weight: 1
 --- !u!1001 &2504822778040029690
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1689,7 +1759,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2504822779368527970, guid: 6fe50cf1a5dd04298aa36ee8a21ddb0e, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2504822779368527970, guid: 6fe50cf1a5dd04298aa36ee8a21ddb0e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1813,7 +1883,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8116878670602943881, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 8116878670602943881, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1855,5 +1925,93 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 8760063833723034937, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+      propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8760063833723034937, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+      propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8760063833723034937, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+      propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8760063833723034937, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+      propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 431890914}
+    - target: {fileID: 8760063833723034937, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+      propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1391990757}
+    - target: {fileID: 8760063833723034937, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+      propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8760063833723034937, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+      propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8760063833723034937, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+      propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayDie
+      objectReference: {fileID: 0}
+    - target: {fileID: 8760063833723034937, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+      propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: InitTargetGameObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 8760063833723034937, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+      propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Holoi.Library.HoloKitApp.RaycastPlacmentVfxController, Holoi.Library.HoloKitApp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8760063833723034937, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+      propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: Holoi.Reality.QuantumBuddhas.QuantumBuddhasSceneManager, Holoi.Reality.QuantumBuddhas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8760063833723034937, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+      propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8760063833723034937, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+      propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+--- !u!1 &8760063833723034935 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2034980346624289473, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+  m_PrefabInstance: {fileID: 7326314751565232118}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8760063833723034937 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8760063833723034937, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
+  m_PrefabInstance: {fileID: 7326314751565232118}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8760063833723034935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68231f92e6c254bc18f3f907b47b2e85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8760063833723034940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8760063833723034935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83bfc8036afe94870adce7fe26a8d4d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _followTarget: {fileID: 0}
+  _movementType: 1
+  _rotateType: 0
+  _updateType: 0
+  _offset: {x: 0, y: 0, z: 0.5}
+  _lerpSpeed: 4
+  _needMoveDistance: 0.25
+  _regardAsArriveDistance: 0.05

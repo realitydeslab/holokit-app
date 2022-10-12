@@ -29,6 +29,7 @@ public class FollowMovementManager : MonoBehaviour
 
     [SerializeField] private Transform _followTarget;
 
+    [Tooltip("If you let it be null, it will find centereye as target.")]
     public Transform FollowTarget
     {
         set
