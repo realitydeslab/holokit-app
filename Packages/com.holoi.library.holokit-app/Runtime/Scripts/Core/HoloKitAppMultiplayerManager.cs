@@ -27,14 +27,15 @@ namespace Holoi.Library.HoloKitApp
 
     public struct ImagePositionPair
     {
-        public Vector3 ServerImagePosition;
-        public Vector3 ClientImagePosition;
+        public Vector3 ServerImagePosition; // QRCode image position in server's coordinate system
+        public Vector3 ClientImagePosition; // QRCode image position in client's coordinate system
     }
 
+    // Rotate client's coordinate system by theta first, then translate
     public struct CalibrationResult
     {
+        public float ThetaInDeg; // Client to server
         public Vector3 Translate;
-        public float Theta;
     }
 
     public class HoloKitAppMultiplayerManager : NetworkBehaviour
@@ -42,6 +43,8 @@ namespace Holoi.Library.HoloKitApp
         [SerializeField] private NetworkHostCameraPose _networkHostCameraPosePrefab;
 
         [SerializeField] private GameObject _phoneAlignmentMarkPrefab;
+
+        [SerializeField] private GameObject _axisPrefab;
 
         private NetworkHostCameraPose _networkHostCameraPose;
 
@@ -64,6 +67,8 @@ namespace Holoi.Library.HoloKitApp
         {
             HoloKitApp.Instance.SetMultiplayerManager(this);
             OnLocalClientConnected?.Invoke();
+
+            TestMockData();
         }
 
         private void Update()
@@ -111,17 +116,24 @@ namespace Holoi.Library.HoloKitApp
             {
                 _serverTimedCameraPoseQueue.Clear();
                 HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnServerARSessionUpdatedFrame;
-                HoloKitARSessionControllerAPI.RegisterARSessionUpdatedFrameDelegate();
                 MultipeerConnectivityTransport.StartAdvertising();
             }
             SpawnNetworkHostCameraPose();
+            StartCoroutine(SpawnAxis());
+        }
+
+        private IEnumerator SpawnAxis()
+        {
+            yield return new WaitForSeconds(8f);
+            Vector3 imagePosition = HoloKitCamera.Instance.CenterEyePose.position + HoloKitCamera.Instance.CenterEyePose.rotation * CameraToQRCodeOffset;
+            Instantiate(_axisPrefab, imagePosition, HoloKitCamera.Instance.CenterEyePose.rotation);
+            Instantiate(_axisPrefab, HoloKitCamera.Instance.CenterEyePose.position, HoloKitCamera.Instance.CenterEyePose.rotation);
         }
 
         public void StopAdvertising()
         {
             if (HoloKitUtils.IsRuntime)
             {
-                HoloKitARSessionControllerAPI.RegisterARSessionUpdatedFrameDelegate();
                 HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnServerARSessionUpdatedFrame;
                 MultipeerConnectivityTransport.StopAdvertising();
             }
@@ -158,7 +170,7 @@ namespace Holoi.Library.HoloKitApp
 
         private const double MaxTimestampDiff = 0.035; // For 30 FPS
 
-        private readonly Queue<ImagePositionPair> _clientImagePositionPairQueue = new();
+        private Queue<ImagePositionPair> _clientImagePositionPairQueue = new();
 
         private const int ClientImagePositionPairQueueStablizationCount = 10;
 
@@ -219,7 +231,6 @@ namespace Holoi.Library.HoloKitApp
         private void StartScanningQRCode()
         {
             HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnClientARSessionUpdatedFrame;
-            HoloKitARSessionControllerAPI.RegisterARSessionUpdatedFrameDelegate();
             var arTrackedImageManager = HoloKitCamera.Instance.GetComponentInParent<ARTrackedImageManager>(true);
             arTrackedImageManager.trackedImagesChanged += OnTrackedImagesChanged;
             arTrackedImageManager.enabled = true;
@@ -227,7 +238,6 @@ namespace Holoi.Library.HoloKitApp
 
         private void StopScanningQRCode()
         {
-            HoloKitARSessionControllerAPI.RegisterARSessionUpdatedFrameDelegate();
             HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnClientARSessionUpdatedFrame;
             var arTrackedImageManager = HoloKitCamera.Instance.GetComponentInParent<ARTrackedImageManager>();
             arTrackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
@@ -313,7 +323,7 @@ namespace Holoi.Library.HoloKitApp
                     TargetClientIds = new ulong[] { serverRpcParams.Receive.SenderClientId }
                 }
             };
-            OnReponseServerImagePositionClientRpc(nearestTimedCameraPose.PoseMatrix.GetPosition(), clientImagePosition, clientRpcParams);
+            OnReponseServerImagePositionClientRpc(serverImagePosition, clientImagePosition, clientRpcParams);
         }
 
         [ClientRpc]
@@ -329,11 +339,11 @@ namespace Holoi.Library.HoloKitApp
             });
             if (_clientImagePositionPairQueue.Count > ClientImagePositionPairQueueStablizationCount)
             {
-                var calibrationResult = CalculateClientToServerTransform();
+                var calibrationResult = CalculateClientToServerTransform(_clientImagePositionPairQueue);
                 _clientCalibrationResultQueue.Enqueue(calibrationResult);
                 if (_clientCalibrationResultQueue.Count > ClientCalibrationResultQueueStablizationCount)
                 {
-                    var thetaStandardDeviation = HoloKitAppUtils.CalculateStdDev(_clientCalibrationResultQueue.Select(x => (double)x.Theta));
+                    var thetaStandardDeviation = HoloKitAppUtils.CalculateStdDev(_clientCalibrationResultQueue.Select(x => (double)x.ThetaInDeg));
                     if (thetaStandardDeviation < ClientThetaQueueStablizationStandardDeviationThreshold)
                     {
                         Debug.Log($"[RealityManager] Yes! theta deviation {thetaStandardDeviation:F4}, threshold {ClientThetaQueueStablizationStandardDeviationThreshold:F4}");
@@ -350,27 +360,93 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
-        private CalibrationResult CalculateClientToServerTransform()
+        private void TestMockData()
+        {
+            var clientToServerTranslate = new Vector3 { x = UnityEngine.Random.Range(-1f, 1f), y = UnityEngine.Random.Range(-1f, 1f), z = UnityEngine.Random.Range(-1f, 1f) };
+            //var ob = new Vector3 { x = UnityEngine.Random.Range(-1f, 1f), y = UnityEngine.Random.Range(-1f, 1f), z = UnityEngine.Random.Range(-1f, 1f) };
+            var thetaInDeg = 30f;
+            //Debug.Log($"[Test] oa: {oa}, ob: {ob}");
+            var answer = new CalibrationResult()
+            {
+                Translate = clientToServerTranslate,
+                ThetaInDeg = thetaInDeg
+            };
+
+            var pairQueue = Enumerable.Range(1, 10).Select(i =>
+            {
+                var pb = new Vector3 { x = UnityEngine.Random.Range(-1f, 1f), y = UnityEngine.Random.Range(-1f, 1f), z = UnityEngine.Random.Range(-1f, 1f) };
+                var pa = -clientToServerTranslate + Matrix4x4.Rotate(Quaternion.AngleAxis(thetaInDeg, Vector3.up)).MultiplyPoint3x4(pb);
+
+                //var pa = new Vector3 { x = UnityEngine.Random.Range(-1f, 1f), y = UnityEngine.Random.Range(-1f, 1f), z = UnityEngine.Random.Range(-1f, 1f) };
+                //var pb = Matrix4x4.Rotate(Quaternion.AngleAxis(-thetaInDeg, Vector3.up)).MultiplyPoint3x4(pa) - clientToServerTranslate;
+                var pair = new ImagePositionPair { ServerImagePosition = pa, ClientImagePosition = pb };
+                return pair;
+            }).ToArray();
+
+
+            //ImagePositionPair imagePositionPair1 = new ImagePositionPair()
+            //{
+
+            //    ServerImagePosition = new Vector3(1f, 0f, 0f),
+            //    ClientImagePosition = new Vector3(Mathf.Cos(Mathf.Deg2Rad * thetaInDeg), 0f, Mathf.Sin(Mathf.Deg2Rad * thetaInDeg)) - clientToServerTranslate
+            //};
+
+            //ImagePositionPair imagePositionPair2 = new ImagePositionPair()
+            //{
+
+            //    ServerImagePosition = new Vector3(0f, 0f, 1f),
+            //    ClientImagePosition = new Vector3(-Mathf.Sin(Mathf.Deg2Rad * thetaInDeg), 0f, Mathf.Cos(Mathf.Deg2Rad * thetaInDeg)) - clientToServerTranslate
+            //};
+
+            //ImagePositionPair imagePositionPair3 = new ImagePositionPair()
+            //{
+
+            //    ServerImagePosition = new Vector3(-1f, 0f, 0f),
+            //    ClientImagePosition = new Vector3(-Mathf.Cos(Mathf.Deg2Rad * thetaInDeg), 0f, -Mathf.Sin(Mathf.Deg2Rad * thetaInDeg)) - clientToServerTranslate
+            //};
+
+            //ImagePositionPair imagePositionPair4 = new ImagePositionPair()
+            //{
+
+            //    ServerImagePosition = new Vector3(0f, 0f, -1f),
+            //    ClientImagePosition = new Vector3(Mathf.Sin(Mathf.Deg2Rad * thetaInDeg), 0f, -Mathf.Cos(Mathf.Deg2Rad * thetaInDeg)) - clientToServerTranslate
+            //};
+            //var pairQueue = new ImagePositionPair[] { imagePositionPair1, imagePositionPair2, imagePositionPair3, imagePositionPair4 };
+
+            Debug.Log("queue:");
+            foreach (var element in pairQueue)
+            {
+                Debug.Log($"ServerImagePosition: {element.ServerImagePosition}, ClientImagePosition: {element.ClientImagePosition}");
+            }
+            //pairQueue.Select(v => Debug.Log($"ClientImagePosition: {v.ClientImagePosition}, ServerImagePosition: {v.ServerImagePosition}")).ToList();
+            //_clientImagePositionPairQueue = pairQueue;
+
+            CalibrationResult result = CalculateClientToServerTransform(pairQueue);
+            Debug.Log($"[MockResult] translate: {result.Translate}, theta: {result.ThetaInDeg}");
+            Debug.Log($"[MockAnswer] translate: {answer.Translate}, theta: {answer.ThetaInDeg}");
+        }
+
+        private CalibrationResult CalculateClientToServerTransform(IEnumerable<ImagePositionPair> queue)
         {
             var clientImagePositionCenter = new Vector3(
-                _clientImagePositionPairQueue.Select(o => o.ClientImagePosition.x).Average(),
-                _clientImagePositionPairQueue.Select(o => o.ClientImagePosition.y).Average(),
-                _clientImagePositionPairQueue.Select(o => o.ClientImagePosition.z).Average());
+                queue.Select(o => o.ClientImagePosition.x).Average(),
+                queue.Select(o => o.ClientImagePosition.y).Average(),
+                queue.Select(o => o.ClientImagePosition.z).Average());
 
             var serverImagePositionCenter = new Vector3(
-                _clientImagePositionPairQueue.Select(o => o.ServerImagePosition.x).Average(),
-                _clientImagePositionPairQueue.Select(o => o.ServerImagePosition.y).Average(),
-                _clientImagePositionPairQueue.Select(o => o.ServerImagePosition.z).Average());
+                queue.Select(o => o.ServerImagePosition.x).Average(),
+                queue.Select(o => o.ServerImagePosition.y).Average(),
+                queue.Select(o => o.ServerImagePosition.z).Average());
 
-            string str = "";
+            //string str = "";
             //Debug.Log($"[RealityManager] clientImagePositionCenter: {clientImagePositionCenter:F4} and serverImagePositionCenter: {serverImagePositionCenter:F4}");
-            foreach (var imagePositionPair in _clientImagePositionPairQueue)
-            {
-                str += $"clientImagePosition: {imagePositionPair.ClientImagePosition:F4}, serverImagePosition: {imagePositionPair.ServerImagePosition:F4}, offset: {imagePositionPair.ClientImagePosition - imagePositionPair.ServerImagePosition:F4}\n";
-            }
-            Debug.Log(str);
+            //foreach (var imagePositionPair in queue)
+            //{
+            //    str += $"clientImagePosition: {imagePositionPair.ClientImagePosition:F4}, serverImagePosition: {imagePositionPair.ServerImagePosition:F4}, offset: {imagePositionPair.ClientImagePosition - imagePositionPair.ServerImagePosition:F4}\n";
+            //}
+            //Debug.Log(str);
 
-            Vector2 tanThetaAB = _clientImagePositionPairQueue.Select(o =>
+            Vector2 tanThetaAB = queue.Select(o =>
             {
                 var p = o.ClientImagePosition - clientImagePositionCenter;
                 var q = o.ServerImagePosition - serverImagePositionCenter;
@@ -379,18 +455,60 @@ namespace Holoi.Library.HoloKitApp
                 return new Vector2(a, b);
             }).Aggregate(Vector2.zero, (r, o) => r + o);
 
-            float theta = (float)Math.Atan2(tanThetaAB.y, tanThetaAB.x);
+            float thetaInDeg = (float)Math.Atan2(tanThetaAB.y, tanThetaAB.x) / Mathf.Deg2Rad;
 
-            Matrix4x4 rotation = Matrix4x4.Rotate(Quaternion.AngleAxis(theta, new Vector3(0, 1, 0)));
+            Matrix4x4 rotation = Matrix4x4.Rotate(Quaternion.AngleAxis(thetaInDeg, Vector3.up));
 
             Vector3 translate = serverImagePositionCenter - rotation.MultiplyPoint3x4(clientImagePositionCenter);
 
             return new CalibrationResult()
             {
-                Translate = translate,
-                Theta = theta
+                Translate = -translate,
+                ThetaInDeg = thetaInDeg
             };
         }
+
+        //private CalibrationResult CalculateClientToServerTransform(Queue<ImagePositionPair> queue)
+        //{
+        //    var clientImagePositionCenter = new Vector3(
+        //        _clientImagePositionPairQueue.Select(o => o.ClientImagePosition.x).Average(),
+        //        _clientImagePositionPairQueue.Select(o => o.ClientImagePosition.y).Average(),
+        //        _clientImagePositionPairQueue.Select(o => o.ClientImagePosition.z).Average());
+
+        //    var serverImagePositionCenter = new Vector3(
+        //        _clientImagePositionPairQueue.Select(o => o.ServerImagePosition.x).Average(),
+        //        _clientImagePositionPairQueue.Select(o => o.ServerImagePosition.y).Average(),
+        //        _clientImagePositionPairQueue.Select(o => o.ServerImagePosition.z).Average());
+
+        //    string str = "";
+        //    //Debug.Log($"[RealityManager] clientImagePositionCenter: {clientImagePositionCenter:F4} and serverImagePositionCenter: {serverImagePositionCenter:F4}");
+        //    foreach (var imagePositionPair in _clientImagePositionPairQueue)
+        //    {
+        //        str += $"clientImagePosition: {imagePositionPair.ClientImagePosition:F4}, serverImagePosition: {imagePositionPair.ServerImagePosition:F4}, offset: {imagePositionPair.ClientImagePosition - imagePositionPair.ServerImagePosition:F4}\n";
+        //    }
+        //    Debug.Log(str);
+
+        //    Vector2 tanThetaAB = _clientImagePositionPairQueue.Select(o =>
+        //    {
+        //        var p = o.ClientImagePosition - clientImagePositionCenter;
+        //        var q = o.ServerImagePosition - serverImagePositionCenter;
+        //        var a = p.x * q.x + p.z * q.z;
+        //        var b = p.z * q.x - p.x * q.z;
+        //        return new Vector2(a, b);
+        //    }).Aggregate(Vector2.zero, (r, o) => r + o);
+
+        //    float theta = (float)Math.Atan2(tanThetaAB.y, tanThetaAB.x);
+
+        //    Matrix4x4 rotation = Matrix4x4.Rotate(Quaternion.AngleAxis(theta, new Vector3(0, 1, 0)));
+
+        //    Vector3 translate = serverImagePositionCenter - rotation.MultiplyPoint3x4(clientImagePositionCenter);
+
+        //    return new CalibrationResult()
+        //    {
+        //        Translate = translate,
+        //        Theta = theta
+        //    };
+        //}
 
         // Step 4: 
         private void OnClientCalibrationSucceeded()
@@ -399,9 +517,9 @@ namespace Holoi.Library.HoloKitApp
 
             // Reset ARSession origin
             var lastCalibrationResult = _clientCalibrationResultQueue.Last();
-            float theta = lastCalibrationResult.Theta;
+            float theta = lastCalibrationResult.ThetaInDeg;
             Vector3 translate = lastCalibrationResult.Translate;
-            HoloKitARSessionControllerAPI.ResetOrigin(translate, Quaternion.AngleAxis(theta, new Vector3(0f, 1f, 0f)));
+            HoloKitARSessionControllerAPI.ResetOrigin(translate, Quaternion.AngleAxis(theta, Vector3.up));
 
             StopScanningQRCode();
             OnFinishedScanningQRCode?.Invoke();

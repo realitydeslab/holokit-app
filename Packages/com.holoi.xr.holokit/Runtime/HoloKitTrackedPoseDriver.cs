@@ -6,20 +6,12 @@ namespace HoloKit
     {
         private void Awake()
         {
-            if (HoloKitUtils.IsRuntime)
-            {
-                HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnARSessionUpdatedFrame;
-                HoloKitARSessionControllerAPI.RegisterARSessionUpdatedFrameDelegate();
-            }
+            HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnARSessionUpdatedFrame;
         }
 
         private void OnDestroy()
         {
-            if (HoloKitUtils.IsRuntime)
-            {
-                HoloKitARSessionControllerAPI.UnregisterARSessionUpdatedFrameDelegate();
-                HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnARSessionUpdatedFrame;
-            }
+            HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnARSessionUpdatedFrame;
         }
 
         private void OnARSessionUpdatedFrame(double timestamp, Matrix4x4 matrix)

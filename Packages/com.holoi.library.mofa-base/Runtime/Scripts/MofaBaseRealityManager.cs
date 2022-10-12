@@ -44,7 +44,7 @@ namespace Holoi.Library.MOFABase
 
         protected virtual void Awake()
         {
-            HoloKitWatchAppAPI.InitializeWithRealityId(1); // MOFA is temporarily 1
+            //HoloKitWatchAppAPI.InitializeWithRealityId(1); // MOFA is temporarily 1
             LifeShield.OnDead += OnLifeShieldDead;
         }
 

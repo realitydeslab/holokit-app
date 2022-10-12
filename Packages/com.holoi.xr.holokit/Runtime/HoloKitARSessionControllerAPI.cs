@@ -101,10 +101,8 @@ namespace HoloKit {
             Action<string, int> OnCurrentARWorldMapSaved,
             Action<bool, string, IntPtr, int> OnGotARWorldMapFromDisk,
             Action OnARWorldMapLoaded,
-            Action OnRelocalizationSucceeded);
-
-        [DllImport("__Internal")]
-        private static extern void HoloKitSDK_RegisterARSessionUpdatedFrameDelegate(Action<double, IntPtr> OnARSessionUpdatedFrame);
+            Action OnRelocalizationSucceeded,
+            Action<double, IntPtr> OnARSessionUpdatedFrame);
 
         [DllImport("__Internal")]
         private static extern double HoloKitSDK_GetSystemUptime();
@@ -139,7 +137,7 @@ namespace HoloKit {
             OnCurrentARWorldMapSaved?.Invoke(mapName, mapSizeInBytes);
         }
 
-        [AOT.MonoPInvokeCallback(typeof(Action<string, IntPtr, int>))]
+        [AOT.MonoPInvokeCallback(typeof(Action<bool, string, IntPtr, int>))]
         private static void OnGotARWorldMapFromDiskDelegate(bool success, string mapName, IntPtr mapPtr, int mapSizeInBytes)
         {
             if (success)
@@ -295,25 +293,16 @@ namespace HoloKit {
             if (HoloKitUtils.IsRuntime)
             {
                 HoloKitSDK_RegisterARSessionControllerDelegates(
-                OnThermalStateChangedDelegate,
-                OnCameraChangedTrackingStateDelegate,
-                OnARWorldMapStatusChangedDelegate,
-                OnGotCurrentARWorldMapDelegate,
-                OnCurrentARWorldMapSavedDelegate,
-                OnGotARWorldMapFromDiskDelegate,
-                OnARWorldMapLoadedDelegate,
-                OnRelocalizationSucceededDelegate);
+                    OnThermalStateChangedDelegate,
+                    OnCameraChangedTrackingStateDelegate,
+                    OnARWorldMapStatusChangedDelegate,
+                    OnGotCurrentARWorldMapDelegate,
+                    OnCurrentARWorldMapSavedDelegate,
+                    OnGotARWorldMapFromDiskDelegate,
+                    OnARWorldMapLoadedDelegate,
+                    OnRelocalizationSucceededDelegate,
+                    OnARSessionUpdatedFrameDelegate);
             }
-        }
-
-        public static void RegisterARSessionUpdatedFrameDelegate()
-        {
-            HoloKitSDK_RegisterARSessionUpdatedFrameDelegate(OnARSessionUpdatedFrameDelegate);
-        }
-
-        public static void UnregisterARSessionUpdatedFrameDelegate()
-        {
-            HoloKitSDK_RegisterARSessionUpdatedFrameDelegate(null);
         }
 
         public static List<ARWorldMapDescription> GetARWorldMapListFromDisk()
