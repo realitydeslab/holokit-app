@@ -135,7 +135,6 @@ namespace Apple.Core
                 Debug.Log($"Getting portion of source path {source} that comes after {searchString}");
                 var expectedInstallPath = source.Substring(source.LastIndexOf(searchString) + searchString.Length);
                 fileGuid = pbxProject.FindFileGuidByProjectPath(Path.Combine(frameworkName.EndsWith(".a") ? "Libraries" : "Frameworks", expectedInstallPath));
-
                 if (string.IsNullOrEmpty(fileGuid))
                 {
                     Debug.LogError($"CopyAndEmbed expected to find an existing GUID for {frameworkName} at {expectedInstallPath} but could not be found.");
