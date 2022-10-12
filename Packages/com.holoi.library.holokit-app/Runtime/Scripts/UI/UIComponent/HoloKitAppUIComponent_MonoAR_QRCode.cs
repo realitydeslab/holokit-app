@@ -1,15 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using System;
 using UnityEngine;
+using UnityEngine.UI;
 using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIComponent_MonoAR_QRCode : MonoBehaviour
     {
+        private const float _qrCodeWidth = 0.04f;
+
         private void Start()
         {
+            // Adjust QRCode size
+            float qrCodeWithInPixel = HoloKitAppUtils.MeterToPixel(_qrCodeWidth);
+            GetComponent<RectTransform>().sizeDelta = new Vector2(qrCodeWithInPixel, qrCodeWithInPixel);
+
             if (HoloKitUtils.IsEditor) { return; }
 
             // Calculate correct camera to QR code offset
