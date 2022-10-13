@@ -1,13 +1,21 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Holoi.Library.HoloKitApp
 {
     public class HoverableObject : MonoBehaviour
     {
+        [Header("Events")]
+        public UnityEvent OnLoadedEvents;
+
+        [Header("Interacton Properties")]
+        [SerializeField] Vector3 _offset = new Vector3(0, 0, 0);
 
         [SerializeField] float _triggerDistance = .2f;
 
         [SerializeField] float _loadTime = 1f;
+
+        bool _isTriggered = false;
 
         float _loadSpeed;
 
@@ -24,7 +32,8 @@ namespace Holoi.Library.HoloKitApp
         }
         private void OnEnable()
         {
-
+            _isTriggered = false;
+            _process = 0;
         }
         private void OnDisable()
         {
@@ -33,14 +42,22 @@ namespace Holoi.Library.HoloKitApp
 
         void Update()
         {
-            if (Vector3.Distance(_ho.transform.position, transform.position) < _triggerDistance)
+            if (Vector3.Distance(_ho.transform.position, transform.position + _offset) < _triggerDistance)
             {
                 _process += Time.deltaTime * _loadSpeed;
-                if (_process > 1) _process = 1;
+                if (_process > 1)
+                {
+                    _process = 1;
+                    if (!_isTriggered)
+                    {
+                        _isTriggered = true;
+                        OnLoadedEvents?.Invoke();
+                    }
+                }
             }
             else
             {
-                _process -= Time.deltaTime * _loadSpeed;
+                _process -= Time.deltaTime * _loadSpeed * 0.5f;
                 if (_process < 0) _process = 0;
             }
         }

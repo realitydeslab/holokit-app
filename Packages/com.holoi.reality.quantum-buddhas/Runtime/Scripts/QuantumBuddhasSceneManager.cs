@@ -10,6 +10,7 @@ namespace Holoi.Reality.QuantumBuddhas
     public class QuantumBuddhasSceneManager : MonoBehaviour
     {
         [SerializeField] List<VisualEffect> _vfxs = new List<VisualEffect>();
+        [SerializeField] Transform _handLoadedVFXParent;
 
         [Header("AR UI Components")]
         [SerializeField] LoadButtonController _placementLoadButton;
@@ -41,6 +42,7 @@ namespace Holoi.Reality.QuantumBuddhas
             if(_animator !=null)
             {
                 _animator.SetTrigger("Fade Out");
+                _animator.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Fade Out");
             }
 
             _index++;
@@ -53,7 +55,12 @@ namespace Holoi.Reality.QuantumBuddhas
             // enable the slected
             _vfxs[_index].gameObject.SetActive(true);
             _animator = _vfxs[_index].GetComponent<Animator>();
-            _animator.Play("Fade in", -1, 0f); // reset animator
+            //_animator.Play("Fade in", -1, 0f); // reset animator
+            _animator.Rebind();
+            _animator.Update(0f);
+            // vfx:
+            _handLoadedVFXParent.gameObject.SetActive(true);
+            StartCoroutine(SetVFXDisableAfterTimes());
         }
 
         public void InitTargetGameObject()
@@ -80,6 +87,12 @@ namespace Holoi.Reality.QuantumBuddhas
         {
             Debug.Log("SetPlacementLoadButton: " + state);
             _placementLoadButton.gameObject.SetActive(state);
+        }
+
+        IEnumerator SetVFXDisableAfterTimes()
+        {
+            yield return new WaitForSeconds(2.5f);
+            _handLoadedVFXParent.gameObject.SetActive(false);
         }
     }
 }
