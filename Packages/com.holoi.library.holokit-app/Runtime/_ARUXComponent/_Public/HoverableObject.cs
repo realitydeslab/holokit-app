@@ -32,6 +32,7 @@ namespace Holoi.Library.HoloKitApp
         }
         private void OnEnable()
         {
+            Debug.Log($"{gameObject.name} : Onenable");
             _isTriggered = false;
             _process = 0;
         }

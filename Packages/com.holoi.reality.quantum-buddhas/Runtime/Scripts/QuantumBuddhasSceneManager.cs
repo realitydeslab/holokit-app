@@ -39,28 +39,36 @@ namespace Holoi.Reality.QuantumBuddhas
 
         public void SwitchToNextVFX()
         {
-            if(_animator !=null)
+            _animator = _vfxs[_index].GetComponent<Animator>();
+            if (_animator !=null)
             {
                 _animator.SetTrigger("Fade Out");
                 _animator.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Fade Out");
             }
 
             _index++;
+
             if (_index == _vfxs.Count) _index = 0;
-            // disbale all vfx
-            foreach (var vfx in _vfxs)
+
+            // disbale other vfx after play animation:
+            for (int i = 0; i < _vfxs.Count; i++)
             {
-                vfx.gameObject.SetActive(false);
+                if(i == _index)
+                {
+                    _vfxs[_index].gameObject.SetActive(true);
+                }
+                else
+                {
+                    Debug.Log($"disable with index: {i}");
+                    StartCoroutine(SetVFXDisableAfterTimes(_vfxs[i].gameObject, 1.5f));
+                }
             }
-            // enable the slected
-            _vfxs[_index].gameObject.SetActive(true);
             _animator = _vfxs[_index].GetComponent<Animator>();
-            //_animator.Play("Fade in", -1, 0f); // reset animator
             _animator.Rebind();
             _animator.Update(0f);
             // vfx:
             _handLoadedVFXParent.gameObject.SetActive(true);
-            StartCoroutine(SetVFXDisableAfterTimes());
+            StartCoroutine(SetVFXDisableAfterTimes(_handLoadedVFXParent.gameObject, 2.5f));
         }
 
         public void InitTargetGameObject()
@@ -89,10 +97,11 @@ namespace Holoi.Reality.QuantumBuddhas
             _placementLoadButton.gameObject.SetActive(state);
         }
 
-        IEnumerator SetVFXDisableAfterTimes()
+        IEnumerator SetVFXDisableAfterTimes(GameObject go,float time)
         {
-            yield return new WaitForSeconds(2.5f);
-            _handLoadedVFXParent.gameObject.SetActive(false);
+            yield return new WaitForSeconds(time);
+            Debug.Log($"Set {go.name} to disable.");
+            go.SetActive(false);
         }
     }
 }
