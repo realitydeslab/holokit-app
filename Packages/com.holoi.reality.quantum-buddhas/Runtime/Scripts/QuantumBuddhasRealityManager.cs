@@ -17,11 +17,19 @@ namespace Holoi.Reality.QuantumBuddhas
         {
             base.OnNetworkSpawn();
 
-            if (IsServer)
+            if (_networkHandPrefab)
             {
-                _networkHand = Instantiate(_networkHandPrefab);
-                _networkHand.Spawn();
+                if (IsServer)
+                {
+                    _networkHand = Instantiate(_networkHandPrefab);
+                    _networkHand.Spawn();
+                }
             }
+            else
+            {
+
+            }
+
         }
 
         private void FixedUpdate()
