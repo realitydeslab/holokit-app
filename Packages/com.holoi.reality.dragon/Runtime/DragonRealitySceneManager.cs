@@ -14,7 +14,8 @@ namespace Holoi.Reality.Dragon
         [Header("AR UI Components")]
         [SerializeField] LoadButtonController _placementLoadButton;
         [Header("UI Components")]
-        [SerializeField] GameObject _switchGO;
+        [SerializeField] GameObject _switchButton;
+        [SerializeField] GameObject _tipsText;
         [Header("AR Mesh Baker")]
         [SerializeField] NavigationBaker _navigationBaker;
 
@@ -23,11 +24,9 @@ namespace Holoi.Reality.Dragon
 
         [SerializeField] Vector3 _offset = Vector3.zero;
 
+        [Header("Game Phase")]
+        [SerializeField] GameObject _arRaycast;
         [SerializeField] GameObject _targetGameObject;
-        [SerializeField] GameObject _dragonParent;
-
-        Transform _centerEye;
-        Animator _animator;
 
         void Start()
         {
@@ -37,7 +36,7 @@ namespace Holoi.Reality.Dragon
             }
             else
             {
-                _switchGO.SetActive(false);
+                _switchButton.SetActive(false);
             }
         }
 
@@ -48,6 +47,7 @@ namespace Holoi.Reality.Dragon
 
         public void BuildNavigation()
         {
+            _tipsText.SetActive(false);
             // disable ar meshing
             var arMeshManager = FindObjectOfType<ARMeshManager>();
             arMeshManager.enabled = false;
@@ -59,7 +59,8 @@ namespace Holoi.Reality.Dragon
                 _navigationBaker.surfaces.Add(surface);
             }
             _navigationBaker.BuildNavMesh();
-            _dragonParent.SetActive(true);
+
+            _arRaycast.SetActive(true);
         }
 
         public void InitTargetGameObject()

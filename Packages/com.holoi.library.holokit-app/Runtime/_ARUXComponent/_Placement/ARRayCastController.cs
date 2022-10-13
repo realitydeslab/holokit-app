@@ -7,7 +7,6 @@ using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
 {
-    [ExecuteInEditMode]
     public class ARRayCastController : MonoBehaviour
     {
 

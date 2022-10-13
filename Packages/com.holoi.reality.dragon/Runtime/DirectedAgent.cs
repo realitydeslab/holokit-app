@@ -15,12 +15,12 @@ namespace Holoi.Reality.Dragon
         void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
-            MoveToLocation();
+            //MoveToLocation();
         }
 
         private void Update()
         {
-            MoveToLocation();
+            //MoveToLocation();
 
             //if(Vector3.Distance(transform.position, _target.position) < 0.1f)
             //{
