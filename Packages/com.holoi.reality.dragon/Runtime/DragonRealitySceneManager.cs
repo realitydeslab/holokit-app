@@ -48,16 +48,23 @@ namespace Holoi.Reality.Dragon
         public void BuildNavigation()
         {
             _tipsText.SetActive(false);
+
             // disable ar meshing
             var arMeshManager = FindObjectOfType<ARMeshManager>();
             arMeshManager.enabled = false;
+
             // add all mesh here
             var surfaceList = FindObjectsOfType<NavMeshSurface>();
             _navigationBaker.surfaces.Clear();
+
             foreach (var surface in surfaceList)
             {
                 _navigationBaker.surfaces.Add(surface);
+                //surface.GetComponent<MeshRenderer>().enabled = false; // make it invisible
             }
+
+            Debug.Log($"Build with {surfaceList.Length} surfaces ");
+
             _navigationBaker.BuildNavMesh();
 
             _arRaycast.SetActive(true);

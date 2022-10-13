@@ -20,7 +20,7 @@ namespace Holoi.Reality.Dragon
 
         private void Update()
         {
-            //MoveToLocation();
+            MoveToLocation();
 
             //if(Vector3.Distance(transform.position, _target.position) < 0.1f)
             //{
