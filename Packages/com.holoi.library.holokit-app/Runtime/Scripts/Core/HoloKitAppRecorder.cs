@@ -44,15 +44,18 @@ namespace Holoi.Library.HoloKitApp
 
         private IEnumerator Start()
         {
-            // Start microphone
-            _microphoneSource = gameObject.AddComponent<AudioSource>();
-            _microphoneSource.mute =
-            _microphoneSource.loop = true;
-            _microphoneSource.bypassEffects =
-            _microphoneSource.bypassListenerEffects = false;
-            _microphoneSource.clip = Microphone.Start(null, true, 1, AudioSettings.outputSampleRate);
-            yield return new WaitUntil(() => Microphone.GetPosition(null) > 0);
-            _microphoneSource.Play();
+            if (HoloKitUtils.IsRuntime)
+            {
+                // Start microphone
+                _microphoneSource = gameObject.AddComponent<AudioSource>();
+                _microphoneSource.mute =
+                _microphoneSource.loop = true;
+                _microphoneSource.bypassEffects =
+                _microphoneSource.bypassListenerEffects = false;
+                _microphoneSource.clip = Microphone.Start(null, true, 1, AudioSettings.outputSampleRate);
+                yield return new WaitUntil(() => Microphone.GetPosition(null) > 0);
+                _microphoneSource.Play();
+            }
         }
 
         private void OnDestroy()
