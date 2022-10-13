@@ -1,17 +1,16 @@
 using UnityEngine;
-using UnityEngine.UI;
 using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIComponent_MonoAR_QRCode : MonoBehaviour
     {
-        private const float _qrCodeWidth = 0.04f;
+        private const float QrCodeWidth = 0.04f;
 
         private void Start()
         {
             // Adjust QRCode size
-            float qrCodeWithInPixel = HoloKitAppUtils.MeterToPixel(_qrCodeWidth);
+            float qrCodeWithInPixel = HoloKitAppUtils.MeterToPixel(QrCodeWidth);
             GetComponent<RectTransform>().sizeDelta = new Vector2(qrCodeWithInPixel, qrCodeWithInPixel);
 
             if (HoloKitUtils.IsEditor) { return; }

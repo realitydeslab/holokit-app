@@ -100,11 +100,13 @@ namespace Holoi.Library.HoloKitApp
                 // Push initial UI panel
                 if (_test)
                 {
+                    // Load test page
                     UIPanelManager.PushUIPanel("TestRealityList");
                 }
                 else
                 {
-                    // TODO: Load main UI panel
+                    // Load landing page
+                    UIPanelManager.PushUIPanel("LandingPage");
                 }
             }
         }

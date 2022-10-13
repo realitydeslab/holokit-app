@@ -68,7 +68,6 @@ namespace Holoi.Library.HoloKitApp
             HoloKitApp.Instance.SetMultiplayerManager(this);
             OnLocalClientConnected?.Invoke();
 
-
             TestCalibrationAlgorithm();
         }
 

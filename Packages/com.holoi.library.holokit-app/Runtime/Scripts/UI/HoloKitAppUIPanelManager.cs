@@ -6,10 +6,6 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIPanelManager : MonoBehaviour
     {
-        //public static HoloKitAppUIPanelManager Instance { get { return _instance; } }
-
-        //private static HoloKitAppUIPanelManager _instance;
-
         public List<HoloKitAppUIPanel> UIPanelList;
 
         [SerializeField] private Canvas _portraitCanvas;
@@ -17,19 +13,6 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeField] private Canvas _starCanvas;
 
         private readonly Stack<HoloKitAppUIPanel> _uiPanelStack = new();
-
-        private void Awake()
-        {
-            //if (_instance != null && _instance != this)
-            //{
-            //    Destroy(gameObject);
-            //}
-            //else
-            //{
-            //    _instance = this;
-            //}
-            //DontDestroyOnLoad(gameObject);
-        }
 
         public void PushUIPanel(string uiPanelName)
         {
@@ -42,7 +25,7 @@ namespace Holoi.Library.HoloKitApp.UI
                     return;
                 }
             }
-            Debug.Log($"[HoloKitAppUIPanelManager] Cannot find UIPanel with name {uiPanelName}");
+            Debug.LogError($"[HoloKitAppUIPanelManager] Cannot find UIPanel with name {uiPanelName}");
         }
 
         private void PushUIPanel(HoloKitAppUIPanel uiPanel)
