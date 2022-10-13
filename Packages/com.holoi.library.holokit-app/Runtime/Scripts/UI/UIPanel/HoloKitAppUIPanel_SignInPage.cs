@@ -159,7 +159,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
                     // TODO: Send user data to Unity backend
 
-                    OnSignedInWithEmail();
+                    OnSignedInWithEmailDisplayed();
                 },
                 error =>
                 {
@@ -217,7 +217,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _notificationText.text = "Signing In with Apple...";
         }
 
-        private void OnSignedInWithEmail()
+        private void OnSignedInWithEmailDisplayed()
         {
             _descriptionText.gameObject.SetActive(false);
             _signInButton.gameObject.SetActive(false);

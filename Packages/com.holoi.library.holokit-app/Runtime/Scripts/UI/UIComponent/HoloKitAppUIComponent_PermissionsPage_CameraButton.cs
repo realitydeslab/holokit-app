@@ -28,12 +28,12 @@ namespace Holoi.Library.HoloKitApp.UI
 
         protected override HoloKitAppPermissionStatus GetPermissionStatus()
         {
-            return HoloKitAppPermissionsManager.GetMicrophonePermissionStatus();
+            return HoloKitAppPermissionsManager.GetCameraPermissionStatus();
         }
 
         protected override void RequestPermission()
         {
-            PermissionsAPI.RequestMicrophonePermission();
+            PermissionsAPI.RequestCameraPermission();
         }
     }
 }

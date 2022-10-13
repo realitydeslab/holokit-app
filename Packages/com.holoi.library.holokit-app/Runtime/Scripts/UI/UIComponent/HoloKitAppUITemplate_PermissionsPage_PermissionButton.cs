@@ -29,14 +29,25 @@ namespace Holoi.Library.HoloKitApp.UI
         protected void UpdatePermissionButton(HoloKitAppPermissionStatus permissionStatus)
         {
             ColorBlock colorBlock = _permissionButton.colors;
+            _permissionButton.onClick.RemoveAllListeners();
             switch (permissionStatus)
             {
                 case HoloKitAppPermissionStatus.NotDetermined:
+                    colorBlock.normalColor = _whiteColor;
+                    colorBlock.selectedColor = _whiteColor;
+                    _permissionText.color = _blackColor;
+                    _checkmarkImage.sprite = _uncheckedSprite;
+                    _permissionButton.onClick.AddListener(RequestPermission);
+                    break;
                 case HoloKitAppPermissionStatus.Denied:
                     colorBlock.normalColor = _whiteColor;
                     colorBlock.selectedColor = _whiteColor;
                     _permissionText.color = _blackColor;
                     _checkmarkImage.sprite = _uncheckedSprite;
+                    _permissionButton.onClick.AddListener(() =>
+                    {
+                        PermissionsAPI.OpenAppSettings();
+                    });
                     break;
                 case HoloKitAppPermissionStatus.Granted:
                     colorBlock.normalColor = _blackColor;
@@ -46,22 +57,6 @@ namespace Holoi.Library.HoloKitApp.UI
                     break;
             }
             _permissionButton.colors = colorBlock;
-
-            _permissionButton.onClick.RemoveAllListeners();
-            switch (permissionStatus)
-            {
-                case HoloKitAppPermissionStatus.NotDetermined:
-                    _permissionButton.onClick.AddListener(RequestPermission);
-                    break;
-                case HoloKitAppPermissionStatus.Denied:
-                    _permissionButton.onClick.AddListener(() =>
-                    {
-                        PermissionsAPI.OpenAppSettings();
-                    });
-                    break;
-                case HoloKitAppPermissionStatus.Granted:
-                    break;
-            }
         }
 
         protected abstract HoloKitAppPermissionStatus GetPermissionStatus();

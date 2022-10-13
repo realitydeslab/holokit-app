@@ -19,7 +19,7 @@ namespace Holoi.Library.HoloKitApp.UI
             switch (status)
             {
                 case LocationPermissionStatus.NotDetermined:
-                    UpdatePermissionButton(HoloKitAppPermissionStatus.Denied);
+                    UpdatePermissionButton(HoloKitAppPermissionStatus.NotDetermined);
                     break;
                 case LocationPermissionStatus.Restricted:
                     UpdatePermissionButton(HoloKitAppPermissionStatus.Denied);
