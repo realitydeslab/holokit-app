@@ -85,7 +85,7 @@ namespace Holoi.Reality.QuantumBuddhas
 
         public void SetPlacementLoadButton(bool state)
         {
-            Debug.Log("SetPlacementLoadButton: " + state);
+            //Debug.Log("SetPlacementLoadButton: " + state);
             _placementLoadButton.gameObject.SetActive(state);
         }
 
