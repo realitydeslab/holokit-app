@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.VFX;
 using Holoi.Library.HoloKitApp;
 using HoloKit;
+using Unity.AI.Navigation;
+using UnityEngine.XR.ARFoundation;
 
 namespace Holoi.Reality.Dragon
 {
@@ -11,6 +13,10 @@ namespace Holoi.Reality.Dragon
     {
         [Header("AR UI Components")]
         [SerializeField] LoadButtonController _placementLoadButton;
+        [Header("UI Components")]
+        [SerializeField] GameObject _switchGO;
+        [Header("AR Mesh Baker")]
+        [SerializeField] NavigationBaker _navigationBaker;
 
         [Header("Placement Settings")]
         [SerializeField] ARRayCastController _arRaycastController;
@@ -18,17 +24,42 @@ namespace Holoi.Reality.Dragon
         [SerializeField] Vector3 _offset = Vector3.zero;
 
         [SerializeField] GameObject _targetGameObject;
+        [SerializeField] GameObject _dragonParent;
 
         Transform _centerEye;
         Animator _animator;
 
         void Start()
         {
+            if (HoloKitApp.Instance.IsHost)
+            {
+
+            }
+            else
+            {
+                _switchGO.SetActive(false);
+            }
         }
 
         void Update()
         {
 
+        }
+
+        public void BuildNavigation()
+        {
+            // disable ar meshing
+            var arMeshManager = FindObjectOfType<ARMeshManager>();
+            arMeshManager.enabled = false;
+            // add all mesh here
+            var surfaceList = FindObjectsOfType<NavMeshSurface>();
+            _navigationBaker.surfaces.Clear();
+            foreach (var surface in surfaceList)
+            {
+                _navigationBaker.surfaces.Add(surface);
+            }
+            _navigationBaker.BuildNavMesh();
+            _dragonParent.SetActive(true);
         }
 
         public void InitTargetGameObject()
