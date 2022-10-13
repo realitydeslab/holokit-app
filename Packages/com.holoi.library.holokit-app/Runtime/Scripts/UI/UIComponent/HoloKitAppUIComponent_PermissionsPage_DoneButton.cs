@@ -64,5 +64,11 @@ namespace Holoi.Library.HoloKitApp.UI
                 _doneButton.interactable = true;
             }
         }
+
+        public void OnDoneButtonPressed()
+        {
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("SignInPage");
+        }
     }
 }

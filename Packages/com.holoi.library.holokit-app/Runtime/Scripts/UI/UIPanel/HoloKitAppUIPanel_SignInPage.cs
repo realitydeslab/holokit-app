@@ -21,6 +21,10 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private TMP_Text _notificationText;
 
+        [SerializeField] private GameObject _userInfo;
+
+        [SerializeField] private TMP_Text _emailText;
+
         private const string AppleUserIdKey = "AppleUserId";
 
         private const string AppleUserNameKey = "AppleUserName";
@@ -33,7 +37,9 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             _descriptionText.gameObject.SetActive(false);
             _signInButton.gameObject.SetActive(false);
+            _signInButton.onClick.AddListener(OnSignInWithAppleButtonPressed);
             _notificationText.gameObject.SetActive(false);
+            _userInfo.SetActive(false);
         }
 
         private void Start()
@@ -111,12 +117,12 @@ namespace Holoi.Library.HoloKitApp.UI
             var quickLoginArgs = new AppleAuthQuickLoginArgs();
 
             // Quick login should succeed if the credential was authorized before and not revoked
-            this._appleAuthManager.QuickLogin(
+            _appleAuthManager.QuickLogin(
                 quickLoginArgs,
                 credential =>
                 {
-                // If it's an Apple credential, save the user ID, for later logins
-                var appleIdCredential = credential as IAppleIDCredential;
+                    // If it's an Apple credential, save the user ID, for later logins
+                    var appleIdCredential = credential as IAppleIDCredential;
                     if (appleIdCredential != null)
                     {
                         PlayerPrefs.SetString(AppleUserIdKey, credential.User);
@@ -126,8 +132,8 @@ namespace Holoi.Library.HoloKitApp.UI
                 },
                 error =>
                 {
-                // If Quick Login fails, we should show the normal sign in with apple menu, to allow for a normal Sign In with apple
-                var authorizationErrorCode = error.GetAuthorizationErrorCode();
+                    // If Quick Login fails, we should show the normal sign in with apple menu, to allow for a normal Sign In with apple
+                    var authorizationErrorCode = error.GetAuthorizationErrorCode();
                     Debug.LogWarning("Quick Login Failed " + authorizationErrorCode.ToString() + " " + error.ToString());
                     OnNotSignedIn();
                 });
@@ -142,21 +148,18 @@ namespace Holoi.Library.HoloKitApp.UI
                 credential =>
                 {
                     // If a sign in with apple succeeds, we should have obtained the credential with the user id, name, and email, save it
-                    PlayerPrefs.SetString(AppleUserIdKey, credential.User);
                     var appleIdCredential = credential as IAppleIDCredential;
-                    if (appleIdCredential.FullName != null)
+                    if (appleIdCredential != null)
                     {
+                        PlayerPrefs.SetString(AppleUserIdKey, credential.User);
                         PlayerPrefs.SetString(AppleUserNameKey, appleIdCredential.FullName.ToString());
-                    }
-                    if (appleIdCredential.Email != null)
-                    {
                         PlayerPrefs.SetString(AppleUserEmailKey, appleIdCredential.Email.ToString());
                     }
                     Debug.Log($"[SignInWithApple] Got user full name: {PlayerPrefs.GetString(AppleUserNameKey)} and email: {PlayerPrefs.GetString(AppleUserEmailKey)}");
-                    
+
                     // TODO: Send user data to Unity backend
 
-                    OnSignedIn();
+                    OnSignedInWithEmail();
                 },
                 error =>
                 {
@@ -214,9 +217,24 @@ namespace Holoi.Library.HoloKitApp.UI
             _notificationText.text = "Signing In with Apple...";
         }
 
+        private void OnSignedInWithEmail()
+        {
+            _descriptionText.gameObject.SetActive(false);
+            _signInButton.gameObject.SetActive(false);
+            _notificationText.gameObject.SetActive(false);
+            _userInfo.SetActive(true);
+            _emailText.text = PlayerPrefs.GetString(AppleUserEmailKey);
+            StartCoroutine(HoloKitAppUtils.WaitAndDo(2f, () =>
+            {
+                OnSignedIn();
+            }));
+        }
+
         private void OnSignedIn()
         {
-            
+            // Load next page
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityMenuPage");
         }
     }
 }
