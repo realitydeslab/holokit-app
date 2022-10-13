@@ -1,0 +1,114 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7387033780661748149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff04eea8ccd1d4b0990f36e5ec837891, type: 3}
+  m_Name: PHASE Spatial Mixer
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -40, y: -136}
+  ports:
+    keys:
+    - ParentNode
+    values:
+    - _fieldName: ParentNode
+      _node: {fileID: -7387033780661748149}
+      _typeQualifiedName: Apple.PHASE.PHASEMixer, Apple.PHASE, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: Mixer
+        node: {fileID: -487082840327007559}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 2
+      _dynamic: 0
+  ParentNode: {fileID: 0}
+  _directPathModeler: 1
+  _earlyReflectionModeler: 1
+  _lateReverbModeler: 1
+  _cullDistance: 0
+  _listenerDirectivityPreset: 0
+  _listenerDirectivitySharpness: 1
+  _listenerDirectivityInnerAngle: 90
+  _listenerDirectivityOuterAngle: 215
+  _sourceDirectivityPreset: 0
+  _sourceDirectivitySharpness: 1
+  _sourceDirectivityInnerAngle: 90
+  _sourceDirectivityOuterAngle: 215
+--- !u!114 &-487082840327007559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08b165ad3013c4bbf9b78d4f1de03db4, type: 3}
+  m_Name: PHASE Sound Event Sampler
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -360, y: -152}
+  ports:
+    keys:
+    - Mixer
+    - ParentNode
+    values:
+    - _fieldName: Mixer
+      _node: {fileID: -487082840327007559}
+      _typeQualifiedName: Apple.PHASE.PHASEMixer, Apple.PHASE, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: ParentNode
+        node: {fileID: -7387033780661748149}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: ParentNode
+      _node: {fileID: -487082840327007559}
+      _typeQualifiedName: Apple.PHASE.PHASESoundEventNode, Apple.PHASE, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  ParentNode: {fileID: 0}
+  _isStreamingAsset: 0
+  _audioClip: {fileID: 8300000, guid: b9e16d591a5624c23b6a3b28110bb31a, type: 3}
+  _looping: 0
+  _calibrationMode: 1
+  _levelNone: 1
+  _levelRelativeSpl: 0
+  _levelAbsoluteSpl: 85
+  _mixer: {fileID: -7387033780661748149}
+  Mixer: {fileID: 0}
+  _streamingAssetAudioClip: {fileID: 0}
+  _assetName: singing bowl
+  _streamingAssetSubDirectory: 
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b79afdf8682714aa5b484522364a10e2, type: 3}
+  m_Name: SingingBowlSoundEvent 13
+  m_EditorClassIdentifier: 
+  nodes:
+  - {fileID: -487082840327007559}
+  - {fileID: -7387033780661748149}
+  m_rootNode: {fileID: -487082840327007559}
