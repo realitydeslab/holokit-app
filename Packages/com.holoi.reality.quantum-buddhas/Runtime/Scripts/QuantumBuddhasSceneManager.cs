@@ -62,17 +62,23 @@ namespace Holoi.Reality.QuantumBuddhas
 
             _targetGameObject.transform.position = _arRaycastController.transform.position + _offset;
 
-            var playerPos = HoloKitCamera.Instance.CenterEyePose.position;
+            //var playerPos = HoloKitCamera.Instance.CenterEyePose.position;
 
-            var targetPos = new Vector3(playerPos.x, _targetGameObject.transform.position.y, playerPos.z);
+            //var targetPos = new Vector3(playerPos.x, _targetGameObject.transform.position.y, playerPos.z);
 
-            _targetGameObject.transform.LookAt(targetPos);
+            //_targetGameObject.transform.LookAt(targetPos);
 
-            _targetGameObject.transform.parent = transform;
+            //_targetGameObject.transform.parent = transform;
+        }
+
+        public void DisableARRaycast()
+        {
+            _arRaycastController.enabled = false;
         }
 
         public void SetPlacementLoadButton(bool state)
         {
+            Debug.Log("SetPlacementLoadButton: " + state);
             _placementLoadButton.gameObject.SetActive(state);
         }
     }

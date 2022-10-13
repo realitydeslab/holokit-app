@@ -63,6 +63,7 @@ namespace Holoi.Library.HoloKitApp
         {
             PlayDie();
             yield return new WaitForSecondsRealtime(1f);
+            Debug.Log("Load Button Die");
             gameObject.SetActive(false);
         }
         public void SetTexture(Texture2D tex)
@@ -72,8 +73,8 @@ namespace Holoi.Library.HoloKitApp
 
         void PlayDie()
         {
+            Debug.Log("Load Button Play Die");
             _animator.SetTrigger("Die");
-
         }
     }
 }
