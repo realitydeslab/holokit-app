@@ -9,38 +9,38 @@ namespace Holoi.Reality.QuantumBuddhas
 {
     public class QuantumBuddhasRealityManager : RealityManager
     {
-        [SerializeField] private NetworkObject _networkHandPrefab;
+        //[SerializeField] private NetworkObject _networkHandPrefab;
 
-        private NetworkObject _networkHand;
+        //private NetworkObject _networkHand;
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
 
-            if (_networkHandPrefab)
-            {
-                if (IsServer)
-                {
-                    _networkHand = Instantiate(_networkHandPrefab);
-                    _networkHand.Spawn();
-                }
-            }
-            else
-            {
+            //if (_networkHandPrefab)
+            //{
+            //    if (IsServer)
+            //    {
+            //        _networkHand = Instantiate(_networkHandPrefab);
+            //        _networkHand.Spawn();
+            //    }
+            //}
+            //else
+            //{
 
-            }
+            //}
 
         }
 
         private void FixedUpdate()
         {
-            if (IsServer)
-            {
-                if (HoloKitHandTracker.Instance.Valid)
-                {
-                    //_networkHand.transform.position = HoloKitHandTracker.Instance.GetHandJointPosition(HandJoint.Index3);
-                }
-            }
+            //if (IsServer)
+            //{
+            //    if (HoloKitHandTracker.Instance.Valid)
+            //    {
+            //        _networkHand.transform.position = HoloKitHandTracker.Instance.GetHandJointPosition(HandJoint.Index3);
+            //    }
+            //}
         }
     }
 }

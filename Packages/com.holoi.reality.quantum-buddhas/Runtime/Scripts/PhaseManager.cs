@@ -8,18 +8,51 @@ namespace Holoi.Reality.QuantumBuddhas
 {
     public class PhaseManager : MonoBehaviour
     {
-        public PHASESource _bg;
-        public PHASEListener _pl;
+        public PHASESource _phaseSources;
+        public PHASEListener _phaseListener;
 
-        public void OpenPhase()
+        //[SerializeField] bool _isSourceEnabled = false;
+        [SerializeField] bool _isSourcePlaying = false;
+
+        private void Awake()
         {
-            _bg.enabled = true;
-            _pl.enabled = true;
+            //if(_isSourceEnabled)
+            //{
+            //    foreach (var source in _phaseSources)
+            //    {
+            //        source.Play();
+            //    }
+            //}
+            //if (_isSourceEnabled)
+            //{
+            //    foreach (var source in _phaseSources)
+            //    {
+            //        source.Stop();
+            //    }
+            //}
         }
 
-        public void DisablePhase()
+        public void PlayPhaseSource()
         {
+            if (!_phaseListener.isActiveAndEnabled)
+            {
+                Debug.Log("Enable Phase Listener");
+                _phaseListener.enabled = true;
+            }
 
+            if (!_phaseSources.IsPlaying())
+            {
+                Debug.Log("play Phase Source");
+
+                _phaseSources.Play();
+
+            }
+            else
+            {
+                Debug.Log("stop Phase Source");
+
+                _phaseSources.Stop();
+            }
         }
     }
 }
