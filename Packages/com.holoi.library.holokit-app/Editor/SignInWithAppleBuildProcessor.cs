@@ -14,19 +14,16 @@ namespace Holoi.Library.HoloKitApp.Editor
                 return;
 
             var projectPath = PBXProject.GetPBXProjectPath(path);
-
-            // Adds entitlement depending on the Unity version used
-#if UNITY_2019_3_OR_NEWER
             var project = new PBXProject();
-            project.ReadFromString(System.IO.File.ReadAllText(projectPath));
-            var manager = new ProjectCapabilityManager(projectPath, "Entitlements.entitlements", null, project.GetUnityMainTargetGuid());
+            project.ReadFromFile(projectPath);
+
+            string packageName = UnityEngine.Application.identifier;
+            string name = packageName.Substring(packageName.LastIndexOf('.') + 1);
+            string entitlementFileName = name + ".entitlements";
+
+            var manager = new ProjectCapabilityManager(projectPath, entitlementFileName, null, project.GetUnityMainTargetGuid());
             manager.AddSignInWithAppleWithCompatibility(project.GetUnityFrameworkTargetGuid());
             manager.WriteToFile();
-#else
-            var manager = new ProjectCapabilityManager(projectPath, "Entitlements.entitlements", PBXProject.GetUnityTargetName());
-            manager.AddSignInWithAppleWithCompatibility();
-            manager.WriteToFile();
-#endif
         }
     }
 }

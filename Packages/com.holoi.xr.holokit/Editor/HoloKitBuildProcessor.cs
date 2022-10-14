@@ -67,7 +67,7 @@ namespace HoloKit.Editor
             private static void AddXcodeCapabilities(string buildPath)
             {
                 string projectPath = PBXProject.GetPBXProjectPath(buildPath);
-                PBXProject project = new PBXProject();
+                PBXProject project = new();
                 project.ReadFromFile(projectPath);
                 string target = project.GetUnityMainTargetGuid();
 
@@ -75,7 +75,7 @@ namespace HoloKit.Editor
                 string name = packageName.Substring(packageName.LastIndexOf('.') + 1);
                 string entitlementFileName = name + ".entitlements";
                 string entitlementPath = Path.Combine(buildPath, entitlementFileName);
-                ProjectCapabilityManager projectCapabilityManager = new ProjectCapabilityManager(projectPath, entitlementFileName, null, target);
+                ProjectCapabilityManager projectCapabilityManager = new(projectPath, entitlementFileName, null, target);
                 PlistDocument entitlementDocument = AddNFCEntitlement(projectCapabilityManager);
                 entitlementDocument.WriteToFile(entitlementPath);
 
@@ -85,6 +85,8 @@ namespace HoloKit.Editor
                 var constructor = typeof(PBXCapabilityType).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(string), typeof(bool), typeof(string), typeof(bool) }, null);
                 PBXCapabilityType nfcCapability = (PBXCapabilityType)constructor.Invoke(new object[] { "com.apple.NearFieldCommunicationTagReading", true, "", false });
                 project.AddCapability(target, nfcCapability, entitlementFileName);
+
+                //projectCapabilityManager.AddSignInWithApple();
 
                 projectCapabilityManager.WriteToFile();
             }

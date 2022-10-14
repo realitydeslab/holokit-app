@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
-    public class HoloKitAppUIPanel_RealityMenuPage : HoloKitAppUIPanel
+    public class HoloKitAppUIPanel_RealityListPage : HoloKitAppUIPanel
     {
-        public override string UIPanelName => "RealityMenuPage";
+        public override string UIPanelName => "RealityListPage";
 
         public override bool OverlayPreviousPanel => true;
     }

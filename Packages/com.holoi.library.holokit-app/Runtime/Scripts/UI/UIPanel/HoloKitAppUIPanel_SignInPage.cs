@@ -58,6 +58,27 @@ namespace Holoi.Library.HoloKitApp.UI
             // Creates an Apple Authentication manager with the deserializer
             _appleAuthManager = new AppleAuthManager(deserializer);
 
+            Initialize();
+        }
+
+        private void Update()
+        {
+            // Updates the AppleAuthManager instance to execute
+            // pending callbacks inside Unity's execution loop
+            if (_appleAuthManager != null)
+            {
+                _appleAuthManager.Update();
+            }
+        }
+
+        private void Initialize()
+        {
+            // Check if the current platform supports Sign In With Apple
+            if (_appleAuthManager == null)
+            {
+                return;
+            }
+
             // If at any point we receive a credentials revoked notification, we delete the stored User ID, and go back to login
             _appleAuthManager.SetCredentialsRevokedCallback(result =>
             {
@@ -122,8 +143,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 credential =>
                 {
                     // If it's an Apple credential, save the user ID, for later logins
-                    var appleIdCredential = credential as IAppleIDCredential;
-                    if (appleIdCredential != null)
+                    if (credential is IAppleIDCredential appleIdCredential)
                     {
                         PlayerPrefs.SetString(AppleUserIdKey, credential.User);
                     }
@@ -234,7 +254,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             // Load next page
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-            HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityMenuPage");
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityListPage");
         }
     }
 }
