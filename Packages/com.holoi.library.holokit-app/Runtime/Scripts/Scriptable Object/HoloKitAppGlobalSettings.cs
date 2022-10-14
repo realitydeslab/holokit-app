@@ -29,6 +29,17 @@ namespace Holoi.Library.HoloKitApp
 
         public MetaObjectCollectionList ObjectCollectionList;
 
+        public bool InstructionEnabled;
+
+        public bool VibrationEnabled;
+
+        // 4K HDR
+        public bool HighResHDREnabled;
+
+        public bool UseWifiForMultiplayerEnabled;
+
+        public bool ShowTechInfoEnabled;
+
         public Dictionary<string, RealityPreference> RealityPreferences;
 
         // Call this function when application quits.
@@ -44,49 +55,65 @@ namespace Holoi.Library.HoloKitApp
             HoloKitAppGlobalSettingsData data = HoloKitAppSaveSystem.LoadGlobalSettings();
             if (data != null)
             {
+                InstructionEnabled = data.InstructionEnabled;
+                VibrationEnabled = data.VibrationEnabled;
+                HighResHDREnabled = data.HighResHDREnabled;
+                UseWifiForMultiplayerEnabled = data.UseWifiForMultiplayerEnabled;
+                ShowTechInfoEnabled = data.ShowTechInfoEnabled;
                 RealityPreferences = data.RealityPreferences;
             }
             else
             {
-                RealityPreferences = new();
-                // Set default preferences
-                foreach (var reality in RealityList.realities)
+                SetDefault();
+            }
+        }
+
+        public void SetDefault()
+        {
+            InstructionEnabled = true;
+            VibrationEnabled = true;
+            HighResHDREnabled = true;
+            UseWifiForMultiplayerEnabled = false;
+            ShowTechInfoEnabled = true;
+
+            // Reality preferences
+            RealityPreferences = new();
+            foreach (var reality in RealityList.realities)
+            {
+                // Set the default avatar
+                string metaAvatarCollectionId = null;
+                string metaAvatarTokenId = null;
+                foreach (var avatarCollection in AvatarCollectionList.list)
                 {
-                    // Set the default avatar
-                    string metaAvatarCollectionId = null;
-                    string metaAvatarTokenId = null;
-                    foreach (var avatarCollection in AvatarCollectionList.list)
+                    if (reality.IsCompatibleWithMetaAvatarCollection(avatarCollection))
                     {
-                        if (reality.IsCompatibleWithMetaAvatarCollection(avatarCollection))
-                        {
-                            metaAvatarCollectionId = avatarCollection.id;
-                            metaAvatarTokenId = avatarCollection.coverMetaAvatar.tokenId;
-                            break;
-                        }
+                        metaAvatarCollectionId = avatarCollection.id;
+                        metaAvatarTokenId = avatarCollection.coverMetaAvatar.tokenId;
+                        break;
                     }
-
-                    // Set the default object
-                    string metaObjectCollectionId = null;
-                    string metaObjectTokenId = null;
-                    foreach (var objectCollection in ObjectCollectionList.list)
-                    {
-                        if (reality.IsCompatibleWithMetaObjectCollection(objectCollection))
-                        {
-                            metaObjectCollectionId = objectCollection.id;
-                            metaObjectTokenId = objectCollection.coverMetaObject.tokenId;
-                            break;
-                        }
-                    }
-
-                    RealityPreference realityPreference = new()
-                    {
-                        MetaAvatarCollectionId = metaAvatarCollectionId,
-                        MetaAvatarTokenId = metaAvatarTokenId,
-                        MetaObjectCollectionId = metaObjectCollectionId,
-                        MetaObjectTokenId = metaObjectTokenId
-                    };
-                    RealityPreferences[reality.realityId] = realityPreference;
                 }
+
+                // Set the default object
+                string metaObjectCollectionId = null;
+                string metaObjectTokenId = null;
+                foreach (var objectCollection in ObjectCollectionList.list)
+                {
+                    if (reality.IsCompatibleWithMetaObjectCollection(objectCollection))
+                    {
+                        metaObjectCollectionId = objectCollection.id;
+                        metaObjectTokenId = objectCollection.coverMetaObject.tokenId;
+                        break;
+                    }
+                }
+
+                RealityPreference realityPreference = new()
+                {
+                    MetaAvatarCollectionId = metaAvatarCollectionId,
+                    MetaAvatarTokenId = metaAvatarTokenId,
+                    MetaObjectCollectionId = metaObjectCollectionId,
+                    MetaObjectTokenId = metaObjectTokenId
+                };
+                RealityPreferences[reality.realityId] = realityPreference;
             }
         }
 

@@ -19,5 +19,60 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
         }
+
+        public void OnIntroButtonPressed()
+        {
+
+        }
+
+        public void OnBuyHoloKitButtonPressed()
+        {
+
+        }
+
+        public void OnGettingStartedButtonPressed()
+        {
+
+        }
+
+        public void OnMyAccountButtonPressed()
+        {
+
+        }
+
+        public void OnSettingsButtonPressed()
+        {
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("SettingsPage");
+        }
+
+        public void OnTwitterButtonPressed()
+        {
+
+        }
+
+        public void OnDiscordButtonPressed()
+        {
+
+        }
+
+        public void OnInstagramButtonPressed()
+        {
+
+        }
+
+        public void OnTiktokButtonPressed()
+        {
+
+        }
+
+        public void OnYoutubeButtonPressed()
+        {
+
+        }
+
+        public void OnMirrorButtonPressed()
+        {
+
+        }
     }
 }
