@@ -36,7 +36,6 @@ namespace Holoi.Library.ARUX
 
         void Update()
         {
-
         }
 
         public void OnHit()
@@ -54,8 +53,12 @@ namespace Holoi.Library.ARUX
         public void PlayDie()
         {
             _animator.SetTrigger("Die");
-            Destroy(this.gameObject, 2f);
+        }
+
+        // animation events
+        public void DisableAfterDieAnimation(AnimationEvent animationEvent)
+        {
+            gameObject.SetActive(false);
         }
     }
-
 }

@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using HoloKit;
+using UnityEngine;
 
 public class HandGestureManager : MonoBehaviour
 {
@@ -32,7 +30,7 @@ public class HandGestureManager : MonoBehaviour
     { get { return _handSeconds; } }
 
     [Header("Features")]
-    [SerializeField] bool _direction;
+    [SerializeField] bool _position;
     [SerializeField] bool _velocity;
     [SerializeField] bool _normal;
     [SerializeField] bool _gesture;
@@ -56,9 +54,9 @@ public class HandGestureManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_direction)
+        if (_position)
         {
-            UpdateDirection();
+            UpdatePosition();
         }
         if (_normal)
         {
@@ -85,11 +83,12 @@ public class HandGestureManager : MonoBehaviour
         }
     }
 
-    void UpdateDirection()
+    void UpdatePosition()
     {
         // we regard the linear diraction from wirst to index2 as hand-direction
         var direction = (_handThirds[1].position - _wrist.position).normalized;
-        transform.LookAt(transform.position + direction);
+        //transform.LookAt(transform.position + direction);
+        transform.position = _handTips[1].position + direction * 0.7f;
         Debug.Log(direction);
 
     }

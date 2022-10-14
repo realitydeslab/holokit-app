@@ -5,6 +5,7 @@ using UnityEngine.VFX;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.ARUX;
 using HoloKit;
+using Unity.Netcode;
 
 namespace Holoi.Reality.QuantumBuddhas
 {
@@ -18,6 +19,7 @@ namespace Holoi.Reality.QuantumBuddhas
 
         [Header("Placement Settings")]
         [SerializeField] ARRayCastController _arRaycastController;
+        [SerializeField] RaycastPlacmentVisualController _RaycastVisual;
 
         [SerializeField] Vector3 _offset = Vector3.zero;
 
@@ -40,6 +42,18 @@ namespace Holoi.Reality.QuantumBuddhas
 
         public void SwitchToNextVFX()
         {
+            if (!HoloKitApp.Instance.IsHost)
+            {
+                return;
+            }
+
+            var realityManager = HoloKitApp.Instance.RealityManager as QuantumBuddhasRealityManager;
+
+            realityManager.OnActiveBuddhasSwitchClientRpc(_index);
+        }
+
+        public void SwitchToNextVFXClientRpc()
+        {
             _animator = _vfxs[_index].GetComponent<Animator>();
             if (_animator !=null)
             {
@@ -61,7 +75,7 @@ namespace Holoi.Reality.QuantumBuddhas
                 else
                 {
                     Debug.Log($"disable with index: {i}");
-                    StartCoroutine(SetVFXDisableAfterTimes(_vfxs[i].gameObject, 1.5f));
+                    StartCoroutine(DisableAfterTimes(_vfxs[i].gameObject, 1.5f));
                 }
             }
             _animator = _vfxs[_index].GetComponent<Animator>();
@@ -69,10 +83,17 @@ namespace Holoi.Reality.QuantumBuddhas
             _animator.Update(0f);
             // vfx:
             _handLoadedVFXParent.gameObject.SetActive(true);
-            StartCoroutine(SetVFXDisableAfterTimes(_handLoadedVFXParent.gameObject, 2.5f));
+            StartCoroutine(DisableAfterTimes(_handLoadedVFXParent.gameObject, 2.5f));
         }
 
         public void InitTargetGameObject()
+        {
+            var realityManager = HoloKitApp.Instance.RealityManager as QuantumBuddhasRealityManager;
+
+            realityManager.OnBuddhasEnabledClientRpc(); // all client run this function
+        }
+
+        public void InitTargetGameObjectClient()
         {
             _targetGameObject.SetActive(true);
 
@@ -81,7 +102,24 @@ namespace Holoi.Reality.QuantumBuddhas
 
         public void DisableARRaycast()
         {
+            if (!HoloKitApp.Instance.IsHost)
+            {
+                return;
+            }
+
+            var realityManager = HoloKitApp.Instance.RealityManager as QuantumBuddhasRealityManager;
+
+            realityManager.OnDisableARRaycastClientRpc();
+        }
+
+        public void DisableARRaycastClientRpc()
+        {
+            // diable function:
             _arRaycastController.enabled = false;
+            // play die animation
+            _RaycastVisual.PlayDie();
+            // disable go
+            StartCoroutine(DisableAfterTimes(_arRaycastController.gameObject,2f));
         }
 
         public void SetPlacementLoadButton(bool state)
@@ -90,7 +128,7 @@ namespace Holoi.Reality.QuantumBuddhas
             _placementLoadButton.gameObject.SetActive(state);
         }
 
-        IEnumerator SetVFXDisableAfterTimes(GameObject go,float time)
+        IEnumerator DisableAfterTimes(GameObject go,float time)
         {
             yield return new WaitForSeconds(time);
             Debug.Log($"Set {go.name} to disable.");
