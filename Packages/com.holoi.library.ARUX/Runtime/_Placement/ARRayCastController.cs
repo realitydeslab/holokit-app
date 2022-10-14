@@ -62,11 +62,11 @@ namespace Holoi.Library.ARUX
             var aimPointDistance = 0f;
             if (tilt > 0)
             {
-                aimPointDistance = MathHelpers.Remap(tilt, 1, 0, .05f, 5, true);
+                aimPointDistance = MathHelpers.Remap(tilt, 1, 0, .05f, 3, true);
             }
             else
             {
-                aimPointDistance = MathHelpers.Remap(tilt, 0, -1, 5, .05f, true);
+                aimPointDistance = MathHelpers.Remap(tilt, 0, -1, 3, .05f, true);
             }
 
             Vector3 rayOrigin = _centerEye.position + horizontalForward.normalized * aimPointDistance;

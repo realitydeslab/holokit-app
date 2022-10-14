@@ -22,7 +22,7 @@ public class HandGestureManager : MonoBehaviour
     public Vector3[] TipVelocityDirection
     { get { return _tipVelocityDirection; } }
     public Vector3[] TipNormals
-    { get { return _tipNoramls; }}
+    { get { return _tipNoramls; } }
     [HideInInspector]
     public Transform[] HandTips
     { get { return _handTips; } }
@@ -31,6 +31,11 @@ public class HandGestureManager : MonoBehaviour
 
     [Header("Features")]
     [SerializeField] bool _position;
+    [SerializeField] float _offset = 0.5f;
+    public float Offset{
+        get { return _offset; }
+        set { _offset = value; }
+    }
     [SerializeField] bool _velocity;
     [SerializeField] bool _normal;
     [SerializeField] bool _gesture;
@@ -85,11 +90,8 @@ public class HandGestureManager : MonoBehaviour
 
     void UpdatePosition()
     {
-        // we regard the linear diraction from wirst to index2 as hand-direction
-        var direction = (_handThirds[1].position - _wrist.position).normalized;
-        //transform.LookAt(transform.position + direction);
-        transform.position = _handTips[1].position + direction * 0.7f;
-        Debug.Log(direction);
+        var direction = (_handForth[1].position - _wrist.position).normalized;
+        transform.position = _handForth[1].position + direction * _offset;
 
     }
 

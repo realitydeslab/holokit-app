@@ -6,6 +6,7 @@ using Holoi.Library.HoloKitApp;
 using Holoi.Library.ARUX;
 using HoloKit;
 using Unity.Netcode;
+using UnityEngine.XR.ARFoundation;
 
 namespace Holoi.Reality.QuantumBuddhas
 {
@@ -16,6 +17,10 @@ namespace Holoi.Reality.QuantumBuddhas
 
         [Header("AR UI Components")]
         [SerializeField] LoadButtonController _placementLoadButton;
+
+        [Header("AR Features")]
+        [SerializeField] ARRaycastManager _arRaycastManager;
+        [SerializeField] ARPlaneManager _arPlaneManager;
 
         [Header("Placement Settings")]
         [SerializeField] ARRayCastController _arRaycastController;
@@ -33,6 +38,17 @@ namespace Holoi.Reality.QuantumBuddhas
         void Start()
         {
             _amount = _vfxs.Count;
+
+            if (HoloKitApp.Instance.IsHost)
+            {
+                _arRaycastManager.enabled = true;
+                _arPlaneManager.enabled = true;
+            }
+            else
+            {
+                _arRaycastManager.enabled = false;
+                _arPlaneManager.enabled = false;
+            }
         }
 
         void Update()
@@ -100,7 +116,7 @@ namespace Holoi.Reality.QuantumBuddhas
             _targetGameObject.transform.position = _arRaycastController.transform.position + _offset;
         }
 
-        public void DisableARRaycast()
+        public void DisableARRaycastVisual()
         {
             if (!HoloKitApp.Instance.IsHost)
             {
@@ -112,7 +128,7 @@ namespace Holoi.Reality.QuantumBuddhas
             realityManager.OnDisableARRaycastClientRpc();
         }
 
-        public void DisableARRaycastClientRpc()
+        public void DisableARRaycastVisualClientRpc()
         {
             // diable function:
             _arRaycastController.enabled = false;
@@ -133,6 +149,17 @@ namespace Holoi.Reality.QuantumBuddhas
             yield return new WaitForSeconds(time);
             Debug.Log($"Set {go.name} to disable.");
             go.SetActive(false);
+        }
+
+        public void DiableARRaycastManager()
+        {
+            _arRaycastManager.enabled = false;
+            _arPlaneManager.enabled = false;
+            var planeList = FindObjectsOfType<ARPlane>();
+            foreach (var plane in planeList)
+            {
+                Destroy(plane.gameObject);
+            }
         }
     }
 }

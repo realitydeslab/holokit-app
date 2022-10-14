@@ -27,7 +27,11 @@ namespace Holoi.Library.ARUX
 
         private void Update()
         {
+#if UNITY_EDITOR
+
+#else
             IsValid = HoloKitHandTracker.Instance.Valid;
+#endif
         }
     }
 }

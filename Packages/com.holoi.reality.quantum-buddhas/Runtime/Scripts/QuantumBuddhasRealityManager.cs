@@ -45,7 +45,7 @@ namespace Holoi.Reality.QuantumBuddhas
         public void OnDisableARRaycastClientRpc()
         {
             Debug.Log($"OnDisableARRaycastClientRpc");
-            GetComponent<QuantumBuddhasSceneManager>().DisableARRaycastClientRpc();
+            GetComponent<QuantumBuddhasSceneManager>().DisableARRaycastVisualClientRpc();
 
         }
 
