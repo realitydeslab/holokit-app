@@ -5,7 +5,7 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using HoloKit;
 
-namespace Holoi.Library.HoloKitApp
+namespace Holoi.Library.ARUX
 {
     public class ARRayCastController : MonoBehaviour
     {

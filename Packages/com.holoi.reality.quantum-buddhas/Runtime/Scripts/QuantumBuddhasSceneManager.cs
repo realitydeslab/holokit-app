@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 using Holoi.Library.HoloKitApp;
+using Holoi.Library.ARUX;
 using HoloKit;
 
 namespace Holoi.Reality.QuantumBuddhas
@@ -34,7 +35,7 @@ namespace Holoi.Reality.QuantumBuddhas
 
         void Update()
         {
-        
+
         }
 
         public void SwitchToNextVFX()
@@ -76,14 +77,6 @@ namespace Holoi.Reality.QuantumBuddhas
             _targetGameObject.SetActive(true);
 
             _targetGameObject.transform.position = _arRaycastController.transform.position + _offset;
-
-            //var playerPos = HoloKitCamera.Instance.CenterEyePose.position;
-
-            //var targetPos = new Vector3(playerPos.x, _targetGameObject.transform.position.y, playerPos.z);
-
-            //_targetGameObject.transform.LookAt(targetPos);
-
-            //_targetGameObject.transform.parent = transform;
         }
 
         public void DisableARRaycast()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 using Holoi.Library.HoloKitApp;
+using Holoi.Library.ARUX;
 using HoloKit;
 using Unity.AI.Navigation;
 using UnityEngine.XR.ARFoundation;

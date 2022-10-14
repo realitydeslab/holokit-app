@@ -31,6 +31,14 @@ public class HandGestureManager : MonoBehaviour
     public Transform[] HandSeconds
     { get { return _handSeconds; } }
 
+    [Header("Features")]
+    [SerializeField] bool _direction;
+    [SerializeField] bool _velocity;
+    [SerializeField] bool _normal;
+    [SerializeField] bool _gesture;
+
+    [SerializeField] bool _smoothFilter;
+
     [HideInInspector] public enum Gesture
     {
         DK,
@@ -45,12 +53,45 @@ public class HandGestureManager : MonoBehaviour
     {
         
     }
+
     private void FixedUpdate()
     {
-        CalculateSmoothTipNormals();
-        //CalculateTipNormals();
-        // GestureDetection();
-        CalculateTipVelocity();
+        if (_direction)
+        {
+            UpdateDirection();
+        }
+        if (_normal)
+        {
+            if (_smoothFilter)
+            {
+                CalculateSmoothTipNormals();
+
+            }
+            else
+            {
+                CalculateTipNormals();
+            }
+
+        }
+
+        if (_velocity)
+        {
+            CalculateTipVelocity();
+        }
+
+        if (_gesture)
+        {
+            GestureDetection();
+        }
+    }
+
+    void UpdateDirection()
+    {
+        // we regard the linear diraction from wirst to index2 as hand-direction
+        var direction = (_handThirds[1].position - _wrist.position).normalized;
+        transform.LookAt(transform.position + direction);
+        Debug.Log(direction);
+
     }
 
     void GestureDetection()
@@ -99,9 +140,6 @@ public class HandGestureManager : MonoBehaviour
 
     void CalculateTipVelocity()
     {
-        // if(is first frame)
-        // else
-
         for (int i = 0; i < 5; i++)
         {
             _currentPosition[i] = _handTips[i].position;

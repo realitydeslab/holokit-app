@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Holoi.Library.HoloKitApp
+namespace Holoi.Library.ARUX
 {
     public class HoverableObject : MonoBehaviour
     {

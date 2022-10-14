@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace Holoi.Library.HoloKitApp
+namespace Holoi.Library.ARUX
 {
-    public class RaycastPlacmentVfxController : MonoBehaviour
+    public class RaycastPlacmentVisualController : MonoBehaviour
     {
         [SerializeField] Texture2D _trueTexture;
         [SerializeField] Texture2D _falseTexture;
@@ -41,10 +41,13 @@ namespace Holoi.Library.HoloKitApp
 
         public void OnHit()
         {
+            _vfx.SetBool("State", true);
             _vfx.SetTexture("MainTex", _trueTexture);
         }
         public void OnNotHit()
         {
+            _vfx.SetBool("State", false);
+
             _vfx.SetTexture("MainTex", _falseTexture);
         }
 

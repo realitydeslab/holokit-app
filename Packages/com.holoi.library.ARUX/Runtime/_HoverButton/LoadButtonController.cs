@@ -1,14 +1,12 @@
 using UnityEngine;
 using System.Collections;
 using System;
-using UnityEngine.Events;
 
-namespace Holoi.Library.HoloKitApp
+namespace Holoi.Library.ARUX
 {
     [RequireComponent(typeof(HoverableObject), typeof(Animator))]
     public class LoadButtonController : MonoBehaviour
     {
-        public UnityEvent OnLoadedEvents;
         public event Action OnDisableEvent;
 
         //animator
@@ -18,7 +16,7 @@ namespace Holoi.Library.HoloKitApp
 
         // loading
         float _process;
-        bool _triggered;
+        bool _isTriggered = false;
 
         private void Awake()
         {
@@ -26,15 +24,18 @@ namespace Holoi.Library.HoloKitApp
             _mr = GetComponent<MeshRenderer>();
             _mat = _mr.material;
         }
+
         private void OnEnable()
         {
             // reset animations: 
             _animator.Rebind();
             _animator.Update(0f);
+
             // reset properties: 
-            _triggered = false;
             _process = 0;
+            _isTriggered = false;
         }
+
         private void OnDisable()
         {
             OnDisableEvent?.Invoke();
@@ -42,39 +43,36 @@ namespace Holoi.Library.HoloKitApp
 
         void Update()
         {
-            if (!_triggered)
-            {
-                _process = GetComponent<HoverableObject>().Process;
-            }
 
-            if (_process == 1 && !_triggered)
+            if(_process == 1 && !_isTriggered)
             {
-                StartCoroutine(PlayDieAndDisable());
-                OnLoadedEvents?.Invoke();
-                _triggered = true;
+                _isTriggered = true;
+                PlayAnimationDie();
             }
             else
             {
-                _mat.SetFloat("_Process", _process);
+
             }
+
+            _process = GetComponent<HoverableObject>().Process;
+            _mat.SetFloat("_Process", _process);
         }
 
-        IEnumerator PlayDieAndDisable()
-        {
-            PlayDie();
-            yield return new WaitForSecondsRealtime(1f);
-            Debug.Log("Load Button Die");
-            gameObject.SetActive(false);
-        }
-        public void SetTexture(Texture2D tex)
+        public void SetButtonTexture(Texture2D tex)
         {
             _mat.SetTexture("_Texture", tex);
         }
 
-        void PlayDie()
+        void PlayAnimationDie()
         {
-            Debug.Log("Load Button Play Die");
+            Debug.Log("PlayAnimationDie");
             _animator.SetTrigger("Die");
+        }
+
+        // animation events
+        public void DisableAfterDieAnimation(AnimationEvent animationEvent)
+        {
+            gameObject.SetActive(false);
         }
     }
 }

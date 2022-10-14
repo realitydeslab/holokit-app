@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Holoi.Library.HoloKitApp
+namespace Holoi.Library.ARUX
 {
     public static class MathHelpers
     {

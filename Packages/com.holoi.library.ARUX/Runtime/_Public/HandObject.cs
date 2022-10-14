@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HoloKit;
 
-namespace Holoi.Library.HoloKitApp
+namespace Holoi.Library.ARUX
 {
     public class HandObject : MonoBehaviour
     {
