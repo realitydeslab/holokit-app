@@ -20,9 +20,7 @@ namespace Holoi.Library.ARUX
 
         [Header("Base")]
 
-        public Vector3 HitPosition;
-
-        [Header("Base")]
+        //public Vector3 HitPosition;
 
         private Transform _centerEye;
 
@@ -80,9 +78,10 @@ namespace Holoi.Library.ARUX
                 foreach (var hitResult in hitResults)
                 {
                     var arPlane = hitResult.trackable.GetComponent<ARPlane>();
+
                     if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
                     {
-                        HitPosition = hitResult.pose.position;
+                        transform.position = hitResult.pose.position;
                         isHit = true;
                         HitEvent?.Invoke();
                         return;
@@ -90,18 +89,15 @@ namespace Holoi.Library.ARUX
                 }
                 isHit = false;
                 NotHitEvent?.Invoke();
-                HitPosition = _centerEye.position + horizontalForward.normalized * 1.5f + (transform.up * -1f);
+                transform.position = _centerEye.position + horizontalForward.normalized * 1.5f + (transform.up * -1f);
 
             }
             else
             {
                 isHit = false;
                 NotHitEvent?.Invoke();
-                HitPosition = _centerEye.position + horizontalForward.normalized * 1.5f + (transform.up * -1f);
+                transform.position = _centerEye.position + horizontalForward.normalized * 1.5f + (transform.up * -1f);
             }
-
-            transform.position = HitPosition;
-
 #else
 
             if (HitDebug)

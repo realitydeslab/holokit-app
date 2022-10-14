@@ -43,23 +43,26 @@ namespace Holoi.Library.ARUX
 
         void Update()
         {
-            if (Vector3.Distance(_ho.transform.position, transform.position + _offset) < _triggerDistance)
+            if (_ho.IsValid)
             {
-                _process += Time.deltaTime * _loadSpeed;
-                if (_process > 1)
+                if (Vector3.Distance(_ho.transform.position, transform.position + _offset) < _triggerDistance)
                 {
-                    _process = 1;
-                    if (!_isTriggered)
+                    _process += Time.deltaTime * _loadSpeed;
+                    if (_process > 1)
                     {
-                        _isTriggered = true;
-                        OnLoadedEvents?.Invoke();
+                        _process = 1;
+                        if (!_isTriggered)
+                        {
+                            _isTriggered = true;
+                            OnLoadedEvents?.Invoke();
+                        }
                     }
                 }
-            }
-            else
-            {
-                _process -= Time.deltaTime * _loadSpeed * 0.5f;
-                if (_process < 0) _process = 0;
+                else
+                {
+                    _process -= Time.deltaTime * _loadSpeed * 0.5f;
+                    if (_process < 0) _process = 0;
+                }
             }
         }
     }

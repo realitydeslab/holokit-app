@@ -11,7 +11,7 @@ namespace Holoi.Library.ARUX
 
         public static HandObject Instance { get { return _instance; } }
 
-        bool _isHandValid = false;
+        public bool IsValid = false;
 
         private void Awake()
         {
@@ -27,7 +27,7 @@ namespace Holoi.Library.ARUX
 
         private void Update()
         {
-            _isHandValid = HoloKitHandTracker.Instance.Valid;
+            IsValid = HoloKitHandTracker.Instance.Valid;
         }
     }
 }
