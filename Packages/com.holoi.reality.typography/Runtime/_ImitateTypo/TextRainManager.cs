@@ -10,11 +10,20 @@ namespace Holoi.Reality.TypoGraphy
 {
     public class TextRainManager : MonoBehaviour
     {
-        public GameObject _rainPrefab;
-        public Transform Root;
+        
+        Transform _head;
+        Transform _rightHand;
+        Transform _leftHand;
+
         BoneController _bone;
+
         VisualEffect _vfxCloud;
+
+        [Header("vfx rain")]
         VisualEffect _vfxRain;
+
+        [Header("quad rain")]
+        public GameObject _rainPrefab;
 
         bool _isValid = false;
 
@@ -39,7 +48,10 @@ namespace Holoi.Reality.TypoGraphy
 
                 GetComponent<FollowMovementManager>().FollowTarget = _bone.skeletonRoot;
                 GetComponent<FollowMovementManager>().enabled = true;
-                _vfxRain.SetVector3("Root Position_position", _bone.skeletonRoot.position);
+                _vfxRain.SetVector3("Head Position_position", _bone.SkeletonNeck1.position);
+                _vfxRain.SetVector3("RH Position_position", _bone.SkeletonRightHand.position);
+                _vfxRain.SetVector3("LH Position_position", _bone.SkeletonLeftHand.position);
+                _vfxRain.SetVector3("Plane Position_position", FindObjectOfType<TypoSpaceRealityManager>().HitPosition);
             }
         }
     }

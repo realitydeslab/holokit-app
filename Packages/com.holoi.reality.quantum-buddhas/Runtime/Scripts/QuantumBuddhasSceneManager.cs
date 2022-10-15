@@ -113,7 +113,10 @@ namespace Holoi.Reality.QuantumBuddhas
         {
             _targetGameObject.SetActive(true);
 
-            _targetGameObject.transform.position = _arRaycastController.transform.position + _offset;
+            _targetGameObject.transform.position = _arRaycastController.transform.position + _centerEye.forward * _offset.z;
+            var target = new Vector3(_centerEye.position.x, _targetGameObject.transform.position.y, _centerEye.position.z);
+            _targetGameObject.transform.LookAt(target);
+                
         }
 
         public void DisableARRaycastVisual()

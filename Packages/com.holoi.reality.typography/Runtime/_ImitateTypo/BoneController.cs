@@ -112,6 +112,10 @@ namespace Holoi.Reality.TypoGraphy
         [SerializeField]
         [Tooltip("The root bone of the skeleton.")]
         Transform m_SkeletonRoot;
+        public Transform SkeletonRightHand;
+        public Transform SkeletonLeftHand;
+        public Transform SkeletonHead;
+        public Transform SkeletonNeck1;
 
         /// <summary>
         /// Get/Set the root bone of the skeleton.
