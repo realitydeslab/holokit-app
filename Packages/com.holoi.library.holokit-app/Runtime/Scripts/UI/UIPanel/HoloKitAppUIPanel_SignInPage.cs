@@ -146,7 +146,10 @@ namespace Holoi.Library.HoloKitApp.UI
                     if (credential is IAppleIDCredential appleIdCredential)
                     {
                         PlayerPrefs.SetString(AppleUserIdKey, credential.User);
+                        PlayerPrefs.SetString(AppleUserNameKey, appleIdCredential.FullName.ToString());
+                        PlayerPrefs.SetString(AppleUserEmailKey, appleIdCredential.Email.ToString());
                     }
+                    Debug.Log($"[SignInWithApple] Quick logged in with user full name: {PlayerPrefs.GetString(AppleUserNameKey)} and email: {PlayerPrefs.GetString(AppleUserEmailKey)}");
 
                     OnSignedIn();
                 },
@@ -168,14 +171,13 @@ namespace Holoi.Library.HoloKitApp.UI
                 credential =>
                 {
                     // If a sign in with apple succeeds, we should have obtained the credential with the user id, name, and email, save it
-                    var appleIdCredential = credential as IAppleIDCredential;
-                    if (appleIdCredential != null)
+                    if (credential is IAppleIDCredential appleIdCredential)
                     {
                         PlayerPrefs.SetString(AppleUserIdKey, credential.User);
                         PlayerPrefs.SetString(AppleUserNameKey, appleIdCredential.FullName.ToString());
                         PlayerPrefs.SetString(AppleUserEmailKey, appleIdCredential.Email.ToString());
                     }
-                    Debug.Log($"[SignInWithApple] Got user full name: {PlayerPrefs.GetString(AppleUserNameKey)} and email: {PlayerPrefs.GetString(AppleUserEmailKey)}");
+                    Debug.Log($"[SignInWithApple] Signed in with user full name: {PlayerPrefs.GetString(AppleUserNameKey)} and email: {PlayerPrefs.GetString(AppleUserEmailKey)}");
 
                     // TODO: Send user data to Unity backend
 
