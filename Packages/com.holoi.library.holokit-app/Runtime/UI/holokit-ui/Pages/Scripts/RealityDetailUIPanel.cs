@@ -72,7 +72,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _technicContainer.reality = _reality;
             _technicContainer.SetUIInfo();
 
-            _id.text.text = "Reality #" + _reality.realityId;
+            _id.text.text = "Reality #" + _reality.id;
             _name.text.text = _reality.name;
             _version.text.text = _reality.version;
             _author.text.text = _reality.author;

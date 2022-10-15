@@ -113,14 +113,14 @@ namespace Holoi.Library.HoloKitApp
                     MetaObjectCollectionId = metaObjectCollectionId,
                     MetaObjectTokenId = metaObjectTokenId
                 };
-                RealityPreferences[reality.realityId] = realityPreference;
+                RealityPreferences[reality.id] = realityPreference;
             }
         }
 
         public MetaAvatar GetRealityPreferencedAvatar(Reality reality)
         {
-            string avatarCollectionId = RealityPreferences[reality.realityId].MetaAvatarCollectionId;
-            string avatarTokenId = RealityPreferences[reality.realityId].MetaAvatarTokenId;
+            string avatarCollectionId = RealityPreferences[reality.id].MetaAvatarCollectionId;
+            string avatarTokenId = RealityPreferences[reality.id].MetaAvatarTokenId;
             foreach (var avatarCollection in AvatarCollectionList.list)
             {
                 if (avatarCollection.id.Equals(avatarCollectionId))
@@ -139,8 +139,8 @@ namespace Holoi.Library.HoloKitApp
 
         public MetaObject GetRealityPreferencedObject(Reality reality)
         {
-            string objectCollectionId = RealityPreferences[reality.realityId].MetaObjectCollectionId;
-            string objectTokenId = RealityPreferences[reality.realityId].MetaObjectTokenId;
+            string objectCollectionId = RealityPreferences[reality.id].MetaObjectCollectionId;
+            string objectTokenId = RealityPreferences[reality.id].MetaObjectTokenId;
             foreach (var objectCollection in ObjectCollectionList.list)
             {
                 if (objectCollection.id.Equals(objectCollectionId))
@@ -183,12 +183,50 @@ namespace Holoi.Library.HoloKitApp
             return list;
         }
 
+        public MetaAvatarCollection GetMetaAvatarCollection(string id)
+        {
+            foreach (var metaAvatarCollection in AvatarCollectionList.list)
+            {
+                if (metaAvatarCollection.id.Equals(id))
+                {
+                    return metaAvatarCollection;
+                }
+            }
+            return null;
+        }
+
+        public MetaObjectCollection GetMetaObjectCollection(string id)
+        {
+            foreach (var metaObjectCollection in ObjectCollectionList.list)
+            {
+                if (metaObjectCollection.id.Equals(id))
+                {
+                    return metaObjectCollection;
+                }
+            }
+            return null;
+        }
+
         public List<Reality> GetAllRealities()
         {
             List<Reality> wholeList = new(RealityList.realities);
             wholeList.AddRange(TestRealityList.realities);
             wholeList = wholeList.Distinct().ToList();
             return wholeList;
+        }
+
+        public int GetRealityIndex(Reality reality)
+        {
+            int realityIndex = 0;
+            foreach (var realityInstance in RealityList.realities)
+            {
+                if (reality.Equals(realityInstance))
+                {
+                    return realityIndex;
+                }
+                realityIndex++;
+            }
+            return 0;
         }
     }
 }

@@ -156,8 +156,9 @@ namespace Holoi.Library.HoloKitApp.UI
                     }
                     else if (fingerMovementVector.magnitude < FingerMovementClickThreshold)
                     {
-                        // TODO: Enter the current room
-                        Debug.Log($"Enter reality: {_currentRoomIndex}");
+                        // Enter the current room
+                        HoloKitApp.Instance.CurrentReality = HoloKitApp.Instance.GlobalSettings.RealityList.realities[_currentRoomIndex];
+                        HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityDetailPage");
                     }
                 }
             }

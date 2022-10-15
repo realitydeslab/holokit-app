@@ -127,7 +127,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 realityThumbnailContainer._thumbnailList.Add(realityThumbnailGO);
 
                 // create titles
-                _prefabTitle.transform.Find("Index").GetChild(0).GetComponent<TMPro.TMP_Text>().text = "Reality " + "#00" + realityCollection.realities[i].realityId;
+                _prefabTitle.transform.Find("Index").GetChild(0).GetComponent<TMPro.TMP_Text>().text = "Reality " + "#00" + realityCollection.realities[i].id;
                 _prefabTitle.transform.Find("Title").GetChild(0).GetComponent<TMPro.TMP_Text>().text = realityCollection.realities[i].displayName;
                 var titleGO = Instantiate(_prefabTitle, _titleScrollContent);
                 tempTitleList.Add(titleGO);

@@ -10,11 +10,12 @@ namespace Holoi.AssetFoundation
     [CreateAssetMenu(menuName = "ScriptableObjects/Reality")]
     public class Reality: ScriptableObject
     {
+        // A unique string to distinguish this reality from other realities
+        public string id;
+
         public string displayName;
 
         public string description;
-
-        public string realityId;
 
         public string author;
 
@@ -32,7 +33,7 @@ namespace Holoi.AssetFoundation
 
         public SceneField scene;
 
-        public string waterMarkField = "";
+        public string watermarkField = "";
 
         public bool IsCompatibleWithMetaAvatarCollection(MetaAvatarCollection avatarCollection)
         {
