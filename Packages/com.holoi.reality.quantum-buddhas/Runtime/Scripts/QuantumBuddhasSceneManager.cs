@@ -114,20 +114,24 @@ namespace Holoi.Reality.QuantumBuddhas
         public void InitTargetGameObjectClient()
         {
             // create main object
-            _targetGameObject.SetActive(true);
+            //_targetGameObject.SetActive(true);
 
-            GameObject go = Instantiate(_targetGameObject);
+            if (HoloKitApp.Instance.IsHost)
+            {
+                GameObject go = Instantiate(_targetGameObject);
 
-            go.transform.position = new Vector3(_centerEye.position.x, _arRaycastController.transform.position.y , _centerEye.position.z);
+                go.transform.position = new Vector3(_centerEye.position.x, _arRaycastController.transform.position.y , _centerEye.position.z);
 
-            var target = new Vector3(_centerEye.position.x, go.transform.position.y, _centerEye.position.z);
+                var target = new Vector3(_centerEye.position.x, go.transform.position.y, _centerEye.position.z);
 
-            target = target - _centerEye.forward;
+                target = target - _centerEye.forward;
 
-            go.transform.LookAt(target);
+                go.transform.LookAt(target);
 
-            go.GetComponent<NetworkObject>().Spawn();
-                
+
+                go.GetComponent<NetworkObject>().Spawn();
+
+            }
         }
 
         public void DisableARRaycastVisual()
