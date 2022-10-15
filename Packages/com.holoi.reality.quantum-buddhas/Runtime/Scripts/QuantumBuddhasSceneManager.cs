@@ -49,6 +49,8 @@ namespace Holoi.Reality.QuantumBuddhas
                 _arRaycastManager.enabled = false;
                 _arPlaneManager.enabled = false;
             }
+
+            _centerEye = HoloKitCamera.Instance.CenterEyePose;
         }
 
         void Update()
