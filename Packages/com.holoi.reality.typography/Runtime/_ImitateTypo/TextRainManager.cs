@@ -49,6 +49,7 @@ namespace Holoi.Reality.TypoGraphy
                 GetComponent<FollowMovementManager>().FollowTarget = _bone.skeletonRoot;
                 GetComponent<FollowMovementManager>().enabled = true;
                 _vfxRain.SetVector3("Head Position_position", _bone.SkeletonNeck1.position);
+                _vfxRain.SetVector3("Chest Position_position", _bone.SkeletonChest.position);
                 _vfxRain.SetVector3("RH Position_position", _bone.SkeletonRightHand.position);
                 _vfxRain.SetVector3("LH Position_position", _bone.SkeletonLeftHand.position);
                 _vfxRain.SetVector3("Plane Position_position", FindObjectOfType<TypoSpaceRealityManager>().HitPosition);

@@ -116,6 +116,7 @@ namespace Holoi.Reality.TypoGraphy
         public Transform SkeletonLeftHand;
         public Transform SkeletonHead;
         public Transform SkeletonNeck1;
+        public Transform SkeletonChest;
 
         /// <summary>
         /// Get/Set the root bone of the skeleton.

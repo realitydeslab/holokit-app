@@ -113,11 +113,20 @@ namespace Holoi.Reality.QuantumBuddhas
 
         public void InitTargetGameObjectClient()
         {
+            // create main object
             _targetGameObject.SetActive(true);
 
-            _targetGameObject.transform.position = _arRaycastController.transform.position + _centerEye.forward * _offset.z;
-            var target = new Vector3(_centerEye.position.x, _targetGameObject.transform.position.y, _centerEye.position.z);
-            _targetGameObject.transform.LookAt(target);
+            GameObject go = Instantiate(_targetGameObject);
+
+            go.transform.position = new Vector3(_centerEye.position.x, _arRaycastController.transform.position.y , _centerEye.position.z);
+
+            var target = new Vector3(_centerEye.position.x, go.transform.position.y, _centerEye.position.z);
+
+            target = target - _centerEye.forward;
+
+            go.transform.LookAt(target);
+
+            go.GetComponent<NetworkObject>().Spawn();
                 
         }
 
