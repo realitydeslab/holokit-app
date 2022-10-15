@@ -27,8 +27,10 @@ namespace Holoi.Library.HoloKitApp
 
     public struct ImagePositionPair
     {
-        public Vector3 ServerImagePosition; // QRCode image position in server's coordinate system
-        public Vector3 ClientImagePosition; // QRCode image position in client's coordinate system
+        public Vector3 ServerImagePosition; // QRCode image pose in server's coordinate system
+        public Quaternion ServerImageRotation;
+        public Vector3 ClientImagePosition; // QRCode image pose in client's coordinate system
+        public Quaternion ClientImageRotation;
     }
 
     // Rotate client's coordinate system by theta first, then translate
@@ -180,6 +182,9 @@ namespace Holoi.Library.HoloKitApp
 
         private const double ClientThetaQueueStablizationStandardDeviationThreshold = 0.1; // In degrees
 
+        private const float OptimizationPenaltyConstant = 10; // A constant whose unit from Cos(Angle) to m meter. 
+
+
         // Step 1: Calculate timestamp offset between two devices
         private void StartClientCalibration()
         {
@@ -268,13 +273,13 @@ namespace Holoi.Library.HoloKitApp
         {
             foreach (var image in args.updated)
             {
-                OnRequestServerImagePositionServerRpc(_lastClientFrameTimestamp + _timestampOffsetToServer, image.transform.position);
+                OnRequestServerImagePositionServerRpc(_lastClientFrameTimestamp + _timestampOffsetToServer, image.transform.position, image.transform.rotation);
             }
         }
 
         // Step 3: When scanned host's QRCode, request host's image position at that timestamp
         [ServerRpc(RequireOwnership = false)]
-        private void OnRequestServerImagePositionServerRpc(double requestedServerTimestamp, Vector3 clientImagePosition, ServerRpcParams serverRpcParams = default)
+        private void OnRequestServerImagePositionServerRpc(double requestedServerTimestamp, Vector3 clientImagePosition, Quaternion clientImageRotation, ServerRpcParams serverRpcParams = default)
         {
             if (_serverTimedCameraPoseQueue.Count == 0)
             {
@@ -302,6 +307,8 @@ namespace Holoi.Library.HoloKitApp
             // Calculate image position using camera position and offset
             Vector3 serverImagePosition = nearestTimedCameraPose.PoseMatrix.GetPosition() +
                 nearestTimedCameraPose.PoseMatrix.rotation * CameraToQRCodeOffset;
+            //Matrix4x4 serverImagePose = nearestTimedCameraPose.PoseMatrix * Matrix4x4.Translate(CameraToQRCodeOffset);
+            Quaternion serverImageRotation = nearestTimedCameraPose.PoseMatrix.rotation;
             ClientRpcParams clientRpcParams = new ClientRpcParams
             {
                 Send = new ClientRpcSendParams
@@ -309,11 +316,11 @@ namespace Holoi.Library.HoloKitApp
                     TargetClientIds = new ulong[] { serverRpcParams.Receive.SenderClientId }
                 }
             };
-            OnReponseServerImagePositionClientRpc(serverImagePosition, clientImagePosition, clientRpcParams);
+            OnReponseServerImagePositionClientRpc(serverImagePosition, serverImageRotation, clientImagePosition, clientImageRotation, clientRpcParams);
         }
 
         [ClientRpc]
-        private void OnReponseServerImagePositionClientRpc(Vector3 serverImagePosition, Vector3 clientImagePosition, ClientRpcParams clientRpcParams = default)
+        private void OnReponseServerImagePositionClientRpc(Vector3 serverImagePosition, Quaternion serverImageRotation, Vector3 clientImagePosition, Quaternion clientImageRotation, ClientRpcParams clientRpcParams = default)
         {
             if (_currentClientSyncPhase != ClientSyncPhase.ScanningQRCode) { return; }
 
@@ -321,7 +328,9 @@ namespace Holoi.Library.HoloKitApp
             _clientImagePositionPairQueue.Enqueue(new ImagePositionPair()
             {
                 ServerImagePosition = serverImagePosition,
-                ClientImagePosition = clientImagePosition
+                ServerImageRotation = serverImageRotation,
+                ClientImagePosition = clientImagePosition,
+                ClientImageRotation = clientImageRotation
             });
             if (_clientImagePositionPairQueue.Count > ClientImagePositionPairQueueStablizationCount)
             {
@@ -349,6 +358,8 @@ namespace Holoi.Library.HoloKitApp
 
         private void TestCalibrationAlgorithm()
         {
+            // TestMockData(Vector3.zero, -30f);
+
             Enumerable.Range(1, 10).Select(i =>
             {
                 var clientToServerTranslate = new Vector3 { x = UnityEngine.Random.Range(-5f, 5f), y = UnityEngine.Random.Range(-2f, 2f), z = UnityEngine.Random.Range(-5f, 5f) };
@@ -371,20 +382,24 @@ namespace Holoi.Library.HoloKitApp
                 ThetaInDeg = thetaInDeg
             };
 
-            var pairQueue = Enumerable.Range(1, 50).Select(i =>
+            var pairQueue = Enumerable.Range(1, 60).Select(i =>
             {
+                //Make Client 
                 //var pb = new Vector3(1f, 0f, 0f);
                 var pb = new Vector3 { x = UnityEngine.Random.Range(-0.05f, 0.05f), y = UnityEngine.Random.Range(-0.05f, 0.05f), z = UnityEngine.Random.Range(-0.05f, 0.05f) };
+                var poseb = Matrix4x4.Translate(pb);
                 // Method 1
                 //Vector3 dist = pb - clientToServerTranslate;
                 //var oax = new Vector3(Mathf.Cos(-thetaInDeg * Mathf.Deg2Rad), 0f, Mathf.Sin(-thetaInDeg * Mathf.Deg2Rad));
                 //var oaz = new Vector3(-Mathf.Sin(-thetaInDeg * Mathf.Deg2Rad), 0f, Mathf.Cos(-thetaInDeg * Mathf.Deg2Rad));
                 //var pa = new Vector3(Vector3.Dot(dist, oax), pb.y, Vector3.Dot(dist, oaz));
                 // Method 2
-                var pa = Matrix4x4.Rotate(Quaternion.AngleAxis(-thetaInDeg, Vector3.up)).MultiplyPoint3x4(pb - clientToServerTranslate);
+                var posea = Matrix4x4.Rotate(Quaternion.AngleAxis(-thetaInDeg, Vector3.up)) * Matrix4x4.Translate(pb - clientToServerTranslate);
+                var pa = posea.GetPosition();
 
-                //Debug.Log($"PA1: {pa}, PA2: {pa2}");
-                var pair = new ImagePositionPair { ServerImagePosition = pa, ClientImagePosition = pb };
+              //  Debug.Log($"PA: {pa}, RA: {posea.rotation.eulerAngles.y}");
+              //  Debug.Log($"PB: {pb}, RB: {poseb.rotation.eulerAngles.y}");
+                var pair = new ImagePositionPair { ServerImagePosition = pa, ServerImageRotation = posea.rotation, ClientImagePosition = pb, ClientImageRotation = poseb.rotation };
                 return pair;
             }).ToArray();
 
@@ -424,6 +439,7 @@ namespace Holoi.Library.HoloKitApp
                 queue.Select(o => o.ServerImagePosition.y).Average(),
                 queue.Select(o => o.ServerImagePosition.z).Average());
 
+
             //string str = "";
             //Debug.Log($"[RealityManager] clientImagePositionCenter: {clientImagePositionCenter:F4} and serverImagePositionCenter: {serverImagePositionCenter:F4}");
             //foreach (var imagePositionPair in queue)
@@ -434,14 +450,16 @@ namespace Holoi.Library.HoloKitApp
 
             Vector2 tanThetaAB = queue.Select(o =>
             {
-                var p = o.ClientImagePosition - clientImagePositionCenter;
-                var q = o.ServerImagePosition - serverImagePositionCenter;
-                var a = p.x * q.x + p.z * q.z;
-                var b = p.z * q.x - p.x * q.z;
+                var p = o.ServerImagePosition - serverImagePositionCenter;
+                var q = o.ClientImagePosition - clientImagePositionCenter;
+                var r = Matrix4x4.Rotate(o.ServerImageRotation).transpose * Matrix4x4.Rotate(o.ClientImageRotation);
+
+                var a = p.x * q.x + p.z * q.z + OptimizationPenaltyConstant * (r.m00 + r.m22);
+                var b = -p.x * q.z + p.z * q.x + OptimizationPenaltyConstant * (-r.m20 + r.m02);
                 return new Vector2(a, b);
             }).Aggregate(Vector2.zero, (r, o) => r + o);
 
-            float thetaInDeg = -(float)Math.Atan2(tanThetaAB.y, tanThetaAB.x) / Mathf.Deg2Rad;
+            float thetaInDeg = (float)Math.Atan2(tanThetaAB.y, tanThetaAB.x) / Mathf.Deg2Rad;
 
             Matrix4x4 rotation = Matrix4x4.Rotate(Quaternion.AngleAxis(thetaInDeg, Vector3.up));
 
