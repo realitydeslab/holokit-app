@@ -9,6 +9,8 @@ namespace Holoi.Reality.TypoGraphy
 {
     public class TypoSpaceRealityManager : RealityManager
     {
-
+        private void Update()
+        {
+        }
     }
 }

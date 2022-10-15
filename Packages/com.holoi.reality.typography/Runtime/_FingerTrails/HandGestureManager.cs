@@ -30,12 +30,12 @@ public class HandGestureManager : MonoBehaviour
     { get { return _handSeconds; } }
 
     [Header("Features")]
-    [SerializeField] bool _position;
-    [SerializeField] float _offset = 0.5f;
-    public float Offset{
-        get { return _offset; }
-        set { _offset = value; }
-    }
+    //[SerializeField] bool _position;
+    //[SerializeField] float _offset = 0.5f;
+    //public float Offset{
+    //    get { return _offset; }
+    //    set { _offset = value; }
+    //}
     [SerializeField] bool _velocity;
     [SerializeField] bool _normal;
     [SerializeField] bool _gesture;
@@ -59,10 +59,6 @@ public class HandGestureManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_position)
-        {
-            UpdatePosition();
-        }
         if (_normal)
         {
             if (_smoothFilter)
@@ -86,13 +82,6 @@ public class HandGestureManager : MonoBehaviour
         {
             GestureDetection();
         }
-    }
-
-    void UpdatePosition()
-    {
-        var direction = (_handForth[1].position - _wrist.position).normalized;
-        transform.position = _handForth[1].position + direction * _offset;
-
     }
 
     void GestureDetection()

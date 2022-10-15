@@ -5,6 +5,7 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using HoloKit;
 using UnityEngine.VFX;
+using UnityEngine.Events;
 
 namespace Holoi.Reality.TypoGraphy
 {
@@ -53,11 +54,13 @@ namespace Holoi.Reality.TypoGraphy
 
         void OnHumanBodiesChanged(ARHumanBodiesChangedEventArgs eventArgs)
         {
+            Debug.Log("m_SkeletonTracker:" + m_SkeletonTracker.Count);
+
             BoneController boneController;
 
             foreach (var humanBody in eventArgs.added)
             {
-                Debug.Log("e height = " + humanBody.estimatedHeightScaleFactor);
+                //Debug.Log("e height = " + humanBody.estimatedHeightScaleFactor);
                 if (!m_SkeletonTracker.TryGetValue(humanBody.trackableId, out boneController))
                 {
                     Debug.Log($"Adding a new skeleton [{humanBody.trackableId}].");
@@ -66,12 +69,7 @@ namespace Holoi.Reality.TypoGraphy
                     boneController = newSkeletonGO.GetComponent<BoneController>();
                     m_SkeletonTracker.Add(humanBody.trackableId, boneController);
 
-                    //_process += Time.deltaTime* 0.5f;
-                    _process += 0.001f;
-                    if (_process > 1) _process = 1;
                     boneController.SkinnerVfx.transform.localPosition = new Vector3(0.5f, 0, 0);
-                    //boneController.SkinnerVfx.SetFloat("Spawn Rate", _process);
-
                     //boneController.SkinnerVfx.transform.InverseTransformPoint(HoloKitCamera.Instance.CenterEyePose.right * 0.5f);
                 }
 
