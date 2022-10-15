@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIPanel_MenuPage : HoloKitAppUIPanel
@@ -22,22 +18,22 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnIntroButtonPressed()
         {
-
+            // TODO: Go to holokit.io Safari
         }
 
         public void OnBuyHoloKitButtonPressed()
         {
-
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("BuyHoloKitPage");
         }
 
         public void OnGettingStartedButtonPressed()
         {
-
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("GettingStartedPage");
         }
 
         public void OnMyAccountButtonPressed()
         {
-
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("MyAccountPage");
         }
 
         public void OnSettingsButtonPressed()

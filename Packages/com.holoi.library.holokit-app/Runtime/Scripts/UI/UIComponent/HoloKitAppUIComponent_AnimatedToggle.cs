@@ -10,6 +10,10 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private Image _selectorImage;
 
+        [SerializeField] private Sprite _frameSpriteUnselected;
+
+        [SerializeField] private Sprite _frameSpriteSelected;
+
         public bool Toggled;
 
         private const float MaxAbsSelectorPosX = 40f;
@@ -30,13 +34,13 @@ namespace Holoi.Library.HoloKitApp.UI
             if (Toggled)
             {
                 _selectorImage.rectTransform.anchoredPosition = new Vector2(MaxAbsSelectorPosX, 0f);
-                _frameImage.color = BlackColor;
+                _frameImage.sprite = _frameSpriteSelected;
                 _selectorImage.color = WhiteColor;
             }
             else
             {
                 _selectorImage.rectTransform.anchoredPosition = new Vector2(-MaxAbsSelectorPosX, 0f);
-                _frameImage.color = WhiteColor;
+                _frameImage.sprite = _frameSpriteUnselected;
                 _selectorImage.color = BlackColor;
             }
         }
@@ -60,7 +64,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 else if (_selectorImage.rectTransform.anchoredPosition.x > -MaxAbsSelectorPosX)
                 {
                     _selectorImage.rectTransform.anchoredPosition = new Vector2(MaxAbsSelectorPosX, 0f);
-                    _frameImage.color = BlackColor;
+                    _frameImage.sprite = _frameSpriteSelected;
                     _selectorImage.color = WhiteColor;
                 }
             }
@@ -75,7 +79,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 else if (_selectorImage.rectTransform.anchoredPosition.x < -MaxAbsSelectorPosX)
                 {
                     _selectorImage.rectTransform.anchoredPosition = new Vector2(-MaxAbsSelectorPosX, 0f);
-                    _frameImage.color = WhiteColor;
+                    _frameImage.sprite = _frameSpriteUnselected;
                     _selectorImage.color = BlackColor;
                 }
             }
