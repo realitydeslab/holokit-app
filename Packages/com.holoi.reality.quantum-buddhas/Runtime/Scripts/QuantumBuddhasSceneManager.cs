@@ -124,14 +124,22 @@ namespace Holoi.Reality.QuantumBuddhas
 
                 var target = new Vector3(_centerEye.position.x, go.transform.position.y, _centerEye.position.z);
 
-                target = target - _centerEye.forward;
+                var eyeHorizentalForward = GetHorizontalForward(_centerEye);
+
+                target = go.transform.position - eyeHorizentalForward;
+                //Debug.Log(_centerEye.forward);
 
                 go.transform.LookAt(target);
-
 
                 go.GetComponent<NetworkObject>().Spawn();
 
             }
+        }
+
+
+        public static Vector3 GetHorizontalForward(Transform transform)
+        {
+            return new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
         }
 
         public void DisableARRaycastVisual()
