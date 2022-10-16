@@ -14,6 +14,8 @@ namespace Holoi.Library.HoloKitApp
         [Header(@"Recording")]
         [SerializeField] private bool _recordMicrophone;
 
+        [SerializeField] private bool _watermarkEnabled;
+
         [SerializeField] private Camera _watermarkCamera;
 
         [SerializeField] private GameObject _watermark;
@@ -46,15 +48,27 @@ namespace Holoi.Library.HoloKitApp
         {
             if (HoloKitUtils.IsRuntime)
             {
-                // Start microphone
-                _microphoneSource = gameObject.AddComponent<AudioSource>();
-                _microphoneSource.mute =
-                _microphoneSource.loop = true;
-                _microphoneSource.bypassEffects =
-                _microphoneSource.bypassListenerEffects = false;
-                _microphoneSource.clip = Microphone.Start(null, true, 1, AudioSettings.outputSampleRate);
-                yield return new WaitUntil(() => Microphone.GetPosition(null) > 0);
-                _microphoneSource.Play();
+                if (_watermarkEnabled)
+                {
+                    _watermarkCamera.gameObject.SetActive(true);
+                }
+                else
+                {
+                    _watermarkCamera.gameObject.SetActive(false);
+                }
+                if (_recordMicrophone)
+                {
+
+                    // Start microphone
+                    _microphoneSource = gameObject.AddComponent<AudioSource>();
+                    _microphoneSource.mute = false;
+                    _microphoneSource.loop = true;
+                    _microphoneSource.bypassEffects = false;
+                    _microphoneSource.bypassListenerEffects = false;
+                    _microphoneSource.clip = Microphone.Start(null, true, 1, AudioSettings.outputSampleRate);
+                    yield return new WaitUntil(() => Microphone.GetPosition(null) > 0);
+                    _microphoneSource.Play();
+                }
             }
         }
 
@@ -75,6 +89,10 @@ namespace Holoi.Library.HoloKitApp
             {
                 _recordCamera.GetComponent<ARCameraBackground>().enabled = true;
                 _recordCamera.enabled = true;
+                if (_watermarkEnabled)
+                {
+                    _watermark.gameObject.SetActive(true);
+                }
                 _watermark.transform.localPosition = _watermarkLandscapeLocalPosition;
                 _watermark.transform.localScale = new Vector3(WatermarkLandscapeLocalScale,
                                                               WatermarkLandscapeLocalScale,
@@ -82,15 +100,22 @@ namespace Holoi.Library.HoloKitApp
             }
             else
             {
+                if (_watermarkEnabled)
+                {
+                    _watermark.gameObject.SetActive(true);
+                }
                 _watermark.transform.localPosition = _watermarkPortraitLocalPosition;
                 _watermark.transform.localScale = new Vector3(WatermarkPortraitLocalScale,
                                                               WatermarkPortraitLocalScale,
                                                               WatermarkPortraitLocalScale);
             }
-            _watermarkCamera.gameObject.SetActive(true);
-            var cameraData = _recordCamera.GetUniversalAdditionalCameraData();
-            cameraData.cameraStack.Clear();
-            cameraData.cameraStack.Add(_watermarkCamera);
+            if (_watermarkEnabled)
+            {
+                _watermarkCamera.gameObject.SetActive(true);
+                var cameraData = _recordCamera.GetUniversalAdditionalCameraData();
+                cameraData.cameraStack.Clear();
+                cameraData.cameraStack.Add(_watermarkCamera);
+            }
         }
 
         private void ReleaseRecorderParams()
@@ -118,13 +143,19 @@ namespace Holoi.Library.HoloKitApp
             _cameraInput.HDR = true;
             _audioInput = _recordMicrophone ? new AudioInput(_recorder, clock, _microphoneSource, true) : null;
             // Unmute microphone
-            _microphoneSource.mute = _audioInput == null;
+            if (_recordMicrophone)
+            {
+                _microphoneSource.mute = _audioInput == null;
+            }
         }
 
         public async void StopRecording()
         {
             // Mute microphone
-            _microphoneSource.mute = true;
+            if (_recordMicrophone)
+            {
+                _microphoneSource.mute = true;
+            }
             // Stop recording
             _audioInput?.Dispose();
             _cameraInput.Dispose();

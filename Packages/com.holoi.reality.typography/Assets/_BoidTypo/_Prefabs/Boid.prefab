@@ -52,14 +52,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b22e6bdcc61445fb9cb74c8eb4cc66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxObjectNum: 256
-  CohesionNeighborhoodRadius: 0.4
+  MaxObjectNum: 512
+  CohesionNeighborhoodRadius: 0.6
   AlignmentNeighborhoodRadius: 0.4
-  SeparateNeighborhoodRadius: 0.1
+  SeparateNeighborhoodRadius: 0.3
   MaxSpeed: 4
   MaxSteerForce: 1
-  CohesionWeight: 2
-  AlignmentWeight: 1
+  CohesionWeight: 1
+  AlignmentWeight: 4
   SeparateWeight: 6
   AvoidWallWeight: 5
   WallSize: {x: 1, y: 1, z: 1}
@@ -107,7 +107,10 @@ VisualEffect:
     m_Gradient:
       m_Array: []
     m_NamedObject:
-      m_Array: []
+      m_Array:
+      - m_Value: {fileID: 2800000, guid: b3799119a595747c2b04eac4d3aaed9f, type: 3}
+        m_Name: TextTexture
+        m_Overridden: 1
     m_Bool:
       m_Array: []
 --- !u!73398921 &5323887839999723743
@@ -119,7 +122,7 @@ VFXRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5323887839999723744}
   m_Enabled: 0
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
