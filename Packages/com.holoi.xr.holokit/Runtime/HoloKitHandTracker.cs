@@ -177,7 +177,7 @@ namespace HoloKit
         {
             if (Time.time - _lastUpdateTime > _fadeOutDelay)
             {
-                _hand.SetActive(false);
+                //_hand.SetActive(false);
                 OnHandValidityChanged?.Invoke(false);
             }
         }

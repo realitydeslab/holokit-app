@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 using HoloKit;
+using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Reality.TypoGraphy
 {
@@ -20,18 +21,20 @@ namespace Holoi.Reality.TypoGraphy
 
         void FixedUpdate()
         {
-            for (int i = 0; i < 5; i++)
-            {
-                // trial vfx
-                _vfxs[i].gameObject.transform.position = _softTips[i].position;
-                _vfxs[i].SetVector3("Tip Normal", _HGM.TipNormals[i]);
 
-                // particel vfx
-                //_vfxs[i].gameObject.transform.position = _softTips[i].position;
-                //_vfxs[i].SetVector3("Tip Normal", _HGM.TipNormals[i]);
-                //_vfxs[i].SetVector3("V Direction", _HGM.TipVelocityDirection[i]);
-                //Debug.Log(_vfxs[i].GetVector3("V Direction"));
-            }
+                for (int i = 0; i < 5; i++)
+                {
+                    // trial vfx
+                    //_vfxs[i].gameObject.transform.position = _softTips[i].position;
+                    //_vfxs[i].SetVector3("Tip Normal", _HGM.TipNormals[i]);
+
+                    // particel vfx
+                    _vfxs[i].gameObject.transform.position = _softTips[i].position;
+                    _vfxs[i].SetVector3("Tip Normal", _HGM.TipNormals[i]);
+                    _vfxs[i].SetVector3("V Direction", _HGM.TipVelocityDirection[i]);
+                    //Debug.Log(_vfxs[i].GetVector3("V Direction"));
+                }
+
         }
         public void HideJoint()
         {
