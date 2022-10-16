@@ -1,19 +1,27 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
 using BoidsSimulationOnGPU;
 using HoloKit;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
-
+using Holoi.Library.HoloKitApp;
+using Unity.Netcode;
 
 namespace Holoi.Reality.Typography
 {
     public class BoidTypoSceneManager : MonoBehaviour
     {
-        [SerializeField] GPUBoids _boids;
-        [SerializeField] VisualEffect _vfx;
+        [Header("Reality Objects")]
+        [SerializeField] GameObject _boidPrefab;
+        [SerializeField] GameObject _boid;
+        GameObject _boidInstance;
+        VisualEffect _vfx;
+        [SerializeField] Transform _rotateAroundPlayer;
+        [Header("AR Base Objects")]
+        [SerializeField] Transform _serverCenterEye;
+
         // raycast
         ARRaycastManager _raycastManager;
         Pose _placementPose;
@@ -21,53 +29,72 @@ namespace Holoi.Reality.Typography
         float _directDistance = 0 ;
         float _verticalDistance = 0;
         //
-        Transform centereye;
+        Transform _centereye;
         // temp test
-        [SerializeField] Camera _cam;
         [SerializeField] Transform hitPoseSample;
 
         private void Start()
         {
             _raycastManager = GetComponent<ARRaycastManager>();
-             centereye = HoloKitCamera.Instance.CenterEyePose;
+             _centereye = HoloKitCamera.Instance.CenterEyePose;
+
+            _vfx = _boid.GetComponent<VisualEffect>();
+            _vfx.enabled = true;
 
         }
 
         void Update()
         {
+            if (HoloKitApp.Instance.IsHost)
+            {
+                UpdateServerCenterEye();
+                //UpdateBoidCenterRotateAroundPlayer();
+                //UpdateBoidCenter();
+            }
             SetVfxBuffer();
-            UpdatePlacementPose();
         }
 
-        
-        private void UpdatePlacementPose()
+        void UpdateServerCenterEye()
         {
-            Vector3 screenCenter = new Vector3(0,0,0);
-            if (_cam.ViewportToScreenPoint(new Vector3(0.5f, 0.5f)) != null)
-            {
-                screenCenter = _cam.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
-            }
+            _serverCenterEye.position = _centereye.position;
+        }
+
+        void UpdateBoidCenterRotateAroundPlayer()
+        {
+            if(_boid)
+                _boid.transform.position = _rotateAroundPlayer.position;
+        }
+
+        /// <summary>
+        /// this function devide how far the boid center from player.
+        /// </summary>
+        private void UpdateBoidCenter()
+        {
+            Vector3 horizontalForward = GetHorizontalForward(HoloKitCamera.Instance.CenterEyePose);
+
+            Vector3 rayOrigin = _centereye.position;
+
+            Ray ray = new(rayOrigin, _centereye.forward);
 
             var hits = new List<ARRaycastHit>();
 
             if (_raycastManager != null)
             {
-                _raycastManager.Raycast(screenCenter, hits, TrackableType.Planes);
+                _raycastManager.Raycast(ray, hits, TrackableType.Planes);
             }
             else
             {
                 Debug.Log("_raycastManager null!");
             }
 
-
             placementPoseIsValid = hits.Count > 0;
             if (placementPoseIsValid)
             {
                 _placementPose = hits[0].pose;
                 hitPoseSample.position = _placementPose.position;
-                _directDistance = Vector3.Distance(centereye.position, _placementPose.position);
+                _directDistance = Vector3.Distance(_centereye.position, _placementPose.position);
 
-                var eyeOnXZ = new Vector2(centereye.position.x, centereye.position.z);
+                var eyeOnXZ = new Vector2(_centereye.position.x, _centereye.position.z);
                 var poseOnXZ = new Vector3(_placementPose.position.x, _placementPose.position.z);
                 _verticalDistance = Vector2.Distance(eyeOnXZ, poseOnXZ);
 
@@ -82,44 +109,9 @@ namespace Holoi.Reality.Typography
                     offsetZ = ((_verticalDistance - 0.25f - 0.5f) / _verticalDistance) * _directDistance; // o.5f is compersation of un-accurate
                 }
 
-                _boids.GetComponent<FollowMovementManager>().Offset =
+                _boid.GetComponent<FollowMovementManager>().Offset =
                     new Vector3(0, 0, offsetZ);
-
-                //Debug.Log("Did Hit with _directDistance: " + _directDistance);
             }
-
-            /*
-            // Bit shift the index of the layer (8) to get a bit mask
-            int layerMask = 1 << 8;
-
-            // This would cast rays only against colliders in layer 8.
-            // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
-            //layerMask = ~layerMask;
-
-            RaycastHit hit;
-
-            // Does the ray intersect any objects excluding the player layer
-            if (Physics.Raycast(centereye.position, GetHorizontalForward(centereye), out hit, Mathf.Infinity, layerMask))
-            {
-                _verticalDistance = Vector3.Distance(centereye.position, hit.point);
-
-                Debug.Log("Did Hit with _verticalDistance: " + _verticalDistance);
-
-                var offsetZ = 2f;
-
-                if (_verticalDistance > 2.5f)
-                {
-                    offsetZ = 2f;
-                }
-                else
-                {
-                    offsetZ = ((_verticalDistance - 0.5f) / _verticalDistance) * _directDistance;
-                }
-
-                _boids.GetComponent<FollowMovementManager>().Offset =
-                    new Vector3(0,0, offsetZ);
-            }
-            */
         }
 
         public static Vector3 GetHorizontalForward(Transform transform)
@@ -129,8 +121,11 @@ namespace Holoi.Reality.Typography
 
         void SetVfxBuffer()
         {
-            _vfx.SetGraphicsBuffer("PositionDataBuffer", _boids.GetBoidPositionDataBuffer());
-            _vfx.SetGraphicsBuffer("VelocityDataBuffer", _boids.GetBoidVelocityDataBuffer());
+            if (_vfx != null)
+            {
+                _vfx.SetGraphicsBuffer("PositionDataBuffer", _boid.GetComponent<GPUBoids>().GetBoidPositionDataBuffer());
+                _vfx.SetGraphicsBuffer("VelocityDataBuffer", _boid.GetComponent<GPUBoids>().GetBoidVelocityDataBuffer());
+            }
         }
     }
 }
