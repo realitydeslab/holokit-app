@@ -75,8 +75,12 @@ namespace Holoi.Library.HoloKitApp
         private void OnDestroy()
         {
             // Stop microphone
-            _microphoneSource.Stop();
-            Microphone.End(null);
+            if (_recordMicrophone)
+            {
+
+                _microphoneSource.Stop();
+                Microphone.End(null);
+            }
         }
 
         private void PrepareRecorderParams()

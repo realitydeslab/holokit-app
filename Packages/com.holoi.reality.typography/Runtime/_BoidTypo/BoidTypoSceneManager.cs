@@ -45,7 +45,7 @@ namespace Holoi.Reality.Typography
         {
             if (HoloKitApp.Instance.IsHost)
             {
-                UpdateServerCenterEye();
+                //UpdateServerCenterEye();
                 //UpdateBoidCenter();
             }
             SetVfxBuffer();
