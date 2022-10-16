@@ -46,7 +46,6 @@ namespace Holoi.Reality.Typography
             if (HoloKitApp.Instance.IsHost)
             {
                 UpdateServerCenterEye();
-                //UpdateBoidCenterRotateAroundPlayer();
                 //UpdateBoidCenter();
             }
             SetVfxBuffer();
@@ -55,12 +54,6 @@ namespace Holoi.Reality.Typography
         void UpdateServerCenterEye()
         {
             _serverCenterEye.position = _centerEye.position;
-        }
-
-        void UpdateBoidCenterRotateAroundPlayer()
-        {
-            if(_boid)
-                _boid.transform.position = _rotateAroundPlayer.position;
         }
 
         /// <summary>
