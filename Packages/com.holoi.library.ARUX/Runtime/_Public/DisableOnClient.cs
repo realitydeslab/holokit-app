@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 using Holoi.Library.HoloKitApp;
 
 
 public class DisableOnClient : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] bool _vfx;
+    [SerializeField] bool _gameObject;
+
     void Start()
     {
 
@@ -17,7 +20,14 @@ public class DisableOnClient : MonoBehaviour
     {
         if (!HoloKitApp.Instance.IsHost)
         {
-            if (gameObject.activeSelf) gameObject.SetActive(false);
+            if (_gameObject)
+            {
+                if (gameObject.activeSelf) gameObject.SetActive(false);
+            }
+            if (_vfx)
+            {
+                if (GetComponent<VisualEffect>().enabled) GetComponent<VisualEffect>().enabled = false;
+            }
         }
         else
         {

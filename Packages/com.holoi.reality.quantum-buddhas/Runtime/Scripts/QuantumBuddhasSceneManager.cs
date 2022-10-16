@@ -73,6 +73,7 @@ namespace Holoi.Reality.QuantumBuddhas
         public void SwitchToNextVFXClientRpc()
         {
             _animator = _vfxs[_index].GetComponent<Animator>();
+
             if (_animator !=null)
             {
                 _animator.SetTrigger("Fade Out");
@@ -133,6 +134,12 @@ namespace Holoi.Reality.QuantumBuddhas
 
                 go.GetComponent<NetworkObject>().Spawn();
 
+                _vfxs.Clear();
+
+                for (int i = 0; i < go.transform.childCount; i++)
+                {
+                    _vfxs.Add(go.transform.GetChild(i).GetComponent<BuddhasController>().vfx);
+                }
             }
         }
 
@@ -167,7 +174,10 @@ namespace Holoi.Reality.QuantumBuddhas
         public void SetPlacementLoadButton(bool state)
         {
             //Debug.Log("SetPlacementLoadButton: " + state);
-            _placementLoadButton.gameObject.SetActive(state);
+            if (HoloKitApp.Instance.IsHost)
+            {
+                _placementLoadButton.gameObject.SetActive(state);
+            }
         }
 
         IEnumerator DisableAfterTimes(GameObject go,float time)

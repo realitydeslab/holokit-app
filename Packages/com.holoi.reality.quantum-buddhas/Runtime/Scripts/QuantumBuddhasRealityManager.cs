@@ -54,7 +54,6 @@ namespace Holoi.Reality.QuantumBuddhas
         {
             Debug.Log($"OnActiveBuddhasChangedClientRpc: {index}");
             GetComponent<QuantumBuddhasSceneManager>().SwitchToNextVFXClientRpc();
-
         }
 
         [ClientRpc]

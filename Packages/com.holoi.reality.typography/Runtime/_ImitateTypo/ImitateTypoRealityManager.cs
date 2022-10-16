@@ -17,6 +17,12 @@ namespace Holoi.Reality.Typography
 
         [HideInInspector] public Vector3 HitPosition = Vector3.down;
 
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+
+        }
+
         private void Start()
         {
             _arRaycastManager = FindObjectOfType<ARRaycastManager>();

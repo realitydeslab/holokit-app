@@ -14,9 +14,7 @@ namespace Holoi.Reality.Typography
     public class BoidTypoSceneManager : MonoBehaviour
     {
         [Header("Reality Objects")]
-        [SerializeField] GameObject _boidPrefab;
         [SerializeField] GameObject _boid;
-        GameObject _boidInstance;
         VisualEffect _vfx;
         [SerializeField] Transform _rotateAroundPlayer;
         [Header("AR Base Objects")]
