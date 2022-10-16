@@ -66,6 +66,7 @@ public class FollowMovementManager : MonoBehaviour
 
     private void OnEnable()
     {
+        if(_movementType != MovementType.NotFollow)
         transform.position = _followTarget.position + _followTarget.TransformVector(_offset);
     }
 
