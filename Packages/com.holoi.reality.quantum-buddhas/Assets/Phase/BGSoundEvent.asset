@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7387033780661748149
+--- !u!114 &-7536488032439656545
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,17 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff04eea8ccd1d4b0990f36e5ec837891, type: 3}
-  m_Name: PHASE Spatial Mixer
+  m_Script: {fileID: 11500000, guid: fde41757782e64ab3b6da4dfb2352154, type: 3}
+  m_Name: PHASE Ambient Mixer
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -40, y: -136}
+  position: {x: 72, y: -200}
   ports:
     keys:
     - ParentNode
     values:
     - _fieldName: ParentNode
-      _node: {fileID: -7387033780661748149}
+      _node: {fileID: -7536488032439656545}
       _typeQualifiedName: Apple.PHASE.PHASEMixer, Apple.PHASE, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
@@ -31,18 +31,10 @@ MonoBehaviour:
       _typeConstraint: 2
       _dynamic: 0
   ParentNode: {fileID: 0}
-  _directPathModeler: 1
-  _earlyReflectionModeler: 1
-  _lateReverbModeler: 1
-  _cullDistance: 0
-  _listenerDirectivityPreset: 0
-  _listenerDirectivitySharpness: 1
-  _listenerDirectivityInnerAngle: 90
-  _listenerDirectivityOuterAngle: 215
-  _sourceDirectivityPreset: 0
-  _sourceDirectivitySharpness: 1
-  _sourceDirectivityInnerAngle: 90
-  _sourceDirectivityOuterAngle: 215
+  _pitch: 0
+  _yaw: 0
+  _roll: 0
+  _channelLayout: 1
 --- !u!114 &-487082840327007559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,7 +60,7 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: ParentNode
-        node: {fileID: -7387033780661748149}
+        node: {fileID: -7536488032439656545}
         reroutePoints: []
       _direction: 1
       _connectionType: 0
@@ -89,9 +81,9 @@ MonoBehaviour:
   _looping: 1
   _calibrationMode: 1
   _levelNone: 1
-  _levelRelativeSpl: 12
+  _levelRelativeSpl: 0
   _levelAbsoluteSpl: 85
-  _mixer: {fileID: -7387033780661748149}
+  _mixer: {fileID: -7536488032439656545}
   Mixer: {fileID: 0}
   _streamingAssetAudioClip: {fileID: 0}
   _assetName: light-texture-114054
@@ -110,5 +102,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodes:
   - {fileID: -487082840327007559}
-  - {fileID: -7387033780661748149}
+  - {fileID: -7536488032439656545}
   m_rootNode: {fileID: -487082840327007559}
