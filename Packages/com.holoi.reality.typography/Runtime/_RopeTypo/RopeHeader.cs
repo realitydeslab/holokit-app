@@ -24,9 +24,20 @@ namespace Holoi.Reality.Typography
         {
             _velocity = (transform.position - _lastPosition) / Time.deltaTime;
 
-            _direction = _velocity.normalized;
+            
 
             _lastPosition = transform.position;
+
+            var directionSet = _direction;
+
+            if(_velocity.magnitude == 0)
+            {
+
+            }
+            else
+            {
+                _direction = _velocity.normalized;
+            }
 
             FindObjectOfType<RopeControllerRealisticNoSpring>().ropeHeaderDirection = -1f * _direction;
 
