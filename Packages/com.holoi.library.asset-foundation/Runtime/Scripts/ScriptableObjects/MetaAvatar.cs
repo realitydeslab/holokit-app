@@ -1,23 +1,16 @@
 using UnityEngine;
-using UnityEngine.Video;
 
 namespace Holoi.AssetFoundation
 {
     [CreateAssetMenu(menuName = "ScriptableObjects/MetaAvatar")]
-    public class MetaAvatar : ScriptableObject
+    public class MetaAvatar : Artifact
     {
-        public Avatar unityAvatar; 
+        public bool Rigged;
 
-        public Sprite image;
+        public Avatar UnityAvatar;
 
-        public VideoClip video;
+        public override ArtifactCollection ArtifactCollection => MetaAvatarCollection;
 
-        public GameObject prefab;
-
-        public bool rigged;
-
-        public string tokenId;
-
-        public MetaAvatarCollection collection;
+        public MetaAvatarCollection MetaAvatarCollection;
     }
 }

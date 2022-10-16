@@ -21,9 +21,9 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             _realityIndexText.text = "Reality #" +
                 HoloKitAppUtils.IntToStringF3(HoloKitApp.Instance.GlobalSettings.GetRealityIndex(HoloKitApp.Instance.CurrentReality) + 1);
-            _realityNameText.text = HoloKitApp.Instance.CurrentReality.displayName;
-            _realityAuthorText.text = HoloKitApp.Instance.CurrentReality.author;
-            _realityDescriptionText.text = HoloKitApp.Instance.CurrentReality.description;
+            _realityNameText.text = HoloKitApp.Instance.CurrentReality.DisplayName;
+            _realityAuthorText.text = HoloKitApp.Instance.CurrentReality.Author;
+            _realityDescriptionText.text = HoloKitApp.Instance.CurrentReality.Description;
         }
 
         public void OnBackButtonPressed()

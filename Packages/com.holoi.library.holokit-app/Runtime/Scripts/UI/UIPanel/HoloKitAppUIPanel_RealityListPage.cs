@@ -98,9 +98,9 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 realityIndex++;
                 GameObject roomInstance;
-                if (reality.thumbnailPrefab != null)
+                if (reality.ThumbnailPrefab != null)
                 {
-                    roomInstance = Instantiate(reality.thumbnailPrefab);
+                    roomInstance = Instantiate(reality.ThumbnailPrefab);
                 }
                 else
                 {
@@ -167,7 +167,7 @@ namespace Holoi.Library.HoloKitApp.UI
         private void OnTargetRoomArrived()
         {
             _realityIndexText.text = "Reality #" + HoloKitAppUtils.IntToStringF3(_currentRoomIndex + 1);
-            _realityNameText.text = HoloKitApp.Instance.GlobalSettings.RealityList.realities[_currentRoomIndex].displayName;
+            _realityNameText.text = HoloKitApp.Instance.GlobalSettings.RealityList.realities[_currentRoomIndex].DisplayName;
         }
 
         private void ScrollToNextRoom()

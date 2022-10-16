@@ -107,7 +107,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             if (_avatar == null)
             {
-                _avatar = Instantiate(AvatarList.list[0].metaAvatars[0].prefab,
+                _avatar = Instantiate(AvatarList.List[0].MetaAvatars[0].Prefab,
                             transform.position, Quaternion.identity);
                 // Setup avatar's components
                 _avatar.transform.SetParent(transform);

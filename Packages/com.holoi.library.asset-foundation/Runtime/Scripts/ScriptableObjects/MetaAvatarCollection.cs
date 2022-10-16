@@ -1,29 +1,34 @@
-using UnityEngine;
-using Holoi.AssetFoundation;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Holoi.AssetFoundation
 {
     [CreateAssetMenu(menuName = "ScriptableObjects/MetaAvatarCollection")]
-    public class MetaAvatarCollection : ScriptableObject
+    public class MetaAvatarCollection : ArtifactCollection
     {
-        public string id;
+        public override List<Artifact> Artifacts
+        {
+            get
+            {
+                return MetaAvatars.Cast<Artifact>().ToList();
+            }
+        }
 
-        public List<MetaAvatar> metaAvatars;
+        public List<MetaAvatar> MetaAvatars;
 
-        public MetaAvatar coverMetaAvatar;
-        
-        public string displayName;
+        public override Artifact CoverArtifact => CoverMetaAvatar;
 
-        public string description;
+        public MetaAvatar CoverMetaAvatar;
 
-        public string author;
+        public override List<Tag> Tags
+        {
+            get
+            {
+                return MetaAvatarTags.Cast<Tag>().ToList();
+            }
+        }
 
-        public SmartContract contract;
-
-        public string imageUrl;
-
-        public List<MetaAvatarTag> tags;
+        public List<MetaAvatarTag> MetaAvatarTags;
     }
 }

@@ -14,7 +14,7 @@ namespace Holoi.AssetFoundation
 
         public List<Reality> FilterByTag(RealityTag tag)
         {
-            return realities.Where(collection => collection.realityTags.Contains(tag)).ToList();
+            return realities.Where(collection => collection.RealityTags.Contains(tag)).ToList();
         }
     }
 }

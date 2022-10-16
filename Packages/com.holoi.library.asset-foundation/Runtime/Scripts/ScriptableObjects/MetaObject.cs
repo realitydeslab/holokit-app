@@ -1,19 +1,12 @@
 using UnityEngine;
-using UnityEngine.Video;
 
 namespace Holoi.AssetFoundation
 {
     [CreateAssetMenu(menuName = "ScriptableObjects/MetaObject")]
-    public class MetaObject : ScriptableObject
+    public class MetaObject : Artifact
     {
-        public Sprite image;
+        public override ArtifactCollection ArtifactCollection => MetaObjectCollection;
 
-        public VideoClip video;
-
-        public GameObject prefab;
-
-        public string tokenId;
-
-        public MetaObjectCollection collection;
+        public MetaObjectCollection MetaObjectCollection;
     }
 }

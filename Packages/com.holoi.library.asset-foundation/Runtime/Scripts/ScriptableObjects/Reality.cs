@@ -1,9 +1,7 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
-using Holoi.AssetFoundation;
-using System.Collections;
-using System.Collections.Generic;
-using System;
 
 namespace Holoi.AssetFoundation
 {
@@ -11,36 +9,36 @@ namespace Holoi.AssetFoundation
     public class Reality: ScriptableObject
     {
         // A unique string to distinguish this reality from other realities
-        public string id;
+        public string BundleId;
 
-        public string displayName;
+        public string DisplayName;
 
-        public string description;
+        public string Description;
 
-        public string author;
+        public string Author;
 
-        public string version;
+        public string Version;
 
-        public GameObject thumbnailPrefab;
+        public GameObject ThumbnailPrefab;
 
-        public List<VideoClip> previewVideos;
+        public List<VideoClip> PreviewVideos;
 
-        public List<RealityTag> realityTags;
+        public List<RealityTag> RealityTags;
 
-        public List<MetaAvatarTag> compatibleMetaAvatarTags;
+        public List<MetaAvatarTag> CompatibleMetaAvatarTags;
 
-        public List<MetaObjectTag> compatibleMetaObjectTags;
+        public List<MetaObjectTag> CompatibleMetaObjectTags;
 
-        public SceneField scene;
+        public SceneField Scene;
 
-        public string watermarkField = "";
+        public string WatermarkField = "";
 
         public bool IsCompatibleWithMetaAvatarCollection(MetaAvatarCollection avatarCollection)
         {
             int count = 0;
-            foreach (var tag in compatibleMetaAvatarTags)
+            foreach (var tag in CompatibleMetaAvatarTags)
             {
-                foreach (var tag2 in avatarCollection.tags)
+                foreach (var tag2 in avatarCollection.MetaAvatarTags)
                 {
                     if (tag.Equals(tag2))
                     {
@@ -49,7 +47,7 @@ namespace Holoi.AssetFoundation
                     }
                 }
             }
-            if (count == compatibleMetaAvatarTags.Count)
+            if (count == CompatibleMetaAvatarTags.Count)
             {
                 return true;
             }
@@ -62,9 +60,9 @@ namespace Holoi.AssetFoundation
         public bool IsCompatibleWithMetaObjectCollection(MetaObjectCollection objectCollection)
         {
             int count = 0;
-            foreach (var tag in compatibleMetaObjectTags)
+            foreach (var tag in CompatibleMetaObjectTags)
             {
-                foreach (var tag2 in objectCollection.tags)
+                foreach (var tag2 in objectCollection.MetaObjectTags)
                 {
                     if (tag.Equals(tag2))
                     {
@@ -73,7 +71,7 @@ namespace Holoi.AssetFoundation
                     }
                 }
             }
-            if (count == compatibleMetaObjectTags.Count)
+            if (count == CompatibleMetaObjectTags.Count)
             {
                 return true;
             }

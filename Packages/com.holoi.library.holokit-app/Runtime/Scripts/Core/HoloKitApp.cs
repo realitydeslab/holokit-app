@@ -109,6 +109,8 @@ namespace Holoi.Library.HoloKitApp
                     //UIPanelManager.PushUIPanel("LandingPage");
                 }
             }
+
+            CurrentReality = GlobalSettings.RealityList.realities[0];
         }
 
         private void OnDestroy()
@@ -144,9 +146,9 @@ namespace Holoi.Library.HoloKitApp
         {
             foreach (var reality in GlobalSettings.GetAllRealities())
             {
-                if (reality.scene == null) { continue; }
+                if (reality.Scene == null) { continue; }
 
-                if (reality.scene.SceneName.Equals(scene.name))
+                if (reality.Scene.SceneName.Equals(scene.name))
                 {
                     return true;
                 }
@@ -206,7 +208,7 @@ namespace Holoi.Library.HoloKitApp
                 return;
             }
             _isHost = true;
-            SceneManager.LoadScene(CurrentReality.scene.SceneName, LoadSceneMode.Single);
+            SceneManager.LoadScene(CurrentReality.Scene.SceneName, LoadSceneMode.Single);
         }
 
         public void JoinRealityAsSpectator()
@@ -217,7 +219,7 @@ namespace Holoi.Library.HoloKitApp
                 return;
             }
             _isHost = false;
-            SceneManager.LoadScene(CurrentReality.scene.SceneName, LoadSceneMode.Single);
+            SceneManager.LoadScene(CurrentReality.Scene.SceneName, LoadSceneMode.Single);
         }
         #endregion
 

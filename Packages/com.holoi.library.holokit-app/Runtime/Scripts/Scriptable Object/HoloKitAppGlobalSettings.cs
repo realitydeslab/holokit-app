@@ -9,11 +9,11 @@ namespace Holoi.Library.HoloKitApp
     [Serializable]
     public struct RealityPreference
     {
-        public string MetaAvatarCollectionId;
+        public string MetaAvatarCollectionBundleId;
 
         public string MetaAvatarTokenId;
 
-        public string MetaObjectCollectionId;
+        public string MetaObjectCollectionBundleId;
 
         public string MetaObjectTokenId;
     }
@@ -83,12 +83,12 @@ namespace Holoi.Library.HoloKitApp
                 // Set the default avatar
                 string metaAvatarCollectionId = null;
                 string metaAvatarTokenId = null;
-                foreach (var avatarCollection in AvatarCollectionList.list)
+                foreach (var avatarCollection in AvatarCollectionList.List)
                 {
                     if (reality.IsCompatibleWithMetaAvatarCollection(avatarCollection))
                     {
-                        metaAvatarCollectionId = avatarCollection.id;
-                        metaAvatarTokenId = avatarCollection.coverMetaAvatar.tokenId;
+                        metaAvatarCollectionId = avatarCollection.BundleId;
+                        metaAvatarTokenId = avatarCollection.CoverMetaAvatar.TokenId;
                         break;
                     }
                 }
@@ -96,38 +96,38 @@ namespace Holoi.Library.HoloKitApp
                 // Set the default object
                 string metaObjectCollectionId = null;
                 string metaObjectTokenId = null;
-                foreach (var objectCollection in ObjectCollectionList.list)
+                foreach (var objectCollection in ObjectCollectionList.List)
                 {
                     if (reality.IsCompatibleWithMetaObjectCollection(objectCollection))
                     {
-                        metaObjectCollectionId = objectCollection.id;
-                        metaObjectTokenId = objectCollection.coverMetaObject.tokenId;
+                        metaObjectCollectionId = objectCollection.BundleId;
+                        metaObjectTokenId = objectCollection.CoverMetaObject.TokenId;
                         break;
                     }
                 }
 
                 RealityPreference realityPreference = new()
                 {
-                    MetaAvatarCollectionId = metaAvatarCollectionId,
+                    MetaAvatarCollectionBundleId = metaAvatarCollectionId,
                     MetaAvatarTokenId = metaAvatarTokenId,
-                    MetaObjectCollectionId = metaObjectCollectionId,
+                    MetaObjectCollectionBundleId = metaObjectCollectionId,
                     MetaObjectTokenId = metaObjectTokenId
                 };
-                RealityPreferences[reality.id] = realityPreference;
+                RealityPreferences[reality.BundleId] = realityPreference;
             }
         }
 
         public MetaAvatar GetRealityPreferencedAvatar(Reality reality)
         {
-            string avatarCollectionId = RealityPreferences[reality.id].MetaAvatarCollectionId;
-            string avatarTokenId = RealityPreferences[reality.id].MetaAvatarTokenId;
-            foreach (var avatarCollection in AvatarCollectionList.list)
+            string avatarCollectionId = RealityPreferences[reality.BundleId].MetaAvatarCollectionBundleId;
+            string avatarTokenId = RealityPreferences[reality.BundleId].MetaAvatarTokenId;
+            foreach (var avatarCollection in AvatarCollectionList.List)
             {
-                if (avatarCollection.id.Equals(avatarCollectionId))
+                if (avatarCollection.BundleId.Equals(avatarCollectionId))
                 {
-                    foreach (var avatar in avatarCollection.metaAvatars)
+                    foreach (var avatar in avatarCollection.MetaAvatars)
                     {
-                        if (avatar.tokenId.Equals(avatarTokenId))
+                        if (avatar.TokenId.Equals(avatarTokenId))
                         {
                             return avatar;
                         }
@@ -139,15 +139,15 @@ namespace Holoi.Library.HoloKitApp
 
         public MetaObject GetRealityPreferencedObject(Reality reality)
         {
-            string objectCollectionId = RealityPreferences[reality.id].MetaObjectCollectionId;
-            string objectTokenId = RealityPreferences[reality.id].MetaObjectTokenId;
-            foreach (var objectCollection in ObjectCollectionList.list)
+            string objectCollectionId = RealityPreferences[reality.BundleId].MetaObjectCollectionBundleId;
+            string objectTokenId = RealityPreferences[reality.BundleId].MetaObjectTokenId;
+            foreach (var objectCollection in ObjectCollectionList.List)
             {
-                if (objectCollection.id.Equals(objectCollectionId))
+                if (objectCollection.BundleId.Equals(objectCollectionId))
                 {
-                    foreach (var metaObject in objectCollection.metaObjects)
+                    foreach (var metaObject in objectCollection.MetaObjects)
                     {
-                        if (metaObject.tokenId.Equals(objectTokenId))
+                        if (metaObject.TokenId.Equals(objectTokenId))
                         {
                             return metaObject;
                         }
@@ -160,7 +160,7 @@ namespace Holoi.Library.HoloKitApp
         public List<MetaAvatarCollection> GetCompatibleMetaAvatarCollectionList(Reality reality)
         {
             List<MetaAvatarCollection> list = new();
-            foreach (var avatarCollection in AvatarCollectionList.list)
+            foreach (var avatarCollection in AvatarCollectionList.List)
             {
                 if (reality.IsCompatibleWithMetaAvatarCollection(avatarCollection))
                 {
@@ -173,7 +173,7 @@ namespace Holoi.Library.HoloKitApp
         public List<MetaObjectCollection> GetCompatibleMetaObjectCollectionList(Reality reality)
         {
             List<MetaObjectCollection> list = new();
-            foreach (var objectCollection in ObjectCollectionList.list)
+            foreach (var objectCollection in ObjectCollectionList.List)
             {
                 if (reality.IsCompatibleWithMetaObjectCollection(objectCollection))
                 {
@@ -183,11 +183,11 @@ namespace Holoi.Library.HoloKitApp
             return list;
         }
 
-        public MetaAvatarCollection GetMetaAvatarCollection(string id)
+        public MetaAvatarCollection GetMetaAvatarCollection(string bundleId)
         {
-            foreach (var metaAvatarCollection in AvatarCollectionList.list)
+            foreach (var metaAvatarCollection in AvatarCollectionList.List)
             {
-                if (metaAvatarCollection.id.Equals(id))
+                if (metaAvatarCollection.BundleId.Equals(bundleId))
                 {
                     return metaAvatarCollection;
                 }
@@ -195,11 +195,11 @@ namespace Holoi.Library.HoloKitApp
             return null;
         }
 
-        public MetaObjectCollection GetMetaObjectCollection(string id)
+        public MetaObjectCollection GetMetaObjectCollection(string bundleId)
         {
-            foreach (var metaObjectCollection in ObjectCollectionList.list)
+            foreach (var metaObjectCollection in ObjectCollectionList.List)
             {
-                if (metaObjectCollection.id.Equals(id))
+                if (metaObjectCollection.BundleId.Equals(bundleId))
                 {
                     return metaObjectCollection;
                 }
@@ -227,6 +227,19 @@ namespace Holoi.Library.HoloKitApp
                 realityIndex++;
             }
             return 0;
+        }
+
+        public MetaAvatarCollection GetPreferencedMetaAvatarCollection(Reality reality)
+        {
+            RealityPreference realityPreference = RealityPreferences[reality.BundleId];
+            foreach (var metaAvatarCollection in AvatarCollectionList.List)
+            {
+                if (metaAvatarCollection.BundleId.Equals(realityPreference.MetaAvatarCollectionBundleId))
+                {
+                    return metaAvatarCollection;
+                }
+            }
+            return null;
         }
     }
 }

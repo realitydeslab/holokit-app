@@ -18,7 +18,7 @@ namespace Holoi.Library.HoloKitApp.UI
         public void Init(Reality reality, int index)
         {
             _realityId.text = "Reality #" + HoloKitAppUtils.IntToStringF3(index);
-            _realityName.text = reality.displayName;
+            _realityName.text = reality.DisplayName;
             _hostButton.onClick.AddListener(() =>
             {
                 HoloKitApp.Instance.CurrentReality = reality;
