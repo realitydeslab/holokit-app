@@ -6,7 +6,7 @@ using Unity.Netcode;
 using HoloKit;
 using Holoi.Library.ARUX;
 
-namespace Holoi.Reality.TypoGraphy
+namespace Holoi.Reality.Typography
 {
     public class FingerTypoRealityManager : RealityManager
     {

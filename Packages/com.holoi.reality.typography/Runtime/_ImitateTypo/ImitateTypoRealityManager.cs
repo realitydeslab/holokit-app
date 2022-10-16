@@ -9,7 +9,7 @@ using UnityEngine.XR.ARSubsystems;
 
 namespace Holoi.Reality.Typography
 {
-    public class TypoSpaceRealityManager : RealityManager
+    public class ImitateTypoRealityManager : RealityManager
     {
         ARRaycastManager _arRaycastManager;
         Transform _centerEye;

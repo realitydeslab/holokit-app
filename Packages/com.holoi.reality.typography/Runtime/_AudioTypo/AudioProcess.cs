@@ -1,5 +1,6 @@
 using UnityEngine;
-namespace Holoi.Reality.TypoGraphy
+
+namespace Holoi.Reality.Typography
 {
     public class AudioProcess : MonoBehaviour
     {

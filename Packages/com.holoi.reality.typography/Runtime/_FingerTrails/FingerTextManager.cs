@@ -5,7 +5,7 @@ using UnityEngine.VFX;
 using HoloKit;
 using Holoi.Library.HoloKitApp;
 
-namespace Holoi.Reality.TypoGraphy
+namespace Holoi.Reality.Typography
 {
     public class FingerTextManager : MonoBehaviour
     {

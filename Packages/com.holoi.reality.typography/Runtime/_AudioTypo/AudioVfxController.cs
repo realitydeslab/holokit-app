@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
-namespace Holoi.Reality.TypoGraphy
+
+namespace Holoi.Reality.Typography
 {
     public class AudioVfxController : MonoBehaviour
     {

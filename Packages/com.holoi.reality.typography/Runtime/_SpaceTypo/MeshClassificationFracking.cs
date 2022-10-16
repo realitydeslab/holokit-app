@@ -11,7 +11,7 @@ using UnityEngine.XR.ARKit;
 
 using Object = UnityEngine.Object;
 
-namespace Holoi.Reality.TypoGraphy
+namespace Holoi.Reality.Typography
 {
     public class MeshClassificationFracking : MonoBehaviour
     {

@@ -7,7 +7,7 @@ using HoloKit;
 using UnityEngine.VFX;
 using UnityEngine.Events;
 
-namespace Holoi.Reality.TypoGraphy
+namespace Holoi.Reality.Typography
 {
     public class HumanBodyTracker : MonoBehaviour
     {

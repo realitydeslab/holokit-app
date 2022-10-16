@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using HoloKit;
 
-namespace Holoi.Reality.TypoGraphy
+namespace Holoi.Reality.Typography
 {
     public class MeshTypographySceneManager : MonoBehaviour
     {

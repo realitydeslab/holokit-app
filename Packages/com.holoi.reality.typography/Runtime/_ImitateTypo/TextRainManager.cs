@@ -6,7 +6,7 @@ using Unity.Netcode;
 using HoloKit;
 using UnityEngine.VFX;
 
-namespace Holoi.Reality.TypoGraphy
+namespace Holoi.Reality.Typography
 {
     public class TextRainManager : MonoBehaviour
     {

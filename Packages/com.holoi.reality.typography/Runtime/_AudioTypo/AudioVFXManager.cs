@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HoloKit;
 
-namespace Holoi.Reality.TypoGraphy
+namespace Holoi.Reality.Typography
 {
     public class AudioVFXManager : MonoBehaviour
     {

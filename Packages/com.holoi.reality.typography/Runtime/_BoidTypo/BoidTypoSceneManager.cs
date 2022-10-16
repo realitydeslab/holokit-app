@@ -29,14 +29,14 @@ namespace Holoi.Reality.Typography
         float _directDistance = 0 ;
         float _verticalDistance = 0;
         //
-        Transform _centereye;
+        Transform _centerEye;
         // temp test
         [SerializeField] Transform hitPoseSample;
 
         private void Start()
         {
             _raycastManager = GetComponent<ARRaycastManager>();
-             _centereye = HoloKitCamera.Instance.CenterEyePose;
+             _centerEye = HoloKitCamera.Instance.CenterEyePose;
 
             _vfx = _boid.GetComponent<VisualEffect>();
             _vfx.enabled = true;
@@ -56,7 +56,7 @@ namespace Holoi.Reality.Typography
 
         void UpdateServerCenterEye()
         {
-            _serverCenterEye.position = _centereye.position;
+            _serverCenterEye.position = _centerEye.position;
         }
 
         void UpdateBoidCenterRotateAroundPlayer()
@@ -72,9 +72,9 @@ namespace Holoi.Reality.Typography
         {
             Vector3 horizontalForward = GetHorizontalForward(HoloKitCamera.Instance.CenterEyePose);
 
-            Vector3 rayOrigin = _centereye.position;
+            Vector3 rayOrigin = _centerEye.position;
 
-            Ray ray = new(rayOrigin, _centereye.forward);
+            Ray ray = new(rayOrigin, _centerEye.forward);
 
             var hits = new List<ARRaycastHit>();
 
@@ -92,9 +92,9 @@ namespace Holoi.Reality.Typography
             {
                 _placementPose = hits[0].pose;
                 hitPoseSample.position = _placementPose.position;
-                _directDistance = Vector3.Distance(_centereye.position, _placementPose.position);
+                _directDistance = Vector3.Distance(_centerEye.position, _placementPose.position);
 
-                var eyeOnXZ = new Vector2(_centereye.position.x, _centereye.position.z);
+                var eyeOnXZ = new Vector2(_centerEye.position.x, _centerEye.position.z);
                 var poseOnXZ = new Vector3(_placementPose.position.x, _placementPose.position.z);
                 _verticalDistance = Vector2.Distance(eyeOnXZ, poseOnXZ);
 

@@ -7,7 +7,7 @@ using HoloKit;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-namespace Holoi.Reality.TypoGraphy
+namespace Holoi.Reality.Typography
 {
     public class BoidTypoRealityManager : RealityManager
     {

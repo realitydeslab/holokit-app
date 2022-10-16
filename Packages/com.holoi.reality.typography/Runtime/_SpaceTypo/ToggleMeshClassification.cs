@@ -5,7 +5,7 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARKit;
 #endif // UNITY_IOS && !UNITY_EDITOR
 
-namespace Holoi.Reality.TypoGraphy
+namespace Holoi.Reality.Typography
 {
     public class ToggleMeshClassification : MonoBehaviour
     {
