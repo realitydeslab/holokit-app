@@ -26,11 +26,6 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeField] private GameObject _defaultRoomPrefab;
 
         /// <summary>
-        /// The directional light of the entire scene.
-        /// </summary>
-        [SerializeField] private GameObject _directionalLightPrefab;
-
-        /// <summary>
         /// The spot light for each room.
         /// </summary>
         [SerializeField] private GameObject _roomLightPrefab;
@@ -39,11 +34,6 @@ namespace Holoi.Library.HoloKitApp.UI
         /// Keeps a reference of this to destroy later.
         /// </summary>
         private GameObject _roomListRoot;
-
-        /// <summary>
-        /// Keeps a reference of this to destroy later.
-        /// </summary>
-        private GameObject _directionalLight;
 
         /// <summary>
         /// Keeps a reference of this to destroy later.
@@ -89,9 +79,9 @@ namespace Holoi.Library.HoloKitApp.UI
         // The list of spawned rooms.
         private readonly List<GameObject> RoomList = new();
 
-        private void Start()
+        // We dynamically spawn and destroy reality rooms to save resources.
+        private void OnEnable()
         {
-            _directionalLight = Instantiate(_directionalLightPrefab);
             _roomListRoot = Instantiate(_roomListRootPrefab);
             int realityIndex = -1;
             foreach (var reality in HoloKitApp.Instance.GlobalSettings.RealityList.List)
@@ -112,9 +102,15 @@ namespace Holoi.Library.HoloKitApp.UI
                 roomInstance.transform.localRotation = Quaternion.identity;
                 roomInstance.transform.localScale = Vector3.one;
             }
-            Camera.main.transform.SetPositionAndRotation(RoomCenterToCameraOffsetPosition, Quaternion.Euler(RoomCenterToCameraOffsteEulerRotation));
+            Vector3 currentRoomPosition = new(_currentRoomIndex * RoomSpacingDist, 0f, 0f);
+            Camera.main.transform.SetPositionAndRotation(currentRoomPosition + RoomCenterToCameraOffsetPosition, Quaternion.Euler(RoomCenterToCameraOffsteEulerRotation));
             _cameraTargetPosition = Camera.main.transform.position;
             OnTargetRoomArrived();
+        }
+
+        private void OnDisable()
+        {
+            Destroy(_roomListRoot);
         }
 
         private void Update()
