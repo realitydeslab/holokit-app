@@ -35,7 +35,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnEnterRealityButtonPressed()
         {
-            Debug.Log("Enter reality button pressed");
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityPreferencesPage");
         }
     }
 }

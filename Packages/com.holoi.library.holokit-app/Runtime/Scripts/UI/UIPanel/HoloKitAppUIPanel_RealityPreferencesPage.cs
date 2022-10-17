@@ -10,11 +10,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
-        private void Start()
-        {
-            
-        }
-
         public void OnBackButtonPressed()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();

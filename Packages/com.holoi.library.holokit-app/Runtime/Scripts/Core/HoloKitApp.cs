@@ -106,7 +106,7 @@ namespace Holoi.Library.HoloKitApp
                 else
                 {
                     // Load landing page
-                    //UIPanelManager.PushUIPanel("LandingPage");
+                    UIPanelManager.PushUIPanel("LandingPage");
                 }
             }
 

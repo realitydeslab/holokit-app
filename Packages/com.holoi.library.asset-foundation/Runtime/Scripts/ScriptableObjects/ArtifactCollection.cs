@@ -22,5 +22,19 @@ namespace Holoi.AssetFoundation
         public string ImageUrl;
 
         public abstract List<Tag> Tags { get; }
+
+        public int GetArtifactIndex(string artifactTokenId)
+        {
+            int index = -1;
+            foreach (var artifact in Artifacts)
+            {
+                index++;
+                if (artifact.TokenId.Equals(artifactTokenId))
+                {
+                    return index;
+                }
+            }
+            return -1;
+        }
     }
 }

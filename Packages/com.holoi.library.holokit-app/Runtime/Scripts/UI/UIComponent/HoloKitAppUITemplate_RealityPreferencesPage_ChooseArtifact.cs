@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,14 +9,14 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public abstract class HoloKitAppUITemplate_RealityPreferencesPage_ChooseArtifact : MonoBehaviour
     {
-        [Header("Avatar Collection Selector")]
+        [Header("Artifact Collection Selector")]
         [SerializeField] private RectTransform _artifactCollectionScrollRoot;
 
         [SerializeField] private HoloKitAppUIComponent_RealityPreferencesPage_ArtifactCollectionTab _artifactCollectionTabPrefab;
 
-        private ArtifactCollection _artifactCollection;
+        protected ArtifactCollection CurrentArtifactCollection;
 
-        [Header("Avatar Selector")]
+        [Header("Artifact Selector")]
         [SerializeField] private TMP_Text _artifactTokenId;
 
         [SerializeField] private TMP_Text _artifactCollectionName;
@@ -28,7 +29,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private Scrollbar _artifactHorizontalScrollbar;
 
-        private int _currentArtifactIndex = 0;
+        private int _currentArtifactIndex = -1;
 
         private float _artifactHorizontalScrollbarInterval = 1f;
 
@@ -66,8 +67,11 @@ namespace Holoi.Library.HoloKitApp.UI
                 }
             }
 
-            _artifactCollection = HoloKitApp.Instance.GlobalSettings.GetPreferencedMetaAvatarCollection(HoloKitApp.Instance.CurrentReality);
-            UpdateArtifactSelector(_artifactCollection);
+            CurrentArtifactCollection = HoloKitApp.Instance.GlobalSettings.GetPreferencedMetaAvatarCollection(HoloKitApp.Instance.CurrentReality);
+            UpdateArtifactSelector(CurrentArtifactCollection);
+            // Scroll to the preferenced avatar image
+            int preferencedArtifactIndex = GetPreferencedArtifactIndex();
+            StartCoroutine(SetArtifactScrollbarValue(preferencedArtifactIndex * _artifactHorizontalScrollbarInterval));
         }
 
         private void Update()
@@ -92,30 +96,44 @@ namespace Holoi.Library.HoloKitApp.UI
                 if (index != _currentArtifactIndex)
                 {
                     _currentArtifactIndex = index;
-                    // Update SO
-                    Debug.Log($"Changed to {index}");
+                    UpdateRealityPreferences(CurrentArtifactCollection.BundleId, CurrentArtifactCollection.Artifacts[_currentArtifactIndex].TokenId);
                 }
             }
         }
 
         protected abstract List<ArtifactCollection> GetCompatibleArtifactCollectionList();
 
+        protected abstract int GetPreferencedArtifactIndex();
+
         private void OnNewTabSelected(ArtifactCollection artifactCollection)
         {
-            _artifactCollection = artifactCollection;
+            CurrentArtifactCollection = artifactCollection;
             for (int i = 0; i < _artifactCollectionScrollRoot.childCount; i++)
             {
                 var artifactCollectionTab = _artifactCollectionScrollRoot.GetChild(i).GetComponent<HoloKitAppUIComponent_RealityPreferencesPage_ArtifactCollectionTab>();
                 if (artifactCollectionTab.ArtifactCollection.Equals(artifactCollection))
                 {
                     artifactCollectionTab.OnSelected();
-                    UpdateArtifactSelector(artifactCollection);
                 }
                 else
                 {
                     artifactCollectionTab.OnUnselected();
                 }
             }
+
+            UpdateArtifactSelector(artifactCollection);
+
+            int coverArtifactIndex = artifactCollection.GetArtifactIndex(artifactCollection.CoverArtifact.TokenId);
+            StartCoroutine(SetArtifactScrollbarValue(coverArtifactIndex * _artifactHorizontalScrollbarInterval));
+
+            UpdateRealityPreferences(artifactCollection.BundleId, artifactCollection.CoverArtifact.TokenId);
+        }
+
+        private IEnumerator SetArtifactScrollbarValue(float value)
+        {
+            // Wait for 1 frame
+            yield return null;
+            _artifactHorizontalScrollbar.value = value;
         }
 
         private void UpdateArtifactSelector(ArtifactCollection artifactCollection)
@@ -147,17 +165,6 @@ namespace Holoi.Library.HoloKitApp.UI
             _artifactHorizontalScrollbarInterval = 1f / (artifactCollection.Artifacts.Count - 1);
         }
 
-        private void UpdateRealityPreferences(string avatarCollectionId, string avatarTokenId)
-        {
-            // Save the new avatar collection to global settings
-            RealityPreference realityPreference = HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId];
-            HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId] = new RealityPreference()
-            {
-                MetaAvatarCollectionBundleId = avatarCollectionId,
-                MetaAvatarTokenId = avatarTokenId,
-                MetaObjectCollectionBundleId = realityPreference.MetaObjectCollectionBundleId,
-                MetaObjectTokenId = realityPreference.MetaObjectTokenId
-            };
-        }
+        protected abstract void UpdateRealityPreferences(string artifactCollectionId, string artifactTokenId);
     }
 }
