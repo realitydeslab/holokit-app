@@ -3,7 +3,7 @@ using UnityEngine.Video;
 
 namespace Holoi.AssetFoundation
 {
-    public abstract class Artifact : ScriptableObject
+    public abstract class NonFungible : ScriptableObject
     {
         public string TokenId;
 
@@ -13,6 +13,6 @@ namespace Holoi.AssetFoundation
 
         public GameObject Prefab;
 
-        public abstract ArtifactCollection ArtifactCollection { get; }
+        public abstract NonFungibleCollection NonFungibleCollection { get; }
     }
 }

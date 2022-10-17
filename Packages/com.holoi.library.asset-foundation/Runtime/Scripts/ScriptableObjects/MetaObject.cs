@@ -3,9 +3,9 @@ using UnityEngine;
 namespace Holoi.AssetFoundation
 {
     [CreateAssetMenu(menuName = "ScriptableObjects/MetaObject")]
-    public class MetaObject : Artifact
+    public class MetaObject: NonFungible
     {
-        public override ArtifactCollection ArtifactCollection => MetaObjectCollection;
+        public override NonFungibleCollection NonFungibleCollection => MetaObjectCollection;
 
         public MetaObjectCollection MetaObjectCollection;
     }

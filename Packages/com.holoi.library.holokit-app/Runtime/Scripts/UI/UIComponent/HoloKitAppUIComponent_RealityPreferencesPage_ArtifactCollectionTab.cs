@@ -7,7 +7,7 @@ using Holoi.AssetFoundation;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
-    public class HoloKitAppUIComponent_RealityPreferencesPage_ArtifactCollectionTab : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+    public class HoloKitAppUIComponent_RealityPreferencesPage_NonFungibleCollectionTab : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         [SerializeField] private TMP_Text _tabName;
 
@@ -21,13 +21,13 @@ namespace Holoi.Library.HoloKitApp.UI
             }
         }
 
-        public ArtifactCollection ArtifactCollection => _artifactCollection;
+        public NonFungibleCollection NonFungibleCollection => _artifactCollection;
 
-        private ArtifactCollection _artifactCollection;
+        private NonFungibleCollection _artifactCollection;
 
-        private Action<ArtifactCollection> _onNewTabSelected;
+        private Action<NonFungibleCollection> _onNewTabSelected;
 
-        public void Init(string name, ArtifactCollection artifactCollectionId, Action<ArtifactCollection> OnNewTabSelected)
+        public void Init(string name, NonFungibleCollection artifactCollectionId, Action<NonFungibleCollection> OnNewTabSelected)
         {
             _tabName.text = name;
             _artifactCollection = artifactCollectionId;

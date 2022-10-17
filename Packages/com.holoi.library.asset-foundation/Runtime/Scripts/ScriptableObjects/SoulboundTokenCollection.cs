@@ -2,22 +2,35 @@ using UnityEngine;
 using Holoi.AssetFoundation;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Holoi.AssetFoundation
 {
     [CreateAssetMenu(menuName = "ScriptableObjects/SoulboundTokenCollection")]
-    public class SoulboundTokenCollection : ScriptableObject
+    public class SoulboundTokenCollection : NonFungibleCollection
     {
-        public List<SoulboundToken> SoulboundToken;
+        public override List<NonFungible> NonFungibles
+        {
+            get
+            {
+                return SoulboundTokens.Cast<NonFungible>().ToList();
+            }
+        }
 
-        public string displayName;
+        public List<SoulboundToken> SoulboundTokens;
 
-        public string description;
+        public override NonFungible CoverNonFungible => CoverSoulboundToken;
 
-        public string author;
+        public SoulboundToken CoverSoulboundToken;
 
-        public SmartContract contract;
+        public override List<Tag> Tags
+        {
+            get
+            {
+                return SoulboundTokenTags.Cast<Tag>().ToList();
+            }
+        }
 
-        public string imageUrl;
+        public List<SoulBoundTokenTag> SoulboundTokenTags;
     }
 }

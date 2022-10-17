@@ -5,16 +5,10 @@ using UnityEngine.Video;
 namespace Holoi.AssetFoundation
 {
     [CreateAssetMenu(menuName = "ScriptableObjects/SoulboundToken")]
-    public class SoulboundToken : ScriptableObject
+    public class SoulboundToken : NonFungible 
     {
-        public Sprite image;
+        public override NonFungibleCollection NonFungibleCollection => SBTCollection;
 
-        public VideoClip video;
-
-        public GameObject prefab;
-
-        public string tokenId;
-
-        public SoulboundTokenCollection collection;
+        public SoulboundTokenCollection SBTCollection;
     }
 }

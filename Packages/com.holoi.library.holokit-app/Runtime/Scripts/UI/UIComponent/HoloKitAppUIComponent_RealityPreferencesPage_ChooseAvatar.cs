@@ -6,9 +6,9 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIComponent_RealityPreferencesPage_ChooseAvatar : HoloKitAppUITemplate_RealityPreferencesPage_ChooseArtifact
     {
-        protected override List<ArtifactCollection> GetCompatibleArtifactCollectionList()
+        protected override List<NonFungibleCollection> GetCompatibleNonFungibleCollectionList()
         {
-            return HoloKitApp.Instance.GlobalSettings.GetCompatibleMetaAvatarCollectionList(HoloKitApp.Instance.CurrentReality).Cast<ArtifactCollection>().ToList();
+            return HoloKitApp.Instance.GlobalSettings.GetCompatibleMetaAvatarCollectionList(HoloKitApp.Instance.CurrentReality).Cast<NonFungibleCollection>().ToList();
         }
 
         protected override int GetPreferencedArtifactIndex()

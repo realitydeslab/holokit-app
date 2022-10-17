@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace Holoi.AssetFoundation
 {
-    public abstract class ArtifactCollection : ScriptableObject
+    public abstract class NonFungibleCollection : ScriptableObject
     {
         public string BundleId;
 
-        public abstract List<Artifact> Artifacts { get; }
+        public abstract List<NonFungible> NonFungibles { get; }
 
-        public abstract Artifact CoverArtifact { get; }
+        public abstract NonFungible CoverNonFungible { get; }
 
         public string DisplayName;
 

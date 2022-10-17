@@ -5,19 +5,19 @@ using UnityEngine;
 namespace Holoi.AssetFoundation
 {
     [CreateAssetMenu(menuName = "ScriptableObjects/MetaObjectCollection")]
-    public class MetaObjectCollection : ArtifactCollection
+    public class MetaObjectCollection : NonFungibleCollection
     {
-        public override List<Artifact> Artifacts
+        public override List<NonFungible> NonFungibles
         {
             get
             {
-                return MetaObjects.Cast<Artifact>().ToList();
+                return MetaObjects.Cast<NonFungible>().ToList();
             }
         }
 
         public List<MetaObject> MetaObjects;
 
-        public override Artifact CoverArtifact => CoverMetaObject;
+        public override NonFungible CoverNonFungible => CoverMetaObject;
 
         public MetaObject CoverMetaObject;
 
