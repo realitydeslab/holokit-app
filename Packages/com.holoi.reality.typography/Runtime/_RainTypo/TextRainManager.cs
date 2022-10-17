@@ -52,7 +52,7 @@ namespace Holoi.Reality.Typography
                 _vfxRain.SetVector3("Chest Position_position", _bone.SkeletonChest.position);
                 _vfxRain.SetVector3("RH Position_position", _bone.SkeletonRightHand.position);
                 _vfxRain.SetVector3("LH Position_position", _bone.SkeletonLeftHand.position);
-                _vfxRain.SetVector3("Plane Position_position", FindObjectOfType<ImitateTypoRealityManager>().HitPosition);
+                _vfxRain.SetVector3("Plane Position_position", FindObjectOfType<RainTypoRealityManager>().HitPosition);
             }
         }
     }
