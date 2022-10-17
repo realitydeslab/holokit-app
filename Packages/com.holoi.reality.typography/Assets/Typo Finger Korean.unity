@@ -320,7 +320,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 1
+  m_Time: 3
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -329,7 +329,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.015
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -358,8 +358,8 @@ TrailRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 65535
-      atime2: 0
+      atime1: 49151
+      atime2: 65535
       atime3: 0
       atime4: 0
       atime5: 0
@@ -367,14 +367,14 @@ TrailRenderer:
       atime7: 0
       m_Mode: 0
       m_NumColorKeys: 2
-      m_NumAlphaKeys: 2
+      m_NumAlphaKeys: 3
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
     textureMode: 1
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
+  m_MinVertexDistance: 0.001
   m_Autodestruct: 0
   m_Emitting: 1
 --- !u!114 &72963051
@@ -393,7 +393,7 @@ MonoBehaviour:
   m_shaderPropertyName: _MoveToMaterialUV
   m_shaderPropertyID: 2693
   m_materialData:
-  - m_trailRenderer: {fileID: 0}
+  - m_trailRenderer: {fileID: 72963050}
     m_uvTiling: {x: 1, y: 1}
     m_move: 0
 --- !u!1 &157508829 stripped
@@ -462,7 +462,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 176031585}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0.399, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -486,7 +486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef2469f8489bb419f82881ce2992a1b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _HHT: {fileID: 0}
+  _HHT: {fileID: 776683207}
   _vfxs:
   - {fileID: 238959461}
   - {fileID: 72963047}
@@ -586,7 +586,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 1
+  m_Time: 3
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -595,7 +595,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.015
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -624,8 +624,8 @@ TrailRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 65535
-      atime2: 0
+      atime1: 49151
+      atime2: 65535
       atime3: 0
       atime4: 0
       atime5: 0
@@ -633,14 +633,14 @@ TrailRenderer:
       atime7: 0
       m_Mode: 0
       m_NumColorKeys: 2
-      m_NumAlphaKeys: 2
+      m_NumAlphaKeys: 3
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
     textureMode: 1
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
+  m_MinVertexDistance: 0.001
   m_Autodestruct: 0
   m_Emitting: 1
 --- !u!114 &238959463
@@ -659,7 +659,7 @@ MonoBehaviour:
   m_shaderPropertyName: _MoveToMaterialUV
   m_shaderPropertyID: 2693
   m_materialData:
-  - m_trailRenderer: {fileID: 0}
+  - m_trailRenderer: {fileID: 238959462}
     m_uvTiling: {x: 1, y: 1}
     m_move: 0
 --- !u!4 &238959464
@@ -1521,6 +1521,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8758747947476060082, guid: 33703e991f67b48bc95296635ea2bc41, type: 3}
   m_PrefabInstance: {fileID: 1147827204}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &776683207 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 193546642362784935, guid: 33703e991f67b48bc95296635ea2bc41, type: 3}
+  m_PrefabInstance: {fileID: 1147827204}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147827205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 198b8f12a899d438cbed1d2344af69c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &835078245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1963,11 +1974,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 193546642362784935, guid: 33703e991f67b48bc95296635ea2bc41, type: 3}
       propertyPath: _visible
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 193546642362784935, guid: 33703e991f67b48bc95296635ea2bc41, type: 3}
       propertyPath: _fadeOutDelay
-      value: 0.33
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3231388504386293999, guid: 33703e991f67b48bc95296635ea2bc41, type: 3}
       propertyPath: m_IsActive
@@ -2897,7 +2908,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 1
+  m_Time: 3
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -2906,7 +2917,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.015
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2935,8 +2946,8 @@ TrailRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 65535
-      atime2: 0
+      atime1: 49151
+      atime2: 65535
       atime3: 0
       atime4: 0
       atime5: 0
@@ -2944,14 +2955,14 @@ TrailRenderer:
       atime7: 0
       m_Mode: 0
       m_NumColorKeys: 2
-      m_NumAlphaKeys: 2
+      m_NumAlphaKeys: 3
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
     textureMode: 1
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
+  m_MinVertexDistance: 0.001
   m_Autodestruct: 0
   m_Emitting: 1
 --- !u!114 &1538538174
@@ -2970,7 +2981,7 @@ MonoBehaviour:
   m_shaderPropertyName: _MoveToMaterialUV
   m_shaderPropertyID: 2693
   m_materialData:
-  - m_trailRenderer: {fileID: 0}
+  - m_trailRenderer: {fileID: 1538538173}
     m_uvTiling: {x: 1, y: 1}
     m_move: 0
 --- !u!1 &1566741838 stripped
@@ -3399,7 +3410,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 1
+  m_Time: 3
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -3408,7 +3419,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.015
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3437,8 +3448,8 @@ TrailRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 65535
-      atime2: 0
+      atime1: 49151
+      atime2: 65535
       atime3: 0
       atime4: 0
       atime5: 0
@@ -3446,14 +3457,14 @@ TrailRenderer:
       atime7: 0
       m_Mode: 0
       m_NumColorKeys: 2
-      m_NumAlphaKeys: 2
+      m_NumAlphaKeys: 3
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
     textureMode: 1
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
+  m_MinVertexDistance: 0.001
   m_Autodestruct: 0
   m_Emitting: 1
 --- !u!114 &1778256649
@@ -3472,7 +3483,7 @@ MonoBehaviour:
   m_shaderPropertyName: _MoveToMaterialUV
   m_shaderPropertyID: 2693
   m_materialData:
-  - m_trailRenderer: {fileID: 0}
+  - m_trailRenderer: {fileID: 1778256648}
     m_uvTiling: {x: 1, y: 1}
     m_move: 0
 --- !u!114 &1806170157
@@ -3913,7 +3924,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 1
+  m_Time: 3
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -3922,7 +3933,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.015
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3951,8 +3962,8 @@ TrailRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 65535
-      atime2: 0
+      atime1: 49151
+      atime2: 65535
       atime3: 0
       atime4: 0
       atime5: 0
@@ -3960,14 +3971,14 @@ TrailRenderer:
       atime7: 0
       m_Mode: 0
       m_NumColorKeys: 2
-      m_NumAlphaKeys: 2
+      m_NumAlphaKeys: 3
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
     textureMode: 1
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
+  m_MinVertexDistance: 0.001
   m_Autodestruct: 0
   m_Emitting: 1
 --- !u!114 &1980883840
@@ -3986,7 +3997,7 @@ MonoBehaviour:
   m_shaderPropertyName: _MoveToMaterialUV
   m_shaderPropertyID: 2693
   m_materialData:
-  - m_trailRenderer: {fileID: 0}
+  - m_trailRenderer: {fileID: 1980883839}
     m_uvTiling: {x: 1, y: 1}
     m_move: 0
 --- !u!1 &2010761505
