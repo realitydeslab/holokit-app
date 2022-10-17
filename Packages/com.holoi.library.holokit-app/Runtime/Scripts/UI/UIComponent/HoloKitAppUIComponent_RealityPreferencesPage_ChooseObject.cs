@@ -4,17 +4,17 @@ using Holoi.AssetFoundation;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
-    public class HoloKitAppUIComponent_RealityPreferencesPage_ChooseObject : HoloKitAppUITemplate_RealityPreferencesPage_ChooseArtifact
+    public class HoloKitAppUIComponent_RealityPreferencesPage_ChooseObject : HoloKitAppUITemplate_RealityPreferencesPage_ChooseNonFungible
     {
-        protected override List<ArtifactCollection> GetCompatibleArtifactCollectionList()
+        protected override List<NonFungibleCollection> GetCompatibleNonFungibleCollectionList()
         {
-            return HoloKitApp.Instance.GlobalSettings.GetCompatibleMetaObjectCollectionList(HoloKitApp.Instance.CurrentReality).Cast<ArtifactCollection>().ToList();
+            return HoloKitApp.Instance.GlobalSettings.GetCompatibleMetaObjectCollectionList(HoloKitApp.Instance.CurrentReality).Cast<NonFungibleCollection>().ToList();
         }
 
-        protected override int GetPreferencedArtifactIndex()
+        protected override int GetPreferencedNonFungibleIndex()
         {
             RealityPreference realityPreference = HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId];
-            return CurrentArtifactCollection.GetArtifactIndex(realityPreference.MetaObjectTokenId);
+            return CurrentNonFungibleCollection.GetNonFungibleIndex(realityPreference.MetaObjectTokenId);
         }
 
         protected override void UpdateRealityPreferences(string artifactCollectionId, string artifactTokenId)

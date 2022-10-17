@@ -78,7 +78,7 @@ namespace Holoi.Library.HoloKitApp
 
             // Reality preferences
             RealityPreferences = new();
-            foreach (var reality in RealityList.realities)
+            foreach (var reality in RealityList.List)
             {
                 // Set the default avatar
                 string metaAvatarCollectionId = null;
@@ -209,8 +209,8 @@ namespace Holoi.Library.HoloKitApp
 
         public List<Reality> GetAllRealities()
         {
-            List<Reality> wholeList = new(RealityList.realities);
-            wholeList.AddRange(TestRealityList.realities);
+            List<Reality> wholeList = new(RealityList.List);
+            wholeList.AddRange(TestRealityList.List);
             wholeList = wholeList.Distinct().ToList();
             return wholeList;
         }
@@ -218,7 +218,7 @@ namespace Holoi.Library.HoloKitApp
         public int GetRealityIndex(Reality reality)
         {
             int realityIndex = 0;
-            foreach (var realityInstance in RealityList.realities)
+            foreach (var realityInstance in RealityList.List)
             {
                 if (reality.Equals(realityInstance))
                 {

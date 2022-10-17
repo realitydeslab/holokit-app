@@ -5,7 +5,8 @@ namespace Holoi.AssetFoundation
     [CreateAssetMenu(menuName = "ScriptableObjects/RealityTag")]
     public class RealityTag : Tag 
     {
-        public string id;
-        public string displayName;
+        public string BundleId;
+
+        public string DisplayName;
     }
 }

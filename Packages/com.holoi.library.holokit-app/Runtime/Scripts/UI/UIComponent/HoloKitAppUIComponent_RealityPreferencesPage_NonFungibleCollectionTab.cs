@@ -21,16 +21,16 @@ namespace Holoi.Library.HoloKitApp.UI
             }
         }
 
-        public NonFungibleCollection NonFungibleCollection => _artifactCollection;
+        public NonFungibleCollection NonFungibleCollection => _nonFungibleCollection;
 
-        private NonFungibleCollection _artifactCollection;
+        private NonFungibleCollection _nonFungibleCollection;
 
         private Action<NonFungibleCollection> _onNewTabSelected;
 
-        public void Init(string name, NonFungibleCollection artifactCollectionId, Action<NonFungibleCollection> OnNewTabSelected)
+        public void Init(string name, NonFungibleCollection nonFungibleCollection, Action<NonFungibleCollection> OnNewTabSelected)
         {
             _tabName.text = name;
-            _artifactCollection = artifactCollectionId;
+            _nonFungibleCollection = nonFungibleCollection;
             _onNewTabSelected = OnNewTabSelected;
         }
 
@@ -43,7 +43,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 return;
             }
 
-            _onNewTabSelected(_artifactCollection);
+            _onNewTabSelected(_nonFungibleCollection);
         }
 
         public virtual void OnPointerUp(PointerEventData eventData) { }

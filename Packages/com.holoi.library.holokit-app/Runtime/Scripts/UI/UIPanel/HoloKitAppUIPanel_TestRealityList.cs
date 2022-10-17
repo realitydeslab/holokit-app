@@ -20,7 +20,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
 
             int realityIndex = 0;
-            foreach (var reality in HoloKitApp.Instance.GlobalSettings.TestRealityList.realities)
+            foreach (var reality in HoloKitApp.Instance.GlobalSettings.TestRealityList.List)
             {
                 realityIndex++;
                 var realitySlotInstance = Instantiate(_realitySlotPrefab);

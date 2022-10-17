@@ -18,7 +18,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
             _text = GetComponent<FlexibleUIText>().text;
 
-            _text.text = "#" + tag.displayName;
+            _text.text = "#" + tag.DisplayName;
 
             GetComponent<RectTransform>().sizeDelta = new Vector2(
                 GetComponent<FlexibleUIText>().text.preferredWidth + 72,

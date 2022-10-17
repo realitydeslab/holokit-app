@@ -111,7 +111,7 @@ namespace Holoi.Library.HoloKitApp
             }
 
             // Set a default reality
-            CurrentReality = GlobalSettings.RealityList.realities[0];
+            CurrentReality = GlobalSettings.RealityList.List[0];
         }
 
         private void OnDestroy()

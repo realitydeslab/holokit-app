@@ -94,7 +94,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _directionalLight = Instantiate(_directionalLightPrefab);
             _roomListRoot = Instantiate(_roomListRootPrefab);
             int realityIndex = -1;
-            foreach (var reality in HoloKitApp.Instance.GlobalSettings.RealityList.realities)
+            foreach (var reality in HoloKitApp.Instance.GlobalSettings.RealityList.List)
             {
                 realityIndex++;
                 GameObject roomInstance;
@@ -157,7 +157,7 @@ namespace Holoi.Library.HoloKitApp.UI
                     else if (fingerMovementVector.magnitude < FingerMovementClickThreshold)
                     {
                         // Enter the current room
-                        HoloKitApp.Instance.CurrentReality = HoloKitApp.Instance.GlobalSettings.RealityList.realities[_currentRoomIndex];
+                        HoloKitApp.Instance.CurrentReality = HoloKitApp.Instance.GlobalSettings.RealityList.List[_currentRoomIndex];
                         HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityDetailPage");
                     }
                 }
@@ -167,7 +167,7 @@ namespace Holoi.Library.HoloKitApp.UI
         private void OnTargetRoomArrived()
         {
             _realityIndexText.text = "Reality #" + HoloKitAppUtils.IntToStringF3(_currentRoomIndex + 1);
-            _realityNameText.text = HoloKitApp.Instance.GlobalSettings.RealityList.realities[_currentRoomIndex].DisplayName;
+            _realityNameText.text = HoloKitApp.Instance.GlobalSettings.RealityList.List[_currentRoomIndex].DisplayName;
         }
 
         private void ScrollToNextRoom()

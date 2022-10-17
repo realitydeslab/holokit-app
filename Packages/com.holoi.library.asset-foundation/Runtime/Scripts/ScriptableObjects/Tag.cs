@@ -4,6 +4,6 @@ namespace Holoi.AssetFoundation
 {
     public abstract class Tag : ScriptableObject
     {
-        public string tagName;
+        public string TagName;
     }
 }

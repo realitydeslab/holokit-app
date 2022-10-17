@@ -23,13 +23,13 @@ namespace Holoi.AssetFoundation
 
         public abstract List<Tag> Tags { get; }
 
-        public int GetArtifactIndex(string artifactTokenId)
+        public int GetNonFungibleIndex(string artifactTokenId)
         {
             int index = -1;
-            foreach (var artifact in Artifacts)
+            foreach (var nonFungible in NonFungibles)
             {
                 index++;
-                if (artifact.TokenId.Equals(artifactTokenId))
+                if (nonFungible.TokenId.Equals(artifactTokenId))
                 {
                     return index;
                 }

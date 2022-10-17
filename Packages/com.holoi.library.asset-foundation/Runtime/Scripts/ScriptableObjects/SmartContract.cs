@@ -6,11 +6,12 @@ namespace Holoi.AssetFoundation
     [CreateAssetMenu(menuName = "ScriptableObjects/SmartContract")]
     public class SmartContract : ScriptableObject
     {
-        public string address;
-        public string chainName = "ethereum";
+        public string Address;
+
+        public string ChainName = "ethereum";
 
         public string OpenseaUrl(string tokenId) {
-            return $"https://opensea.io/assets/{chainName}/{address}/{tokenId}";
+            return $"https://opensea.io/assets/{ChainName}/{Address}/{tokenId}";
         }
     }
 }
