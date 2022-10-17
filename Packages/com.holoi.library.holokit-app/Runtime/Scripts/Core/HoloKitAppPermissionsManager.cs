@@ -34,10 +34,10 @@ namespace Holoi.Library.HoloKitApp
             {
                 return false;
             }
-            if (GetLocationPermissionStatus() != HoloKitAppPermissionStatus.Granted)
-            {
-                return false;
-            }
+            //if (GetLocationPermissionStatus() != HoloKitAppPermissionStatus.Granted)
+            //{
+            //    return false;
+            //}
             return true;
         }
 
