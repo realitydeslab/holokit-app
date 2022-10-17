@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -10,7 +11,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private Mask _mask;
 
-        [SerializeField] private ScrollRect _scrollRect;
+        [SerializeField] private Scrollbar _horizontalScrollbar;
 
         [SerializeField] private Image _arrowUntriggered;
 
@@ -22,16 +23,22 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private GameObject _cover;
 
-        [SerializeField] private float _initialHorizontalScrollValue;
+        [SerializeField] private float _initialHorizontalScrollbarValue;
 
         protected bool Selected;
 
         private const float RecoverSpeed = 0.5f;
 
-        protected virtual void Awake()
+        protected virtual void Start()
         {
-            _scrollRect.horizontalScrollbar.value = _initialHorizontalScrollValue;
             OnRecovered();
+            StartCoroutine(SetHorizontalScrollbarValue(_initialHorizontalScrollbarValue));
+        }
+
+        private IEnumerator SetHorizontalScrollbarValue(float value)
+        {
+            yield return null;
+            _horizontalScrollbar.value = value;
         }
 
         protected virtual void Update()
@@ -40,24 +47,24 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 if (SwipeRight)
                 {
-                    if (_scrollRect.horizontalScrollbar.value < _initialHorizontalScrollValue)
+                    if (_horizontalScrollbar.value < _initialHorizontalScrollbarValue)
                     {
-                        _scrollRect.horizontalScrollbar.value += RecoverSpeed * Time.deltaTime;
-                        if (_scrollRect.horizontalScrollbar.value > _initialHorizontalScrollValue)
+                        _horizontalScrollbar.value += RecoverSpeed * Time.deltaTime;
+                        if (_horizontalScrollbar.value > _initialHorizontalScrollbarValue)
                         {
-                            _scrollRect.horizontalScrollbar.value = _initialHorizontalScrollValue;
+                            _horizontalScrollbar.value = _initialHorizontalScrollbarValue;
                             OnRecovered();
                         }
                     }
                 }
                 else
                 {
-                    if (_scrollRect.horizontalScrollbar.value > _initialHorizontalScrollValue)
+                    if (_horizontalScrollbar.value > _initialHorizontalScrollbarValue)
                     {
-                        _scrollRect.horizontalScrollbar.value -= RecoverSpeed * Time.deltaTime;
-                        if (_scrollRect.horizontalScrollbar.value < _initialHorizontalScrollValue)
+                        _horizontalScrollbar.value -= RecoverSpeed * Time.deltaTime;
+                        if (_horizontalScrollbar.value < _initialHorizontalScrollbarValue)
                         {
-                            _scrollRect.horizontalScrollbar.value = _initialHorizontalScrollValue;
+                            _horizontalScrollbar.value = _initialHorizontalScrollbarValue;
                             OnRecovered();
                         }
                     }
@@ -89,7 +96,7 @@ namespace Holoi.Library.HoloKitApp.UI
         protected virtual void OnUnselected()
         {
             Selected = false;
-            if (_scrollRect.horizontalScrollbar.value == _initialHorizontalScrollValue)
+            if (_horizontalScrollbar.value == _initialHorizontalScrollbarValue)
             {
                 OnRecovered();
             }
@@ -110,9 +117,9 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             if (SwipeRight)
             {
-                if (value.x > _initialHorizontalScrollValue)
+                if (value.x > _initialHorizontalScrollbarValue)
                 {
-                    _scrollRect.horizontalScrollbar.value = _initialHorizontalScrollValue;
+                    _horizontalScrollbar.value = _initialHorizontalScrollbarValue;
                 }
 
                 if (value.x == 0f)
@@ -122,9 +129,9 @@ namespace Holoi.Library.HoloKitApp.UI
             }
             else
             {
-                if (value.x < _initialHorizontalScrollValue)
+                if (value.x < _initialHorizontalScrollbarValue)
                 {
-                    _scrollRect.horizontalScrollbar.value = _initialHorizontalScrollValue;
+                    _horizontalScrollbar.value = _initialHorizontalScrollbarValue;
                 }
 
                 if (value.x == 1f)

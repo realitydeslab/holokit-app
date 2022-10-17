@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -10,16 +7,6 @@ namespace Holoi.Library.HoloKitApp.UI
         public override bool SwipeRight => true;
 
         [SerializeField] private HoloKitAppUIPanel_StarAR _starARPanel;
-
-        private const float HorizontalOffset = 0.018f;
-
-        protected override void Awake()
-        {
-            base.Awake();
-
-            //float horizontalOffsetPixel = HoloKitAppUtils.MeterToPixel(HorizontalOffset);
-            //GetComponent<RectTransform>().anchoredPosition = new Vector2(horizontalOffsetPixel, 0f);
-        }
 
         protected override void OnSelected()
         {
