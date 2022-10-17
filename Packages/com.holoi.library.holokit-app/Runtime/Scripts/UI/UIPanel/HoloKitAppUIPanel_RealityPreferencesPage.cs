@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIPanel_RealityPreferencesPage : HoloKitAppUIPanel
@@ -13,6 +9,16 @@ namespace Holoi.Library.HoloKitApp.UI
         public void OnBackButtonPressed()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+        }
+
+        public void OnStartHostButtonPressed()
+        {
+            HoloKitApp.Instance.EnterRealityAsHost();
+        }
+
+        public void OnStartClientButtonPressed()
+        {
+            HoloKitApp.Instance.JoinRealityAsSpectator();
         }
     }
 }

@@ -110,6 +110,7 @@ namespace Holoi.Library.HoloKitApp
                 }
             }
 
+            // Set a default reality
             CurrentReality = GlobalSettings.RealityList.realities[0];
         }
 
