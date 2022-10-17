@@ -8,24 +8,40 @@ namespace Holoi.Library.MOFABase
 {
     public class LifeShieldVFXController : MonoBehaviour
     {
+        [SerializeField] bool _isSingle = false;
+        [SerializeField] GameObject _singleLifeShield;
+
         [SerializeField] LifeShield _lifeShield;
 
         [SerializeField] List<GameObject> _debrisExplosion; // 0 1 2 3 = top rigt left bot
 
+        
+
         private void OnEnable()
         {
-            LifeShield.OnTopDestroyed += OnShieldTopDestoryed;
-            LifeShield.OnRightDestroyed += OnShieldRightDestoryed;
-            LifeShield.OnLeftDestroyed += OnShieldLeftDestoryed;
-            LifeShield.OnBotDestroyed += OnShieldBotDestoryed;
+            if (!_isSingle)
+            {
+                LifeShield.OnTopDestroyed += OnShieldTopDestoryed;
+                LifeShield.OnRightDestroyed += OnShieldRightDestoryed;
+                LifeShield.OnLeftDestroyed += OnShieldLeftDestoryed;
+                LifeShield.OnBotDestroyed += OnShieldBotDestoryed;
+            }
+            else
+            {
+                LifeShield.OnDead += OnSingleShieldDestoryed;
+            }
+
         }
 
         private void OnDisable()
         {
-            LifeShield.OnTopDestroyed -= OnShieldTopDestoryed;
-            LifeShield.OnRightDestroyed -= OnShieldRightDestoryed;
-            LifeShield.OnLeftDestroyed -= OnShieldLeftDestoryed;
-            LifeShield.OnBotDestroyed -= OnShieldBotDestoryed;
+            if (!_isSingle)
+            {
+                LifeShield.OnTopDestroyed -= OnShieldTopDestoryed;
+                LifeShield.OnRightDestroyed -= OnShieldRightDestoryed;
+                LifeShield.OnLeftDestroyed -= OnShieldLeftDestoryed;
+                LifeShield.OnBotDestroyed -= OnShieldBotDestoryed;
+            }
         }
 
         void OnShieldTopDestoryed(ulong ownerClientId)
@@ -53,6 +69,18 @@ namespace Holoi.Library.MOFABase
         {
             if (ownerClientId == _lifeShield.OwnerClientId)
             {
+                _debrisExplosion[3].SetActive(true);
+            }
+        }
+
+        void OnSingleShieldDestoryed(ulong ownerClientId)
+        {
+            if (ownerClientId == _lifeShield.OwnerClientId)
+            {
+                _singleLifeShield.SetActive(false);
+                _debrisExplosion[0].SetActive(true);
+                _debrisExplosion[1].SetActive(true);
+                _debrisExplosion[2].SetActive(true);
                 _debrisExplosion[3].SetActive(true);
             }
         }
