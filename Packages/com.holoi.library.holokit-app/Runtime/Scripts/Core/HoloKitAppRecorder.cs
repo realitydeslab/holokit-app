@@ -56,9 +56,9 @@ namespace Holoi.Library.HoloKitApp
                 {
                     _watermarkCamera.gameObject.SetActive(false);
                 }
+
                 if (_recordMicrophone)
                 {
-
                     // Start microphone
                     _microphoneSource = gameObject.AddComponent<AudioSource>();
                     _microphoneSource.mute = false;
