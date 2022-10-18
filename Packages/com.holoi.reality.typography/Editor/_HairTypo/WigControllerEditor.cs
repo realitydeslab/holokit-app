@@ -1,5 +1,7 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
+
 
 namespace Holoi.Reality.Typography.Editor
 {
@@ -89,3 +91,4 @@ namespace Holoi.Reality.Typography.Editor
         }
     }
 }
+#endif

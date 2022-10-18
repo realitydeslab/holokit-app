@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 
@@ -27,3 +28,4 @@ namespace Holoi.Reality.Typography.Editor
           => _so.FindProperty(name);
     }
 }
+#endif
