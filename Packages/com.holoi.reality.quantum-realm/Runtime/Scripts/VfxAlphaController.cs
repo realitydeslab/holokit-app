@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using Unity.Netcode;
 
-namespace Holoi.Reality.QuantumBuddhas
+namespace Holoi.Reality.QuantumRealm
 {
     public class VfxAlphaController : NetworkBehaviour
     {

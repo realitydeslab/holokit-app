@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
-namespace Holoi.Reality.QuantumBuddhas
+namespace Holoi.Reality.QuantumRealm
 {
     public class NetWorkObjectDebug : NetworkBehaviour
     {

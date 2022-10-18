@@ -4,7 +4,7 @@ using UnityEngine;
 using Apple.PHASE;
 using HoloKit;
 
-namespace Holoi.Reality.QuantumBuddhas
+namespace Holoi.Reality.QuantumRealm
 {
     public class PhaseManager : MonoBehaviour
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using Holoi.Library.ARUX;
 
-namespace Holoi.Reality.QuantumBuddhas
+namespace Holoi.Reality.QuantumRealm
 {
     public class BuddhasController : MonoBehaviour
     {

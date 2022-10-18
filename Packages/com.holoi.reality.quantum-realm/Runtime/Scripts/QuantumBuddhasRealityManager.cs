@@ -6,7 +6,7 @@ using Unity.Netcode;
 using HoloKit;
 using Holoi.Library.ARUX;
 
-namespace Holoi.Reality.QuantumBuddhas
+namespace Holoi.Reality.QuantumRealm
 {
     public class QuantumBuddhasRealityManager : RealityManager
     {

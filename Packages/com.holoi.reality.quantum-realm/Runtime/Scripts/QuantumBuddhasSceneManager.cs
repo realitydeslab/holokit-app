@@ -8,7 +8,7 @@ using HoloKit;
 using Unity.Netcode;
 using UnityEngine.XR.ARFoundation;
 
-namespace Holoi.Reality.QuantumBuddhas
+namespace Holoi.Reality.QuantumRealm
 {
     public class QuantumBuddhasSceneManager : MonoBehaviour
     {

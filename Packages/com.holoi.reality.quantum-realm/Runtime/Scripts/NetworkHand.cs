@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine.VFX;
 using UnityEngine.Animations;
 
-namespace Holoi.Reality.QuantumBuddhas
+namespace Holoi.Reality.QuantumRealm
 {
     public class NetworkHand : NetworkBehaviour
     {
