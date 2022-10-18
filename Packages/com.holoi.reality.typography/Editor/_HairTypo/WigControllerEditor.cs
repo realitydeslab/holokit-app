@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace Holoi.Reality.Typography
+namespace Holoi.Reality.Typography.Editor
 {
     [CustomEditor(typeof(WigController))]
-    sealed class WigControllerEditor : Editor
+    sealed class WigControllerEditor : UnityEditor.Editor
     {
         SerializedProperty _source;
         SerializedProperty _target;

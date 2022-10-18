@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace Holoi.Reality.Typography
+namespace Holoi.Reality.Typography.Editor
 {
     // Simple string label with GUIContent
     struct Label
