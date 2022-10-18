@@ -1,13 +1,14 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace BurstWig
+namespace Holoi.Reality.Typography
 {
     [CustomEditor(typeof(WigController))]
     sealed class WigControllerEditor : Editor
     {
         SerializedProperty _source;
         SerializedProperty _target;
+        SerializedProperty _vertexReducer;
         SerializedProperty _segmentCount;
         SerializedProperty _randomSeed;
 
@@ -35,6 +36,7 @@ namespace BurstWig
 
             _source       = finder["_source"];
             _target       = finder["_target"];
+            _vertexReducer = finder["_vertexReducer"];
             _segmentCount = finder["_segmentCount"];
             _randomSeed   = finder["_randomSeed"];
 
@@ -57,6 +59,7 @@ namespace BurstWig
 
             EditorGUILayout.Space();
 
+            EditorGUILayout.PropertyField(_vertexReducer);
             EditorGUILayout.PropertyField(_segmentCount);
             EditorGUILayout.PropertyField(_randomSeed);
 

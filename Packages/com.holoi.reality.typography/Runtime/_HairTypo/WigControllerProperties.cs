@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BurstWig
+namespace Holoi.Reality.Typography
 {
     public sealed partial class WigController
     {

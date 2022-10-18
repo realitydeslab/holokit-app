@@ -4,7 +4,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using VisualEffect = UnityEngine.VFX.VisualEffect;
 
-namespace BurstWig
+namespace Holoi.Reality.Typography
 {
     public sealed partial class WigController : MonoBehaviour
     {
@@ -12,6 +12,7 @@ namespace BurstWig
 
         [SerializeField] MeshRenderer _source = null;
         [SerializeField] VisualEffect _target = null;
+        [SerializeField] int _vertexReducer = 2;
         [SerializeField, Range(8, 256)] int _segmentCount = 64;
         [SerializeField] uint _randomSeed = 0;
         [SerializeField] WigProfile _profile = WigProfile.DefaultProfile;
@@ -32,7 +33,7 @@ namespace BurstWig
         void Start()
         {
             var mesh = _source.GetComponent<MeshFilter>().sharedMesh;
-            var vcount = mesh.vertexCount;
+            var vcount = mesh.vertexCount/_vertexReducer;
 
             _rootPoints = new NativeArray<RootPoint>
               (vcount, Allocator.Persistent);
@@ -47,8 +48,11 @@ namespace BurstWig
             var normals = mesh.normals;
 
             for (var vi = 0; vi < vcount; vi++)
+            {
                 _rootPoints[vi] = new RootPoint
-                  { position = vertices[vi], normal = normals[vi] };
+                { position = vertices[vi*_vertexReducer], normal = normals[vi] };
+            }
+
 
             _positionMap = new Texture2D
               (_segmentCount, vcount, TextureFormat.RGBAFloat, false);

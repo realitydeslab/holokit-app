@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace BurstWig
+namespace Holoi.Reality.Typography
 {
     // Simple string label with GUIContent
     struct Label

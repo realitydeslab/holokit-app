@@ -9,7 +9,7 @@ using UnityEngine.XR.ARSubsystems;
 
 namespace Holoi.Reality.Typography
 {
-    public class TrackerTypoRealityManager : RealityManager
+    public class HairTypoRealityManager : RealityManager
     {
         [Header("AR Base Objects")]
         [SerializeField] Transform _serverCenterEye;
@@ -24,11 +24,12 @@ namespace Holoi.Reality.Typography
 
         }
 
+
         private void Start()
         {
             _centerEye = HoloKitCamera.Instance.CenterEyePose;
 
-             InitServerCenterEye();
+            InitServerCenterEye();
 
         }
 

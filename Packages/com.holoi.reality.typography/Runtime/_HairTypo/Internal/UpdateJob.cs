@@ -3,7 +3,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using XXHash = Klak.Math.XXHash;
 
-namespace BurstWig
+namespace Holoi.Reality.Typography
 {
     [Unity.Burst.BurstCompile(CompileSynchronously = true)]
     struct UpdateJob : IJobParallelFor

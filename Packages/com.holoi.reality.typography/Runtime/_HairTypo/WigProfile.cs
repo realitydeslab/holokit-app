@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BurstWig
+namespace Holoi.Reality.Typography
 {
     [System.Serializable]
     public struct WigProfile

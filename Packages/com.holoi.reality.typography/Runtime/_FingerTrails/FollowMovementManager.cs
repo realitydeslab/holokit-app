@@ -46,7 +46,7 @@ public class FollowMovementManager : MonoBehaviour
     [SerializeField] private Vector3 _offset = new Vector3(0, 0, 0.5f);
     [SerializeField] private float _lerpSpeed = 4f;
     [SerializeField] private float _needMoveDistance = .01f;
-    [SerializeField] private float _regardAsArriveDistance = .002f;
+    [SerializeField] private float _regardAsArriveDistance = .001f;
 
     private bool _needMove = false;
 

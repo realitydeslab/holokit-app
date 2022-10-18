@@ -1,6 +1,6 @@
 using Unity.Mathematics;
 
-namespace BurstWig
+namespace Holoi.Reality.Typography
 {
     struct RootPoint
     {
