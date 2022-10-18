@@ -88,7 +88,7 @@ namespace Holoi.Library.HoloKitApp
                     if (reality.IsCompatibleWithMetaAvatarCollection(avatarCollection))
                     {
                         metaAvatarCollectionId = avatarCollection.BundleId;
-                        metaAvatarTokenId = avatarCollection.CoverMetaAvatar.TokenId;
+                        metaAvatarTokenId = avatarCollection.CoverMetaAvatar ? avatarCollection.CoverMetaAvatar.TokenId : null;
                         break;
                     }
                 }
@@ -101,7 +101,7 @@ namespace Holoi.Library.HoloKitApp
                     if (reality.IsCompatibleWithMetaObjectCollection(objectCollection))
                     {
                         metaObjectCollectionId = objectCollection.BundleId;
-                        metaObjectTokenId = objectCollection.CoverMetaObject.TokenId;
+                        metaObjectTokenId = objectCollection.CoverMetaObject ? objectCollection.CoverMetaObject.TokenId : null;
                         break;
                     }
                 }
