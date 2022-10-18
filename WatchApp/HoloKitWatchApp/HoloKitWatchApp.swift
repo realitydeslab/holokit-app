@@ -9,14 +9,13 @@ import SwiftUI
 
 @main
 struct HoloKitWatchApp: App {
-    @StateObject private var holokitAppWatch = HoloKitWatchAppManager()
-
-    //@StateObject private var mofaWatchManager = MofaWatchManager()
     
+    @StateObject private var holokitWatchAppManager = HoloKitWatchAppManager()
+
     var body: some Scene {
         WindowGroup {
             HomeView()
-                .environmentObject(holokitAppWatch)
+                .environmentObject(holokitWatchAppManager)
         }
     }
 }

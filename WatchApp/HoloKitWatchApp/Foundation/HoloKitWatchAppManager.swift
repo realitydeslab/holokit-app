@@ -17,10 +17,6 @@ class HoloKitWatchAppManager: NSObject, ObservableObject {
     override init() {
         super.init()
         
-        initializeHoloKitAppWCSessionDelegate()
-    }
-    
-    public func initializeHoloKitAppWCSessionDelegate() {
         if (WCSession.isSupported()) {
             wcSession = WCSession.default
             wcSession.delegate = self
@@ -31,16 +27,26 @@ class HoloKitWatchAppManager: NSObject, ObservableObject {
 
 // MARK: - WCSessionDelegate
 extension HoloKitWatchAppManager: WCSessionDelegate {
+    
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        
+        if (activationState == .activated) {
+            print("WCSession activated");
+        } else {
+            print("WCSession activation failed");
+        }
     }
     
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        if let realityId = message["RealityId"] as? Int {
-            print("Received realityId: \(realityId)")
-            if let reality = Reality(rawValue: realityId) {
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        print("didReceiveApplicationContext")
+        if let realityIndex = applicationContext["CurrentReality"] as? Int {
+            print("Received current reality updated message with reality index: \(realityIndex)")
+            if let reality = Reality(rawValue: realityIndex) {
                 self.currentReality = reality
             }
         }
+    }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        print("didReceiveMessage")
     }
 }

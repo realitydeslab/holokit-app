@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct MockHoloKitApp: App {
     
-    @State var holokitWatchAppManager = MockHoloKitWatchAppManager()
+    @State var holokitWatchAppManager = MockHoloKitAppWatchConnectivityManager()
     
     var body: some Scene {
         WindowGroup {

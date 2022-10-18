@@ -1,30 +1,44 @@
-//
-//  ContentView.swift
-//  HoloKitApp
-//
-//  Created by Yuchen Zhang on 2022/10/6.
-//
-
 import SwiftUI
 
 struct ContentView: View {
     
-    @EnvironmentObject var holokitWatchAppManager: MockHoloKitWatchAppManager
+    @EnvironmentObject var watchConnectivityManager: MockHoloKitAppWatchConnectivityManager
     
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-            
-            Button("Is Watch App Installed") {
-                _ = self.holokitWatchAppManager.isWatchAppInstalled()
+            Button("Activate") {
+                self.watchConnectivityManager.Activate()
             }
             
-            Button ("Initialize with RealityId") {
-                self.holokitWatchAppManager.initializeWithRealityId(realityId: 1)
+            Spacer(minLength: 10)
+            
+            Button("Paired") {
+                print("Has paired apple watch: \(self.watchConnectivityManager.HasPairedAppleWatch())")
             }
+            
+            Spacer(minLength: 10)
+            
+            Button("Watch App Installed") {
+                print("Is watch app installed: \(self.watchConnectivityManager.IsWatchAppInstalled())")
+            }
+            
+            Spacer(minLength: 10)
+            
+            Button("Is Reachable") {
+                print("Is reachable: \(self.watchConnectivityManager.IsReachable())")
+            }
+            
+            Spacer(minLength: 10)
+            
+            Button("Send Message") {
+                self.watchConnectivityManager.SendMessage()
+            }
+            
+//            Spacer(minLength: 10)
+//            
+//            Button("Update Current Reality") {
+//                self.watchConnectivityManager.UpdateCurrentReality(1)
+//            }
         }
         .padding()
     }
@@ -33,6 +47,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .environmentObject(MockHoloKitWatchAppManager())
+            .environmentObject(MockHoloKitAppWatchConnectivityManager())
     }
 }
