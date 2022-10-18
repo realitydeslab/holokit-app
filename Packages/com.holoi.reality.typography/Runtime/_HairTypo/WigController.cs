@@ -50,7 +50,7 @@ namespace Holoi.Reality.Typography
             for (var vi = 0; vi < vcount; vi++)
             {
                 _rootPoints[vi] = new RootPoint
-                { position = vertices[vi*_vertexReducer], normal = normals[vi] };
+                { position = vertices[vi*_vertexReducer], normal = normals[vi * _vertexReducer] };
             }
 
 
