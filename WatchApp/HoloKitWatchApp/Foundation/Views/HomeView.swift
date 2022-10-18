@@ -3,8 +3,8 @@ import SwiftUI
 struct HomeView: View {
     
     @EnvironmentObject var holokitAppWatchManager: HoloKitWatchAppManager
-
-    @StateObject private var mofaWatchManager = MofaWatchAppManager()
+    
+    @EnvironmentObject var mofaWatchAppManager: MofaWatchAppManager
     
     var body: some View {
         if (self.holokitAppWatchManager.currentReality == .nothing) {
@@ -16,9 +16,11 @@ struct HomeView: View {
             }
         } else if (self.holokitAppWatchManager.currentReality == .mofaTheTraining) {
             MofaHomeView()
-                .environmentObject(self.mofaWatchManager)
+                .environmentObject(self.holokitAppWatchManager.mofaWatchAppManager)
                 .onAppear {
-                    self.mofaWatchManager.InitializeMofaWCSessionDelegate()
+                    DispatchQueue.main.async {
+                        mofaWatchAppManager.InitializeMofaWCSessionDelegate()
+                    }
                 }
         }
     }
@@ -32,6 +34,8 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView().environmentObject(HoloKitWatchAppManager())
+        HomeView()
+            .environmentObject(HoloKitWatchAppManager())
+            .environmentObject(MofaWatchAppManager())
     }
 }

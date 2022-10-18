@@ -7,7 +7,7 @@ class MockHoloKitAppWatchConnectivityManager: NSObject, ObservableObject {
     override init() {
         super.init()
         
-        if (WCSession.isSupported()){
+        if (WCSession.isSupported()) {
             wcSession = WCSession.default
             wcSession.delegate = self
         }
@@ -30,12 +30,13 @@ class MockHoloKitAppWatchConnectivityManager: NSObject, ObservableObject {
     }
     
     func UpdateCurrentReality(_ realityIndex: Int) {
-        let context = ["CurrentReality" : realityIndex];
-        guard (try? self.wcSession.updateApplicationContext(context)) != nil else {
+        let context = ["CurrentReality" : realityIndex, "Variable" : Int.random(in: 0..<999)];
+        do {
+            try self.wcSession.updateApplicationContext(context)
+            print("Updated current reality")
+        } catch {
             print("Failed to update current reality")
-            return
         }
-        print("Updated current reality to watch")
     }
     
     func SendMessage() {

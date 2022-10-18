@@ -10,11 +10,11 @@ struct ContentView: View {
                 self.watchConnectivityManager.Activate()
             }
             
-            Spacer(minLength: 10)
-            
-            Button("Paired") {
-                print("Has paired apple watch: \(self.watchConnectivityManager.HasPairedAppleWatch())")
-            }
+//            Spacer(minLength: 10)
+//
+//            Button("Paired") {
+//                print("Has paired apple watch: \(self.watchConnectivityManager.HasPairedAppleWatch())")
+//            }
             
             Spacer(minLength: 10)
             
@@ -34,11 +34,11 @@ struct ContentView: View {
                 self.watchConnectivityManager.SendMessage()
             }
             
-//            Spacer(minLength: 10)
-//            
-//            Button("Update Current Reality") {
-//                self.watchConnectivityManager.UpdateCurrentReality(1)
-//            }
+            Spacer(minLength: 10)
+            
+            Button("Update Current Reality") {
+                self.watchConnectivityManager.UpdateCurrentReality(1)
+            }
         }
         .padding()
     }

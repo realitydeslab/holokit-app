@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MofaResultView: View {
     
-    @EnvironmentObject var mofaWatchManager: MofaWatchAppManager
+    @EnvironmentObject var holokitWatchAppManager: HoloKitWatchAppManager
     
     @State var result: Bool = true
     
@@ -46,7 +46,7 @@ struct MofaResultView: View {
     
     var gotItButton: some View {
         Button {
-            self.mofaWatchManager.currentView = .fightingView
+            self.holokitWatchAppManager.mofaWatchAppManager.currentView = .fightingView
         } label: {
             HStack {
                 Text("Got it")
@@ -69,6 +69,6 @@ struct MofaResultView: View {
 
 struct MofaResultView_Previews: PreviewProvider {
     static var previews: some View {
-        MofaResultView().environmentObject(MofaWatchAppManager())
+        MofaResultView().environmentObject(HoloKitWatchAppManager())
     }
 }

@@ -12,7 +12,9 @@ class HoloKitWatchAppManager: NSObject, ObservableObject {
     
     @Published var currentReality: Reality = .nothing
     
-    var wcSession: WCSession!
+    public var mofaWatchAppManager = MofaWatchAppManager()
+    
+    private var wcSession: WCSession!
     
     override init() {
         super.init()
@@ -37,16 +39,18 @@ extension HoloKitWatchAppManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        print("didReceiveApplicationContext")
+        print("holokitapp didReceiveApplicationContext")
         if let realityIndex = applicationContext["CurrentReality"] as? Int {
             print("Received current reality updated message with reality index: \(realityIndex)")
             if let reality = Reality(rawValue: realityIndex) {
-                self.currentReality = reality
+                DispatchQueue.main.async {
+                    self.currentReality = reality
+                }
             }
         }
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        print("didReceiveMessage")
+        print("holokitapp didReceiveMessage")
     }
 }

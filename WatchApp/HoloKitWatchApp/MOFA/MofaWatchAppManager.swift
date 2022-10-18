@@ -264,28 +264,30 @@ extension MofaWatchAppManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        if message["QueryWatchState"] is Int {
-            print("Received QueryWatchState message");
-            switch(self.currentState) {
-            case .nothing:
-                self.sendWatchInputMessage(watchInput: .changeToNothing)
-                break
-            case .sky:
-                //self.sendWatchInputMessage(watchInput: .change2Sky)
-                break
-            case .ground:
-                self.sendWatchInputMessage(watchInput: .changeToGround)
-                break
-            }
-            return
-        }
+        print("mofa didReceiveMessage");
         
-        if message["RoundResult"] is Int {
-            let roundResult = message["RoundResult"] as! MofaRoundResult;
-            let kill: Int = message["Kill"] as! Int;
-            let hitRate: Float = message["HitRate"] as! Float;
-            print("RoundResult \(roundResult), Kill \(kill) and HitRate \(hitRate)")
-        }
+//        if message["QueryWatchState"] is Int {
+//            print("Received QueryWatchState message");
+//            switch(self.currentState) {
+//            case .nothing:
+//                self.sendWatchInputMessage(watchInput: .changeToNothing)
+//                break
+//            case .sky:
+//                //self.sendWatchInputMessage(watchInput: .change2Sky)
+//                break
+//            case .ground:
+//                self.sendWatchInputMessage(watchInput: .changeToGround)
+//                break
+//            }
+//            return
+//        }
+//
+//        if message["RoundResult"] is Int {
+//            let roundResult = message["RoundResult"] as! MofaRoundResult;
+//            let kill: Int = message["Kill"] as! Int;
+//            let hitRate: Float = message["HitRate"] as! Float;
+//            print("RoundResult \(roundResult), Kill \(kill) and HitRate \(hitRate)")
+//        }
     }
 }
 

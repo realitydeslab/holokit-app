@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MofaFightingView: View {
     
-    @EnvironmentObject var mofaWatchManager: MofaWatchAppManager
+    @EnvironmentObject var holokitWatchAppManager: HoloKitWatchAppManager
     
     @State var isFighting: Bool = false
     
@@ -14,7 +14,7 @@ struct MofaFightingView: View {
             
             Spacer()
             
-            if (self.mofaWatchManager.isFighting) {
+            if (self.holokitWatchAppManager.mofaWatchAppManager.isFighting) {
                 fightingText
             } else {
                 startButton
@@ -24,7 +24,7 @@ struct MofaFightingView: View {
     
     var startButton: some View {
         Button {
-            self.mofaWatchManager.isFighting = true
+            self.holokitWatchAppManager.mofaWatchAppManager.isFighting = true
         } label: {
             ZStack {
                 Rectangle()

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MofaHandednessView: View {
     
-    @EnvironmentObject var mofaWatchManager: MofaWatchAppManager
+    @EnvironmentObject var holokitWatchAppManager: HoloKitWatchAppManager
 
     var body: some View {
         VStack {
@@ -22,13 +22,13 @@ struct MofaHandednessView: View {
     
     var rightHandButton: some View {
         Button {
-            self.mofaWatchManager.isRightHand = true
-            self.mofaWatchManager.currentView = .fightingView
+            self.holokitWatchAppManager.mofaWatchAppManager.isRightHand = true
+            self.holokitWatchAppManager.mofaWatchAppManager.currentView = .fightingView
         } label: {
             ZStack {
                 Rectangle()
                     .frame(maxWidth: 120, maxHeight: 50)
-                    .foregroundColor(self.mofaWatchManager.isRightHand ? .white : .black)
+                    .foregroundColor(self.holokitWatchAppManager.mofaWatchAppManager.isRightHand ? .white : .black)
                 HStack {
                     Text("Right Hand")
                         .font(Font.custom("ObjectSans-BoldSlanted", size: 13))
@@ -36,7 +36,7 @@ struct MofaHandednessView: View {
                         .resizable()
                         .frame(maxWidth: 16, maxHeight: 16)
                 }
-                .foregroundColor(self.mofaWatchManager.isRightHand ? .black : .white)
+                .foregroundColor(self.holokitWatchAppManager.mofaWatchAppManager.isRightHand ? .black : .white)
             }
         }
         .buttonStyle(.plain)
@@ -44,13 +44,13 @@ struct MofaHandednessView: View {
     
     var leftHandButton: some View {
         Button {
-            self.mofaWatchManager.isRightHand = false
-            self.mofaWatchManager.currentView = .fightingView
+            self.holokitWatchAppManager.mofaWatchAppManager.isRightHand = false
+            self.holokitWatchAppManager.mofaWatchAppManager.currentView = .fightingView
         } label: {
             ZStack {
                 Rectangle()
                     .frame(maxWidth: 120, maxHeight: 50)
-                    .foregroundColor(self.mofaWatchManager.isRightHand ? .black : .white)
+                    .foregroundColor(self.holokitWatchAppManager.mofaWatchAppManager.isRightHand ? .black : .white)
                     .border(Color.white)
                 HStack {
                     Text("Left Hand")
@@ -61,7 +61,7 @@ struct MofaHandednessView: View {
                         .frame(maxWidth: 16, maxHeight: 16)
 
                 }
-                .foregroundColor(self.mofaWatchManager.isRightHand ? .white : .black)
+                .foregroundColor(self.holokitWatchAppManager.mofaWatchAppManager.isRightHand ? .white : .black)
 
             }
         }
@@ -71,9 +71,9 @@ struct MofaHandednessView: View {
     var rememberSelectionTick: some View {
         HStack {
             Button {
-                self.mofaWatchManager.rememberHandedness.toggle()
+                self.holokitWatchAppManager.mofaWatchAppManager.rememberHandedness.toggle()
             } label: {
-                if (self.mofaWatchManager.rememberHandedness){
+                if (self.holokitWatchAppManager.mofaWatchAppManager.rememberHandedness){
                     Circle()
                     .frame(maxWidth: 20, maxHeight: 20)
                 } else {
@@ -92,6 +92,6 @@ struct MofaHandednessView: View {
 
 struct MofaHandednessView_Previews: PreviewProvider {
     static var previews: some View {
-        MofaHandednessView().environmentObject(MofaWatchAppManager())
+        MofaHandednessView().environmentObject(HoloKitWatchAppManager())
     }
 }

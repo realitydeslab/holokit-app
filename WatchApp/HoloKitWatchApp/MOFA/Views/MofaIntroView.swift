@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MofaIntroView: View {
     
-    @EnvironmentObject var mofaWatchManager: MofaWatchAppManager
+    @EnvironmentObject var holokitWatchAppManager: HoloKitWatchAppManager
     
     var body: some View {
         VStack {
@@ -20,7 +20,7 @@ struct MofaIntroView: View {
     
     var startButton: some View {
         Button {
-            self.mofaWatchManager.currentView = .handednessView
+            self.holokitWatchAppManager.mofaWatchAppManager.currentView = .handednessView
         } label: {
             ZStack {
                 Rectangle()
@@ -38,6 +38,6 @@ struct MofaIntroView: View {
 
 struct MofaIntroView_Previews: PreviewProvider {
     static var previews: some View {
-        MofaIntroView().environmentObject(MofaWatchAppManager())
+        MofaIntroView().environmentObject(HoloKitWatchAppManager())
     }
 }
