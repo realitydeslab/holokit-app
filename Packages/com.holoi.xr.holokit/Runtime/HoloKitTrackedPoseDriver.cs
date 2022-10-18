@@ -20,7 +20,6 @@ namespace HoloKit
         {
             if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Stereo)
             {
-                Debug.Log("Rotating matrix");
                 matrix *= RotationMatrix;
             }
             transform.SetPositionAndRotation(matrix.GetPosition(),
