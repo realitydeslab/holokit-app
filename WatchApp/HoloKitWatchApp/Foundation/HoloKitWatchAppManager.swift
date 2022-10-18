@@ -25,6 +25,13 @@ class HoloKitWatchAppManager: NSObject, ObservableObject {
             wcSession.activate()
         }
     }
+    
+    func GiveWCSessionDelegateControl() {
+        if (WCSession.isSupported()) {
+            wcSession = WCSession.default
+            wcSession.delegate = self
+        }
+    }
 }
 
 // MARK: - WCSessionDelegate
@@ -32,16 +39,15 @@ extension HoloKitWatchAppManager: WCSessionDelegate {
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         if (activationState == .activated) {
-            print("WCSession activated");
+            print("[HoloKitWatchAppManager] WCSession activated");
         } else {
-            print("WCSession activation failed");
+            print("[HoloKitWatchAppManager] WCSession activation failed");
         }
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        print("holokitapp didReceiveApplicationContext")
+        print("[HoloKitWatchAppManager] didReceiveApplicationContext")
         if let realityIndex = applicationContext["CurrentReality"] as? Int {
-            print("Received current reality updated message with reality index: \(realityIndex)")
             if let reality = Reality(rawValue: realityIndex) {
                 DispatchQueue.main.async {
                     self.currentReality = reality
@@ -51,6 +57,6 @@ extension HoloKitWatchAppManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        print("holokitapp didReceiveMessage")
+        print("[HoloKitWatchAppManager] didReceiveMessage")
     }
 }

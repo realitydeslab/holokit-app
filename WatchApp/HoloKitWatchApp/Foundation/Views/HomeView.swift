@@ -19,7 +19,7 @@ struct HomeView: View {
                 .environmentObject(self.holokitAppWatchManager.mofaWatchAppManager)
                 .onAppear {
                     DispatchQueue.main.async {
-                        mofaWatchAppManager.InitializeMofaWCSessionDelegate()
+                        mofaWatchAppManager.GiveWCSessionDelegateControl()
                     }
                 }
         }

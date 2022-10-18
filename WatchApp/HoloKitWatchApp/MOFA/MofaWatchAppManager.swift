@@ -7,8 +7,7 @@ import simd
 
 enum WatchState: Int {
     case nothing = 0
-    case sky = 1
-    case ground = 2
+    case ground = 1
 }
 
 enum WatchInput: Int {
@@ -67,7 +66,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         requestHealthKitAuthorization()
     }
     
-    public func InitializeMofaWCSessionDelegate() {
+    func GiveWCSessionDelegateControl() {
         if (WCSession.isSupported()) {
             wcSession = WCSession.default
             wcSession.delegate = self
@@ -181,14 +180,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
                     }
                 }
                 
-                if (simd_dot(gravityVector3, simd_double3(1, 0, 0)) > 0.7) {
-                    if (self.currentState != .sky) {
-                        print("changed to sky")
-                        self.currentState = .sky
-                        //self.sendWatchInputMessage(wathInput: .basic)
-                        return
-                    }
-                } else if (simd_dot(gravityVector3, simd_double3(-1, 0, 0)) > 0.7) {
+                if (simd_dot(gravityVector3, simd_double3(-1, 0, 0)) > 0.7) {
                     if (self.currentState != .ground) {
                         print("changed to ground")
                         self.currentState = .ground
@@ -260,11 +252,19 @@ class MofaWatchAppManager: NSObject, ObservableObject {
 // MARK: - WCSessionDelegate
 extension MofaWatchAppManager: WCSessionDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        
+        if (activationState == .activated) {
+            print("[MofaWatchAppManager] WCSession activated");
+        } else {
+            print("[MofaWatchAppManager] WCSession activation failed");
+        }
+    }
+    
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        print("[MofaWatchAppManager] didReceiveApplicationContext")
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        print("mofa didReceiveMessage");
+        print("[MofaWatchAppManager] didReceiveMessage")
         
 //        if message["QueryWatchState"] is Int {
 //            print("Received QueryWatchState message");
