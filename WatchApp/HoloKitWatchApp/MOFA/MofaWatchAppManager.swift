@@ -95,19 +95,17 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     func sendStartRoundMessage() {
         let message = ["StartRound": 0];
         self.wcSession.sendMessage(message, replyHandler: nil)
+        print("Start round message sent")
     }
     
     public func startRound() {
-        sendStartRoundMessage()
         startCoreMotion()
-        startWorkout()
-        //self.isFighting = true
+        //startWorkout()
     }
     
     public func stopRound() {
         endCoreMotion()
-        endWorkout()
-        //self.isFighting = false
+        //endWorkout()
     }
     
     public func startWorkout() {
@@ -203,6 +201,18 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         self.wcSession.sendMessage(message, replyHandler: nil, errorHandler: nil)
     }
     
+    func sendWatchCurrentStateMessage() {
+        switch(self.currentState) {
+        case .normal:
+            self.sendWatchInputMessage(watchInput: .changeToNormal)
+            break
+        case .ground:
+            self.sendWatchInputMessage(watchInput: .changeToGround)
+            break
+        }
+        return
+    }
+    
 // MARK: - Workout Metrics
     @Published var averageHeartRate: Double = 0
     @Published var heartRate: Double = 0
@@ -263,12 +273,14 @@ extension MofaWatchAppManager: WCSessionDelegate {
                         print("Mofa watch phase changed to fighting")
                         DispatchQueue.main.async {
                             self.currentView = .fightingView
+                            self.startRound()
                         }
                     } else if (mofaWatchPhase == .idle) {
                         // Round ended
                         print("Mofa watch phase changed to idle")
                         DispatchQueue.main.async {
                             self.currentView = .resultView
+                            self.stopRound()
                         }
                         
                         if let roundResultIndex = applicationContext["RoundResult"] as? Int {
@@ -295,28 +307,9 @@ extension MofaWatchAppManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-//        if message["QueryWatchState"] is Int {
-//            print("Received QueryWatchState message");
-//            switch(self.currentState) {
-//            case .nothing:
-//                self.sendWatchInputMessage(watchInput: .changeToNothing)
-//                break
-//            case .sky:
-//                //self.sendWatchInputMessage(watchInput: .change2Sky)
-//                break
-//            case .ground:
-//                self.sendWatchInputMessage(watchInput: .changeToGround)
-//                break
-//            }
-//            return
-//        }
-//
-//        if message["RoundResult"] is Int {
-//            let roundResult = message["RoundResult"] as! MofaRoundResult;
-//            let kill: Int = message["Kill"] as! Int;
-//            let hitRate: Float = message["HitRate"] as! Float;
-//            print("RoundResult \(roundResult), Kill \(kill) and HitRate \(hitRate)")
-//        }
+        if message["QueryWatchState"] is Int {
+            self.sendWatchCurrentStateMessage()
+        }
     }
 }
 

@@ -46,6 +46,7 @@ extension HoloKitWatchAppManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        print("[HoloKitWatchAppManager] didReceiveApplicationContext")
         if let realityIndex = applicationContext["CurrentReality"] as? Int {
             if let reality = Reality(rawValue: realityIndex) {
                 print("Switched to reality: \(String(describing: reality))")

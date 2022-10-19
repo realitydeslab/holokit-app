@@ -24,7 +24,6 @@ struct MofaFightingView: View {
     
     var startButton: some View {
         Button {
-            //self.mofaWatchAppManager.mofaWatchPhase = .fighting
             self.mofaWatchAppManager.sendStartRoundMessage()
         } label: {
             ZStack {

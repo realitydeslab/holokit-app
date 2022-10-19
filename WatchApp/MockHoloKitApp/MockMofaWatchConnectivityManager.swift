@@ -34,7 +34,7 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
     }
     
     func onRoundStarted() {
-        let context = ["MofaWatchPhase" : MofaWatchPhase.fighting.rawValue];
+        let context = ["MofaWatchPhase" : MofaWatchPhase.fighting.rawValue, "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
         do {
             try self.wcSession.updateApplicationContext(context)
             print("Fighting phase synced")
@@ -79,6 +79,7 @@ extension MockMofaWatchConnectivityManager: WCSessionDelegate {
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         if message["StartRound"] is Int {
             print("Start round message received")
+            self.onRoundStarted()
         }
     }
 }

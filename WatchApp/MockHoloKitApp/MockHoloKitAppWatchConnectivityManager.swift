@@ -20,6 +20,13 @@ class MockHoloKitAppWatchConnectivityManager: NSObject, ObservableObject {
         }
     }
     
+    func takeControlWatchConnectivitySession() {
+        if (WCSession.isSupported()) {
+            wcSession = WCSession.default
+            wcSession.delegate = self
+        }
+    }
+    
     func hasPairedAppleWatch() -> Bool {
         return self.wcSession.isPaired;
     }
