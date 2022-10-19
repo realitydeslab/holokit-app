@@ -22,6 +22,8 @@ namespace Holoi.Reality.Typography
 
         ARPlane _hitWall;
 
+        bool _isCollisionTriggeredFirstTime = true;
+
         private NetworkVariable<Vector3> _hitWalPos = new NetworkVariable<Vector3>();
 
         private NetworkVariable<Vector3> _hitWalNormal = new NetworkVariable<Vector3>();
@@ -39,7 +41,15 @@ namespace Holoi.Reality.Typography
 
         void Start()
         {
+            if (HoloKitApp.Instance.IsHost)
+            {
+                GetComponent<FollowMovementManager>().enabled = true;
+            }
+            else
+            {
+                GetComponent<FollowMovementManager>().enabled = false;
 
+            }
         }
 
         void Update()
@@ -49,15 +59,18 @@ namespace Holoi.Reality.Typography
 
         public void OnHandsUp()
         {
+            _isCollisionTriggeredFirstTime = true;
             _vfx.SetBool("Is Alive", true);
-            GetComponent<FollowMovementManager>().enabled = true;
+            if (HoloKitApp.Instance.IsHost)
+                GetComponent<FollowMovementManager>().enabled = true;
             _rigidBody.velocity = Vector3.zero;
             _rigidBody.useGravity = false;
         }
 
         public void OnShoot(Vector3 direction)
         {
-            GetComponent<FollowMovementManager>().enabled = false;
+            if (HoloKitApp.Instance.IsHost)
+                GetComponent<FollowMovementManager>().enabled = false;
             _rigidBody.useGravity = true;
             _rigidBody.velocity = direction * 3;
 
@@ -68,7 +81,7 @@ namespace Holoi.Reality.Typography
         {
             Debug.Log("OnCollisionEnter");
 
-            if (HoloKitApp.Instance.IsHost)
+            if (HoloKitApp.Instance.IsHost && _isCollisionTriggeredFirstTime)
             {
                 if (collision.transform.GetComponent<ARPlane>() != null)
                 {
@@ -117,6 +130,7 @@ namespace Holoi.Reality.Typography
                     }
 #endif
                 }
+                _isCollisionTriggeredFirstTime = false;
             }
             else
             {

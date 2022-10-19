@@ -37,7 +37,6 @@ namespace Holoi.Reality.Typography
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-
         }
 
         private void Start()
@@ -71,15 +70,14 @@ namespace Holoi.Reality.Typography
                     break;
                 case State.handsUp:
 
+                    Debug.Log("OnHandsUp");
                     _ball.GetComponent<BallController>().OnHandsUp();
-                    UpdateHandFollowerPosition();
 
                     break;
                 case State.shoot:
 
                     var direction = _centerEye.forward;
                     _ball.GetComponent<BallController>().OnShoot(direction);
-
                     _state = State.free;
                     break;
                 case State.free:
@@ -95,17 +93,22 @@ namespace Holoi.Reality.Typography
             _serverHandFollower.position = _centerEye.position + offset;
         }
 
-        public void SwitchStateToHandsUp()
+        public void OnHandsUpButtonClicked()
         {
             _state = State.handsUp;
+            // for server
+            OnHandsUpButtonClickedServerRpc();
         }
-        public void SwitchStateToShoot()
+
+        public void OnShootButtonClicked()
         {
             _state = State.shoot;
+            // for server
+            OnShootButtonClickedServerRpc();
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void OnHandsUpButtonClickedServerRpc()
+        private void OnHandsUpButtonClickedServerRpc()
         {
             Debug.Log("OnHandsUpButtonClickedServerRpc");
 
@@ -114,7 +117,7 @@ namespace Holoi.Reality.Typography
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void OnShootButtonClickedServerRpc()
+        private void OnShootButtonClickedServerRpc()
         {
             Debug.Log("OnShootButtonClickedServerRpc");
             _state = State.shoot;
