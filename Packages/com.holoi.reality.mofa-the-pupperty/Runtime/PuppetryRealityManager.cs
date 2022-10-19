@@ -6,7 +6,6 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using Unity.Netcode;
 using HoloKit;
-
 using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Reality.MOFAThePuppetry
@@ -64,12 +63,11 @@ namespace Holoi.Reality.MOFAThePuppetry
         {
 #if Unity_IOS
             if (Time.time > 4f && _isFloorHeightValid)
-            {
 #endif
 #if UNITY_EDITOR
             if (_start)
-            {
 #endif
+            {
                 if (HoloKitApp.Instance.IsHost)
                 {
 
@@ -79,6 +77,7 @@ namespace Holoi.Reality.MOFAThePuppetry
                     // update controller buttons' state:
                     if (_forwardButton.buttonPressed)
                     {
+                        Debug.Log("_forwardButton.buttonPressed");
                         OnForwardButtonStateChangedServerRpc(true);
                     }
                     else
@@ -87,6 +86,8 @@ namespace Holoi.Reality.MOFAThePuppetry
                     }
                     if (_backwardButton.buttonPressed)
                     {
+                        Debug.Log("_backwardButton.buttonPressed");
+
                         OnBackwardButtonStateChangedServerRpc(true);
                     }
                     else
@@ -95,6 +96,8 @@ namespace Holoi.Reality.MOFAThePuppetry
                     }
                     if (_rightwardButton.buttonPressed)
                     {
+                        Debug.Log("_rightwardButton.buttonPressed");
+
                         OnRightwardButtonStateChangedServerRpc(true);
                     }
                     else
@@ -103,6 +106,8 @@ namespace Holoi.Reality.MOFAThePuppetry
                     }
                     if (_leftwardButton.buttonPressed)
                     {
+                        Debug.Log("_leftwardButton.buttonPressed");
+
                         OnLeftwardButtonStateChangedServerRpc(true);
                     }
                     else
@@ -209,13 +214,13 @@ namespace Holoi.Reality.MOFAThePuppetry
             }
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void OnForwardButtonStateChangedServerRpc(bool state)
         {
             Debug.Log("OnForwardButtonStateChangedServerRpc");
             _forwardButton.buttonPressed = state;
         }
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void OnBackwardButtonStateChangedServerRpc(bool state)
         {
             Debug.Log("OnBackwardButtonStateChangedServerRpc");
@@ -223,7 +228,7 @@ namespace Holoi.Reality.MOFAThePuppetry
             _forwardButton.buttonPressed = state;
 
         }
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void OnLeftwardButtonStateChangedServerRpc(bool state)
         {
             Debug.Log("OnLeftwardButtonStateChangedServerRpc");
@@ -231,7 +236,7 @@ namespace Holoi.Reality.MOFAThePuppetry
             _forwardButton.buttonPressed = state;
 
         }
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void OnRightwardButtonStateChangedServerRpc(bool state)
         {
             Debug.Log("OnRightwardButtonStateChangedServerRpc");

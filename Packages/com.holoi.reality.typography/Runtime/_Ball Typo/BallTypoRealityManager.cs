@@ -70,19 +70,15 @@ namespace Holoi.Reality.Typography
 
                     break;
                 case State.handsUp:
-                    _ball.GetComponent<FollowMovementManager>().enabled = true;
-                    _ball.GetComponent<BallController>()._rigidBody.velocity = Vector3.zero;
-                    _ball.GetComponent<BallController>()._rigidBody.useGravity = false;
+
+                    _ball.GetComponent<BallController>().OnHandsUp();
                     UpdateHandFollowerPosition();
+
                     break;
                 case State.shoot:
+
                     var direction = _centerEye.forward;
-
-                    _ball.GetComponent<FollowMovementManager>().enabled = false;
-                    _ball.GetComponent<BallController>()._rigidBody.useGravity = true;
-                    _ball.GetComponent<BallController>()._rigidBody.velocity = direction * 3;
-
-                    _ball.GetComponent<BallController>().ClearHitWall(); // clear hit wall every time you shoot to avoid the unexpected hit wall.
+                    _ball.GetComponent<BallController>().OnShoot(direction);
 
                     _state = State.free;
                     break;
