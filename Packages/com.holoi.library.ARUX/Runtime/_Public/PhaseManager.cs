@@ -33,5 +33,10 @@ namespace Holoi.Library.ARUX
             _phaseSources.Stop();
             _phaseSources.DestroyFromPHASE();
         }
+
+        private void OnDestroy()
+        {
+            OnSceneExited();
+        }
     }
 }

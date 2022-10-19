@@ -9,6 +9,7 @@ using UnityEngine.XR.ARSubsystems;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.ARUX;
 
+
 namespace Holoi.Reality.Typography
 {
     public class BallTypoRealityManager : RealityManager
@@ -16,6 +17,7 @@ namespace Holoi.Reality.Typography
         [Header("AR Base Objects")]
         [SerializeField] Transform _centerEye;
         [SerializeField] Transform _serverHandFollower;
+        [SerializeField] GameObject _invisibleARPlane;
         [Header("Reality Objects")]
         [SerializeField] Transform _ball;
         [Header("Client UI")]
@@ -33,6 +35,8 @@ namespace Holoi.Reality.Typography
         }
 
         public State _state = State.idle;
+
+        bool _isFirstTimePlay = true;
 
         public override void OnNetworkSpawn()
         {
@@ -69,7 +73,20 @@ namespace Holoi.Reality.Typography
 
                     break;
                 case State.handsUp:
-                    Debug.Log("OnHandsUp");
+
+                    if (_isFirstTimePlay)
+                    {
+                        var _arPlaneManager = FindObjectOfType<ARPlaneManager>();
+
+                        foreach (var plane in _arPlaneManager.trackables)
+                        {
+                            plane.GetComponent<MeshRenderer>().material = _invisibleARPlane.GetComponent<MeshRenderer>().material;
+                        }
+                        _isFirstTimePlay = false;
+                    }
+
+                    //Debug.Log("OnHandsUp");
+
                     _ball.GetComponent<BallController>().OnHandsUp();
 
                     break;
