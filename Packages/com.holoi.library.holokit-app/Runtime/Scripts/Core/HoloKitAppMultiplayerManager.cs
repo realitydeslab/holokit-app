@@ -46,13 +46,11 @@ namespace Holoi.Library.HoloKitApp
 
         [SerializeField] private GameObject _phoneAlignmentMarkPrefab;
 
-        [SerializeField] private GameObject _axisPrefab;
-
         private NetworkHostCameraPose _networkHostCameraPose;
 
         private GameObject _phoneAlignmentMark;
 
-        private NetworkVariable<Vector3> _hostCameraToDisplayCenterOffset = new(Vector3.zero, NetworkVariableReadPermission.Everyone);
+        private readonly NetworkVariable<Vector3> _hostCameraToDisplayCenterOffset = new(Vector3.zero, NetworkVariableReadPermission.Everyone);
 
         private readonly Dictionary<ulong, string> _connectedSpectatorDevices = new();
 
@@ -123,15 +121,6 @@ namespace Holoi.Library.HoloKitApp
             }
             SpawnNetworkHostCameraPose();
             UpdateCameraToDisplayCenterOffset();
-            StartCoroutine(SpawnAxis());
-        }
-
-        private IEnumerator SpawnAxis()
-        {
-            yield return new WaitForSeconds(8f);
-            Vector3 imagePosition = HoloKitCamera.Instance.CenterEyePose.position + HoloKitCamera.Instance.CenterEyePose.rotation * CameraToQRCodeOffset;
-            Instantiate(_axisPrefab, imagePosition, HoloKitCamera.Instance.CenterEyePose.rotation);
-            Instantiate(_axisPrefab, HoloKitCamera.Instance.CenterEyePose.position, HoloKitCamera.Instance.CenterEyePose.rotation);
         }
 
         public void StopAdvertising()
@@ -239,6 +228,10 @@ namespace Holoi.Library.HoloKitApp
             HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnClientARSessionUpdatedFrame;
             var arTrackedImageManager = HoloKitCamera.Instance.GetComponentInParent<ARTrackedImageManager>(true);
             arTrackedImageManager.trackedImagesChanged += OnTrackedImagesChanged;
+            foreach (var trackable in arTrackedImageManager.trackables)
+            {
+                trackable.gameObject.SetActive(true);
+            }
             arTrackedImageManager.enabled = true;
         }
 
@@ -251,7 +244,7 @@ namespace Holoi.Library.HoloKitApp
             // Destroy the image tracker prefab
             foreach (var trackable in arTrackedImageManager.trackables)
             {
-                Destroy(trackable.gameObject);
+                trackable.gameObject.SetActive(false);
             }
         }
 
@@ -474,10 +467,11 @@ namespace Holoi.Library.HoloKitApp
         private void UpdateCameraToDisplayCenterOffset()
         {
             Vector3 phoneModelCameraOffset = HoloKitOpticsAPI.GetPhoneModelCameraOffset(HoloKitType.HoloKitX);
-            float screenWidthInMeter = HoloKitUtils.PixelToMeter(Screen.width);
-            _hostCameraToDisplayCenterOffset.Value = new Vector3(phoneModelCameraOffset.x + screenWidthInMeter,
-                                                                 phoneModelCameraOffset.y,
-                                                                 phoneModelCameraOffset.z);
+            Vector3 portraitCameraOffset = new(phoneModelCameraOffset.y, -phoneModelCameraOffset.x, phoneModelCameraOffset.z);
+            float halfScreenWidthInMeter = HoloKitUtils.PixelToMeter(Screen.width / 2f);
+            _hostCameraToDisplayCenterOffset.Value = new Vector3(portraitCameraOffset.x + halfScreenWidthInMeter,
+                                                                 portraitCameraOffset.y,
+                                                                 portraitCameraOffset.z);
         }
 
         // We only need to spawn this on client machine locally
