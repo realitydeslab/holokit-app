@@ -30,6 +30,7 @@ namespace Holoi.Reality.QuantumRealm
         [Header("AR Features")]
         [SerializeField] ARRaycastManager _arRaycastManager;
         [SerializeField] ARPlaneManager _arPlaneManager;
+        [SerializeField] AROcclusionManager _arOcclusioManager;
 
         [Header("Placement Settings")]
         [SerializeField] ARRayCastController _arRaycastController;
@@ -75,6 +76,14 @@ namespace Holoi.Reality.QuantumRealm
                 _handHookHead.position = _handJoint.position + dir * 0.5f;
             }
 
+            if(HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono)
+            {
+                _arOcclusioManager.enabled = true;
+            }
+            else
+            {
+                _arOcclusioManager.enabled = false;
+            }
         }
 
         public void SwitchToNextVFX()
@@ -89,7 +98,7 @@ namespace Holoi.Reality.QuantumRealm
             realityManager.OnActiveBuddhasSwitchClientRpc(_index);
         }
 
-        public void SwitchToNextVFXClientRpc()
+        public void SwitchToNextVFXClient()
         {
             _animator = _vfxs[_index].GetComponent<Animator>();
 
@@ -127,6 +136,9 @@ namespace Holoi.Reality.QuantumRealm
         public void InitTargetGameObject()
         {
             var realityManager = HoloKitApp.Instance.RealityManager as QuantumBuddhasRealityManager;
+
+            DisableARRaycastVisual();
+            DisableARPlaneManager();
 
             realityManager.OnBuddhasEnabledClientRpc(); // all client run this function
         }
@@ -168,6 +180,15 @@ namespace Holoi.Reality.QuantumRealm
             return new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
         }
 
+        public void DisableARPlaneManager()
+        {
+            if (HoloKitApp.Instance.IsHost)
+            {
+                _arPlaneManager.enabled = false;
+            }
+            
+        }
+
         public void DisableARRaycastVisual()
         {
             if (!HoloKitApp.Instance.IsHost)
@@ -180,7 +201,7 @@ namespace Holoi.Reality.QuantumRealm
             realityManager.OnDisableARRaycastClientRpc();
         }
 
-        public void DisableARRaycastVisualClientRpc()
+        public void DisableARRaycastVisualClient()
         {
             // diable function:
             _arRaycastController.enabled = false;
@@ -206,7 +227,7 @@ namespace Holoi.Reality.QuantumRealm
             go.SetActive(false);
         }
 
-        public void DiableARRaycastManager()
+        public void DisbleARRaycastManager()
         {
             _arRaycastManager.enabled = false;
             _arPlaneManager.enabled = false;

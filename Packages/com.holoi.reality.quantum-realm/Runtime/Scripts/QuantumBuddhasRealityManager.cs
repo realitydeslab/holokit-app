@@ -45,7 +45,7 @@ namespace Holoi.Reality.QuantumRealm
         public void OnDisableARRaycastClientRpc()
         {
             Debug.Log($"OnDisableARRaycastClientRpc");
-            GetComponent<QuantumBuddhasSceneManager>().DisableARRaycastVisualClientRpc();
+            GetComponent<QuantumBuddhasSceneManager>().DisableARRaycastVisualClient();
 
         }
 
@@ -53,7 +53,7 @@ namespace Holoi.Reality.QuantumRealm
         public void OnActiveBuddhasSwitchClientRpc(int index)
         {
             Debug.Log($"OnActiveBuddhasChangedClientRpc: {index}");
-            GetComponent<QuantumBuddhasSceneManager>().SwitchToNextVFXClientRpc();
+            GetComponent<QuantumBuddhasSceneManager>().SwitchToNextVFXClient();
         }
 
         [ClientRpc]
