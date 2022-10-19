@@ -13,6 +13,9 @@ struct ContentView: View {
         } else if (holokitAppWatchConnectivityManager.currentReality == .mofaTheTraining) {
             MofaView()
                 .environmentObject(self.mofaWatchConnectivityManager)
+                .onAppear {
+                    self.mofaWatchConnectivityManager.TakeControlWatchConnectivitySession()
+                }
         }
     }
 }

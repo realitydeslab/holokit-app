@@ -24,7 +24,9 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
     
     override init() {
         super.init()
-        
+    }
+    
+    func TakeControlWatchConnectivitySession() {
         if (WCSession.isSupported()) {
             wcSession = WCSession.default
             wcSession.delegate = self
