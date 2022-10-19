@@ -16,8 +16,6 @@ namespace Holoi.Library.MOFABase
 
     public class MofaPlayer : NetworkBehaviour
     {
-        public Vector3 LifeShieldOffest; 
-
         [HideInInspector] public NetworkVariable<MofaTeam> Team = new(0, NetworkVariableReadPermission.Everyone);
 
         [HideInInspector] public NetworkVariable<int> KillCount = new(0, NetworkVariableReadPermission.Everyone);
@@ -27,6 +25,8 @@ namespace Holoi.Library.MOFABase
         [HideInInspector] public NetworkVariable<bool> Ready = new(false, NetworkVariableReadPermission.Everyone);
 
         [HideInInspector] public LifeShield LifeShield;
+
+        [HideInInspector] public Vector3 LifeShieldOffest = new(0f, -0.4f, 0.5f);
 
         public static event Action OnScoreChanged;
 

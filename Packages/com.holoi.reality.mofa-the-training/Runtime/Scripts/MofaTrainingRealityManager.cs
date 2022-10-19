@@ -26,7 +26,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.Awake();
 
-            MofaBaseRealityManager.OnPhaseChanged += OnPhaseChangedFunc;
+            OnPhaseChanged += OnPhaseChangedFunc;
             HoloKitAppUIEventManager.OnTriggered += OnTriggered;
             HoloKitAppUIEventManager.OnBoosted += OnBoosted;
         }
@@ -35,7 +35,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.OnDestroy();
 
-            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChangedFunc;
+            OnPhaseChanged -= OnPhaseChangedFunc;
             HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
             HoloKitAppUIEventManager.OnBoosted -= OnBoosted;
         }

@@ -52,6 +52,8 @@ namespace Holoi.Library.HoloKitApp
 
         private GameObject _phoneAlignmentMark;
 
+        private NetworkVariable<Vector3> _hostCameraToDisplayCenterOffset = new(Vector3.zero, NetworkVariableReadPermission.Everyone);
+
         private readonly Dictionary<ulong, string> _connectedSpectatorDevices = new();
 
         public static event Action OnLocalClientConnected;
@@ -75,8 +77,9 @@ namespace Holoi.Library.HoloKitApp
         {
             if (_phoneAlignmentMark != null)
             {
-                _phoneAlignmentMark.transform.SetPositionAndRotation(_networkHostCameraPose.transform.position,
-                                                                     _networkHostCameraPose.transform.rotation);
+                _phoneAlignmentMark.transform.SetPositionAndRotation(
+                    _networkHostCameraPose.transform.position + _networkHostCameraPose.transform.rotation * _hostCameraToDisplayCenterOffset.Value,
+                    _networkHostCameraPose.transform.rotation);
             }
         }
 
@@ -119,6 +122,7 @@ namespace Holoi.Library.HoloKitApp
                 MultipeerConnectivityTransport.StartAdvertising();
             }
             SpawnNetworkHostCameraPose();
+            UpdateCameraToDisplayCenterOffset();
             StartCoroutine(SpawnAxis());
         }
 
@@ -464,6 +468,16 @@ namespace Holoi.Library.HoloKitApp
             {
                 Destroy(_networkHostCameraPose.gameObject);
             }
+        }
+
+        // Host only, make sure you are in portrait mode when calling this method.
+        private void UpdateCameraToDisplayCenterOffset()
+        {
+            Vector3 phoneModelCameraOffset = HoloKitOpticsAPI.GetPhoneModelCameraOffset(HoloKitType.HoloKitX);
+            float screenWidthInMeter = HoloKitUtils.PixelToMeter(Screen.width);
+            _hostCameraToDisplayCenterOffset.Value = new Vector3(phoneModelCameraOffset.x + screenWidthInMeter,
+                                                                 phoneModelCameraOffset.y,
+                                                                 phoneModelCameraOffset.z);
         }
 
         // We only need to spawn this on client machine locally

@@ -19,15 +19,18 @@ namespace Holoi.Reality.MOFATheTraining
 
     public class MofaAI : MofaPlayer
     {
-        public MetaAvatarCollectionList AvatarList;
+        [SerializeField] private MofaAvatarCollectionParamsList _mofaAvatarCollectionParamsList;
 
-        public SpellList SpellList;
+        [SerializeField] private SpellList _spellList;
 
         [SerializeField] private RuntimeAnimatorController _mofaAvatarRuntimeAnimatorController;
 
         private Animator _animator;
 
         private GameObject _avatar;
+
+        // From avatar origin to avatar's center eye
+        private Vector3 _centerEyeOffset;
 
         private MofaBaseRealityManager _mofaRealityManager;
 
@@ -39,7 +42,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         private Vector3 _destPosition;
 
-        private readonly float _speed = 0.3f;
+        private const float Speed = 0.3f;
 
         private AIAttackState _lastAIAttackState;
 
@@ -57,7 +60,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         private Vector3 _lastFramePosition;
 
-        private readonly Vector4 _velocityRemap = new(-.02f, .02f, -1f, 1f);
+        private readonly Vector4 VelocityRemap = new(-.02f, .02f, -1f, 1f);
 
         public static event Action<SpellType> OnAISpawnedSpell;
 
@@ -71,7 +74,7 @@ namespace Holoi.Reality.MOFATheTraining
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-            Debug.Log("[MofaAI] OnNetworkSpawn");
+            //Debug.Log("[MofaAI] OnNetworkSpawn");
 
             NetworkManager.NetworkTickSystem.Tick += OnNetworkTick;
         }
@@ -107,12 +110,18 @@ namespace Holoi.Reality.MOFATheTraining
         {
             if (_avatar == null)
             {
-                _avatar = Instantiate(AvatarList.List[0].MetaAvatars[0].Prefab,
+                var preferencedAvatarCollection = HoloKitApp.Instance.GlobalSettings.GetPreferencedAvatarCollection(null);
+                var preferencedAvatar = HoloKitApp.Instance.GlobalSettings.GetPreferencedAvatar(null);
+                var avatarCollectionParams = _mofaAvatarCollectionParamsList.GetAvatarCollectionParams(preferencedAvatarCollection);
+                _centerEyeOffset = avatarCollectionParams.CenterEyeOffset;
+                LifeShieldOffest = avatarCollectionParams.LifeShiledOffset;
+                _avatar = Instantiate(preferencedAvatar.Prefab,
                             transform.position, Quaternion.identity);
                 // Setup avatar's components
                 _avatar.transform.SetParent(transform);
                 _avatar.transform.localPosition = Vector3.zero;
                 _avatar.transform.localRotation = Quaternion.identity;
+                _avatar.transform.localScale = new Vector3(avatarCollectionParams.Scale, avatarCollectionParams.Scale, avatarCollectionParams.Scale);
                 _animator = _avatar.GetComponent<Animator>();
                 _animator.runtimeAnimatorController = _mofaAvatarRuntimeAnimatorController;
             }
@@ -149,7 +158,7 @@ namespace Holoi.Reality.MOFATheTraining
                     else
                     {
                         // Approaching to the destination
-                        transform.position += _speed * Time.fixedDeltaTime * (_destPosition - transform.position).normalized;
+                        transform.position += Speed * Time.fixedDeltaTime * (_destPosition - transform.position).normalized;
                         UpdateAvatarMovementAnimation();
                     }
                 }
@@ -184,7 +193,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void SetupSpellsForAI()
         {
-            foreach (var spell in SpellList.List)
+            foreach (var spell in _spellList.List)
             {
                 if (spell.MagicSchool.Id == 0)
                 {
@@ -286,8 +295,8 @@ namespace Holoi.Reality.MOFATheTraining
                     z = MofaTrainingUtils.InverseClamp(z, -1 * staticThreshold, 1 * staticThreshold);
                     x = MofaTrainingUtils.InverseClamp(x, -1 * staticThreshold, 1 * staticThreshold);
 
-                    z = MofaTrainingUtils.Remap(z, _velocityRemap.x, _velocityRemap.y, _velocityRemap.z, _velocityRemap.w, true);
-                    x = MofaTrainingUtils.Remap(x, _velocityRemap.x, _velocityRemap.y, _velocityRemap.z, _velocityRemap.w, true);
+                    z = MofaTrainingUtils.Remap(z, VelocityRemap.x, VelocityRemap.y, VelocityRemap.z, VelocityRemap.w, true);
+                    x = MofaTrainingUtils.Remap(x, VelocityRemap.x, VelocityRemap.y, VelocityRemap.z, VelocityRemap.w, true);
 
                     _animator.SetFloat("Velocity Z", z);
                     _animator.SetFloat("Velocity X", x);

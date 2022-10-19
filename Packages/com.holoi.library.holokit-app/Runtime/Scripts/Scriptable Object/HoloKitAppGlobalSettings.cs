@@ -117,41 +117,71 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
-        public MetaAvatar GetRealityPreferencedAvatar(Reality reality)
+        public MetaAvatarCollection GetPreferencedAvatarCollection(Reality reality)
         {
-            string avatarCollectionId = RealityPreferences[reality.BundleId].MetaAvatarCollectionBundleId;
-            string avatarTokenId = RealityPreferences[reality.BundleId].MetaAvatarTokenId;
+            if (reality == null)
+            {
+                reality = HoloKitApp.Instance.CurrentReality;
+            }
+            string avatarCollectionBundleId = RealityPreferences[reality.BundleId].MetaAvatarCollectionBundleId;
             foreach (var avatarCollection in AvatarCollectionList.List)
             {
-                if (avatarCollection.BundleId.Equals(avatarCollectionId))
+                if (avatarCollection.BundleId.Equals(avatarCollectionBundleId))
                 {
-                    foreach (var avatar in avatarCollection.MetaAvatars)
-                    {
-                        if (avatar.TokenId.Equals(avatarTokenId))
-                        {
-                            return avatar;
-                        }
-                    }
+                    return avatarCollection;
                 }
             }
             return null;
         }
 
-        public MetaObject GetRealityPreferencedObject(Reality reality)
+        public MetaObjectCollection GetPreferencedObjectCollection(Reality reality)
         {
-            string objectCollectionId = RealityPreferences[reality.BundleId].MetaObjectCollectionBundleId;
-            string objectTokenId = RealityPreferences[reality.BundleId].MetaObjectTokenId;
+            if (reality == null)
+            {
+                reality = HoloKitApp.Instance.CurrentReality;
+            }
+            string objectCollectionBundleId = RealityPreferences[reality.BundleId].MetaObjectCollectionBundleId;
             foreach (var objectCollection in ObjectCollectionList.List)
             {
-                if (objectCollection.BundleId.Equals(objectCollectionId))
+                if (objectCollection.BundleId.Equals(objectCollectionBundleId))
                 {
-                    foreach (var metaObject in objectCollection.MetaObjects)
-                    {
-                        if (metaObject.TokenId.Equals(objectTokenId))
-                        {
-                            return metaObject;
-                        }
-                    }
+                    return objectCollection;
+                }
+            }
+            return null;
+        }
+
+        public MetaAvatar GetPreferencedAvatar(Reality reality)
+        {
+            if (reality == null)
+            {
+                reality = HoloKitApp.Instance.CurrentReality;
+            }
+            string avatarTokenId = RealityPreferences[reality.BundleId].MetaAvatarTokenId;
+            var avatarCollection = GetPreferencedAvatarCollection(reality);
+            foreach (var avatar in avatarCollection.MetaAvatars)
+            {
+                if (avatar.TokenId.Equals(avatarTokenId))
+                {
+                    return avatar;
+                }
+            }
+            return null;
+        }
+
+        public MetaObject GetPreferencedObject(Reality reality)
+        {
+            if (reality == null)
+            {
+                reality = HoloKitApp.Instance.CurrentReality;
+            }
+            string objectTokenId = RealityPreferences[reality.BundleId].MetaObjectTokenId;
+            var objectCollection = GetPreferencedObjectCollection(reality);
+            foreach (var metaObject in objectCollection.MetaObjects)
+            {
+                if (metaObject.TokenId.Equals(objectTokenId))
+                {
+                    return metaObject;
                 }
             }
             return null;
