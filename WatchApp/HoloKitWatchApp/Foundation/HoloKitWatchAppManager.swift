@@ -26,7 +26,7 @@ class HoloKitWatchAppManager: NSObject, ObservableObject {
         }
     }
     
-    func TakeControlWatchConnectivitySession() {
+    func takeControlWatchConnectivitySession() {
         if (WCSession.isSupported()) {
             wcSession = WCSession.default
             wcSession.delegate = self

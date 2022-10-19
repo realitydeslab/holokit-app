@@ -14,7 +14,7 @@ struct ContentView: View {
             MofaView()
                 .environmentObject(self.mofaWatchConnectivityManager)
                 .onAppear {
-                    self.mofaWatchConnectivityManager.TakeControlWatchConnectivitySession()
+                    self.mofaWatchConnectivityManager.takeControlWatchConnectivitySession()
                 }
         }
     }

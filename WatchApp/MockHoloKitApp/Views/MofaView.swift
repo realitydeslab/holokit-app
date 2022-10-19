@@ -19,14 +19,14 @@ struct MofaView: View {
                 .frame(height: 50)
             
             Button("Start Round") {
-                mofaWatchConnectivityManager.OnRoundStarted()
+                mofaWatchConnectivityManager.onRoundStarted()
             }
             
             Spacer()
                 .frame(height: 50)
             
             Button("End Round") {
-                mofaWatchConnectivityManager.OnRoundEnded(.victory, 24, 0.43, 72)
+                mofaWatchConnectivityManager.onRoundEnded(.victory, 24, 0.43, 72)
             }
         }
     }

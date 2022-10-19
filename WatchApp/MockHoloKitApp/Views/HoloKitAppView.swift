@@ -19,21 +19,21 @@ struct HoloKitAppView: View {
                 .frame(height: 50)
             
             Button("Activate") {
-                self.watchConnectivityManager.Activate()
+                self.watchConnectivityManager.activate()
             }
             
             Spacer()
                 .frame(height: 50)
             
             Button("Watch App Installed") {
-                print("Is watch app installed: \(self.watchConnectivityManager.IsWatchAppInstalled())")
+                print("Is watch app installed: \(self.watchConnectivityManager.isWatchAppInstalled())")
             }
             
             Spacer()
                 .frame(height: 50)
             
             Button("Is Reachable") {
-                print("Is reachable: \(self.watchConnectivityManager.IsReachable())")
+                print("Is reachable: \(self.watchConnectivityManager.isReachable())")
             }
             
             Spacer()
@@ -41,7 +41,7 @@ struct HoloKitAppView: View {
             
             Button("Go to MOFA") {
                 watchConnectivityManager.currentReality = .mofaTheTraining
-                watchConnectivityManager.UpdateCurrentReality(watchConnectivityManager.currentReality.rawValue)
+                watchConnectivityManager.updateCurrentReality(watchConnectivityManager.currentReality.rawValue)
             }
         }
         .padding()

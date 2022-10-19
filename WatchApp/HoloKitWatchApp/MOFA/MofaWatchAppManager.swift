@@ -61,7 +61,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         requestHealthKitAuthorization()
     }
     
-    func TakeControlWatchConnectivitySession() {
+    func takeControlWatchConnectivitySession() {
         if (WCSession.isSupported()) {
             wcSession = WCSession.default
             wcSession.delegate = self
@@ -92,15 +92,13 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         }
     }
     
-    func SendStartRoundMessage() {
-        let readyMessage = ["StartRound": 0];
-        self.wcSession.sendMessage(readyMessage, replyHandler: nil, errorHandler: { error in
-            print("Failed to send message to iPhone with error: \(error.localizedDescription)")
-        })
+    func sendStartRoundMessage() {
+        let message = ["StartRound": 0];
+        self.wcSession.sendMessage(message, replyHandler: nil)
     }
     
     public func startRound() {
-        SendStartRoundMessage()
+        sendStartRoundMessage()
         startCoreMotion()
         startWorkout()
         //self.isFighting = true

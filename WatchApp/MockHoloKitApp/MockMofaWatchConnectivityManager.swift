@@ -26,14 +26,14 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
         super.init()
     }
     
-    func TakeControlWatchConnectivitySession() {
+    func takeControlWatchConnectivitySession() {
         if (WCSession.isSupported()) {
             wcSession = WCSession.default
             wcSession.delegate = self
         }
     }
     
-    func OnRoundStarted() {
+    func onRoundStarted() {
         let context = ["MofaWatchPhase" : MofaWatchPhase.fighting.rawValue];
         do {
             try self.wcSession.updateApplicationContext(context)
@@ -43,7 +43,7 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
         }
     }
     
-    func OnRoundEnded(_ roundResult: MofaRoundResult, _ kill: Int, _ hitRate: Float, _ distance: Float) {
+    func onRoundEnded(_ roundResult: MofaRoundResult, _ kill: Int, _ hitRate: Float, _ distance: Float) {
         let context = ["MofaWatchPhase" : MofaWatchPhase.idle.rawValue,
                        "RoundResult" : roundResult.rawValue,
                        "Kill" : kill,
@@ -77,6 +77,8 @@ extension MockMofaWatchConnectivityManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        
+        if message["StartRound"] is Int {
+            print("Start round message received")
+        }
     }
 }

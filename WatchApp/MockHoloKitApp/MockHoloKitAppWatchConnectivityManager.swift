@@ -20,23 +20,23 @@ class MockHoloKitAppWatchConnectivityManager: NSObject, ObservableObject {
         }
     }
     
-    func HasPairedAppleWatch() -> Bool {
+    func hasPairedAppleWatch() -> Bool {
         return self.wcSession.isPaired;
     }
     
-    func IsWatchAppInstalled() -> Bool {
+    func isWatchAppInstalled() -> Bool {
         return self.wcSession.isWatchAppInstalled;
     }
     
-    func Activate() {
+    func activate() {
         self.wcSession.activate()
     }
     
-    func IsReachable() -> Bool {
+    func isReachable() -> Bool {
         return self.wcSession.isReachable
     }
     
-    func UpdateCurrentReality(_ realityIndex: Int) {
+    func updateCurrentReality(_ realityIndex: Int) {
         let context = ["CurrentReality" : realityIndex];
         do {
             try self.wcSession.updateApplicationContext(context)

@@ -19,7 +19,7 @@ struct HomeView: View {
                 .environmentObject(mofaWatchAppManager)
                 .onAppear {
                     DispatchQueue.main.async {
-                        mofaWatchAppManager.TakeControlWatchConnectivitySession()
+                        mofaWatchAppManager.takeControlWatchConnectivitySession()
                     }
                 }
         }
