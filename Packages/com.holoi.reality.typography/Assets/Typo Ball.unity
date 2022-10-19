@@ -441,7 +441,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &298435409
 MonoBehaviour:
@@ -568,7 +568,7 @@ RectTransform:
   - {fileID: 1364306139}
   - {fileID: 1779633996}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -701,7 +701,7 @@ Transform:
   - {fileID: 1725330315}
   - {fileID: 1704995448}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &635644578
 GameObject:
@@ -871,7 +871,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &840606392
 MeshRenderer:
@@ -937,7 +937,7 @@ Transform:
   m_Children:
   - {fileID: 1641295366}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &840606396
 Rigidbody:
@@ -1116,8 +1116,10 @@ MonoBehaviour:
   UIPanelPrefabs: []
   _urpAsset: {fileID: 0}
   _centerEye: {fileID: 250452858}
-  _handFollower: {fileID: 1957844134}
+  _serverHandFollower: {fileID: 1957844134}
   _ball: {fileID: 840606394}
+  _handsUp: {fileID: 1364306140}
+  _shoot: {fileID: 1779633997}
   HitPosition: {x: 0, y: -1, z: 0}
   _state: 0
 --- !u!1 &1047463877
@@ -1310,7 +1312,7 @@ MonoBehaviour:
       - m_Target: {fileID: 890886630}
         m_TargetAssemblyTypeName: Holoi.Reality.Typography.BallTypoRealityManager,
           Holoi.Reality.Typography
-        m_MethodName: SwitchStateToHandsUp
+        m_MethodName: OnHandsUpButtonClickedServerRpc
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1825,7 +1827,7 @@ MonoBehaviour:
       - m_Target: {fileID: 890886630}
         m_TargetAssemblyTypeName: Holoi.Reality.Typography.BallTypoRealityManager,
           Holoi.Reality.Typography
-        m_MethodName: SwitchStateToShoot
+        m_MethodName: OnShootButtonClickedServerRpc
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2186,8 +2188,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1957844134}
+  - component: {fileID: 1957844135}
+  - component: {fileID: 1957844136}
   m_Layer: 0
-  m_Name: Hand Follower
+  m_Name: Server Hand Follower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2208,3 +2212,45 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1957844135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1957844133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3787238964
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &1957844136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1957844133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 0
+  SyncRotAngleY: 0
+  SyncRotAngleZ: 0
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 0
+  Interpolate: 1

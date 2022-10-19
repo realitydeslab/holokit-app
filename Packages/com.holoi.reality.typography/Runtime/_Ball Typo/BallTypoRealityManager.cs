@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Holoi.Library.HoloKitApp;
 using Unity.Netcode;
 using HoloKit;
@@ -13,8 +14,12 @@ namespace Holoi.Reality.Typography
     {
         [Header("AR Base Objects")]
         [SerializeField] Transform _centerEye;
-        [SerializeField] Transform _handFollower;
+        [SerializeField] Transform _serverHandFollower;
+        [Header("Reality Objects")]
         [SerializeField] Transform _ball;
+        [Header("Client UI")]
+        [SerializeField] Button _handsUp;
+        [SerializeField] Button _shoot;
 
         [HideInInspector] public Vector3 HitPosition = Vector3.down;
 
@@ -28,14 +33,36 @@ namespace Holoi.Reality.Typography
 
         public State _state = State.idle;
 
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+
+        }
+
         private void Start()
         {
+            if (HoloKitApp.Instance.IsHost)
+            {
+                _handsUp.gameObject.SetActive(false);
+                _shoot.gameObject.SetActive(false);
+            }
+            else
+            {
+                _handsUp.gameObject.SetActive(true);
+                _shoot.gameObject.SetActive(true);
+            }
+
             if (_centerEye == null) _centerEye = HoloKitCamera.Instance.CenterEyePose;
 
         }
 
         void Update()
         {
+            if (HoloKitApp.Instance.IsHost)
+            {
+                UpdateHandFollowerPosition();
+            }
+
             switch (_state)
             {
                 case State.idle:
@@ -43,6 +70,7 @@ namespace Holoi.Reality.Typography
                     break;
                 case State.handsUp:
                     _ball.GetComponent<FollowMovementManager>().enabled = true;
+                    _ball.GetComponent<BallController>()._rigidBody.velocity = Vector3.zero;
                     _ball.GetComponent<BallController>()._rigidBody.useGravity = false;
                     UpdateHandFollowerPosition();
                     break;
@@ -67,7 +95,7 @@ namespace Holoi.Reality.Typography
         {
             var offset = _centerEye.right * 0.55f + _centerEye.up * 0.5f;
 
-            _handFollower.position = _centerEye.position + offset;
+            _serverHandFollower.position = _centerEye.position + offset;
         }
 
         public void SwitchStateToHandsUp()
@@ -78,5 +106,21 @@ namespace Holoi.Reality.Typography
         {
             _state = State.shoot;
         }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void OnHandsUpButtonClickedServerRpc()
+        {
+            Debug.Log("OnHandsUpButtonClickedServerRpc");
+
+            _state = State.handsUp;
+
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void OnShootButtonClickedServerRpc()
+        {
+            Debug.Log("OnShootButtonClickedServerRpc");
+            _state = State.shoot;
+        }
     }
-}
+}i
