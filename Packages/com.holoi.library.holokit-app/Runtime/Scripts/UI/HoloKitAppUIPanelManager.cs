@@ -61,6 +61,15 @@ namespace Holoi.Library.HoloKitApp.UI
             }
         }
 
+        public string PeekUIPanel()
+        {
+            if (_uiPanelStack.TryPeek(out var lastUIPanel))
+            {
+                return lastUIPanel.UIPanelName;
+            }
+            return null;
+        }
+
         public void OnARSceneUnloaded()
         {
             while (!_uiPanelStack.Peek().UIPanelName.Equals("MonoAR"))

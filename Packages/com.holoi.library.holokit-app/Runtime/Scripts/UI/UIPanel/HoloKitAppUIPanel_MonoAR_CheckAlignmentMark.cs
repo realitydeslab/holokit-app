@@ -8,9 +8,10 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnCheckedButtonPressed()
         {
-            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+            while (!HoloKitApp.Instance.UIPanelManager.PeekUIPanel().Equals("MonoAR"))
+            {
+                HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+            }
             HoloKitAppUIEventManager.OnAlignmentMarkChecked?.Invoke();
         }
 
