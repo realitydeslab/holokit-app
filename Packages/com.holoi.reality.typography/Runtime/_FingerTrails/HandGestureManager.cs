@@ -42,7 +42,8 @@ public class HandGestureManager : MonoBehaviour
 
     [SerializeField] bool _smoothFilter;
 
-    [HideInInspector] public enum Gesture
+    [HideInInspector]
+    public enum Gesture
     {
         DK,
         Fist,
@@ -54,23 +55,14 @@ public class HandGestureManager : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     private void FixedUpdate()
     {
         if (_normal)
         {
-            if (_smoothFilter)
-            {
-                CalculateSmoothTipNormals();
-
-            }
-            else
-            {
-                CalculateTipNormals();
-            }
-
+            CalculateTipNormals();
         }
 
         if (_velocity)
@@ -121,9 +113,19 @@ public class HandGestureManager : MonoBehaviour
 
     void CalculateTipNormals()
     {
-        for (int i = 0; i < 5; i++)
+        if (_smoothFilter)
         {
-            _tipNoramls[i] = (_handTips[i].position - _handSeconds[i].position).normalized; 
+            for (int i = 0; i < 5; i++)
+            {
+                _tipNoramls[i] = (_smoothHandTips[i].position - _smoothHandSeconds[i].position).normalized;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                _tipNoramls[i] = (_handTips[i].position - _handSeconds[i].position).normalized;
+            }
         }
     }
 
@@ -139,14 +141,6 @@ public class HandGestureManager : MonoBehaviour
             _tipVelocity[i] = dist / Time.deltaTime;
 
             _lastPosition[i] = _currentPosition[i];
-        }
-    }
-
-    void CalculateSmoothTipNormals()
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            _tipNoramls[i] = (_smoothHandTips[i].position - _smoothHandSeconds[i].position).normalized;
         }
     }
 }
