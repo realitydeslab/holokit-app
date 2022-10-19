@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Holoi.Library.HoloKitApp;
 using Unity.Netcode;
 using HoloKit;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using Holoi.Library.HoloKitApp;
+using Holoi.Library.ARUX;
 
 namespace Holoi.Reality.Typography
 {
@@ -123,4 +124,4 @@ namespace Holoi.Reality.Typography
             _state = State.shoot;
         }
     }
-}i
+}

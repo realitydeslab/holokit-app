@@ -7,6 +7,7 @@ using HoloKit;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using Holoi.Library.HoloKitApp;
+using Holoi.Library.ARUX;
 using Unity.Netcode;
 
 namespace Holoi.Reality.Typography

@@ -12,8 +12,17 @@ namespace Holoi.Reality.QuantumRealm
 {
     public class QuantumBuddhasSceneManager : MonoBehaviour
     {
+        [Header("Buddhas Objects")]
         [SerializeField] List<VisualEffect> _vfxs = new List<VisualEffect>();
+
+        [Header("Hand Objects")]
+        [SerializeField] Transform _handJoint;
+        [SerializeField] Transform _handHookHead;
         [SerializeField] Transform _handLoadedVFXParent;
+
+        [Header("AR NetWork Base Objects")]
+        [SerializeField] Transform _serverCenterEye;
+
 
         [Header("AR UI Components")]
         [SerializeField] LoadButtonController _placementLoadButton;
@@ -43,11 +52,14 @@ namespace Holoi.Reality.QuantumRealm
             {
                 _arRaycastManager.enabled = true;
                 _arPlaneManager.enabled = true;
+                _serverCenterEye.GetComponent<FollowMovementManager>().enabled = true;
             }
             else
             {
                 _arRaycastManager.enabled = false;
                 _arPlaneManager.enabled = false;
+                _serverCenterEye.GetComponent<FollowMovementManager>().enabled = false;
+
             }
 
             _centerEye = HoloKitCamera.Instance.CenterEyePose;
@@ -55,6 +67,13 @@ namespace Holoi.Reality.QuantumRealm
 
         void Update()
         {
+            if (HoloKitApp.Instance.IsHost)
+            {
+                // update hand hook head position
+                var dir = (_handJoint.position - _serverCenterEye.position).normalized;
+
+                _handHookHead.position = _handJoint.position + dir * 0.5f;
+            }
 
         }
 

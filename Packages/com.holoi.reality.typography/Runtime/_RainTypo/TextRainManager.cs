@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Holoi.Library.HoloKitApp;
 using Unity.Netcode;
 using HoloKit;
 using UnityEngine.VFX;
+using Holoi.Library.HoloKitApp;
+using Holoi.Library.ARUX;
 
 namespace Holoi.Reality.Typography
 {
