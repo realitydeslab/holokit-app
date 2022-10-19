@@ -26,7 +26,7 @@ struct HomeView: View {
     }
     
     var defaultIntroView: some View {
-        Image("HoloKit")
+        Image("holokit-icon")
             .resizable()
             .frame(maxWidth: 120, maxHeight: 120)
     }

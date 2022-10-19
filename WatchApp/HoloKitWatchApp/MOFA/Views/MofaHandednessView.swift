@@ -32,7 +32,7 @@ struct MofaHandednessView: View {
                 HStack {
                     Text("Right Hand")
                         .font(Font.custom("ObjectSans-BoldSlanted", size: 13))
-                    Image("Arrow_Right")
+                    Image("arrow-right")
                         .resizable()
                         .frame(maxWidth: 16, maxHeight: 16)
                 }
@@ -55,7 +55,7 @@ struct MofaHandednessView: View {
                 HStack {
                     Text("Left Hand")
                         .font(Font.custom("ObjectSans-BoldSlanted", size: 13))
-                    Image("Arrow_Right")
+                    Image("arrow-right")
                         .renderingMode(.template)
                         .resizable()
                         .frame(maxWidth: 16, maxHeight: 16)

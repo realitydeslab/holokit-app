@@ -6,6 +6,7 @@ using Unity.Netcode.Transports.UNET;
 using Holoi.AssetFoundation;
 using Holoi.Library.Permissions;
 using HoloKit;
+using Holoi.Library.HoloKitApp.WatchConnectivity;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -112,6 +113,9 @@ namespace Holoi.Library.HoloKitApp
 
             // Set a default reality
             CurrentReality = GlobalSettings.RealityList.List[0];
+
+            // Activate WCSession
+            HoloKitAppWatchConnectivityAPI.ActivateWatchConnectivitySession();
         }
 
         private void OnDestroy()

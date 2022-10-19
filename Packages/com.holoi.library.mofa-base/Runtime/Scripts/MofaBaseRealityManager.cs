@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
+using Holoi.Library.HoloKitApp.WatchConnectivity;
 
 namespace Holoi.Library.MOFABase
 {
@@ -43,8 +44,13 @@ namespace Holoi.Library.MOFABase
 
         protected virtual void Awake()
         {
-            //HoloKitWatchAppAPI.InitializeWithRealityId(1); // MOFA is temporarily 1
             LifeShield.OnDead += OnLifeShieldDead;
+
+            // Apple Watch
+            // TODO: MofaWatchConnectivityManager should take control first
+
+            // We then update the control on Watch side so that MofaWatchConnectivityManager won't miss messages.
+            HoloKitAppWatchConnectivityAPI.UpdateCurrentReality(WatchReality.MOFATheTraining);
         }
 
         public override void OnDestroy()

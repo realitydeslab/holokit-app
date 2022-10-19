@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MofaResultView: View {
     
-    @EnvironmentObject var holokitWatchAppManager: HoloKitWatchAppManager
+    @EnvironmentObject var mofaWatchAppManager: MofaWatchAppManager
     
     @State var result: Bool = true
     
@@ -23,13 +23,13 @@ struct MofaResultView: View {
     }
     
     var youWinImage: some View {
-        Image("You_Win")
+        Image("you-win")
             .resizable()
             .frame(maxWidth: 140, maxHeight: 30)
     }
     
     var youLoseImage: some View {
-        Image("You_Lose")
+        Image("you-lose")
             .resizable()
             .frame(maxWidth: 140, maxHeight: 30)
     }
@@ -46,12 +46,12 @@ struct MofaResultView: View {
     
     var gotItButton: some View {
         Button {
-            self.holokitWatchAppManager.mofaWatchAppManager.currentView = .fightingView
+            self.mofaWatchAppManager.currentView = .fightingView
         } label: {
             HStack {
                 Text("Got it")
                     .font(Font.custom("ObjectSans-BoldSlanted", size: 14))
-                Image("Arrow_Right")
+                Image("arrow-right")
                     .renderingMode(.template)
                     .resizable()
                     .frame(maxWidth: 10, maxHeight: 10)
@@ -69,6 +69,6 @@ struct MofaResultView: View {
 
 struct MofaResultView_Previews: PreviewProvider {
     static var previews: some View {
-        MofaResultView().environmentObject(HoloKitWatchAppManager())
+        MofaResultView().environmentObject(MofaWatchAppManager())
     }
 }

@@ -8,7 +8,7 @@ struct MofaFightingView: View {
     
     var body: some View {
         VStack {
-            Image("MOFA_Weapon")
+            Image("mofa-weapon")
                 .resizable()
                 .frame(maxWidth: 120, maxHeight: 120)
             
@@ -35,7 +35,7 @@ struct MofaFightingView: View {
                         .font(Font.custom("ObjectSans-BoldSlanted", size: 13))
                         .foregroundColor(.black)
                     
-                    Image("Arrow_Right")
+                    Image("arrow-right")
                         .renderingMode(.template)
                         .resizable()
                         .frame(maxWidth: 10, maxHeight: 10)
