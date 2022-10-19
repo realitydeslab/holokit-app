@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Holoi.Library.HoloKitApp;
-using Holoi.Library.ARUX;
 using Unity.Netcode;
 using HoloKit;
 using UnityEngine.XR.ARFoundation;
@@ -10,20 +9,17 @@ using UnityEngine.XR.ARSubsystems;
 
 namespace Holoi.Reality.Typography
 {
-    public class RainTypoRealityManager : RealityManager
+    public class PuppetryRealityManager : RealityManager
     {
         [Header("AR Base Objects")]
         [SerializeField] Transform _centerEye;
-        [SerializeField] PhaseManager _phaseManager;
+        [SerializeField] GameObject _arSoftShadowPlane;
 
         ARRaycastManager _arRaycastManager;
-        
-        bool _isRaycastHitFloor = false;
+        ARPlaneManager _arPlaneManager;
 
-        //
-        BoneController _bone;
-        bool _isBodyValid = false;
-        bool _isTrigger = false;
+        bool _isRaycastHitFloor = false;
+        bool _isFloorHeightValid = false;
 
         [HideInInspector] public Vector3 HitPosition = Vector3.down;
 
@@ -34,22 +30,14 @@ namespace Holoi.Reality.Typography
 
         private void Start()
         {
+            _arPlaneManager = FindObjectOfType<ARPlaneManager>();
             _arRaycastManager = FindObjectOfType<ARRaycastManager>();
-            if(_centerEye==null) _centerEye = HoloKitCamera.Instance.CenterEyePose;
+            if (_centerEye == null) _centerEye = HoloKitCamera.Instance.CenterEyePose;
         }
 
         private void Update()
         {
-            if (FindObjectOfType<BoneController>() != null && !_isTrigger)
-            {
-                _isBodyValid = true;
-                _bone = FindObjectOfType<BoneController>();
-                _phaseManager.PlayPhaseSource();
-                _isTrigger = true;
-            }
-
             UpdateFloorHeight();
-
         }
 
         void UpdateFloorHeight()
@@ -72,17 +60,16 @@ namespace Holoi.Reality.Typography
                         HitPosition = hitResult.pose.position;
                         transform.position = HitPosition;
                         _isRaycastHitFloor = true;
+                        _isFloorHeightValid = true;
                         return;
                     }
                 }
                 _isRaycastHitFloor = false;
-                //transform.position = _centerEye.position + horizontalForward.normalized * 1.5f + (transform.up * -1f);
 
             }
             else
             {
                 _isRaycastHitFloor = false;
-                //transform.position = _centerEye.position + horizontalForward.normalized * 1.5f + (transform.up * -1f);
             }
         }
     }

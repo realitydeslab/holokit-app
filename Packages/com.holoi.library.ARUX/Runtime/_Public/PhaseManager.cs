@@ -4,7 +4,7 @@ using UnityEngine;
 using Apple.PHASE;
 using HoloKit;
 
-namespace Holoi.Reality.QuantumRealm
+namespace Holoi.Library.ARUX
 {
     public class PhaseManager : MonoBehaviour
     {
@@ -18,24 +18,12 @@ namespace Holoi.Reality.QuantumRealm
 
         public void PlayPhaseSource()
         {
-            if (!_phaseListener.isActiveAndEnabled)
-            {
-                Debug.Log("Enable Phase Listener");
-                _phaseListener.enabled = true;
-            }
-
             if (!_phaseSources.IsPlaying())
             {
                 Debug.Log("play Phase Source");
 
                 _phaseSources.Play();
 
-            }
-            else
-            {
-                Debug.Log("stop Phase Source");
-
-                _phaseSources.Stop();
             }
         }
 

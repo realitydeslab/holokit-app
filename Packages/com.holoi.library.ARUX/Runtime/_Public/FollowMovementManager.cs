@@ -74,8 +74,8 @@ namespace Holoi.Library.ARUX
 
         void Start()
         {
-            if (!_followTarget) { _followTarget = HoloKitCamera.Instance.CenterEyePose; }
-            else { }
+            if (!_followTarget)
+                _followTarget = HoloKitCamera.Instance.CenterEyePose;
 
             switch (_updateType)
             {
