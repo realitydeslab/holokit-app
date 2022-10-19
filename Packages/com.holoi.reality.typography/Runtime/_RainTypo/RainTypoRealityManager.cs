@@ -20,7 +20,6 @@ namespace Holoi.Reality.Typography
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-
         }
 
         private void Start()

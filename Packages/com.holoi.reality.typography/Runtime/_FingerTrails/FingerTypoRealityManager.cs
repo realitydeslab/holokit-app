@@ -10,9 +10,8 @@ namespace Holoi.Reality.Typography
 {
     public class FingerTypoRealityManager : RealityManager
     {
-        [Header("Reality Objects")]
-        public Transform _smoothTips;
-        public Transform _smoothSeconds;
+        [Header("Server Controlled Objects")]
+        [SerializeField] List<Transform> _softTips;
 
         public override void OnNetworkSpawn()
         {
@@ -24,10 +23,18 @@ namespace Holoi.Reality.Typography
             if (HoloKitApp.Instance.IsHost)
             {
                 HoloKitHandTracker.Instance.enabled = true;
+                foreach (var tip in _softTips)
+                {
+                    tip.GetComponent<FollowMovementManager>().enabled = true;
+                }
             }
             else
             {
                 HoloKitHandTracker.Instance.enabled = false;
+                foreach (var tip in _softTips)
+                {
+                    tip.GetComponent<FollowMovementManager>().enabled = false;
+                }
             }
         }
 

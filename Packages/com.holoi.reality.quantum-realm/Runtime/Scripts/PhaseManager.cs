@@ -11,25 +11,9 @@ namespace Holoi.Reality.QuantumRealm
         public PHASESource _phaseSources;
         public PHASEListener _phaseListener;
 
-        //[SerializeField] bool _isSourceEnabled = false;
-        [SerializeField] bool _isSourcePlaying = false;
-
         private void Awake()
         {
-            //if(_isSourceEnabled)
-            //{
-            //    foreach (var source in _phaseSources)
-            //    {
-            //        source.Play();
-            //    }
-            //}
-            //if (_isSourceEnabled)
-            //{
-            //    foreach (var source in _phaseSources)
-            //    {
-            //        source.Stop();
-            //    }
-            //}
+
         }
 
         public void PlayPhaseSource()
@@ -53,6 +37,13 @@ namespace Holoi.Reality.QuantumRealm
 
                 _phaseSources.Stop();
             }
+        }
+
+        // now PHASE has a bug that will not stop playing after exited scene. So for now we need to handle it manully;
+        public void OnSceneExited()
+        {
+            _phaseSources.Stop();
+            _phaseSources.DestroyFromPHASE();
         }
     }
 }
