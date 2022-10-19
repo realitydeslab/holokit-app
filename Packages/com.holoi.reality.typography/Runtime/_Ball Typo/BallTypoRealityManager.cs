@@ -51,7 +51,9 @@ namespace Holoi.Reality.Typography
 
                     _ball.GetComponent<FollowMovementManager>().enabled = false;
                     _ball.GetComponent<BallController>()._rigidBody.useGravity = true;
-                    _ball.GetComponent<Rigidbody>().velocity = direction * 3;
+                    _ball.GetComponent<BallController>()._rigidBody.velocity = direction * 3;
+
+                    _ball.GetComponent<BallController>().ClearHitWall(); // clear hit wall every time you shoot to avoid the unexpected hit wall.
 
                     _state = State.free;
                     break;

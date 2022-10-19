@@ -2,18 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
+
 
 namespace Holoi.Reality.Typography
 {
     public class BallController : MonoBehaviour
     {
         public Rigidbody _rigidBody;
+
         [SerializeField] VisualEffect _vfx;
 
-        //[SerializeField] bool _usingPrefab;
-        //[SerializeField] GameObject _textPrefab;
-
         [SerializeField] float _radius = 0.3f;
+
+        ARPlane _hitWall;
 
 
 
@@ -29,26 +32,47 @@ namespace Holoi.Reality.Typography
 
         private void OnCollisionEnter(Collision collision)
         {
+            Debug.Log("OnCollisionEnter");
 
-            var hitPos = collision.transform.position;
-            _vfx.SetVector3("Hit Position_position", hitPos);
-            _vfx.SendEvent("OnExplode");
+            if (collision.transform.GetComponent<ARPlane>() != null)
+            {
+                _hitWall = collision.transform.GetComponent<ARPlane>();
+
+#if UNITY_EDITOR
+                if (true)
+                {
+                    Debug.Log(_hitWall.name);
+                    _vfx.SetVector3("Hit Plane Position_position", _hitWall.transform.position);
+                    _vfx.SetVector3("Hit Plane Normal", _hitWall.normal);
+                }
+#endif
+#if UNITY_IOS
+                if (_hitWall.alignment == PlaneAlignment.Vertical)
+                {
+                    Debug.Log(_hitWall.name);
+                    _vfx.SetVector3("Hit Plane Position_position", _hitWall.transform.position);
+                    _vfx.SetVector3("Hit Plane Normal", _hitWall.normal);
+                }
+#endif
+                var hitPos = collision.GetContact(0).point;
+
+                Debug.Log(hitPos);
+
+                _vfx.SetVector3("Hit Position_position", hitPos);
+
+                _vfx.SendEvent("OnExplode");
+            }
+
+
+
 
         }
 
-        //void OnExplodePrefabMode()
-        //{
-        //    for (int i = 0; i < 1000; i++)
-        //    {
-        //        var go = Instantiate(_textPrefab, transform);
-        //        var offset = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
-        //        offset = offset.normalized;
-        //        offset *= _radius;
-        //        go.transform.position = transform.position + offset;
-        //        var direction = go.transform.position - transform.position;
-        //        direction = direction.normalized;
-        //        go.GetComponent<Rigidbody>().velocity = direction * 3;
-        //    }
-        //}
+        public void ClearHitWall()
+        {
+            _hitWall = null;
+            _vfx.SetVector3("Hit Plane Position_position", new Vector3(0, 999, 0));
+            _vfx.SetVector3("Hit Plane Normal", new Vector3(0,1,0));
+        }
     }
 }
