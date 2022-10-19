@@ -5,22 +5,16 @@ import CoreMotion
 import HealthKit
 import simd
 
-enum WatchState: Int {
-    case nothing = 0
-    case ground = 1
-}
-
-enum WatchInput: Int {
-    case castSpell = 0
-    case changeToNothing = 1
-    case changeToGround = 2
-}
-
 enum MofaView: Int {
     case introView = 0
     case handednessView = 1
     case fightingView = 2
     case resultView = 3
+}
+
+enum MofaWatchPhase: Int {
+    case idle = 0
+    case fighting = 1
 }
 
 enum MofaRoundResult: Int {
@@ -29,26 +23,27 @@ enum MofaRoundResult: Int {
     case draw = 2
 }
 
+enum WatchState: Int {
+    case normal = 0
+    case ground = 1
+}
+
+enum WatchInput: Int {
+    case castSpell = 0
+    case changeToNormal = 1
+    case changeToGround = 2
+}
+
 class MofaWatchAppManager: NSObject, ObservableObject {
     
     @Published var currentView: MofaView = .introView
     
     @Published var isRightHand: Bool = true
     
-    @Published var rememberHandedness: Bool = false
-    
-    @Published var isFighting: Bool = false
-    
     @Published var roundResult: MofaRoundResult = .victory
-    
-//    @Published var showingSummaryView: Bool = false {
-//        didSet {
-//            if showingSummaryView == false {
-//                resetWorkout()
-//            }
-//        }
-//    }
      
+    @Published var mofaWatchPhase: MofaWatchPhase = .idle
+    
     let motionManager = CMMotionManager()
 
     let healthStore = HKHealthStore()
@@ -56,7 +51,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     var workoutSession: HKWorkoutSession?
     var builder: HKLiveWorkoutBuilder?
     
-    var currentState: WatchState = .nothing
+    var currentState: WatchState = .normal
     let sharedInputCd: Double = 0.5
     var lastInputTime: Double = 0
     
@@ -66,7 +61,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         requestHealthKitAuthorization()
     }
     
-    func GiveWCSessionDelegateControl() {
+    func TakeControlWatchConnectivitySession() {
         if (WCSession.isSupported()) {
             wcSession = WCSession.default
             wcSession.delegate = self
@@ -108,13 +103,13 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         SendStartRoundMessage()
         startCoreMotion()
         startWorkout()
-        self.isFighting = true
+        //self.isFighting = true
     }
     
     public func stopRound() {
         endCoreMotion()
         endWorkout()
-        self.isFighting = false
+        //self.isFighting = false
     }
     
     public func startWorkout() {
@@ -188,10 +183,10 @@ class MofaWatchAppManager: NSObject, ObservableObject {
                         return
                     }
                 } else {
-                    if (self.currentState != .nothing) {
+                    if (self.currentState != .normal) {
                         print("changed to nothing")
-                        self.currentState = .nothing
-                        self.sendWatchInputMessage(watchInput: .changeToNothing)
+                        self.currentState = .normal
+                        self.sendWatchInputMessage(watchInput: .changeToNormal)
                         return
                     }
                 }
@@ -260,12 +255,48 @@ extension MofaWatchAppManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        print("[MofaWatchAppManager] didReceiveApplicationContext")
+        if let mofaWatchPhaseIndex = applicationContext["MofaWatchPhase"] as? Int {
+            if let mofaWatchPhase = MofaWatchPhase(rawValue: mofaWatchPhaseIndex) {
+                if mofaWatchPhase != self.mofaWatchPhase {
+                    DispatchQueue.main.async {
+                        self.mofaWatchPhase = mofaWatchPhase
+                    }
+                    if (mofaWatchPhase == .fighting) {
+                        print("Mofa watch phase changed to fighting")
+                        DispatchQueue.main.async {
+                            self.currentView = .fightingView
+                        }
+                    } else if (mofaWatchPhase == .idle) {
+                        // Round ended
+                        print("Mofa watch phase changed to idle")
+                        DispatchQueue.main.async {
+                            self.currentView = .resultView
+                        }
+                        
+                        if let roundResultIndex = applicationContext["RoundResult"] as? Int {
+                            if let roundResult = MofaRoundResult(rawValue: roundResultIndex) {
+                                print("Round result: \(roundResult)")
+                            }
+                        }
+                        
+                        if let kill = applicationContext["Kill"] as? Int {
+                            print("Kill: \(kill)")
+                        }
+                        
+                        if let hitRate = applicationContext["HitRate"] as? Float {
+                            print("Hit rate: \(hitRate)")
+                        }
+                        
+                        if let distance = applicationContext["Distance"] as? Float {
+                            print("Distance: \(distance)")
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        print("[MofaWatchAppManager] didReceiveMessage")
-        
 //        if message["QueryWatchState"] is Int {
 //            print("Received QueryWatchState message");
 //            switch(self.currentState) {

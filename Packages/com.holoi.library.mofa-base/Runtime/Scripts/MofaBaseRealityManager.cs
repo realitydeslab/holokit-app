@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
-using Holoi.Library.HoloKitApp.Watch;
 
 namespace Holoi.Library.MOFABase
 {

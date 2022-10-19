@@ -16,10 +16,10 @@ struct HomeView: View {
             }
         } else if (self.holokitAppWatchManager.currentReality == .mofaTheTraining) {
             MofaHomeView()
-                .environmentObject(self.holokitAppWatchManager.mofaWatchAppManager)
+                .environmentObject(mofaWatchAppManager)
                 .onAppear {
                     DispatchQueue.main.async {
-                        mofaWatchAppManager.GiveWCSessionDelegateControl()
+                        mofaWatchAppManager.TakeControlWatchConnectivitySession()
                     }
                 }
         }

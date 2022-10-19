@@ -2,16 +2,16 @@ import SwiftUI
 
 struct MofaHomeView: View {
     
-    @EnvironmentObject var holokitWatchAppManager: HoloKitWatchAppManager
+    @EnvironmentObject var mofaWatchAppManager: MofaWatchAppManager
     
     var body: some View {
-        if (self.holokitWatchAppManager.mofaWatchAppManager.currentView == .introView) {
+        if (self.mofaWatchAppManager.currentView == .introView) {
             MofaIntroView()
-        } else if (self.holokitWatchAppManager.mofaWatchAppManager.currentView == .handednessView) {
+        } else if (self.mofaWatchAppManager.currentView == .handednessView) {
             MofaHandednessView()
-        } else if (self.holokitWatchAppManager.mofaWatchAppManager.currentView == .fightingView) {
+        } else if (self.mofaWatchAppManager.currentView == .fightingView) {
             MofaFightingView()
-        } else if (self.holokitWatchAppManager.mofaWatchAppManager.currentView == .resultView) {
+        } else if (self.mofaWatchAppManager.currentView == .resultView) {
             MofaResultView()
         }
     }
@@ -19,6 +19,6 @@ struct MofaHomeView: View {
 
 struct MofaHomeView_Previews: PreviewProvider {
     static var previews: some View {
-        MofaHomeView().environmentObject(HoloKitWatchAppManager())
+        MofaHomeView().environmentObject(MofaWatchAppManager())
     }
 }

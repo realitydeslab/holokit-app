@@ -26,7 +26,7 @@ class HoloKitWatchAppManager: NSObject, ObservableObject {
         }
     }
     
-    func GiveWCSessionDelegateControl() {
+    func TakeControlWatchConnectivitySession() {
         if (WCSession.isSupported()) {
             wcSession = WCSession.default
             wcSession.delegate = self
@@ -46,9 +46,9 @@ extension HoloKitWatchAppManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        print("[HoloKitWatchAppManager] didReceiveApplicationContext")
         if let realityIndex = applicationContext["CurrentReality"] as? Int {
             if let reality = Reality(rawValue: realityIndex) {
+                print("Switched to reality: \(String(describing: reality))")
                 DispatchQueue.main.async {
                     self.currentReality = reality
                 }
@@ -57,6 +57,6 @@ extension HoloKitWatchAppManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        print("[HoloKitWatchAppManager] didReceiveMessage")
+        
     }
 }

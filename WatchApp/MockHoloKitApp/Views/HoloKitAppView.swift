@@ -1,52 +1,56 @@
+//
+//  HoloKitAppView.swift
+//  MockHoloKitApp
+//
+//  Created by Yuchen Zhang on 2022/10/19.
+//
+
 import SwiftUI
 
-struct ContentView: View {
+struct HoloKitAppView: View {
     
     @EnvironmentObject var watchConnectivityManager: MockHoloKitAppWatchConnectivityManager
     
     var body: some View {
         VStack {
+            Text("HoloKit App")
+            
+            Spacer()
+                .frame(height: 50)
+            
             Button("Activate") {
                 self.watchConnectivityManager.Activate()
             }
             
-//            Spacer(minLength: 10)
-//
-//            Button("Paired") {
-//                print("Has paired apple watch: \(self.watchConnectivityManager.HasPairedAppleWatch())")
-//            }
-            
-            Spacer(minLength: 10)
+            Spacer()
+                .frame(height: 50)
             
             Button("Watch App Installed") {
                 print("Is watch app installed: \(self.watchConnectivityManager.IsWatchAppInstalled())")
             }
             
-            Spacer(minLength: 10)
+            Spacer()
+                .frame(height: 50)
             
             Button("Is Reachable") {
                 print("Is reachable: \(self.watchConnectivityManager.IsReachable())")
             }
             
-            Spacer(minLength: 10)
+            Spacer()
+                .frame(height: 50)
             
-            Button("Send Message") {
-                self.watchConnectivityManager.SendMessage()
-            }
-            
-            Spacer(minLength: 10)
-            
-            Button("Update Current Reality") {
-                self.watchConnectivityManager.UpdateCurrentReality(1)
+            Button("Go to MOFA") {
+                watchConnectivityManager.currentReality = .mofaTheTraining
+                watchConnectivityManager.UpdateCurrentReality(watchConnectivityManager.currentReality.rawValue)
             }
         }
         .padding()
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct HoloKitAppView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        HoloKitAppView()
             .environmentObject(MockHoloKitAppWatchConnectivityManager())
     }
 }

@@ -15,8 +15,8 @@ struct MofaHandednessView: View {
             Spacer()
             leftHandButton
                 .padding(.bottom)
-            Spacer()
-            rememberSelectionTick
+//            Spacer()
+//            rememberSelectionTick
         }
     }
     
@@ -68,26 +68,26 @@ struct MofaHandednessView: View {
         .buttonStyle(.plain)
     }
     
-    var rememberSelectionTick: some View {
-        HStack {
-            Button {
-                self.holokitWatchAppManager.mofaWatchAppManager.rememberHandedness.toggle()
-            } label: {
-                if (self.holokitWatchAppManager.mofaWatchAppManager.rememberHandedness){
-                    Circle()
-                    .frame(maxWidth: 20, maxHeight: 20)
-                } else {
-                    Circle()
-                    .stroke(Color.white, lineWidth: 2)
-                    .frame(maxWidth: 20, maxHeight: 20)
-                }
-            }
-            .buttonStyle(.plain)
-            
-            Text("Remember my selection")
-                .font(Font.custom("ObjectSans-BoldSlanted", size: 13))
-        }
-    }
+//    var rememberSelectionTick: some View {
+//        HStack {
+//            Button {
+//                self.holokitWatchAppManager.mofaWatchAppManager.rememberHandedness.toggle()
+//            } label: {
+//                if (self.holokitWatchAppManager.mofaWatchAppManager.rememberHandedness){
+//                    Circle()
+//                    .frame(maxWidth: 20, maxHeight: 20)
+//                } else {
+//                    Circle()
+//                    .stroke(Color.white, lineWidth: 2)
+//                    .frame(maxWidth: 20, maxHeight: 20)
+//                }
+//            }
+//            .buttonStyle(.plain)
+//
+//            Text("Remember my selection")
+//                .font(Font.custom("ObjectSans-BoldSlanted", size: 13))
+//        }
+//    }
 }
 
 struct MofaHandednessView_Previews: PreviewProvider {

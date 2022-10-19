@@ -1,6 +1,13 @@
 import WatchConnectivity
 
+enum Reality: Int {
+    case nothing = 0
+    case mofaTheTraining = 1
+}
+
 class MockHoloKitAppWatchConnectivityManager: NSObject, ObservableObject {
+    
+    @Published var currentReality: Reality = .nothing
     
     private var wcSession: WCSession!
     
@@ -30,22 +37,12 @@ class MockHoloKitAppWatchConnectivityManager: NSObject, ObservableObject {
     }
     
     func UpdateCurrentReality(_ realityIndex: Int) {
-        let context = ["CurrentReality" : realityIndex, "Variable" : Int.random(in: 0..<999)];
+        let context = ["CurrentReality" : realityIndex];
         do {
             try self.wcSession.updateApplicationContext(context)
             print("Updated current reality")
         } catch {
             print("Failed to update current reality")
-        }
-    }
-    
-    func SendMessage() {
-        if (self.wcSession.isReachable) {
-            let message = ["CurrentReality" : 0];
-            self.wcSession.sendMessage(message, replyHandler: nil)
-            print("Message sent")
-        } else {
-            print("Cannot send message since watch is not reachable")
         }
     }
 }

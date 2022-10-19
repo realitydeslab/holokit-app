@@ -10,12 +10,15 @@ import SwiftUI
 @main
 struct MockHoloKitApp: App {
     
-    @State var holokitWatchAppManager = MockHoloKitAppWatchConnectivityManager()
+    @State var holokitAppWatchConnectivityManager = MockHoloKitAppWatchConnectivityManager()
+    
+    @State var mofaWatchConnectivityManager = MockMofaWatchConnectivityManager()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(holokitWatchAppManager)
+                .environmentObject(holokitAppWatchConnectivityManager)
+                .environmentObject(mofaWatchConnectivityManager)
         }
     }
 }
