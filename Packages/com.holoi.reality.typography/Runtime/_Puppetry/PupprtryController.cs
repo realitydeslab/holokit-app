@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Holoi.Reality.Typography
 {
@@ -14,14 +11,8 @@ namespace Holoi.Reality.Typography
         Vector3 _lastFrameRight;
         private readonly Vector4 _velocityRemap = new(-.02f, .02f, -1f, 1f);
 
-        [Header("Button List")]
-        [SerializeField] MyButton _forwardButton;
-        [SerializeField] MyButton _backwardButton;
-        [SerializeField] MyButton _rightwardButton;
-        [SerializeField] MyButton _leftwardButton;
-
-        float _vZ;
-        float _vX;
+        public float vZ;
+        public float vX;
 
         private void Start()
         {
@@ -30,36 +21,6 @@ namespace Holoi.Reality.Typography
 
         private void Update()
         {
-            if (_forwardButton.buttonPressed)
-            {
-                Debug.Log("_forwardButton");
-                _vZ = 1.51f * Time.deltaTime;
-            }
-            else if (_backwardButton.buttonPressed)
-            {
-                Debug.Log("_backwardButton");
-
-                _vZ = -1.51f * Time.deltaTime;
-
-            }
-            else if (_rightwardButton.buttonPressed)
-            {
-                Debug.Log("_rightwardButton");
-
-                _vX = 1.51f * Time.deltaTime;
-            }
-            else if (_leftwardButton.buttonPressed)
-            {
-                Debug.Log("_leftwardButton");
-
-                _vX = -1.51f * Time.deltaTime;
-            }
-            else
-            {
-
-            }
-
-
             UpdateAvatarMovementAnimation();
         }
 
@@ -74,18 +35,18 @@ namespace Holoi.Reality.Typography
             if (_notFirstAnimationFrame)
             {
                 // Calculate the relative z and x velocity
-                Vector3 distFromLastFrame = transform.position - _lastFramePosition;
-                if (distFromLastFrame != Vector3.zero)
+                //Vector3 distFromLastFrame = transform.position - _lastFramePosition;
+                if (true)
                 {
                     var staticThreshold = 0.001667f; // if velocity < 0.1m/s, we regard it static.
-                    _vZ = InverseClamp(_vZ, -1 * staticThreshold, 1 * staticThreshold);
-                    _vX = InverseClamp(_vX, -1 * staticThreshold, 1 * staticThreshold);
+                    vZ = InverseClamp(vZ, -1 * staticThreshold, 1 * staticThreshold);
+                    vX = InverseClamp(vX, -1 * staticThreshold, 1 * staticThreshold);
 
-                    _vZ = Remap(_vZ, _velocityRemap.x, _velocityRemap.y, _velocityRemap.z, _velocityRemap.w, true);
-                    _vX = Remap(_vX, _velocityRemap.x, _velocityRemap.y, _velocityRemap.z, _velocityRemap.w, true);
+                    vZ = Remap(vZ, _velocityRemap.x, _velocityRemap.y, _velocityRemap.z, _velocityRemap.w, true);
+                    vX = Remap(vX, _velocityRemap.x, _velocityRemap.y, _velocityRemap.z, _velocityRemap.w, true);
 
-                    _animator.SetFloat("Velocity Z", _vZ);
-                    _animator.SetFloat("Velocity X", _vX);
+                    _animator.SetFloat("Velocity Z", vZ);
+                    _animator.SetFloat("Velocity X", vX);
                 }
             }
             else
