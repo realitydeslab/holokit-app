@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
@@ -32,6 +29,11 @@ namespace Holoi.Library.HoloKitApp.UI
         private void OnFinishedScanningQRCode()
         {
             HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_CheckAlignmentMark");
+        }
+
+        public void OnExitButtonPressed()
+        {
+            HoloKitApp.Instance.Shutdown();
         }
     }
 }

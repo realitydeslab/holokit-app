@@ -50,6 +50,8 @@ namespace Holoi.Library.HoloKitApp
 
         public RealityManager RealityManager => _realityManager;
 
+        public bool Test => _test;
+
         private Reality _currentReality;
 
         private bool _isHost = true;

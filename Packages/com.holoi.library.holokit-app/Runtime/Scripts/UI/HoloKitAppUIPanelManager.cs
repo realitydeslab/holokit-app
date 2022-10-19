@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -64,11 +63,18 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnARSceneUnloaded()
         {
-            if (_uiPanelStack.Peek().UIPanelName.Equals("StarAR"))
+            while (!_uiPanelStack.Peek().UIPanelName.Equals("MonoAR"))
             {
                 PopUIPanel();
             }
+            // Pop MonoAR panel
             PopUIPanel();
+
+            if (!HoloKitApp.Instance.Test)
+            {
+                // Pop Reality preferences page panel
+                PopUIPanel();
+            }
         }
     }
 }
