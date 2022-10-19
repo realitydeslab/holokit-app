@@ -34,7 +34,7 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
     }
     
     func onRoundStarted() {
-        let context = ["MofaWatchPhase" : MofaWatchPhase.fighting.rawValue, "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
+        let context = ["MofaWatchPhase" : MofaWatchPhase.fighting.rawValue];
         do {
             try self.wcSession.updateApplicationContext(context)
             print("Fighting phase synced")
