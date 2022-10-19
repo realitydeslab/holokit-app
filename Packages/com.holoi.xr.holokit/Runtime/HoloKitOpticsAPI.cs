@@ -13,13 +13,16 @@ namespace HoloKit
         private static extern void HoloKitSDK_ReleasePhoneModelCameraOffsetPtr(IntPtr ptr);
 
         [DllImport("__Internal")]
-        private static extern float HoloKitSDK_GetHoloKitModelPhoneFrameWidth(int holokitType);
+        private static extern float HoloKitSDK_GetPhoneModelScreenDpi();
 
         [DllImport("__Internal")]
-        private static extern float HoloKitSDK_GetHoloKitModelPhoneFrameHeight(int holokitType);
+        private static extern float HoloKitSDK_GetHoloKitModelPhoneFrameWidthInPixel();
 
         [DllImport("__Internal")]
-        private static extern float HoloKitSDK_GetHoloKitModelHorizontalAlignmentMarkerOffset(int holokitType);
+        private static extern float HoloKitSDK_GetHoloKitModelPhoneFrameHeightInPixel();
+
+        [DllImport("__Internal")]
+        private static extern float HoloKitSDK_GetHoloKitModelHorizontalAlignmentMarkerOffsetInPixel(int holokitType);
 
         public static Vector3 GetPhoneModelCameraOffset(HoloKitType holokitType)
         {
@@ -30,17 +33,29 @@ namespace HoloKit
             return new Vector3(offset[0], offset[1], offset[2]);
         }
 
-        // Vector.x is width and Vector.y is height
-        public static Vector2 GetHoloKitModelPhoneFrameSize(HoloKitType holokitType)
+        public static float GetScreenDpi()
         {
-            float width = HoloKitSDK_GetHoloKitModelPhoneFrameWidth((int)holokitType);
-            float height = HoloKitSDK_GetHoloKitModelPhoneFrameHeight((int)holokitType);
-            return new Vector2(width, height + 0.005f); // Add an extra height
+            if (HoloKitUtils.IsRuntime)
+            {
+                return HoloKitSDK_GetPhoneModelScreenDpi();
+            }
+            else
+            {
+                return Screen.dpi;
+            }
         }
 
-        public static float GetHoloKitModelHorizontalAlignmentMarkerOffset(HoloKitType holokitType)
+        // Vector.x is width and Vector.y is height
+        public static Vector2 GetHoloKitModelPhoneFrameSizeInPixel()
         {
-            return HoloKitSDK_GetHoloKitModelHorizontalAlignmentMarkerOffset((int)holokitType);
+            float width = HoloKitSDK_GetHoloKitModelPhoneFrameWidthInPixel();
+            float height = HoloKitSDK_GetHoloKitModelPhoneFrameHeightInPixel();
+            return new Vector2(width, height);
+        }
+
+        public static float GetHoloKitModelHorizontalAlignmentMarkerOffsetInPixel(HoloKitType holokitType)
+        {
+            return HoloKitSDK_GetHoloKitModelHorizontalAlignmentMarkerOffsetInPixel((int)holokitType);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -9,7 +10,11 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
-        [SerializeField] private GameObject _horizontalAlignmentMarker;
+        [SerializeField] private RectTransform _phoneFrame;
+
+        [SerializeField] private RectTransform _horizontalAlignmentMarker;
+
+        [SerializeField] private RectTransform _header;
 
         [SerializeField] private GameObject _mainWindow;
 
@@ -25,16 +30,40 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private GameObject _moreButton;
 
-        private void Awake()
+        // TODO: Make this dynamically adapted to the current iPhone
+        private const float HorizontalAlignmentMarkerThickness = 3f;
+
+        // In meter
+        private const float PhoneFrameTopToHeaderOffset = 0.005f;
+
+        private void Start()
         {
+            // Adapt to the current screen size
             int a = Screen.width;
             int b = Screen.height;
-            GetComponent<RectTransform>().sizeDelta = new Vector3(a > b ? a : b, a < b ? a : b);
+            int screenWidth = a > b ? a : b;
+            int screenHeight = a < b ? a : b;
+            GetComponent<RectTransform>().sizeDelta = new Vector3(screenWidth, screenHeight);
+
+            if (HoloKitUtils.IsEditor) { return; }
+            // Set phone frame
+            Vector2 phoneFrameSizeInPixel = HoloKitOpticsAPI.GetHoloKitModelPhoneFrameSizeInPixel();
+            _phoneFrame.sizeDelta = phoneFrameSizeInPixel;
+
+            // Set horizontal alignment marker
+            // Adjust position
+            float horizontalAlignmentMarkerOffsetInPixel = HoloKitOpticsAPI.GetHoloKitModelHorizontalAlignmentMarkerOffsetInPixel(HoloKitType.HoloKitX);
+            _horizontalAlignmentMarker.anchoredPosition = new Vector2(horizontalAlignmentMarkerOffsetInPixel, 0f);
+            // Adjust length
+            _horizontalAlignmentMarker.sizeDelta = new Vector2(HorizontalAlignmentMarkerThickness, screenHeight - phoneFrameSizeInPixel.y);
+
+            // Set header
+            _header.anchoredPosition = new Vector2(0f, phoneFrameSizeInPixel.y + HoloKitUtils.MeterToPixel(PhoneFrameTopToHeaderOffset));
         }
 
         public void OnTriggerButtonPressed()
         {
-            _horizontalAlignmentMarker.SetActive(false);
+            _horizontalAlignmentMarker.gameObject.SetActive(false);
             _boostButton.SetActive(false);
             _exitButton.SetActive(false);
             _recordButton.SetActive(false);
@@ -43,7 +72,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnTriggerButtonReleased()
         {
-            _horizontalAlignmentMarker.SetActive(true);
+            _horizontalAlignmentMarker.gameObject.SetActive(true);
             _boostButton.SetActive(true);
             _exitButton.SetActive(true);
             _recordButton.SetActive(true);
@@ -52,7 +81,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnBoostButtonPressed()
         {
-            _horizontalAlignmentMarker.SetActive(false);
+            _horizontalAlignmentMarker.gameObject.SetActive(false);
             _triggerButton.SetActive(false);
             _exitButton.SetActive(false);
             _recordButton.SetActive(false);
@@ -61,7 +90,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnBoostButtonReleased()
         {
-            _horizontalAlignmentMarker.SetActive(true);
+            _horizontalAlignmentMarker.gameObject.SetActive(true);
             _triggerButton.SetActive(true);
             _exitButton.SetActive(true);
             _recordButton.SetActive(true);
@@ -70,7 +99,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnExitButtonPressed()
         {
-            _horizontalAlignmentMarker.SetActive(false);
+            _horizontalAlignmentMarker.gameObject.SetActive(false);
             _triggerButton.SetActive(false);
             _boostButton.SetActive(false);
             _recordButton.SetActive(false);
@@ -79,7 +108,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnExitButtonReleased()
         {
-            _horizontalAlignmentMarker.SetActive(true);
+            _horizontalAlignmentMarker.gameObject.SetActive(true);
             _triggerButton.SetActive(true);
             _boostButton.SetActive(true);
             _recordButton.SetActive(true);
@@ -88,7 +117,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnRecordButtonPressed()
         {
-            _horizontalAlignmentMarker.SetActive(false);
+            _horizontalAlignmentMarker.gameObject.SetActive(false);
             _triggerButton.SetActive(false);
             _boostButton.SetActive(false);
             _exitButton.SetActive(false);
@@ -97,7 +126,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnRecordButtonReleased()
         {
-            _horizontalAlignmentMarker.SetActive(true);
+            _horizontalAlignmentMarker.gameObject.SetActive(true);
             _triggerButton.SetActive(true);
             _boostButton.SetActive(true);
             _exitButton.SetActive(true);
@@ -106,7 +135,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnMoreButtonPressed()
         {
-            _horizontalAlignmentMarker.SetActive(false);
+            _horizontalAlignmentMarker.gameObject.SetActive(false);
             _mainWindow.SetActive(false);
             _moreWindow.SetActive(true);
             StartCoroutine(StartMoreButtonCoolingDown());
@@ -115,7 +144,7 @@ namespace Holoi.Library.HoloKitApp.UI
         private IEnumerator StartMoreButtonCoolingDown()
         {
             yield return new WaitForSeconds(6f);
-            _horizontalAlignmentMarker.SetActive(true);
+            _horizontalAlignmentMarker.gameObject.SetActive(true);
             _mainWindow.SetActive(true);
             _moreWindow.SetActive(false);
         }

@@ -10,15 +10,15 @@ namespace Holoi.Library.HoloKitApp.UI
         private void Start()
         {
             // Adjust QRCode size
-            float qrCodeWithInPixel = HoloKitAppUtils.MeterToPixel(QrCodeWidth);
+            float qrCodeWithInPixel = HoloKitUtils.MeterToPixel(QrCodeWidth);
             GetComponent<RectTransform>().sizeDelta = new Vector2(qrCodeWithInPixel, qrCodeWithInPixel);
 
             if (HoloKitUtils.IsEditor) { return; }
 
             // Calculate correct camera to QR code offset
             Vector3 leftEdgeCenterToQRCodeOffset = Vector3.zero;
-            leftEdgeCenterToQRCodeOffset.x = HoloKitAppUtils.PixelToMeter(Screen.width / 2);
-            leftEdgeCenterToQRCodeOffset.y = -HoloKitAppUtils.PixelToMeter(Screen.height / 2 - (int)transform.position.y);
+            leftEdgeCenterToQRCodeOffset.x = HoloKitUtils.PixelToMeter(Screen.width / 2);
+            leftEdgeCenterToQRCodeOffset.y = -HoloKitUtils.PixelToMeter(Screen.height / 2 - (int)transform.position.y);
 
             Vector3 originalPhoneModelCameraOffset = HoloKitOpticsAPI.GetPhoneModelCameraOffset(HoloKitType.HoloKitX);
             Vector3 phoneModelCameraOffset = new(originalPhoneModelCameraOffset.y, -originalPhoneModelCameraOffset.x, originalPhoneModelCameraOffset.z);
