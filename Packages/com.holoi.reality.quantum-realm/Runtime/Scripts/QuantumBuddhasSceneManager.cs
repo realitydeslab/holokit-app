@@ -13,7 +13,7 @@ namespace Holoi.Reality.QuantumRealm
     public class QuantumBuddhasSceneManager : MonoBehaviour
     {
         [Header("Buddhas Objects")]
-        [SerializeField] List<VisualEffect> _vfxs = new List<VisualEffect>();
+        public List<VisualEffect> vfxs = new List<VisualEffect>();
 
         [Header("Hand Objects")]
         [SerializeField] Transform _handJoint;
@@ -47,7 +47,7 @@ namespace Holoi.Reality.QuantumRealm
 
         void Start()
         {
-            _amount = _vfxs.Count;
+            _amount = vfxs.Count;
 
             if (HoloKitApp.Instance.IsHost)
             {
@@ -100,7 +100,7 @@ namespace Holoi.Reality.QuantumRealm
 
         public void SwitchToNextVFXClient()
         {
-            _animator = _vfxs[_index].GetComponent<Animator>();
+            _animator = vfxs[_index].GetComponent<Animator>();
 
             if (_animator !=null)
             {
@@ -110,22 +110,22 @@ namespace Holoi.Reality.QuantumRealm
 
             _index++;
 
-            if (_index == _vfxs.Count) _index = 0;
+            if (_index == vfxs.Count) _index = 0;
 
             // disbale other vfx after play animation:
-            for (int i = 0; i < _vfxs.Count; i++)
+            for (int i = 0; i < vfxs.Count; i++)
             {
                 if(i == _index)
                 {
-                    _vfxs[_index].gameObject.SetActive(true);
+                    vfxs[_index].gameObject.SetActive(true);
                 }
                 else
                 {
                     Debug.Log($"disable with index: {i}");
-                    StartCoroutine(DisableAfterTimes(_vfxs[i].gameObject, 1.5f));
+                    StartCoroutine(DisableAfterTimes(vfxs[i].gameObject, 1.5f));
                 }
             }
-            _animator = _vfxs[_index].GetComponent<Animator>();
+            _animator = vfxs[_index].GetComponent<Animator>();
             _animator.Rebind();
             _animator.Update(0f);
             // vfx:
@@ -150,6 +150,8 @@ namespace Holoi.Reality.QuantumRealm
 
             if (HoloKitApp.Instance.IsHost)
             {
+                var realityManager = HoloKitApp.Instance.RealityManager as QuantumBuddhasRealityManager;
+
                 GameObject go = Instantiate(_targetGameObject);
 
                 go.transform.position = new Vector3(_centerEye.position.x, _arRaycastController.transform.position.y , _centerEye.position.z);
@@ -159,17 +161,17 @@ namespace Holoi.Reality.QuantumRealm
                 var eyeHorizentalForward = GetHorizontalForward(_centerEye);
 
                 target = go.transform.position - eyeHorizentalForward;
-                //Debug.Log(_centerEye.forward);
 
                 go.transform.LookAt(target);
 
                 go.GetComponent<NetworkObject>().Spawn();
 
-                _vfxs.Clear();
+                vfxs.Clear();
 
                 for (int i = 0; i < go.transform.childCount; i++)
                 {
-                    _vfxs.Add(go.transform.GetChild(i).GetComponent<BuddhasController>().vfx);
+                    var vfx = go.transform.GetChild(i).GetComponent<BuddhasController>().vfx;
+                    vfxs.Add(vfx);
                 }
             }
         }

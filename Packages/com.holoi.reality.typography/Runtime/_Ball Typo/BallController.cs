@@ -16,7 +16,7 @@ namespace Holoi.Reality.Typography
     {
         public Rigidbody _rigidBody;
 
-        [SerializeField] VisualEffect _vfx;
+        [SerializeField] List<VisualEffect> _vfxs;
 
         [SerializeField] float _radius = 0.3f;
 
@@ -60,7 +60,11 @@ namespace Holoi.Reality.Typography
         public void OnHandsUp()
         {
             _isCollisionTriggeredFirstTime = true;
-            _vfx.SetBool("Is Alive", true);
+            foreach(var vfx in _vfxs)
+            {
+                vfx.SetBool("Is Alive", true);
+            }
+            
             if (HoloKitApp.Instance.IsHost)
                 GetComponent<FollowMovementManager>().enabled = true;
             _rigidBody.velocity = Vector3.zero;
@@ -72,7 +76,7 @@ namespace Holoi.Reality.Typography
             if (HoloKitApp.Instance.IsHost)
                 GetComponent<FollowMovementManager>().enabled = false;
             _rigidBody.useGravity = true;
-            _rigidBody.velocity = direction * 3;
+            _rigidBody.velocity = direction * 12;
 
             GetComponent<BallController>().ClearHitWall(); // clear hit wall every time you shoot to avoid the unexpected hit wall.
         }
@@ -90,15 +94,15 @@ namespace Holoi.Reality.Typography
 #if UNITY_EDITOR
                     if (true)
                     {
-                        _vfx.SetBool("Is Alive", false);
-                        _vfx.SetVector3("Hit Plane Position_position", _hitWall.transform.position);
-                        _vfx.SetVector3("Hit Plane Normal", _hitWall.normal);
-
                         var hitPos = collision.GetContact(0).point;
-
-                        _vfx.SetVector3("Hit Position_position", hitPos);
-
-                        _vfx.SendEvent("OnExplode");
+                        foreach (var vfx in _vfxs)
+                        {
+                            vfx.SetBool("Is Alive", false);
+                            vfx.SetVector3("Hit Plane Position_position", _hitWall.transform.position);
+                            vfx.SetVector3("Hit Plane Normal", _hitWall.normal);
+                            vfx.SetVector3("Hit Position_position", hitPos);
+                            vfx.SendEvent("OnExplode");
+                        }
 
                         OnCollisionEnterVFXChangesClientRpc(
                             _hitWall.transform.position,
@@ -110,15 +114,18 @@ namespace Holoi.Reality.Typography
 #if UNITY_IOS
                     if (_hitWall.alignment == PlaneAlignment.Vertical)
                     {
-                        _vfx.SetBool("Is Alive", false);
-                        _vfx.SetVector3("Hit Plane Position_position", _hitWall.transform.position);
-                        _vfx.SetVector3("Hit Plane Normal", _hitWall.normal);
-
                         var hitPos = collision.GetContact(0).point;
 
-                        _vfx.SetVector3("Hit Position_position", hitPos);
+                        foreach (var vfx in _vfxs)
+                        {
+                            vfx.SetBool("Is Alive", false);
+                            vfx.SetVector3("Hit Plane Position_position", _hitWall.transform.position);
+                            vfx.SetVector3("Hit Plane Normal", _hitWall.normal);
 
-                        _vfx.SendEvent("OnExplode");
+                            vfx.SetVector3("Hit Position_position", hitPos);
+
+                            vfx.SendEvent("OnExplode");
+                        }
 
                         Debug.Log("Call OnCollisionEnterVFXChangesClientRpc");
 
@@ -141,8 +148,11 @@ namespace Holoi.Reality.Typography
         public void ClearHitWall()
         {
             _hitWall = null;
-            _vfx.SetVector3("Hit Plane Position_position", new Vector3(0, 999, 0));
-            _vfx.SetVector3("Hit Plane Normal", new Vector3(0, 1, 0));
+            foreach (var vfx in _vfxs)
+            {
+                vfx.SetVector3("Hit Plane Position_position", new Vector3(0, 999, 0));
+                vfx.SetVector3("Hit Plane Normal", new Vector3(0, 1, 0));
+            }
         }
 
         [ClientRpc]
@@ -150,14 +160,17 @@ namespace Holoi.Reality.Typography
         {
             Debug.Log("OnCollisionEnterVFXChangesClientRpc");
 
-            _vfx.SetBool("Is Alive", false);
-            _vfx.SetVector3("Hit Plane Position_position", hitWallPos);
+            foreach (var vfx in _vfxs)
+            {
+                vfx.SetBool("Is Alive", false);
+                vfx.SetVector3("Hit Plane Position_position", hitWallPos);
 
-            _vfx.SetVector3("Hit Plane Normal", hitWallNormal);
+                vfx.SetVector3("Hit Plane Normal", hitWallNormal);
 
-            _vfx.SetVector3("Hit Position_position", hitPos);
+                vfx.SetVector3("Hit Position_position", hitPos);
 
-            _vfx.SendEvent("OnExplode");
+                vfx.SendEvent("OnExplode");
+            }
         }
     }
 }

@@ -43,8 +43,8 @@ namespace Holoi.Reality.Typography
         {
             if (HoloKitApp.Instance.IsHost)
             {
-                _handsUp.gameObject.SetActive(false);
-                _shoot.gameObject.SetActive(false);
+                //_handsUp.gameObject.SetActive(false);
+                //_shoot.gameObject.SetActive(false);
             }
             else
             {
@@ -69,7 +69,6 @@ namespace Holoi.Reality.Typography
 
                     break;
                 case State.handsUp:
-
                     Debug.Log("OnHandsUp");
                     _ball.GetComponent<BallController>().OnHandsUp();
 
@@ -95,16 +94,31 @@ namespace Holoi.Reality.Typography
 
         public void OnHandsUpButtonClicked()
         {
-            _state = State.handsUp;
-            // for server
-            OnHandsUpButtonClickedServerRpc();
+            
+            if (HoloKitApp.Instance.IsHost)
+            {
+                _state = State.handsUp;
+            }
+            else
+            {
+                // for server
+                OnHandsUpButtonClickedServerRpc();
+            }
+
         }
 
         public void OnShootButtonClicked()
         {
-            _state = State.shoot;
-            // for server
-            OnShootButtonClickedServerRpc();
+            
+            if (HoloKitApp.Instance.IsHost)
+            {
+                _state = State.shoot;
+            }
+            else
+            {
+                // for server
+                OnShootButtonClickedServerRpc();
+            }
         }
 
         [ServerRpc(RequireOwnership = false)]
