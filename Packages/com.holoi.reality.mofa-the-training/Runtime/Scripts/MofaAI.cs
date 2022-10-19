@@ -110,8 +110,10 @@ namespace Holoi.Reality.MOFATheTraining
         {
             if (_avatar == null)
             {
-                var preferencedAvatarCollection = HoloKitApp.Instance.GlobalSettings.GetPreferencedAvatarCollection(null);
-                var preferencedAvatar = HoloKitApp.Instance.GlobalSettings.GetPreferencedAvatar(null);
+                var preferencedAvatarCollection = HoloKitApp.Instance.Test ?
+                    HoloKitApp.Instance.GlobalSettings.GetAmbersAvatarCollection() : HoloKitApp.Instance.GlobalSettings.GetPreferencedAvatarCollection(null);
+                var preferencedAvatar = HoloKitApp.Instance.Test ?
+                    HoloKitApp.Instance.GlobalSettings.GetAmbersAvatar() : HoloKitApp.Instance.GlobalSettings.GetPreferencedAvatar(null);
                 var avatarCollectionParams = _mofaAvatarCollectionParamsList.GetAvatarCollectionParams(preferencedAvatarCollection);
                 _centerEyeOffset = avatarCollectionParams.CenterEyeOffset;
                 LifeShieldOffest = avatarCollectionParams.LifeShiledOffset;

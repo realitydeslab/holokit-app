@@ -42,6 +42,11 @@ namespace Holoi.Library.HoloKitApp
 
         public Dictionary<string, RealityPreference> RealityPreferences;
 
+        // This is temporary
+        private const string AmbersAvatarCollectionBundleId = "com.holoi.avatar.meebits";
+
+        private const string AmbersAvatarTokenId = "5958";
+
         // Call this function when application quits.
         public void Save()
         {
@@ -267,6 +272,31 @@ namespace Holoi.Library.HoloKitApp
                 if (metaAvatarCollection.BundleId.Equals(realityPreference.MetaAvatarCollectionBundleId))
                 {
                     return metaAvatarCollection;
+                }
+            }
+            return null;
+        }
+
+        public MetaAvatarCollection GetAmbersAvatarCollection()
+        {
+            foreach (var avatarCollection in AvatarCollectionList.List)
+            {
+                if (avatarCollection.BundleId.Equals(AmbersAvatarCollectionBundleId))
+                {
+                    return avatarCollection;
+                }
+            }
+            return null;
+        }
+
+        public MetaAvatar GetAmbersAvatar()
+        {
+            MetaAvatarCollection avatarCollection = GetAmbersAvatarCollection();
+            foreach (var avatar in avatarCollection.MetaAvatars)
+            {
+                if (avatar.TokenId.Equals(AmbersAvatarTokenId))
+                {
+                    return avatar;
                 }
             }
             return null;
