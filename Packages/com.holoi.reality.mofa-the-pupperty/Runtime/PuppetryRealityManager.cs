@@ -9,7 +9,7 @@ using HoloKit;
 
 using Holoi.Library.HoloKitApp;
 
-namespace Holoi.Reality.Typography
+namespace Holoi.Reality.MOFAThePuppetry
 {
     public class PuppetryRealityManager : RealityManager
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Holoi.Reality.Typography
+namespace Holoi.Reality.MOFAThePuppetry
 {
     public class PupprtryController : MonoBehaviour
     {
