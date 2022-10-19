@@ -23,7 +23,14 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnSpectatorButtonPressed()
         {
-            HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ShareReality");
+            if (HoloKitApp.Instance.IsHost)
+            {
+                HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ShareReality");
+            }
+            else
+            {
+                HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_RescanQRCode");
+            }
         }
 
         public void OnStarButtonPressed()
