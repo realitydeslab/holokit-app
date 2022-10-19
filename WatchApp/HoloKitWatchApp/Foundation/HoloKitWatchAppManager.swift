@@ -31,6 +31,7 @@ class HoloKitWatchAppManager: NSObject, ObservableObject {
             wcSession = WCSession.default
             wcSession.delegate = self
         }
+        self.currentReality = .nothing
     }
 }
 

@@ -54,7 +54,10 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity
 
         public static void TakeControlWatchConnectivitySession()
         {
-            HoloKitAppWatchConnectivity_TakeControlWCSession();
+            if (HoloKit.HoloKitUtils.IsRuntime)
+            {
+                HoloKitAppWatchConnectivity_TakeControlWCSession();
+            }
         }
 
         public static void UpdateCurrentReality(WatchReality watchReality)

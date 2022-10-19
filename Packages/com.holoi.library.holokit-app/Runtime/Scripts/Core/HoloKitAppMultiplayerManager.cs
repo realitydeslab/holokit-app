@@ -218,7 +218,6 @@ namespace Holoi.Library.HoloKitApp
             if (_timestampOffsetQueue.Count > TimestampOffsetQueueStablizationCount)
             {
                 double standardDeviation = HoloKitAppUtils.CalculateStdDev(_timestampOffsetQueue);
-                //Debug.Log($"[RealityManager] new timestamp offset standard deviation: {standardDeviation}");
                 if (standardDeviation < TimestampOffsetQueueStablizationStandardDeviationThreshold)
                 {
                     // This deviation is acceptable
@@ -245,6 +244,11 @@ namespace Holoi.Library.HoloKitApp
             var arTrackedImageManager = HoloKitCamera.Instance.GetComponentInParent<ARTrackedImageManager>();
             arTrackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
             arTrackedImageManager.enabled = false;
+            // Destroy the image tracker prefab
+            foreach (var trackable in arTrackedImageManager.trackables)
+            {
+                Destroy(trackable.gameObject);
+            }
         }
 
         private void OnServerARSessionUpdatedFrame(double timestamp, Matrix4x4 matrix)
@@ -332,8 +336,8 @@ namespace Holoi.Library.HoloKitApp
             });
             if (_clientImagePositionPairQueue.Count > ClientImagePositionPairQueueStablizationCount)
             {
-                var calibrationResult = CalculateClientToServerTransform(_clientImagePositionPairQueue);
-                Debug.Log($"[Calibration] theta: {calibrationResult.ThetaInDeg}, translate: {calibrationResult.Translate}");
+                var calibrationResult = CalculateClientToServerTransform();
+                //Debug.Log($"[Calibration] theta: {calibrationResult.ThetaInDeg}, translate: {calibrationResult.Translate}");
                 _clientCalibrationResultQueue.Enqueue(calibrationResult);
                 if (_clientCalibrationResultQueue.Count > ClientCalibrationResultQueueStablizationCount)
                 {
@@ -354,99 +358,19 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
-        private void TestCalibrationAlgorithm()
+        private CalibrationResult CalculateClientToServerTransform()
         {
-            // TestMockData(Vector3.zero, -30f);
-
-            Enumerable.Range(1, 10).Select(i =>
-            {
-                var clientToServerTranslate = new Vector3 { x = UnityEngine.Random.Range(-5f, 5f), y = UnityEngine.Random.Range(-2f, 2f), z = UnityEngine.Random.Range(-5f, 5f) };
-                var thetaInDeg = UnityEngine.Random.Range(0f, 360f);
-                TestMockData(clientToServerTranslate, thetaInDeg);
-                return 1f;
-            }).ToArray();
-        }
-
-        private void TestMockData(Vector3 clientToServerTranslate, float thetaInDeg)
-        {
-            //var clientToServerTranslate = new Vector3(-5f, 0.5f, 1);
-            //var clientToServerTranslate = new Vector3 { x = UnityEngine.Random.Range(-1f, 1f), y = UnityEngine.Random.Range(-1f, 1f), z = UnityEngine.Random.Range(-1f, 1f) };
-            //var ob = new Vector3 { x = UnityEngine.Random.Range(-1f, 1f), y = UnityEngine.Random.Range(-1f, 1f), z = UnityEngine.Random.Range(-1f, 1f) };
-            //var thetaInDeg = -270f;
-            //Debug.Log($"[Test] oa: {oa}, ob: {ob}");
-            var answer = new CalibrationResult()
-            {
-                Translate = clientToServerTranslate,
-                ThetaInDeg = thetaInDeg
-            };
-
-            var pairQueue = Enumerable.Range(1, 60).Select(i =>
-            {
-                //Make Client 
-                //var pb = new Vector3(1f, 0f, 0f);
-                var pb = new Vector3 { x = UnityEngine.Random.Range(-0.05f, 0.05f), y = UnityEngine.Random.Range(-0.05f, 0.05f), z = UnityEngine.Random.Range(-0.05f, 0.05f) };
-                var poseb = Matrix4x4.Translate(pb);
-                // Method 1
-                //Vector3 dist = pb - clientToServerTranslate;
-                //var oax = new Vector3(Mathf.Cos(-thetaInDeg * Mathf.Deg2Rad), 0f, Mathf.Sin(-thetaInDeg * Mathf.Deg2Rad));
-                //var oaz = new Vector3(-Mathf.Sin(-thetaInDeg * Mathf.Deg2Rad), 0f, Mathf.Cos(-thetaInDeg * Mathf.Deg2Rad));
-                //var pa = new Vector3(Vector3.Dot(dist, oax), pb.y, Vector3.Dot(dist, oaz));
-                // Method 2
-                var posea = Matrix4x4.Rotate(Quaternion.AngleAxis(-thetaInDeg, Vector3.up)) * Matrix4x4.Translate(pb - clientToServerTranslate);
-                var pa = posea.GetPosition();
-
-              //  Debug.Log($"PA: {pa}, RA: {posea.rotation.eulerAngles.y}");
-              //  Debug.Log($"PB: {pb}, RB: {poseb.rotation.eulerAngles.y}");
-                var pair = new ImagePositionPair { ServerImagePosition = pa, ServerImageRotation = posea.rotation, ClientImagePosition = pb, ClientImageRotation = poseb.rotation };
-                return pair;
-            }).ToArray();
-
-            //Debug.Log("queue:");
-            //foreach (var element in pairQueue)
-            //{
-            //    Debug.Log($"ServerImagePosition: {element.ServerImagePosition}, ClientImagePosition: {element.ClientImagePosition}");
-            //}
-            //pairQueue.Select(v => Debug.Log($"ClientImagePosition: {v.ClientImagePosition}, ServerImagePosition: {v.ServerImagePosition}")).ToList();
-            //_clientImagePositionPairQueue = pairQueue;
-
-            CalibrationResult result = CalculateClientToServerTransform(pairQueue);
-            Debug.Log($"[MockDiff] translate: {result.Translate - answer.Translate}, theta: {result.ThetaInDeg - answer.ThetaInDeg}");
-            //Debug.Log($"[MockResult] translate: {result.Translate}, theta: {result.ThetaInDeg}");
-            //Debug.Log($"[MockAnswer] translate: {answer.Translate}, theta: {answer.ThetaInDeg}");
-        }
-
-        private CalibrationResult CalculateClientToServerTransform(IEnumerable<ImagePositionPair> queue)
-        {
-            //Debug.Log($"Client image Standard deviation x: {HoloKitAppUtils.CalculateStdDev(queue.Select(o => (double)o.ClientImagePosition.x).ToArray())}");
-            //Debug.Log($"Client image Standard deviation y: {HoloKitAppUtils.CalculateStdDev(queue.Select(o => (double)o.ClientImagePosition.y).ToArray())}");
-            //Debug.Log($"Client image Standard deviation z: {HoloKitAppUtils.CalculateStdDev(queue.Select(o => (double)o.ClientImagePosition.z).ToArray())}");
-
-            //Debug.Log($"Server image Standard deviation x: {HoloKitAppUtils.CalculateStdDev(queue.Select(o => (double)o.ServerImagePosition.x).ToArray())}");
-            //Debug.Log($"Server image Standard deviation y: {HoloKitAppUtils.CalculateStdDev(queue.Select(o => (double)o.ServerImagePosition.y).ToArray())}");
-            //Debug.Log($"Server image Standard deviation z: {HoloKitAppUtils.CalculateStdDev(queue.Select(o => (double)o.ServerImagePosition.z).ToArray())}");
-
-            Debug.Log(string.Join("\n", queue.Select(o => $"{o.ServerImagePosition.x:F10},{o.ServerImagePosition.y:F10},{o.ServerImagePosition.z:F10},{o.ClientImagePosition.x:F10},{o.ClientImagePosition.y:F10},{o.ClientImagePosition.z:F10}")));
-
             var clientImagePositionCenter = new Vector3(
-                queue.Select(o => o.ClientImagePosition.x).Average(),
-                queue.Select(o => o.ClientImagePosition.y).Average(),
-                queue.Select(o => o.ClientImagePosition.z).Average());
+                _clientImagePositionPairQueue.Select(o => o.ClientImagePosition.x).Average(),
+                _clientImagePositionPairQueue.Select(o => o.ClientImagePosition.y).Average(),
+                _clientImagePositionPairQueue.Select(o => o.ClientImagePosition.z).Average());
 
             var serverImagePositionCenter = new Vector3(
-                queue.Select(o => o.ServerImagePosition.x).Average(),
-                queue.Select(o => o.ServerImagePosition.y).Average(),
-                queue.Select(o => o.ServerImagePosition.z).Average());
+                _clientImagePositionPairQueue.Select(o => o.ServerImagePosition.x).Average(),
+                _clientImagePositionPairQueue.Select(o => o.ServerImagePosition.y).Average(),
+                _clientImagePositionPairQueue.Select(o => o.ServerImagePosition.z).Average());
 
-
-            //string str = "";
-            //Debug.Log($"[RealityManager] clientImagePositionCenter: {clientImagePositionCenter:F4} and serverImagePositionCenter: {serverImagePositionCenter:F4}");
-            //foreach (var imagePositionPair in queue)
-            //{
-            //    str += $"clientImagePosition: {imagePositionPair.ClientImagePosition:F4}, serverImagePosition: {imagePositionPair.ServerImagePosition:F4}, offset: {imagePositionPair.ClientImagePosition - imagePositionPair.ServerImagePosition:F4}\n";
-            //}
-            //Debug.Log(str);
-
-            Vector2 tanThetaAB = queue.Select(o =>
+            Vector2 tanThetaAB = _clientImagePositionPairQueue.Select(o =>
             {
                 var p = o.ServerImagePosition - serverImagePositionCenter;
                 var q = o.ClientImagePosition - clientImagePositionCenter;
@@ -469,48 +393,6 @@ namespace Holoi.Library.HoloKitApp
                 ThetaInDeg = thetaInDeg
             };
         }
-
-        //private CalibrationResult CalculateClientToServerTransform(Queue<ImagePositionPair> queue)
-        //{
-        //    var clientImagePositionCenter = new Vector3(
-        //        _clientImagePositionPairQueue.Select(o => o.ClientImagePosition.x).Average(),
-        //        _clientImagePositionPairQueue.Select(o => o.ClientImagePosition.y).Average(),
-        //        _clientImagePositionPairQueue.Select(o => o.ClientImagePosition.z).Average());
-
-        //    var serverImagePositionCenter = new Vector3(
-        //        _clientImagePositionPairQueue.Select(o => o.ServerImagePosition.x).Average(),
-        //        _clientImagePositionPairQueue.Select(o => o.ServerImagePosition.y).Average(),
-        //        _clientImagePositionPairQueue.Select(o => o.ServerImagePosition.z).Average());
-
-        //    string str = "";
-        //    //Debug.Log($"[RealityManager] clientImagePositionCenter: {clientImagePositionCenter:F4} and serverImagePositionCenter: {serverImagePositionCenter:F4}");
-        //    foreach (var imagePositionPair in _clientImagePositionPairQueue)
-        //    {
-        //        str += $"clientImagePosition: {imagePositionPair.ClientImagePosition:F4}, serverImagePosition: {imagePositionPair.ServerImagePosition:F4}, offset: {imagePositionPair.ClientImagePosition - imagePositionPair.ServerImagePosition:F4}\n";
-        //    }
-        //    Debug.Log(str);
-
-        //    Vector2 tanThetaAB = _clientImagePositionPairQueue.Select(o =>
-        //    {
-        //        var p = o.ClientImagePosition - clientImagePositionCenter;
-        //        var q = o.ServerImagePosition - serverImagePositionCenter;
-        //        var a = p.x * q.x + p.z * q.z;
-        //        var b = p.z * q.x - p.x * q.z;
-        //        return new Vector2(a, b);
-        //    }).Aggregate(Vector2.zero, (r, o) => r + o);
-
-        //    float theta = (float)Math.Atan2(tanThetaAB.y, tanThetaAB.x);
-
-        //    Matrix4x4 rotation = Matrix4x4.Rotate(Quaternion.AngleAxis(theta, new Vector3(0, 1, 0)));
-
-        //    Vector3 translate = serverImagePositionCenter - rotation.MultiplyPoint3x4(clientImagePositionCenter);
-
-        //    return new CalibrationResult()
-        //    {
-        //        Translate = translate,
-        //        Theta = theta
-        //    };
-        //}
 
         // Step 4: 
         private void OnClientCalibrationSucceeded()
