@@ -56,6 +56,16 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
             print("Failed to sync round result")
         }
     }
+    
+    func updateCurrentReality(_ realityIndex: Int) {
+        let context = ["CurrentReality" : realityIndex];
+        do {
+            try self.wcSession.updateApplicationContext(context)
+            print("Updated current reality")
+        } catch {
+            print("Failed to update current reality")
+        }
+    }
 }
 
 extension MockMofaWatchConnectivityManager: WCSessionDelegate {

@@ -14,6 +14,11 @@ struct HomeView: View {
                 Text("HoloKit")
                     .font(Font.custom("ObjectSans-BoldSlanted", size: 16))
             }
+            .onAppear {
+                DispatchQueue.main.async {
+                    holokitAppWatchManager.takeControlWatchConnectivitySession()
+                }
+            }
         } else if (self.holokitAppWatchManager.currentReality == .mofaTheTraining) {
             MofaHomeView()
                 .environmentObject(mofaWatchAppManager)

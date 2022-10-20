@@ -28,6 +28,13 @@ struct MofaView: View {
             Button("End Round") {
                 mofaWatchConnectivityManager.onRoundEnded(.victory, 24, 0.43, 72)
             }
+            
+            Spacer()
+                .frame(height: 50)
+            
+            Button("Back") {
+                mofaWatchConnectivityManager.updateCurrentReality(0)
+            }
         }
     }
 }

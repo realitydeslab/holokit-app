@@ -206,8 +206,10 @@ namespace Holoi.Library.HoloKitApp
                 HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
             }
 
-            // Make Watch App jump back to the main page
+            // Let HoloKitAppWatchConnectivityManager take control of WCSessionDelegate
             HoloKitAppWatchConnectivityAPI.TakeControlWatchConnectivitySession();
+            // Make Watch App jump back to the main page
+            HoloKitAppWatchConnectivityAPI.UpdateCurrentReality(WatchReality.Nothing);
         }
 
         public void EnterRealityAsHost()

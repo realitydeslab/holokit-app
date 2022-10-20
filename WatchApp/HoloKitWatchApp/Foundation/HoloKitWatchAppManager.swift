@@ -12,13 +12,11 @@ class HoloKitWatchAppManager: NSObject, ObservableObject {
     
     @Published var currentReality: Reality = .nothing
     
-    public var mofaWatchAppManager = MofaWatchAppManager()
-    
     private var wcSession: WCSession!
     
     override init() {
         super.init()
-        
+        print("[HoloKitWatchAppManager] init")
         if (WCSession.isSupported()) {
             wcSession = WCSession.default
             wcSession.delegate = self

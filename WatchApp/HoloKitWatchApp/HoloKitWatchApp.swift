@@ -19,6 +19,9 @@ struct HoloKitWatchApp: App {
             HomeView()
                 .environmentObject(holokitWatchAppManager)
                 .environmentObject(mofaWatchAppManager)
+                .onAppear {
+                    self.mofaWatchAppManager.holokitWatchAppManager = self.holokitWatchAppManager
+                }
         }
     }
 }

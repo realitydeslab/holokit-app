@@ -36,6 +36,8 @@ enum WatchInput: Int {
 
 class MofaWatchAppManager: NSObject, ObservableObject {
     
+    var holokitWatchAppManager: HoloKitWatchAppManager?
+    
     @Published var currentView: MofaView = .introView
     
     @Published var isRightHand: Bool = true
@@ -57,7 +59,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     
     override init() {
         super.init()
-        
+        print("[MofaWatchAppManager] init")
         requestHealthKitAuthorization()
     }
     
@@ -303,6 +305,8 @@ extension MofaWatchAppManager: WCSessionDelegate {
                     }
                 }
             }
+        } else if applicationContext["CurrentReality"] is Int {
+            self.holokitWatchAppManager?.session(session, didReceiveApplicationContext: applicationContext)
         }
     }
     
