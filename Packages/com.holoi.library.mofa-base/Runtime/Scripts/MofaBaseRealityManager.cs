@@ -5,6 +5,7 @@ using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.HoloKitApp.WatchConnectivity;
+using Holoi.Library.MOFABase.WatchConnectivity;
 
 namespace Holoi.Library.MOFABase
 {
@@ -20,9 +21,27 @@ namespace Holoi.Library.MOFABase
 
     public enum MofaRoundResult
     {
-        BlueTeamWins,
-        RedTeamWins,
-        Draw
+        BlueTeamWins = 0,
+        RedTeamWins = 1,
+        Draw = 2
+    }
+
+    public enum MofaIndividualRoundResult
+    {
+        Victory = 0,
+        Defeat = 1,
+        Draw = 2
+    }
+
+    public struct MofaIndividualStats
+    {
+        public MofaIndividualRoundResult IndividualRoundResult;
+
+        public int Kill;
+
+        public float HitRate;
+
+        public float Distance;
     }
 
     public abstract class MofaBaseRealityManager : RealityManager
@@ -47,8 +66,9 @@ namespace Holoi.Library.MOFABase
             LifeShield.OnDead += OnLifeShieldDead;
 
             // Apple Watch
-            // TODO: MofaWatchConnectivityManager should take control first
-
+            MofaWatchConnectivityAPI.Initialize();
+            // MofaWatchConnectivityManager should take control first
+            MofaWatchConnectivityAPI.TakeControlWatchConnectivitySession();
             // We then update the control on Watch side so that MofaWatchConnectivityManager won't miss messages.
             HoloKitAppWatchConnectivityAPI.UpdateCurrentReality(WatchReality.MOFATheTraining);
         }
@@ -71,10 +91,27 @@ namespace Holoi.Library.MOFABase
             Phase.OnValueChanged -= OnPhaseChangedFunc;
         }
 
+        // This delegate method will be called on every client.
         private void OnPhaseChangedFunc(MofaPhase oldValue, MofaPhase newValue)
         {
             Debug.Log($"[MOFABase] Phase changed to {newValue}");
             OnPhaseChanged?.Invoke(newValue);
+
+            if (newValue == MofaPhase.Countdown)
+            {
+                MofaWatchConnectivityAPI.SyncRoundStartToWatch();
+            }
+            else if (newValue == MofaPhase.RoundResult)
+            {
+                if (!IsLocalPlayerSpectator())
+                {
+                    var localPlayerStats = GetIndividualStats(GetLocalPlayer());
+                    MofaWatchConnectivityAPI.SyncRoundResultToWatch(localPlayerStats.IndividualRoundResult,
+                                                                    localPlayerStats.Kill,
+                                                                    localPlayerStats.HitRate,
+                                                                    localPlayerStats.Distance);
+                }
+            }
         }
 
         protected void SpawnLocalPlayerSpellManager()
@@ -86,11 +123,6 @@ namespace Holoi.Library.MOFABase
         public void SetPlayer(ulong clientId, MofaPlayer mofaPlayer)
         {
             Players[clientId] = mofaPlayer;
-            // The setter of parenting can neither be the parent nor the child
-            //if (IsServer)
-            //{
-            //    mofaPlayer.transform.SetParent(transform);
-            //}
         }
 
         public void SetLifeShield(LifeShield lifeShield)
@@ -185,6 +217,36 @@ namespace Holoi.Library.MOFABase
                 }
             }
             return teamScore;
+        }
+
+        private MofaIndividualStats GetIndividualStats(MofaPlayer player)
+        {
+            MofaIndividualStats stats = new();
+            // Inividual round result
+            var roundResult = GetRoundResult();
+            if (roundResult == MofaRoundResult.Draw)
+            {
+                stats.IndividualRoundResult = MofaIndividualRoundResult.Draw;
+            }
+            else
+            {
+                if (player.Team.Value == MofaTeam.Blue)
+                {
+
+                    stats.IndividualRoundResult = roundResult == MofaRoundResult.BlueTeamWins ?
+                        MofaIndividualRoundResult.Victory : MofaIndividualRoundResult.Defeat;
+                }
+                else
+                {
+                    stats.IndividualRoundResult = roundResult == MofaRoundResult.RedTeamWins ?
+                        MofaIndividualRoundResult.Victory : MofaIndividualRoundResult.Defeat;
+                }
+            }
+            // Kills
+            stats.Kill = player.KillCount.Value;
+            // TODO: Hit rate and distance
+
+            return stats;
         }
 
         public MofaRoundResult GetRoundResult()

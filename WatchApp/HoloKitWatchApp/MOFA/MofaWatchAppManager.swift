@@ -247,18 +247,18 @@ extension MofaWatchAppManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        if let isFighting = applicationContext["IsFighint"] as? Int {
-            if ((isFighting == 0 && self.isFighting == true) || (isFighting == 1 && self.isFighting == false)) {
+        if let isFighting = applicationContext["IsFighting"] as? Bool {
+            if (isFighting != self.isFighting) {
                 DispatchQueue.main.async {
-                    self.isFighting = isFighting == 1
+                    self.isFighting = isFighting
                 }
-                if (self.isFighting == true) {
+                if (isFighting == true) {
                     print("Is fighting changed to true")
                     DispatchQueue.main.async {
                         self.currentView = .fightingView
                         self.startRound()
                     }
-                } else if (self.isFighting == false) {
+                } else if (isFighting == false) {
                     // Round ended
                     print("Is fighting changed to false")
                     DispatchQueue.main.async {

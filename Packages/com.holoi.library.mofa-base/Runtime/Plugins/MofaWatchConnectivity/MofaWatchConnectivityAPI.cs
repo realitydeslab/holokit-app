@@ -10,14 +10,6 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
         Ground = 1
     }
 
-    // You must make sure this enum is identical to the one on Mofa Watch App
-    public enum MofaRoundResult
-    {
-        Victory = 0,
-        Defeat = 1,
-        Draw = 2
-    }
-
     public static class MofaWatchConnectivityAPI
     {
         [DllImport("__Internal")]
@@ -75,9 +67,9 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
             MofaWatchConnectivity_SyncRoundStartToWatch();
         }
 
-        public static void SyncRoundResultToWatch(MofaRoundResult mofaRoundResult, int kill, float hitRate, float distance)
+        public static void SyncRoundResultToWatch(MofaIndividualRoundResult roundResult, int kill, float hitRate, float distance)
         {
-            MofaWatchConnectivity_SyncRoundResultToWatch((int)mofaRoundResult, kill, hitRate, distance);
+            MofaWatchConnectivity_SyncRoundResultToWatch((int)roundResult, kill, hitRate, distance);
         }
     }
 }

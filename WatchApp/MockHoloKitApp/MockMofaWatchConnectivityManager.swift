@@ -7,11 +7,6 @@
 
 import WatchConnectivity
 
-enum MofaWatchPhase: Int {
-    case idle = 0
-    case fighting = 1
-}
-
 enum MofaRoundResult: Int {
     case victory = 0
     case defeat = 1
@@ -35,7 +30,7 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
     }
     
     func onRoundStarted() {
-        let context = ["MofaWatchPhase" : MofaWatchPhase.fighting.rawValue];
+        let context = ["IsFighting" : true, "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
         do {
             try self.wcSession.updateApplicationContext(context)
             print("Fighting phase synced")
@@ -45,11 +40,12 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
     }
     
     func onRoundEnded(_ roundResult: MofaRoundResult, _ kill: Int, _ hitRate: Float, _ distance: Float) {
-        let context = ["MofaWatchPhase" : MofaWatchPhase.idle.rawValue,
+        let context = ["IsFighting" : false,
                        "RoundResult" : roundResult.rawValue,
                        "Kill" : kill,
                        "HitRate" : hitRate,
-                       "Distance" : distance] as [String : Any];
+                       "Distance" : distance,
+                       "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
         do {
             try self.wcSession.updateApplicationContext(context)
             print("Round result synced")
