@@ -68,14 +68,15 @@ namespace Holoi.Library.ARUX
 
         private void OnEnable()
         {
-            if (_movementType != MovementType.NotFollow)
-                transform.position = _followTarget.position + _followTarget.TransformVector(_offset);
+            
         }
 
         void Start()
         {
             if (!_followTarget)
                 _followTarget = HoloKitCamera.Instance.CenterEyePose;
+            if (_movementType != MovementType.NotFollow)
+                transform.position = _followTarget.position + _followTarget.TransformVector(_offset);
 
             switch (_updateType)
             {

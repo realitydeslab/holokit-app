@@ -14,13 +14,26 @@ namespace Holoi.Reality.Typography
     {
         [Header("AR Objects")]
         [SerializeField] Transform _centerEye;
-        [SerializeField] PhaseManager _phaseManager;
         [SerializeField] ARRaycastManager _arRaycastManager;
+        [SerializeField] ARPlaneManager _arPlaneManager;
+        [SerializeField] AROcclusionManager _arOcclusionManager;
+
+        [Header("Hand Objects")]
+        [SerializeField] Transform _handJoint;
+        [SerializeField] Transform _handHookHead;
+        [SerializeField] Transform _handLoadedVFXParent;
 
         [Header("Reality Objects")]
         [SerializeField] GameObject _buddhasPrefab;
          GameObject _buddhasInstance;
 
+        [Header("AR UI Components")]
+        [SerializeField] LoadButtonController _placementLoadButton;
+        [SerializeField] ARRayCastController _arRaycastController;
+        [SerializeField] RaycastPlacmentVisualController _raycastVisualController;
+
+        [Header("PHASE")]
+        [SerializeField] PhaseManager _phaseManager;
 
         bool _isCastOnFloor = false;
 
@@ -41,42 +54,90 @@ namespace Holoi.Reality.Typography
 
         private void Update()
         {
-            UpdateFloorHeight();
-        }
-
-        void InitializeRealityObject()
-        {
-            _buddhasInstance = GameObject.Instantiate(_buddhasPrefab);
-        }
-
-        void UpdateFloorHeight()
-        {
-
-            Vector3 rayOrigin = _centerEye.position + _centerEye.forward * 1f;
-
-            Ray ray = new(rayOrigin, Vector3.down);
-
-            List<ARRaycastHit> hitResults = new();
-
-            if (_arRaycastManager.Raycast(ray, hitResults, TrackableType.Planes))
+            if (HoloKitApp.Instance.IsHost)
             {
-                foreach (var hitResult in hitResults)
-                {
-                    var arPlane = hitResult.trackable.GetComponent<ARPlane>();
+                // update hand hook's head position
+                var dir = (_handJoint.position - _centerEye.position).normalized;
 
-                    if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
-                    {
-                        CastOnFloorPosition = hitResult.pose.position;
-                        transform.position = CastOnFloorPosition;
-                        _isCastOnFloor = true;
-                        return;
-                    }
-                }
-                _isCastOnFloor = false;
+                _handHookHead.position = _handJoint.position + dir * 0.5f;
+            }
+
+            if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono)
+            {
+                _arOcclusionManager.enabled = true;
             }
             else
             {
-                _isCastOnFloor = false;
+                _arOcclusionManager.enabled = false;
+            }
+        }
+
+        public static Vector3 GetHorizontalForward(Transform transform)
+        {
+            return new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
+        }
+
+        public void InitializeRealityObject()
+        {
+            _buddhasInstance = GameObject.Instantiate(_buddhasPrefab);
+
+            _buddhasInstance.transform.position = _arRaycastController.transform.position;
+
+            var target = new Vector3(_centerEye.position.x, _buddhasInstance.transform.position.y, _centerEye.position.z);
+
+            var eyeHorizentalForward = GetHorizontalForward(_centerEye);
+
+            target = _buddhasInstance.transform.position - eyeHorizentalForward;
+
+            _buddhasInstance.transform.LookAt(target);
+
+            _buddhasInstance.GetComponent<NetworkObject>().Spawn();
+        }
+
+        IEnumerator DisableGameObjectAfterTimes(GameObject go, float time)
+        {
+            yield return new WaitForSeconds(time);
+            go.SetActive(false);
+        }
+
+        public void DisableARPlaneManager()
+        {
+            _arPlaneManager.enabled = false;
+            _arPlaneManager.enabled = false;
+            var planeList = FindObjectsOfType<ARPlane>();
+            foreach (var plane in planeList)
+            {
+                Destroy(plane.gameObject);
+            }
+        }
+
+        public void DisableARRaycastManager()
+        {
+            // disble ar ui script:
+            _arRaycastController.enabled = false;
+            // play die animation
+            _raycastVisualController.PlayDie();
+            // disable go
+            StartCoroutine(DisableGameObjectAfterTimes(_arRaycastController.gameObject, 2f));
+        }
+
+        public void OnInteractionTriggered()
+        {
+            TriggerHandVFX();
+        }
+
+        void TriggerHandVFX()
+        {
+            _handLoadedVFXParent.gameObject.SetActive(true);
+            StartCoroutine(DisableGameObjectAfterTimes(_handLoadedVFXParent.gameObject, 2.5f));
+        }
+
+        public void SetPlacementLoadButton(bool state)
+        {
+            //Debug.Log("SetPlacementLoadButton: " + state);
+            if (HoloKitApp.Instance.IsHost)
+            {
+                _placementLoadButton.gameObject.SetActive(state);
             }
         }
     }

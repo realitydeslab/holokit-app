@@ -30,11 +30,11 @@ namespace Holoi.Reality.QuantumRealm
         [Header("AR Features")]
         [SerializeField] ARRaycastManager _arRaycastManager;
         [SerializeField] ARPlaneManager _arPlaneManager;
-        [SerializeField] AROcclusionManager _arOcclusioManager;
+        [SerializeField] AROcclusionManager _arOcclusionManager;
 
         [Header("Placement Settings")]
         [SerializeField] ARRayCastController _arRaycastController;
-        [SerializeField] RaycastPlacmentVisualController _RaycastVisual;
+        [SerializeField] RaycastPlacmentVisualController _raycastVisual;
 
         [SerializeField] Vector3 _offset = Vector3.zero;
 
@@ -90,27 +90,32 @@ namespace Holoi.Reality.QuantumRealm
 
             if(HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono)
             {
-                _arOcclusioManager.enabled = true;
+                _arOcclusionManager.enabled = true;
             }
             else
             {
-                _arOcclusioManager.enabled = false;
+                _arOcclusionManager.enabled = false;
             }
         }
 
         public void SwitchToNextVFX()
         {
-            if (!HoloKitApp.Instance.IsHost)
+            if (HoloKitApp.Instance.IsHost)
+            {
+                OnBuddhasSwitchedClientRpc(_index);
+            }
+            else
             {
                 return;
             }
 
-            OnBuddhasSwitchedClientRpc(_index);
+            
         }
 
         public void InitTargetGameObject()
         {
-            DisableARRaycastVisual();
+            DisableARRaycastManager();
+
             DisableARPlaneManager();
 
             OnBuddhasInitializedClientRpc(); // all client run this function
@@ -126,18 +131,45 @@ namespace Holoi.Reality.QuantumRealm
             if (HoloKitApp.Instance.IsHost)
             {
                 _arPlaneManager.enabled = false;
+                _arPlaneManager.enabled = false;
+                var planeList = FindObjectsOfType<ARPlane>();
+                foreach (var plane in planeList)
+                {
+                    Destroy(plane.gameObject);
+                }
+            }
+            else
+            {
+                return;
             }
             
         }
 
-        public void DisableARRaycastVisual()
+        IEnumerator DisableGameObjectAfterTimes(GameObject go, float time)
         {
-            if (!HoloKitApp.Instance.IsHost)
+            yield return new WaitForSeconds(time);
+            go.SetActive(false);
+        }
+
+        public void DisableARRaycastManager()
+        {
+            // if client
+            if (HoloKitApp.Instance.IsHost)
+            {
+                // disble ar ui script:
+                _arRaycastController.enabled = false;
+                // play die animation
+                _raycastVisual.PlayDie();
+                // disable go
+                StartCoroutine(DisableGameObjectAfterTimes(_arRaycastController.gameObject, 2f));
+
+                OnDisableARRaycastClientRpc();
+                return;
+            }
+            else
             {
                 return;
             }
-
-            OnDisableARRaycastClientRpc();
         }
 
         public void SetPlacementLoadButton(bool state)
@@ -149,36 +181,29 @@ namespace Holoi.Reality.QuantumRealm
             }
         }
 
-        IEnumerator DisableGameObjectAfterTimes(GameObject go,float time)
-        {
-            yield return new WaitForSeconds(time);
-            go.SetActive(false);
-        }
-
-        public void DisbleARRaycastManager()
-        {
-            _arRaycastManager.enabled = false;
-            _arPlaneManager.enabled = false;
-            var planeList = FindObjectsOfType<ARPlane>();
-            foreach (var plane in planeList)
-            {
-                Destroy(plane.gameObject);
-            }
-        }
-
         [ClientRpc]
         public void OnDisableARRaycastClientRpc()
         {
             Debug.Log($"OnDisableARRaycastClientRpc");
-
             // disble ar ui script:
             _arRaycastController.enabled = false;
             // play die animation
-            _RaycastVisual.PlayDie();
+            _raycastVisual.PlayDie();
             // disable go
             StartCoroutine(DisableGameObjectAfterTimes(_arRaycastController.gameObject, 2f));
-
         }
+
+        //[ClientRpc]
+        //public void DisbleARPlaneManagerClientRpc()
+        //{
+        //    _arRaycastManager.enabled = false;
+        //    _arPlaneManager.enabled = false;
+        //    var planeList = FindObjectsOfType<ARPlane>();
+        //    foreach (var plane in planeList)
+        //    {
+        //        Destroy(plane.gameObject);
+        //    }
+        //}
 
         [ClientRpc]
         public void OnBuddhasSwitchedClientRpc(int index)
@@ -213,7 +238,12 @@ namespace Holoi.Reality.QuantumRealm
             _animator = vfxs[_index].GetComponent<Animator>();
             _animator.Rebind();
             _animator.Update(0f);
-            // vfx:
+            // hand vfx:
+            TriggerHandVFX();
+        }
+
+        void TriggerHandVFX()
+        {
             _handLoadedVFXParent.gameObject.SetActive(true);
             StartCoroutine(DisableGameObjectAfterTimes(_handLoadedVFXParent.gameObject, 2.5f));
         }
