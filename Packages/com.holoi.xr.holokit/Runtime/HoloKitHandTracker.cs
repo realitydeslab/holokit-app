@@ -178,6 +178,13 @@ namespace HoloKit
             if (Time.time - _lastUpdateTime > _fadeOutDelay)
             {
                 //_hand.SetActive(false);
+
+                Transform centerEye = HoloKitCamera.Instance.CenterEyePose;
+
+                for (int i = 0; i < 21; i++)
+                {
+                    _handJoints[i].position = centerEye.transform.position + Vector3.down;
+                }
                 OnHandValidityChanged?.Invoke(false);
             }
         }

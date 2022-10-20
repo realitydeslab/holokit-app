@@ -30,8 +30,6 @@ namespace Holoi.Library.ARUX
         // now PHASE has a bug that will not stop playing after exited scene. So for now we need to handle it manully;
         public void OnSceneExited()
         {
-            //_phaseSources.Stop();
-            //_phaseSources.DestroyFromPHASE();
 
             Debug.Log("OnSceneExited");
             if(_phaseSources != null)
@@ -46,9 +44,8 @@ namespace Holoi.Library.ARUX
             if (_phaseListener != null)
             {
                 Debug.Log("_phaseListener");
-
-                //_phaseListener.enabled = false;
-                //Destroy(_phaseListener);
+                _phaseListener.enabled = false;
+                Destroy(_phaseListener);
             }
         }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.VFX;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.ARUX;
@@ -26,6 +27,9 @@ namespace Holoi.Reality.QuantumRealm
 
         [Header("AR UI Components")]
         [SerializeField] LoadButtonController _placementLoadButton;
+        [Header("UI Components")]
+
+        [SerializeField] Button _switchButton;
 
         [Header("AR Features")]
         [SerializeField] ARRaycastManager _arRaycastManager;
@@ -43,7 +47,8 @@ namespace Holoi.Reality.QuantumRealm
         Transform _centerEye;
         int _amount = 0;
         int _index = 0;
-        Animator _animator;
+        Animator _vfxAnimator;
+        Animator _seatAnimator;
 
         public override void OnNetworkSpawn()
         {
@@ -75,6 +80,8 @@ namespace Holoi.Reality.QuantumRealm
                 ARRayCastController.Instance.enabled = false;
             }
 
+            _switchButton.onClick.AddListener(SwitchToNextVFXNetWork);
+
             _centerEye = HoloKitCamera.Instance.CenterEyePose;
         }
 
@@ -98,18 +105,72 @@ namespace Holoi.Reality.QuantumRealm
             }
         }
 
-        public void SwitchToNextVFX()
+        void SwitchtoNextVFX()
+        {
+            // do on host:
+            Debug.Log($"OnActiveBuddhasChanged: {_index}");
+
+            BuddhasController controller = vfxs[_index].transform.parent.GetComponent<BuddhasController>();
+
+            _vfxAnimator = controller.vfxAnimator;
+            _seatAnimator = controller.setaAnimator;
+
+            if (_vfxAnimator != null)
+            {
+                _vfxAnimator.SetTrigger("Fade Out");
+                _seatAnimator.SetTrigger("Fade Out");
+            }
+
+            _index++;
+
+            if (_index == vfxs.Count) _index = 0;
+
+            // disbale other vfx after play animation:
+            for (int i = 0; i < vfxs.Count; i++)
+            {
+                if (i == _index)
+                {
+                    vfxs[_index].gameObject.SetActive(true);
+                }
+                else if (i == _index - 1)
+                {
+                    StartCoroutine(DisableGameObjectAfterTimes(vfxs[i].gameObject, 1.5f));
+                }
+                else
+                {
+
+                }
+            }
+
+            _vfxAnimator = vfxs[_index].transform.parent.GetComponent<BuddhasController>().vfxAnimator;
+            _seatAnimator = vfxs[_index].transform.parent.GetComponent<BuddhasController>().setaAnimator;
+
+            _vfxAnimator.Rebind();
+            _vfxAnimator.Update(0f);
+
+            _seatAnimator.Rebind();
+            _seatAnimator.Update(0f);
+
+            // hand vfx:
+            TriggerHandVFX();
+        }
+
+        public void SwitchToNextVFXNetWork()
         {
             if (HoloKitApp.Instance.IsHost)
             {
-                OnBuddhasSwitchedClientRpc(_index);
+                // do on host:
+                SwitchtoNextVFX();
+                // do on client:
+                OnBuddhasSwitchedClientRpc(_index - 1);
             }
             else
             {
-                return;
+                // do on client:
+                SwitchtoNextVFX();
+                // do on host:
+                OnBuddhasSwitchedServerRpc(_index - 1);
             }
-
-            
         }
 
         public void InitTargetGameObject()
@@ -205,17 +266,27 @@ namespace Holoi.Reality.QuantumRealm
         //    }
         //}
 
-        [ClientRpc]
-        public void OnBuddhasSwitchedClientRpc(int index)
+        [ServerRpc(RequireOwnership = false)]
+        public void OnBuddhasSwitchedServerRpc(int index)
         {
-            Debug.Log($"OnActiveBuddhasChangedClientRpc: {index}");
-
-            _animator = vfxs[_index].GetComponent<Animator>();
-
-            if (_animator != null)
+            if (!IsServer)
             {
-                _animator.SetTrigger("Fade Out");
-                _animator.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Fade Out");
+                return;
+            }
+
+            _index = index;
+
+            Debug.Log($"OnBuddhasSwitchedServerRpc: {_index}");
+
+            BuddhasController controller = vfxs[index].transform.parent.GetComponent<BuddhasController>();
+
+            _vfxAnimator = controller.vfxAnimator;
+            _seatAnimator = controller.setaAnimator;
+
+            if (_vfxAnimator != null)
+            {
+                _vfxAnimator.SetTrigger("Fade Out");
+                _seatAnimator.SetTrigger("Fade Out");
             }
 
             _index++;
@@ -229,15 +300,80 @@ namespace Holoi.Reality.QuantumRealm
                 {
                     vfxs[_index].gameObject.SetActive(true);
                 }
-                else
+                else if (i == _index - 1)
                 {
-                    Debug.Log($"disable with index: {i}");
                     StartCoroutine(DisableGameObjectAfterTimes(vfxs[i].gameObject, 1.5f));
                 }
+                else
+                {
+                }
             }
-            _animator = vfxs[_index].GetComponent<Animator>();
-            _animator.Rebind();
-            _animator.Update(0f);
+
+            _vfxAnimator = vfxs[index].transform.parent.GetComponent<BuddhasController>().vfxAnimator;
+            _seatAnimator = vfxs[index].transform.parent.GetComponent<BuddhasController>().setaAnimator;
+
+            _vfxAnimator.Rebind();
+            _vfxAnimator.Update(0f);
+
+            _seatAnimator.Rebind();
+            _seatAnimator.Update(0f);
+
+            // hand vfx:
+            TriggerHandVFX();
+        }
+
+        [ClientRpc]
+        public void OnBuddhasSwitchedClientRpc(int index)
+        {
+            if (IsServer)
+            {
+                return;
+            }
+
+            _index = index;
+
+            Debug.Log($"OnActiveBuddhasChangedClientRpc: {_index}");
+
+            BuddhasController controller = vfxs[index].transform.parent.GetComponent<BuddhasController>();
+
+            _vfxAnimator = controller.vfxAnimator;
+            _seatAnimator = controller.setaAnimator;
+
+            if (_vfxAnimator != null)
+            {
+                _vfxAnimator.SetTrigger("Fade Out");
+                _seatAnimator.SetTrigger("Fade Out");
+            }
+
+            _index++;
+
+            if (_index == vfxs.Count) _index = 0;
+
+            // disbale other vfx after play animation:
+            for (int i = 0; i < vfxs.Count; i++)
+            {
+                if (i == _index)
+                {
+                    vfxs[_index].gameObject.SetActive(true);
+                }
+                else if (i == _index - 1)
+                {
+                    StartCoroutine(DisableGameObjectAfterTimes(vfxs[i].gameObject, 1.5f));
+                }
+                else
+                {
+                }
+            }
+
+            _vfxAnimator = vfxs[index].transform.parent.GetComponent<BuddhasController>().vfxAnimator;
+            _seatAnimator = vfxs[index].transform.parent.GetComponent<BuddhasController>().setaAnimator;
+
+            _vfxAnimator.Rebind();
+            _vfxAnimator.Update(0f);
+
+            _seatAnimator.Rebind();
+            _seatAnimator.Update(0f);
+
             // hand vfx:
             TriggerHandVFX();
         }

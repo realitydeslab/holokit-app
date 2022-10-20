@@ -57,7 +57,6 @@ namespace Holoi.Reality.Typography
             }
 
             if (_centerEye == null) _centerEye = HoloKitCamera.Instance.CenterEyePose;
-
         }
 
         void Update()
@@ -104,7 +103,7 @@ namespace Holoi.Reality.Typography
 
         void UpdateHandFollowerPosition()
         {
-            var offset = _centerEye.right * 0.55f + _centerEye.up * 0.5f;
+            var offset = _centerEye.right * 0.45f + _centerEye.up * 0.25f;
 
             _serverHandFollower.position = _centerEye.position + offset;
         }
@@ -121,7 +120,6 @@ namespace Holoi.Reality.Typography
                 // for server
                 OnHandsUpButtonClickedServerRpc();
             }
-
         }
 
         public void OnShootButtonClicked()
@@ -144,7 +142,6 @@ namespace Holoi.Reality.Typography
             Debug.Log("OnHandsUpButtonClickedServerRpc");
 
             _state = State.handsUp;
-
         }
 
         [ServerRpc(RequireOwnership = false)]

@@ -9,6 +9,8 @@ namespace Holoi.Reality.QuantumRealm
     public class BuddhasController : MonoBehaviour
     {
         public VisualEffect vfx;
+        public Animator vfxAnimator;
+        public Animator setaAnimator;
 
         [SerializeField] HoverableObject _hoverableObject;
 
@@ -18,7 +20,7 @@ namespace Holoi.Reality.QuantumRealm
         {
             _ho = HandObject.Instance;
 
-            _hoverableObject.OnLoadedEvents.AddListener(FindObjectOfType<QuantumBuddhasSceneManager>().SwitchToNextVFX);
+            _hoverableObject.OnLoadedEvents.AddListener(FindObjectOfType<QuantumBuddhasSceneManager>().SwitchToNextVFXNetWork);
         }
 
         void Update()
