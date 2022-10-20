@@ -54,12 +54,14 @@ namespace Holoi.Reality.Typography
 
         void OnHumanBodiesChanged(ARHumanBodiesChangedEventArgs eventArgs)
         {
-            Debug.Log("m_SkeletonTracker:" + m_SkeletonTracker.Count);
+            Debug.Log("OnHumanBodiesChanged with number:" + m_SkeletonTracker.Count);
 
             BoneController boneController;
 
             foreach (var humanBody in eventArgs.added)
             {
+                Debug.Log("foreach humanBody");
+
                 //Debug.Log("e height = " + humanBody.estimatedHeightScaleFactor);
                 if (!m_SkeletonTracker.TryGetValue(humanBody.trackableId, out boneController))
                 {
@@ -72,8 +74,11 @@ namespace Holoi.Reality.Typography
                     boneController.SkinnerVfx.transform.localPosition = new Vector3(0.5f, 0, 0);
                     //boneController.SkinnerVfx.transform.InverseTransformPoint(HoloKitCamera.Instance.CenterEyePose.right * 0.5f);
                 }
+                Debug.Log("InitializeSkeletonJoints");
 
                 boneController.InitializeSkeletonJoints();
+                Debug.Log("ApplyBodyPose");
+
                 boneController.ApplyBodyPose(humanBody);
             }
 
@@ -81,6 +86,8 @@ namespace Holoi.Reality.Typography
             {
                 if (m_SkeletonTracker.TryGetValue(humanBody.trackableId, out boneController))
                 {
+                    Debug.Log("ApplyBodyPose2");
+
                     boneController.ApplyBodyPose(humanBody);
                 }
             }
