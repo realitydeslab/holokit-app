@@ -10,7 +10,7 @@ using UnityEngine.XR.ARFoundation;
 
 namespace Holoi.Reality.QuantumRealm
 {
-    public class QuantumBuddhasSceneManager : MonoBehaviour
+    public class QuantumBuddhasSceneManager : RealityManager
     {
         [Header("Buddhas Objects")]
         public List<VisualEffect> vfxs = new List<VisualEffect>();
@@ -45,6 +45,11 @@ namespace Holoi.Reality.QuantumRealm
         int _index = 0;
         Animator _animator;
 
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+        }
+
         void Start()
         {
             _amount = vfxs.Count;
@@ -54,6 +59,10 @@ namespace Holoi.Reality.QuantumRealm
                 _arRaycastManager.enabled = true;
                 _arPlaneManager.enabled = true;
                 _serverCenterEye.GetComponent<FollowMovementManager>().enabled = true;
+
+                HoloKitHandTracker.Instance.Active = true;
+                HandObject.Instance.enabled = true;
+                ARRayCastController.Instance.enabled = true;
             }
             else
             {
@@ -61,6 +70,9 @@ namespace Holoi.Reality.QuantumRealm
                 _arPlaneManager.enabled = false;
                 _serverCenterEye.GetComponent<FollowMovementManager>().enabled = false;
 
+                HoloKitHandTracker.Instance.Active = false;
+                HandObject.Instance.enabled = false;
+                ARRayCastController.Instance.enabled = false;
             }
 
             _centerEye = HoloKitCamera.Instance.CenterEyePose;
@@ -70,7 +82,7 @@ namespace Holoi.Reality.QuantumRealm
         {
             if (HoloKitApp.Instance.IsHost)
             {
-                // update hand hook head position
+                // update hand hook's head position
                 var dir = (_handJoint.position - _serverCenterEye.position).normalized;
 
                 _handHookHead.position = _handJoint.position + dir * 0.5f;
@@ -93,82 +105,16 @@ namespace Holoi.Reality.QuantumRealm
                 return;
             }
 
-            var realityManager = HoloKitApp.Instance.RealityManager as QuantumBuddhasRealityManager;
-
-            realityManager.OnActiveBuddhasSwitchClientRpc(_index);
-        }
-
-        public void SwitchToNextVFXClient()
-        {
-            _animator = vfxs[_index].GetComponent<Animator>();
-
-            if (_animator !=null)
-            {
-                _animator.SetTrigger("Fade Out");
-                _animator.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Fade Out");
-            }
-
-            _index++;
-
-            if (_index == vfxs.Count) _index = 0;
-
-            // disbale other vfx after play animation:
-            for (int i = 0; i < vfxs.Count; i++)
-            {
-                if(i == _index)
-                {
-                    vfxs[_index].gameObject.SetActive(true);
-                }
-                else
-                {
-                    Debug.Log($"disable with index: {i}");
-                    StartCoroutine(DisableGameObjectAfterTimes(vfxs[i].gameObject, 1.5f));
-                }
-            }
-            _animator = vfxs[_index].GetComponent<Animator>();
-            _animator.Rebind();
-            _animator.Update(0f);
-            // vfx:
-            _handLoadedVFXParent.gameObject.SetActive(true);
-            StartCoroutine(DisableGameObjectAfterTimes(_handLoadedVFXParent.gameObject, 2.5f));
+            OnBuddhasSwitchedClientRpc(_index);
         }
 
         public void InitTargetGameObject()
         {
-            var realityManager = HoloKitApp.Instance.RealityManager as QuantumBuddhasRealityManager;
-
             DisableARRaycastVisual();
             DisableARPlaneManager();
 
-            realityManager.OnBuddhasEnabledClientRpc(); // all client run this function
+            OnBuddhasInitializedClientRpc(); // all client run this function
         }
-
-        public void InitTargetGameObjectClient()
-        {
-            // create main object
-            //_targetGameObject.SetActive(true);
-
-            if (HoloKitApp.Instance.IsHost)
-            {
-                var realityManager = HoloKitApp.Instance.RealityManager as QuantumBuddhasRealityManager;
-
-                GameObject go = Instantiate(_targetGameObject);
-
-                go.transform.position = new Vector3(_centerEye.position.x, _arRaycastController.transform.position.y , _centerEye.position.z);
-
-                var target = new Vector3(_centerEye.position.x, go.transform.position.y, _centerEye.position.z);
-
-                var eyeHorizentalForward = GetHorizontalForward(_centerEye);
-
-                target = go.transform.position - eyeHorizentalForward;
-
-                go.transform.LookAt(target);
-
-                go.GetComponent<NetworkObject>().Spawn();
-
-            }
-        }
-
 
         public static Vector3 GetHorizontalForward(Transform transform)
         {
@@ -191,19 +137,7 @@ namespace Holoi.Reality.QuantumRealm
                 return;
             }
 
-            var realityManager = HoloKitApp.Instance.RealityManager as QuantumBuddhasRealityManager;
-
-            realityManager.OnDisableARRaycastClientRpc();
-        }
-
-        public void DisableARRaycastVisualClient()
-        {
-            // diable function:
-            _arRaycastController.enabled = false;
-            // play die animation
-            _RaycastVisual.PlayDie();
-            // disable go
-            StartCoroutine(DisableGameObjectAfterTimes(_arRaycastController.gameObject,2f));
+            OnDisableARRaycastClientRpc();
         }
 
         public void SetPlacementLoadButton(bool state)
@@ -229,6 +163,83 @@ namespace Holoi.Reality.QuantumRealm
             foreach (var plane in planeList)
             {
                 Destroy(plane.gameObject);
+            }
+        }
+
+        [ClientRpc]
+        public void OnDisableARRaycastClientRpc()
+        {
+            Debug.Log($"OnDisableARRaycastClientRpc");
+
+            // disble ar ui script:
+            _arRaycastController.enabled = false;
+            // play die animation
+            _RaycastVisual.PlayDie();
+            // disable go
+            StartCoroutine(DisableGameObjectAfterTimes(_arRaycastController.gameObject, 2f));
+
+        }
+
+        [ClientRpc]
+        public void OnBuddhasSwitchedClientRpc(int index)
+        {
+            Debug.Log($"OnActiveBuddhasChangedClientRpc: {index}");
+
+            _animator = vfxs[_index].GetComponent<Animator>();
+
+            if (_animator != null)
+            {
+                _animator.SetTrigger("Fade Out");
+                _animator.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Fade Out");
+            }
+
+            _index++;
+
+            if (_index == vfxs.Count) _index = 0;
+
+            // disbale other vfx after play animation:
+            for (int i = 0; i < vfxs.Count; i++)
+            {
+                if (i == _index)
+                {
+                    vfxs[_index].gameObject.SetActive(true);
+                }
+                else
+                {
+                    Debug.Log($"disable with index: {i}");
+                    StartCoroutine(DisableGameObjectAfterTimes(vfxs[i].gameObject, 1.5f));
+                }
+            }
+            _animator = vfxs[_index].GetComponent<Animator>();
+            _animator.Rebind();
+            _animator.Update(0f);
+            // vfx:
+            _handLoadedVFXParent.gameObject.SetActive(true);
+            StartCoroutine(DisableGameObjectAfterTimes(_handLoadedVFXParent.gameObject, 2.5f));
+        }
+
+        [ClientRpc]
+        public void OnBuddhasInitializedClientRpc()
+        {
+            Debug.Log($"OnBuddhasEnabledClientRpc");
+
+            // create main object
+            if (HoloKitApp.Instance.IsHost)
+            {
+                GameObject go = Instantiate(_targetGameObject);
+
+                go.transform.position = new Vector3(_centerEye.position.x, _arRaycastController.transform.position.y, _centerEye.position.z);
+
+                var target = new Vector3(_centerEye.position.x, go.transform.position.y, _centerEye.position.z);
+
+                var eyeHorizentalForward = GetHorizontalForward(_centerEye);
+
+                target = go.transform.position - eyeHorizentalForward;
+
+                go.transform.LookAt(target);
+
+                go.GetComponent<NetworkObject>().Spawn();
+
             }
         }
     }

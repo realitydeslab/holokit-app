@@ -33,15 +33,22 @@ namespace Holoi.Library.ARUX
             //_phaseSources.Stop();
             //_phaseSources.DestroyFromPHASE();
 
+            Debug.Log("OnSceneExited");
             if(_phaseSources != null)
             {
+                Debug.Log("_phaseSources");
+
                 _phaseSources.Stop();
                 _phaseSources.DestroyFromPHASE();
                 _phaseSources.enabled = false;
+                Destroy(_phaseSources);
             }
             if (_phaseListener != null)
             {
-                _phaseListener.enabled = false;
+                Debug.Log("_phaseListener");
+
+                //_phaseListener.enabled = false;
+                //Destroy(_phaseListener);
             }
         }
 

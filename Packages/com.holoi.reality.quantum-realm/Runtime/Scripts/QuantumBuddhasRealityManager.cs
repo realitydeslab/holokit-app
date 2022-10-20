@@ -16,53 +16,5 @@ namespace Holoi.Reality.QuantumRealm
             base.OnNetworkSpawn();
 
         }
-
-        private void Awake()
-        {
-        }
-
-        private void Start()
-        {
-            if (HoloKitApp.Instance.IsHost)
-            {
-                HoloKitHandTracker.Instance.Active = true;
-                HandObject.Instance.enabled = true;
-                ARRayCastController.Instance.enabled = true;
-            }
-            else
-            {
-                HoloKitHandTracker.Instance.Active = false;
-                HandObject.Instance.enabled = false;
-                ARRayCastController.Instance.enabled = false;
-            }
-        }
-
-        private void FixedUpdate()
-        {
-
-        }
-
-        [ClientRpc]
-        public void OnDisableARRaycastClientRpc()
-        {
-            Debug.Log($"OnDisableARRaycastClientRpc");
-            GetComponent<QuantumBuddhasSceneManager>().DisableARRaycastVisualClient();
-
-        }
-
-        [ClientRpc]
-        public void OnActiveBuddhasSwitchClientRpc(int index)
-        {
-            Debug.Log($"OnActiveBuddhasChangedClientRpc: {index}");
-            GetComponent<QuantumBuddhasSceneManager>().SwitchToNextVFXClient();
-        }
-
-        [ClientRpc]
-        public void OnBuddhasEnabledClientRpc()
-        {
-            Debug.Log($"OnBuddhasEnabledClientRpc");
-
-            GetComponent<QuantumBuddhasSceneManager>().InitTargetGameObjectClient();
-        }
     }
 }
