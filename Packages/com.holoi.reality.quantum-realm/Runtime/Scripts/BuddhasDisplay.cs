@@ -6,16 +6,27 @@ namespace Holoi.Reality.QuantumRealm
 {
     public class BuddhasDisplay : MonoBehaviour
     {
-        // Start is called before the first frame update
+        private void Awake()
+        {
+            OnBuddhasDisplayBitrh();
+        }
+
         void Start()
         {
         
         }
 
-        // Update is called once per frame
-        void Update()
+        public void OnBuddhasDisplayBitrh()
         {
-        
+            var manager = FindObjectOfType<QuantumBuddhasSceneManager>();
+
+            manager.vfxs.Clear();
+
+            for (int i = 0; i < this.transform.childCount; i++)
+            {
+                var vfx = transform.GetChild(i).GetComponent<BuddhasController>().vfx;
+                manager.vfxs.Add(vfx);
+            }
         }
     }
 }

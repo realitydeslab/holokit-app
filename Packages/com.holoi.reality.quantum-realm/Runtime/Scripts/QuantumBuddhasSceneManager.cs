@@ -122,7 +122,7 @@ namespace Holoi.Reality.QuantumRealm
                 else
                 {
                     Debug.Log($"disable with index: {i}");
-                    StartCoroutine(DisableAfterTimes(vfxs[i].gameObject, 1.5f));
+                    StartCoroutine(DisableGameObjectAfterTimes(vfxs[i].gameObject, 1.5f));
                 }
             }
             _animator = vfxs[_index].GetComponent<Animator>();
@@ -130,7 +130,7 @@ namespace Holoi.Reality.QuantumRealm
             _animator.Update(0f);
             // vfx:
             _handLoadedVFXParent.gameObject.SetActive(true);
-            StartCoroutine(DisableAfterTimes(_handLoadedVFXParent.gameObject, 2.5f));
+            StartCoroutine(DisableGameObjectAfterTimes(_handLoadedVFXParent.gameObject, 2.5f));
         }
 
         public void InitTargetGameObject()
@@ -166,13 +166,6 @@ namespace Holoi.Reality.QuantumRealm
 
                 go.GetComponent<NetworkObject>().Spawn();
 
-                vfxs.Clear();
-
-                for (int i = 0; i < go.transform.childCount; i++)
-                {
-                    var vfx = go.transform.GetChild(i).GetComponent<BuddhasController>().vfx;
-                    vfxs.Add(vfx);
-                }
             }
         }
 
@@ -210,7 +203,7 @@ namespace Holoi.Reality.QuantumRealm
             // play die animation
             _RaycastVisual.PlayDie();
             // disable go
-            StartCoroutine(DisableAfterTimes(_arRaycastController.gameObject,2f));
+            StartCoroutine(DisableGameObjectAfterTimes(_arRaycastController.gameObject,2f));
         }
 
         public void SetPlacementLoadButton(bool state)
@@ -222,10 +215,9 @@ namespace Holoi.Reality.QuantumRealm
             }
         }
 
-        IEnumerator DisableAfterTimes(GameObject go,float time)
+        IEnumerator DisableGameObjectAfterTimes(GameObject go,float time)
         {
             yield return new WaitForSeconds(time);
-            Debug.Log($"Set {go.name} to disable.");
             go.SetActive(false);
         }
 
