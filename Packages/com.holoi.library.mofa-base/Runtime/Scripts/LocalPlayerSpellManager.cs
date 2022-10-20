@@ -9,6 +9,8 @@ namespace Holoi.Library.MOFABase
 {
     public class LocalPlayerSpellManager : MonoBehaviour
     {
+        public MagicSchoolList MagicSchoolList;
+
         public SpellList SpellList;
 
         [HideInInspector] public Spell BasicSpell;
@@ -79,8 +81,9 @@ namespace Holoi.Library.MOFABase
         {
             foreach (var spell in SpellList.List)
             {
-                if (spell.MagicSchool.Id == 0)
+                if (spell.MagicSchool.TokenId.Equals("0"))
                 {
+                    Debug.Log($"Spell: {spell.Name}");
                     if (spell.SpellType == SpellType.Basic)
                     {
                         BasicSpell = spell;
