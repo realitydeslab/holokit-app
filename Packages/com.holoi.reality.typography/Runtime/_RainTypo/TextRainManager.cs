@@ -9,7 +9,7 @@ using Holoi.Library.ARUX;
 
 namespace Holoi.Reality.Typography
 {
-    public class TextRainManager : MonoBehaviour
+    public class TextRainManager : RealityManager
     {
         
         Transform _head;
@@ -23,10 +23,7 @@ namespace Holoi.Reality.Typography
         [Header("vfx rain")]
         VisualEffect _vfxRain;
 
-        [Header("quad rain")]
-        public GameObject _rainPrefab;
-
-        bool _isValid = false;
+        bool _isValid = true;
 
         void Start()
         {
@@ -36,25 +33,46 @@ namespace Holoi.Reality.Typography
 
         void Update()
         {
-            if (FindObjectOfType<BoneController>() != null)
-            {
-                _isValid = true;
-                _bone = FindObjectOfType<BoneController>();
-            }
 
             if (_isValid)
             {
-                _vfxCloud.enabled = true;
-                _vfxRain.enabled = true;
-
-                GetComponent<FollowMovementManager>().FollowTarget = _bone.skeletonRoot;
-                GetComponent<FollowMovementManager>().enabled = true;
-                _vfxRain.SetVector3("Head Position_position", _bone.SkeletonNeck1.position);
-                _vfxRain.SetVector3("Chest Position_position", _bone.SkeletonChest.position);
-                _vfxRain.SetVector3("RH Position_position", _bone.SkeletonRightHand.position);
-                _vfxRain.SetVector3("LH Position_position", _bone.SkeletonLeftHand.position);
-                _vfxRain.SetVector3("Plane Position_position", FindObjectOfType<RainTypoRealityManager>().HitPosition);
+                UpdateVisual();
             }
+        }
+
+        void UpdateVisual()
+        {
+            if (IsServer)
+            {
+                var serverEye = FindObjectOfType<RainTypoRealityManager>().ServerCenterEye;
+
+                _vfxRain.SetVector3("Head Position_position", serverEye.position);
+
+                var estimateChestPos = serverEye.position - (serverEye.up * 0.5f);
+
+                _vfxRain.SetVector3("Chest Position_position", estimateChestPos);
+
+                var hitPos = FindObjectOfType<RainTypoRealityManager>().HitPosition;
+
+                _vfxRain.SetVector3("Plane Position_position", hitPos);
+
+                UpdateVisualClientRpc(serverEye.position, estimateChestPos, hitPos);
+            }
+
+        }
+
+        [ClientRpc] void UpdateVisualClientRpc(Vector3 eyePos, Vector3 chestPos, Vector3 hitPos)
+        {
+            if (IsServer)
+            {
+                return;
+            }
+
+            _vfxRain.SetVector3("Head Position_position", eyePos);
+
+            _vfxRain.SetVector3("Chest Position_position", chestPos);
+
+            _vfxRain.SetVector3("Plane Position_position", hitPos);
         }
     }
 }

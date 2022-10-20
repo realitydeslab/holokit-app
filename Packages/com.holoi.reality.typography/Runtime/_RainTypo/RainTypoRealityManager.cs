@@ -12,8 +12,9 @@ namespace Holoi.Reality.Typography
 {
     public class RainTypoRealityManager : RealityManager
     {
-        [Header("AR Base Objects")]
-        [SerializeField] Transform _centerEye;
+        [Header("AR Objects")]
+        public Transform ServerCenterEye;
+        public Transform CenterEye;
         [SerializeField] PhaseManager _phaseManager;
 
         ARRaycastManager _arRaycastManager;
@@ -35,7 +36,10 @@ namespace Holoi.Reality.Typography
         private void Start()
         {
             _arRaycastManager = FindObjectOfType<ARRaycastManager>();
-            if(_centerEye==null) _centerEye = HoloKitCamera.Instance.CenterEyePose;
+
+            if(CenterEye==null) CenterEye = HoloKitCamera.Instance.CenterEyePose;
+
+            InitServerCenterEye();
         }
 
         private void Update()
@@ -49,13 +53,26 @@ namespace Holoi.Reality.Typography
             }
 
             UpdateFloorHeight();
+        }
 
+        void InitServerCenterEye()
+        {
+
+            if (HoloKitApp.Instance.IsHost)
+            {
+                ServerCenterEye.GetComponent<FollowMovementManager>().enabled = true;
+            }
+            else
+            {
+                ServerCenterEye.GetComponent<FollowMovementManager>().enabled = false;
+
+            }
         }
 
         void UpdateFloorHeight()
         {
 
-            Vector3 rayOrigin = _centerEye.position + _centerEye.forward * 1f;
+            Vector3 rayOrigin = CenterEye.position + CenterEye.forward * 1f;
 
             Ray ray = new(rayOrigin, Vector3.down);
 
