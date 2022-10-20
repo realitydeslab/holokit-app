@@ -91,7 +91,7 @@ namespace Holoi.Reality.Typography
 
             _buddhasInstance.transform.LookAt(target);
 
-            _buddhasInstance.GetComponent<NetworkObject>().Spawn();
+            //_buddhasInstance.GetComponent<NetworkObject>().Spawn();
         }
 
         IEnumerator DisableGameObjectAfterTimes(GameObject go, float time)

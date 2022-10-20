@@ -16,6 +16,8 @@ namespace Holoi.Reality.Typography
 
         void Start()
         {
+            _ho = HandObject.Instance;
+
             _hoverableObject.OnLoadedEvents.AddListener(FindObjectOfType<BuddhasRealityManager>().OnInteractionTriggered);
         }
 
