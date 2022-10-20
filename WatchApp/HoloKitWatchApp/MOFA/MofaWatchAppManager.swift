@@ -12,11 +12,6 @@ enum MofaView: Int {
     case resultView = 3
 }
 
-enum MofaWatchPhase: Int {
-    case idle = 0
-    case fighting = 1
-}
-
 enum MofaRoundResult: Int {
     case victory = 0
     case defeat = 1
@@ -43,11 +38,11 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     @Published var isRightHand: Bool = true
     
     @Published var roundResult: MofaRoundResult = .victory
-     
-    @Published var mofaWatchPhase: MofaWatchPhase = .idle
+    
+    @Published var isFighting: Bool = false
     
     let motionManager = CMMotionManager()
-
+    
     let healthStore = HKHealthStore()
     var wcSession: WCSession!
     var workoutSession: HKWorkoutSession?
@@ -215,7 +210,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         return
     }
     
-// MARK: - Workout Metrics
+    // MARK: - Workout Metrics
     @Published var averageHeartRate: Double = 0
     @Published var heartRate: Double = 0
     @Published var activeEnergy: Double = 0
@@ -265,43 +260,41 @@ extension MofaWatchAppManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        if let mofaWatchPhaseIndex = applicationContext["MofaWatchPhase"] as? Int {
-            if let mofaWatchPhase = MofaWatchPhase(rawValue: mofaWatchPhaseIndex) {
-                if mofaWatchPhase != self.mofaWatchPhase {
+        if let isFighting = applicationContext["IsFighint"] as? Int {
+            if ((isFighting == 0 && self.isFighting == true) || (isFighting == 1 && self.isFighting == false)) {
+                DispatchQueue.main.async {
+                    self.isFighting = isFighting == 1
+                }
+                if (self.isFighting == true) {
+                    print("Is fighting changed to true")
                     DispatchQueue.main.async {
-                        self.mofaWatchPhase = mofaWatchPhase
+                        self.currentView = .fightingView
+                        self.startRound()
                     }
-                    if (mofaWatchPhase == .fighting) {
-                        print("Mofa watch phase changed to fighting")
-                        DispatchQueue.main.async {
-                            self.currentView = .fightingView
-                            self.startRound()
+                } else if (self.isFighting == false) {
+                    // Round ended
+                    print("Is fighting changed to false")
+                    DispatchQueue.main.async {
+                        self.currentView = .resultView
+                        self.stopRound()
+                    }
+                    
+                    if let roundResultIndex = applicationContext["RoundResult"] as? Int {
+                        if let roundResult = MofaRoundResult(rawValue: roundResultIndex) {
+                            print("Round result: \(roundResult)")
                         }
-                    } else if (mofaWatchPhase == .idle) {
-                        // Round ended
-                        print("Mofa watch phase changed to idle")
-                        DispatchQueue.main.async {
-                            self.currentView = .resultView
-                            self.stopRound()
-                        }
-                        
-                        if let roundResultIndex = applicationContext["RoundResult"] as? Int {
-                            if let roundResult = MofaRoundResult(rawValue: roundResultIndex) {
-                                print("Round result: \(roundResult)")
-                            }
-                        }
-                        
-                        if let kill = applicationContext["Kill"] as? Int {
-                            print("Kill: \(kill)")
-                        }
-                        
-                        if let hitRate = applicationContext["HitRate"] as? Float {
-                            print("Hit rate: \(hitRate)")
-                        }
-                        
-                        if let distance = applicationContext["Distance"] as? Float {
-                            print("Distance: \(distance)")
-                        }
+                    }
+                    
+                    if let kill = applicationContext["Kill"] as? Int {
+                        print("Kill: \(kill)")
+                    }
+                    
+                    if let hitRate = applicationContext["HitRate"] as? Float {
+                        print("Hit rate: \(hitRate)")
+                    }
+                    
+                    if let distance = applicationContext["Distance"] as? Float {
+                        print("Distance: \(distance)")
                     }
                 }
             }
@@ -311,8 +304,13 @@ extension MofaWatchAppManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        
+    }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
         if message["QueryWatchState"] is Int {
-            self.sendWatchCurrentStateMessage()
+            let replyMessage = ["WatchState" : self.currentState.rawValue];
+            replyHandler(replyMessage)
         }
     }
 }
@@ -322,7 +320,7 @@ extension MofaWatchAppManager: HKWorkoutSessionDelegate {
     func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {
         //print("workoutSessionDidChangeTo \(toState) from \(fromState)")
         DispatchQueue.main.async {
-
+            
         }
         
         // Wait for the session to transition states before ending the builder.

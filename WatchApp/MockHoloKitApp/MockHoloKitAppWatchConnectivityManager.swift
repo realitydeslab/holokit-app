@@ -25,6 +25,7 @@ class MockHoloKitAppWatchConnectivityManager: NSObject, ObservableObject {
             wcSession = WCSession.default
             wcSession.delegate = self
         }
+        print("HoloKitAppWatchConnectivityManager took control")
     }
     
     func hasPairedAppleWatch() -> Bool {
@@ -44,7 +45,8 @@ class MockHoloKitAppWatchConnectivityManager: NSObject, ObservableObject {
     }
     
     func updateCurrentReality(_ realityIndex: Int) {
-        let context = ["CurrentReality" : realityIndex];
+        let context = ["CurrentReality" : realityIndex,
+                       "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
         do {
             try self.wcSession.updateApplicationContext(context)
             print("Updated current reality")

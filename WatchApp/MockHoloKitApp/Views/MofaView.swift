@@ -32,6 +32,13 @@ struct MofaView: View {
             Spacer()
                 .frame(height: 50)
             
+            Button("Query Watch State") {
+                mofaWatchConnectivityManager.queryWatchState()
+            }
+            
+            Spacer()
+                .frame(height: 50)
+            
             Button("Back") {
                 mofaWatchConnectivityManager.updateCurrentReality(0)
             }

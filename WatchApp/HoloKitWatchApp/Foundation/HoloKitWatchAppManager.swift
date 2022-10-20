@@ -57,6 +57,6 @@ extension HoloKitWatchAppManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        
+        print("[HoloKitWatchAppManager] didReceiveMessage")
     }
 }

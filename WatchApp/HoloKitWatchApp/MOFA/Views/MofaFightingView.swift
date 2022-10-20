@@ -14,7 +14,7 @@ struct MofaFightingView: View {
             
             Spacer()
             
-            if (self.mofaWatchAppManager.mofaWatchPhase == .fighting) {
+            if (self.mofaWatchAppManager.isFighting) {
                 fightingText
             } else {
                 startButton

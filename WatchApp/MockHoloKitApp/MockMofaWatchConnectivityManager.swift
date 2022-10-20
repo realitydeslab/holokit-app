@@ -31,6 +31,7 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
             wcSession = WCSession.default
             wcSession.delegate = self
         }
+        print("MofaWatchConnectivityManager took control")
     }
     
     func onRoundStarted() {
@@ -58,12 +59,22 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
     }
     
     func updateCurrentReality(_ realityIndex: Int) {
-        let context = ["CurrentReality" : realityIndex];
+        let context = ["CurrentReality" : realityIndex,
+                       "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
         do {
             try self.wcSession.updateApplicationContext(context)
             print("Updated current reality")
         } catch {
             print("Failed to update current reality")
+        }
+    }
+    
+    func queryWatchState() {
+        let message = ["QueryWatchState" : 0]
+        self.wcSession.sendMessage(message) { replyMessage in
+            if let watchStateIndex = replyMessage["WatchState"] as? Int {
+                print("On received query watch state replay: \(watchStateIndex)")
+            }
         }
     }
 }
