@@ -42,7 +42,7 @@ namespace Holoi.Library.MOFABase
 
         public override void OnNetworkSpawn()
         {
-            Debug.Log($"[MofaPlayer] OnNetworkSpawned with ownership {OwnerClientId} and team {Team.Value}");
+            //Debug.Log($"[MofaPlayer] OnNetworkSpawned with ownership {OwnerClientId} and team {Team.Value}");
 
             var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             mofaRealityManager.SetPlayer(OwnerClientId, this);

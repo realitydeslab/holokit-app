@@ -26,6 +26,9 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
         [DllImport("__Internal")]
         private static extern void MofaWatchConnectivity_SyncRoundResultToWatch(int roundResultIndex, int kill, float hitRate, float distance);
 
+        [DllImport("__Internal")]
+        private static extern void MofaWatchConnectivity_QueryWatchState();
+
         [AOT.MonoPInvokeCallback(typeof(Action))]
         private static void OnStartRoundMessageReceivedDelegate()
         {
@@ -52,6 +55,7 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
 
         public static void Initialize()
         {
+            if (HoloKit.HoloKitUtils.IsEditor) { return; }
             MofaWatchConnectivity_Initialize(OnStartRoundMessageReceivedDelegate,
                                              OnWatchStateChangedDelegate,
                                              OnWatchTriggeredDelegate);
@@ -59,17 +63,26 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
 
         public static void TakeControlWatchConnectivitySession()
         {
+            if (HoloKit.HoloKitUtils.IsEditor) { return; }
             MofaWatchConnectivity_TakeControlWCSession();
         }
 
         public static void SyncRoundStartToWatch()
         {
+            if (HoloKit.HoloKitUtils.IsEditor) { return; }
             MofaWatchConnectivity_SyncRoundStartToWatch();
         }
 
         public static void SyncRoundResultToWatch(MofaIndividualRoundResult roundResult, int kill, float hitRate, float distance)
         {
+            if (HoloKit.HoloKitUtils.IsEditor) { return; }
             MofaWatchConnectivity_SyncRoundResultToWatch((int)roundResult, kill, hitRate, distance);
+        }
+
+        public static void QueryWatchState()
+        {
+            if (HoloKit.HoloKitUtils.IsEditor) { return; }
+            MofaWatchConnectivity_QueryWatchState();
         }
     }
 }

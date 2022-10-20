@@ -86,6 +86,16 @@ namespace Holoi.Reality.MOFATheTraining
             NetworkManager.NetworkTickSystem.Tick -= OnNetworkTick;
         }
 
+
+        private void Update()
+        {
+            // For Chibi Apes local position bug
+            if (_avatar != null)
+            {
+                _avatar.transform.localPosition = Vector3.zero;
+            }
+        }
+
         [ClientRpc]
         public void InitializeAvatarPositionClientRpc(Vector3 initialPosition, Quaternion initialRotation)
         {

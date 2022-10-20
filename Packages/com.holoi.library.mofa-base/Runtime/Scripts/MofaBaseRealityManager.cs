@@ -59,6 +59,8 @@ namespace Holoi.Library.MOFABase
 
         public Dictionary<ulong, MofaPlayer> Players = new();
 
+        public int RoundCount = 0;
+
         public static event Action<MofaPhase> OnPhaseChanged;
 
         protected virtual void Awake()
@@ -97,20 +99,30 @@ namespace Holoi.Library.MOFABase
             Debug.Log($"[MOFABase] Phase changed to {newValue}");
             OnPhaseChanged?.Invoke(newValue);
 
-            if (newValue == MofaPhase.Countdown)
+            switch (newValue)
             {
-                MofaWatchConnectivityAPI.SyncRoundStartToWatch();
-            }
-            else if (newValue == MofaPhase.RoundResult)
-            {
-                if (!IsLocalPlayerSpectator())
-                {
-                    var localPlayerStats = GetIndividualStats(GetLocalPlayer());
-                    MofaWatchConnectivityAPI.SyncRoundResultToWatch(localPlayerStats.IndividualRoundResult,
-                                                                    localPlayerStats.Kill,
-                                                                    localPlayerStats.HitRate,
-                                                                    localPlayerStats.Distance);
-                }
+                case MofaPhase.Waiting:
+                    break;
+                case MofaPhase.Countdown:
+                    MofaWatchConnectivityAPI.SyncRoundStartToWatch();
+                    RoundCount++;
+                    break;
+                case MofaPhase.Fighting:
+                    break;
+                case MofaPhase.RoundOver:
+                    break;
+                case MofaPhase.RoundResult:
+                    if (!IsLocalPlayerSpectator())
+                    {
+                        var localPlayerStats = GetIndividualStats(GetLocalPlayer());
+                        MofaWatchConnectivityAPI.SyncRoundResultToWatch(localPlayerStats.IndividualRoundResult,
+                                                                        localPlayerStats.Kill,
+                                                                        localPlayerStats.HitRate,
+                                                                        localPlayerStats.Distance);
+                    }
+                    break;
+                case MofaPhase.RoundData:
+                    break;
             }
         }
 
@@ -294,6 +306,14 @@ namespace Holoi.Library.MOFABase
         public bool IsLocalPlayerSpectator()
         {
             return !Players.ContainsKey(NetworkManager.LocalClientId);
+        }
+
+        public virtual void StartRound()
+        {
+            if (Phase.Value != MofaPhase.Waiting && Phase.Value != MofaPhase.RoundData)
+            {
+                return;
+            }
         }
     }
 }

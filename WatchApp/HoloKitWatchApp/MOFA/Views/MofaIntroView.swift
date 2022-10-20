@@ -20,7 +20,7 @@ struct MofaIntroView: View {
     
     var startButton: some View {
         Button {
-            self.mofaWatchAppManager.currentView = .fightingView
+            self.mofaWatchAppManager.sendStartRoundMessage()
         } label: {
             ZStack {
                 Rectangle()

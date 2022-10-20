@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Holoi.Library.HoloKitApp;
 using UnityEngine.VFX;
+using Holoi.Library.MOFABase.WatchConnectivity;
 
 namespace Holoi.Library.MOFABase
 {
@@ -22,18 +20,18 @@ namespace Holoi.Library.MOFABase
 
         private void OnEnable()
         {
-            LocalPlayerSpellManager.OnControllerStateChanged += OnControllerStateChanged;
+            MofaWatchConnectivityAPI.OnWatchStateChanged += OnWatchStateChanged;
         }
 
         private void OnDisable()
         {
-            LocalPlayerSpellManager.OnControllerStateChanged -= OnControllerStateChanged;
+            MofaWatchConnectivityAPI.OnWatchStateChanged -= OnWatchStateChanged;
         }
 
-        private void OnControllerStateChanged(ControllerState controllerState)
+        private void OnWatchStateChanged(MofaWatchState watchState)
         {
             // SIZHENGTODO:
-            if (controllerState == ControllerState.Ground)
+            if (watchState == MofaWatchState.Ground)
             {
                 _animator.SetTrigger("To Function");
             }

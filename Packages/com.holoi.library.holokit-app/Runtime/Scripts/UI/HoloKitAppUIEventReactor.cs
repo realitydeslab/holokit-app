@@ -34,12 +34,10 @@ namespace Holoi.Library.HoloKitApp.UI
             if (renderMode == HoloKitRenderMode.Stereo)
             {
                 HoloKitCamera.Instance.OpenStereoWithoutNFC("SomethingForNothing");
-                //Screen.orientation = ScreenOrientation.LandscapeLeft;
             }
             else
             {
                 HoloKitCamera.Instance.RenderMode = HoloKitRenderMode.Mono;
-                //Screen.orientation = ScreenOrientation.Portrait;
             }
         }
 

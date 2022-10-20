@@ -28,7 +28,6 @@ namespace Holoi.Reality.MOFATheTraining
 
             OnPhaseChanged += OnPhaseChangedFunc;
             HoloKitAppUIEventManager.OnTriggered += OnTriggered;
-            HoloKitAppUIEventManager.OnBoosted += OnBoosted;
         }
 
         public override void OnDestroy()
@@ -37,7 +36,6 @@ namespace Holoi.Reality.MOFATheTraining
 
             OnPhaseChanged -= OnPhaseChangedFunc;
             HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
-            HoloKitAppUIEventManager.OnBoosted -= OnBoosted;
         }
 
         public override void OnNetworkSpawn()
@@ -103,9 +101,10 @@ namespace Holoi.Reality.MOFATheTraining
             _mofaAI.GetComponent<NetworkObject>().SpawnWithOwnership(999);
         }
 
-        private void OnTriggered()
+        public override void StartRound()
         {
-            if (Phase.Value == MofaPhase.Waiting)
+            base.StartRound();
+            if (RoundCount == 0)
             {
                 if (_placementIndicator.activeSelf)
                 {
@@ -115,20 +114,26 @@ namespace Holoi.Reality.MOFATheTraining
                 }
                 else
                 {
-                    Debug.Log("[MOFATheTraining] Cannot start game in current position");
+                    Debug.Log("[MOFATheTraining] Cannot start round in current position");
                 }
-                return;
             }
-
-            if (Phase.Value == MofaPhase.Fighting)
+            else
             {
-                LocalPlayerSpellManager.SpawnBasicSpell();
+                StartCoroutine(StartSingleRound());
+            }
+        }
+
+        private void OnTriggered()
+        {
+            if (Phase.Value == MofaPhase.Waiting)
+            {
+                StartRound();
                 return;
             }
 
             if (Phase.Value == MofaPhase.RoundData)
             {
-                StartCoroutine(StartSingleRound());
+                StartRound();
                 return;
             }
         }
@@ -149,14 +154,6 @@ namespace Holoi.Reality.MOFATheTraining
                     DestroyExistingARPlanes();
                 }
                 return;
-            }
-        }
-
-        private void OnBoosted()
-        {
-            if (Phase.Value == MofaPhase.Fighting)
-            {
-                LocalPlayerSpellManager.SpawnSecondarySpell();
             }
         }
 
