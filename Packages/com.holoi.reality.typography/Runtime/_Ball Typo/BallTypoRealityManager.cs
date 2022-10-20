@@ -16,7 +16,7 @@ namespace Holoi.Reality.Typography
     {
         [Header("AR Base Objects")]
         [SerializeField] Transform _centerEye;
-        [SerializeField] Transform _serverHandFollower;
+        public Transform ServerHandFollower;
         [SerializeField] GameObject _invisibleARPlane;
         [Header("Reality Objects")]
         [SerializeField] Transform _ball;
@@ -105,7 +105,7 @@ namespace Holoi.Reality.Typography
         {
             var offset = _centerEye.right * 0.45f + _centerEye.up * 0.25f;
 
-            _serverHandFollower.position = _centerEye.position + offset;
+            ServerHandFollower.position = _centerEye.position + offset;
         }
 
         public void OnHandsUpButtonClicked()
@@ -114,9 +114,11 @@ namespace Holoi.Reality.Typography
             if (HoloKitApp.Instance.IsHost)
             {
                 _state = State.handsUp;
+                OnHandsUpButtonClickedClientRpc();
             }
             else
             {
+                _state = State.handsUp;
                 // for server
                 OnHandsUpButtonClickedServerRpc();
             }
@@ -128,13 +130,30 @@ namespace Holoi.Reality.Typography
             if (HoloKitApp.Instance.IsHost)
             {
                 _state = State.shoot;
+                OnShootButtonClickedClientRpc();
             }
             else
             {
+                _state = State.shoot;
                 // for server
                 OnShootButtonClickedServerRpc();
             }
         }
+
+        [ClientRpc]
+        private void OnHandsUpButtonClickedClientRpc()
+        {
+            Debug.Log("OnHandsUpButtonClickedClientRpc");
+
+            _state = State.handsUp;
+        }
+        [ClientRpc]
+        private void OnShootButtonClickedClientRpc()
+        {
+            Debug.Log("OnShootButtonClickedClientRpc");
+            _state = State.shoot;
+        }
+
 
         [ServerRpc(RequireOwnership = false)]
         private void OnHandsUpButtonClickedServerRpc()

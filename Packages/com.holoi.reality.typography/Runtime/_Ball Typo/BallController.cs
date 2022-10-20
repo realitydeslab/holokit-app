@@ -66,7 +66,12 @@ namespace Holoi.Reality.Typography
             }
             
             if (HoloKitApp.Instance.IsHost)
+            {
+                // reset position to hands pos:
+                transform.position = FindObjectOfType<BallTypoRealityManager>().ServerHandFollower.position;
                 GetComponent<FollowMovementManager>().enabled = true;
+            }
+                
             _rigidBody.velocity = Vector3.zero;
             _rigidBody.useGravity = false;
         }
