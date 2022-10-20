@@ -93,7 +93,7 @@ namespace Holoi.Reality.QuantumRealm
                 // update hand hook's head position
                 var dir = (_handJoint.position - _serverCenterEye.position).normalized;
 
-                _handHookHead.position = _handJoint.position + dir * 0.5f;
+                _handHookHead.position = _handJoint.position + dir * 0.5f + _serverCenterEye.up*0.1f;
             }
 
             if(HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono)

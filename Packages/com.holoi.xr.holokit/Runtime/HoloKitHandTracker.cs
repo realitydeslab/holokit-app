@@ -104,6 +104,10 @@ namespace HoloKit
             SetHandJointsVisible(_visible);
         }
 
+        private void Start()
+        {
+        }
+
         private void OnDestroy()
         {
             HoloKitHandTrackingControllerAPI.OnHandPoseUpdated -= OnHandPoseUpdated;
@@ -181,10 +185,14 @@ namespace HoloKit
 
                 Transform centerEye = HoloKitCamera.Instance.CenterEyePose;
 
-                for (int i = 0; i < 21; i++)
+                if (HoloKitUtils.IsRuntime)
                 {
-                    _handJoints[i].position = centerEye.transform.position + Vector3.down;
+                    for (int i = 0; i < 21; i++)
+                    {
+                        _handJoints[i].position = centerEye.position - centerEye.up;
+                    }
                 }
+
                 OnHandValidityChanged?.Invoke(false);
             }
         }
@@ -194,7 +202,14 @@ namespace HoloKit
             if (!_hand.activeSelf)
             {
                 Transform centerEye = HoloKitCamera.Instance.CenterEyePose;
-                return centerEye.position - centerEye.up;
+                Vector3 pos = Vector3.zero;
+
+                if (HoloKitUtils.IsRuntime)
+                {
+                    pos = centerEye.position - centerEye.up;
+                }
+
+                return pos;
             }
 
             return _handJoints[(int)joint].position;
