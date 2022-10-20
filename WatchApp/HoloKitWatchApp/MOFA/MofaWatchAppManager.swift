@@ -23,12 +23,6 @@ enum WatchState: Int {
     case ground = 1
 }
 
-enum WatchInput: Int {
-    case castSpell = 0
-    case changeToNormal = 1
-    case changeToGround = 2
-}
-
 class MofaWatchAppManager: NSObject, ObservableObject {
     
     var holokitWatchAppManager: HoloKitWatchAppManager?
@@ -89,20 +83,14 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         }
     }
     
-    func sendStartRoundMessage() {
-        let message = ["StartRound": 0];
-        self.wcSession.sendMessage(message, replyHandler: nil)
-        print("Start round message sent")
-    }
-    
     public func startRound() {
         startCoreMotion()
-        //startWorkout()
+        startWorkout()
     }
     
     public func stopRound() {
         endCoreMotion()
-        //endWorkout()
+        endWorkout()
     }
     
     public func startWorkout() {
@@ -161,8 +149,8 @@ class MofaWatchAppManager: NSObject, ObservableObject {
                 
                 if (currentTime - self.lastInputTime > self.sharedInputCd) {
                     if (acceleration.x < -1.6) {
-                        print("Cast spell")
-                        self.sendWatchInputMessage(watchInput: .castSpell)
+                        print("Triggered")
+                        self.sendWatchTriggeredMessage()
                         self.lastInputTime = currentTime
                         return
                     }
@@ -170,16 +158,16 @@ class MofaWatchAppManager: NSObject, ObservableObject {
                 
                 if (simd_dot(gravityVector3, simd_double3(-1, 0, 0)) > 0.7) {
                     if (self.currentState != .ground) {
-                        print("changed to ground")
+                        print("Changed to ground")
                         self.currentState = .ground
-                        self.sendWatchInputMessage(watchInput: .changeToGround)
+                        self.sendWatchStateChangedMessage(watchState: self.currentState)
                         return
                     }
                 } else {
                     if (self.currentState != .normal) {
-                        print("changed to nothing")
+                        print("Changed to normal")
                         self.currentState = .normal
-                        self.sendWatchInputMessage(watchInput: .changeToNormal)
+                        self.sendWatchStateChangedMessage(watchState: self.currentState)
                         return
                     }
                 }
@@ -193,21 +181,20 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         }
     }
     
-    func sendWatchInputMessage(watchInput: WatchInput) {
-        let message = ["WatchInput": watchInput.rawValue]
-        self.wcSession.sendMessage(message, replyHandler: nil, errorHandler: nil)
+    func sendStartRoundMessage() {
+        let message = ["StartRound": 0];
+        self.wcSession.sendMessage(message, replyHandler: nil)
+        print("Start round message sent")
     }
     
-    func sendWatchCurrentStateMessage() {
-        switch(self.currentState) {
-        case .normal:
-            self.sendWatchInputMessage(watchInput: .changeToNormal)
-            break
-        case .ground:
-            self.sendWatchInputMessage(watchInput: .changeToGround)
-            break
-        }
-        return
+    func sendWatchTriggeredMessage() {
+        let message = ["WatchTriggered" : 0];
+        self.wcSession.sendMessage(message, replyHandler: nil)
+    }
+    
+    func sendWatchStateChangedMessage(watchState: WatchState) {
+        let message = ["WatchState" : watchState.rawValue]
+        self.wcSession.sendMessage(message, replyHandler: nil)
     }
     
     // MARK: - Workout Metrics
