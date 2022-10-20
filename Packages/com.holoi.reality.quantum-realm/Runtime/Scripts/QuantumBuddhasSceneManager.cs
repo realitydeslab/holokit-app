@@ -8,6 +8,7 @@ using Holoi.Library.ARUX;
 using HoloKit;
 using Unity.Netcode;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 namespace Holoi.Reality.QuantumRealm
 {
@@ -98,10 +99,13 @@ namespace Holoi.Reality.QuantumRealm
             if(HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono)
             {
                 _arOcclusionManager.enabled = true;
+                _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Fastest;
+                _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Fastest;
             }
             else
             {
-                _arOcclusionManager.enabled = false;
+                _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Disabled;
+                _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Disabled;
             }
         }
 

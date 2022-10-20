@@ -65,10 +65,13 @@ namespace Holoi.Reality.Typography
             if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono)
             {
                 _arOcclusionManager.enabled = true;
+                _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Fastest;
+                _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Fastest;
             }
             else
             {
-                _arOcclusionManager.enabled = false;
+                _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Disabled;
+                _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Disabled;
             }
         }
 
