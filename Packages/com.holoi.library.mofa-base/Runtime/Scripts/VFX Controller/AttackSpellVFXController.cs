@@ -32,11 +32,13 @@ namespace Holoi.Library.MOFABase
         }
         void OnHit()
         {
+            Debug.Log("ON Hit");
             _animator.SetTrigger("Hit");
         }
 
         void OnDie()
         {
+            Debug.Log("ON DIE");
             _animator.SetTrigger("Die");
         }
     }
