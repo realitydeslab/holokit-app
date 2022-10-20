@@ -15,6 +15,8 @@ namespace Holoi.Library.ARUX
 
         [SerializeField] float _loadTime = 1f;
 
+        [SerializeField] bool _autoReset = false;
+
         bool _isTriggered = false;
 
         float _loadSpeed;
@@ -41,6 +43,12 @@ namespace Holoi.Library.ARUX
 
         }
 
+        public void OnReset()
+        {
+            _isTriggered = false;
+            _process = 0;
+        }
+
         void Update()
         {
             if (_ho.IsValid)
@@ -55,6 +63,10 @@ namespace Holoi.Library.ARUX
                         {
                             _isTriggered = true;
                             OnLoadedEvents?.Invoke();
+                            if(_autoReset)
+                            {
+                                OnReset();
+                            }
                         }
                     }
                 }

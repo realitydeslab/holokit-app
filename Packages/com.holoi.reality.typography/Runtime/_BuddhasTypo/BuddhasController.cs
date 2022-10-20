@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 using Holoi.Library.ARUX;
+using Apple.PHASE;
 
 namespace Holoi.Reality.Typography
 {
@@ -11,6 +12,7 @@ namespace Holoi.Reality.Typography
         public VisualEffect vfx;
 
         [SerializeField] HoverableObject _hoverableObject;
+        [SerializeField] PHASESource _phaseSource;
 
         HandObject _ho;
 
@@ -19,6 +21,12 @@ namespace Holoi.Reality.Typography
             _ho = HandObject.Instance;
 
             _hoverableObject.OnLoadedEvents.AddListener(FindObjectOfType<BuddhasRealityManager>().OnInteractionTriggered);
+            _hoverableObject.OnLoadedEvents.AddListener(PlayPhase);
+        }
+
+        void PlayPhase()
+        {
+            _phaseSource.Play();
         }
 
         void Update()
