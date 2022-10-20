@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Holoi.Library.HoloKitApp;
 
@@ -19,6 +17,12 @@ namespace Holoi.Library.MOFABase
 
         private void Awake()
         {
+            if (!HoloKitApp.HoloKitApp.Instance.IsHost)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
         }
 
