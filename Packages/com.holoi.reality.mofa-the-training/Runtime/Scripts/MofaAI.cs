@@ -207,7 +207,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             foreach (var spell in _spellList.List)
             {
-                if (spell.MagicSchool.TokenId.Equals("2"))
+                if (spell.MagicSchool.TokenId.Equals("0"))
                 {
                     if (spell.SpellType == SpellType.Basic)
                     {

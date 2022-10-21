@@ -22,8 +22,8 @@ namespace Holoi.Library.Permissions.Editor
                 rootDict.SetString("NSMicrophoneUsageDescription", "For recording");
                 rootDict.SetString("NSPhotoLibraryAddUsageDescription", "For saving recorded videos");
                 rootDict.SetString("NSPhotoLibraryUsageDescription", "For saving recorded videos");
-                rootDict.SetString("NSLocationWhenInUseUsageDescription", "For location based services");
-                rootDict.SetString("NSLocationAlwaysAndWhenInUseUsageDescription", "For location based services");
+                //rootDict.SetString("NSLocationWhenInUseUsageDescription", "For location based services");
+                //rootDict.SetString("NSLocationAlwaysAndWhenInUseUsageDescription", "For location based services");
 
                 File.WriteAllText(plistPath, plist.WriteToString());
             }

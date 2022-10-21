@@ -1,8 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using HoloKit;
-using Holoi.Library.HoloKitApp;
 using Unity.Netcode;
 
 namespace Holoi.Library.MOFABase
