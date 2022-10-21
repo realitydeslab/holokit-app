@@ -15,7 +15,7 @@ namespace Holoi.Library.MOFABase
 
         public GameObject RedScreen;
 
-        private void Awake()
+        private void Start()
         {
             if (!HoloKitApp.HoloKitApp.Instance.IsHost)
             {
@@ -24,20 +24,17 @@ namespace Holoi.Library.MOFABase
             }
 
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
-        }
 
-        private void OnDestroy()
-        {
-            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
-        }
-
-        private void Start()
-        {
             Scores.SetActive(false);
             Time.SetActive(false);
             Reticle.SetActive(false);
             Status.SetActive(false);
             RedScreen.SetActive(false);
+        }
+
+        private void OnDestroy()
+        {
+            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
         }
 
         private void OnPhaseChanged(MofaPhase mofaPhase)

@@ -11,6 +11,11 @@ namespace Holoi.Library.HoloKitApp.UI
             return HoloKitApp.Instance.GlobalSettings.GetCompatibleMetaObjectCollectionList(HoloKitApp.Instance.CurrentReality).Cast<NonFungibleCollection>().ToList();
         }
 
+        protected override NonFungibleCollection GetPreferencedNonFungibleCollection()
+        {
+            return HoloKitApp.Instance.GlobalSettings.GetPreferencedObjectCollection(HoloKitApp.Instance.CurrentReality);
+        }
+
         protected override int GetPreferencedNonFungibleIndex()
         {
             RealityPreference realityPreference = HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId];

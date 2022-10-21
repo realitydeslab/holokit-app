@@ -69,12 +69,13 @@ namespace Holoi.Library.HoloKitApp
             }
             else
             {
-                SetDefault();
+                LoadDefaultSettings();
             }
         }
 
-        public void SetDefault()
+        public void LoadDefaultSettings()
         {
+            Debug.Log("[GlobalSettings] Load default global settings");
             InstructionEnabled = true;
             VibrationEnabled = true;
             HighResHDREnabled = true;

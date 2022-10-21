@@ -31,6 +31,11 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeField] private GameObject _roomLightPrefab;
 
         /// <summary>
+        /// Only taps inside this area are effective.
+        /// </summary>
+        [SerializeField] private RectTransform _inputArea;
+
+        /// <summary>
         /// Keeps a reference of this to destroy later.
         /// </summary>
         private GameObject _roomListRoot;
@@ -129,10 +134,22 @@ namespace Holoi.Library.HoloKitApp.UI
             if (Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
+                if (touch.phase != TouchPhase.Began && touch.phase != TouchPhase.Ended)
+                {
+                    return;
+                }
+
+                if (!IsInsideInputArea(touch.position))
+                {
+                    return;
+                }
+
                 if (touch.phase == TouchPhase.Began)
                 {
                     _touchBeganPosition = touch.position;
+
                     // TODO: Light the current room
+
                 }
                 else if (touch.phase == TouchPhase.Ended)
                 {
@@ -157,6 +174,22 @@ namespace Holoi.Library.HoloKitApp.UI
                         HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityDetailPage");
                     }
                 }
+            }
+        }
+
+        private bool IsInsideInputArea(Vector3 position)
+        {
+            if (position.x > (_inputArea.position.x - _inputArea.sizeDelta.x / 2f)
+                && position.x < (_inputArea.position.x + _inputArea.sizeDelta.x / 2f)
+                &&
+                position.y > (_inputArea.position.y - _inputArea.sizeDelta.y / 2f)
+                && position.y < (_inputArea.position.y + _inputArea.sizeDelta.y / 2f))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 

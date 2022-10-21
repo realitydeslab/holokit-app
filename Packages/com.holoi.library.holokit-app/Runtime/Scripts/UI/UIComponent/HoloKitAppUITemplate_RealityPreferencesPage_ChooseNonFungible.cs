@@ -37,6 +37,14 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private const float NonFungibleHorizontalScrollbarMovementSpeed = 1f;
 
+        protected abstract List<NonFungibleCollection> GetCompatibleNonFungibleCollectionList();
+
+        protected abstract NonFungibleCollection GetPreferencedNonFungibleCollection();
+
+        protected abstract int GetPreferencedNonFungibleIndex();
+
+        protected abstract void UpdateRealityPreferences(string artifactCollectionId, string artifactTokenId);
+
         private void Start()
         {
             var compatibleNonFungibleCollectionList = GetCompatibleNonFungibleCollectionList();
@@ -51,6 +59,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 Destroy(_nonFungibleCollectionScrollRoot.GetChild(i).gameObject);
             }
 
+            CurrentNonFungibleCollection = GetPreferencedNonFungibleCollection();
             // Setup avatar collection list
             foreach (var nonFungibleCollection in compatibleNonFungibleCollectionList)
             {
@@ -60,17 +69,15 @@ namespace Holoi.Library.HoloKitApp.UI
                 tabInstance.Init(nonFungibleCollection.DisplayName, nonFungibleCollection, OnNewTabSelected);
 
                 // Select the current preferenced avatar collection
-                if (nonFungibleCollection.BundleId.Equals(HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId].MetaAvatarCollectionBundleId))
+                if (nonFungibleCollection.BundleId.Equals(CurrentNonFungibleCollection.BundleId))
                 {
                     tabInstance.OnSelected();
                 }
             }
-
-            CurrentNonFungibleCollection = HoloKitApp.Instance.GlobalSettings.GetPreferencedMetaAvatarCollection(HoloKitApp.Instance.CurrentReality);
             UpdateNonFungibleSelector(CurrentNonFungibleCollection);
             // Scroll to the preferenced avatar image
-            int preferencedArtifactIndex = GetPreferencedNonFungibleIndex();
-            StartCoroutine(SetNonFungibleScrollbarValue(preferencedArtifactIndex * _nonFungibleHorizontalScrollbarInterval));
+            int preferencedNonfungibleIndex = GetPreferencedNonFungibleIndex();
+            StartCoroutine(SetNonFungibleScrollbarValue(preferencedNonfungibleIndex * _nonFungibleHorizontalScrollbarInterval));
         }
 
         private void Update()
@@ -96,13 +103,10 @@ namespace Holoi.Library.HoloKitApp.UI
                 {
                     _currentNonFungibleIndex = index;
                     UpdateRealityPreferences(CurrentNonFungibleCollection.BundleId, CurrentNonFungibleCollection.NonFungibles[_currentNonFungibleIndex].TokenId);
+                    _nonFungibleTokenId.text = "#" + CurrentNonFungibleCollection.NonFungibles[index].TokenId;
                 }
             }
         }
-
-        protected abstract List<NonFungibleCollection> GetCompatibleNonFungibleCollectionList();
-
-        protected abstract int GetPreferencedNonFungibleIndex();
 
         private void OnNewTabSelected(NonFungibleCollection nonFungibleCollection)
         {
@@ -163,7 +167,5 @@ namespace Holoi.Library.HoloKitApp.UI
 
             _nonFungibleHorizontalScrollbarInterval = 1f / (nonFungibleCollection.NonFungibles.Count - 1);
         }
-
-        protected abstract void UpdateRealityPreferences(string artifactCollectionId, string artifactTokenId);
     }
 }

@@ -11,6 +11,11 @@ namespace Holoi.Library.HoloKitApp.UI
             return HoloKitApp.Instance.GlobalSettings.GetCompatibleMetaAvatarCollectionList(HoloKitApp.Instance.CurrentReality).Cast<NonFungibleCollection>().ToList();
         }
 
+        protected override NonFungibleCollection GetPreferencedNonFungibleCollection()
+        {
+            return HoloKitApp.Instance.GlobalSettings.GetPreferencedAvatarCollection(HoloKitApp.Instance.CurrentReality);
+        }
+
         protected override int GetPreferencedNonFungibleIndex()
         {
             RealityPreference realityPreference = HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId];

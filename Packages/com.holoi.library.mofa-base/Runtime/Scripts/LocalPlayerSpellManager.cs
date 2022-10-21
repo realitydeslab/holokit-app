@@ -81,9 +81,8 @@ namespace Holoi.Library.MOFABase
         {
             foreach (var spell in SpellList.List)
             {
-                if (spell.MagicSchool.TokenId.Equals("0"))
+                if (spell.MagicSchool.TokenId.Equals("2"))
                 {
-                    Debug.Log($"Spell: {spell.Name}");
                     if (spell.SpellType == SpellType.Basic)
                     {
                         BasicSpell = spell;

@@ -29,7 +29,7 @@ namespace Holoi.Library.HoloKitApp
             }
             else
             {
-                Debug.Log($"[SaveSystem] Failed to find save file at {s_savePath}");
+                //Debug.Log($"[SaveSystem] Failed to find save file at {s_savePath}");
                 return null;
             }
         }
