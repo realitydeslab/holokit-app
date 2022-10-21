@@ -146,8 +146,22 @@ namespace Holoi.Library.HoloKitApp.UI
                     if (credential is IAppleIDCredential appleIdCredential)
                     {
                         PlayerPrefs.SetString(AppleUserIdKey, credential.User);
-                        PlayerPrefs.SetString(AppleUserNameKey, appleIdCredential.FullName.ToString());
-                        PlayerPrefs.SetString(AppleUserEmailKey, appleIdCredential.Email.ToString());
+                        if (appleIdCredential.FullName != null)
+                        {
+                            PlayerPrefs.SetString(AppleUserNameKey, appleIdCredential.FullName.ToString());
+                        }
+                        else
+                        {
+                            Debug.Log("[SIWA] User's fullname is not available through quick login");
+                        }
+                        if (appleIdCredential.Email != null)
+                        {
+                            PlayerPrefs.SetString(AppleUserEmailKey, appleIdCredential.Email.ToString());
+                        }
+                        else
+                        {
+                            Debug.Log("[SIWA] User's email is not available through quick login");
+                        }
                     }
                     Debug.Log($"[SignInWithApple] Quick logged in with user full name: {PlayerPrefs.GetString(AppleUserNameKey)} and email: {PlayerPrefs.GetString(AppleUserEmailKey)}");
 

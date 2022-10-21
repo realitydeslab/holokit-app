@@ -33,9 +33,9 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private float _nonFungibleHorizontalScrollbarInterval = 1f;
 
-        private const float NonFungibleHorizontalScrollbarMaxDeviation = 0.001f;
+        private float _lastDeltaTime = 0f;
 
-        private const float NonFungibleHorizontalScrollbarMovementSpeed = 1f;
+        private const float NonFungibleHorizontalScrollbarMovementSpeed = 1.8f;
 
         protected abstract List<NonFungibleCollection> GetCompatibleNonFungibleCollectionList();
 
@@ -84,9 +84,19 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             if (Input.touchCount > 0) { return; }
 
+            int step = Mathf.RoundToInt(_nonFungibleHorizontalScrollbar.value / _nonFungibleHorizontalScrollbarInterval);
             float deviation = _nonFungibleHorizontalScrollbar.value % _nonFungibleHorizontalScrollbarInterval;
-            if (Mathf.Abs(deviation) > NonFungibleHorizontalScrollbarMaxDeviation)
+            if (deviation != 0f)
             {
+                Debug.Log($"Scrollbar value: {_nonFungibleHorizontalScrollbar.value}");
+                if (Mathf.Abs(deviation) < NonFungibleHorizontalScrollbarMovementSpeed * _lastDeltaTime * 2f)
+                {
+                    Debug.Log("Jit");
+                    _nonFungibleHorizontalScrollbar.value = step * _nonFungibleHorizontalScrollbarInterval;
+                    return;
+                }
+
+                _lastDeltaTime = Time.deltaTime;
                 if (deviation > _nonFungibleHorizontalScrollbarInterval / 2f)
                 {
                     _nonFungibleHorizontalScrollbar.value += NonFungibleHorizontalScrollbarMovementSpeed * Time.deltaTime;
@@ -98,12 +108,11 @@ namespace Holoi.Library.HoloKitApp.UI
             }
             else
             {
-                int index = Mathf.RoundToInt(_nonFungibleHorizontalScrollbar.value / _nonFungibleHorizontalScrollbarInterval);
-                if (index != _currentNonFungibleIndex)
+                if (step != _currentNonFungibleIndex)
                 {
-                    _currentNonFungibleIndex = index;
+                    _currentNonFungibleIndex = step;
                     UpdateRealityPreferences(CurrentNonFungibleCollection.BundleId, CurrentNonFungibleCollection.NonFungibles[_currentNonFungibleIndex].TokenId);
-                    _nonFungibleTokenId.text = "#" + CurrentNonFungibleCollection.NonFungibles[index].TokenId;
+                    _nonFungibleTokenId.text = "#" + CurrentNonFungibleCollection.NonFungibles[step].TokenId;
                 }
             }
         }
