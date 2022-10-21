@@ -25,7 +25,7 @@ namespace Holoi.Library.MOFABase
         {
             yield return new WaitForSecondsRealtime(time);
             animator.enabled = true;
-            animator.speed = 2f;
+            animator.speed = 1f;
         }
     }
 }
