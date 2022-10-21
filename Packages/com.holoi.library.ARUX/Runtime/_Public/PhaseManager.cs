@@ -24,10 +24,7 @@ namespace Holoi.Library.ARUX
         {
             if (!_phaseSource.IsPlaying())
             {
-                Debug.Log("play Phase Source");
-
                 _phaseSource.Play();
-
             }
         }
 
@@ -35,25 +32,6 @@ namespace Holoi.Library.ARUX
         public void OnSceneExited()
         {
             Helpers.PHASEStop();
-
-            Debug.Log("OnSceneExited");
-
-            //if(_phaseSource != null)
-            //{
-            //    Debug.Log("_phaseSources");
-
-            //    _phaseSource.Stop();
-            //    _phaseSource.DestroyFromPHASE();
-            //    _phaseSource.enabled = false;
-            //    Destroy(_phaseSource);
-            //}
-            //if (_phaseListener != null)
-            //{
-            //    Debug.Log("_phaseListener");
-            //    _phaseListener.enabled = false;
-                
-            //    Destroy(_phaseListener);
-            //}
         }
 
         private void OnDestroy()

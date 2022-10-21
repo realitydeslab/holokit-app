@@ -37,6 +37,7 @@ float _CohesionWeight; // 結合適用時の重み
 
 float4 _WallCenter; // 壁の中心座標
 float4 _WallSize; // 壁のサイズ
+float _SphereRadius; // 壁のサイズ
 float _AvoidWallWeight; // 壁を避ける強さの重み
 
 float4 _AttractCenter;
@@ -56,16 +57,18 @@ float3 avoidWall(float3 position)
     float3 ws = _WallSize.xyz;
     float3 acc = float3(0, 0, 0);
     // x
-    acc.x = (position.x < wc.x - ws.x * 0.5) ? acc.x + 1.0 : acc.x;
-    acc.x = (position.x > wc.x + ws.x * 0.5) ? acc.x - 1.0 : acc.x;
+    // acc.x = (position.x < wc.x - ws.x * 0.5) ? acc.x + 1.0 : acc.x;
+    // acc.x = (position.x > wc.x + ws.x * 0.5) ? acc.x - 1.0 : acc.x;
 
     // y
-    acc.y = (position.y < wc.y - ws.y * 0.5) ? acc.y + 1.0 : acc.y;
-    acc.y = (position.y > wc.y + ws.y * 0.5) ? acc.y - 1.0 : acc.y;
+    // acc.y = (position.y < wc.y - ws.y * 0.5) ? acc.y + 1.0 : acc.y;
+    // acc.y = (position.y > wc.y + ws.y * 0.5) ? acc.y - 1.0 : acc.y;
 
     // z
-    acc.z = (position.z < wc.z - ws.z * 0.5) ? acc.z + 1.0 : acc.z;
-    acc.z = (position.z > wc.z + ws.z * 0.5) ? acc.z - 1.0 : acc.z;
+    // acc.z = (position.z < wc.z - ws.z * 0.5) ? acc.z + 1.0 : acc.z;
+    // acc.z = (position.z > wc.z + ws.z * 0.5) ? acc.z - 1.0 : acc.z;
+
+    acc = distance(position, wc) > _SphereRadius ? normalize(wc - position) : 0;
 
     return acc;
 }

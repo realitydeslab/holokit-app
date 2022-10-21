@@ -55,14 +55,15 @@ MonoBehaviour:
   MaxObjectNum: 512
   CohesionNeighborhoodRadius: 0.6
   AlignmentNeighborhoodRadius: 0.4
-  SeparateNeighborhoodRadius: 0.3
-  MaxSpeed: 4
-  MaxSteerForce: 1
+  SeparateNeighborhoodRadius: 0.2
+  MaxSpeed: 2
+  MaxSteerForce: 0.65
   CohesionWeight: 1
-  AlignmentWeight: 4
-  SeparateWeight: 6
-  AvoidWallWeight: 5
-  WallSize: {x: 1, y: 1, z: 1}
+  AlignmentWeight: 2
+  SeparateWeight: 2
+  AvoidWallWeight: 2
+  WallSize: {x: 2, y: 1, z: 2}
+  SphereRadius: 1
   BoidsCS: {fileID: 7200000, guid: aa9c7701bf25a4ba8837004afc6d26aa, type: 3}
 --- !u!2083052967 &5323887839999723740
 VisualEffect:
@@ -122,7 +123,7 @@ VFXRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5323887839999723744}
   m_Enabled: 0
-  m_CastShadows: 0
+  m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -169,6 +170,7 @@ MonoBehaviour:
   _movementType: 0
   _rotateType: 2
   _updateType: 0
+  _worldSpace: 0
   _offset: {x: 0, y: 0, z: 0}
   _lerpSpeed: 1
   _needMoveDistance: 0.01

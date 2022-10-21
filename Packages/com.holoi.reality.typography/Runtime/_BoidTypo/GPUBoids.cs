@@ -48,9 +48,11 @@ namespace BoidsSimulationOnGPU
         // 壁のサイズ
         public Vector3 WallSize = new Vector3(32.0f, 32.0f, 32.0f);
 
+        public float SphereRadius = 1;
+
         #endregion
 
-//
+        //
 
         #region Built-in Resources
 
@@ -127,7 +129,8 @@ namespace BoidsSimulationOnGPU
         {
             // デバッグとしてシミュレーション領域をワイヤーフレームで描画
             Gizmos.color = Color.cyan;
-            Gizmos.DrawWireCube(transform.position, WallSize);
+            //Gizmos.DrawWireCube(transform.position, WallSize);
+            Gizmos.DrawWireSphere(transform.position, SphereRadius);
         }
 
         #endregion
@@ -190,6 +193,7 @@ namespace BoidsSimulationOnGPU
             cs.SetFloat("_AlignmentWeight", AlignmentWeight);
             cs.SetVector("_WallCenter", transform.position);
             cs.SetVector("_WallSize", WallSize);
+            cs.SetFloat("_SphereRadius", SphereRadius);
             cs.SetFloat("_AvoidWallWeight", AvoidWallWeight);
             cs.SetBuffer(id, "_BoidPositionDataBufferRead", _boidPositionBuffer);
             cs.SetBuffer(id, "_BoidVelocityDataBufferRead", _boidVelocityBuffer);
