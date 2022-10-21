@@ -23,7 +23,6 @@ namespace Holoi.Library.MOFABase
             _attackController.OnHit -= OnHit;
             _lifeTimeController.OnSpawned -= OnSpawn;
             _lifeTimeController.OnDead -= OnDie;
-
         }
 
         void OnSpawn()
@@ -32,13 +31,11 @@ namespace Holoi.Library.MOFABase
         }
         void OnHit()
         {
-            Debug.Log("ON Hit");
             _animator.SetTrigger("Hit");
         }
 
         void OnDie()
         {
-            Debug.Log("ON DIE");
             _animator.SetTrigger("Die");
         }
     }
