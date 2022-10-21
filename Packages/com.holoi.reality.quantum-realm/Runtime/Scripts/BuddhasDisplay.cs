@@ -1,11 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Apple.CoreHaptics;
+
 
 namespace Holoi.Reality.QuantumRealm
 {
     public class BuddhasDisplay : MonoBehaviour
     {
+        // corehaptics:
+        private CHHapticEngine _engine;
+
+        private CHHapticPatternPlayer _interactionHapticPlayer;
+
+        [SerializeField] private TextAsset _interactionAHAP;
+
+        // others:
+        private QuantumBuddhasSceneManager _manager;
+
+
         private void Awake()
         {
             OnBuddhasDisplayBitrh();
@@ -13,7 +26,22 @@ namespace Holoi.Reality.QuantumRealm
 
         void Start()
         {
-        
+            _manager = FindObjectOfType<QuantumBuddhasSceneManager>();
+            if (_manager is null)
+            {
+                Debug.LogError("Could not find the GameManager.");
+            }
+            else
+            {
+                _engine = _manager.HapticEngine;
+
+                SetupHapticPlayers();
+
+                //if (HasTexture)
+                //{
+                //    _textureHapticPlayer.Start();
+                //}
+            }
         }
 
         public void OnBuddhasDisplayBitrh()
@@ -27,6 +55,16 @@ namespace Holoi.Reality.QuantumRealm
                 var vfx = transform.GetChild(i).GetComponent<BuddhasController>().vfx;
                 manager.vfxs.Add(vfx);
             }
+        }
+
+        private void SetupHapticPlayers()
+        {
+            _interactionHapticPlayer = _engine.MakePlayer(new CHHapticPattern(_interactionAHAP));
+        }
+
+        public void PlayHaptics()
+        {
+            _interactionHapticPlayer.Start();
         }
     }
 }

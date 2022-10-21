@@ -9,6 +9,7 @@ using HoloKit;
 using Unity.Netcode;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using Apple.CoreHaptics;
 
 namespace Holoi.Reality.QuantumRealm
 {
@@ -41,14 +42,17 @@ namespace Holoi.Reality.QuantumRealm
         [SerializeField] ARRayCastController _arRaycastController;
         [SerializeField] RaycastPlacmentVisualController _raycastVisual;
 
-        [SerializeField] Vector3 _offset = Vector3.zero;
-
         [SerializeField] GameObject _targetGameObject;
 
+        //
+        public CHHapticEngine HapticEngine;
+
         Transform _centerEye;
-        int _amount = 0;
-        int _index = 0;
+
+        int _currentIndex = 0;
+
         Animator _vfxAnimator;
+
         Animator _seatAnimator;
 
         public override void OnNetworkSpawn()
@@ -58,8 +62,6 @@ namespace Holoi.Reality.QuantumRealm
 
         void Start()
         {
-            _amount = vfxs.Count;
-
             if (HoloKitApp.Instance.IsHost)
             {
                 _arRaycastManager.enabled = true;
@@ -80,6 +82,8 @@ namespace Holoi.Reality.QuantumRealm
                 HandObject.Instance.enabled = false;
                 ARRayCastController.Instance.enabled = false;
             }
+
+            SetupHapticEngine();
 
             _switchButton.onClick.AddListener(SwitchToNextVFXNetWork);
 
@@ -112,9 +116,9 @@ namespace Holoi.Reality.QuantumRealm
         void SwitchtoNextVFX()
         {
             // do on host:
-            Debug.Log($"OnActiveBuddhasChanged: {_index}");
+            Debug.Log($"OnActiveBuddhasChanged: {_currentIndex}");
 
-            BuddhasController controller = vfxs[_index].transform.parent.GetComponent<BuddhasController>();
+            BuddhasController controller = vfxs[_currentIndex].transform.parent.GetComponent<BuddhasController>();
 
             _vfxAnimator = controller.vfxAnimator;
             _seatAnimator = controller.setaAnimator;
@@ -125,18 +129,18 @@ namespace Holoi.Reality.QuantumRealm
                 _seatAnimator.SetTrigger("Fade Out");
             }
 
-            _index++;
+            _currentIndex++;
 
-            if (_index == vfxs.Count) _index = 0;
+            if (_currentIndex == vfxs.Count) _currentIndex = 0;
 
             // disbale other vfx after play animation:
             for (int i = 0; i < vfxs.Count; i++)
             {
-                if (i == _index)
+                if (i == _currentIndex)
                 {
-                    vfxs[_index].gameObject.SetActive(true);
+                    vfxs[_currentIndex].gameObject.SetActive(true);
                 }
-                else if (i == _index - 1)
+                else if (i == _currentIndex - 1)
                 {
                     StartCoroutine(DisableGameObjectAfterTimes(vfxs[i].gameObject, 1.5f));
                 }
@@ -146,8 +150,8 @@ namespace Holoi.Reality.QuantumRealm
                 }
             }
 
-            _vfxAnimator = vfxs[_index].transform.parent.GetComponent<BuddhasController>().vfxAnimator;
-            _seatAnimator = vfxs[_index].transform.parent.GetComponent<BuddhasController>().setaAnimator;
+            _vfxAnimator = vfxs[_currentIndex].transform.parent.GetComponent<BuddhasController>().vfxAnimator;
+            _seatAnimator = vfxs[_currentIndex].transform.parent.GetComponent<BuddhasController>().setaAnimator;
 
             _vfxAnimator.Rebind();
             _vfxAnimator.Update(0f);
@@ -166,14 +170,14 @@ namespace Holoi.Reality.QuantumRealm
                 // do on host:
                 SwitchtoNextVFX();
                 // do on client:
-                OnBuddhasSwitchedClientRpc(_index - 1);
+                OnBuddhasSwitchedClientRpc(_currentIndex - 1);
             }
             else
             {
                 // do on client:
                 SwitchtoNextVFX();
                 // do on host:
-                OnBuddhasSwitchedServerRpc(_index - 1);
+                OnBuddhasSwitchedServerRpc(_currentIndex - 1);
             }
         }
 
@@ -278,9 +282,9 @@ namespace Holoi.Reality.QuantumRealm
                 return;
             }
 
-            _index = index;
+            _currentIndex = index;
 
-            Debug.Log($"OnBuddhasSwitchedServerRpc: {_index}");
+            Debug.Log($"OnBuddhasSwitchedServerRpc: {_currentIndex}");
 
             BuddhasController controller = vfxs[index].transform.parent.GetComponent<BuddhasController>();
 
@@ -293,18 +297,18 @@ namespace Holoi.Reality.QuantumRealm
                 _seatAnimator.SetTrigger("Fade Out");
             }
 
-            _index++;
+            _currentIndex++;
 
-            if (_index == vfxs.Count) _index = 0;
+            if (_currentIndex == vfxs.Count) _currentIndex = 0;
 
             // disbale other vfx after play animation:
             for (int i = 0; i < vfxs.Count; i++)
             {
-                if (i == _index)
+                if (i == _currentIndex)
                 {
-                    vfxs[_index].gameObject.SetActive(true);
+                    vfxs[_currentIndex].gameObject.SetActive(true);
                 }
-                else if (i == _index - 1)
+                else if (i == _currentIndex - 1)
                 {
                     StartCoroutine(DisableGameObjectAfterTimes(vfxs[i].gameObject, 1.5f));
                 }
@@ -334,9 +338,9 @@ namespace Holoi.Reality.QuantumRealm
                 return;
             }
 
-            _index = index;
+            _currentIndex = index;
 
-            Debug.Log($"OnActiveBuddhasChangedClientRpc: {_index}");
+            Debug.Log($"OnActiveBuddhasChangedClientRpc: {_currentIndex}");
 
             BuddhasController controller = vfxs[index].transform.parent.GetComponent<BuddhasController>();
 
@@ -349,18 +353,18 @@ namespace Holoi.Reality.QuantumRealm
                 _seatAnimator.SetTrigger("Fade Out");
             }
 
-            _index++;
+            _currentIndex++;
 
-            if (_index == vfxs.Count) _index = 0;
+            if (_currentIndex == vfxs.Count) _currentIndex = 0;
 
             // disbale other vfx after play animation:
             for (int i = 0; i < vfxs.Count; i++)
             {
-                if (i == _index)
+                if (i == _currentIndex)
                 {
-                    vfxs[_index].gameObject.SetActive(true);
+                    vfxs[_currentIndex].gameObject.SetActive(true);
                 }
-                else if (i == _index - 1)
+                else if (i == _currentIndex - 1)
                 {
                     StartCoroutine(DisableGameObjectAfterTimes(vfxs[i].gameObject, 1.5f));
                 }
@@ -410,6 +414,31 @@ namespace Holoi.Reality.QuantumRealm
 
                 go.GetComponent<NetworkObject>().Spawn();
 
+            }
+        }
+
+        /*
+ * Create a single haptic engine to be shared throughout the app
+ */
+        private void SetupHapticEngine()
+        {
+            HapticEngine = new CHHapticEngine
+            {
+                IsAutoShutdownEnabled = false
+            };
+
+            HapticEngine.Start();
+        }
+
+        public void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                HapticEngine.Stop();
+            }
+            else
+            {
+                HapticEngine.Start();
             }
         }
     }
