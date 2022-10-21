@@ -56,18 +56,12 @@ namespace HoloKit
             }
         }
 
+        private bool _isValid = false;
         public bool Valid
         {
             get
             {
-                if (_hand.activeSelf)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return _isValid;
             }
         }
 
@@ -166,9 +160,11 @@ namespace HoloKit
         private void OnHandPoseUpdated(float[] poses)
         {
             _lastUpdateTime = Time.time;
-            if (!_hand.activeSelf)
+            if (!_isValid)
             {
                 _hand.SetActive(true);
+                _isValid = true;
+
                 OnHandValidityChanged?.Invoke(true);
             }
             for (int i = 0; i < 21; i++)
@@ -182,6 +178,7 @@ namespace HoloKit
             if (Time.time - _lastUpdateTime > _fadeOutDelay)
             {
                 //_hand.SetActive(false);
+                _isValid = false;
 
                 Transform centerEye = HoloKitCamera.Instance.CenterEyePose;
 
@@ -189,7 +186,7 @@ namespace HoloKit
                 {
                     for (int i = 0; i < 21; i++)
                     {
-                        _handJoints[i].position = centerEye.position - centerEye.up;
+                        _handJoints[i].position = centerEye.position - centerEye.up * 0.5f;
                     }
                 }
 

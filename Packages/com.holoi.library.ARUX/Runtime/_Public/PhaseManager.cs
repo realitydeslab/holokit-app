@@ -10,7 +10,6 @@ namespace Holoi.Library.ARUX
     {
         public PHASESource _phaseSource;
         public PHASEListener _phaseListener;
-        public PHASESoundEventNodeGraph _phaseSoundEventNodeGraph;
 
         private void Awake()
         {
