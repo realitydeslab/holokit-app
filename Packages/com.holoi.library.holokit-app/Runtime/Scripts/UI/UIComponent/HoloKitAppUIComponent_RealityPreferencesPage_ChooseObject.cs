@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Holoi.AssetFoundation;
 
 namespace Holoi.Library.HoloKitApp.UI
@@ -33,6 +34,11 @@ namespace Holoi.Library.HoloKitApp.UI
                 MetaObjectCollectionBundleId = artifactCollectionId,
                 MetaObjectTokenId = artifactTokenId
             };
+            Debug.Log($"UpdateRealityPreferences with " +
+                $"MetaAvatarCollectionBundleId: {realityPreference.MetaAvatarCollectionBundleId}, " +
+                $"MetaAvatarTokenId: {realityPreference.MetaAvatarTokenId}, " +
+                $"MetaObjectCollectionBundleId: {artifactCollectionId}, " +
+                $"MetaObjectTokenId: {artifactTokenId}");
         }
     }
 }

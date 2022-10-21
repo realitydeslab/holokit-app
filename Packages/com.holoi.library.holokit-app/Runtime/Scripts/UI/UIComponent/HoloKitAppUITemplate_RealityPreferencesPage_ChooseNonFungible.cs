@@ -88,28 +88,28 @@ namespace Holoi.Library.HoloKitApp.UI
             float deviation = _nonFungibleHorizontalScrollbar.value % _nonFungibleHorizontalScrollbarInterval;
             if (deviation != 0f)
             {
-                Debug.Log($"Scrollbar value: {_nonFungibleHorizontalScrollbar.value}");
-                if (Mathf.Abs(deviation) < NonFungibleHorizontalScrollbarMovementSpeed * _lastDeltaTime * 2f)
-                {
-                    Debug.Log("Jit");
-                    _nonFungibleHorizontalScrollbar.value = step * _nonFungibleHorizontalScrollbarInterval;
-                    return;
-                }
+                _nonFungibleHorizontalScrollbar.value = step * _nonFungibleHorizontalScrollbarInterval;
+                //if (Mathf.Abs(deviation) < NonFungibleHorizontalScrollbarMovementSpeed * _lastDeltaTime * 2f)
+                //{
+                //    _nonFungibleHorizontalScrollbar.value = step * _nonFungibleHorizontalScrollbarInterval;
+                //    return;
+                //}
 
-                _lastDeltaTime = Time.deltaTime;
-                if (deviation > _nonFungibleHorizontalScrollbarInterval / 2f)
-                {
-                    _nonFungibleHorizontalScrollbar.value += NonFungibleHorizontalScrollbarMovementSpeed * Time.deltaTime;
-                }
-                else
-                {
-                    _nonFungibleHorizontalScrollbar.value -= NonFungibleHorizontalScrollbarMovementSpeed * Time.deltaTime;
-                }
+                //_lastDeltaTime = Time.deltaTime;
+                //if (deviation > _nonFungibleHorizontalScrollbarInterval / 2f)
+                //{
+                //    _nonFungibleHorizontalScrollbar.value += NonFungibleHorizontalScrollbarMovementSpeed * Time.deltaTime;
+                //}
+                //else
+                //{
+                //    _nonFungibleHorizontalScrollbar.value -= NonFungibleHorizontalScrollbarMovementSpeed * Time.deltaTime;
+                //}
             }
             else
             {
                 if (step != _currentNonFungibleIndex)
                 {
+                    Debug.Log($"Changed to step: {step}");
                     _currentNonFungibleIndex = step;
                     UpdateRealityPreferences(CurrentNonFungibleCollection.BundleId, CurrentNonFungibleCollection.NonFungibles[_currentNonFungibleIndex].TokenId);
                     _nonFungibleTokenId.text = "#" + CurrentNonFungibleCollection.NonFungibles[step].TokenId;
