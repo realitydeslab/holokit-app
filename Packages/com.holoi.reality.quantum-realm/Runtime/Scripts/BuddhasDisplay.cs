@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Apple.CoreHaptics;
+//using Apple.CoreHaptics;
 
 
 namespace Holoi.Reality.QuantumRealm
@@ -9,9 +9,9 @@ namespace Holoi.Reality.QuantumRealm
     public class BuddhasDisplay : MonoBehaviour
     {
         // corehaptics:
-        private CHHapticEngine _engine;
+        //private CHHapticEngine _engine;
 
-        private CHHapticPatternPlayer _interactionHapticPlayer;
+        //private CHHapticPatternPlayer _interactionHapticPlayer;
 
         [SerializeField] private TextAsset _interactionAHAP;
 
@@ -26,22 +26,22 @@ namespace Holoi.Reality.QuantumRealm
 
         void Start()
         {
-            _manager = FindObjectOfType<QuantumBuddhasSceneManager>();
-            if (_manager is null)
-            {
-                Debug.LogError("Could not find the GameManager.");
-            }
-            else
-            {
-                _engine = _manager.HapticEngine;
+            //_manager = FindObjectOfType<QuantumBuddhasSceneManager>();
+            //if (_manager is null)
+            //{
+            //    Debug.LogError("Could not find the GameManager.");
+            //}
+            //else
+            //{
+            //    _engine = _manager.HapticEngine;
 
-                SetupHapticPlayers();
+            //    SetupHapticPlayers();
 
-                //if (HasTexture)
-                //{
-                //    _textureHapticPlayer.Start();
-                //}
-            }
+            //    //if (HasTexture)
+            //    //{
+            //    //    _textureHapticPlayer.Start();
+            //    //}
+            //}
         }
 
         public void OnBuddhasDisplayBitrh()
@@ -57,14 +57,14 @@ namespace Holoi.Reality.QuantumRealm
             }
         }
 
-        private void SetupHapticPlayers()
-        {
-            _interactionHapticPlayer = _engine.MakePlayer(new CHHapticPattern(_interactionAHAP));
-        }
+        //private void SetupHapticPlayers()
+        //{
+        //    _interactionHapticPlayer = _engine.MakePlayer(new CHHapticPattern(_interactionAHAP));
+        //}
 
-        public void PlayHaptics()
-        {
-            _interactionHapticPlayer.Start();
-        }
+        //public void PlayHaptics()
+        //{
+        //    _interactionHapticPlayer.Start();
+        //}
     }
 }

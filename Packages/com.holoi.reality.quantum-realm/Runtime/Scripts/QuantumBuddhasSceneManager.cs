@@ -9,7 +9,7 @@ using HoloKit;
 using Unity.Netcode;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
-using Apple.CoreHaptics;
+//using Apple.CoreHaptics;
 
 namespace Holoi.Reality.QuantumRealm
 {
@@ -45,7 +45,7 @@ namespace Holoi.Reality.QuantumRealm
         [SerializeField] GameObject _targetGameObject;
 
         //
-        public CHHapticEngine HapticEngine;
+        //public CHHapticEngine HapticEngine;
 
         Transform _centerEye;
 
@@ -83,7 +83,7 @@ namespace Holoi.Reality.QuantumRealm
                 ARRayCastController.Instance.enabled = false;
             }
 
-            SetupHapticEngine();
+            //SetupHapticEngine();
 
             _switchButton.onClick.AddListener(SwitchToNextVFXNetWork);
 
@@ -97,7 +97,8 @@ namespace Holoi.Reality.QuantumRealm
                 // update hand hook's head position
                 var dir = (_handJoint.position - _serverCenterEye.position).normalized;
 
-                _handHookHead.position = _handJoint.position + dir * 0.5f + _serverCenterEye.up*0.2f;
+                //_handHookHead.position = _handJoint.position + dir * 0.5f + _serverCenterEye.up*0.2f;
+                _handHookHead.position = _handJoint.position + dir * 0.5f;
             }
 
             if(HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono)
@@ -420,26 +421,26 @@ namespace Holoi.Reality.QuantumRealm
         /*
  * Create a single haptic engine to be shared throughout the app
  */
-        private void SetupHapticEngine()
-        {
-            HapticEngine = new CHHapticEngine
-            {
-                IsAutoShutdownEnabled = false
-            };
+        //private void SetupHapticEngine()
+        //{
+        //    HapticEngine = new CHHapticEngine
+        //    {
+        //        IsAutoShutdownEnabled = false
+        //    };
 
-            HapticEngine.Start();
-        }
+        //    HapticEngine.Start();
+        //}
 
-        public void OnApplicationPause(bool pause)
-        {
-            if (pause)
-            {
-                HapticEngine.Stop();
-            }
-            else
-            {
-                HapticEngine.Start();
-            }
-        }
+        //public void OnApplicationPause(bool pause)
+        //{
+        //    if (pause)
+        //    {
+        //        HapticEngine.Stop();
+        //    }
+        //    else
+        //    {
+        //        HapticEngine.Start();
+        //    }
+        //}
     }
 }
