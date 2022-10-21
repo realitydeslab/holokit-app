@@ -45,6 +45,7 @@ namespace Holoi.Library.ARUX
         [SerializeField] UpdateType _updateType;
 
         [Header("Movement Properties")]
+        [SerializeField] bool _worldSpace = false;
         [SerializeField] private Vector3 _offset = new Vector3(0, 0, 0.5f);
         [SerializeField] private float _lerpSpeed = 4f;
         [SerializeField] private float _needMoveDistance = .01f;
@@ -76,7 +77,17 @@ namespace Holoi.Library.ARUX
             if (!_followTarget)
                 _followTarget = HoloKitCamera.Instance.CenterEyePose;
             if (_movementType != MovementType.NotFollow)
-                transform.position = _followTarget.position + _followTarget.TransformVector(_offset);
+            {
+                if (_worldSpace)
+                {
+                    transform.position = _followTarget.position + _offset;
+                }
+                else
+                {
+                    transform.position = _followTarget.position + _followTarget.TransformVector(_offset);
+                }
+            }
+                
 
             switch (_updateType)
             {
@@ -121,7 +132,7 @@ namespace Holoi.Library.ARUX
                     if (_needMove)
                     {
                         targetPosition = GetTargetPosition(_followTarget.position, _offset);
-                        transform.position = AnimationLerp(transform.position, targetPosition, _lerpSpeed);
+                        transform.position = PositionAnimationLerp(transform.position, targetPosition, _lerpSpeed);
                         if (Vector3.Distance(_followTarget.position, transform.position) < _regardAsArriveDistance)
                         {
                             _needMove = false;
@@ -156,7 +167,7 @@ namespace Holoi.Library.ARUX
             }
         }
 
-        Vector3 AnimationLerp(Vector3 position, Vector3 targetPosition, float lerpSpeed)
+        Vector3 PositionAnimationLerp(Vector3 position, Vector3 targetPosition, float lerpSpeed)
         {
             position += (targetPosition - position) * Time.deltaTime * lerpSpeed;
             return position;
@@ -168,11 +179,21 @@ namespace Holoi.Library.ARUX
             Vector3 headsetUp = _followTarget.up; // get headset forward direction
             Vector3 headsetRight = _followTarget.right; // get headset forward direction
 
-            var offsetByTarget = headsetForward * offset.z +
-            headsetUp * offset.y +
-            headsetRight * offset.x;
+            var localOffset = _followTarget.TransformVector(_offset);
+            var worldOffset = offset;
 
-            return targetPosition + offsetByTarget;
+            if (_worldSpace)
+            {
+                return targetPosition + worldOffset;
+            }
+            else
+            {
+                return targetPosition + localOffset;
+            }
+
+            //var offsetByTarget = headsetForward * offset.z +
+            //headsetUp * offset.y +
+            //headsetRight * offset.x; 
         }
         public void Reset()
         {
