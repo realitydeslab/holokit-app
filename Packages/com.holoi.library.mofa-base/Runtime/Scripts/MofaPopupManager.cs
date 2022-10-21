@@ -9,6 +9,8 @@ namespace Holoi.Library.MOFABase
 {
     public class MofaPopupManager : MonoBehaviour
     {
+        [SerializeField] private Transform _fightingPanelTransform;
+
         [SerializeField] private GameObject _countdownPrefab;
 
         [SerializeField] private GameObject _roundOverPrefab;
@@ -25,8 +27,6 @@ namespace Holoi.Library.MOFABase
 
         private GameObject _currentPopup;
 
-        private MofaFightingPanel _mofaFightingPanel;
-
         private void Awake()
         {
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
@@ -41,17 +41,6 @@ namespace Holoi.Library.MOFABase
 
         private IEnumerator SpawnPopup(GameObject popupPrefab, float destroyDelay)
         {
-            if (_mofaFightingPanel == null)
-            {
-                if (HoloKitUtils.IsRuntime)
-                {
-                    _mofaFightingPanel = HoloKitCamera.Instance.CenterEyePose.GetComponentInChildren<MofaFightingPanel>();
-                }
-                else
-                {
-                    _mofaFightingPanel = HoloKitCamera.Instance.GetComponentInChildren<MofaFightingPanel>();
-                }
-            }
             if (popupPrefab == null)
             {
                 yield return null;
@@ -61,7 +50,7 @@ namespace Holoi.Library.MOFABase
                 Destroy(_currentPopup);
             }
             _currentPopup = Instantiate(popupPrefab);
-            _currentPopup.transform.SetParent(_mofaFightingPanel.transform);
+            _currentPopup.transform.SetParent(_fightingPanelTransform);
             _currentPopup.transform.localPosition = Vector3.zero;
             _currentPopup.transform.localRotation = Quaternion.identity;
 

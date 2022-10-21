@@ -79,9 +79,10 @@ namespace Holoi.Library.MOFABase
 
         private void SetupSpells()
         {
+            var preferencedMofaSpell = HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject(null);
             foreach (var spell in SpellList.List)
             {
-                if (spell.MagicSchool.TokenId.Equals("2"))
+                if (spell.MagicSchool.TokenId.Equals(preferencedMofaSpell.TokenId))
                 {
                     if (spell.SpellType == SpellType.Basic)
                     {
