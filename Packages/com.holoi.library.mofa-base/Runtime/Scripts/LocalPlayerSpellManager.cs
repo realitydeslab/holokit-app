@@ -9,8 +9,6 @@ namespace Holoi.Library.MOFABase
 {
     public class LocalPlayerSpellManager : MonoBehaviour
     {
-        public MagicSchoolList MagicSchoolList;
-
         public SpellList SpellList;
 
         [HideInInspector] public Spell BasicSpell;
