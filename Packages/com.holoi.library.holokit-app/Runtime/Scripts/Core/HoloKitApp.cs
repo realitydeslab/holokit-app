@@ -118,6 +118,12 @@ namespace Holoi.Library.HoloKitApp
 
             // Activate WCSession
             HoloKitAppWatchConnectivityAPI.ActivateWatchConnectivitySession();
+
+            // Simulate iOS's FPS when testing on Editor
+            if (HoloKitUtils.IsEditor)
+            {
+                Application.targetFrameRate = 60;
+            }
         }
 
         private void OnDestroy()

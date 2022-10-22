@@ -33,6 +33,11 @@ namespace Holoi.Library.HoloKitApp.UI
                 MetaObjectCollectionBundleId = realityPreference.MetaObjectCollectionBundleId,
                 MetaObjectTokenId = realityPreference.MetaObjectTokenId
             };
+            UnityEngine.Debug.Log($"UpdateRealityPreferences with " +
+                $"MetaAvatarCollectionBundleId: {nonFungibleCollectionId}, " +
+                $"MetaAvatarTokenId: {nonFungibleTokenId}, " +
+                $"MetaObjectCollectionBundleId: {realityPreference.MetaObjectCollectionBundleId}, " +
+                $"MetaObjectTokenId: {realityPreference.MetaObjectTokenId}");
         }
     }
 }

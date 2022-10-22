@@ -27,15 +27,9 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private Sprite _nonFungibleDefaultImage;
 
-        [SerializeField] private Scrollbar _nonFungibleHorizontalScrollbar;
-
         private int _currentNonFungibleIndex = -1;
 
-        private float _nonFungibleHorizontalScrollbarInterval = 1f;
-
-        private float _lastDeltaTime = 0f;
-
-        private const float NonFungibleHorizontalScrollbarMovementSpeed = 1.8f;
+        private const float NonFungibleHorizontalScrollbarMovementSpeed = 400f;
 
         protected abstract List<NonFungibleCollection> GetCompatibleNonFungibleCollectionList();
 
@@ -77,39 +71,41 @@ namespace Holoi.Library.HoloKitApp.UI
             UpdateNonFungibleSelector(CurrentNonFungibleCollection);
             // Scroll to the preferenced avatar image
             int preferencedNonfungibleIndex = GetPreferencedNonFungibleIndex();
-            StartCoroutine(SetNonFungibleScrollbarValue(preferencedNonfungibleIndex * _nonFungibleHorizontalScrollbarInterval));
+            float value = preferencedNonfungibleIndex * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x;
+            _nonFungibleScrollRoot.anchoredPosition = new Vector2(-value, _nonFungibleScrollRoot.anchoredPosition.y);
         }
 
         private void Update()
         {
             if (Input.touchCount > 0) { return; }
 
-            int step = Mathf.RoundToInt(_nonFungibleHorizontalScrollbar.value / _nonFungibleHorizontalScrollbarInterval);
-            float deviation = _nonFungibleHorizontalScrollbar.value % _nonFungibleHorizontalScrollbarInterval;
+            int step = Mathf.Abs(Mathf.RoundToInt(_nonFungibleScrollRoot.anchoredPosition.x / _nonFungibleSlotPrefab.rectTransform.sizeDelta.x));
+            float deviation = Mathf.Abs(_nonFungibleScrollRoot.anchoredPosition.x % _nonFungibleSlotPrefab.rectTransform.sizeDelta.x);
             if (deviation != 0f)
             {
-                _nonFungibleHorizontalScrollbar.value = step * _nonFungibleHorizontalScrollbarInterval;
-                //if (Mathf.Abs(deviation) < NonFungibleHorizontalScrollbarMovementSpeed * _lastDeltaTime * 2f)
-                //{
-                //    _nonFungibleHorizontalScrollbar.value = step * _nonFungibleHorizontalScrollbarInterval;
-                //    return;
-                //}
+                if (deviation < 30f)
+                {
+                    _nonFungibleScrollRoot.anchoredPosition = new Vector2(-step * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x,
+                                                                          _nonFungibleScrollRoot.anchoredPosition.y);
+                    return;
+                }
 
-                //_lastDeltaTime = Time.deltaTime;
-                //if (deviation > _nonFungibleHorizontalScrollbarInterval / 2f)
-                //{
-                //    _nonFungibleHorizontalScrollbar.value += NonFungibleHorizontalScrollbarMovementSpeed * Time.deltaTime;
-                //}
-                //else
-                //{
-                //    _nonFungibleHorizontalScrollbar.value -= NonFungibleHorizontalScrollbarMovementSpeed * Time.deltaTime;
-                //}
+                if (deviation > _nonFungibleSlotPrefab.rectTransform.sizeDelta.x / 2f)
+                {
+                    _nonFungibleScrollRoot.anchoredPosition -= new Vector2(NonFungibleHorizontalScrollbarMovementSpeed * Time.deltaTime,
+                                                                          _nonFungibleScrollRoot.anchoredPosition.y);
+                }
+                else
+                {
+                    _nonFungibleScrollRoot.anchoredPosition += new Vector2(NonFungibleHorizontalScrollbarMovementSpeed * Time.deltaTime,
+                                                                          _nonFungibleScrollRoot.anchoredPosition.y);
+                }
             }
             else
             {
                 if (step != _currentNonFungibleIndex)
                 {
-                    Debug.Log($"Changed to step: {step}");
+                    //Debug.Log($"Changed to step: {step}");
                     _currentNonFungibleIndex = step;
                     UpdateRealityPreferences(CurrentNonFungibleCollection.BundleId, CurrentNonFungibleCollection.NonFungibles[_currentNonFungibleIndex].TokenId);
                     _nonFungibleTokenId.text = "#" + CurrentNonFungibleCollection.NonFungibles[step].TokenId;
@@ -135,17 +131,12 @@ namespace Holoi.Library.HoloKitApp.UI
 
             UpdateNonFungibleSelector(nonFungibleCollection);
 
+
             int coverNonFungibleIndex = nonFungibleCollection.GetNonFungibleIndex(nonFungibleCollection.CoverNonFungible.TokenId);
-            StartCoroutine(SetNonFungibleScrollbarValue(coverNonFungibleIndex * _nonFungibleHorizontalScrollbarInterval));
+            float value = coverNonFungibleIndex * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x;
+            _nonFungibleScrollRoot.anchoredPosition = new Vector2(-value, _nonFungibleScrollRoot.anchoredPosition.y);
 
             UpdateRealityPreferences(nonFungibleCollection.BundleId, nonFungibleCollection.CoverNonFungible.TokenId);
-        }
-
-        private IEnumerator SetNonFungibleScrollbarValue(float value)
-        {
-            // Wait for 1 frame
-            yield return null;
-            _nonFungibleHorizontalScrollbar.value = value;
         }
 
         private void UpdateNonFungibleSelector(NonFungibleCollection nonFungibleCollection)
@@ -173,8 +164,6 @@ namespace Holoi.Library.HoloKitApp.UI
                     slotInstance.sprite = artifact.Image;
                 }
             }
-
-            _nonFungibleHorizontalScrollbarInterval = 1f / (nonFungibleCollection.NonFungibles.Count - 1);
         }
     }
 }
