@@ -13,12 +13,12 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnStartHostButtonPressed()
         {
-            HoloKitApp.Instance.EnterRealityAsHost();
+            HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Host);
         }
 
         public void OnStartClientButtonPressed()
         {
-            HoloKitApp.Instance.JoinRealityAsSpectator();
+            HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Spectator);
         }
     }
 }

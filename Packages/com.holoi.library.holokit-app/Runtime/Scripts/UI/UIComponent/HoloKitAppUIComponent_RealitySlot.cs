@@ -22,12 +22,12 @@ namespace Holoi.Library.HoloKitApp.UI
             _hostButton.onClick.AddListener(() =>
             {
                 HoloKitApp.Instance.CurrentReality = reality;
-                HoloKitApp.Instance.EnterRealityAsHost();
+                HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Host);
             });
             _clientButton.onClick.AddListener(() =>
             {
                 HoloKitApp.Instance.CurrentReality = reality;
-                HoloKitApp.Instance.JoinRealityAsSpectator();
+                HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Spectator);
             });
         }
     }

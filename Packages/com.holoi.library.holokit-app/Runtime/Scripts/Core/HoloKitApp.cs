@@ -10,6 +10,15 @@ using Holoi.Library.HoloKitApp.WatchConnectivity;
 
 namespace Holoi.Library.HoloKitApp
 {
+    public enum HoloKitAppPlayerType
+    {
+        Host = 0,
+        Spectator = 1,
+        SecondPlayer = 2,
+        ThirdPlayer = 3,
+        FourthPlayer = 4
+    }
+
     public class HoloKitApp : MonoBehaviour
     {
         public static HoloKitApp Instance { get { return _instance; } }
@@ -20,6 +29,8 @@ namespace Holoi.Library.HoloKitApp
         [SerializeField] private NetworkManager _networkManagerPrefab;
 
         [SerializeField] private HoloKitAppMultiplayerManager _multiplayerManagerPrefab;
+
+        [SerializeField] private HoloKitAppARSessionManager _arSessioinManagerPrefab;
 
         [SerializeField] private HoloKitAppRecorder _recorderPrefab;
 
@@ -42,21 +53,27 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
-        public bool IsHost => _isHost;
+        public bool IsHost => _localPlayerType == HoloKitAppPlayerType.Host;
+
+        public HoloKitAppPlayerType LocalPlayerType => _localPlayerType;
+
+        public bool Test => _test;
 
         public HoloKitAppMultiplayerManager MultiplayerManager => _multiplayerManager;
+
+        public HoloKitAppARSessionManager ARSessionManager => _arSessionManager;
 
         public HoloKitAppRecorder Recorder => _recorder;
 
         public RealityManager RealityManager => _realityManager;
 
-        public bool Test => _test;
-
         private Reality _currentReality;
 
-        private bool _isHost = true;
+        private HoloKitAppPlayerType _localPlayerType = HoloKitAppPlayerType.Host;
 
         private HoloKitAppMultiplayerManager _multiplayerManager;
+
+        private HoloKitAppARSessionManager _arSessionManager;
 
         private HoloKitAppRecorder _recorder;
 
@@ -76,8 +93,6 @@ namespace Holoi.Library.HoloKitApp
             }
             DontDestroyOnLoad(gameObject);
 
-            // Set screen orientation
-            Screen.orientation = ScreenOrientation.Portrait;
             // Initialize HoloKit SDK
             if (HoloKitUtils.IsRuntime)
             {
@@ -188,7 +203,7 @@ namespace Holoi.Library.HoloKitApp
             // Wait and start network
             StartCoroutine(HoloKitAppUtils.WaitAndDo(0.5f, () =>
             {
-                if (_isHost)
+                if (IsHost)
                     StartHost();
                 else
                     StartClient();
@@ -218,25 +233,9 @@ namespace Holoi.Library.HoloKitApp
             HoloKitAppWatchConnectivityAPI.UpdateCurrentReality(WatchReality.Nothing);
         }
 
-        public void EnterRealityAsHost()
+        public void EnterRealityAs(HoloKitAppPlayerType playerType)
         {
-            if (CurrentReality == null)
-            {
-                Debug.Log("[HoloKitApp] Failed to enter reality since CurrentReality is null");
-                return;
-            }
-            _isHost = true;
-            SceneManager.LoadScene(CurrentReality.Scene.SceneName, LoadSceneMode.Single);
-        }
-
-        public void JoinRealityAsSpectator()
-        {
-            if (CurrentReality == null)
-            {
-                Debug.Log("[HoloKitApp] Failed to join reality since CurrentReality is null");
-                return;
-            }
-            _isHost = false;
+            _localPlayerType = playerType;
             SceneManager.LoadScene(CurrentReality.Scene.SceneName, LoadSceneMode.Single);
         }
         #endregion
@@ -290,12 +289,10 @@ namespace Holoi.Library.HoloKitApp
 
             if (NetworkManager.Singleton.StartHost())
             {
+                SpawnMultiplayerManager();
+                SpawnARSessionManager();
+                SpawnRecorder();
                 Debug.Log("[HoloKitApp] Host started");
-
-                var multiplayerManagerInstance = Instantiate(_multiplayerManagerPrefab);
-                multiplayerManagerInstance.GetComponent<NetworkObject>().Spawn();
-
-                _recorder = Instantiate(_recorderPrefab);
             }
             else
             {
@@ -312,14 +309,30 @@ namespace Holoi.Library.HoloKitApp
 
             if (NetworkManager.Singleton.StartClient())
             {
+                SpawnARSessionManager();
+                SpawnRecorder();
                 Debug.Log("[HoloKitApp] Client started");
-
-                _recorder = Instantiate(_recorderPrefab);
             }
             else
             {
                 Debug.Log("[HoloKitApp] Failed to start client");
             }
+        }
+
+        private void SpawnMultiplayerManager()
+        {
+            var multiplayerManagerInstance = Instantiate(_multiplayerManagerPrefab);
+            multiplayerManagerInstance.GetComponent<NetworkObject>().Spawn();
+        }
+
+        private void SpawnARSessionManager()
+        {
+            _arSessionManager = Instantiate(_arSessioinManagerPrefab);
+        }
+
+        private void SpawnRecorder()
+        {
+            _recorder = Instantiate(_recorderPrefab);
         }
 
         public void SetMultiplayerManager(HoloKitAppMultiplayerManager multiplayerManager)

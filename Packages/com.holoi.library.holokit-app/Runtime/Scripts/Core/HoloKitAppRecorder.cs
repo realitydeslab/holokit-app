@@ -16,23 +16,11 @@ namespace Holoi.Library.HoloKitApp
 
         [SerializeField] private bool _watermarkEnabled;
 
-        [SerializeField] private Camera _watermarkCamera;
-
-        [SerializeField] private GameObject _watermark;
-
         public bool IsRecording => _cameraInput != null;
 
         private int _videoWidth = 1170;
 
         private int _videoHeight = 2532;
-
-        private readonly Vector3 _watermarkPortraitLocalPosition = new(-0.15f, -0.45f, 1f);
-
-        private readonly Vector3 _watermarkLandscapeLocalPosition = new(-1f, -0.45f, 1f);
-
-        private const float WatermarkPortraitLocalScale = 0.08f;
-
-        private const float WatermarkLandscapeLocalScale = 0.1f;
 
         private Camera _recordCamera;
 
@@ -50,11 +38,11 @@ namespace Holoi.Library.HoloKitApp
             {
                 if (_watermarkEnabled)
                 {
-                    _watermarkCamera.gameObject.SetActive(true);
+                    
                 }
                 else
                 {
-                    _watermarkCamera.gameObject.SetActive(false);
+                    
                 }
 
                 if (_recordMicrophone)
@@ -93,32 +81,6 @@ namespace Holoi.Library.HoloKitApp
             {
                 _recordCamera.GetComponent<ARCameraBackground>().enabled = true;
                 _recordCamera.enabled = true;
-                if (_watermarkEnabled)
-                {
-                    _watermark.gameObject.SetActive(true);
-                }
-                _watermark.transform.localPosition = _watermarkLandscapeLocalPosition;
-                _watermark.transform.localScale = new Vector3(WatermarkLandscapeLocalScale,
-                                                              WatermarkLandscapeLocalScale,
-                                                              WatermarkLandscapeLocalScale);
-            }
-            else
-            {
-                if (_watermarkEnabled)
-                {
-                    _watermark.gameObject.SetActive(true);
-                }
-                _watermark.transform.localPosition = _watermarkPortraitLocalPosition;
-                _watermark.transform.localScale = new Vector3(WatermarkPortraitLocalScale,
-                                                              WatermarkPortraitLocalScale,
-                                                              WatermarkPortraitLocalScale);
-            }
-            if (_watermarkEnabled)
-            {
-                _watermarkCamera.gameObject.SetActive(true);
-                var cameraData = _recordCamera.GetUniversalAdditionalCameraData();
-                cameraData.cameraStack.Clear();
-                cameraData.cameraStack.Add(_watermarkCamera);
             }
         }
 
@@ -129,7 +91,6 @@ namespace Holoi.Library.HoloKitApp
                 _recordCamera.GetComponent<ARCameraBackground>().enabled = false;
                 _recordCamera.enabled = false;
             }
-            _watermarkCamera.gameObject.SetActive(false);
         }
 
         public void StartRecording()
@@ -143,7 +104,7 @@ namespace Holoi.Library.HoloKitApp
             var clock = new RealtimeClock();
             _recorder = new MP4Recorder(_videoWidth, _videoHeight, frameRate, sampleRate, channelCount, audioBitRate: 96_000);
             // Create recording inputs
-            _cameraInput = new(_recorder, clock, new Camera[] { _recordCamera, _watermarkCamera });
+            _cameraInput = new(_recorder, clock, new Camera[] { _recordCamera });
             _cameraInput.HDR = true;
             _audioInput = _recordMicrophone ? new AudioInput(_recorder, clock, _microphoneSource, true) : null;
             // Unmute microphone

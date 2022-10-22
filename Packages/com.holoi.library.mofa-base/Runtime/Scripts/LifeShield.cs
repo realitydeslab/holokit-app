@@ -59,8 +59,6 @@ namespace Holoi.Library.MOFABase
 
         public override void OnNetworkSpawn()
         {
-            Debug.Log($"[LifeShield] OnNetworkSpawn with ownership {OwnerClientId}");
-
             var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             mofaRealityManager.SetLifeShield(this);
 

@@ -7,10 +7,8 @@ using Holoi.Library.MOFABase.WatchConnectivity;
 
 namespace Holoi.Library.MOFABase
 {
-    public class LocalPlayerSpellManager : MonoBehaviour
+    public class MofaInputManager : MonoBehaviour
     {
-        public SpellList SpellList;
-
         [HideInInspector] public Spell BasicSpell;
 
         [HideInInspector] public Spell SecondarySpell;
@@ -24,8 +22,6 @@ namespace Holoi.Library.MOFABase
         [HideInInspector] public float SecondarySpellUseCount;
 
         [HideInInspector] public MofaWatchState CurrentWatchState;
-
-        private MofaBaseRealityManager _mofaRealityManager;
 
         public float BasicSpellChargePercentage
         {
@@ -43,12 +39,13 @@ namespace Holoi.Library.MOFABase
             }
         }
 
+        private MofaBaseRealityManager MofaBaseRealityManager => (MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager;
+
         public static event Action<SpellType> OnSpawnSpellFailed;
 
-        private void Awake()
+        private void Start()
         {
             SetupSpells();
-            _mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
             LifeShield.OnSpawned += OnLifeShieldSpawned;
             LifeShield.OnDead += OnLifeShieldDestroyed;
@@ -78,8 +75,8 @@ namespace Holoi.Library.MOFABase
         private void SetupSpells()
         {
             var preferencedMofaSpell = HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject(null);
-            Debug.Log($"preferencedMofaSpell: {preferencedMofaSpell.TokenId}");
-            foreach (var spell in SpellList.List)
+            
+            foreach (var spell in MofaBaseRealityManager.SpellList.List)
             {
                 if (spell.MagicSchool.TokenId.Equals(preferencedMofaSpell.TokenId))
                 {
@@ -168,7 +165,7 @@ namespace Holoi.Library.MOFABase
             }
             else
             {
-                _mofaRealityManager.SpawnSpellServerRpc(BasicSpell.Id,
+                MofaBaseRealityManager.SpawnSpellServerRpc(BasicSpell.Id,
                     HoloKitCamera.Instance.CenterEyePose.position,
                     HoloKitCamera.Instance.CenterEyePose.rotation,
                     NetworkManager.Singleton.LocalClientId);
@@ -191,7 +188,7 @@ namespace Holoi.Library.MOFABase
                 return;
             }
 
-            _mofaRealityManager.SpawnSpellServerRpc(SecondarySpell.Id,
+            MofaBaseRealityManager.SpawnSpellServerRpc(SecondarySpell.Id,
                 HoloKitCamera.Instance.CenterEyePose.position,
                 HoloKitCamera.Instance.CenterEyePose.rotation,
                 NetworkManager.Singleton.LocalClientId);
@@ -203,7 +200,7 @@ namespace Holoi.Library.MOFABase
         {
             if (ownerClientId == NetworkManager.Singleton.LocalClientId)
             {
-                if (_mofaRealityManager.Phase.Value == MofaPhase.Fighting)
+                if (MofaBaseRealityManager.Phase.Value == MofaPhase.Fighting)
                 {
                     Active = true;
                     MofaWatchConnectivityAPI.QueryWatchState();
@@ -238,7 +235,7 @@ namespace Holoi.Library.MOFABase
         #region Apple Watch
         private void OnStartRoundMessageReceived()
         {
-            _mofaRealityManager.StartRound();
+            MofaBaseRealityManager.StartRound();
         }
 
         private void OnWatchStateChanged(MofaWatchState watchState)

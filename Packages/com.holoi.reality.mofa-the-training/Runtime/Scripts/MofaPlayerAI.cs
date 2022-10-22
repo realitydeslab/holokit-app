@@ -17,7 +17,7 @@ namespace Holoi.Reality.MOFATheTraining
         SecondarySpell = 2
     }
 
-    public class MofaAI : MofaPlayer
+    public class MofaPlayerAI : MofaPlayer
     {
         [SerializeField] private MofaAvatarCollectionParamsList _mofaAvatarCollectionParamsList;
 

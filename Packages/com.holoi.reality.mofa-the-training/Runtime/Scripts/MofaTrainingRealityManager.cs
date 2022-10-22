@@ -12,19 +12,19 @@ namespace Holoi.Reality.MOFATheTraining
     public class MofaTrainingRealityManager : MofaBaseRealityManager
     {
         [Header("MOFA The Training")]
-        public MofaAI MofaAIPrefab;
+        [SerializeField] private MofaPlayerAI _mofaPlayerAIPrefab;
 
-        public GameObject PlacementIndicatorPrefab;
+        [SerializeField] private GameObject _placementIndicatorPrefab;
 
         private GameObject _placementIndicator;
 
         private ARRaycastManager _arRaycastManager;
 
-        private MofaAI _mofaAI;
+        private MofaPlayerAI _mofaAI;
 
-        protected override void Awake()
+        protected override void Start()
         {
-            base.Awake();
+            base.Start();
 
             OnPhaseChanged += OnPhaseChangedFunc;
             HoloKitAppUIEventManager.OnTriggered += OnTriggered;
@@ -46,9 +46,9 @@ namespace Holoi.Reality.MOFATheTraining
 
             if (IsServer)
             {
-                SpawnLocalPlayerSpellManager();
+                //SpawnLocalPlayerSpellManager();
                 // Spawn host's player
-                SpawnMofaPlayer(MofaTeam.Blue, NetworkManager.LocalClientId);
+                SpawnPlayer(MofaTeam.Blue, NetworkManager.LocalClientId);
                 // Spawn host's life shield
                 SpawnLifeShield(NetworkManager.LocalClientId);
 
@@ -58,7 +58,7 @@ namespace Holoi.Reality.MOFATheTraining
             if (IsServer)
             {
                 var placementIndicatorInitialPos = HoloKitUtils.IsRuntime ? Vector3.zero : new Vector3(0f, -1f, 5f);
-                _placementIndicator = Instantiate(PlacementIndicatorPrefab, placementIndicatorInitialPos, Quaternion.identity);
+                _placementIndicator = Instantiate(_placementIndicatorPrefab, placementIndicatorInitialPos, Quaternion.identity);
                 _arRaycastManager = HoloKitCamera.Instance.GetComponentInParent<ARRaycastManager>();
             }
         }
@@ -96,7 +96,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void SpawnMofaAI()
         {
-            _mofaAI = Instantiate(MofaAIPrefab);
+            _mofaAI = Instantiate(_mofaPlayerAIPrefab);
             _mofaAI.Team.Value = MofaTeam.Red;
             _mofaAI.GetComponent<NetworkObject>().SpawnWithOwnership(999);
         }

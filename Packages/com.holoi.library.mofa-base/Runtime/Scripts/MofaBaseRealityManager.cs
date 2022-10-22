@@ -9,13 +9,22 @@ using Holoi.Library.MOFABase.WatchConnectivity;
 
 namespace Holoi.Library.MOFABase
 {
+    /// <summary>
+    /// At any moment of the game, the game is at one of the following state.
+    /// </summary>
     public enum MofaPhase
     {
+        // Before the first round
         Waiting = 0,
+        // When all players get ready
         Countdown = 1,
+        // When the round actually begins
         Fighting = 2,
+        // When the round over UI merges
         RoundOver = 3,
+        // When the round result is shown
         RoundResult = 4,
+        // When the summary board merges
         RoundData = 5
     }
 
@@ -33,6 +42,9 @@ namespace Holoi.Library.MOFABase
         Draw = 2
     }
 
+    /// <summary>
+    /// Stats which will be shown on the summary board after each round.
+    /// </summary>
     public struct MofaIndividualStats
     {
         public MofaIndividualRoundResult IndividualRoundResult;
@@ -49,13 +61,11 @@ namespace Holoi.Library.MOFABase
         [HideInInspector] public NetworkVariable<MofaPhase> Phase = new(0, NetworkVariableReadPermission.Everyone);
 
         [Header("MOFA Base")]
+        public SpellList SpellList;
+
         public MofaPlayer MofaPlayerPrefab;
 
         public LifeShield LifeShieldPrefab;
-
-        public LocalPlayerSpellManager LocalPlayerSpellManagerPrefab;
-
-        [HideInInspector] public LocalPlayerSpellManager LocalPlayerSpellManager;
 
         public Dictionary<ulong, MofaPlayer> Players = new();
 
@@ -63,16 +73,17 @@ namespace Holoi.Library.MOFABase
 
         public static event Action<MofaPhase> OnPhaseChanged;
 
-        protected virtual void Awake()
+        protected virtual void Start()
         {
-            LifeShield.OnDead += OnLifeShieldDead;
-
-            // Apple Watch
+            // Initialize MofaWatchConnectivity on native
             MofaWatchConnectivityAPI.Initialize();
             // MofaWatchConnectivityManager should take control first
             MofaWatchConnectivityAPI.TakeControlWatchConnectivitySession();
             // We then update the control on Watch side so that MofaWatchConnectivityManager won't miss messages.
             HoloKitAppWatchConnectivityAPI.UpdateCurrentReality(WatchReality.MOFATheTraining);
+
+            // We need to respawn life shields when they are destroyed.
+            LifeShield.OnDead += OnLifeShieldDead;
         }
 
         public override void OnDestroy()
@@ -90,13 +101,13 @@ namespace Holoi.Library.MOFABase
 
         public override void OnNetworkDespawn()
         {
+            Debug.Log("[MofaBaseRealityManager] OnNetworkDespawn");
             Phase.OnValueChanged -= OnPhaseChangedFunc;
         }
 
         // This delegate method will be called on every client.
         private void OnPhaseChangedFunc(MofaPhase oldValue, MofaPhase newValue)
         {
-            Debug.Log($"[MOFABase] Phase changed to {newValue}");
             OnPhaseChanged?.Invoke(newValue);
 
             switch (newValue)
@@ -104,7 +115,8 @@ namespace Holoi.Library.MOFABase
                 case MofaPhase.Waiting:
                     break;
                 case MofaPhase.Countdown:
-                    MofaWatchConnectivityAPI.SyncRoundStartToWatch();
+                    // TODO: Do all apple watch work on LocalPlayerSpellManager
+                    //MofaWatchConnectivityAPI.SyncRoundStartToWatch();
                     RoundCount++;
                     break;
                 case MofaPhase.Fighting:
@@ -126,12 +138,6 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        protected void SpawnLocalPlayerSpellManager()
-        {
-            LocalPlayerSpellManager = Instantiate(LocalPlayerSpellManagerPrefab);
-            LocalPlayerSpellManager.transform.SetParent(transform);
-        }
-
         public void SetPlayer(ulong clientId, MofaPlayer mofaPlayer)
         {
             Players[clientId] = mofaPlayer;
@@ -149,7 +155,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        public void SpawnMofaPlayer(MofaTeam team, ulong ownerClientId)
+        public void SpawnPlayer(MofaTeam team, ulong ownerClientId)
         {
             var player = Instantiate(MofaPlayerPrefab);
             player.Team.Value = team;
@@ -193,7 +199,7 @@ namespace Holoi.Library.MOFABase
         public void SpawnSpellServerRpc(int spellId, Vector3 clientCenterEyePosition,
             Quaternion clientCenterEyeRotation, ulong ownerClientId)
         {
-            Spell spell = LocalPlayerSpellManager.SpellList.GetSpell(spellId);
+            Spell spell = SpellList.GetSpell(spellId);
             var position = clientCenterEyePosition + clientCenterEyeRotation * spell.SpawnOffset;
             var rotation = clientCenterEyeRotation;
             if (spell.PerpendicularToGround)
