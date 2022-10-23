@@ -81,10 +81,10 @@ namespace Holoi.Library.MOFABase
             // Hide local player's shield
             if (OwnerClientId == NetworkManager.LocalClientId)
             {
-                _fragments[LifeShieldArea.Top].GetComponent<MeshRenderer>().enabled = false;
-                _fragments[LifeShieldArea.Bot].GetComponent<MeshRenderer>().enabled = false;
-                _fragments[LifeShieldArea.Left].GetComponent<MeshRenderer>().enabled = false;
-                _fragments[LifeShieldArea.Right].GetComponent<MeshRenderer>().enabled = false;
+                _fragments[LifeShieldArea.Top].transform.GetChild(0).gameObject.SetActive(false);
+                _fragments[LifeShieldArea.Bot].transform.GetChild(0).gameObject.SetActive(false);
+                _fragments[LifeShieldArea.Left].transform.GetChild(0).gameObject.SetActive(false);
+                _fragments[LifeShieldArea.Right].transform.GetChild(0).gameObject.SetActive(false);
             }
 
             // TODO: Destroy fragments that have already been destroyed for late joined spectator.
@@ -129,6 +129,9 @@ namespace Holoi.Library.MOFABase
                 }
             }
             _fragments[LifeShieldArea.Top].GetComponent<MeshRenderer>().enabled = false;
+            if(_fragments[LifeShieldArea.Top].transform.GetChild(0) != null)
+            _fragments[LifeShieldArea.Top].transform.GetChild(0).gameObject.SetActive(false);
+            
             OnTopDestroyed?.Invoke(OwnerClientId);
             PlayHitSound();
             IsDead();
@@ -157,6 +160,9 @@ namespace Holoi.Library.MOFABase
                 }
             }
             _fragments[LifeShieldArea.Bot].GetComponent<MeshRenderer>().enabled = false;
+            if(_fragments[LifeShieldArea.Bot].transform.GetChild(0) != null)
+            _fragments[LifeShieldArea.Bot].transform.GetChild(0).gameObject.SetActive(false);
+            
             OnBotDestroyed?.Invoke(OwnerClientId);
             PlayHitSound();
             IsDead();
@@ -185,6 +191,9 @@ namespace Holoi.Library.MOFABase
                 }
             }
             _fragments[LifeShieldArea.Left].GetComponent<MeshRenderer>().enabled = false;
+            if(_fragments[LifeShieldArea.Left].transform.GetChild(0) != null)
+            _fragments[LifeShieldArea.Left].transform.GetChild(0).gameObject.SetActive(false);
+
             OnLeftDestroyed?.Invoke(OwnerClientId);
             PlayHitSound();
             IsDead();
@@ -213,6 +222,9 @@ namespace Holoi.Library.MOFABase
                 }
             }
             _fragments[LifeShieldArea.Right].GetComponent<MeshRenderer>().enabled = false;
+            if(_fragments[LifeShieldArea.Right].transform.GetChild(0) != null)
+             _fragments[LifeShieldArea.Right].transform.GetChild(0).gameObject.SetActive(false);
+
             OnRightDestroyed?.Invoke(OwnerClientId);
             PlayHitSound();
             IsDead();
