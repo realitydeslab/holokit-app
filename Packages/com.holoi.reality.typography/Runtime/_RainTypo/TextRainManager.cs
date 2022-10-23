@@ -46,7 +46,7 @@ namespace Holoi.Reality.Typography
             {
                 var serverEye = FindObjectOfType<RainTypoRealityManager>().ServerCenterEye;
 
-                _vfxRain.SetVector3("Head Position_position", serverEye.position);
+                _vfxRain.SetVector3("Head Position_position", serverEye.position - (serverEye.up * 0.15f));
 
                 var estimateChestPos = serverEye.position - (serverEye.up * 0.5f);
 
