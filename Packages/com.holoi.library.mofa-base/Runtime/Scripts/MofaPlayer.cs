@@ -25,7 +25,7 @@ namespace Holoi.Library.MOFABase
 
         [HideInInspector] public LifeShield LifeShield;
 
-        [HideInInspector] public Vector3 LifeShieldOffest = new(0f, -0.4f, 0.5f);
+        [HideInInspector] public Vector3 LifeShieldOffset = new(0f, -0.4f, 0.5f);
 
         public static event Action OnScoreChanged;
 

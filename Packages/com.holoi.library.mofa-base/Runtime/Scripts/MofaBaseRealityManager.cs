@@ -70,7 +70,7 @@ namespace Holoi.Library.MOFABase
 
         public int RoundCount => _roundCount.Value;
 
-        private NetworkVariable<int> _roundCount => new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        private NetworkVariable<int> _roundCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         public MofaRoundResult RoundResult => _roundResult.Value;
 
@@ -80,7 +80,7 @@ namespace Holoi.Library.MOFABase
 
         private readonly Dictionary<ulong, MofaPlayer> _players = new();
 
-        private const int RoundDuration = 30;
+        private const int RoundDuration = 80;
 
         public static event Action<MofaPhase> OnPhaseChanged;
 
@@ -173,12 +173,13 @@ namespace Holoi.Library.MOFABase
         {
             MofaPlayer shieldOwner = Players[lifeShield.OwnerClientId];
             shieldOwner.LifeShield = lifeShield;
-            if (IsServer)
-            {
+            //if (IsServer)
+            //{
                 lifeShield.transform.SetParent(shieldOwner.transform);
-                lifeShield.transform.localPosition = shieldOwner.LifeShieldOffest;
+                lifeShield.transform.localPosition = shieldOwner.LifeShieldOffset;
                 lifeShield.transform.localRotation = Quaternion.identity;
-            }
+                lifeShield.transform.localScale = Vector3.one;
+            //}
         }
 
         public MofaPlayer GetPlayer(ulong clientId = 0)
@@ -202,10 +203,10 @@ namespace Holoi.Library.MOFABase
         // Host only
         public void OnPlayerReadyStateChanged()
         {
-            //if (_players.Count < 2)
-            //{
-            //    return;
-            //}
+            if (_players.Count < 2)
+            {
+                return;
+            }
 
             foreach (var player in _players.Values)
             {

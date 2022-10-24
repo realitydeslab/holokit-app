@@ -124,7 +124,7 @@ namespace Holoi.Reality.MOFATheTraining
                     HoloKitApp.Instance.GlobalSettings.GetAmbersAvatar() : HoloKitApp.Instance.GlobalSettings.GetPreferencedAvatar(null);
                 var avatarCollectionParams = _mofaAvatarCollectionParamsList.GetAvatarCollectionParams(preferencedAvatarCollection);
                 _centerEyeOffset = avatarCollectionParams.CenterEyeOffset;
-                LifeShieldOffest = avatarCollectionParams.LifeShiledOffset;
+                LifeShieldOffset = avatarCollectionParams.LifeShiledOffset;
                 _avatar = Instantiate(preferencedAvatar.Prefab,
                             transform.position, Quaternion.identity);
                 // Setup avatar's components
@@ -189,6 +189,10 @@ namespace Holoi.Reality.MOFATheTraining
                 else if (mofaPhase == MofaPhase.RoundOver)
                 {
                     StopCoroutine(_attackAICoroutine);
+                    if (IsServer)
+                    {
+                        _animationVector.Value = new Vector2(0f, 0f);
+                    }
                 }
             }
         }
@@ -305,8 +309,8 @@ namespace Holoi.Reality.MOFATheTraining
                     x = MofaTrainingUtils.Remap(x, VelocityRemap.x, VelocityRemap.y, VelocityRemap.z, VelocityRemap.w, true);
 
                     _animationVector.Value = new Vector2(x, z);
-                    _animator.SetFloat("Velocity Z", z);
-                    _animator.SetFloat("Velocity X", x);
+                    //_animator.SetFloat("Velocity Z", z);
+                    //_animator.SetFloat("Velocity X", x);
                 }
             }
             else
@@ -322,11 +326,8 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void OnAnimationVectorChanged(Vector2 oldValue, Vector2 newValue)
         {
-            if (!IsServer)
-            {
-                _animator.SetFloat("Velocity Z", newValue.x);
-                _animator.SetFloat("Velocity X", newValue.y);
-            }
+            _animator.SetFloat("Velocity Z", newValue.x);
+            _animator.SetFloat("Velocity X", newValue.y);
         }
 
         private void PlayAvatarCastSpellAnimation(SpellType spellType)

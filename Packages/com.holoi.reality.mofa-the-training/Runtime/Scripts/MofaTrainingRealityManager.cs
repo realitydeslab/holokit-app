@@ -6,6 +6,7 @@ using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.HoloKitApp.UI;
 using Holoi.Library.MOFABase;
+using Holoi.Library.MOFABase.WatchConnectivity;
 using HoloKit;
 
 namespace Holoi.Reality.MOFATheTraining
@@ -35,6 +36,7 @@ namespace Holoi.Reality.MOFATheTraining
             }));
             OnPhaseChanged += OnPhaseChangedFunc;
             HoloKitAppUIEventManager.OnTriggered += OnTriggered;
+            MofaWatchConnectivityAPI.OnStartRoundMessageReceived += OnStartRoundMessageReceived;
         }
 
         public override void OnDestroy()
@@ -43,6 +45,7 @@ namespace Holoi.Reality.MOFATheTraining
 
             OnPhaseChanged -= OnPhaseChangedFunc;
             HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
+            MofaWatchConnectivityAPI.OnStartRoundMessageReceived -= OnStartRoundMessageReceived;
         }
 
         public override void OnNetworkSpawn()
@@ -140,6 +143,12 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 StartRound();
             }
+        }
+
+        // Apple Watch
+        private void OnStartRoundMessageReceived()
+        {
+            StartRound();
         }
     }
 }
