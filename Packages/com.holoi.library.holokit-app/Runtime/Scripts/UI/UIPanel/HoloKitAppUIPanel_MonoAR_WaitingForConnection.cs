@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIPanel_MonoAR_WaitingForConnection : HoloKitAppUIPanel
@@ -10,7 +6,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
-        private void Awake()
+        private void Start()
         {
             HoloKitAppMultiplayerManager.OnLocalClientConnected += OnLocalClientConnected;
         }

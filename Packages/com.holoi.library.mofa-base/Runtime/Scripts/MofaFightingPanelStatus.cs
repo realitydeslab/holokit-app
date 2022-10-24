@@ -6,17 +6,14 @@ namespace Holoi.Library.MOFABase
 {
     public class MofaFightingPanelStatus : MonoBehaviour
     {
-        private MofaBaseRealityManager _mofaRealityManager;
+        [SerializeField] MofaInputManager _inputManager;
 
         [SerializeField] Animator _animator;
+
         [Header("UI Elements")]
         [SerializeField] VisualEffect _attackBar;
-        [SerializeField] VisualEffect _ultimateBar;
 
-        private void Awake()
-        {
-            //_mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-        }
+        [SerializeField] VisualEffect _ultimateBar;
 
         private void OnEnable()
         {
@@ -30,7 +27,6 @@ namespace Holoi.Library.MOFABase
 
         private void OnWatchStateChanged(MofaWatchState watchState)
         {
-            // SIZHENGTODO:
             if (watchState == MofaWatchState.Ground)
             {
                 _animator.SetTrigger("To Function");
@@ -43,11 +39,11 @@ namespace Holoi.Library.MOFABase
 
         private void Update()
         {
-            //_attackBar.SetFloat("Loading", _mofaRealityManager.LocalPlayerSpellManager.BasicSpellChargePercentage);
-            //_ultimateBar.SetFloat("Loading", _mofaRealityManager.LocalPlayerSpellManager.SecondarySpellChargePercentage);
-            // SIZHENGTODO: 更新充能
-            // _mofaRealityManager.LocalPlayerSpellManager.SecondarySpellUseCount 此为二技能已经使用过的次数
-            // _mofaRealityManager.LocalPlayerSpellManager.SecondarySpell.MaxUseCount 此为二技能的最大使用次数
+            if (_inputManager.Active)
+            {
+                //_attackBar.SetFloat("Loading", _inputManager.BasicSpellChargePercentage);
+                //_ultimateBar.SetFloat("Loading", _inputManager.SecondarySpellChargePercentage);
+            }
         }
     }
 }

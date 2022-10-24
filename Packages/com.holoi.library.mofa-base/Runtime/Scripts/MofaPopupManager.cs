@@ -24,15 +24,17 @@ namespace Holoi.Library.MOFABase
 
         private GameObject _currentPopup;
 
-        private void Awake()
+        private void Start()
         {
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
+            MofaBaseRealityManager.OnReceivedRoundResult += OnReceivedRoundResult;
             LifeShield.OnDead += OnLifeShieldDestroyed;
         }
 
         private void OnDestroy()
         {
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
+            MofaBaseRealityManager.OnReceivedRoundResult -= OnReceivedRoundResult;
             LifeShield.OnDead -= OnLifeShieldDestroyed;
         }
 
@@ -73,7 +75,6 @@ namespace Holoi.Library.MOFABase
                     StartCoroutine(SpawnPopup(_roundOverPrefab, 4f));
                     break;
                 case MofaPhase.RoundResult:
-                    OnRoundResult();
                     break;
                 case MofaPhase.RoundData:
                     OnRoundData();
@@ -81,50 +82,52 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnRoundResult()
+        private void OnReceivedRoundResult(MofaRoundResult roundResult)
         {
-            var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
             {
+                // TODO: Play blue team wins or red team wins on spectator
                 return;
             }
-            var localPlayer = mofaRealityManager.GetPlayer();
-            var roundResult = mofaRealityManager.GetRoundResult();
-            switch (roundResult)
+
+            if (roundResult == MofaRoundResult.Draw)
             {
-                case MofaRoundResult.BlueTeamWins:
-                    if (localPlayer.Team.Value == MofaTeam.Blue)
-                    {
-                        StartCoroutine(SpawnPopup(_victoryPrefab, 3f));
-                    }
-                    else
-                    {
-                        StartCoroutine(SpawnPopup(_defeatPrefab, 3f));
-                    }
-                    break;
-                case MofaRoundResult.RedTeamWins:
-                    if (localPlayer.Team.Value == MofaTeam.Blue)
-                    {
-                        StartCoroutine(SpawnPopup(_defeatPrefab, 3f));
-                    }
-                    else
-                    {
-                        StartCoroutine(SpawnPopup(_victoryPrefab, 3f));
-                    }
-                    break;
-                case MofaRoundResult.Draw:
-                    StartCoroutine(SpawnPopup(_drawPrefab, 3f));
-                    break;
+                StartCoroutine(SpawnPopup(_drawPrefab, 3f));
+                return;
+            }
+
+            MofaTeam team = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).GetPlayer().Team.Value;
+            if (team == MofaTeam.Blue)
+            {
+                if (roundResult == MofaRoundResult.BlueTeamWins)
+                {
+                    StartCoroutine(SpawnPopup(_victoryPrefab, 3f));
+                }
+                else
+                {
+                    StartCoroutine(SpawnPopup(_defeatPrefab, 3f));
+                }
+            }
+            else if (team == MofaTeam.Red)
+            {
+                if (roundResult == MofaRoundResult.RedTeamWins)
+                {
+                    StartCoroutine(SpawnPopup(_victoryPrefab, 3f));
+                }
+                else
+                {
+                    StartCoroutine(SpawnPopup(_defeatPrefab, 3f));
+                }
             }
         }
 
         private void OnRoundData()
         {
-            StartCoroutine(SpawnPopup(_summaryBoardPrefab, 30f));
+            //StartCoroutine(SpawnPopup(_summaryBoardPrefab, 30f));
             // TODO: Display detailed data
         }
 
-        private void OnLifeShieldDestroyed(ulong ownerClientId)
+        private void OnLifeShieldDestroyed(ulong _, ulong ownerClientId)
         {
             if (ownerClientId == NetworkManager.Singleton.LocalClientId)
             {

@@ -12,7 +12,7 @@ namespace Holoi.Library.MOFABase
             LifeShield.OnTopDestroyed += OnBeingHit;
             LifeShield.OnRightDestroyed += OnBeingHit;
             LifeShield.OnLeftDestroyed += OnBeingHit;
-            LifeShield.OnBotDestroyed += OnBeingHit;
+            LifeShield.OnCenterDestroyed += OnBeingHit;
         }
 
         private void OnDisable()
@@ -20,7 +20,7 @@ namespace Holoi.Library.MOFABase
             LifeShield.OnTopDestroyed -= OnBeingHit;
             LifeShield.OnRightDestroyed -= OnBeingHit;
             LifeShield.OnLeftDestroyed -= OnBeingHit;
-            LifeShield.OnBotDestroyed -= OnBeingHit;
+            LifeShield.OnCenterDestroyed -= OnBeingHit;
         }
 
         private void Start()

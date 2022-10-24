@@ -80,5 +80,17 @@ namespace Holoi.AssetFoundation
                 return false;
             }
         }
+
+        public bool SupportMultiplayer()
+        {
+            foreach (var realityTag in RealityTags)
+            {
+                if (realityTag.BundleId.Equals("com.holoi.asset-foundation.support-multiplayer"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

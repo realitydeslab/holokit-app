@@ -13,7 +13,9 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private Button _hostButton;
 
-        [SerializeField] private Button _clientButton;
+        [SerializeField] private Button _playerButton;
+
+        [SerializeField] private Button _spectatorButton;
 
         public void Init(Reality reality, int index)
         {
@@ -24,7 +26,21 @@ namespace Holoi.Library.HoloKitApp.UI
                 HoloKitApp.Instance.CurrentReality = reality;
                 HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Host);
             });
-            _clientButton.onClick.AddListener(() =>
+
+            if (reality.SupportMultiplayer())
+            {
+                _playerButton.onClick.AddListener(() =>
+                {
+                    HoloKitApp.Instance.CurrentReality = reality;
+                    HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.NonHostPlayer);
+                });
+            }
+            else
+            {
+                _playerButton.interactable = false;
+            }
+
+            _spectatorButton.onClick.AddListener(() =>
             {
                 HoloKitApp.Instance.CurrentReality = reality;
                 HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Spectator);

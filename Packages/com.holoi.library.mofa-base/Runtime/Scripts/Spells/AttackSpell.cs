@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Unity.Netcode;
-using Holoi.Library.HoloKitApp;
-using System;
 
 namespace Holoi.Library.MOFABase
 {
@@ -37,14 +34,22 @@ namespace Holoi.Library.MOFABase
                 MofaTeam victimTeam = mofaRealityManager.Players[other.GetComponentInParent<NetworkObject>().OwnerClientId].Team.Value;
                 if (attackerTeam != victimTeam)
                 {
-                    damageable.OnDamaged(OwnerClientId);
-                    OnHitClientRpc();
-                    if (HitOnce)
+                    damageable.OnDamaged(transform, OwnerClientId);
+                    if (!damageable.OnHitDelegation)
                     {
-                        GetComponent<Collider>().enabled = false;
-                        Destroy(gameObject, _destroyDelay);
+                        OnHitFunc();
                     }
                 }
+            }
+        }
+
+        public void OnHitFunc()
+        {
+            OnHitClientRpc();
+            if (HitOnce)
+            {
+                GetComponent<Collider>().enabled = false;
+                Destroy(gameObject, _destroyDelay);
             }
         }
 

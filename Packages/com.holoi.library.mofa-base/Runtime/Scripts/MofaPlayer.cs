@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using Holoi.Library.HoloKitApp;
 using HoloKit;
 using System;
 
@@ -11,12 +8,13 @@ namespace Holoi.Library.MOFABase
     public enum MofaTeam
     {
         Blue = 0,
-        Red = 1,
-        Spectator = 2
+        Red = 1
     }
 
     public class MofaPlayer : NetworkBehaviour
     {
+        [HideInInspector] public NetworkVariable<int> MagicSchoolTokenId = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
         [HideInInspector] public NetworkVariable<MofaTeam> Team = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         [HideInInspector] public NetworkVariable<bool> Ready = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);

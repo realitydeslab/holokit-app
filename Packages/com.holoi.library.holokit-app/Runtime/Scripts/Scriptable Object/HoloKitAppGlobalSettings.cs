@@ -75,7 +75,7 @@ namespace Holoi.Library.HoloKitApp
 
         public void LoadDefaultSettings()
         {
-            Debug.Log("[GlobalSettings] Load default global settings");
+            Debug.Log("[GlobalSettings] Loaded default global settings");
             InstructionEnabled = true;
             VibrationEnabled = true;
             HighResHDREnabled = true;
@@ -175,7 +175,7 @@ namespace Holoi.Library.HoloKitApp
             return null;
         }
 
-        public MetaObject GetPreferencedObject(Reality reality)
+        public MetaObject GetPreferencedObject(Reality reality = null)
         {
             if (reality == null)
             {

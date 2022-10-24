@@ -16,11 +16,13 @@ namespace Holoi.Library.MOFABase
         private void Awake()
         {
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
+            MofaBaseRealityManager.OnReceivedRoundResult += OnReceivedRoundResult;
         }
 
         private void OnDestroy()
         {
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
+            MofaBaseRealityManager.OnReceivedRoundResult -= OnReceivedRoundResult;
         }
 
         private void OnPhaseChanged(MofaPhase mofaPhase)
@@ -40,7 +42,6 @@ namespace Holoi.Library.MOFABase
                     PlayRoundOverSound();
                     break;
                 case MofaPhase.RoundResult:
-                    OnRoundResult();
                     break;
                 case MofaPhase.RoundData:
                     break;
@@ -110,40 +111,42 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnRoundResult()
+        private void OnReceivedRoundResult(MofaRoundResult roundResult)
         {
-            var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
             {
+                // TODO: Play blue team wins or red team wins on spectator
                 return;
             }
-            var localPlayer = mofaRealityManager.GetPlayer();
-            var roundResult = mofaRealityManager.GetRoundResult();
-            switch (roundResult)
+
+            if (roundResult == MofaRoundResult.Draw)
             {
-                case MofaRoundResult.BlueTeamWins:
-                    if (localPlayer.Team.Value == MofaTeam.Blue)
-                    {
-                        PlayVictorySound();
-                    }
-                    else
-                    {
-                        PlayDefeatSound();
-                    }
-                    break;
-                case MofaRoundResult.RedTeamWins:
-                    if (localPlayer.Team.Value == MofaTeam.Blue)
-                    {
-                        PlayDefeatSound();
-                    }
-                    else
-                    {
-                        PlayVictorySound();
-                    }
-                    break;
-                case MofaRoundResult.Draw:
-                    PlayDrawSound();
-                    break;
+                PlayDrawSound();
+                return;
+            }
+
+            MofaTeam team = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).GetPlayer().Team.Value;
+            if (team == MofaTeam.Blue)
+            {
+                if (roundResult == MofaRoundResult.BlueTeamWins)
+                {
+                    PlayVictorySound();
+                }
+                else
+                {
+                    PlayDefeatSound();
+                }
+            }
+            else if (team == MofaTeam.Red)
+            {
+                if(roundResult == MofaRoundResult.RedTeamWins)
+                {
+                    PlayVictorySound();
+                }
+                else
+                {
+                    PlayDefeatSound();
+                }
             }
         }
     }

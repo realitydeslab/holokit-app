@@ -93,7 +93,7 @@ namespace Holoi.Reality.MOFATheTraining
             _mofaAI.GetComponent<NetworkObject>().SpawnWithOwnership(999);
         }
 
-        public override void StartRound()
+        protected override void StartRound()
         {
             if (CurrentPhase != MofaPhase.Waiting && CurrentPhase != MofaPhase.RoundData)
             {

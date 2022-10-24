@@ -1,41 +1,42 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using Holoi.Library.HoloKitApp;
-using System;
 
 namespace Holoi.Library.MOFABase
 {
-    public class LifeShield : NetworkBehaviour
+    public class LifeShield : NetworkBehaviour, IDamageable
     {
-        [HideInInspector] public NetworkVariable<bool> TopDestroyed = new(false, NetworkVariableReadPermission.Everyone);
+        public bool OnHitDelegation => true;
 
-        [HideInInspector] public NetworkVariable<bool> BotDestroyed = new(false, NetworkVariableReadPermission.Everyone);
-
-        [HideInInspector] public NetworkVariable<bool> LeftDestroyed = new(false, NetworkVariableReadPermission.Everyone);
-
-        [HideInInspector] public NetworkVariable<bool> RightDestroyed = new(false, NetworkVariableReadPermission.Everyone);
-
-        [HideInInspector] public NetworkVariable<int> LastAttackerClientId = new(0, NetworkVariableReadPermission.Everyone);
-
-        [SerializeField] private Material _blueMaterial;
-
-        [SerializeField] private Material _redMaterial;
+        public MagicSchool MagicSchool;
 
         [SerializeField] private AudioClip _beingHitSound;
 
         [SerializeField] private AudioClip _beingDestroyedSound;
 
+        private readonly NetworkVariable<bool> _centerDestroyed = new(false, NetworkVariableReadPermission.Everyone);
+
+        private readonly NetworkVariable<bool> _topDestroyed = new(false, NetworkVariableReadPermission.Everyone);
+
+        private readonly NetworkVariable<bool> _leftDestroyed = new(false, NetworkVariableReadPermission.Everyone);
+
+        private readonly NetworkVariable<bool> _rightDestroyed = new(false, NetworkVariableReadPermission.Everyone);
+
+        private readonly NetworkVariable<int> _lastAttackerClientId = new(0, NetworkVariableReadPermission.Everyone);
+
         private AudioSource _audioSource;
 
         public static float DestroyDelay = 1f;
 
+        // TODO: Test this value
+        private const float LifeShieldFragmentRadius = 0.3f;
+
         private readonly Dictionary<LifeShieldArea, LifeShieldFragment> _fragments = new();
 
-        public static event Action<ulong> OnTopDestroyed;
+        public static event Action<ulong> OnCenterDestroyed;
 
-        public static event Action<ulong> OnBotDestroyed;
+        public static event Action<ulong> OnTopDestroyed;
 
         public static event Action<ulong> OnLeftDestroyed;
 
@@ -43,7 +44,8 @@ namespace Holoi.Library.MOFABase
 
         public static event Action<ulong> OnSpawned;
 
-        public static event Action<ulong> OnDead;
+        // The first ulong is the attackerClientId and the second is the ownerClientId
+        public static event Action<ulong, ulong> OnDead;
 
         private void Awake()
         {
@@ -59,194 +61,140 @@ namespace Holoi.Library.MOFABase
 
         public override void OnNetworkSpawn()
         {
-            var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-            mofaRealityManager.SetLifeShield(this);
+            ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).SetLifeShield(this);
 
-            // Setup color
-            if (mofaRealityManager.Players[OwnerClientId].Team.Value == MofaTeam.Blue)
-            {
-                _fragments[LifeShieldArea.Top].GetComponent<MeshRenderer>().material = _blueMaterial;
-                _fragments[LifeShieldArea.Bot].GetComponent<MeshRenderer>().material = _blueMaterial;
-                _fragments[LifeShieldArea.Left].GetComponent<MeshRenderer>().material = _blueMaterial;
-                _fragments[LifeShieldArea.Right].GetComponent<MeshRenderer>().material = _blueMaterial;
-            }
-            else
-            {
-                _fragments[LifeShieldArea.Top].GetComponent<MeshRenderer>().material = _redMaterial;
-                _fragments[LifeShieldArea.Bot].GetComponent<MeshRenderer>().material = _redMaterial;
-                _fragments[LifeShieldArea.Left].GetComponent<MeshRenderer>().material = _redMaterial;
-                _fragments[LifeShieldArea.Right].GetComponent<MeshRenderer>().material = _redMaterial;
-            }
-
-            // Hide local player's shield
+            //Hide local player's shield
             if (OwnerClientId == NetworkManager.LocalClientId)
             {
+                _fragments[LifeShieldArea.Center].transform.GetChild(0).gameObject.SetActive(false);
                 _fragments[LifeShieldArea.Top].transform.GetChild(0).gameObject.SetActive(false);
-                _fragments[LifeShieldArea.Bot].transform.GetChild(0).gameObject.SetActive(false);
                 _fragments[LifeShieldArea.Left].transform.GetChild(0).gameObject.SetActive(false);
                 _fragments[LifeShieldArea.Right].transform.GetChild(0).gameObject.SetActive(false);
             }
 
             // TODO: Destroy fragments that have already been destroyed for late joined spectator.
 
-
-            TopDestroyed.OnValueChanged += OnTopDestroyedFunc;
-            BotDestroyed.OnValueChanged += OnBotDestroyedFunc;
-            LeftDestroyed.OnValueChanged += OnLeftDestroyedFunc;
-            RightDestroyed.OnValueChanged += OnRightDestroyedFunc;
+            _centerDestroyed.OnValueChanged += OnCenterDestroyedFunc;
+            _topDestroyed.OnValueChanged += OnTopDestroyedFunc;
+            _leftDestroyed.OnValueChanged += OnLeftDestroyedFunc;
+            _rightDestroyed.OnValueChanged += OnRightDestroyedFunc;
 
             OnSpawned?.Invoke(OwnerClientId);
         }
 
         public override void OnNetworkDespawn()
         {
-            TopDestroyed.OnValueChanged -= OnTopDestroyedFunc;
-            BotDestroyed.OnValueChanged -= OnBotDestroyedFunc;
-            LeftDestroyed.OnValueChanged -= OnLeftDestroyedFunc;
-            RightDestroyed.OnValueChanged -= OnRightDestroyedFunc;
+            _centerDestroyed.OnValueChanged -= OnCenterDestroyedFunc;
+            _topDestroyed.OnValueChanged -= OnTopDestroyedFunc;
+            _leftDestroyed.OnValueChanged -= OnLeftDestroyedFunc;
+            _rightDestroyed.OnValueChanged -= OnRightDestroyedFunc;
+        }
+
+        public void OnDamaged(Transform bulletTransform, ulong attackerClientId)
+        {
+            int hitFragmentCount = 0;
+            foreach (var fragment in _fragments.Values)
+            {
+                if (Vector3.Distance(fragment.transform.position, bulletTransform.position) < LifeShieldFragmentRadius)
+                {
+                    _lastAttackerClientId.Value = (int)attackerClientId;
+                    switch (fragment.Area)
+                    {
+                        case LifeShieldArea.Center:
+                            if (_centerDestroyed.Value)
+                            {
+                                continue;
+                            }
+                            _centerDestroyed.Value = true;
+                            GetComponent<Collider>().enabled = false;
+                            bulletTransform.GetComponent<AttackSpell>().OnHitFunc();
+                            return;
+                        case LifeShieldArea.Top:
+                            if (_topDestroyed.Value)
+                            {
+                                continue;
+                            }
+                            hitFragmentCount++;
+                            _topDestroyed.Value = true;
+                            break;
+                        case LifeShieldArea.Left:
+                            if (_leftDestroyed.Value)
+                            {
+                                continue;
+                            }
+                            hitFragmentCount++;
+                            _leftDestroyed.Value = true;
+                            break;
+                        case LifeShieldArea.Right:
+                            if (_rightDestroyed.Value)
+                            {
+                                continue;
+                            }
+                            hitFragmentCount++;
+                            _rightDestroyed.Value = true;
+                            break;
+                    }
+                }
+            }
+            if (hitFragmentCount> 0)
+            {
+                bulletTransform.GetComponent<AttackSpell>().OnHitFunc();
+            }
+        }
+
+        private void OnCenterDestroyedFunc(bool oldValue, bool newValue)
+        {
+            if (!newValue)
+            {
+                return;
+            }
+
+            if (IsServer)
+            {
+                _topDestroyed.Value = true;
+                _leftDestroyed.Value = true;
+                _rightDestroyed.Value = true;
+            }
+            OnCenterDestroyed?.Invoke(OwnerClientId);
+            PlayHitSound();
+            _fragments[LifeShieldArea.Center].transform.GetChild(0).gameObject.SetActive(false);
+
+            // The entire shield has been destroyed at this point
+            PlayDestroySound();
+            OnDead?.Invoke((ulong)_lastAttackerClientId.Value, OwnerClientId);
+            if (IsServer)
+            {
+                Destroy(gameObject, DestroyDelay);
+            }
         }
 
         private void OnTopDestroyedFunc(bool oldValue, bool newValue)
         {
-            if (!newValue)
+            if (newValue)
             {
-                return;
+                OnTopDestroyed?.Invoke(OwnerClientId);
+                PlayHitSound();
+                _fragments[LifeShieldArea.Top].transform.GetChild(0).gameObject.SetActive(false);
             }
-
-            if (IsServer)
-            {
-                if (_fragments[LifeShieldArea.Top].TryGetComponent<Collider>(out var topCollider))
-                {
-                    topCollider.enabled = false;
-                }
-                if (_fragments[LifeShieldArea.TopLeft].TryGetComponent<Collider>(out var topLeftCollider))
-                {
-                    topLeftCollider.enabled = false;
-                }
-                if (_fragments[LifeShieldArea.TopRight].TryGetComponent<Collider>(out var topRightCollider))
-                {
-                    topRightCollider.enabled = false;
-                }
-            }
-            _fragments[LifeShieldArea.Top].GetComponent<MeshRenderer>().enabled = false;
-            if(_fragments[LifeShieldArea.Top].transform.GetChild(0) != null)
-            _fragments[LifeShieldArea.Top].transform.GetChild(0).gameObject.SetActive(false);
-            
-            OnTopDestroyed?.Invoke(OwnerClientId);
-            PlayHitSound();
-            IsDead();
-        }
-
-        private void OnBotDestroyedFunc(bool oldValue, bool newValue)
-        {
-            if (!newValue)
-            {
-                return;
-            }
-
-            if (IsServer)
-            {
-                if (_fragments[LifeShieldArea.Bot].TryGetComponent<Collider>(out var botCollider))
-                {
-                    botCollider.enabled = false;
-                }
-                if (_fragments[LifeShieldArea.BotLeft].TryGetComponent<Collider>(out var botLeftCollider))
-                {
-                    botLeftCollider.enabled = false;
-                }
-                if (_fragments[LifeShieldArea.BotRight].TryGetComponent<Collider>(out var botRightCollider))
-                {
-                    botRightCollider.enabled = false;
-                }
-            }
-            _fragments[LifeShieldArea.Bot].GetComponent<MeshRenderer>().enabled = false;
-            if(_fragments[LifeShieldArea.Bot].transform.GetChild(0) != null)
-            _fragments[LifeShieldArea.Bot].transform.GetChild(0).gameObject.SetActive(false);
-            
-            OnBotDestroyed?.Invoke(OwnerClientId);
-            PlayHitSound();
-            IsDead();
         }
 
         private void OnLeftDestroyedFunc(bool oldValue, bool newValue)
         {
-            if (!newValue)
+            if (newValue)
             {
-                return;
+                OnLeftDestroyed?.Invoke(OwnerClientId);
+                PlayHitSound();
+                _fragments[LifeShieldArea.Left].transform.GetChild(0).gameObject.SetActive(false);
             }
-
-            if (IsServer)
-            {
-                if (_fragments[LifeShieldArea.Left].TryGetComponent<Collider>(out var leftCollider))
-                {
-                    leftCollider.enabled = false;
-                }
-                if (_fragments[LifeShieldArea.TopLeft].TryGetComponent<Collider>(out var topLeftCollider))
-                {
-                    topLeftCollider.enabled = false;
-                }
-                if (_fragments[LifeShieldArea.BotLeft].TryGetComponent<Collider>(out var botLeftCollider))
-                {
-                    botLeftCollider.enabled = false;
-                }
-            }
-            _fragments[LifeShieldArea.Left].GetComponent<MeshRenderer>().enabled = false;
-            if(_fragments[LifeShieldArea.Left].transform.GetChild(0) != null)
-            _fragments[LifeShieldArea.Left].transform.GetChild(0).gameObject.SetActive(false);
-
-            OnLeftDestroyed?.Invoke(OwnerClientId);
-            PlayHitSound();
-            IsDead();
         }
 
         private void OnRightDestroyedFunc(bool oldValue, bool newValue)
         {
-            if (!newValue)
+            if (newValue)
             {
-                return;
-            }
-
-            if (IsServer)
-            {
-                if (_fragments[LifeShieldArea.Right].TryGetComponent<Collider>(out var rightCollider))
-                {
-                    rightCollider.enabled = false;
-                }
-                if (_fragments[LifeShieldArea.TopRight].TryGetComponent<Collider>(out var topRightCollider))
-                {
-                    topRightCollider.enabled = false;
-                }
-                if (_fragments[LifeShieldArea.BotRight].TryGetComponent<Collider>(out var botRightCollider))
-                {
-                    botRightCollider.enabled = false;
-                }
-            }
-            _fragments[LifeShieldArea.Right].GetComponent<MeshRenderer>().enabled = false;
-            if(_fragments[LifeShieldArea.Right].transform.GetChild(0) != null)
-             _fragments[LifeShieldArea.Right].transform.GetChild(0).gameObject.SetActive(false);
-
-            OnRightDestroyed?.Invoke(OwnerClientId);
-            PlayHitSound();
-            IsDead();
-        }
-
-        private void IsDead()
-        {
-            if (TopDestroyed.Value && BotDestroyed.Value && LeftDestroyed.Value && RightDestroyed.Value)
-            {
-                OnDead?.Invoke(OwnerClientId);
-                PlayDestroySound();
-                if (IsServer)
-                {
-                    _fragments[LifeShieldArea.Center].GetComponent<Collider>().enabled = false;
-                    var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-                    if (mofaRealityManager.CurrentPhase == MofaPhase.Fighting || mofaRealityManager.CurrentPhase == MofaPhase.RoundOver)
-                    {
-                        mofaRealityManager.Players[(ulong)LastAttackerClientId.Value].KillCount.Value++;
-                        mofaRealityManager.Players[OwnerClientId].DeathCount.Value++;
-                    }
-                    Destroy(gameObject, DestroyDelay);
-                }
+                OnRightDestroyed?.Invoke(OwnerClientId);
+                PlayHitSound();
+                _fragments[LifeShieldArea.Right].transform.GetChild(0).gameObject.SetActive(false);
             }
         }
 

@@ -24,7 +24,7 @@ namespace Holoi.Library.MOFABase
                 LifeShield.OnTopDestroyed += OnShieldTopDestoryed;
                 LifeShield.OnRightDestroyed += OnShieldRightDestoryed;
                 LifeShield.OnLeftDestroyed += OnShieldLeftDestoryed;
-                LifeShield.OnBotDestroyed += OnShieldBotDestoryed;
+                LifeShield.OnCenterDestroyed += OnShieldBotDestoryed;
             }
             else
             {
@@ -40,7 +40,7 @@ namespace Holoi.Library.MOFABase
                 LifeShield.OnTopDestroyed -= OnShieldTopDestoryed;
                 LifeShield.OnRightDestroyed -= OnShieldRightDestoryed;
                 LifeShield.OnLeftDestroyed -= OnShieldLeftDestoryed;
-                LifeShield.OnBotDestroyed -= OnShieldBotDestoryed;
+                LifeShield.OnCenterDestroyed -= OnShieldBotDestoryed;
             }
         }
 
@@ -73,7 +73,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        void OnSingleShieldDestoryed(ulong ownerClientId)
+        void OnSingleShieldDestoryed(ulong _, ulong ownerClientId)
         {
             if (ownerClientId == _lifeShield.OwnerClientId)
             {

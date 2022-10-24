@@ -114,6 +114,7 @@ namespace Holoi.Library.MOFABase
                     break;
                 case MofaPhase.Countdown:
                     Reset();
+                    MofaWatchConnectivityAPI.SyncRoundStartToWatch();
                     break;
                 case MofaPhase.Fighting:
                     Active = true;
@@ -125,19 +126,21 @@ namespace Holoi.Library.MOFABase
                 case MofaPhase.RoundResult:
                     break;
                 case MofaPhase.RoundData:
+                    OnRoundData();
                     break;
             }
         }
 
-        private void OnRoundResult()
+        private void OnRoundData()
         {
             if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
             {
-                //var localPlayerStats = GetIndividualStats(GetLocalPlayer());
-                //MofaWatchConnectivityAPI.SyncRoundResultToWatch(localPlayerStats.IndividualRoundResult,
-                //                                                localPlayerStats.Kill,
-                //                                                localPlayerStats.HitRate,
-                //                                                localPlayerStats.Distance);
+                
+                var localPlayerStats = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).GetIndividualStats();
+                MofaWatchConnectivityAPI.SyncRoundResultToWatch(localPlayerStats.IndividualRoundResult,
+                                                                localPlayerStats.Kill,
+                                                                localPlayerStats.HitRate,
+                                                                localPlayerStats.Distance);
             }
         }
 
@@ -180,13 +183,13 @@ namespace Holoi.Library.MOFABase
         {
             if (!Active)
             {
-                Debug.Log("[LocalPlayerSpellManager] Not active");
+                Debug.Log("[MofaInputManager] Not active");
                 return;
             }
 
             if (BasicSpellCharge < BasicSpell.ChargeTime)
             {
-                Debug.Log("[LocalPlayerSpellManager] Basic spell not charged");
+                Debug.Log("[MofaInputManager] Basic spell not charged");
                 OnSpawnSpellFailed?.Invoke(SpellType.Basic);
             }
             else
@@ -203,13 +206,13 @@ namespace Holoi.Library.MOFABase
         {
             if (!Active)
             {
-                Debug.Log("[LocalPlayerSpellManager] Not active");
+                Debug.Log("[MofaInputManager] Not active");
                 return;
             }
 
             if (SecondarySpellUseCount > SecondarySpell.MaxUseCount)
             {
-                Debug.Log("[LocalPlayerSpellManager] Exceed secondary spell use count");
+                Debug.Log("[MofaInputManager] Exceed secondary spell use count");
                 OnSpawnSpellFailed?.Invoke(SpellType.Secondary);
                 return;
             }
@@ -234,7 +237,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnLifeShieldDestroyed(ulong ownerClientId)
+        private void OnLifeShieldDestroyed(ulong _, ulong ownerClientId)
         {
             if (ownerClientId == NetworkManager.Singleton.LocalClientId)
             {
@@ -261,7 +264,7 @@ namespace Holoi.Library.MOFABase
         #region Apple Watch
         private void OnStartRoundMessageReceived()
         {
-            MofaBaseRealityManager.StartRound();
+            ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).GetPlayer().Ready.Value = true;
         }
 
         private void OnWatchStateChanged(MofaWatchState watchState)

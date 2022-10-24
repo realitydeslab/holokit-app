@@ -66,6 +66,8 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         public bool IsPlayer => _localPlayerType != HoloKitAppPlayerType.Spectator;
 
+        public bool IsNonHostPlayer => _localPlayerType == HoloKitAppPlayerType.NonHostPlayer;
+
         public HoloKitAppPlayerType LocalPlayerType => _localPlayerType;
 
         public bool Test => _test;

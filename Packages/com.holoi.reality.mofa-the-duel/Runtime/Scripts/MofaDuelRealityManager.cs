@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Holoi.Library.HoloKitApp;
 using Holoi.Library.HoloKitApp.UI;
 using Holoi.Library.MOFABase;
 
@@ -25,7 +22,11 @@ namespace Holoi.Reality.MOFATheDuel
 
         private void OnTriggered()
         {
-            GetPlayer().Ready.Value = true;
+            if (CurrentPhase == MofaPhase.Waiting || CurrentPhase == MofaPhase.RoundData)
+            {
+                GetPlayer().Ready.Value = true;
+                Debug.Log("Local player is ready");
+            }
         }
     }
 }

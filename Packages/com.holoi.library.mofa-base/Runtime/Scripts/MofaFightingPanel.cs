@@ -1,5 +1,4 @@
 using UnityEngine;
-using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Library.MOFABase
 {
@@ -17,12 +16,6 @@ namespace Holoi.Library.MOFABase
 
         private void Start()
         {
-            if (!HoloKitApp.HoloKitApp.Instance.IsHost)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
             Scores.SetActive(false);
             Time.SetActive(false);
@@ -58,7 +51,7 @@ namespace Holoi.Library.MOFABase
 
         private void OnCountdown()
         {
-            if (HoloKitApp.HoloKitApp.Instance.LocalPlayerType == HoloKitAppPlayerType.Spectator) // Spectator
+            if (HoloKitApp.HoloKitApp.Instance.IsSpectator) // Spectator
             {
                 Scores.SetActive(true);
                 Time.SetActive(true);

@@ -84,7 +84,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         protected virtual void OnSelected()
         {
-            Handheld.Vibrate();
             Selected = true;
             _mask.enabled = false;
             if (_arrowUntriggered != null)

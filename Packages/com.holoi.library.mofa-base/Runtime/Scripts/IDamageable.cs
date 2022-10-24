@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Holoi.Library.MOFABase
 {
     public interface IDamageable
     {
-        public void OnDamaged(ulong attackerClientId);
+        public abstract bool OnHitDelegation { get; }
+
+        public void OnDamaged(Transform bulletTransform, ulong attackerClientId);
     }
 }

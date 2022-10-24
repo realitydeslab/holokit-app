@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Holoi.Library.HoloKitApp.UI
@@ -15,9 +13,12 @@ namespace Holoi.Library.HoloKitApp.UI
         private void Start()
         {
             // If local device is spectator
-            if (!HoloKitApp.Instance.IsHost)
+            if (HoloKit.HoloKitUtils.IsRuntime)
             {
-                HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_WaitingForConnection");
+                if (!HoloKitApp.Instance.IsHost)
+                {
+                    HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_WaitingForConnection");
+                }
             }
         }
 
