@@ -2,7 +2,6 @@ using Apple.CoreHaptics;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-using System.Diagnostics;
 using System.Numerics;
 
 public class HapticsTest : MonoBehaviour
@@ -41,6 +40,15 @@ public class HapticsTest : MonoBehaviour
         }
     }
 
+    public void Play()
+    {
+        if (!(_hapticsAHAP is null))
+        {
+            _hapticsEngine.PlayPatternFromAhap(_hapticsAHAP);
+        }
+    }
+
+
     //private void SetupHapticPlayers()
     //{
     //    _textureHapticPlayer = _engine.MakeAdvancedPlayer(new CHHapticPattern(_rollingTextureAHAP));
@@ -56,19 +64,19 @@ public class HapticsTest : MonoBehaviour
 
 
 
-    private void UpdateTextureIntensity()
-    {
-        var currentSpeed = _rigidbody.velocity.magnitude;
-        var intensity = Math.Min(currentSpeed / _maximumReasonableVelocity, 1f);
-        var hapticParameters = new List<CHHapticParameter>
-            {
-                new CHHapticParameter(
-                    parameterId: CHHapticDynamicParameterID.HapticIntensityControl,
-                    parameterValue: intensity
-                )
-            };
+    //private void UpdateTextureIntensity()
+    //{
+    //    var currentSpeed = _rigidbody.velocity.magnitude;
+    //    var intensity = Math.Min(currentSpeed / _maximumReasonableVelocity, 1f);
+    //    var hapticParameters = new List<CHHapticParameter>
+    //        {
+    //            new CHHapticParameter(
+    //                parameterId: CHHapticDynamicParameterID.HapticIntensityControl,
+    //                parameterValue: intensity
+    //            )
+    //        };
 
-        Debug.Log($"Sending intensity {intensity} to texture player.");
-        _textureHapticPlayer.SendParameters(hapticParameters);
-    }
+    //    Debug.Log($"Sending intensity {intensity} to texture player.");
+    //    _textureHapticPlayer.SendParameters(hapticParameters);
+    //}
 }
