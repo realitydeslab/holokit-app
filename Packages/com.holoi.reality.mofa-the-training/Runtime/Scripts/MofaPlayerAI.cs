@@ -21,9 +21,9 @@ namespace Holoi.Reality.MOFATheTraining
     {
         [SerializeField] private MofaAvatarCollectionParamsList _mofaAvatarCollectionParamsList;
 
-        [SerializeField] private SpellList _spellList;
-
         [SerializeField] private RuntimeAnimatorController _mofaAvatarRuntimeAnimatorController;
+
+        private readonly NetworkVariable<Vector2> _animationVector = new(Vector2.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         private Animator _animator;
 
@@ -42,8 +42,6 @@ namespace Holoi.Reality.MOFATheTraining
 
         private Vector3 _destPosition;
 
-        private const float Speed = 0.3f;
-
         private AIAttackState _lastAIAttackState;
 
         private Coroutine _attackAICoroutine;
@@ -60,6 +58,8 @@ namespace Holoi.Reality.MOFATheTraining
 
         private Vector3 _lastFramePosition;
 
+        private const float Speed = 0.3f;
+
         private readonly Vector4 VelocityRemap = new(-.02f, .02f, -1f, 1f);
 
         public static event Action<SpellType> OnAISpawnedSpell;
@@ -74,18 +74,16 @@ namespace Holoi.Reality.MOFATheTraining
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-            //Debug.Log("[MofaAI] OnNetworkSpawn");
 
-            NetworkManager.NetworkTickSystem.Tick += OnNetworkTick;
+            _animationVector.OnValueChanged += OnAnimationVectorChanged;
         }
 
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
 
-            NetworkManager.NetworkTickSystem.Tick -= OnNetworkTick;
+            _animationVector.OnValueChanged -= OnAnimationVectorChanged;
         }
-
 
         private void Update()
         {
@@ -136,14 +134,6 @@ namespace Holoi.Reality.MOFATheTraining
                 _avatar.transform.localScale = new Vector3(avatarCollectionParams.Scale, avatarCollectionParams.Scale, avatarCollectionParams.Scale);
                 _animator = _avatar.GetComponent<Animator>();
                 _animator.runtimeAnimatorController = _mofaAvatarRuntimeAnimatorController;
-            }
-        }
-
-        private void OnNetworkTick()
-        {
-            if (!IsServer)
-            {
-                UpdateAvatarMovementAnimation();
             }
         }
 
@@ -205,7 +195,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void SetupSpellsForAI()
         {
-            foreach (var spell in _spellList.List)
+            foreach (var spell in ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).SpellList.List)
             {
                 if (spell.MagicSchool.TokenId.Equals("0"))
                 {
@@ -253,16 +243,20 @@ namespace Holoi.Reality.MOFATheTraining
 
         private IEnumerator SpawnSpellWithDelay(SpellType spellType)
         {
-            OnAISpawnedSpellClientRpc(spellType);
-            if (spellType == SpellType.Basic)
+            var hostLifeShield = _mofaRealityManager.Players[0].LifeShield;
+            if (LifeShield != null && hostLifeShield != null)
             {
-                yield return new WaitForSeconds(0.3f);
-            }
-            else
-            {
-                yield return new WaitForSeconds(0.5f);
-            }
-            SpawnSpell(spellType);
+                OnAISpawnedSpellClientRpc(spellType);
+                if (spellType == SpellType.Basic)
+                {
+                    yield return new WaitForSeconds(0.3f);
+                }
+                else
+                {
+                    yield return new WaitForSeconds(0.5f);
+                }
+                SpawnSpell(spellType);
+            }   
         }
 
         [ClientRpc]
@@ -277,7 +271,7 @@ namespace Holoi.Reality.MOFATheTraining
             var hostLifeShield = _mofaRealityManager.Players[0].LifeShield;
             if (LifeShield != null && hostLifeShield != null)
             {
-                Vector3 avatarCenterEyePos = transform.position + transform.rotation * new Vector3(0f, 1.2f, 1f); // TODO: Give a better offset
+                Vector3 avatarCenterEyePos = transform.position + transform.rotation * _centerEyeOffset;
                 Quaternion rotation = Quaternion.LookRotation(hostLifeShield.transform.position - avatarCenterEyePos);
                 // TODO: Random deviation
 
@@ -310,6 +304,7 @@ namespace Holoi.Reality.MOFATheTraining
                     z = MofaTrainingUtils.Remap(z, VelocityRemap.x, VelocityRemap.y, VelocityRemap.z, VelocityRemap.w, true);
                     x = MofaTrainingUtils.Remap(x, VelocityRemap.x, VelocityRemap.y, VelocityRemap.z, VelocityRemap.w, true);
 
+                    _animationVector.Value = new Vector2(x, z);
                     _animator.SetFloat("Velocity Z", z);
                     _animator.SetFloat("Velocity X", x);
                 }
@@ -323,6 +318,15 @@ namespace Holoi.Reality.MOFATheTraining
             _lastFrameForward = transform.forward;
             _lastFrameRight = transform.right;
             _lastFramePosition = transform.position;
+        }
+
+        private void OnAnimationVectorChanged(Vector2 oldValue, Vector2 newValue)
+        {
+            if (!IsServer)
+            {
+                _animator.SetFloat("Velocity Z", newValue.x);
+                _animator.SetFloat("Velocity X", newValue.y);
+            }
         }
 
         private void PlayAvatarCastSpellAnimation(SpellType spellType)

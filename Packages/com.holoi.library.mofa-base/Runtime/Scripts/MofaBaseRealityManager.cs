@@ -80,7 +80,7 @@ namespace Holoi.Library.MOFABase
 
         private readonly Dictionary<ulong, MofaPlayer> _players = new();
 
-        private const int RoundDuration = 80;
+        private const int RoundDuration = 30;
 
         public static event Action<MofaPhase> OnPhaseChanged;
 
@@ -149,7 +149,7 @@ namespace Holoi.Library.MOFABase
         }
 
         // Host only
-        protected void SpawnPlayer(int magicSchoolTokenId, MofaTeam team, ulong ownerClientId)
+        public void SpawnPlayer(int magicSchoolTokenId, MofaTeam team, ulong ownerClientId)
         {
             var player = Instantiate(_mofaPlayerPrefab);
             player.MagicSchoolTokenId.Value = magicSchoolTokenId;

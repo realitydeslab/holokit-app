@@ -64,7 +64,7 @@ namespace Holoi.Library.MOFABase
             ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).SetLifeShield(this);
 
             //Hide local player's shield
-            if (OwnerClientId == NetworkManager.LocalClientId)
+            if (HoloKit.HoloKitUtils.IsRuntime && OwnerClientId == NetworkManager.LocalClientId)
             {
                 _fragments[LifeShieldArea.Center].transform.GetChild(0).gameObject.SetActive(false);
                 _fragments[LifeShieldArea.Top].transform.GetChild(0).gameObject.SetActive(false);

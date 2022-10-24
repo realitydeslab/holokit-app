@@ -123,21 +123,13 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &141574176
+--- !u!1001 &130612390
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5912776338988280467, guid: 97aee316523dc4f1ca51dee4f510ce12, type: 3}
-      propertyPath: LifeShieldPrefab
-      value: 
-      objectReference: {fileID: 7460444132525488057, guid: 3f22ed168999e4f2cbdd00e479788366, type: 3}
-    - target: {fileID: 5912776338988280467, guid: 97aee316523dc4f1ca51dee4f510ce12, type: 3}
-      propertyPath: _mofaPlayerPrefab
-      value: 
-      objectReference: {fileID: 5531124449187713469, guid: 5180be57b37b4499b813f534629c92ee, type: 3}
     - target: {fileID: 5912776338988280468, guid: 97aee316523dc4f1ca51dee4f510ce12, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -184,15 +176,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5912776338988280469, guid: 97aee316523dc4f1ca51dee4f510ce12, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 1425954916
+      value: 2051966726
       objectReference: {fileID: 0}
     - target: {fileID: 5912776338988280470, guid: 97aee316523dc4f1ca51dee4f510ce12, type: 3}
       propertyPath: m_Name
       value: Mofa Training Reality Manager
-      objectReference: {fileID: 0}
-    - target: {fileID: 5912776338988280470, guid: 97aee316523dc4f1ca51dee4f510ce12, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97aee316523dc4f1ca51dee4f510ce12, type: 3}
@@ -397,6 +385,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5626992624695367093, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
   m_PrefabInstance: {fileID: 275482710}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &322521519 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1674415485778022400, guid: 3f5bcecdc6ada49e487efb33f65a7e0d, type: 3}
+  m_PrefabInstance: {fileID: 1674415485173491401}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59256fc500bba4b53be81d558760c8cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &608755119
 GameObject:
   m_ObjectHideFlags: 0
@@ -801,7 +800,7 @@ ParentConstraint:
   m_AffectRotationX: 1
   m_AffectRotationY: 1
   m_AffectRotationZ: 1
-  m_IsContraintActive: 0
+  m_IsContraintActive: 1
   m_IsLocked: 0
   m_Sources:
   - sourceTransform: {fileID: 275482713}
@@ -923,7 +922,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1078102007842606174, guid: a52ee14d8ad774911906000298a66025, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 800
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1078102007842606174, guid: a52ee14d8ad774911906000298a66025, type: 3}
       propertyPath: m_LocalRotation.w
@@ -961,6 +960,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4363729947160988311, guid: a52ee14d8ad774911906000298a66025, type: 3}
+      propertyPath: _inputManager
+      value: 
+      objectReference: {fileID: 322521519}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a52ee14d8ad774911906000298a66025, type: 3}
 --- !u!224 &1913339202 stripped
@@ -978,8 +981,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2068233601}
   - component: {fileID: 2068233600}
-  - component: {fileID: 2068233602}
-  - component: {fileID: 2068233603}
   m_Layer: 0
   m_Name: XR Origin
   m_TagString: Untagged
@@ -1020,33 +1021,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2068233602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2068233599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1760703bbd54c04488a8d10600262ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PlanePrefab: {fileID: 1585201990951412, guid: c9ecef8baa71543d4b69de01f8ac4472, type: 3}
-  m_DetectionMode: 1
---- !u!114 &2068233603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2068233599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa17d122634046b4a8e23048891fafc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_RaycastPrefab: {fileID: 0}
 --- !u!1 &2111703477
 GameObject:
   m_ObjectHideFlags: 0
@@ -1146,6 +1120,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mofa Popup Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 3562751820711696954, guid: 663eacc5261b743df87013da82b76119, type: 3}
+      propertyPath: _fightingPanelTransform
+      value: 
+      objectReference: {fileID: 1913339202}
     - target: {fileID: 3562751820711696955, guid: 663eacc5261b743df87013da82b76119, type: 3}
       propertyPath: m_RootOrder
       value: 12

@@ -114,12 +114,14 @@ namespace Holoi.Library.HoloKitApp
                 HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
                 HoloKitARSessionControllerAPI.SetSessionShouldAttemptRelocalization(false);
             }
+
             // Trigger WirelessData permission
             if (HoloKitUtils.IsRuntime)
             {
                 PermissionsAPI.Initialize();
+                StartCoroutine(HoloKitAppPermissionsManager.RequestWirelessDataPermission());
             }
-            StartCoroutine(HoloKitAppPermissionsManager.RequestWirelessDataPermission());
+            
             // Load Global Settings
             GlobalSettings.Load();
             // Register scene management delegates
@@ -162,6 +164,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnApplicationQuit()
         {
+            ResetWatchConnectivity();
             GlobalSettings.Save();
         }
         #endregion
@@ -240,6 +243,11 @@ namespace Holoi.Library.HoloKitApp
                 HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
             }
 
+            ResetWatchConnectivity();
+        }
+
+        private void ResetWatchConnectivity()
+        {
             // Let HoloKitAppWatchConnectivityManager take control of WCSessionDelegate
             HoloKitAppWatchConnectivityAPI.TakeControlWatchConnectivitySession();
             // Make Watch App jump back to the main page

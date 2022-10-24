@@ -141,6 +141,7 @@ namespace Holoi.Library.HoloKitApp
         {
             yield return new WaitForSeconds(0.2f); // TODO: To make sure the UI has already popped up
             UnityWebRequest request = UnityWebRequest.Get("http://holoi.com");
+            request.timeout = 10;
             yield return request.SendWebRequest();
 
             if (request.result == UnityWebRequest.Result.ConnectionError)
