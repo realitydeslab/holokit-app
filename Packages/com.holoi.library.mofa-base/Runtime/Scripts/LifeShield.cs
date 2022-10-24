@@ -240,7 +240,7 @@ namespace Holoi.Library.MOFABase
                 {
                     _fragments[LifeShieldArea.Center].GetComponent<Collider>().enabled = false;
                     var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-                    if (mofaRealityManager.Phase.Value == MofaPhase.Fighting || mofaRealityManager.Phase.Value == MofaPhase.RoundOver)
+                    if (mofaRealityManager.CurrentPhase == MofaPhase.Fighting || mofaRealityManager.CurrentPhase == MofaPhase.RoundOver)
                     {
                         mofaRealityManager.Players[(ulong)LastAttackerClientId.Value].KillCount.Value++;
                         mofaRealityManager.Players[OwnerClientId].DeathCount.Value++;

@@ -20,10 +20,6 @@ namespace Holoi.Library.HoloKitApp
             {
                 GraphicsSettings.renderPipelineAsset = _urpAsset;
             }
-            else
-            {
-                Debug.Log("[RealityManager] Current reality does not contain a customized URP Asset");
-            }
         }
     }
 }

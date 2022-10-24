@@ -5,8 +5,8 @@ using Unity.Netcode;
 using Unity.Netcode.Transports.UNET;
 using Holoi.AssetFoundation;
 using Holoi.Library.Permissions;
-using HoloKit;
 using Holoi.Library.HoloKitApp.WatchConnectivity;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -14,9 +14,7 @@ namespace Holoi.Library.HoloKitApp
     {
         Host = 0,
         Spectator = 1,
-        SecondPlayer = 2,
-        ThirdPlayer = 3,
-        FourthPlayer = 4
+        NonHostPlayer = 2
     }
 
     public class HoloKitApp : MonoBehaviour
@@ -53,7 +51,20 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
+        /// <summary>
+        /// If the local device is the host
+        /// </summary>
         public bool IsHost => _localPlayerType == HoloKitAppPlayerType.Host;
+
+        /// <summary>
+        /// If the local device is a spectator
+        /// </summary>
+        public bool IsSpectator => _localPlayerType == HoloKitAppPlayerType.Spectator;
+
+        /// <summary>
+        /// If the local player is the host or a non-host-player
+        /// </summary>
+        public bool IsPlayer => _localPlayerType != HoloKitAppPlayerType.Spectator;
 
         public HoloKitAppPlayerType LocalPlayerType => _localPlayerType;
 

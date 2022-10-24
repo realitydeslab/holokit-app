@@ -3,6 +3,7 @@ using UnityEngine;
 using Unity.Netcode;
 using HoloKit;
 using Holoi.Library.HoloKitApp.UI;
+using Holoi.Library.HoloKitApp.WatchConnectivity;
 using Holoi.Library.MOFABase.WatchConnectivity;
 
 namespace Holoi.Library.MOFABase
@@ -45,6 +46,19 @@ namespace Holoi.Library.MOFABase
 
         private void Start()
         {
+            if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            // Setup MofaWatchConnectivity
+            MofaWatchConnectivityAPI.Initialize();
+            // MofaWatchConnectivityManager should take control first
+            MofaWatchConnectivityAPI.TakeControlWatchConnectivitySession();
+            // We then update the control on Watch side so that MofaWatchConnectivityManager won't miss messages.
+            HoloKitAppWatchConnectivityAPI.UpdateCurrentReality(WatchReality.MOFATheTraining);
+
             SetupSpells();
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
             LifeShield.OnSpawned += OnLifeShieldSpawned;
@@ -112,6 +126,18 @@ namespace Holoi.Library.MOFABase
                     break;
                 case MofaPhase.RoundData:
                     break;
+            }
+        }
+
+        private void OnRoundResult()
+        {
+            if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
+            {
+                //var localPlayerStats = GetIndividualStats(GetLocalPlayer());
+                //MofaWatchConnectivityAPI.SyncRoundResultToWatch(localPlayerStats.IndividualRoundResult,
+                //                                                localPlayerStats.Kill,
+                //                                                localPlayerStats.HitRate,
+                //                                                localPlayerStats.Distance);
             }
         }
 
@@ -200,7 +226,7 @@ namespace Holoi.Library.MOFABase
         {
             if (ownerClientId == NetworkManager.Singleton.LocalClientId)
             {
-                if (MofaBaseRealityManager.Phase.Value == MofaPhase.Fighting)
+                if (MofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting)
                 {
                     Active = true;
                     MofaWatchConnectivityAPI.QueryWatchState();

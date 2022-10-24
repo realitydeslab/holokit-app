@@ -8,15 +8,21 @@ namespace Holoi.Library.HoloKitApp
 {
     public class HoloKitAppARSessionManager : MonoBehaviour
     {
-        [Header("Plane Detection")]
-        [SerializeField] private ARPlane _arPlanePrefab;
-
         [Header("Image Tracking")]
         [SerializeField] private XRReferenceImageLibrary _holokitAppReferenceImageLibrary;
 
         [SerializeField] private GameObject _trackedImagePrefab;
 
+        [Header("Plane Detection")]
+        [SerializeField] private ARPlane _arPlanePrefab;
+
+        public ARTrackedImageManager ARTrackedImageManager => _arTrackedImageManager;
+
+        public ARPlaneManager ARPlaneManager => _arPlaneManager;
+
         private ARTrackedImageManager _arTrackedImageManager;
+
+        private ARPlaneManager _arPlaneManager;
 
         private void Start()
         {
@@ -37,12 +43,18 @@ namespace Holoi.Library.HoloKitApp
             }
             else
             {
-                // Add ARTrackedImageManager if client does not have ont
+                // Add ARTrackedImageManager if client does not have one
                 if (!HoloKitApp.Instance.IsHost)
                 {
                     _arTrackedImageManager = xrOrigin.gameObject.AddComponent<ARTrackedImageManager>();
                     SetupARTrackedImageManager();
                 }
+            }
+
+            // Plane detection
+            if (xrOrigin.TryGetComponent(out _arPlaneManager))
+            {
+
             }
         }
 
@@ -52,6 +64,20 @@ namespace Holoi.Library.HoloKitApp
             _arTrackedImageManager.referenceLibrary = _holokitAppReferenceImageLibrary;
             _arTrackedImageManager.requestedMaxNumberOfMovingImages = 1;
             _arTrackedImageManager.trackedImagePrefab = _trackedImagePrefab;
+        }
+
+        public void SetARTrackedImageManagerActive(bool active)
+        {
+            foreach (var trackable in _arTrackedImageManager.trackables)
+            {
+                trackable.gameObject.SetActive(active);
+            }
+            _arTrackedImageManager.enabled = active;
+        }
+
+        public void SetARPlaneManagerActive(bool active)
+        {
+
         }
     }
 }

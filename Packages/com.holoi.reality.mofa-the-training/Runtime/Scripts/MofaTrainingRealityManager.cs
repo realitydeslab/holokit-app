@@ -42,16 +42,8 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.OnNetworkSpawn();
 
-            Debug.Log("[MofaTrainingRealityManager] OnNetworkSpawn");
-
             if (IsServer)
             {
-                //SpawnLocalPlayerSpellManager();
-                // Spawn host's player
-                SpawnPlayer(MofaTeam.Blue, NetworkManager.LocalClientId);
-                // Spawn host's life shield
-                SpawnLifeShield(NetworkManager.LocalClientId);
-
                 SpawnMofaAI();
             }
 
@@ -103,14 +95,19 @@ namespace Holoi.Reality.MOFATheTraining
 
         public override void StartRound()
         {
-            base.StartRound();
+            if (CurrentPhase != MofaPhase.Waiting && CurrentPhase != MofaPhase.RoundData)
+            {
+                Debug.Log($"[MofaBaseRealityManager] You cannot start round at the current phase: {CurrentPhase}");
+                return;
+            }
+
             if (RoundCount == 0)
             {
                 if (_placementIndicator.activeSelf)
                 {
                     _mofaAI.InitializeAvatarPositionClientRpc(_placementIndicator.transform.position, _placementIndicator.transform.rotation);
                     Destroy(_placementIndicator);
-                    StartCoroutine(StartSingleRound());
+                    StartCoroutine(StartRoundFlow());
                 }
                 else
                 {
@@ -119,19 +116,19 @@ namespace Holoi.Reality.MOFATheTraining
             }
             else
             {
-                StartCoroutine(StartSingleRound());
+                StartCoroutine(StartRoundFlow());
             }
         }
 
         private void OnTriggered()
         {
-            if (Phase.Value == MofaPhase.Waiting)
+            if (CurrentPhase == MofaPhase.Waiting)
             {
                 StartRound();
                 return;
             }
 
-            if (Phase.Value == MofaPhase.RoundData)
+            if (CurrentPhase == MofaPhase.RoundData)
             {
                 StartRound();
                 return;
@@ -140,7 +137,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void OnPhaseChangedFunc(MofaPhase mofaPhase)
         {
-            if (Phase.Value == MofaPhase.Countdown)
+            if (CurrentPhase == MofaPhase.Countdown)
             {
                 var arRaycastManager = HoloKitCamera.Instance.GetComponentInParent<ARRaycastManager>();
                 if (arRaycastManager != null)

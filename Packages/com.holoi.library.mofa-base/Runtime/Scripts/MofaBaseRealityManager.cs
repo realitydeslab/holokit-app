@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
-using Holoi.Library.HoloKitApp.WatchConnectivity;
-using Holoi.Library.MOFABase.WatchConnectivity;
 
 namespace Holoi.Library.MOFABase
 {
@@ -58,30 +56,29 @@ namespace Holoi.Library.MOFABase
 
     public abstract class MofaBaseRealityManager : RealityManager
     {
-        [HideInInspector] public NetworkVariable<MofaPhase> Phase = new(0, NetworkVariableReadPermission.Everyone);
-
         [Header("MOFA Base")]
+        [SerializeField] private MofaPlayer _mofaPlayerPrefab;
+
+        [SerializeField] private LifeShield _lifeShieldPrefab;
+
         public SpellList SpellList;
 
-        public MofaPlayer MofaPlayerPrefab;
+        public MofaPhase CurrentPhase => _currentPhase.Value;
 
-        public LifeShield LifeShieldPrefab;
+        private NetworkVariable<MofaPhase> _currentPhase = new(0, NetworkVariableReadPermission.Everyone);
 
-        public Dictionary<ulong, MofaPlayer> Players = new();
+        public int RoundCount => _roundCount.Value;
 
-        public int RoundCount = 0;
+        private NetworkVariable<int> _roundCount => new(0, NetworkVariableReadPermission.Everyone);
+
+        public Dictionary<ulong, MofaPlayer> Players => _players;
+
+        private readonly Dictionary<ulong, MofaPlayer> _players = new();
 
         public static event Action<MofaPhase> OnPhaseChanged;
 
         protected virtual void Start()
         {
-            // Initialize MofaWatchConnectivity on native
-            MofaWatchConnectivityAPI.Initialize();
-            // MofaWatchConnectivityManager should take control first
-            MofaWatchConnectivityAPI.TakeControlWatchConnectivitySession();
-            // We then update the control on Watch side so that MofaWatchConnectivityManager won't miss messages.
-            HoloKitAppWatchConnectivityAPI.UpdateCurrentReality(WatchReality.MOFATheTraining);
-
             // We need to respawn life shields when they are destroyed.
             LifeShield.OnDead += OnLifeShieldDead;
         }
@@ -96,46 +93,44 @@ namespace Holoi.Library.MOFABase
         {
             base.OnNetworkSpawn();
 
-            Phase.OnValueChanged += OnPhaseChangedFunc;
+            _currentPhase.OnValueChanged += OnPhaseChangedFunc;
+
+            if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
+            {
+                // Currently we only support 1 on 1, so the host is always blue and the other player is always red 
+                SpawnPlayerServerRpc(HoloKitApp.HoloKitApp.Instance.IsHost ? MofaTeam.Blue : MofaTeam.Red);
+            }
         }
 
         public override void OnNetworkDespawn()
         {
-            Debug.Log("[MofaBaseRealityManager] OnNetworkDespawn");
-            Phase.OnValueChanged -= OnPhaseChangedFunc;
+            _currentPhase.OnValueChanged -= OnPhaseChangedFunc;
         }
 
         // This delegate method will be called on every client.
         private void OnPhaseChangedFunc(MofaPhase oldValue, MofaPhase newValue)
         {
             OnPhaseChanged?.Invoke(newValue);
+        }
 
-            switch (newValue)
-            {
-                case MofaPhase.Waiting:
-                    break;
-                case MofaPhase.Countdown:
-                    // TODO: Do all apple watch work on LocalPlayerSpellManager
-                    //MofaWatchConnectivityAPI.SyncRoundStartToWatch();
-                    RoundCount++;
-                    break;
-                case MofaPhase.Fighting:
-                    break;
-                case MofaPhase.RoundOver:
-                    break;
-                case MofaPhase.RoundResult:
-                    if (!IsLocalPlayerSpectator())
-                    {
-                        var localPlayerStats = GetIndividualStats(GetLocalPlayer());
-                        MofaWatchConnectivityAPI.SyncRoundResultToWatch(localPlayerStats.IndividualRoundResult,
-                                                                        localPlayerStats.Kill,
-                                                                        localPlayerStats.HitRate,
-                                                                        localPlayerStats.Distance);
-                    }
-                    break;
-                case MofaPhase.RoundData:
-                    break;
-            }
+        [ServerRpc(RequireOwnership = false)]
+        protected void SpawnPlayerServerRpc(MofaTeam team, ServerRpcParams serverRpcParams = default)
+        {
+            SpawnPlayer(team, serverRpcParams.Receive.SenderClientId);
+        }
+
+        // Host only
+        protected void SpawnPlayer(MofaTeam team, ulong ownerClientId)
+        {
+            var player = Instantiate(_mofaPlayerPrefab);
+            player.Team.Value = team;
+            player.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
+        }
+
+        public void SpawnLifeShield(ulong ownerClientId)
+        {
+            var lifeShield = Instantiate(_lifeShieldPrefab);
+            lifeShield.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
         }
 
         public void SetPlayer(ulong clientId, MofaPlayer mofaPlayer)
@@ -155,34 +150,62 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        public void SpawnPlayer(MofaTeam team, ulong ownerClientId)
+        public MofaPlayer GetPlayer(ulong clientId = 0)
         {
-            var player = Instantiate(MofaPlayerPrefab);
-            player.Team.Value = team;
-            player.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
+            if (Players.ContainsKey(clientId))
+            {
+                return Players[clientId];
+            }
+            else
+            {
+                Debug.Log($"[MofaBaseRealityManager] There is no player with clientId: {clientId}");
+                return null;
+            }
         }
 
-        public void SpawnLifeShield(ulong ownerClientId)
+        // Host only
+        public void OnPlayerReadyStateChanged()
         {
-            var lifeShield = Instantiate(LifeShieldPrefab);
-            lifeShield.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
+            foreach (var player in _players.Values)
+            {
+                if (!player.Ready.Value)
+                {
+                    return;
+                }
+            }
+            // Everyone is ready
+            StartRound();
         }
 
-        protected IEnumerator StartSingleRound()
+        // Host only
+        public virtual void StartRound()
         {
-            Phase.Value = MofaPhase.Countdown;
-            RespawnEachPlayersLifeShield();
+            if (_currentPhase.Value != MofaPhase.Waiting && _currentPhase.Value != MofaPhase.RoundData)
+            {
+                Debug.Log($"[MofaBaseRealityManager] You cannot start round at the current phase: {_currentPhase.Value}");
+                return;
+            }
+            StartCoroutine(StartRoundFlow());
+        }
+
+        // Host only
+        protected IEnumerator StartRoundFlow()
+        {
+            _currentPhase.Value = MofaPhase.Countdown;
+            _roundCount.Value++;
+            RespawnAllLifeShields();
             yield return new WaitForSeconds(3f);
-            Phase.Value = MofaPhase.Fighting;
+            _currentPhase.Value = MofaPhase.Fighting;
             yield return new WaitForSeconds(80f);
-            Phase.Value = MofaPhase.RoundOver;
+            _currentPhase.Value = MofaPhase.RoundOver;
             yield return new WaitForSeconds(3f);
-            Phase.Value = MofaPhase.RoundResult;
+            _currentPhase.Value = MofaPhase.RoundResult;
             yield return new WaitForSeconds(3f);
-            Phase.Value = MofaPhase.RoundData;
+            _currentPhase.Value = MofaPhase.RoundData;
         }
 
-        private void RespawnEachPlayersLifeShield()
+        // Host only
+        private void RespawnAllLifeShields()
         {
             foreach (var clientId in Players.Keys)
             {
@@ -237,7 +260,7 @@ namespace Holoi.Library.MOFABase
             return teamScore;
         }
 
-        private MofaIndividualStats GetIndividualStats(MofaPlayer player)
+        public MofaIndividualStats GetIndividualStats(MofaPlayer player)
         {
             MofaIndividualStats stats = new();
             // Inividual round result
@@ -294,31 +317,6 @@ namespace Holoi.Library.MOFABase
             else
             {
                 return MofaRoundResult.Draw;
-            }
-        }
-
-        public MofaPlayer GetLocalPlayer()
-        {
-            if (Players.ContainsKey(NetworkManager.LocalClientId))
-            {
-                return Players[NetworkManager.LocalClientId];
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public bool IsLocalPlayerSpectator()
-        {
-            return !Players.ContainsKey(NetworkManager.LocalClientId);
-        }
-
-        public virtual void StartRound()
-        {
-            if (Phase.Value != MofaPhase.Waiting && Phase.Value != MofaPhase.RoundData)
-            {
-                return;
             }
         }
     }

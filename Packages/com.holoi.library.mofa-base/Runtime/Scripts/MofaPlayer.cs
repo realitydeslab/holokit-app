@@ -11,18 +11,19 @@ namespace Holoi.Library.MOFABase
     public enum MofaTeam
     {
         Blue = 0,
-        Red = 1
+        Red = 1,
+        Spectator = 2
     }
 
     public class MofaPlayer : NetworkBehaviour
     {
-        [HideInInspector] public NetworkVariable<MofaTeam> Team = new(0, NetworkVariableReadPermission.Everyone);
+        [HideInInspector] public NetworkVariable<MofaTeam> Team = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        [HideInInspector] public NetworkVariable<int> KillCount = new(0, NetworkVariableReadPermission.Everyone);
+        [HideInInspector] public NetworkVariable<bool> Ready = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        [HideInInspector] public NetworkVariable<int> DeathCount = new(0, NetworkVariableReadPermission.Everyone);
+        [HideInInspector] public NetworkVariable<int> KillCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        [HideInInspector] public NetworkVariable<bool> Ready = new(false, NetworkVariableReadPermission.Everyone);
+        [HideInInspector] public NetworkVariable<int> DeathCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         [HideInInspector] public LifeShield LifeShield;
 
@@ -30,7 +31,7 @@ namespace Holoi.Library.MOFABase
 
         public static event Action OnScoreChanged;
 
-        protected virtual void Awake()
+        protected virtual void Start()
         {
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
         }
@@ -42,16 +43,16 @@ namespace Holoi.Library.MOFABase
 
         public override void OnNetworkSpawn()
         {
-            //Debug.Log($"[MofaPlayer] OnNetworkSpawned with ownership {OwnerClientId} and team {Team.Value}");
+            Debug.Log($"[MofaPlayer] Spawned with team: {Team.Value} and ownership: {OwnerClientId}");
 
-            var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-            mofaRealityManager.SetPlayer(OwnerClientId, this);
-
+            ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).SetPlayer(OwnerClientId, this);
+            Ready.OnValueChanged += OnReadyStateChangedFunc;
             KillCount.OnValueChanged += OnScoreChangedFunc;
         }
 
         public override void OnNetworkDespawn()
         {
+            Ready.OnValueChanged -= OnReadyStateChangedFunc;
             KillCount.OnValueChanged -= OnScoreChangedFunc;
         }
 
@@ -67,6 +68,17 @@ namespace Holoi.Library.MOFABase
         private void OnScoreChangedFunc(int oldValue, int newValue)
         {
             OnScoreChanged?.Invoke();
+        }
+
+        private void OnReadyStateChangedFunc(bool oldValue, bool newValue)
+        {
+            if (IsServer)
+            {
+                if (!oldValue && newValue)
+                {
+                    ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).OnPlayerReadyStateChanged();
+                }
+            }
         }
 
         protected virtual void OnPhaseChanged(MofaPhase mofaPhase)

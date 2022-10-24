@@ -241,7 +241,6 @@ namespace Holoi.Library.HoloKitApp
             var arTrackedImageManager = HoloKitCamera.Instance.GetComponentInParent<ARTrackedImageManager>();
             arTrackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
             arTrackedImageManager.enabled = false;
-            // Destroy the image tracker prefab
             foreach (var trackable in arTrackedImageManager.trackables)
             {
                 trackable.gameObject.SetActive(false);

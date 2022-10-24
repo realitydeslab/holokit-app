@@ -64,9 +64,9 @@ namespace Holoi.Reality.MOFATheTraining
 
         public static event Action<SpellType> OnAISpawnedSpell;
 
-        protected override void Awake()
+        protected override void Start()
         {
-            base.Awake();
+            base.Start();
 
             _mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
         }
@@ -160,7 +160,7 @@ namespace Holoi.Reality.MOFATheTraining
                 }
 
                 // Position
-                if (_mofaRealityManager.Phase.Value == MofaPhase.Fighting)
+                if (_mofaRealityManager.CurrentPhase == MofaPhase.Fighting)
                 {
                     if (Vector3.Distance(transform.position, _destPosition) < 0.1f)
                     {

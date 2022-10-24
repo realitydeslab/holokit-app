@@ -24,7 +24,6 @@ namespace Holoi.Library.MOFABase
             }
 
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
-
             Scores.SetActive(false);
             Time.SetActive(false);
             Reticle.SetActive(false);
@@ -59,8 +58,7 @@ namespace Holoi.Library.MOFABase
 
         private void OnCountdown()
         {
-            var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-            if (mofaRealityManager.IsLocalPlayerSpectator()) // Spectator
+            if (HoloKitApp.HoloKitApp.Instance.LocalPlayerType == HoloKitAppPlayerType.Spectator) // Spectator
             {
                 Scores.SetActive(true);
                 Time.SetActive(true);

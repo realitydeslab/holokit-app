@@ -113,11 +113,11 @@ namespace Holoi.Library.MOFABase
         private void OnRoundResult()
         {
             var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-            if (mofaRealityManager.IsLocalPlayerSpectator())
+            if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
             {
                 return;
             }
-            var localPlayer = mofaRealityManager.GetLocalPlayer();
+            var localPlayer = mofaRealityManager.GetPlayer();
             var roundResult = mofaRealityManager.GetRoundResult();
             switch (roundResult)
             {
