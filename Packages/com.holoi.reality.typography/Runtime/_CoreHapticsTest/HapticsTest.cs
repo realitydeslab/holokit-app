@@ -53,7 +53,7 @@ public class HapticsTest : MonoBehaviour
     private void UpdateTextureIntensity()
 	{
 		// var currentSpeed = _rigidbody.velocity.magnitude;
-		var intensity = _sb.value *5f;
+		var intensity = _sb.value * 1f;
 		var hapticParameters = new List<CHHapticParameter>
 			{
 				new CHHapticParameter(
