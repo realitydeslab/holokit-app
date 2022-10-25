@@ -7,13 +7,14 @@ namespace Holoi.Avatar.Meebits
     public class MeebitsController : MonoBehaviour
     {
         public Transform HandJoint;
-        public Transform WeaponPrefab;
+        public GameObject WeaponPrefab;
 
         void Start()
         {
             var go = Instantiate(WeaponPrefab, HandJoint);
-            go.localPosition = new Vector3(0, 0.05f, 0.05f);
-            go.localEulerAngles = new Vector3(-90, 0, 0);
+            go.transform.localPosition = new Vector3(-.025f, 0.05f, 0.01f);
+            go.transform.localEulerAngles = new Vector3(-90, 0, 0);
+            go.transform.localScale = Vector3.one * 0.2f;
         }
     }
 }
