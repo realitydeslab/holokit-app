@@ -18,6 +18,7 @@ namespace Holoi.Library.ARUX
         [SerializeField] bool _autoReset = false;
 
         bool _isTriggered = false;
+        bool _isInteracted = false;
 
         float _loadSpeed;
 
@@ -26,6 +27,7 @@ namespace Holoi.Library.ARUX
         float _process = 0;
 
         public float Process { get { return _process; } }
+        public bool Interacted { get { return _isInteracted; } }
 
         private void Start()
         {
@@ -55,6 +57,7 @@ namespace Holoi.Library.ARUX
             {
                 if (Vector3.Distance(_ho.transform.position, transform.position + _offset) < _triggerDistance)
                 {
+                    _isInteracted = true;
                     _process += Time.deltaTime * _loadSpeed;
                     if (_process > 1)
                     {
@@ -72,6 +75,7 @@ namespace Holoi.Library.ARUX
                 }
                 else
                 {
+                    _isInteracted = false;
                     _process -= Time.deltaTime * _loadSpeed * 0.5f;
                     if (_process < 0) _process = 0;
                 }
