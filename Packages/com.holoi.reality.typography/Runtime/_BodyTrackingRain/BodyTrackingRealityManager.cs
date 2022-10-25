@@ -16,15 +16,8 @@ namespace Holoi.Reality.Typography
         [SerializeField] Transform _centerEye;
         [SerializeField] PhaseManager _phaseManager;
 
-        ARRaycastManager _arRaycastManager;
-        
-        bool _isRaycastHitFloor = false;
-
-        BoneController _bone;
-        bool _isBodyValid = false;
-        bool _isTrigger = false;
-
-        [HideInInspector] public Vector3 HitPosition = Vector3.down;
+        public bool IsBodyValid = false;
+        bool _isFirstTimeFindBody = false;
 
         public override void OnNetworkSpawn()
         {
@@ -33,57 +26,30 @@ namespace Holoi.Reality.Typography
 
         private void Start()
         {
-            _arRaycastManager = FindObjectOfType<ARRaycastManager>();
-            if(_centerEye==null) _centerEye = HoloKitCamera.Instance.CenterEyePose;
+            if(_centerEye == null) _centerEye = HoloKitCamera.Instance.CenterEyePose;
         }
 
         private void Update()
         {
-            if (FindObjectOfType<BoneController>() != null && !_isTrigger)
+            if (FindObjectOfType<BoneController>() != null)
             {
-                _isBodyValid = true;
-                _bone = FindObjectOfType<BoneController>();
-                _phaseManager.PlayPhaseSource();
-                _isTrigger = true;
-            }
-
-            if (FindObjectOfType<AROcclusionManager>()) Debug.Log("got a manager");
-
-            UpdateFloorHeight();
-
-        }
-
-        void UpdateFloorHeight()
-        {
-
-            Vector3 rayOrigin = _centerEye.position + _centerEye.forward * 1f;
-
-            Ray ray = new(rayOrigin, Vector3.down);
-
-            List<ARRaycastHit> hitResults = new();
-
-            if (_arRaycastManager.Raycast(ray, hitResults, TrackableType.Planes))
-            {
-                foreach (var hitResult in hitResults)
+                if (!_isFirstTimeFindBody)
                 {
-                    var arPlane = hitResult.trackable.GetComponent<ARPlane>();
-
-                    if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
-                    {
-                        HitPosition = hitResult.pose.position;
-                        transform.position = HitPosition;
-                        _isRaycastHitFloor = true;
-                        return;
-                    }
+                    IsBodyValid = true;
+                    _phaseManager.PlayPhaseSource();
+                    _isFirstTimeFindBody = true;
                 }
-                _isRaycastHitFloor = false;
-                //transform.position = _centerEye.position + horizontalForward.normalized * 1.5f + (transform.up * -1f);
+                else
+                {
+                    IsBodyValid = true;
+                }
 
             }
             else
             {
-                _isRaycastHitFloor = false;
-                //transform.position = _centerEye.position + horizontalForward.normalized * 1.5f + (transform.up * -1f);
+                Debug.Log("not found a body");
+                IsBodyValid = false;
+                _phaseManager.StopPhaseSource();
             }
         }
     }

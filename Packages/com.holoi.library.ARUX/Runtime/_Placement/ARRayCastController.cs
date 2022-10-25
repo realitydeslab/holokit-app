@@ -24,7 +24,7 @@ namespace Holoi.Library.ARUX
 
         private Transform _centerEye;
 
-        public bool isHit = false;
+        [HideInInspector] public bool isHit = false;
 
         private ARRaycastManager _arRaycastManager;
 
