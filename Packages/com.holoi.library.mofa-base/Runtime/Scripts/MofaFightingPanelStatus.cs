@@ -29,11 +29,11 @@ namespace Holoi.Library.MOFABase
         {
             if (watchState == MofaWatchState.Ground)
             {
-                _animator.SetTrigger("To Function");
+                _animator.SetBool("Attack", false);
             }
             else
             {
-                _animator.SetTrigger("To Attack");
+                _animator.SetBool("Attack", true);
             }
         }
 
