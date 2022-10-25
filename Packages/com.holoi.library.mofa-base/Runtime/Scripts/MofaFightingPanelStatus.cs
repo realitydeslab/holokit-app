@@ -41,8 +41,8 @@ namespace Holoi.Library.MOFABase
         {
             if (_inputManager.Active)
             {
-                //_attackBar.SetFloat("Loading", _inputManager.BasicSpellChargePercentage);
-                //_ultimateBar.SetFloat("Loading", _inputManager.SecondarySpellChargePercentage);
+                _attackBar.SetFloat("Loading Process", _inputManager.BasicSpellChargePercentage);
+                _ultimateBar.SetFloat("Loading Process", _inputManager.SecondarySpellChargePercentage);
             }
         }
     }

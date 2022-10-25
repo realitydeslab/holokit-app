@@ -16,11 +16,11 @@ namespace Holoi.Reality.MOFATheTraining
         [Header("MOFA The Training")]
         [SerializeField] private MofaPlayerAI _mofaPlayerAIPrefab;
 
-        [SerializeField] private GameObject _placementIndicatorPrefab;
+        [SerializeField] private AvatarPlacementIndicatorController _placementIndicatorPrefab;
 
         private MofaPlayerAI _mofaPlayerAI;
 
-        private GameObject _placementIndicator;
+        private AvatarPlacementIndicatorController _placementIndicator;
 
         protected override void Start()
         {
@@ -90,12 +90,12 @@ namespace Holoi.Reality.MOFATheTraining
                                 _placementIndicator.transform.position = new Vector3(position.x, hit.pose.position.y, position.z);
                                 Vector3 forwardVector = HoloKitCamera.Instance.CenterEyePose.position - _placementIndicator.transform.position;
                                 _placementIndicator.transform.rotation = MofaUtils.GetHorizontalLookRotation(forwardVector);
-                                _placementIndicator.SetActive(true);
+                                _placementIndicator.gameObject.SetActive(true);
                                 return;
                             }
                         }
                     }
-                    _placementIndicator.SetActive(false);
+                    _placementIndicator.gameObject.SetActive(false);
                 }
             }
         }
@@ -108,13 +108,13 @@ namespace Holoi.Reality.MOFATheTraining
                 return;
             }
 
-            Debug.Log($"The Training RoundCount: {RoundCount}");
             if (RoundCount == 0)
             {
-                if (_placementIndicator.activeSelf)
+                if (_placementIndicator.gameObject.activeSelf)
                 {
+                    _placementIndicator.OnBirth();
                     _mofaPlayerAI.InitializeAvatarPositionClientRpc(_placementIndicator.transform.position, _placementIndicator.transform.rotation);
-                    Destroy(_placementIndicator);
+                    Destroy(_placementIndicator, 3f);
                     StartCoroutine(StartRoundFlow());
                 }
                 else

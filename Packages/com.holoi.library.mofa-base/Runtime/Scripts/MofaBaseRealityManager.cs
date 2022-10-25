@@ -159,7 +159,7 @@ namespace Holoi.Library.MOFABase
 
         public void SpawnLifeShield(ulong ownerClientId)
         {
-            var lifeShieldPrefab = LifeShieldList.GetLifeShield(_players[ownerClientId].MagicSchoolTokenId.ToString());
+            var lifeShieldPrefab = LifeShieldList.GetLifeShield(_players[ownerClientId].MagicSchoolTokenId.Value.ToString());
             var lifeShield = Instantiate(lifeShieldPrefab);
             lifeShield.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
         }
@@ -292,7 +292,8 @@ namespace Holoi.Library.MOFABase
 
         private IEnumerator RespawnLifeShield(ulong ownerClientId)
         {
-            yield return new WaitForSeconds(3f - LifeShield.DestroyDelay);
+            //yield return new WaitForSeconds(3f - LifeShield.DestroyDelay);
+            yield return new WaitForSeconds(3f);
             SpawnLifeShield(ownerClientId);
         }
 

@@ -28,7 +28,7 @@ namespace Holoi.Library.MOFABase
         {
             get
             {
-                return BasicSpellChargePercentage / BasicSpell.ChargeTime * BasicSpell.MaxChargeCount;
+                return BasicSpellCharge / (BasicSpell.ChargeTime * BasicSpell.MaxChargeCount);
             }
         }
 
@@ -154,6 +154,10 @@ namespace Holoi.Library.MOFABase
             if (BasicSpellCharge < BasicSpell.ChargeTime * BasicSpell.MaxChargeCount)
             {
                 BasicSpellCharge += Time.fixedDeltaTime;
+                if (BasicSpellCharge > BasicSpell.ChargeTime * BasicSpell.MaxChargeCount)
+                {
+                    BasicSpellCharge = BasicSpell.ChargeTime * BasicSpell.MaxChargeCount;
+                }
             }
 
             if (CurrentWatchState == MofaWatchState.Ground)
@@ -161,6 +165,10 @@ namespace Holoi.Library.MOFABase
                 if (SecondarySpellCharge < SecondarySpell.ChargeTime)
                 {
                     SecondarySpellCharge += Time.fixedDeltaTime;
+                    if (SecondarySpellCharge > SecondarySpell.ChargeTime)
+                    {
+                        SecondarySpellCharge = SecondarySpell.ChargeTime;
+                    }
                 }
             }
             else
