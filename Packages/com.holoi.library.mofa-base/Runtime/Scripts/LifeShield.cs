@@ -15,6 +15,8 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] private AudioClip _beingDestroyedSound;
 
+        public bool IsDestroyed => _centerDestroyed.Value;
+
         private readonly NetworkVariable<bool> _centerDestroyed = new(false, NetworkVariableReadPermission.Everyone);
 
         private readonly NetworkVariable<bool> _topDestroyed = new(false, NetworkVariableReadPermission.Everyone);

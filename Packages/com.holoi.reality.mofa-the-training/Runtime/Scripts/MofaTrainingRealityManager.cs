@@ -71,7 +71,9 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void Update()
         {
-            if (_placementIndicator != null)
+            if (_placementIndicator != null
+                && HoloKitApp.Instance.ARSessionManager.ARRaycastManager != null
+                && HoloKitApp.Instance.ARSessionManager.ARPlaneManager != null)
             {
                 if (HoloKitUtils.IsRuntime)
                 {
@@ -86,7 +88,7 @@ namespace Holoi.Reality.MOFATheTraining
                             var arPlane = hit.trackable.GetComponent<ARPlane>();
                             if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
                             {
-                                Vector3 position = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * 5; // TODO: Changeable
+                                Vector3 position = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * 6f; // TODO: Changeable
                                 _placementIndicator.transform.position = new Vector3(position.x, hit.pose.position.y, position.z);
                                 Vector3 forwardVector = HoloKitCamera.Instance.CenterEyePose.position - _placementIndicator.transform.position;
                                 _placementIndicator.transform.rotation = MofaUtils.GetHorizontalLookRotation(forwardVector);

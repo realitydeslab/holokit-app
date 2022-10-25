@@ -139,11 +139,6 @@ namespace Holoi.Library.HoloKitApp.UI
                     return;
                 }
 
-                if (!IsInsideInputArea(touch.position))
-                {
-                    return;
-                }
-
                 if (touch.phase == TouchPhase.Began)
                 {
                     _touchBeganPosition = touch.position;
@@ -169,6 +164,10 @@ namespace Holoi.Library.HoloKitApp.UI
                     }
                     else if (fingerMovementVector.magnitude < FingerMovementClickThreshold)
                     {
+                        if (!IsInsideInputArea(_touchBeganPosition))
+                        {
+                            return;
+                        }
                         // Enter the current room
                         HoloKitApp.Instance.CurrentReality = HoloKitApp.Instance.GlobalSettings.RealityList.List[_currentRoomIndex];
                         HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityDetailPage");

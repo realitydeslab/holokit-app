@@ -15,6 +15,8 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] VisualEffect _ultimateBar;
 
+        private bool _isPointingGround;
+
         private void OnEnable()
         {
             MofaWatchConnectivityAPI.OnWatchStateChanged += OnWatchStateChanged;

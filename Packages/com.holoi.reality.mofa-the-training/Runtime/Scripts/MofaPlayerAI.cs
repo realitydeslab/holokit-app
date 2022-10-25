@@ -1,12 +1,10 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using Holoi.AssetFoundation;
 using HoloKit;
 using Holoi.Library.MOFABase;
 using Holoi.Library.HoloKitApp;
-using System;
 
 namespace Holoi.Reality.MOFATheTraining
 {
@@ -105,7 +103,7 @@ namespace Holoi.Reality.MOFATheTraining
                 _initialPosition = go.transform.position;
                 _initialForward = go.transform.forward;
                 _initialRight = go.transform.right;
-                
+
                 _destPosition = go.transform.position;
                 transform.position = go.transform.position;
 
@@ -219,7 +217,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             yield return new WaitForSeconds(UnityEngine.Random.Range(1f, 5f));
 
-            while(true)
+            while (true)
             {
                 float random = UnityEngine.Random.Range(0f, 1f);
                 if (random < 0.2f) // Do nothing
@@ -247,8 +245,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         private IEnumerator SpawnSpellWithDelay(SpellType spellType)
         {
-            var hostLifeShield = _mofaRealityManager.Players[0].LifeShield;
-            if (LifeShield != null && hostLifeShield != null)
+            if (IsHostAlive() && IsAIAlive())
             {
                 OnAISpawnedSpellClientRpc(spellType);
                 if (spellType == SpellType.Basic)
@@ -260,7 +257,32 @@ namespace Holoi.Reality.MOFATheTraining
                     yield return new WaitForSeconds(0.5f);
                 }
                 SpawnSpell(spellType);
-            }   
+            }
+        }
+
+        private bool IsHostAlive()
+        {
+            var hostLifeShield = _mofaRealityManager.Players[0].LifeShield;
+            if (hostLifeShield != null && !hostLifeShield.IsDestroyed)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool IsAIAlive()
+        {
+            if (LifeShield != null && !LifeShield.IsDestroyed)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         [ClientRpc]
@@ -269,20 +291,27 @@ namespace Holoi.Reality.MOFATheTraining
             OnAISpawnedSpell?.Invoke(spellType);
             PlayAvatarCastSpellAnimation(spellType);
         }
-        
+
         private void SpawnSpell(SpellType spellType)
         {
             var hostLifeShield = _mofaRealityManager.Players[0].LifeShield;
-            if (LifeShield != null && hostLifeShield != null)
+            Vector3 avatarCenterEyePos = transform.position + transform.rotation * _centerEyeOffset;
+            Quaternion rotation = Quaternion.LookRotation(hostLifeShield.transform.position - avatarCenterEyePos);
+            // TODO: Random deviation
+            if (UnityEngine.Random.Range(0, 1f) > 0.5f)
             {
-                Vector3 avatarCenterEyePos = transform.position + transform.rotation * _centerEyeOffset;
-                Quaternion rotation = Quaternion.LookRotation(hostLifeShield.transform.position - avatarCenterEyePos);
-                // TODO: Random deviation
-
-                _mofaRealityManager.SpawnSpellServerRpc(spellType == SpellType.Basic ? _basicSpell.Id : _secondarySpell.Id,
-                    avatarCenterEyePos, rotation, OwnerClientId);
-                _lastAIAttackState = spellType == SpellType.Basic ? AIAttackState.BasicSpell : AIAttackState.SecondarySpell;
+                // Add horizontal deviation
+                rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(-10f, 10f), 0f) * rotation;
             }
+            else
+            {
+                // Add vertical deviation
+                rotation = Quaternion.Euler(UnityEngine.Random.Range(-10f, 10f), 0f, 0f) * rotation;
+            }
+
+            _mofaRealityManager.SpawnSpellServerRpc(spellType == SpellType.Basic ? _basicSpell.Id : _secondarySpell.Id,
+                avatarCenterEyePos, rotation, OwnerClientId);
+            _lastAIAttackState = spellType == SpellType.Basic ? AIAttackState.BasicSpell : AIAttackState.SecondarySpell;
         }
 
         private void UpdateAvatarMovementAnimation()
