@@ -8,11 +8,11 @@ struct MofaResultView: View {
     
     var body: some View {
         VStack {
-            if (self.result) {
-                youWinImage
-            } else {
-                youLoseImage
-            }
+//            if (self.result) {
+//                youWinImage
+//            } else {
+//                youLoseImage
+//            }
             //Spacer()
             dataList
                 .padding(.top)

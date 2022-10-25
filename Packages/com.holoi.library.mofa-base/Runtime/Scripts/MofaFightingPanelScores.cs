@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Library.MOFABase
 {
@@ -9,11 +6,35 @@ namespace Holoi.Library.MOFABase
     {
         [Header("UI Elenments")]
         [SerializeField] TMPro.TMP_Text _yourScore;
+
         [SerializeField] TMPro.TMP_Text _enemyScore;
+
+        [SerializeField] private GameObject _blueTeamMark;
+
+        [SerializeField] private GameObject _redTeamMark;
 
         private void OnEnable()
         {
             MofaPlayer.OnScoreChanged += OnScoreChanged;
+        }
+
+        private void Start()
+        {
+            if (HoloKitApp.HoloKitApp.Instance.IsHost)
+            {
+                _blueTeamMark.SetActive(true);
+                _redTeamMark.SetActive(false);
+            }
+            else if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
+            {
+                _blueTeamMark.SetActive(false);
+                _redTeamMark.SetActive(true);
+            }
+            else if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
+            {
+                _blueTeamMark.SetActive(false);
+                _redTeamMark.SetActive(false);
+            }
         }
 
         private void OnDisable()

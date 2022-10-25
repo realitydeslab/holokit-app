@@ -9,12 +9,14 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            Debug.Log("More button OnPointerDown");
             _starARPanel.OnMoreButtonPressed();
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            
+            Debug.Log("More button OnPointerUp");
+            _starARPanel.OnMoreButtonReleased();
         }
     }
 }

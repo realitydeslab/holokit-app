@@ -128,7 +128,10 @@ namespace Holoi.Library.MOFABase
 
             if (newValue == MofaPhase.RoundData)
             {
-                ResetLocalPlayerReadyState();
+                if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
+                {
+                    ResetLocalPlayerReadyState();
+                }
             }
         }
 

@@ -30,6 +30,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private GameObject _moreButton;
 
+        [SerializeField] private GameObject _block;
+
         // TODO: Make this dynamically adapted to the current iPhone
         private const float HorizontalAlignmentMarkerThickness = 3f;
 
@@ -136,16 +138,16 @@ namespace Holoi.Library.HoloKitApp.UI
         public void OnMoreButtonPressed()
         {
             _horizontalAlignmentMarker.gameObject.SetActive(false);
-            _mainWindow.SetActive(false);
+            //_mainWindow.SetActive(false);
+            _block.SetActive(true);
             _moreWindow.SetActive(true);
-            StartCoroutine(StartMoreButtonCoolingDown());
         }
 
-        private IEnumerator StartMoreButtonCoolingDown()
+        public void OnMoreButtonReleased()
         {
-            yield return new WaitForSeconds(6f);
             _horizontalAlignmentMarker.gameObject.SetActive(true);
-            _mainWindow.SetActive(true);
+            //_mainWindow.SetActive(true);
+            _block.SetActive(false);
             _moreWindow.SetActive(false);
         }
     }
