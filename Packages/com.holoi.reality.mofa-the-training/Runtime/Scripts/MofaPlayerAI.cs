@@ -313,7 +313,7 @@ namespace Holoi.Reality.MOFATheTraining
             else
             {
                 // Add vertical deviation
-                rotation = Quaternion.Euler(UnityEngine.Random.Range(-15f, 15f), 0f, 0f) * rotation;
+                rotation = Quaternion.Euler(UnityEngine.Random.Range(-10f, 10f), 0f, 0f) * rotation;
             }
 
             _mofaRealityManager.SpawnSpellServerRpc(spellType == SpellType.Basic ? _basicSpell.Id : _secondarySpell.Id,
