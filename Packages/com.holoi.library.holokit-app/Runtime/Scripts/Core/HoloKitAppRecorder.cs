@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.XR.ARFoundation;
 using NatSuite.Recorders;
 using NatSuite.Recorders.Clocks;
@@ -75,6 +74,14 @@ namespace Holoi.Library.HoloKitApp
         {
             _videoWidth = Screen.width;
             _videoHeight = Screen.height;
+            if (_videoWidth % 2 != 0)
+            {
+                _videoWidth--;
+            }
+            if (_videoHeight %2 != 0)
+            {
+                _videoHeight--;
+            }
 
             _recordCamera = HoloKitCamera.Instance.GetComponent<Camera>();
             if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Stereo)
