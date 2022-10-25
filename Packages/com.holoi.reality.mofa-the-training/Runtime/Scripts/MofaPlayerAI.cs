@@ -231,9 +231,16 @@ namespace Holoi.Reality.MOFATheTraining
                         _lastAIAttackState = AIAttackState.Nothing;
                     }
                 }
-                else if (random > 0.8) // Secondary spell
+                else if (random > 0.9) // Secondary spell
                 {
-
+                    if (_lastAIAttackState == AIAttackState.SecondarySpell)
+                    {
+                        _lastAIAttackState = AIAttackState.Nothing;
+                    }
+                    else
+                    {
+                        StartCoroutine(SpawnSpellWithDelay(SpellType.Secondary));
+                    }
                 }
                 else // Basic spell
                 {
