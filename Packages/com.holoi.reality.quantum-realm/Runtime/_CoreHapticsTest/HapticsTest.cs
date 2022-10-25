@@ -17,14 +17,17 @@ public class HapticsTest : MonoBehaviour
    [SerializeField] Scrollbar _sb;
 
 
-    [SerializeField] private TextAsset[] _hapticsList = new TextAsset[3];
+    [SerializeField] private TextAsset[] _hapticsList = new TextAsset[12];
+    [SerializeField] private TextAsset[] _textureHapticsList = new TextAsset[12];
 
     [SerializeField] private TextAsset _hapticsAHAP;
     [SerializeField] private TextAsset _haptics2AHAP;
     [SerializeField] private TextAsset _haptics3AHAP;
 
 	[SerializeField] private TextAsset _rollingTextureAHAP;
-
+    int _index = 0;
+    int _indexTexture = 0;
+    bool _playTexture = false;
 
     public void Awake()
     {
@@ -34,18 +37,17 @@ public class HapticsTest : MonoBehaviour
 
     public void Start()
     {
-        SetupHapticPlayers();
+        SetupHapticAdvancedPlayers(_rollingTextureAHAP);
 		_textureHapticPlayer.Start();
 
     }
 
     void FixedUpdate(){
-        UpdateTextureIntensity();
     }
 
-    private void SetupHapticPlayers()
+    private void SetupHapticAdvancedPlayers(TextAsset textureAHAP)
 	{
-		_textureHapticPlayer = _hapticsEngine.MakeAdvancedPlayer(new CHHapticPattern(_rollingTextureAHAP));
+		_textureHapticPlayer = _hapticsEngine.MakeAdvancedPlayer(new CHHapticPattern(textureAHAP));
 		_textureHapticPlayer.LoopEnabled = true;
 		_textureHapticPlayer.LoopEnd = 0f;
     }
@@ -82,44 +84,28 @@ public class HapticsTest : MonoBehaviour
 
     }
 
-    public void Play(int index)
+    public void PlayTexture()
     {
-        
-        if (!(_hapticsList[index] is null))
-        {
-            _hapticsEngine.PlayPatternFromAhap(_hapticsList[index]);
-        }
+        _indexTexture++;
+        if (_index > 20) _indexTexture = 0;
+
+        _textureHapticPlayer.Destroy();
+        // set new player
+        SetupHapticAdvancedPlayers(_textureHapticsList[_indexTexture]);
+
+        _textureHapticPlayer.Start();
+
     }
 
+    public void Play()
+    {
 
-    //private void SetupHapticPlayers()
-    //{
-    //    _textureHapticPlayer = _engine.MakeAdvancedPlayer(new CHHapticPattern(_rollingTextureAHAP));
-    //    _textureHapticPlayer.LoopEnabled = true;
-    //    _textureHapticPlayer.LoopEnd = 0f;
+        _index++;
+        if (_index > 20) _index = 0;
 
-    //    _smallCollisionHapticPlayer = _engine.MakePlayer(new CHHapticPattern(_smallCollisionAHAP));
-    //    _largeCollisionHapticPlayer = _engine.MakePlayer(new CHHapticPattern(_largeCollisionAHAP));
-
-    //    _implodeHapticPlayer = _engine.MakeAdvancedPlayer(new CHHapticPattern(_implodeAHAP));
-    //    _implodeHapticPlayer.CompletionHandler += ImplosionHapticCompletion;
-    //}
-
-
-
-    //private void UpdateTextureIntensity()
-    //{
-    //    var currentSpeed = _rigidbody.velocity.magnitude;
-    //    var intensity = Math.Min(currentSpeed / _maximumReasonableVelocity, 1f);
-    //    var hapticParameters = new List<CHHapticParameter>
-    //        {
-    //            new CHHapticParameter(
-    //                parameterId: CHHapticDynamicParameterID.HapticIntensityControl,
-    //                parameterValue: intensity
-    //            )
-    //        };
-
-    //    Debug.Log($"Sending intensity {intensity} to texture player.");
-    //    _textureHapticPlayer.SendParameters(hapticParameters);
-    //}
+        if (!(_hapticsList[_index] is null))
+        {
+            _hapticsEngine.PlayPatternFromAhap(_hapticsList[_index]);
+        }
+    }
 }
