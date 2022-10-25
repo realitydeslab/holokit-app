@@ -286,6 +286,11 @@ extension MofaWatchAppManager: WCSessionDelegate {
                 }
             }
         } else if applicationContext["CurrentReality"] is Int {
+            DispatchQueue.main.async {
+                self.isFighting = false
+                self.currentView = .fightingView
+                self.stopRound()
+            }
             self.holokitWatchAppManager?.session(session, didReceiveApplicationContext: applicationContext)
         }
     }
