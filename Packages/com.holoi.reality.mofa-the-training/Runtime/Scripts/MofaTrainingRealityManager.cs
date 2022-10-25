@@ -116,7 +116,7 @@ namespace Holoi.Reality.MOFATheTraining
                 {
                     _placementIndicator.OnBirth();
                     _mofaPlayerAI.InitializeAvatarPositionClientRpc(_placementIndicator.transform.position, _placementIndicator.transform.rotation);
-                    Destroy(_placementIndicator, 3f);
+                    Destroy(_placementIndicator.gameObject, 3f);
                     StartCoroutine(StartRoundFlow());
                 }
                 else
