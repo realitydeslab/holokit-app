@@ -74,16 +74,12 @@ namespace Holoi.Library.MOFABase
 
         private void OnStartedRecording()
         {
-            Scores.SetActive(false);
-            Time.SetActive(false);
-            Reticle.SetActive(false);
-            Status.SetActive(false);
-            RedScreen.SetActive(false);
+            GetComponent<RectTransform>().localPosition = new Vector3(0f, 99f, 1f);
         }
 
         private void OnStoppedRecording()
         {
-            OnCountdown();
+            GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 1f);
         }
     }
 }

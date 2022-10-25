@@ -24,7 +24,6 @@ namespace Holoi.Library.MOFABase
         {
             if (mofaPhase == MofaPhase.Fighting)
             {
-                // SIZHENGTODO: 计时开始，80s一局
                 _timeCounter = 80;
             }
         }
