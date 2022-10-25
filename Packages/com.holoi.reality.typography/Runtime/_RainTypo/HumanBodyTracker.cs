@@ -19,7 +19,6 @@ namespace Holoi.Reality.Typography
         [Tooltip("The ARHumanBodyManager which will produce body tracking events.")]
         ARHumanBodyManager m_HumanBodyManager;
 
-        float _process = 0;
         /// <summary>
         /// Get/Set the <c>ARHumanBodyManager</c>.
         /// </summary>
@@ -42,6 +41,7 @@ namespace Holoi.Reality.Typography
 
         void OnEnable()
         {
+            Debug.Log("body tracker enabled");
             Debug.Assert(m_HumanBodyManager != null, "Human body manager is required.");
             m_HumanBodyManager.humanBodiesChanged += OnHumanBodiesChanged;
         }

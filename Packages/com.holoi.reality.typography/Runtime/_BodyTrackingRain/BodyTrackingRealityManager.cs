@@ -47,6 +47,8 @@ namespace Holoi.Reality.Typography
                 _isTrigger = true;
             }
 
+            if (FindObjectOfType<AROcclusionManager>()) Debug.Log("got a manager");
+
             UpdateFloorHeight();
 
         }
