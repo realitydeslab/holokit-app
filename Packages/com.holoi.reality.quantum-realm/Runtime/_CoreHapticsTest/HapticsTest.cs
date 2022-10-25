@@ -18,13 +18,12 @@ public class HapticsTest : MonoBehaviour
 
 
     [SerializeField] private TextAsset[] _hapticsList = new TextAsset[12];
-    [SerializeField] private TextAsset[] _textureHapticsList = new TextAsset[12];
+    [SerializeField] List<TextAsset> _textureHapticsList = new List<TextAsset>();
 
-    [SerializeField] private TextAsset _hapticsAHAP;
-    [SerializeField] private TextAsset _haptics2AHAP;
-    [SerializeField] private TextAsset _haptics3AHAP;
+    //[SerializeField] private TextAsset _hapticsAHAP;
+    //[SerializeField] private TextAsset _haptics2AHAP;
+    //[SerializeField] private TextAsset _haptics3AHAP;
 
-	[SerializeField] private TextAsset _rollingTextureAHAP;
     int _index = 0;
     int _indexTexture = 0;
     bool _playTexture = false;
@@ -37,9 +36,8 @@ public class HapticsTest : MonoBehaviour
 
     public void Start()
     {
-        SetupHapticAdvancedPlayers(_rollingTextureAHAP);
+        SetupHapticAdvancedPlayers(_textureHapticsList[0]);
 		_textureHapticPlayer.Start();
-
     }
 
     void FixedUpdate(){
@@ -87,7 +85,7 @@ public class HapticsTest : MonoBehaviour
     public void PlayTexture()
     {
         _indexTexture++;
-        if (_index > 20) _indexTexture = 0;
+        if (_indexTexture > _textureHapticsList.Count) _indexTexture = 0;
 
         _textureHapticPlayer.Destroy();
         // set new player

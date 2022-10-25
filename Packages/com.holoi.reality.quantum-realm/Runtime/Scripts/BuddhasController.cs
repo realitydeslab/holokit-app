@@ -33,6 +33,8 @@ namespace Holoi.Reality.QuantumRealm
             _hoverableObject.OnLoadedEvents.AddListener(StopHapticsPlayer);
 
             SetupHapticAdvancedPlayers(_textureAHAP);
+            _textureHapticPlayer.Start();
+            _textureHapticPlayer.Stop();
         }
 
         void Update()
@@ -61,14 +63,12 @@ namespace Holoi.Reality.QuantumRealm
         {
             if (_textureHapticPlayer != null)
                 _textureHapticPlayer.Start();
-
         }
 
         public void StopHapticsPlayer()
         {
             if(_textureHapticPlayer!=null)
             _textureHapticPlayer.Stop();
-
         }
 
         private void SetupHapticAdvancedPlayers(TextAsset textureAHAP)
