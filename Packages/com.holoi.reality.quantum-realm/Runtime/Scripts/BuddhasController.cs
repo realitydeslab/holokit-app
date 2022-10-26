@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 using Holoi.Library.ARUX;
@@ -32,9 +30,10 @@ namespace Holoi.Reality.QuantumRealm
             _hoverableObject.OnLoadedEvents.AddListener(FindObjectOfType<QuantumBuddhasSceneManager>().SwitchToNextVFXNetWork);
             _hoverableObject.OnLoadedEvents.AddListener(StopHapticsPlayer);
 
-            SetupHapticAdvancedPlayers(_textureAHAP);
-            _textureHapticPlayer.Start();
-            _textureHapticPlayer.Stop();
+            if (FindObjectOfType<HapticsManager>())
+            {
+                SetupHapticAdvancedPlayers(_textureAHAP);
+            }
         }
 
         void Update()

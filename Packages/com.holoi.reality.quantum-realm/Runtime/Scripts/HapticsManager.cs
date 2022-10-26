@@ -16,5 +16,10 @@ namespace Holoi.Reality.QuantumRealm
             HapticsEngine = new CHHapticEngine { IsAutoShutdownEnabled = false };
             HapticsEngine.Start();
         }
+
+        private void Start()
+        {
+            
+        }
     }
 }

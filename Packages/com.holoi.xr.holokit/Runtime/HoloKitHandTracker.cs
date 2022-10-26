@@ -41,7 +41,7 @@ namespace HoloKit
             set
             {
                 _active = value;
-                EnableAROcclusionManager(_active);
+                if(value) EnableAROcclusionManager(_active);
                 HoloKitHandTrackingControllerAPI.SetHandTrackingActive(_active);
             }
         }

@@ -101,17 +101,18 @@ namespace Holoi.Reality.QuantumRealm
                 _handHookHead.position = _handJoint.position + dir * 0.5f;
             }
 
-            if(HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono)
-            {
-                _arOcclusionManager.enabled = true;
-                _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Fastest;
-                _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Fastest;
-            }
-            else
-            {
-                _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Disabled;
-                _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Disabled;
-            }
+            // must enabled because hand tracking needs
+            //if(HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono)
+            //{
+            //    _arOcclusionManager.enabled = true;
+            //    _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Fastest;
+            //    _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Fastest;
+            //}
+            //else
+            //{
+            //    _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Disabled;
+            //    _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Disabled;
+            //}
         }
 
         void SwitchtoNextVFX()
@@ -171,14 +172,14 @@ namespace Holoi.Reality.QuantumRealm
                 // do on host:
                 SwitchtoNextVFX();
                 // do on client:
-                OnBuddhasSwitchedClientRpc(_currentIndex - 1);
+                OnBuddhasSwitchedClientRpc(_currentIndex);
             }
             else
             {
                 // do on client:
                 SwitchtoNextVFX();
                 // do on host:
-                OnBuddhasSwitchedServerRpc(_currentIndex - 1);
+                OnBuddhasSwitchedServerRpc(_currentIndex);
             }
         }
 
@@ -263,18 +264,6 @@ namespace Holoi.Reality.QuantumRealm
             StartCoroutine(DisableGameObjectAfterTimes(_arRaycastController.gameObject, 2f));
         }
 
-        //[ClientRpc]
-        //public void DisbleARPlaneManagerClientRpc()
-        //{
-        //    _arRaycastManager.enabled = false;
-        //    _arPlaneManager.enabled = false;
-        //    var planeList = FindObjectsOfType<ARPlane>();
-        //    foreach (var plane in planeList)
-        //    {
-        //        Destroy(plane.gameObject);
-        //    }
-        //}
-
         [ServerRpc(RequireOwnership = false)]
         public void OnBuddhasSwitchedServerRpc(int index)
         {
@@ -283,7 +272,8 @@ namespace Holoi.Reality.QuantumRealm
                 return;
             }
 
-            _currentIndex = index;
+            var lastIndex = index - 1 < 0 ? vfxs.Count - 1 : index - 1;
+            _currentIndex = lastIndex;
 
             Debug.Log($"OnBuddhasSwitchedServerRpc: {_currentIndex}");
 
@@ -309,7 +299,7 @@ namespace Holoi.Reality.QuantumRealm
                 {
                     vfxs[_currentIndex].gameObject.SetActive(true);
                 }
-                else if (i == _currentIndex - 1)
+                else if (i == lastIndex)
                 {
                     StartCoroutine(DisableGameObjectAfterTimes(vfxs[i].gameObject, 1.5f));
                 }
@@ -339,7 +329,8 @@ namespace Holoi.Reality.QuantumRealm
                 return;
             }
 
-            _currentIndex = index;
+            var lastIndex = index - 1 < 0 ? vfxs.Count - 1 : index - 1;
+            _currentIndex = lastIndex;
 
             Debug.Log($"OnActiveBuddhasChangedClientRpc: {_currentIndex}");
 
@@ -353,6 +344,10 @@ namespace Holoi.Reality.QuantumRealm
                 _vfxAnimator.SetTrigger("Fade Out");
                 _seatAnimator.SetTrigger("Fade Out");
             }
+            else
+            {
+                Debug.Log("not found animator");
+            }
 
             _currentIndex++;
 
@@ -365,7 +360,7 @@ namespace Holoi.Reality.QuantumRealm
                 {
                     vfxs[_currentIndex].gameObject.SetActive(true);
                 }
-                else if (i == _currentIndex - 1)
+                else if (i == lastIndex)
                 {
                     StartCoroutine(DisableGameObjectAfterTimes(vfxs[i].gameObject, 1.5f));
                 }
@@ -417,30 +412,5 @@ namespace Holoi.Reality.QuantumRealm
 
             }
         }
-
-        /*
- * Create a single haptic engine to be shared throughout the app
- */
-        //private void SetupHapticEngine()
-        //{
-        //    HapticEngine = new CHHapticEngine
-        //    {
-        //        IsAutoShutdownEnabled = false
-        //    };
-
-        //    HapticEngine.Start();
-        //}
-
-        //public void OnApplicationPause(bool pause)
-        //{
-        //    if (pause)
-        //    {
-        //        HapticEngine.Stop();
-        //    }
-        //    else
-        //    {
-        //        HapticEngine.Start();
-        //    }
-        //}
     }
 }
