@@ -39,8 +39,9 @@ public class MOFATrainingThumbnail : MonoBehaviour
     {
         _boltAnimator.enabled = true;
         _boltAnimator.Rebind();
-        _boltMagic.transform.position = new Vector3(0, 1.5f, 0);
-        _boltMagic.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, -2f);
+        var transform = _avatarAnimator.GetComponent<Transform>();
+        _boltMagic.transform.position = transform.position + Vector3.up * 1.5f;
+        _boltMagic.GetComponent<Rigidbody>().velocity = transform.forward*2f;
         StartCoroutine(WaitAndExplode());
     }
 }
