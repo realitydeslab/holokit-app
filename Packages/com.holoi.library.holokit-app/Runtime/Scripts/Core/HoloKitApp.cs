@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UNET;
+using Netcode.Transports.MultipeerConnectivity;
 using Holoi.AssetFoundation;
 using Holoi.Library.Permissions;
 using Holoi.Library.HoloKitApp.WatchConnectivity;
@@ -219,6 +220,7 @@ namespace Holoi.Library.HoloKitApp
             // Wait and start network
             StartCoroutine(HoloKitAppUtils.WaitAndDo(0.5f, () =>
             {
+                MultipeerConnectivityTransport.BundleId = _currentReality.BundleId;
                 if (IsHost)
                     StartHost();
                 else

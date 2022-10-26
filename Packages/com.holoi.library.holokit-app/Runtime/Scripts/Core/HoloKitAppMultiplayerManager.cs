@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Unity.Netcode;
-using HoloKit;
-using Netcode.Transports.MultipeerConnectivity;
 using UnityEngine.XR.ARFoundation;
+using Unity.Netcode;
+using Netcode.Transports.MultipeerConnectivity;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
 {

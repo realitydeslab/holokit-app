@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using Unity.Netcode;
@@ -12,6 +11,8 @@ namespace Netcode.Transports.MultipeerConnectivity
 
         public bool AutomaticAdvertisement = true;
 
+        public static string BundleId;
+
         private static MultipeerConnectivityTransport s_instance;
 
         [DllImport("__Internal")]
@@ -22,10 +23,10 @@ namespace Netcode.Transports.MultipeerConnectivity
                                                   Action OnHostDisconnected);
 
         [DllImport("__Internal")]
-        private static extern void MPC_StartAdvertising();
+        private static extern void MPC_StartAdvertising(string bundleId);
 
         [DllImport("__Internal")]
-        private static extern void MPC_StartBrowsing();
+        private static extern void MPC_StartBrowsing(string bundleId);
 
         [DllImport("__Internal")]
         private static extern void MPC_StopAdvertising();
@@ -88,6 +89,11 @@ namespace Netcode.Transports.MultipeerConnectivity
 
         public override void Initialize(NetworkManager networkManager)
         {
+            if (BundleId == null)
+            {
+                Debug.LogError("[MultipeerConnectivityTransport] You must set BundleId before start the network");
+            }
+
             MPC_Initialize(OnClientConnected,
                            OnConnectedToHost,
                            OnReceivedData,
@@ -99,20 +105,20 @@ namespace Netcode.Transports.MultipeerConnectivity
         {
             if (AutomaticAdvertisement)
             {
-                MPC_StartAdvertising();
+                MPC_StartAdvertising(BundleId);
             }
             return true;
         }
 
         public override bool StartClient()
         {
-            MPC_StartBrowsing();
+            MPC_StartBrowsing(BundleId);
             return true;
         }
 
         public static void StartAdvertising()
         {
-            MPC_StartAdvertising();
+            MPC_StartAdvertising(BundleId);
         }
 
         public static void StopAdvertising()
@@ -124,7 +130,6 @@ namespace Netcode.Transports.MultipeerConnectivity
         {
             transportId = 0;
             payload = default;
-            //payload = new ArraySegment<byte>();
             receiveTime = Time.realtimeSinceStartup;
             return NetworkEvent.Nothing;
         }
@@ -154,6 +159,7 @@ namespace Netcode.Transports.MultipeerConnectivity
         {
             Debug.Log("[MPCTransport] Shutdown");
             MPC_Deinitialize();
+            BundleId = null;
         }
     }
 }
