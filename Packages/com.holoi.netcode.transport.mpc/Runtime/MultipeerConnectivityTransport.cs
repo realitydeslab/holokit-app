@@ -35,7 +35,7 @@ namespace Netcode.Transports.MultipeerConnectivity
         private static extern void MPC_StopBrowsing();
 
         [DllImport("__Internal")]
-        private static extern void MPC_Deinitialize();
+        private static extern void MPC_Shutdown();
 
         [DllImport("__Internal")]
         private static extern void MPC_SendData(int transportID, byte[] data, int length, bool reliable);
@@ -162,7 +162,7 @@ namespace Netcode.Transports.MultipeerConnectivity
         public override void Shutdown()
         {
             Debug.Log("[MPCTransport] Shutdown");
-            MPC_Deinitialize();
+            MPC_Shutdown();
             BundleId = null;
         }
     }
