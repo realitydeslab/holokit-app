@@ -21,7 +21,7 @@ namespace Holoi.Reality.QuantumRealm
         [Header("Hand Objects")]
         [SerializeField] Transform _handJoint;
         [SerializeField] Transform _handHookHead;
-        [SerializeField] Transform _handLoadedVFXParent;
+        [SerializeField] Transform _handHoverLoadedVFX;
 
         [Header("AR NetWork Base Objects")]
         [SerializeField] Transform _serverCenterEye;
@@ -105,19 +105,6 @@ namespace Holoi.Reality.QuantumRealm
                 //_handHookHead.position = _handJoint.position + dir * 0.5f + _serverCenterEye.up*0.2f;
                 _handHookHead.position = _handJoint.position + dir * 0.5f;
             }
-
-            // must enabled because hand tracking needs
-            //if(HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono)
-            //{
-            //    _arOcclusionManager.enabled = true;
-            //    _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Fastest;
-            //    _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Fastest;
-            //}
-            //else
-            //{
-            //    _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Disabled;
-            //    _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Disabled;
-            //}
         }
 
         void SwitchtoNextVFX()
@@ -389,8 +376,8 @@ namespace Holoi.Reality.QuantumRealm
 
         void TriggerHandVFX()
         {
-            _handLoadedVFXParent.gameObject.SetActive(true);
-            StartCoroutine(DisableGameObjectAfterTimes(_handLoadedVFXParent.gameObject, 2.5f));
+            _handHoverLoadedVFX.gameObject.SetActive(true);
+            StartCoroutine(DisableGameObjectAfterTimes(_handHoverLoadedVFX.gameObject, 1.5f));
         }
 
         [ClientRpc]
