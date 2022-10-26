@@ -11,7 +11,7 @@ namespace Netcode.Transports.MultipeerConnectivity
 
         public bool AutomaticAdvertisement = true;
 
-        public static string BundleId;
+        public static string BundleId = null;
 
         private static MultipeerConnectivityTransport s_instance;
 
@@ -89,16 +89,20 @@ namespace Netcode.Transports.MultipeerConnectivity
 
         public override void Initialize(NetworkManager networkManager)
         {
-            if (BundleId == null)
-            {
-                Debug.LogError("[MultipeerConnectivityTransport] You must set BundleId before start the network");
-            }
-
             MPC_Initialize(OnClientConnected,
                            OnConnectedToHost,
                            OnReceivedData,
                            OnClientDisconnected,
                            OnHostDisconnected);
+
+            if (BundleId == null)
+            {
+                Debug.Log("[MultipeerConnectivityTransport] Initialized without BundleId");
+            }
+            else
+            {
+                Debug.Log($"[MultipeerConnectivityTransport] Initilized with BundleId: {BundleId}");
+            }
         }
 
         public override bool StartServer()

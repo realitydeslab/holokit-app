@@ -241,11 +241,15 @@ namespace Holoi.Library.HoloKitApp
             if (HoloKitUtils.IsRuntime)
             {
                 LoaderUtility.Deinitialize();
+                Debug.Log("LoaderUtility.Deinitialize();");
                 LoaderUtility.Initialize();
+                Debug.Log("LoaderUtility.Initialize();");
                 HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
-            }
+                Debug.Log("HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();");
 
-            ResetWatchConnectivity();
+                ResetWatchConnectivity();
+                Debug.Log("ResetWatchConnectivity();");
+            }
         }
 
         private void ResetWatchConnectivity()
