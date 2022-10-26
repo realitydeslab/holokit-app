@@ -27,17 +27,25 @@ public class MOFADuelThumbnail : MonoBehaviour
 
     IEnumerator WaitAndShootBolt()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.25f);
+        PlayAttackAnimation(0);
+        yield return new WaitForSeconds(0.25f);
         ShootBolt(0);
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.25f);
+        PlayAttackAnimation(1);
+        yield return new WaitForSeconds(0.25f);
         ShootBolt(1);
+
         StartCoroutine(WaitAndShootBolt());
+    }
+
+    void PlayAttackAnimation(int index)
+    {
+        _playerAnimator[index].SetTrigger("Attack A");
     }
 
     void ShootBolt(int index)
     {
-        _playerAnimator[index].SetTrigger("Attack A");
-
         var go = Instantiate(_boltPrefab[index]);
         var player = _playerAnimator[index].transform;
         go.transform.position = player.position + player.forward * 0.5f + Vector3.up * 1.5f;
