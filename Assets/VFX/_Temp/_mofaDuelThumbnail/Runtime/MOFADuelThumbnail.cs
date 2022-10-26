@@ -14,7 +14,7 @@ public class MOFADuelThumbnail : MonoBehaviour
         _playerAnimator[0].SetFloat("Velocity X", 1);
         _playerAnimator[1].SetFloat("Velocity X", 1);
 
-
+        StartCoroutine(WaitAndShootBolt());
     }
 
     // Update is called once per frame
@@ -28,13 +28,16 @@ public class MOFADuelThumbnail : MonoBehaviour
     IEnumerator WaitAndShootBolt()
     {
         yield return new WaitForSeconds(1.5f);
-        ShootBolt(1);
-        yield return new WaitForSeconds(1.5f);
         ShootBolt(0);
+        yield return new WaitForSeconds(1.5f);
+        ShootBolt(1);
+        StartCoroutine(WaitAndShootBolt());
     }
 
     void ShootBolt(int index)
     {
+        _playerAnimator[index].SetTrigger("Attack A");
+
         var go = Instantiate(_boltPrefab[index]);
         var player = _playerAnimator[index].transform;
         go.transform.position = player.position + player.forward * 0.5f + Vector3.up * 1.5f;

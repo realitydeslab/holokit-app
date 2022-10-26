@@ -16,4 +16,10 @@ public class BoltMagic : MonoBehaviour
     {
         
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //Debug.Log("trigger enter");
+        GetComponent<Animator>().SetTrigger("Hit");
+    }
 }
