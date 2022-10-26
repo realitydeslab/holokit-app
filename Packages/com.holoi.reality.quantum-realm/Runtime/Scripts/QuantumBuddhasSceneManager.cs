@@ -85,9 +85,14 @@ namespace Holoi.Reality.QuantumRealm
 
             //SetupHapticEngine();
 
+            _centerEye = HoloKitCamera.Instance.CenterEyePose;
+        }
+
+        void SetUpSwitchButton()
+        {
+            _switchButton.gameObject.SetActive(true);
             _switchButton.onClick.AddListener(SwitchToNextVFXNetWork);
 
-            _centerEye = HoloKitCamera.Instance.CenterEyePose;
         }
 
         void Update()
@@ -391,7 +396,9 @@ namespace Holoi.Reality.QuantumRealm
         [ClientRpc]
         public void OnBuddhasInitializedClientRpc()
         {
-            Debug.Log($"OnBuddhasEnabledClientRpc");
+            //Debug.Log($"OnBuddhasEnabledClientRpc");
+
+            SetUpSwitchButton();
 
             // create main object
             if (HoloKitApp.Instance.IsHost)
