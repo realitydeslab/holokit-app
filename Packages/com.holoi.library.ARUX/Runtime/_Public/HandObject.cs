@@ -13,7 +13,9 @@ namespace Holoi.Library.ARUX
 
         public bool IsValid = false;
 
-        [SerializeField] GameObject _visualSampleObject;
+        public GameObject VisualSampleObject;
+        public Animator Animator;
+        int count = 0;
 
         private void Awake()
         {
@@ -32,16 +34,12 @@ namespace Holoi.Library.ARUX
 #if UNITY_EDITOR
             // do nothing
 #else
+            if(HoloKitHandTracker.Instance.Valid == true)
             IsValid = HoloKitHandTracker.Instance.Valid;
 #endif
-            if (IsValid)
-            {
-                _visualSampleObject.SetActive(true);
-            }
-            else
-            {
-                _visualSampleObject.SetActive(false);
-            }
+
+            Animator.SetBool("HandValid", IsValid);
+
         }
     }
 }

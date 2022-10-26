@@ -22,6 +22,7 @@ namespace Holoi.Reality.QuantumRealm
         [SerializeField] Transform _handJoint;
         [SerializeField] Transform _handHookHead;
         [SerializeField] Transform _handHoverLoadedVFX;
+        [SerializeField] HandObject _ho;
 
         [Header("AR NetWork Base Objects")]
         [SerializeField] Transform _serverCenterEye;
@@ -104,6 +105,8 @@ namespace Holoi.Reality.QuantumRealm
 
                 //_handHookHead.position = _handJoint.position + dir * 0.5f + _serverCenterEye.up*0.2f;
                 _handHookHead.position = _handJoint.position + dir * 0.5f;
+
+                SyncHandValidStateCLientRpc(_ho.IsValid);
             }
         }
 
@@ -404,6 +407,19 @@ namespace Holoi.Reality.QuantumRealm
 
                 go.GetComponent<NetworkObject>().Spawn();
 
+            }
+        }
+
+        [ClientRpc]
+        public void SyncHandValidStateCLientRpc(bool valid)
+        {
+            if (HoloKitApp.Instance.IsHost)
+            {
+                return;
+            }
+            else
+            {
+                _ho.Animator.SetBool("HandValid", valid);
             }
         }
     }
