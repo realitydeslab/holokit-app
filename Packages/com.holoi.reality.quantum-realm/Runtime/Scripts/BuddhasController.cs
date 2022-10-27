@@ -30,7 +30,9 @@ namespace Holoi.Reality.QuantumRealm
             _hoverableObject.OnLoadedEvents.AddListener(FindObjectOfType<QuantumBuddhasSceneManager>().SwitchToNextVFXNetWork);
             _hoverableObject.OnLoadedEvents.AddListener(StopHapticsPlayer);
 
-            if (FindObjectOfType<HapticsManager>())
+            var engine = FindObjectOfType<HapticsManager>().HapticsEngine;
+
+            if (engine != null)
             {
                 SetupHapticAdvancedPlayers(_textureAHAP);
             }
@@ -38,17 +40,17 @@ namespace Holoi.Reality.QuantumRealm
 
         void Update()
         {
-            if(_ho)
-            vfx.SetVector3("Hand Position", _ho.transform.position);
+            if (_ho)
+                vfx.SetVector3("Hand Position", _ho.transform.position);
 
             if (_hoverableObject.Interacted)
             {
-                if(_isPlaying == false)
+                if (_isPlaying == false)
                 {
                     StartHapticsPlayer();
                     _isPlaying = true;
                 }
-                
+
             }
             else
             {
@@ -66,8 +68,8 @@ namespace Holoi.Reality.QuantumRealm
 
         public void StopHapticsPlayer()
         {
-            if(_textureHapticPlayer!=null)
-            _textureHapticPlayer.Stop();
+            if (_textureHapticPlayer != null)
+                _textureHapticPlayer.Stop();
         }
 
         private void SetupHapticAdvancedPlayers(TextAsset textureAHAP)

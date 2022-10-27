@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Apple.CoreHaptics;
+using HoloKit;
 
 namespace Holoi.Reality.QuantumRealm
 {
@@ -13,8 +14,12 @@ namespace Holoi.Reality.QuantumRealm
 
         public void Awake()
         {
-            HapticsEngine = new CHHapticEngine { IsAutoShutdownEnabled = false };
-            HapticsEngine.Start();
+            if (HoloKitUtils.IsRuntime)
+            {
+                HapticsEngine = new CHHapticEngine { IsAutoShutdownEnabled = false };
+                HapticsEngine.Start();
+            }
+
         }
 
         private void Start()
