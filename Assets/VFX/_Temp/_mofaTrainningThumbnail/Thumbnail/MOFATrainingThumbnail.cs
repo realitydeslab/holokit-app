@@ -52,7 +52,7 @@ public class MOFATrainingThumbnail : MonoBehaviour
         _boltAnimator = go.GetComponent<Animator>();
         go.transform.LookAt(transform.forward * 5f);
         go.transform.position = transform.position + Vector3.up * 1.5f + transform.forward * 1f;
-        go.GetComponent<Rigidbody>().velocity = transform.forward * 2f;
+        go.GetComponent<Rigidbody>().velocity = transform.forward * 3f;
         //StartCoroutine(WaitAndExplode());
     }
 }

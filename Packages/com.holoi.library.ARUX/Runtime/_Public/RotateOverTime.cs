@@ -10,7 +10,7 @@ namespace Holoi.Library.ARUX
         public Vector3 RotateVector;
 
         Vector3 _angle;
-        Quaternion _rotationOffset;
+        //Quaternion _rotationOffset;
         Vector3 _positionOffset;
 
         Transform child;
@@ -22,7 +22,7 @@ namespace Holoi.Library.ARUX
         void Start()
         {
             child = transform.GetChild(0);
-            _rotationOffset = child.rotation;
+            //_rotationOffset = child.rotation;
             _positionOffset = child.position;
         }
 
@@ -39,7 +39,8 @@ namespace Holoi.Library.ARUX
                 child.position = new Vector3(x, y, z);
             }
 
-            transform.rotation = _rotationOffset * Quaternion.Euler(_angle.x, _angle.y, _angle.z);
+            //transform.rotation = _rotationOffset * Quaternion.Euler(_angle.x, _angle.y, _angle.z);
+            transform.rotation = Quaternion.Euler(_angle.x, _angle.y, _angle.z);
         }
     }
 }
