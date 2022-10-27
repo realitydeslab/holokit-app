@@ -9,9 +9,9 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private bool _appeared;
 
-        private const float AppearDelay = 2f;
+        private const float AppearDelay = 0.6f;
 
-        private const float AppearTime = 1f;
+        private const float AppearTime = 0.6f;
 
         private void Start()
         {

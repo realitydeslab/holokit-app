@@ -7,7 +7,7 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         [SerializeField] private Image _logoImage;
 
-        private const float AppearTime = 2f;
+        private const float AppearTime = 0.6f;
 
         private void Start()
         {

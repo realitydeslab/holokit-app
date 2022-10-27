@@ -6,7 +6,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
-        private const float Duration = 3.6f;
+        private const float Duration = 2f;
 
         private void Start()
         {
