@@ -308,12 +308,12 @@ namespace Holoi.Reality.MOFATheTraining
             if (UnityEngine.Random.Range(0, 1f) > 0.5f)
             {
                 // Add horizontal deviation
-                rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(-15f, 15f), 0f) * rotation;
+                rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(-30f, 30f), 0f) * rotation;
             }
             else
             {
                 // Add vertical deviation
-                rotation = Quaternion.Euler(UnityEngine.Random.Range(-10f, 10f), 0f, 0f) * rotation;
+                rotation = Quaternion.Euler(UnityEngine.Random.Range(-30f, 30f), 0f, 0f) * rotation;
             }
 
             _mofaRealityManager.SpawnSpellServerRpc(spellType == SpellType.Basic ? _basicSpell.Id : _secondarySpell.Id,
