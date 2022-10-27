@@ -48,7 +48,7 @@ public class MOFADuelThumbnail : MonoBehaviour
     {
         var go = Instantiate(_boltPrefab[index]);
         var player = _playerAnimator[index].transform;
-        go.transform.position = player.position + player.forward * 0.5f + Vector3.up * 1.5f;
+        go.transform.position = player.position + player.forward * 1f + Vector3.up * 1.5f;
         go.GetComponent<Rigidbody>().velocity = player.forward * 2f;
     }
 }
