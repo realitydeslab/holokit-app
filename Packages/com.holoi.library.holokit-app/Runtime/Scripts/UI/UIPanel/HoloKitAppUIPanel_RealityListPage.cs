@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -74,12 +73,17 @@ namespace Holoi.Library.HoloKitApp.UI
         /// <summary>
         /// The local position of camera relative to room center.
         /// </summary>
-        private readonly Vector3 RoomCenterToCameraOffsetPosition = new(-10f, 18f, -8.8f);
+        public static Vector3 RoomCenterToCameraOffsetPosition = new(-10f, 18f, -8.8f);
 
         /// <summary>
         /// The local rotation in Euler of camera relative to room center.
         /// </summary>
-        private readonly Vector3 RoomCenterToCameraOffsteEulerRotation = new(48f, 48f, 0f);
+        public static Vector3 RoomCenterToCameraOffsteEulerRotation = new(48f, 48f, 0f);
+
+        /// <summary>
+        /// The offset from the center of the room to the point light.
+        /// </summary>
+        private readonly Vector3 RoomLightOffset = new(0f, 0.5f, 0f);
 
         // The list of spawned rooms.
         private readonly List<GameObject> RoomList = new();
@@ -142,9 +146,6 @@ namespace Holoi.Library.HoloKitApp.UI
                 if (touch.phase == TouchPhase.Began)
                 {
                     _touchBeganPosition = touch.position;
-
-                    // TODO: Light the current room
-
                 }
                 else if (touch.phase == TouchPhase.Ended)
                 {

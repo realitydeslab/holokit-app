@@ -123,7 +123,7 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
-        public MetaAvatarCollection GetPreferencedAvatarCollection(Reality reality)
+        public MetaAvatarCollection GetPreferencedAvatarCollection(Reality reality = null)
         {
             if (reality == null)
             {
@@ -140,7 +140,7 @@ namespace Holoi.Library.HoloKitApp
             return null;
         }
 
-        public MetaObjectCollection GetPreferencedObjectCollection(Reality reality)
+        public MetaObjectCollection GetPreferencedObjectCollection(Reality reality = null)
         {
             if (reality == null)
             {
@@ -157,7 +157,7 @@ namespace Holoi.Library.HoloKitApp
             return null;
         }
 
-        public MetaAvatar GetPreferencedAvatar(Reality reality)
+        public MetaAvatar GetPreferencedAvatar(Reality reality = null)
         {
             if (reality == null)
             {
@@ -193,8 +193,12 @@ namespace Holoi.Library.HoloKitApp
             return null;
         }
 
-        public List<MetaAvatarCollection> GetCompatibleMetaAvatarCollectionList(Reality reality)
+        public List<MetaAvatarCollection> GetCompatibleMetaAvatarCollectionList(Reality reality = null)
         {
+            if (reality == null)
+            {
+                reality = HoloKitApp.Instance.CurrentReality;
+            }
             List<MetaAvatarCollection> list = new();
             foreach (var avatarCollection in AvatarCollectionList.List)
             {
@@ -206,8 +210,12 @@ namespace Holoi.Library.HoloKitApp
             return list;
         }
 
-        public List<MetaObjectCollection> GetCompatibleMetaObjectCollectionList(Reality reality)
+        public List<MetaObjectCollection> GetCompatibleMetaObjectCollectionList(Reality reality = null)
         {
+            if (reality == null)
+            {
+                reality = HoloKitApp.Instance.CurrentReality;
+            }
             List<MetaObjectCollection> list = new();
             foreach (var objectCollection in ObjectCollectionList.List)
             {

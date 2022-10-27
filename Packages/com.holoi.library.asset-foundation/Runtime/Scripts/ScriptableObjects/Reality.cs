@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
@@ -35,6 +34,11 @@ namespace Holoi.AssetFoundation
 
         public bool IsCompatibleWithMetaAvatarCollection(MetaAvatarCollection avatarCollection)
         {
+            if (CompatibleMetaAvatarTags.Count == 0)
+            {
+                return false;
+            }
+
             int count = 0;
             foreach (var tag in CompatibleMetaAvatarTags)
             {
@@ -59,6 +63,11 @@ namespace Holoi.AssetFoundation
 
         public bool IsCompatibleWithMetaObjectCollection(MetaObjectCollection objectCollection)
         {
+            if (CompatibleMetaObjectTags.Count == 0)
+            {
+                return false;
+            }
+
             int count = 0;
             foreach (var tag in CompatibleMetaObjectTags)
             {

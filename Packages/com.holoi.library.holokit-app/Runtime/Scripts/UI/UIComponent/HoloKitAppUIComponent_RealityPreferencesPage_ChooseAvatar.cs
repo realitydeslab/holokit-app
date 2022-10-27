@@ -8,12 +8,12 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         protected override List<NonFungibleCollection> GetCompatibleNonFungibleCollectionList()
         {
-            return HoloKitApp.Instance.GlobalSettings.GetCompatibleMetaAvatarCollectionList(HoloKitApp.Instance.CurrentReality).Cast<NonFungibleCollection>().ToList();
+            return HoloKitApp.Instance.GlobalSettings.GetCompatibleMetaAvatarCollectionList().Cast<NonFungibleCollection>().ToList();
         }
 
         protected override NonFungibleCollection GetPreferencedNonFungibleCollection()
         {
-            return HoloKitApp.Instance.GlobalSettings.GetPreferencedAvatarCollection(HoloKitApp.Instance.CurrentReality);
+            return HoloKitApp.Instance.GlobalSettings.GetPreferencedAvatarCollection();
         }
 
         protected override int GetPreferencedNonFungibleIndex()
@@ -33,11 +33,6 @@ namespace Holoi.Library.HoloKitApp.UI
                 MetaObjectCollectionBundleId = realityPreference.MetaObjectCollectionBundleId,
                 MetaObjectTokenId = realityPreference.MetaObjectTokenId
             };
-            UnityEngine.Debug.Log($"UpdateRealityPreferences with " +
-                $"MetaAvatarCollectionBundleId: {nonFungibleCollectionId}, " +
-                $"MetaAvatarTokenId: {nonFungibleTokenId}, " +
-                $"MetaObjectCollectionBundleId: {realityPreference.MetaObjectCollectionBundleId}, " +
-                $"MetaObjectTokenId: {realityPreference.MetaObjectTokenId}");
         }
     }
 }
