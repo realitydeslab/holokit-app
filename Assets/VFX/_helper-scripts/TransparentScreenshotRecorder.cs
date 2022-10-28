@@ -23,6 +23,7 @@ public class TransparentScreenshotRecorder : MonoBehaviour
     public int frameRate = 24;
     [Tooltip("How many frames should be captured before quitting")]
     public int framesToCapture = 24;
+    public int framesToCapture2 = 24;
     #endregion
     #region private fields
     private string folderName = "";
@@ -72,11 +73,15 @@ public class TransparentScreenshotRecorder : MonoBehaviour
         yield return new WaitForEndOfFrame();
         if (videoFrame < framesToCapture)
         {
-            RenderCamToTexture(whiteCam, textureWhite);
-            RenderCamToTexture(blackCam, textureBlack);
+            if(videoFrame == framesToCapture2)
+            {
+                RenderCamToTexture(whiteCam, textureWhite);
+                RenderCamToTexture(blackCam, textureBlack);
 
-            CalculateOutputTexture();
-            SavePng();
+                CalculateOutputTexture();
+                SavePng();
+            }
+
             videoFrame++;
             Debug.Log("Rendered frame " + videoFrame);
         }

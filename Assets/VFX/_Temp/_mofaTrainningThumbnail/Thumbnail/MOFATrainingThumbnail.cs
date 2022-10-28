@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class MOFATrainingThumbnail : MonoBehaviour
 {
+    [SerializeField] Transform _parent;
     [SerializeField] Animator _avatarAnimator;
-    [SerializeField] float _avatarVelocity;
+    [SerializeField] Vector2 _avatarVelocity;
     Animator _boltAnimator;
     [SerializeField] GameObject _boltPrefab;
     [SerializeField] float _attackInterval = 3f;
@@ -15,9 +16,17 @@ public class MOFATrainingThumbnail : MonoBehaviour
     {
         if (_avatarAnimator == null)
             _avatarAnimator = GetComponent<Animator>();
-        if (_avatarVelocity != 0) _avatarAnimator.SetFloat("Velocity X", _avatarVelocity);
+        if (_avatarVelocity.magnitude != 0)
+        {
+            _avatarAnimator.SetFloat("Velocity Z", _avatarVelocity.x);
+            _avatarAnimator.SetFloat("Velocity X", _avatarVelocity.y);
 
-        StartCoroutine(WaitAndBegin(_attackPreset, _attackInterval));
+        }
+
+        if (_boltPrefab)
+        {
+            StartCoroutine(WaitAndBegin(_attackPreset, _attackInterval));
+        }
     }
 
     void Update()
@@ -48,7 +57,7 @@ public class MOFATrainingThumbnail : MonoBehaviour
 
     void ShootBolt()
     {
-        var go = Instantiate(_boltPrefab);
+        var go = Instantiate(_boltPrefab, _parent);
         _boltAnimator = go.GetComponent<Animator>();
         go.transform.LookAt(transform.forward * 5f);
         go.transform.position = transform.position + Vector3.up * 1.5f + transform.forward * 1f;
