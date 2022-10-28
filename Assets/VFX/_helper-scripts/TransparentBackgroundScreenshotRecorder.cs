@@ -93,9 +93,7 @@ public class TransparentBackgroundScreenshotRecorder : MonoBehaviour
     }
     void RenderCamToTexture(Camera cam, Texture2D tex)
     {
-        screenWidth = Screen.width;
-        screenHeight = Screen.height;
-        RenderTexture renderTexture = new RenderTexture(screenWidth, screenHeight, 24);
+        RenderTexture renderTexture = new RenderTexture(screenWidth, screenHeight, 0, RenderTextureFormat.DefaultHDR);
 
         cam.targetTexture = renderTexture;
         cam.Render();
@@ -188,13 +186,11 @@ public class TransparentBackgroundScreenshotRecorder : MonoBehaviour
         originalTimescaleTime = Time.timeScale;
         //Output the current screen window width in the console
         var size = GetMainGameViewSize();
-        Debug.Log("Screen Width : " + size.x);
-
         screenWidth = (int)size.x;
         screenHeight = (int)size.y;
-        textureBlack = new Texture2D(screenWidth, screenHeight, TextureFormat.RGB24, false);
-        textureWhite = new Texture2D(screenWidth, screenHeight, TextureFormat.RGB24, false);
-        textureTransparentBackground = new Texture2D(screenWidth, screenHeight, TextureFormat.ARGB32, false);
+        textureBlack = new Texture2D(screenWidth, screenHeight, TextureFormat.RGB9e5Float, false);
+        textureWhite = new Texture2D(screenWidth, screenHeight, TextureFormat.RGB9e5Float, false);
+        textureTransparentBackground = new Texture2D(screenWidth, screenHeight, TextureFormat.RGB9e5Float, false);
     }
 
     public static Vector2 GetMainGameViewSize()
