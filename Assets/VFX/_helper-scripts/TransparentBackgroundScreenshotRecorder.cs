@@ -186,10 +186,22 @@ public class TransparentBackgroundScreenshotRecorder : MonoBehaviour
     void CacheAndInitialiseFields()
     {
         originalTimescaleTime = Time.timeScale;
-        screenWidth = Screen.width;
-        screenHeight = Screen.height;
+        //Output the current screen window width in the console
+        var size = GetMainGameViewSize();
+        Debug.Log("Screen Width : " + size.x);
+
+        screenWidth = (int)size.x;
+        screenHeight = (int)size.y;
         textureBlack = new Texture2D(screenWidth, screenHeight, TextureFormat.RGB24, false);
         textureWhite = new Texture2D(screenWidth, screenHeight, TextureFormat.RGB24, false);
         textureTransparentBackground = new Texture2D(screenWidth, screenHeight, TextureFormat.ARGB32, false);
+    }
+
+    public static Vector2 GetMainGameViewSize()
+    {
+        System.Type T = System.Type.GetType("UnityEditor.GameView,UnityEditor");
+        System.Reflection.MethodInfo GetSizeOfMainGameView = T.GetMethod("GetSizeOfMainGameView", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        System.Object Res = GetSizeOfMainGameView.Invoke(null, null);
+        return (Vector2)Res;
     }
 }
