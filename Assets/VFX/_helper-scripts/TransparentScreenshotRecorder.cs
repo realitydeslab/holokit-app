@@ -13,7 +13,7 @@ Usage:
 6. Play your scene. Screenshots will be saved to YourUnityProject/Screenshots by default.
 */
 
-public class TransparentBackgroundScreenshotRecorder : MonoBehaviour
+public class TransparentScreenshotRecorder : MonoBehaviour
 {
 
     #region public fields
@@ -38,11 +38,11 @@ public class TransparentBackgroundScreenshotRecorder : MonoBehaviour
     private bool done = false;
     private int screenWidth;
     private int screenHeight;
+    [SerializeField] bool _postProcessing = false;
     [SerializeField] private Texture2D textureBlack;
     [SerializeField] private Texture2D textureWhite;
     [SerializeField] private Texture2D textureTransparentBackground;
 
-    //private Texture2D textureTransparentBackground = new Texture2D(256, 256, TextureFormat.ARGB32, false);
     #endregion
 
     void Awake()
@@ -93,7 +93,15 @@ public class TransparentBackgroundScreenshotRecorder : MonoBehaviour
     }
     void RenderCamToTexture(Camera cam, Texture2D tex)
     {
-        RenderTexture renderTexture = new RenderTexture(screenWidth, screenHeight, 0, RenderTextureFormat.DefaultHDR);
+        RenderTexture renderTexture;
+        if (_postProcessing)
+        {
+             renderTexture = new RenderTexture(screenWidth, screenHeight, 0, RenderTextureFormat.DefaultHDR);
+        }
+        else
+        {
+             renderTexture = new RenderTexture(screenWidth, screenHeight, 16);
+        }
 
         cam.targetTexture = renderTexture;
         cam.Render();

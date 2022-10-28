@@ -32,6 +32,8 @@ namespace Holoi.Reality.Typography
 
         void Start()
         {
+
+            transform.position = Vector3.zero;
             var mesh = _source.GetComponent<MeshFilter>().sharedMesh;
             var vcount = mesh.vertexCount/_vertexReducer;
 
