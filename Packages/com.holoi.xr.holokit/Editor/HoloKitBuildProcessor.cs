@@ -24,8 +24,8 @@ namespace HoloKit.Editor
 
             void PostprocessBuild(BuildReport report)
             {
-                AddXcodePlist(report.summary.outputPath);
-                AddXcodeCapabilities(report.summary.outputPath);
+                //AddXcodePlist(report.summary.outputPath);
+                //AddXcodeCapabilities(report.summary.outputPath);
                 AddXcodeBuildSettings(report.summary.outputPath);
             }
 
@@ -37,7 +37,7 @@ namespace HoloKit.Editor
 
                 PlistElementDict rootDict = plist.root;
 
-                // NFC
+                // NFC Plist
                 rootDict.SetString("NFCReaderUsageDescription", "For NFC authentication");
                 PlistElementArray nfcArray = rootDict.CreateArray("com.apple.developer.nfc.readersession.iso7816.select-identifiers");
                 nfcArray.AddString("D2760000850101");
@@ -85,8 +85,6 @@ namespace HoloKit.Editor
                 var constructor = typeof(PBXCapabilityType).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(string), typeof(bool), typeof(string), typeof(bool) }, null);
                 PBXCapabilityType nfcCapability = (PBXCapabilityType)constructor.Invoke(new object[] { "com.apple.NearFieldCommunicationTagReading", true, "", false });
                 project.AddCapability(target, nfcCapability, entitlementFileName);
-
-                //projectCapabilityManager.AddSignInWithApple();
 
                 projectCapabilityManager.WriteToFile();
             }

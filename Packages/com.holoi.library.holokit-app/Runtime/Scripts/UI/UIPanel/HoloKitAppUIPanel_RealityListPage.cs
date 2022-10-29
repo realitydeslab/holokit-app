@@ -130,6 +130,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             _touchable = false;
             Destroy(_roomListRoot);
+            RoomList.Clear();
         }
 
         private void Update()
