@@ -64,10 +64,6 @@ namespace Holoi.Library.HoloKitApp.UI
             _room.transform.localPosition = Vector3.zero;
             _room.transform.localRotation = Quaternion.identity;
             _room.transform.localScale = Vector3.one;
-            if (Camera.main == null)
-            {
-                Debug.Log("No main camera found");
-            }
             Camera.main.transform.SetPositionAndRotation(HoloKitAppUIPanel_RealityListPage.RoomCenterToCameraOffsetPosition,
                                                          Quaternion.Euler(HoloKitAppUIPanel_RealityListPage.RoomCenterToCameraOffsteEulerRotation));
             Camera.main.targetTexture = _roomViewRenderTexture;
