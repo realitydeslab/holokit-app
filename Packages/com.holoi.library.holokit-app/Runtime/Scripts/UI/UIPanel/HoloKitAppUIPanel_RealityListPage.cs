@@ -49,6 +49,8 @@ namespace Holoi.Library.HoloKitApp.UI
         /// </summary>
         private int _currentRoomIndex = 0;
 
+        private bool _touchable = false;
+
         private Vector2 _touchBeganPosition;
 
         private Vector3 _cameraTargetPosition;
@@ -115,10 +117,15 @@ namespace Holoi.Library.HoloKitApp.UI
             Camera.main.transform.SetPositionAndRotation(currentRoomPosition + RoomCenterToCameraOffsetPosition, Quaternion.Euler(RoomCenterToCameraOffsteEulerRotation));
             _cameraTargetPosition = Camera.main.transform.position;
             OnTargetRoomArrived();
+            StartCoroutine(HoloKitAppUtils.WaitAndDo(0.5f, () =>
+            {
+                _touchable = true;
+            }));
         }
 
         private void OnDisable()
         {
+            _touchable = false;
             Destroy(_roomListRoot);
         }
 
@@ -135,7 +142,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 OnTargetRoomArrived();
             }
 
-            if (Input.touchCount > 0)
+            if (_touchable && Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
                 if (touch.phase != TouchPhase.Began && touch.phase != TouchPhase.Ended)
