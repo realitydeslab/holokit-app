@@ -44,17 +44,12 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private const float CamaraOrthographicSize = 10f;
 
+        private readonly Vector3 RoomCenterOffset = new(0f, 3f, 0f);
+
         /// <summary>
         /// The local position of camera relative to room center.
         /// </summary>
-        private readonly Vector3 RoomCenterToCameraOffsetPosition = new(-10f, 18f, -8.8f);
-
-        /// <summary>
-        /// The local rotation in Euler of camera relative to room center.
-        /// </summary>
-        private readonly Vector3 RoomCenterToCameraOffsteEulerRotation = new(48f, 48f, 0f);
-
-        private readonly Vector3 RotationAxisX = new(0f, 1f, 0f);
+        private readonly Vector3 RoomCenterToCameraOffsetPosition = new(-10f, 12f, -8.8f);
 
         private readonly Vector3 RotationAxisY = new(1f, 0f, -1f);
 
@@ -74,8 +69,9 @@ namespace Holoi.Library.HoloKitApp.UI
             _room.transform.localRotation = Quaternion.identity;
             _room.transform.localScale = Vector3.one;
             Camera.main.orthographicSize = CamaraOrthographicSize;
-            Camera.main.transform.SetPositionAndRotation(RoomCenterToCameraOffsetPosition,
-                                                         Quaternion.Euler(RoomCenterToCameraOffsteEulerRotation));
+            Camera.main.transform.position = RoomCenterToCameraOffsetPosition;
+            // Camera always looks at the room
+            Camera.main.transform.LookAt(RoomCenterOffset);
             Camera.main.targetTexture = _roomViewRenderTexture;
 
             _accumulatedRotationX = 0f;
@@ -127,12 +123,12 @@ namespace Holoi.Library.HoloKitApp.UI
                 if (_isTouching && IsInsideInputArea(touch.position))
                 {
                     Vector3 fingerMovement = touch.position - _lastTouchPosition;
-
-                    float rotationX = -fingerMovement.x * RoomRotationSpeed * Time.deltaTime;
+                    float rotationX = fingerMovement.x * RoomRotationSpeed * Time.deltaTime;
                     _accumulatedRotationX += rotationX;
                     if (_accumulatedRotationX > -30f && _accumulatedRotationX < 30f)
                     {
-                        _room.transform.Rotate(RotationAxisX, rotationX);
+                        Camera.main.transform.RotateAround(Vector3.zero, Vector3.up, rotationX);
+                        //_room.transform.Rotate(RotationAxisX, rotationX);
                     }
                     else
                     {
@@ -146,11 +142,11 @@ namespace Holoi.Library.HoloKitApp.UI
                         }
                     }
 
-                    float rotationY = fingerMovement.y * RoomRotationSpeed * Time.deltaTime;
+                    float rotationY = -fingerMovement.y * RoomRotationSpeed * Time.deltaTime;
                     _accumulatedRotationY += rotationY;
                     if (_accumulatedRotationY > -30f && _accumulatedRotationY < 30f)
                     {
-                        _room.transform.Rotate(RotationAxisY, rotationY);
+                        Camera.main.transform.RotateAround(Vector3.zero, RotationAxisY, rotationY);
                     }
                     else
                     {
