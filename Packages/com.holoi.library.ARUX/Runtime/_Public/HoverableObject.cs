@@ -58,7 +58,6 @@ namespace Holoi.Library.ARUX
             {
                 if (Vector3.Distance(_ho.transform.position, transform.position + _offset) < _triggerDistance)
                 {
-                    //Debug.Log("interact!!!");
                     _isInteracted = true;
                     _process += Time.deltaTime * _loadSpeed;
                     if (_process > 1)
@@ -78,7 +77,6 @@ namespace Holoi.Library.ARUX
                 }
                 else
                 {
-                    //Debug.Log("not interact!!!");
                     _isInteracted = false;
                     _process -= Time.deltaTime * _loadSpeed * 0.5f;
                     if (_process < 0) _process = 0;

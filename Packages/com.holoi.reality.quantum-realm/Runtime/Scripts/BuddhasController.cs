@@ -43,14 +43,22 @@ namespace Holoi.Reality.QuantumRealm
             if (_ho)
                 vfx.SetVector3("Hand Position", _ho.transform.position);
 
-            if (_hoverableObject.Interacted)
+            if (_hoverableObject)
             {
-                if (_isPlaying == false)
+                if (_hoverableObject.Interacted)
                 {
-                    StartHapticsPlayer();
-                    _isPlaying = true;
-                }
+                    if (_isPlaying == false)
+                    {
+                        StartHapticsPlayer();
+                        _isPlaying = true;
+                    }
 
+                }
+                else
+                {
+                    StopHapticsPlayer();
+                    _isPlaying = false;
+                }
             }
             else
             {
@@ -78,6 +86,16 @@ namespace Holoi.Reality.QuantumRealm
             _textureHapticPlayer = engine.MakeAdvancedPlayer(new CHHapticPattern(textureAHAP));
             _textureHapticPlayer.LoopEnabled = true;
             _textureHapticPlayer.LoopEnd = 0f;
+        }
+
+        private void OnDisable()
+        {
+            StopHapticsPlayer();
+        }
+
+        private void OnDestroy()
+        {
+            StopHapticsPlayer();
         }
     }
 }
