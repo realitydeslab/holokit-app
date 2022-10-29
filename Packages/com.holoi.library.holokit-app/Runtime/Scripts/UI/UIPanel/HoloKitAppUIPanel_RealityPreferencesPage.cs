@@ -14,11 +14,23 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private GameObject _spectatorButton;
 
+        [SerializeField] private GameObject _spacer;
+
         private void Start()
         {
             if (!HoloKitApp.Instance.CurrentReality.SupportMultiplayer())
             {
                 _playerButton.SetActive(false);
+            }
+
+            if (HoloKitApp.Instance.GlobalSettings.GetCompatibleMetaAvatarCollectionList().Count == 0
+                && HoloKitApp.Instance.GlobalSettings.GetCompatibleMetaObjectCollectionList().Count == 0)
+            {
+                _spacer.SetActive(true);
+            }
+            else
+            {
+                _spacer.SetActive(false);
             }
         }
 

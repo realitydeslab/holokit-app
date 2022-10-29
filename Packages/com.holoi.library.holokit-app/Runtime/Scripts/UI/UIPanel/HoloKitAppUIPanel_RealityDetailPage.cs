@@ -44,7 +44,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private const float CamaraOrthographicSize = 10f;
 
-        private readonly Vector3 RoomCenterOffset = new(0f, 3f, 0f);
+        private readonly Vector3 TargetPosition = new(0f, 3f, 0f);
 
         /// <summary>
         /// The local position of camera relative to room center.
@@ -71,7 +71,7 @@ namespace Holoi.Library.HoloKitApp.UI
             Camera.main.orthographicSize = CamaraOrthographicSize;
             Camera.main.transform.position = RoomCenterToCameraOffsetPosition;
             // Camera always looks at the room
-            Camera.main.transform.LookAt(RoomCenterOffset);
+            Camera.main.transform.LookAt(TargetPosition);
             Camera.main.targetTexture = _roomViewRenderTexture;
 
             _accumulatedRotationX = 0f;
@@ -98,6 +98,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Update()
         {
+            Camera.main.transform.LookAt(TargetPosition);
             if (Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
@@ -128,7 +129,6 @@ namespace Holoi.Library.HoloKitApp.UI
                     if (_accumulatedRotationX > -30f && _accumulatedRotationX < 30f)
                     {
                         Camera.main.transform.RotateAround(Vector3.zero, Vector3.up, rotationX);
-                        //_room.transform.Rotate(RotationAxisX, rotationX);
                     }
                     else
                     {
@@ -146,7 +146,8 @@ namespace Holoi.Library.HoloKitApp.UI
                     _accumulatedRotationY += rotationY;
                     if (_accumulatedRotationY > -30f && _accumulatedRotationY < 30f)
                     {
-                        Camera.main.transform.RotateAround(Vector3.zero, RotationAxisY, rotationY);
+                        Camera.main.transform.RotateAround(Vector3.zero,
+                            Camera.main.transform.TransformDirection(Vector3.right), rotationY);
                     }
                     else
                     {
