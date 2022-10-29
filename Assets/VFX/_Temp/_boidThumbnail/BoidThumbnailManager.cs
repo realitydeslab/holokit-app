@@ -13,16 +13,22 @@ public class BoidThumbnailManager : MonoBehaviour
     [SerializeField] Animator _parentAnimator;
     [SerializeField] Animator _avatarAnimator;
 
-
+    int n = 0;
 
     void Start()
     {
-        _boidVFX.enabled = true;
+        _boidVFX.enabled = false;
         //StartCoroutine(WaitAndTurnRight());
     }
 
     private void Update()
     {
+        if (n == 0)
+        {
+            n++;
+            _boidVFX.enabled = true;
+        }
+
         SetVfxBuffer();
     }
 
