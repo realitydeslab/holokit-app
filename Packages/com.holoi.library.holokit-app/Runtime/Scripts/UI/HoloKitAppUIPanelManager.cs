@@ -70,8 +70,24 @@ namespace Holoi.Library.HoloKitApp.UI
             return null;
         }
 
-        public void OnARSceneUnloaded()
+        public void OnStartSceneLoaded()
         {
+            // If this is the first time entering the App?
+            if (HoloKitApp.Instance.Test)
+            {
+                if (_uiPanelStack.Peek().UIPanelName.Equals("TestRealityList"))
+                {
+                    return;
+                }
+            }
+            else
+            {
+                if (_uiPanelStack.Peek().UIPanelName.Equals("LandingPage"))
+                {
+                    return;
+                }
+            }
+
             while (!_uiPanelStack.Peek().UIPanelName.Equals("MonoAR"))
             {
                 PopUIPanel();

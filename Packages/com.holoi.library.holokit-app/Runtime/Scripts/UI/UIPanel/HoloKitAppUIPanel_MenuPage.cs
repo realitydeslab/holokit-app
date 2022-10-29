@@ -8,16 +8,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
-        private void OnEnable()
-        {
-            Debug.Log($"[HoloKitAppUIPanel_MenuPage] OnEnable {Time.time}");
-        }
-
-        private void OnDisable()
-        {
-            Debug.Log($"[HoloKitAppUIPanel_MenuPage] OnDisable {Time.time}");
-        }
-
         public void OnBackButtonPressed()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();

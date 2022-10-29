@@ -41,7 +41,7 @@ namespace Holoi.Library.MOFABase
 
         public override void OnNetworkSpawn()
         {
-            Debug.Log($"[MofaPlayer] Spawned with MagicSchoolTokenId: {MagicSchoolTokenId.Value}, team: {Team.Value} and ownership: {OwnerClientId}");
+            //Debug.Log($"[MofaPlayer] Spawned with MagicSchoolTokenId: {MagicSchoolTokenId.Value}, team: {Team.Value} and ownership: {OwnerClientId}");
 
             ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).SetPlayer(OwnerClientId, this);
             Ready.OnValueChanged += OnReadyStateChangedFunc;

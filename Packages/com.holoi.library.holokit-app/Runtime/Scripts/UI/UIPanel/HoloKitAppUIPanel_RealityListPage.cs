@@ -91,8 +91,6 @@ namespace Holoi.Library.HoloKitApp.UI
         // We dynamically spawn and destroy reality rooms to save resources.
         private void OnEnable()
         {
-            Debug.Log($"[HoloKitAppUIPanel_RealityListPage] OnEnable {Time.time}");
-
             _roomListRoot = Instantiate(_roomListRootPrefab);
             int realityIndex = -1;
             foreach (var reality in HoloKitApp.Instance.GlobalSettings.RealityList.List)
@@ -121,7 +119,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnDisable()
         {
-            Debug.Log($"[HoloKitAppUIPanel_RealityListPage] OnDisable {Time.time}");
             Destroy(_roomListRoot);
         }
 

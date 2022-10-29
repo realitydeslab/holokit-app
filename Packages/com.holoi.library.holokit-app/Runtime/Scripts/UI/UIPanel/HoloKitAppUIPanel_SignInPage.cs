@@ -37,7 +37,6 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             _descriptionText.gameObject.SetActive(false);
             _signInButton.gameObject.SetActive(false);
-            _signInButton.onClick.AddListener(OnSignInWithAppleButtonPressed);
             _notificationText.gameObject.SetActive(false);
             _userInfo.SetActive(false);
         }

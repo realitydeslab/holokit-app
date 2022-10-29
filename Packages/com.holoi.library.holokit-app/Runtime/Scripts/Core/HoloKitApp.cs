@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UNET;
 using Netcode.Transports.MultipeerConnectivity;
@@ -38,6 +40,8 @@ namespace Holoi.Library.HoloKitApp
 
         [Header("UI")]
         public UI.HoloKitAppUIPanelManager UIPanelManager;
+
+        [SerializeField] private UniversalRenderPipelineAsset _urpAssetForUI;
 
         [Header("Debug")]
         // Set this to true to load TestRealityList at the beginning
@@ -177,6 +181,11 @@ namespace Holoi.Library.HoloKitApp
             {
                 InitializeRealityScene();
             }
+            else
+            {
+                UIPanelManager.OnStartSceneLoaded();
+                SetUrpAssetForUI();
+            }
         }
 
         private void OnSceneUnloaded(Scene scene)
@@ -234,9 +243,6 @@ namespace Holoi.Library.HoloKitApp
 
         private void DeinitializeRealityScene()
         {
-            // Pop AR UI Panels
-            UIPanelManager.OnARSceneUnloaded();
-
             // Reset ARSession
             if (HoloKitUtils.IsRuntime)
             {
@@ -361,6 +367,14 @@ namespace Holoi.Library.HoloKitApp
         public void SetMultiplayerManager(HoloKitAppMultiplayerManager multiplayerManager)
         {
             _multiplayerManager = multiplayerManager;
+        }
+
+        private void SetUrpAssetForUI()
+        {
+            if (_urpAssetForUI != null)
+            {
+                GraphicsSettings.renderPipelineAsset = _urpAssetForUI;
+            }
         }
 
         public void Shutdown()
