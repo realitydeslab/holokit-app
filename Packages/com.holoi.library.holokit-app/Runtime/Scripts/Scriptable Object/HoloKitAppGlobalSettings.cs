@@ -76,8 +76,8 @@ namespace Holoi.Library.HoloKitApp
         public void LoadDefaultSettings()
         {
             Debug.Log("[GlobalSettings] Loaded default global settings");
-            InstructionEnabled = true;
-            VibrationEnabled = true;
+            InstructionEnabled = false;
+            VibrationEnabled = false;
             HighResHDREnabled = true;
             UseWifiForMultiplayerEnabled = false;
             ShowTechInfoEnabled = true;

@@ -8,7 +8,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private RectTransform _text2;
 
-        private const float MovementSpeed = 80f;
+        private const float MovementSpeed = 120f;
 
         private void Update()
         {

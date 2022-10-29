@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIPanel_MenuPage : HoloKitAppUIPanel
@@ -5,6 +7,16 @@ namespace Holoi.Library.HoloKitApp.UI
         public override string UIPanelName => "MenuPage";
 
         public override bool OverlayPreviousPanel => true;
+
+        private void OnEnable()
+        {
+            Debug.Log($"[HoloKitAppUIPanel_MenuPage] OnEnable {Time.time}");
+        }
+
+        private void OnDisable()
+        {
+            Debug.Log($"[HoloKitAppUIPanel_MenuPage] OnDisable {Time.time}");
+        }
 
         public void OnBackButtonPressed()
         {
@@ -18,12 +30,13 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnIntroButtonPressed()
         {
-            // TODO: Go to holokit.io Safari
+            Application.OpenURL("https://holokit.io");
         }
 
         public void OnBuyHoloKitButtonPressed()
         {
-            HoloKitApp.Instance.UIPanelManager.PushUIPanel("BuyHoloKitPage");
+            //HoloKitApp.Instance.UIPanelManager.PushUIPanel("BuyHoloKitPage");
+            Application.OpenURL("https://holokit.io/x/get_it_now/");
         }
 
         public void OnGettingStartedButtonPressed()
@@ -43,32 +56,32 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnTwitterButtonPressed()
         {
-
+            Application.OpenURL("https://twitter.com/holokit_io");
         }
 
         public void OnDiscordButtonPressed()
         {
-
+            //Application.OpenURL("https://holokit.io/x/get_it_now/");
         }
 
         public void OnInstagramButtonPressed()
         {
-
+            Application.OpenURL("https://www.instagram.com/holokit.io/");
         }
 
         public void OnTiktokButtonPressed()
         {
-
+            //Application.OpenURL("https://holokit.io/x/get_it_now/");
         }
 
         public void OnYoutubeButtonPressed()
         {
-
+            Application.OpenURL("https://www.youtube.com/channel/UCNLdtATBRfPlKbdsTb1Y-5Q");
         }
 
         public void OnMirrorButtonPressed()
         {
-
+            //Application.OpenURL("https://holokit.io/x/get_it_now/");
         }
     }
 }

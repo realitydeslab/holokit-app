@@ -44,7 +44,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private const float RoomRotationSpeed = 0.1f;
 
-        private readonly Vector3 RotationAxisX = new(1f, 0f, 1f);
+        private readonly Vector3 RotationAxisX = new(0f, 1f, 0f);
 
         private readonly Vector3 RotationAxisY = new(1f, 0f, -1f);
 
