@@ -40,9 +40,19 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private float _accumulatedRotationY;
 
-        private const float RoomListRootScale = 1.9f;
+        private const float RoomRotationSpeed = 0.3f;
 
-        private const float RoomRotationSpeed = 0.1f;
+        private const float CamaraOrthographicSize = 10f;
+
+        /// <summary>
+        /// The local position of camera relative to room center.
+        /// </summary>
+        private readonly Vector3 RoomCenterToCameraOffsetPosition = new(-10f, 18f, -8.8f);
+
+        /// <summary>
+        /// The local rotation in Euler of camera relative to room center.
+        /// </summary>
+        private readonly Vector3 RoomCenterToCameraOffsteEulerRotation = new(48f, 48f, 0f);
 
         private readonly Vector3 RotationAxisX = new(0f, 1f, 0f);
 
@@ -51,7 +61,6 @@ namespace Holoi.Library.HoloKitApp.UI
         private void OnEnable()
         {
             _roomListRoot = Instantiate(_roomListRootPrefab);
-            _roomListRoot.transform.localScale = new Vector3(RoomListRootScale, RoomListRootScale, RoomListRootScale);
             if (HoloKitApp.Instance.CurrentReality.ThumbnailPrefab == null)
             {
                 _room = Instantiate(_defaultRoomPrefab);
@@ -64,8 +73,9 @@ namespace Holoi.Library.HoloKitApp.UI
             _room.transform.localPosition = Vector3.zero;
             _room.transform.localRotation = Quaternion.identity;
             _room.transform.localScale = Vector3.one;
-            Camera.main.transform.SetPositionAndRotation(HoloKitAppUIPanel_RealityListPage.RoomCenterToCameraOffsetPosition,
-                                                         Quaternion.Euler(HoloKitAppUIPanel_RealityListPage.RoomCenterToCameraOffsteEulerRotation));
+            Camera.main.orthographicSize = CamaraOrthographicSize;
+            Camera.main.transform.SetPositionAndRotation(RoomCenterToCameraOffsetPosition,
+                                                         Quaternion.Euler(RoomCenterToCameraOffsteEulerRotation));
             Camera.main.targetTexture = _roomViewRenderTexture;
 
             _accumulatedRotationX = 0f;

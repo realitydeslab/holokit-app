@@ -72,15 +72,17 @@ namespace Holoi.Library.HoloKitApp.UI
         /// </summary>
         private const float FingerMovementClickThreshold = 20f;
 
+        private const float CamaraOrthographicSize = 18f;
+
         /// <summary>
         /// The local position of camera relative to room center.
         /// </summary>
-        public static Vector3 RoomCenterToCameraOffsetPosition = new(-10f, 18f, -8.8f);
+        private readonly Vector3 RoomCenterToCameraOffsetPosition = new(-10f, 18f, -8.8f);
 
         /// <summary>
         /// The local rotation in Euler of camera relative to room center.
         /// </summary>
-        public static Vector3 RoomCenterToCameraOffsteEulerRotation = new(48f, 48f, 0f);
+        private readonly Vector3 RoomCenterToCameraOffsteEulerRotation = new(48f, 48f, 0f);
 
         /// <summary>
         /// The offset from the center of the room to the point light.
@@ -114,6 +116,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 roomInstance.transform.localScale = Vector3.one;
             }
             Vector3 currentRoomPosition = new(_currentRoomIndex * RoomSpacingDist, 0f, 0f);
+            Camera.main.orthographicSize = CamaraOrthographicSize;
             Camera.main.transform.SetPositionAndRotation(currentRoomPosition + RoomCenterToCameraOffsetPosition, Quaternion.Euler(RoomCenterToCameraOffsteEulerRotation));
             _cameraTargetPosition = Camera.main.transform.position;
             OnTargetRoomArrived();

@@ -243,9 +243,9 @@ namespace Holoi.Library.HoloKitApp
 
         private void DeinitializeRealityScene()
         {
-            // Reset ARSession
             if (HoloKitUtils.IsRuntime)
             {
+                // Reset ARSession
                 LoaderUtility.Deinitialize();
                 LoaderUtility.Initialize();
                 HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
