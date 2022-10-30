@@ -24,6 +24,15 @@ namespace HoloKit
         [DllImport("__Internal")]
         private static extern float HoloKitSDK_GetHoloKitModelHorizontalAlignmentMarkerOffsetInPixel(int holokitType);
 
+        [DllImport("__Internal")]
+        private static extern bool HoloKitSDK_IsCurrentDeviceSupportedByHoloKit();
+
+        [DllImport("__Internal")]
+        private static extern bool HoloKitSDK_IsCurrentDeviceIpad();
+
+        [DllImport("__Internal")]
+        private static extern bool HoloKitSDK_IsCurrentDeviceEquippedWithLiDAR();
+
         public static Vector3 GetPhoneModelCameraOffset(HoloKitType holokitType)
         {
             IntPtr offsetPtr = HoloKitSDK_GetPhoneModelCameraOffsetPtr((int)holokitType);
@@ -56,6 +65,21 @@ namespace HoloKit
         public static float GetHoloKitModelHorizontalAlignmentMarkerOffsetInPixel(HoloKitType holokitType)
         {
             return HoloKitSDK_GetHoloKitModelHorizontalAlignmentMarkerOffsetInPixel((int)holokitType);
+        }
+
+        public static bool IsCurrentDeviceSupportedByHoloKit()
+        {
+            return HoloKitSDK_IsCurrentDeviceSupportedByHoloKit();
+        }
+
+        public static bool IsCurrentDeviceIpad()
+        {
+            return HoloKitSDK_IsCurrentDeviceIpad();
+        }
+
+        public static bool IsCurrentDeviceEquippedWithLiDAR()
+        {
+            return HoloKitSDK_IsCurrentDeviceEquippedWithLiDAR();
         }
     }
 }

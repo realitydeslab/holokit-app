@@ -6,82 +6,57 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIComponent_AnimatedToggle : MonoBehaviour
     {
-        [SerializeField] private Image _frameImage;
+        [SerializeField] private Image _frameDarkImage;
 
         [SerializeField] private Image _selectorImage;
 
-        [SerializeField] private Sprite _frameSpriteUnselected;
-
-        [SerializeField] private Sprite _frameSpriteSelected;
-
         public bool Toggled;
 
-        private const float MaxAbsSelectorPosX = 40f;
+        private const float MaxAbsSelectorPosX = 44f;
 
         private const float SelectorMovementDuration = 0.18f;
-
-        private float _selectorMovementSpeed;
-
-        private readonly Color WhiteColor = new(1f, 1f, 1f, 1f);
-
-        private readonly Color BlackColor = new(0f, 0f, 0f, 1f);
 
         public UnityEvent<bool> OnToggleValueChanged;
 
         private void Start()
         {
-            _selectorMovementSpeed = MaxAbsSelectorPosX * 2f / SelectorMovementDuration;
             if (Toggled)
             {
                 _selectorImage.rectTransform.anchoredPosition = new Vector2(MaxAbsSelectorPosX, 0f);
-                _frameImage.sprite = _frameSpriteSelected;
-                _selectorImage.color = WhiteColor;
+                _frameDarkImage.color = new Color(1f, 1f, 1f, 1f);
+                _selectorImage.color = Color.white;
             }
             else
             {
                 _selectorImage.rectTransform.anchoredPosition = new Vector2(-MaxAbsSelectorPosX, 0f);
-                _frameImage.sprite = _frameSpriteUnselected;
-                _selectorImage.color = BlackColor;
+                _frameDarkImage.color = new Color(1f, 1f, 1f, 0f);
+                _selectorImage.color = Color.black;
             }
         }
 
         public void Toggle()
         {
-            Toggled = !Toggled;
-            // TODO: Add vibration
-        }
-
-        private void Update()
-        {
+            LeanTween.cancel(_selectorImage.gameObject);
+            LeanTween.cancel(_frameDarkImage.gameObject);
             if (Toggled)
             {
-                if (_selectorImage.rectTransform.anchoredPosition.x < MaxAbsSelectorPosX)
-                {
-                    _selectorImage.rectTransform.anchoredPosition += new Vector2(_selectorMovementSpeed * Time.deltaTime, 0f);
-                    _frameImage.color -= new Color(SelectorMovementDuration * Time.deltaTime, SelectorMovementDuration * Time.deltaTime, SelectorMovementDuration * Time.deltaTime, 0f);
-                    _selectorImage.color += new Color(SelectorMovementDuration * Time.deltaTime, SelectorMovementDuration * Time.deltaTime, SelectorMovementDuration * Time.deltaTime, 0f);
-                }
-                else if (_selectorImage.rectTransform.anchoredPosition.x > -MaxAbsSelectorPosX)
-                {
-                    _selectorImage.rectTransform.anchoredPosition = new Vector2(MaxAbsSelectorPosX, 0f);
-                    _frameImage.sprite = _frameSpriteSelected;
-                    _selectorImage.color = WhiteColor;
-                }
+                LeanTween.moveX(_selectorImage.rectTransform, -MaxAbsSelectorPosX, SelectorMovementDuration)
+                    .setEase(LeanTweenType.easeInOutSine);
+                LeanTween.color(_selectorImage.rectTransform, Color.black, SelectorMovementDuration)
+                    .setEase(LeanTweenType.easeInOutSine);
+                LeanTween.alpha(_frameDarkImage.rectTransform, 0f, SelectorMovementDuration)
+                    .setEase(LeanTweenType.easeInOutSine);
+                Toggled = false;
             }
             else
             {
-                if (_selectorImage.rectTransform.anchoredPosition.x > -MaxAbsSelectorPosX)
-                {
-                    _selectorImage.rectTransform.anchoredPosition += new Vector2(-_selectorMovementSpeed * Time.deltaTime, 0f);
-                    _frameImage.color += new Color(SelectorMovementDuration * Time.deltaTime, SelectorMovementDuration * Time.deltaTime, SelectorMovementDuration * Time.deltaTime, 0f);
-                    _selectorImage.color -= new Color(SelectorMovementDuration * Time.deltaTime, SelectorMovementDuration * Time.deltaTime, SelectorMovementDuration * Time.deltaTime, 0f);
-                }
-                else if (_selectorImage.rectTransform.anchoredPosition.x < -MaxAbsSelectorPosX)
-                {
-                    _selectorImage.rectTransform.anchoredPosition = new Vector2(-MaxAbsSelectorPosX, 0f);
-                    _frameImage.sprite = _frameSpriteUnselected;
-                    _selectorImage.color = BlackColor;
-                }
+                LeanTween.moveX(_selectorImage.rectTransform, MaxAbsSelectorPosX, SelectorMovementDuration)
+                    .setEase(LeanTweenType.easeInOutSine);
+                LeanTween.color(_selectorImage.rectTransform, Color.white, SelectorMovementDuration)
+                    .setEase(LeanTweenType.easeInOutSine);
+                LeanTween.alpha(_frameDarkImage.rectTransform, 1f, SelectorMovementDuration)
+                    .setEase(LeanTweenType.easeInOutSine);
+                Toggled = true;
             }
         }
     }

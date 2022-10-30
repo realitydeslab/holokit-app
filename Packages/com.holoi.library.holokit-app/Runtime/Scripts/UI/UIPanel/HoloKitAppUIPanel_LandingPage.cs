@@ -32,12 +32,12 @@ namespace Holoi.Library.HoloKitApp.UI
             // Logo
             _logoImage.color = new Color(1f, 1f, 1f, 0f);
             LeanTween.alpha(_logoImage.rectTransform, 1f, LogoAppearTime)
-                .setEase(LeanTweenType.linear);
+                .setEase(LeanTweenType.easeInOutSine);
 
             // Slogan
             _logoImage.color = new Color(1f, 1f, 1f, 0f);
             LeanTween.alpha(_sloganImage.rectTransform, 1f, SloganAppearTime)
-                .setEase(LeanTweenType.linear)
+                .setEase(LeanTweenType.easeInOutSine)
                 .setDelay(SloganAppearDelay);
 
             // Headset
