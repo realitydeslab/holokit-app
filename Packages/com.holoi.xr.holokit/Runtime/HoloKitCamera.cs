@@ -176,6 +176,7 @@ namespace HoloKit
             Debug.Log($"[HoloKitCamera] RenderMode changed to {_renderMode}");
             if (_renderMode == HoloKitRenderMode.Stereo)
             {
+                Screen.orientation = ScreenOrientation.LandscapeLeft;
                 _monoCamera.enabled = false;
                 _arCameraBackground.enabled = false;
                 _leftEyeCamera.gameObject.SetActive(true);
@@ -184,6 +185,7 @@ namespace HoloKit
             }
             else
             {
+                Screen.orientation = ScreenOrientation.Portrait;
                 _monoCamera.enabled = true;
                 _arCameraBackground.enabled = true;
                 _leftEyeCamera.gameObject.SetActive(false);

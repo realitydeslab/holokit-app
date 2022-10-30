@@ -37,9 +37,15 @@ namespace Holoi.Library.HoloKitApp.UI
         public void OnStarButtonPressed()
         {
             // Enter Star Mode
-            Screen.orientation = ScreenOrientation.LandscapeLeft;
-            HoloKitApp.Instance.UIPanelManager.PushUIPanel("StarAR");
-            HoloKitAppUIEventManager.OnRenderModeChanged?.Invoke(HoloKit.HoloKitRenderMode.Stereo);
+            if (HoloKitApp.Instance.GlobalSettings.InstructionEnabled)
+            {
+                HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_GettingStarted");
+            }
+            else
+            {
+                HoloKitApp.Instance.UIPanelManager.PushUIPanel("StarAR");
+                HoloKitAppUIEventManager.OnRenderModeChanged?.Invoke(HoloKit.HoloKitRenderMode.Stereo);
+            }
         }
 
         public void OnExitButtonPressed()
