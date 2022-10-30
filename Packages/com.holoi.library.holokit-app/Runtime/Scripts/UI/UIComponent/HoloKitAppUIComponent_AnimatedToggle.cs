@@ -47,6 +47,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 LeanTween.alpha(_frameDarkImage.rectTransform, 0f, SelectorMovementDuration)
                     .setEase(LeanTweenType.easeInOutSine);
                 Toggled = false;
+                OnToggleValueChanged?.Invoke(Toggled);
             }
             else
             {
@@ -57,6 +58,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 LeanTween.alpha(_frameDarkImage.rectTransform, 1f, SelectorMovementDuration)
                     .setEase(LeanTweenType.easeInOutSine);
                 Toggled = true;
+                OnToggleValueChanged?.Invoke(Toggled);
             }
         }
     }
