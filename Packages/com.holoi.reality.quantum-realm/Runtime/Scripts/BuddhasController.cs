@@ -52,16 +52,24 @@ namespace Holoi.Reality.QuantumRealm
 
             if (HoloKitApp.Instance.IsHost)
             {
-                if (_hoverableObject)
+                if (vfx.isActiveAndEnabled)
                 {
-                    if (_hoverableObject.Interacted)
+                    if (_hoverableObject)
                     {
-                        if (_isPlaying == false)
+                        if (_hoverableObject.Interacted)
                         {
-                            StartHapticsPlayer();
-                            _isPlaying = true;
-                        }
+                            if (_isPlaying == false)
+                            {
+                                StartHapticsPlayer();
+                                _isPlaying = true;
+                            }
 
+                        }
+                        else
+                        {
+                            StopHapticsPlayer();
+                            _isPlaying = false;
+                        }
                     }
                     else
                     {
@@ -71,8 +79,11 @@ namespace Holoi.Reality.QuantumRealm
                 }
                 else
                 {
-                    StopHapticsPlayer();
-                    _isPlaying = false;
+                    if (_isPlaying)
+                    {
+                        StopHapticsPlayer();
+                        _isPlaying = false;
+                    }
                 }
             }
         }
@@ -87,7 +98,10 @@ namespace Holoi.Reality.QuantumRealm
         public void StopHapticsPlayer()
         {
             if (_textureHapticPlayer != null)
+            {
                 _textureHapticPlayer.Stop();
+            }
+                
         }
 
         private void SetupHapticAdvancedPlayers(TextAsset textureAHAP)

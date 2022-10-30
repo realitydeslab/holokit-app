@@ -276,6 +276,8 @@ namespace Holoi.Reality.QuantumRealm
 
             BuddhasController controller = vfxs[index].transform.parent.GetComponent<BuddhasController>();
 
+            //controller.StopHapticsPlayer();
+
             _vfxAnimator = controller.vfxAnimator;
             _seatAnimator = controller.setaAnimator;
 
@@ -332,6 +334,7 @@ namespace Holoi.Reality.QuantumRealm
             Debug.Log($"OnActiveBuddhasChangedClientRpc: {_currentIndex}");
 
             BuddhasController controller = vfxs[index].transform.parent.GetComponent<BuddhasController>();
+            //controller.StopHapticsPlayer();
 
             _vfxAnimator = controller.vfxAnimator;
             _seatAnimator = controller.setaAnimator;
