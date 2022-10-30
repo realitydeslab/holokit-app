@@ -22,10 +22,14 @@ namespace Holoi.Reality.Typography
         [SerializeField] Transform _handJoint;
         [SerializeField] Transform _handHookHead;
         [SerializeField] Transform _handLoadedVFXParent;
+        [SerializeField] HandObject _ho;
+
+        [Header("AR NetWork Base Objects")]
+        [SerializeField] Transform _serverCenterEye;
 
         [Header("Reality Objects")]
-        [SerializeField] GameObject _buddhasPrefab;
-         GameObject _buddhasInstance;
+        [SerializeField] GameObject _prefab;
+         GameObject _prefabInstance;
 
         [Header("AR UI Components")]
         [SerializeField] LoadButtonController _placementLoadButton;
@@ -46,8 +50,40 @@ namespace Holoi.Reality.Typography
             base.OnNetworkSpawn();
         }
 
+        private void OnEnable()
+        {
+            HoloKitCamera.OnHoloKitRenderModeChanged += ToMono;
+        }
+
+        private void OnDisable()
+        {
+            HoloKitCamera.OnHoloKitRenderModeChanged -= ToMono;
+        }
+
         private void Start()
         {
+            if (HoloKitApp.Instance.IsHost)
+            {
+                _arRaycastManager.enabled = true;
+                _arPlaneManager.enabled = true;
+                _serverCenterEye.GetComponent<FollowMovementManager>().enabled = true;
+
+                HoloKitHandTracker.Instance.Active = true;
+                HandObject.Instance.enabled = true;
+                ARRayCastController.Instance.enabled = true;
+            }
+            else
+            {
+                _arRaycastManager.enabled = false;
+                _arPlaneManager.enabled = false;
+                _serverCenterEye.GetComponent<FollowMovementManager>().enabled = false;
+
+
+                HoloKitHandTracker.Instance.Active = false;
+                HandObject.Instance.enabled = false;
+                ARRayCastController.Instance.enabled = false;
+            }
+
             _arRaycastManager = FindObjectOfType<ARRaycastManager>();
             if (_centerEye == null) _centerEye = HoloKitCamera.Instance.CenterEyePose;
         }
@@ -60,16 +96,22 @@ namespace Holoi.Reality.Typography
                 var dir = (_handJoint.position - _centerEye.position).normalized;
 
                 _handHookHead.position = _handJoint.position + dir * 0.025f;
-            }
 
-            if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono)
+                SyncHandValidStateCLientRpc(_ho.IsValid);
+            }
+        }
+
+        void ToMono(HoloKitRenderMode mode)
+        {
+            if (mode == HoloKitRenderMode.Mono)
             {
-                _arOcclusionManager.enabled = true;
+                _arOcclusionManager.requestedEnvironmentDepthMode = EnvironmentDepthMode.Medium;
                 _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Fastest;
                 _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Fastest;
             }
             else
             {
+                _arOcclusionManager.requestedEnvironmentDepthMode = EnvironmentDepthMode.Medium;
                 _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Disabled;
                 _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Disabled;
             }
@@ -82,19 +124,17 @@ namespace Holoi.Reality.Typography
 
         public void InitializeRealityObject()
         {
-            _buddhasInstance = GameObject.Instantiate(_buddhasPrefab);
+            _prefabInstance = Instantiate(_prefab);
 
-            _buddhasInstance.transform.position = _arRaycastController.transform.position;
+            _prefabInstance.transform.position = _arRaycastController.transform.position;
 
-            var target = new Vector3(_centerEye.position.x, _buddhasInstance.transform.position.y, _centerEye.position.z);
+            //var eyeHorizentalForward = GetHorizontalForward(_centerEye);
 
-            var eyeHorizentalForward = GetHorizontalForward(_centerEye);
+            var lookAtPoint = _prefabInstance.transform.position;
 
-            target = _buddhasInstance.transform.position - eyeHorizentalForward;
+            _prefabInstance.transform.LookAt(lookAtPoint);
 
-            _buddhasInstance.transform.LookAt(target);
-
-            //_buddhasInstance.GetComponent<NetworkObject>().Spawn();
+            _prefabInstance.GetComponent<NetworkObject>().Spawn();
         }
 
         IEnumerator DisableGameObjectAfterTimes(GameObject go, float time)
@@ -141,6 +181,21 @@ namespace Holoi.Reality.Typography
             if (HoloKitApp.Instance.IsHost)
             {
                 _placementLoadButton.gameObject.SetActive(state);
+            }
+        }
+
+
+        [ClientRpc]
+        public void SyncHandValidStateCLientRpc(bool valid)
+        {
+            if (HoloKitApp.Instance.IsHost)
+            {
+                return;
+            }
+            else
+            {
+                //_ho.IsValid = valid;
+                if(_ho.Animator) _ho.Animator.SetBool("HandValid", valid);
             }
         }
     }

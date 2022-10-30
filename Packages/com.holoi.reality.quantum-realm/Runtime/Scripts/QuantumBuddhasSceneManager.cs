@@ -61,6 +61,16 @@ namespace Holoi.Reality.QuantumRealm
             base.OnNetworkSpawn();
         }
 
+        private void OnEnable()
+        {
+            HoloKitCamera.OnHoloKitRenderModeChanged += ToMono;
+        }
+
+        private void OnDisable()
+        {
+            HoloKitCamera.OnHoloKitRenderModeChanged -= ToMono;
+        }
+
         void Start()
         {
             if (HoloKitApp.Instance.IsHost)
@@ -79,23 +89,13 @@ namespace Holoi.Reality.QuantumRealm
                 _arPlaneManager.enabled = false;
                 _serverCenterEye.GetComponent<FollowMovementManager>().enabled = false;
 
-                _ho.VisualSampleObject.GetComponent<MeshRenderer>().enabled = false;
 
                 HoloKitHandTracker.Instance.Active = false;
                 HandObject.Instance.enabled = false;
                 ARRayCastController.Instance.enabled = false;
             }
 
-            //SetupHapticEngine();
-
             _centerEye = HoloKitCamera.Instance.CenterEyePose;
-        }
-
-        void SetUpSwitchButton()
-        {
-            _switchButton.gameObject.SetActive(true);
-            _switchButton.onClick.AddListener(SwitchToNextVFXNetWork);
-
         }
 
         void Update()
@@ -110,6 +110,29 @@ namespace Holoi.Reality.QuantumRealm
 
                 SyncHandValidStateCLientRpc(_ho.IsValid);
             }
+        }
+
+        void ToMono(HoloKitRenderMode mode)
+        {
+            if(mode == HoloKitRenderMode.Mono)
+            {
+                _arOcclusionManager.requestedEnvironmentDepthMode = EnvironmentDepthMode.Medium;
+                _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Fastest;
+                _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Fastest;
+            }
+            else
+            {
+                _arOcclusionManager.requestedEnvironmentDepthMode = EnvironmentDepthMode.Medium;
+                _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Disabled;
+                _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Disabled;
+            }
+        }
+
+        void SetUpSwitchButton()
+        {
+            _switchButton.gameObject.SetActive(true);
+            _switchButton.onClick.AddListener(SwitchToNextVFXNetWork);
+
         }
 
         public void SwitchToNextVFXNetWork()

@@ -44,7 +44,7 @@ namespace Holoi.Library.ARUX
                 // isValid same to Inspector
             }
 
-            Animator.SetBool("HandValid", IsValid);
+            if(Animator) Animator.SetBool("HandValid", IsValid);
         }
     }
 }
