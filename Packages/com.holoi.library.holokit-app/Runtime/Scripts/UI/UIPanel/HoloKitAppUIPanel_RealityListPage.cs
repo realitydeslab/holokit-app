@@ -25,11 +25,6 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeField] private GameObject _defaultRoomPrefab;
 
         /// <summary>
-        /// The spot light for each room.
-        /// </summary>
-        [SerializeField] private GameObject _roomLightPrefab;
-
-        /// <summary>
         /// Only taps inside this area are effective.
         /// </summary>
         [SerializeField] private RectTransform _inputArea;
@@ -40,11 +35,6 @@ namespace Holoi.Library.HoloKitApp.UI
         private GameObject _roomListRoot;
 
         /// <summary>
-        /// Keeps a reference of this to destroy later.
-        /// </summary>
-        private GameObject _roomLight;
-
-        /// <summary>
         /// The index of the currently selected room.
         /// </summary>
         private int _currentRoomIndex = 0;
@@ -53,14 +43,15 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private Vector2 _touchBeganPosition;
 
-        private Vector3 _cameraTargetPosition;
-
         /// <summary>
         /// The distance between two rooms.
         /// </summary>
         private const float RoomSpacingDist = 13.5f;
 
-        private const float CameraMovementSpeed = 32f;
+        /// <summary>
+        /// The duration for camera moving from one room to another.
+        /// </summary>
+        private const float CameraMovingDuration = 0.7f;
 
         /// <summary>
         /// The UI will only respond to scroll when finger movement magnitude is larger than this value.
@@ -83,11 +74,6 @@ namespace Holoi.Library.HoloKitApp.UI
         /// The local rotation in Euler of camera relative to room center.
         /// </summary>
         private readonly Vector3 RoomCenterToCameraOffsteEulerRotation = new(48f, 48f, 0f);
-
-        /// <summary>
-        /// The offset from the center of the room to the point light.
-        /// </summary>
-        private readonly Vector3 RoomLightOffset = new(0f, 0.5f, 0f);
 
         // The list of spawned rooms.
         private readonly List<GameObject> RoomList = new();
@@ -118,7 +104,6 @@ namespace Holoi.Library.HoloKitApp.UI
             Vector3 currentRoomPosition = new(_currentRoomIndex * RoomSpacingDist, 0f, 0f);
             Camera.main.orthographicSize = CamaraOrthographicSize;
             Camera.main.transform.SetPositionAndRotation(currentRoomPosition + RoomCenterToCameraOffsetPosition, Quaternion.Euler(RoomCenterToCameraOffsteEulerRotation));
-            _cameraTargetPosition = Camera.main.transform.position;
             OnTargetRoomArrived();
             StartCoroutine(HoloKitAppUtils.WaitAndDo(0.5f, () =>
             {
@@ -135,17 +120,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Update()
         {
-            if (Vector3.Distance(Camera.main.transform.position, _cameraTargetPosition) > CameraMovementSpeed * Time.deltaTime)
-            {
-                Camera.main.transform.position += CameraMovementSpeed * Time.deltaTime * (_cameraTargetPosition - Camera.main.transform.position).normalized;
-                return;
-            }
-            else
-            {
-                Camera.main.transform.position = _cameraTargetPosition;
-                OnTargetRoomArrived();
-            }
-
             if (_touchable && Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
@@ -165,13 +139,33 @@ namespace Holoi.Library.HoloKitApp.UI
                     {
                         if (fingerMovementVector.x > 0f && fingerMovementVector.y > 0f)
                         {
-                            // Back to last room
                             ScrollToLastRoom();
                         }
                         else if (fingerMovementVector.x < 0f && fingerMovementVector.y < 0f)
                         {
-                            // Go to next room
                             ScrollToNextRoom();
+                        }
+                        else if (Mathf.Abs(fingerMovementVector.x) > Mathf.Abs(fingerMovementVector.y))
+                        {
+                            if (fingerMovementVector.x > 0f)
+                            {
+                                ScrollToLastRoom();
+                            }
+                            else if (fingerMovementVector.x < 0f)
+                            {
+                                ScrollToNextRoom();
+                            }
+                        }
+                        else if (Mathf.Abs(fingerMovementVector.x) < Mathf.Abs(fingerMovementVector.y))
+                        {
+                            if (fingerMovementVector.y > 0f)
+                            {
+                                ScrollToLastRoom();
+                            }
+                            else if (fingerMovementVector.y < 0f)
+                            {
+                                ScrollToNextRoom();
+                            }
                         }
                     }
                     else if (fingerMovementVector.magnitude < FingerMovementClickThreshold)
@@ -215,7 +209,12 @@ namespace Holoi.Library.HoloKitApp.UI
             if (_currentRoomIndex < RoomList.Count - 1)
             {
                 _currentRoomIndex++;
-                _cameraTargetPosition = Camera.main.transform.position + new Vector3(RoomSpacingDist, 0f, 0f);
+                var cameraTargetPosition = RoomCenterToCameraOffsetPosition +
+                    new Vector3(_currentRoomIndex * RoomSpacingDist, 0f, 0f);
+                LeanTween.cancel(Camera.main.gameObject);
+                LeanTween.move(Camera.main.gameObject, cameraTargetPosition, CameraMovingDuration)
+                    .setEase(LeanTweenType.easeInOutSine)
+                    .setOnComplete(OnTargetRoomArrived);
             }
         }
 
@@ -224,7 +223,12 @@ namespace Holoi.Library.HoloKitApp.UI
             if (_currentRoomIndex > 0)
             {
                 _currentRoomIndex--;
-                _cameraTargetPosition = Camera.main.transform.position - new Vector3(RoomSpacingDist, 0f, 0f);
+                var cameraTargetPosition = RoomCenterToCameraOffsetPosition +
+                    new Vector3(_currentRoomIndex * RoomSpacingDist, 0f, 0f);
+                LeanTween.cancel(Camera.main.gameObject);
+                LeanTween.move(Camera.main.gameObject, cameraTargetPosition, CameraMovingDuration)
+                    .setEase(LeanTweenType.easeInOutSine)
+                    .setOnComplete(OnTargetRoomArrived);
             }
         }
 
