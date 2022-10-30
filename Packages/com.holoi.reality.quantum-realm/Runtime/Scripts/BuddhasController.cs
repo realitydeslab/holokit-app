@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using Holoi.Library.ARUX;
 using Apple.CoreHaptics;
+using Holoi.Library.HoloKitApp;
 
 
 namespace Holoi.Reality.QuantumRealm
@@ -40,30 +41,39 @@ namespace Holoi.Reality.QuantumRealm
 
         void Update()
         {
-            if (_ho)
-                vfx.SetVector3("Hand Position", _ho.transform.position);
-
-            if (_hoverableObject)
+            if (_ho.IsValid)
             {
-                if (_hoverableObject.Interacted)
-                {
-                    if (_isPlaying == false)
-                    {
-                        StartHapticsPlayer();
-                        _isPlaying = true;
-                    }
+                vfx.SetVector3("Hand Position", _ho.transform.position);
+            }
+            else
+            {
+                vfx.SetVector3("Hand Position", new Vector3(0,-99,0));
+            }
 
+            if (HoloKitApp.Instance.IsHost)
+            {
+                if (_hoverableObject)
+                {
+                    if (_hoverableObject.Interacted)
+                    {
+                        if (_isPlaying == false)
+                        {
+                            StartHapticsPlayer();
+                            _isPlaying = true;
+                        }
+
+                    }
+                    else
+                    {
+                        StopHapticsPlayer();
+                        _isPlaying = false;
+                    }
                 }
                 else
                 {
                     StopHapticsPlayer();
                     _isPlaying = false;
                 }
-            }
-            else
-            {
-                StopHapticsPlayer();
-                _isPlaying = false;
             }
         }
 

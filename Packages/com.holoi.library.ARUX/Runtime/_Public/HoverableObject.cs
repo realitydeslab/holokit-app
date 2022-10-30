@@ -54,27 +54,36 @@ namespace Holoi.Library.ARUX
 
         void Update()
         {
-            if (_ho.IsValid)
+            if (_ho.enabled)
             {
-                if (Vector3.Distance(_ho.transform.position, transform.position + _offset) < _triggerDistance)
+                if (_ho.IsValid)
                 {
-                    _isInteracted = true;
-
-                    _process += Time.deltaTime * _loadSpeed;
-
-                    if (_process > 1)
+                    if (Vector3.Distance(_ho.transform.position, transform.position + _offset) < _triggerDistance)
                     {
-                        _process = 1;
-                        if (!_isTriggered)
+                        _isInteracted = true;
+
+                        _process += Time.deltaTime * _loadSpeed;
+
+                        if (_process > 1)
                         {
-                            _isInteracted = false;
-                            _isTriggered = true;
-                            OnLoadedEvents?.Invoke();
-                            if(_autoReset)
+                            _process = 1;
+                            if (!_isTriggered)
                             {
-                                OnReset();
+                                _isInteracted = false;
+                                _isTriggered = true;
+                                OnLoadedEvents?.Invoke();
+                                if (_autoReset)
+                                {
+                                    OnReset();
+                                }
                             }
                         }
+                    }
+                    else
+                    {
+                        _isInteracted = false;
+                        _process -= Time.deltaTime * _loadSpeed * 0.5f;
+                        if (_process < 0) _process = 0;
                     }
                 }
                 else
@@ -83,12 +92,6 @@ namespace Holoi.Library.ARUX
                     _process -= Time.deltaTime * _loadSpeed * 0.5f;
                     if (_process < 0) _process = 0;
                 }
-            }
-            else
-            {
-                _isInteracted = false;
-                _process -= Time.deltaTime * _loadSpeed * 0.5f;
-                if (_process < 0) _process = 0;
             }
         }
     }

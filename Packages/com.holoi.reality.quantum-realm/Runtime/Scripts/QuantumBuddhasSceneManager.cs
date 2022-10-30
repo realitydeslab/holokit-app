@@ -79,6 +79,8 @@ namespace Holoi.Reality.QuantumRealm
                 _arPlaneManager.enabled = false;
                 _serverCenterEye.GetComponent<FollowMovementManager>().enabled = false;
 
+                _ho.VisualSampleObject.GetComponent<MeshRenderer>().enabled = false;
+
                 HoloKitHandTracker.Instance.Active = false;
                 HandObject.Instance.enabled = false;
                 ARRayCastController.Instance.enabled = false;
@@ -108,56 +110,6 @@ namespace Holoi.Reality.QuantumRealm
 
                 SyncHandValidStateCLientRpc(_ho.IsValid);
             }
-        }
-
-        void SwitchtoNextVFX()
-        {
-            // do on host:
-            Debug.Log($"OnActiveBuddhasChanged: {_currentIndex}");
-
-            BuddhasController controller = vfxs[_currentIndex].transform.parent.GetComponent<BuddhasController>();
-
-            _vfxAnimator = controller.vfxAnimator;
-            _seatAnimator = controller.setaAnimator;
-
-            if (_vfxAnimator != null)
-            {
-                _vfxAnimator.SetTrigger("Fade Out");
-                _seatAnimator.SetTrigger("Fade Out");
-            }
-
-            _currentIndex++;
-
-            if (_currentIndex == vfxs.Count) _currentIndex = 0;
-
-            // disbale other vfx after play animation:
-            for (int i = 0; i < vfxs.Count; i++)
-            {
-                if (i == _currentIndex)
-                {
-                    vfxs[_currentIndex].gameObject.SetActive(true);
-                }
-                else if (i == _currentIndex - 1)
-                {
-                    StartCoroutine(DisableGameObjectAfterTimes(vfxs[i].gameObject, 1.5f));
-                }
-                else
-                {
-
-                }
-            }
-
-            _vfxAnimator = vfxs[_currentIndex].transform.parent.GetComponent<BuddhasController>().vfxAnimator;
-            _seatAnimator = vfxs[_currentIndex].transform.parent.GetComponent<BuddhasController>().setaAnimator;
-
-            _vfxAnimator.Rebind();
-            _vfxAnimator.Update(0f);
-
-            _seatAnimator.Rebind();
-            _seatAnimator.Update(0f);
-
-            // hand vfx:
-            TriggerHandVFX();
         }
 
         public void SwitchToNextVFXNetWork()
@@ -245,6 +197,56 @@ namespace Holoi.Reality.QuantumRealm
             {
                 _placementLoadButton.gameObject.SetActive(state);
             }
+        }
+
+        void SwitchtoNextVFX()
+        {
+            // do on host:
+            Debug.Log($"OnActiveBuddhasChanged: {_currentIndex}");
+
+            BuddhasController controller = vfxs[_currentIndex].transform.parent.GetComponent<BuddhasController>();
+
+            _vfxAnimator = controller.vfxAnimator;
+            _seatAnimator = controller.setaAnimator;
+
+            if (_vfxAnimator != null)
+            {
+                _vfxAnimator.SetTrigger("Fade Out");
+                _seatAnimator.SetTrigger("Fade Out");
+            }
+
+            _currentIndex++;
+
+            if (_currentIndex == vfxs.Count) _currentIndex = 0;
+
+            // disbale other vfx after play animation:
+            for (int i = 0; i < vfxs.Count; i++)
+            {
+                if (i == _currentIndex)
+                {
+                    vfxs[_currentIndex].gameObject.SetActive(true);
+                }
+                else if (i == _currentIndex - 1)
+                {
+                    StartCoroutine(DisableGameObjectAfterTimes(vfxs[i].gameObject, 1.5f));
+                }
+                else
+                {
+
+                }
+            }
+
+            _vfxAnimator = vfxs[_currentIndex].transform.parent.GetComponent<BuddhasController>().vfxAnimator;
+            _seatAnimator = vfxs[_currentIndex].transform.parent.GetComponent<BuddhasController>().setaAnimator;
+
+            _vfxAnimator.Rebind();
+            _vfxAnimator.Update(0f);
+
+            _seatAnimator.Rebind();
+            _seatAnimator.Update(0f);
+
+            // hand vfx:
+            TriggerHandVFX();
         }
 
         [ClientRpc]
@@ -420,6 +422,7 @@ namespace Holoi.Reality.QuantumRealm
             else
             {
                 _ho.Animator.SetBool("HandValid", valid);
+
             }
         }
     }
