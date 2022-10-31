@@ -17,6 +17,7 @@ namespace Holoi.Reality.QuantumRealm
     {
         [Header("Buddhas Objects")]
         public List<VisualEffect> vfxs = new List<VisualEffect>();
+        [SerializeField] GameObject _objectPrefab;
 
         [Header("Hand Objects")]
         [SerializeField] Transform _handJoint;
@@ -30,8 +31,8 @@ namespace Holoi.Reality.QuantumRealm
 
         [Header("AR UI Components")]
         [SerializeField] LoadButtonController _placementLoadButton;
-        [Header("UI Components")]
 
+        [Header("UI Components")]
         [SerializeField] Button _switchButton;
 
         [Header("AR Features")]
@@ -42,8 +43,6 @@ namespace Holoi.Reality.QuantumRealm
         [Header("Placement Settings")]
         [SerializeField] ARRayCastController _arRaycastController;
         [SerializeField] RaycastPlacmentVisualController _raycastVisual;
-
-        [SerializeField] GameObject _targetGameObject;
 
         //
         //public CHHapticEngine HapticEngine;
@@ -172,7 +171,6 @@ namespace Holoi.Reality.QuantumRealm
         {
             if (HoloKitApp.Instance.IsHost)
             {
-                _arPlaneManager.enabled = false;
                 _arPlaneManager.enabled = false;
                 var planeList = FindObjectsOfType<ARPlane>();
                 foreach (var plane in planeList)
@@ -422,7 +420,7 @@ namespace Holoi.Reality.QuantumRealm
             // create main object
             if (HoloKitApp.Instance.IsHost)
             {
-                GameObject go = Instantiate(_targetGameObject);
+                GameObject go = Instantiate(_objectPrefab);
 
                 go.transform.position = new Vector3(_centerEye.position.x, _arRaycastController.transform.position.y, _centerEye.position.z);
 

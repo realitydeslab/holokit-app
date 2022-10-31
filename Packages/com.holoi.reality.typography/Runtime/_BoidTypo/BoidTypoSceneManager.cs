@@ -19,6 +19,7 @@ namespace Holoi.Reality.Typography
         VisualEffect _vfx;
         [SerializeField] Transform _rotateAroundPlayer;
         [Header("AR Base Objects")]
+        [SerializeField] Transform _centerEye;
         [SerializeField] Transform _serverCenterEye;
 
         // raycast
@@ -27,15 +28,14 @@ namespace Holoi.Reality.Typography
         bool placementPoseIsValid = false;
         float _directDistance = 0 ;
         float _verticalDistance = 0;
-        //
-        Transform _centerEye;
+
         // temp test
         [SerializeField] Transform hitPoseSample;
 
         private void Start()
         {
             _raycastManager = GetComponent<ARRaycastManager>();
-             _centerEye = HoloKitCamera.Instance.CenterEyePose;
+             //_centerEye = HoloKitCamera.Instance.CenterEyePose;
 
             _vfx = _boid.GetComponent<VisualEffect>();
             _vfx.enabled = true;
@@ -47,7 +47,7 @@ namespace Holoi.Reality.Typography
             if (HoloKitApp.Instance.IsHost)
             {
                 UpdateServerCenterEye();
-                //UpdateBoidCenter();
+                // UpdateBoidCenter();
             }
             SetVfxBuffer();
         }

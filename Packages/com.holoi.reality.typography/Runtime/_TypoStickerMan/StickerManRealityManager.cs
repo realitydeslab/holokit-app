@@ -15,8 +15,11 @@ namespace Holoi.Reality.Typography
         [Header("AR Objects")]
         [SerializeField] Transform _centerEye;
         [SerializeField] ARRaycastManager _arRaycastManager;
-        [SerializeField] ARPlaneManager _arPlaneManager;
         [SerializeField] AROcclusionManager _arOcclusionManager;
+        [SerializeField] ARPlaneManager _arPlaneManager;
+        [SerializeField] Material _arShadowedPlaneMat;
+        [SerializeField] GameObject _arShadowedPlane;
+
 
         [Header("Hand Objects")]
         [SerializeField] Transform _handJoint;
@@ -29,7 +32,7 @@ namespace Holoi.Reality.Typography
 
         [Header("Reality Objects")]
         [SerializeField] GameObject _prefab;
-         GameObject _prefabInstance;
+        GameObject _prefabInstance;
 
         [Header("AR UI Components")]
         [SerializeField] LoadButtonController _placementLoadButton;
@@ -136,6 +139,8 @@ namespace Holoi.Reality.Typography
             _prefabInstance.transform.LookAt(lookAtPoint);
 
             _prefabInstance.GetComponent<NetworkObject>().Spawn();
+
+            SwitchARPlaneToShadowed();
         }
 
         IEnumerator DisableGameObjectAfterTimes(GameObject go, float time)
@@ -200,6 +205,30 @@ namespace Holoi.Reality.Typography
                     _ho.IsValid = valid;
                 }
             }
+        }
+
+        public void SwitchARPlaneToShadowed()
+        {
+            // on host:
+
+            //_arPlaneManager.enabled = false;
+
+            _arPlaneManager.planePrefab = _arShadowedPlane;
+
+            //var planeList = FindObjectsOfType<ARPlane>();
+            //foreach (var plane in planeList)
+            //{
+            //    plane.GetComponent<MeshRenderer>().material = _arShadowedPlaneMat;
+            //}
+
+            // on client: 
+            SwitchARPlaneToShadowedCLientRpc();
+        }
+
+        [ClientRpc]
+        public void SwitchARPlaneToShadowedCLientRpc()
+        {
+            _arPlaneManager.planePrefab = _arShadowedPlane;
         }
     }
 }

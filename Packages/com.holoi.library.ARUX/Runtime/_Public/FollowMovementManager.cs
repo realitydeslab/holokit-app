@@ -44,9 +44,10 @@ namespace Holoi.Library.ARUX
         [SerializeField] RotateType _rotateType;
         [SerializeField] UpdateType _updateType;
 
-        [Header("Movement Properties")]
+        [Header("Offset & Space")]
         [SerializeField] bool _worldSpace = false;
         [SerializeField] private Vector3 _offset = new Vector3(0, 0, 0.5f);
+        [Header("Movement")]
         [SerializeField] private float _lerpSpeed = 4f;
         [SerializeField] private float _needMoveDistance = .01f;
         [SerializeField] private float _regardAsArriveDistance = .001f;
