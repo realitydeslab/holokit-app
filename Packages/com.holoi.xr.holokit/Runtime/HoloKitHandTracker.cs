@@ -89,7 +89,10 @@ namespace HoloKit
             {
                 _instance = this;
             }
+        }
 
+        private void Start()
+        {
             HoloKitHandTrackingControllerAPI.OnHandPoseUpdated += OnHandPoseUpdated;
             HoloKitHandTrackingControllerAPI.RegisterHandTrackingControllerDelegates();
             EnableAROcclusionManager(_active);
@@ -98,13 +101,10 @@ namespace HoloKit
             SetHandJointsVisible(_visible);
         }
 
-        private void Start()
-        {
-        }
-
         private void OnDestroy()
         {
             HoloKitHandTrackingControllerAPI.OnHandPoseUpdated -= OnHandPoseUpdated;
+            HoloKitHandTrackingControllerAPI.SetHandTrackingActive(false);
         }
 
         private void SetupHandJointColors()
