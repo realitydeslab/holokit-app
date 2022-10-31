@@ -54,7 +54,7 @@ namespace Holoi.Library.ARUX
 
         void Update()
         {
-            if (_ho.enabled)
+            if (!_ho.IsSyncedHand) // not sycned, so it is a hand on server
             {
                 if (_ho.IsValid)
                 {
@@ -88,9 +88,7 @@ namespace Holoi.Library.ARUX
                 }
                 else
                 {
-                    _isInteracted = false;
-                    _process -= Time.deltaTime * _loadSpeed * 0.5f;
-                    if (_process < 0) _process = 0;
+                    // it is hand on client, do nothing:
                 }
             }
         }

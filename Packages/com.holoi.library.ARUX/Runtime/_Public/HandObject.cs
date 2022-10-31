@@ -15,7 +15,9 @@ namespace Holoi.Library.ARUX
 
         public GameObject VisualSampleObject;
 
-        public Animator Animator;
+        public Animator handAnimator;
+
+        public bool IsSyncedHand = false;
 
         int count = 0;
 
@@ -31,20 +33,27 @@ namespace Holoi.Library.ARUX
             }
         }
 
+        private void Start()
+        {
+
+        }
+
         private void Update()
         {
 
-            if (HoloKit.HoloKitUtils.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
-                if (HoloKitHandTracker.Instance != false)
+                if (!IsSyncedHand)
+                {
                     IsValid = HoloKitHandTracker.Instance.Valid;
+                } 
             }
             else
             {
-                // isValid same to Inspector
+                // editor mode:
             }
 
-            if(Animator) Animator.SetBool("HandValid", IsValid);
+            if(handAnimator) handAnimator.SetBool("HandValid", IsValid);
         }
     }
 }

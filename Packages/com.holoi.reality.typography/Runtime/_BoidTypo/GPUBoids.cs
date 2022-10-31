@@ -8,12 +8,12 @@ namespace BoidsSimulationOnGPU
     public class GPUBoids : MonoBehaviour
     {
         // スレッドグループのスレッドのサイズ
-        const int SIMULATION_BLOCK_SIZE = 256;
+        const int SIMULATION_BLOCK_SIZE = 128;
 
         #region Boids Parameters
 
         // 最大オブジェクト数
-        [Range(256, 32768)] public int MaxObjectNum = 16384;
+        [Range(128, 32768)] public int MaxObjectNum = 16384;
 
         // 結合を適用する他の個体との半径
         public float CohesionNeighborhoodRadius = 2.0f;

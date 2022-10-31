@@ -69,7 +69,7 @@ namespace Holoi.Reality.Typography
                 _serverCenterEye.GetComponent<FollowMovementManager>().enabled = true;
 
                 HoloKitHandTracker.Instance.Active = true;
-                HandObject.Instance.enabled = true;
+                HandObject.Instance.IsSyncedHand = false;
                 ARRayCastController.Instance.enabled = true;
             }
             else
@@ -80,7 +80,7 @@ namespace Holoi.Reality.Typography
 
 
                 HoloKitHandTracker.Instance.Active = false;
-                HandObject.Instance.enabled = false;
+                HandObject.Instance.IsSyncedHand = true;
                 ARRayCastController.Instance.enabled = false;
             }
 
@@ -124,6 +124,7 @@ namespace Holoi.Reality.Typography
 
         public void InitializeRealityObject()
         {
+            Debug.Log("InitializeRealityObject");
             _prefabInstance = Instantiate(_prefab);
 
             _prefabInstance.transform.position = _arRaycastController.transform.position;
@@ -194,8 +195,10 @@ namespace Holoi.Reality.Typography
             }
             else
             {
-                //_ho.IsValid = valid;
-                if(_ho.Animator) _ho.Animator.SetBool("HandValid", valid);
+                if (_ho.IsSyncedHand)
+                {
+                    _ho.IsValid = valid;
+                }
             }
         }
     }

@@ -73,6 +73,7 @@ namespace Holoi.Reality.QuantumRealm
 
         void Start()
         {
+            // server and client set up
             if (HoloKitApp.Instance.IsHost)
             {
                 _arRaycastManager.enabled = true;
@@ -80,7 +81,7 @@ namespace Holoi.Reality.QuantumRealm
                 _serverCenterEye.GetComponent<FollowMovementManager>().enabled = true;
 
                 HoloKitHandTracker.Instance.Active = true;
-                HandObject.Instance.enabled = true;
+                HandObject.Instance.IsSyncedHand = false;
                 ARRayCastController.Instance.enabled = true;
             }
             else
@@ -91,7 +92,7 @@ namespace Holoi.Reality.QuantumRealm
 
 
                 HoloKitHandTracker.Instance.Active = false;
-                HandObject.Instance.enabled = false;
+                HandObject.Instance.IsSyncedHand = true;
                 ARRayCastController.Instance.enabled = false;
             }
 
@@ -447,7 +448,7 @@ namespace Holoi.Reality.QuantumRealm
             }
             else
             {
-                _ho.Animator.SetBool("HandValid", valid);
+                _ho.handAnimator.SetBool("HandValid", valid);
 
             }
         }

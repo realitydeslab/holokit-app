@@ -31,7 +31,6 @@ namespace Holoi.Reality.Typography
             if (_centerEye == null) _centerEye = HoloKitCamera.Instance.CenterEyePose;
 
             InitServerCenterEye();
-
         }
 
         void Update()

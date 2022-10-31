@@ -13,6 +13,11 @@ namespace Holoi.Reality.Typography
         HandObject _ho;
         [SerializeField] VisualEffect _vfx;
 
+        private void Awake()
+        {
+            Debug.Log("StickerMand Created");
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -24,10 +29,12 @@ namespace Holoi.Reality.Typography
         {
             if (_ho.IsValid)
             {
+                Debug.Log("_ho.IsValid");
                 _vfx.SetFloat("Rate", 1);
             }
             else
             {
+                Debug.Log("_ho.IsNotValid");
                 _vfx.SetFloat("Rate", 0);
             }
             _vfx.SetVector3("Hand", _ho.transform.position);
