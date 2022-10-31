@@ -36,7 +36,14 @@ namespace Holoi.Library.MOFABase
         {
             get
             {
-                return SecondarySpellCharge / SecondarySpell.ChargeTime;
+                if (SecondarySpell != null)
+                {
+                    return SecondarySpellCharge / SecondarySpell.ChargeTime;
+                }
+                else
+                {
+                    return 0f;
+                }
             }
         }
 
