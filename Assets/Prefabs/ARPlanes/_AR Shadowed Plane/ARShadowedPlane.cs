@@ -13,11 +13,13 @@ public class ARShadowedPlane : MonoBehaviour
     [SerializeField] float _blurRadius = 0.1f;
     [SerializeField] float _strength = 0.4f;
     Color _screenARShadowColor = new Color(8 / 255f, 8 / 255f, 8 / 255f, 1);
-    Color _stARShadowColor = new Color(70 / 255f, 0, 140 / 255f, 1);
+    //Color _stARShadowColor = new Color(70 / 255f, 0, 140 / 255f, 1);
+    Color _stARShadowColor = new Color(1, 1, 1, 1);
 
     [Header("Hard Shadow")]
     Color _screenARShadowHardColor = new Color(8 / 255f, 8 / 255f, 8 / 255f, 1);
-    Color _stARShadowHardColor = new Color(70 / 255f, 0, 140 / 255f, 1);
+    //Color _stARShadowHardColor = new Color(70f / 255f, 0, 140 / 255f, 1);
+    Color _stARShadowHardColor = new Color(1, 1, 1, 1);
 
     private void OnEnable()
     {
@@ -48,8 +50,6 @@ public class ARShadowedPlane : MonoBehaviour
 
     void OnRenderModeChanged(HoloKitRenderMode mode)
     {
-        Debug.Log("RenderModeChanged:" + mode);
-
         if (mode == HoloKitRenderMode.Mono)
         {
             if (_isSoftShadowed)
