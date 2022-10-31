@@ -67,14 +67,20 @@ namespace Holoi.Reality.QuantumRealm
                         }
                         else
                         {
-                            StopHapticsPlayer();
-                            _isPlaying = false;
+                            if (_isPlaying == true)
+                            {
+                                StopHapticsPlayer();
+                                _isPlaying = false;
+                            }
                         }
                     }
                     else
                     {
-                        StopHapticsPlayer();
-                        _isPlaying = false;
+                        if (_isPlaying == true)
+                        {
+                            StopHapticsPlayer();
+                            _isPlaying = false;
+                        }
                     }
                 }
                 else

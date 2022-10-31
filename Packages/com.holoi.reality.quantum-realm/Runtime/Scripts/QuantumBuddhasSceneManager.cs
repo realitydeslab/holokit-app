@@ -44,9 +44,6 @@ namespace Holoi.Reality.QuantumRealm
         [SerializeField] ARRayCastController _arRaycastController;
         [SerializeField] RaycastPlacmentVisualController _raycastVisual;
 
-        //
-        //public CHHapticEngine HapticEngine;
-
         Transform _centerEye;
 
         int _currentIndex = 0;
@@ -88,7 +85,6 @@ namespace Holoi.Reality.QuantumRealm
                 _arRaycastManager.enabled = false;
                 _arPlaneManager.enabled = false;
                 _serverCenterEye.GetComponent<FollowMovementManager>().enabled = false;
-
 
                 HoloKitHandTracker.Instance.Active = false;
                 HandObject.Instance.IsSyncedHand = true;

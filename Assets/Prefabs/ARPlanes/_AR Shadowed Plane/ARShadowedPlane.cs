@@ -12,19 +12,19 @@ public class ARShadowedPlane : MonoBehaviour
     [SerializeField] float _fadeTightness = 80;
     [SerializeField] float _blurRadius = 0.1f;
     [SerializeField] float _strength = 0.4f;
-    Color _screenARShadowColor = new Color(0, 0, 0, 1);
-    Color _stARShadowColor = new Color(255, 81, 100, 1);
+    Color _screenARShadowColor = new Color(8 / 255f, 8 / 255f, 8 / 255f, 1);
+    Color _stARShadowColor = new Color(70 / 255f, 0, 140 / 255f, 1);
 
     [Header("Hard Shadow")]
-    Color _screenARShadowHardColor = new Color(0, 0, 0, 1);
-    Color _stARShadowHardColor = new Color(255, 81, 100, 1);
+    Color _screenARShadowHardColor = new Color(8 / 255f, 8 / 255f, 8 / 255f, 1);
+    Color _stARShadowHardColor = new Color(70 / 255f, 0, 140 / 255f, 1);
 
     private void OnEnable()
     {
         HoloKitCamera.OnHoloKitRenderModeChanged += OnRenderModeChanged;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         HoloKitCamera.OnHoloKitRenderModeChanged -= OnRenderModeChanged;
     }
@@ -42,13 +42,14 @@ public class ARShadowedPlane : MonoBehaviour
         else
         {
             _shadowedMat.SetColor("_Color", _screenARShadowHardColor);
-
         }
 
     }
 
     void OnRenderModeChanged(HoloKitRenderMode mode)
     {
+        Debug.Log("RenderModeChanged:" + mode);
+
         if (mode == HoloKitRenderMode.Mono)
         {
             if (_isSoftShadowed)
@@ -73,7 +74,6 @@ public class ARShadowedPlane : MonoBehaviour
                 _shadowedMat.SetColor("_Color", _stARShadowHardColor);
 
             }
-
         }
     }
 }

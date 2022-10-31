@@ -211,9 +211,8 @@ namespace Holoi.Reality.Typography
         {
             // on host:
 
-            //_arPlaneManager.enabled = false;
-
             _arPlaneManager.planePrefab = _arShadowedPlane;
+            _arPlaneManager.enabled = false; // do not update planes
 
             //var planeList = FindObjectsOfType<ARPlane>();
             //foreach (var plane in planeList)
@@ -229,6 +228,8 @@ namespace Holoi.Reality.Typography
         public void SwitchARPlaneToShadowedCLientRpc()
         {
             _arPlaneManager.planePrefab = _arShadowedPlane;
+            _arPlaneManager.enabled = false;
+
         }
     }
 }
