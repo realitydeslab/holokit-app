@@ -3,7 +3,7 @@ using UnityEngine.VFX;
 using Holoi.Library.ARUX;
 using Apple.CoreHaptics;
 using Holoi.Library.HoloKitApp;
-
+using System.Collections;
 
 namespace Holoi.Reality.QuantumRealm
 {
@@ -11,7 +11,7 @@ namespace Holoi.Reality.QuantumRealm
     {
         public VisualEffect vfx;
         public Animator vfxAnimator;
-        public Animator setaAnimator;
+        public Animator seatAnimator;
 
         [SerializeField] HoverableObject _hoverableObject;
 
@@ -22,14 +22,28 @@ namespace Holoi.Reality.QuantumRealm
         [SerializeField] private TextAsset _textureAHAP;
         bool _isPlaying = false;
 
+        public bool IsActive = false;
 
+        private void OnEnable()
+        {
+            IsActive = true;
+        }
+
+        private void OnDisable()
+        {
+            IsActive = false;
+            StopHapticsPlayer();
+        }
 
         void Start()
         {
             _ho = HandObject.Instance;
 
-            _hoverableObject.OnLoadedEvents.AddListener(FindObjectOfType<QuantumBuddhasSceneManager>().SwitchToNextVFXNetWork);
-            _hoverableObject.OnLoadedEvents.AddListener(StopHapticsPlayer);
+            if (HoloKitApp.Instance.IsHost)
+            {
+                _hoverableObject.OnLoadedEvents.AddListener(FindObjectOfType<QuantumBuddhasSceneManager>().SwitchToNextVFXNetWork);
+                _hoverableObject.OnLoadedEvents.AddListener(StopHapticsPlayer);
+            }
 
             var engine = FindObjectOfType<HapticsManager>().HapticsEngine;
 
@@ -52,31 +66,19 @@ namespace Holoi.Reality.QuantumRealm
 
             if (HoloKitApp.Instance.IsHost)
             {
-                if (vfx.isActiveAndEnabled)
+                if (IsActive)
                 {
-                    if (_hoverableObject)
+                    if (_hoverableObject.Interacted)
                     {
-                        if (_hoverableObject.Interacted)
+                        if (_isPlaying == false)
                         {
-                            if (_isPlaying == false)
-                            {
-                                StartHapticsPlayer();
-                                _isPlaying = true;
-                            }
-
-                        }
-                        else
-                        {
-                            if (_isPlaying == true)
-                            {
-                                StopHapticsPlayer();
-                                _isPlaying = false;
-                            }
+                            StartHapticsPlayer();
+                            _isPlaying = true;
                         }
                     }
                     else
                     {
-                        if (_isPlaying == true)
+                        if (_isPlaying)
                         {
                             StopHapticsPlayer();
                             _isPlaying = false;
@@ -94,20 +96,45 @@ namespace Holoi.Reality.QuantumRealm
             }
         }
 
+        private void OnDestroy()
+        {
+            StopHapticsPlayer();
+        }
+
+
+        public void InitBuddha()
+        {
+            IsActive = true;
+
+            vfxAnimator.Rebind();
+            vfxAnimator.Update(0f);
+
+            seatAnimator.Rebind();
+            seatAnimator.Update(0f);
+        }
+
+       public void ExitBuddha()
+        {
+            IsActive = false;
+
+            vfxAnimator.SetTrigger("Fade Out");
+            seatAnimator.SetTrigger("Fade Out");
+        }
 
         public void StartHapticsPlayer()
         {
+            Debug.Log("Start Vibe");
             if (_textureHapticPlayer != null)
                 _textureHapticPlayer.Start();
         }
 
         public void StopHapticsPlayer()
         {
+            Debug.Log("Stop Vibe");
             if (_textureHapticPlayer != null)
             {
                 _textureHapticPlayer.Stop();
             }
-                
         }
 
         private void SetupHapticAdvancedPlayers(TextAsset textureAHAP)
@@ -118,14 +145,11 @@ namespace Holoi.Reality.QuantumRealm
             _textureHapticPlayer.LoopEnd = 0f;
         }
 
-        private void OnDisable()
-        {
-            StopHapticsPlayer();
-        }
 
-        private void OnDestroy()
+        IEnumerator DisableGameObjectAfterTimes(GameObject go, float time)
         {
-            StopHapticsPlayer();
+            yield return new WaitForSeconds(time);
+            go.SetActive(false);
         }
     }
 }

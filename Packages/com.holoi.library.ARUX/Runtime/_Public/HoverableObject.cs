@@ -17,6 +17,7 @@ namespace Holoi.Library.ARUX
 
         [SerializeField] bool _autoReset = false;
 
+        bool _isInteractable = true;
         bool _isTriggered = false;
         bool _isInteracted = false;
 
@@ -37,9 +38,7 @@ namespace Holoi.Library.ARUX
         private void OnEnable()
         {
             Debug.Log($"{gameObject.name} : Onenable");
-            _isTriggered = false;
-            _isInteracted = false;
-            _process = 0;
+            OnReset();
         }
         private void OnDisable()
         {
@@ -48,15 +47,16 @@ namespace Holoi.Library.ARUX
 
         public void OnReset()
         {
+            _isInteractable = true;
             _isTriggered = false;
             _process = 0;
         }
 
         void Update()
         {
-            if (!_ho.IsSyncedHand) // not sycned, so it is a hand on server
+            if (_isInteractable)
             {
-                if (_ho.IsValid)
+                if (!_ho.IsSyncedHand && _ho.IsValid) // not sycned, so it is a hand on server
                 {
                     if (Vector3.Distance(_ho.transform.position, transform.position + _offset) < _triggerDistance)
                     {
@@ -69,6 +69,7 @@ namespace Holoi.Library.ARUX
                             _process = 1;
                             if (!_isTriggered)
                             {
+                                _isInteractable = false;
                                 _isInteracted = false;
                                 _isTriggered = true;
                                 OnLoadedEvents?.Invoke();
@@ -86,11 +87,8 @@ namespace Holoi.Library.ARUX
                         if (_process < 0) _process = 0;
                     }
                 }
-                else
-                {
-                    // it is hand on client, do nothing:
-                }
             }
+
         }
     }
 }
