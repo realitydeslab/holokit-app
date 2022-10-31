@@ -130,17 +130,19 @@ namespace HoloKit
             {
                 _instance = this;
             }
-            _arCameraBackground = GetComponent<ARCameraBackground>();
-            RenderMode = HoloKitRenderMode.Mono;
-            OnRenderModeChanged();
-            HoloKitARSessionControllerAPI.SetVideoEnhancementMode(_videoEnhancementMode);
-            HoloKitNFCSessionControllerAPI.OnNFCSessionCompleted += OnNFCSessionCompleted;
         }
 
         private void Start()
         {
+            _arCameraBackground = GetComponent<ARCameraBackground>();
+            RenderMode = HoloKitRenderMode.Mono;
+            OnRenderModeChanged();
+            HoloKitNFCSessionControllerAPI.OnNFCSessionCompleted += OnNFCSessionCompleted;
+            HoloKitARSessionControllerAPI.SetVideoEnhancementMode(_videoEnhancementMode);
+
             if (HoloKitUtils.IsEditor)
             {
+                // Spawn debug center eye
                 _debugCenterEye = Instantiate(_debugCenterEyePrefab);
             }
             _arSessionStartTime = Time.time;
@@ -173,7 +175,7 @@ namespace HoloKit
 
         private void OnRenderModeChanged()
         {
-            Debug.Log($"[HoloKitCamera] RenderMode changed to {_renderMode}");
+            //Debug.Log($"[HoloKitCamera] RenderMode changed to {_renderMode}");
             if (_renderMode == HoloKitRenderMode.Stereo)
             {
                 Screen.orientation = ScreenOrientation.LandscapeLeft;

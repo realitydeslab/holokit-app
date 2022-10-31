@@ -238,6 +238,12 @@ namespace Holoi.Library.HoloKitApp
 
             // Push AR UI Panel
             UIPanelManager.PushUIPanel("MonoAR");
+
+            // Set VideoEnhancementMode in HoloKitSDK
+            if (GlobalSettings.HighResHDREnabled && _localPlayerType == HoloKitAppPlayerType.Spectator)
+            {
+                HoloKitCamera.Instance.VideoEnhancementMode = VideoEnhancementMode.HighResWithHDR;
+            }
             return;
         }
 

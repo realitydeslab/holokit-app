@@ -14,9 +14,10 @@ namespace Holoi.Reality.Typography
 
         private void Awake()
         {
-            var _videoEnhancementMode = VideoEnhancementMode.HighResWithHDR;
-            HoloKitARSessionControllerAPI.SetVideoEnhancementMode(_videoEnhancementMode);
+            //var _videoEnhancementMode = VideoEnhancementMode.HighResWithHDR;
+            //HoloKitARSessionControllerAPI.SetVideoEnhancementMode(_videoEnhancementMode);
         }
+
         void Start()
         {
             _onMeshingDoneButton.interactable = false;
