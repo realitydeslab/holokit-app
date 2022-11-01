@@ -55,7 +55,7 @@ namespace Holoi.Library.ARUX
             }
 
             _process = GetComponent<HoverableObject>().Process;
-            _mat.SetFloat("_Process", _process);
+            _mat.SetFloat("_Load", _process);
         }
 
         public void SetButtonTexture(Texture2D tex)
