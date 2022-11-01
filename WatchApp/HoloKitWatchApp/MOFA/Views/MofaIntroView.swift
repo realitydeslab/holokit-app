@@ -6,11 +6,25 @@ struct MofaIntroView: View {
     
     var body: some View {
         VStack {
+            HStack {
+                Button {
+                    mofaWatchAppManager.holokitWatchAppManager?.currentController = .nothing
+                } label: {
+                    Image("back")
+                        .resizable()
+                        .foregroundColor(.white)
+                        .frame(maxWidth: 24, maxHeight: 24)
+                }
+                .buttonStyle(.plain)
+                Spacer()
+            }
+            
+
             Spacer()
-            Text("Reality #002")
+            Text("Panel #001")
                 .font(Font.custom("ObjectSans-Regular", size: 13))
                 .padding()
-            Text("MOFA - The Training")
+            Text("MOFA")
                 .font(Font.custom("ObjectSans-BoldSlanted", size: 18))
             Spacer()
             
@@ -27,7 +41,7 @@ struct MofaIntroView: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: 100, maxHeight: 40)
                 
-                Text("Start")
+                Text("Ready")
                     .font(Font.custom("ObjectSans-BoldSlanted", size: 16))
                     .foregroundColor(.black)
             }

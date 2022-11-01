@@ -82,6 +82,10 @@ namespace Holoi.Library.HoloKitApp.Editor
                 "HoloKitWatchApp.swift",
                 "Foundation/HoloKitWatchAppManager.swift",
                 "Foundation/Views/HomeView.swift",
+                "Foundation/Views/PanelView.swift",
+                "Foundation/Views/PanelListView.swift",
+
+                // Mofa
                 "MOFA/MofaWatchAppManager.swift",
                 "MOFA/Views/MofaFightingView.swift",
                 "MOFA/Views/MofaHandednessView.swift",
@@ -131,6 +135,7 @@ namespace Holoi.Library.HoloKitApp.Editor
             project.SetBuildProperty(watchAppTargetGuid, "ARCHS", "$(ARCHS_STANDARD)");
             project.SetBuildProperty(watchAppTargetGuid, "SDKROOT", "watchos");
             project.SetBuildProperty(watchAppTargetGuid, "SUPPORTED_PLATFORMS", "watchsimulator watchos");
+            project.SetBuildProperty(watchAppTargetGuid, "SKIP_INSTALL", "YES");
             project.SetTeamId(watchAppTargetGuid, PlayerSettings.iOS.appleDeveloperTeamID);
 
             project.WriteToFile(projectPath);

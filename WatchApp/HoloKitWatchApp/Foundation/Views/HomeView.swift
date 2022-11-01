@@ -7,19 +7,15 @@ struct HomeView: View {
     @EnvironmentObject var mofaWatchAppManager: MofaWatchAppManager
     
     var body: some View {
-        if (self.holokitAppWatchManager.currentReality == .nothing) {
-            VStack {
-                defaultIntroView
-                    .padding(.bottom)
-                Text("HoloKit")
-                    .font(Font.custom("ObjectSans-BoldSlanted", size: 16))
-            }
-            .onAppear {
-                DispatchQueue.main.async {
-                    holokitAppWatchManager.takeControlWatchConnectivitySession()
+        if (self.holokitAppWatchManager.currentController == .nothing) {
+            PanelListView()
+                .environmentObject(holokitAppWatchManager)
+                .onAppear {
+                    DispatchQueue.main.async {
+                        holokitAppWatchManager.takeControlWatchConnectivitySession()
+                    }
                 }
-            }
-        } else if (self.holokitAppWatchManager.currentReality == .mofaTheTraining) {
+        } else if (self.holokitAppWatchManager.currentController == .mofa) {
             MofaHomeView()
                 .environmentObject(mofaWatchAppManager)
                 .onAppear {
@@ -31,9 +27,14 @@ struct HomeView: View {
     }
     
     var defaultIntroView: some View {
-        Image("holokit-icon")
-            .resizable()
-            .frame(maxWidth: 120, maxHeight: 120)
+        VStack {
+            Image("holokit-icon")
+                .resizable()
+                .frame(maxWidth: 120, maxHeight: 120)
+                .padding(.bottom)
+            Text("HoloKit")
+                .font(Font.custom("ObjectSans-BoldSlanted", size: 16))
+        }
     }
 }
 

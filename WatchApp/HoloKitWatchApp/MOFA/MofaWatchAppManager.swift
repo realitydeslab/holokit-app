@@ -27,7 +27,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     
     var holokitWatchAppManager: HoloKitWatchAppManager?
     
-    @Published var currentView: MofaView = .introView
+    @Published var currentView: MofaView = .fightingView
     
     @Published var isRightHand: Bool = true
     

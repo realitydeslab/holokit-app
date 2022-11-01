@@ -111,6 +111,13 @@ namespace Holoi.Library.MOFABase
                     }
                 }
             }
+
+            // If the currently selected spell set does not have a secondary spell yet,
+            // we give the player a default one
+            if (SecondarySpell == null)
+            {
+                SecondarySpell = MofaBaseRealityManager.SpellList.GetSpell(2);
+            }
         }
 
         private void OnPhaseChanged(MofaPhase newPhase)

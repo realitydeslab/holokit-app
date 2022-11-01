@@ -3,14 +3,14 @@ import WatchKit
 import WatchConnectivity
 import HealthKit
 
-enum Reality: Int {
+enum HoloKitController: Int {
     case nothing = 0
-    case mofaTheTraining = 1
+    case mofa = 1
 }
 
 class HoloKitWatchAppManager: NSObject, ObservableObject {
     
-    @Published var currentReality: Reality = .nothing
+    @Published var currentController: HoloKitController = .nothing
     
     private var wcSession: WCSession!
     
@@ -29,7 +29,7 @@ class HoloKitWatchAppManager: NSObject, ObservableObject {
             wcSession = WCSession.default
             wcSession.delegate = self
         }
-        self.currentReality = .nothing
+        self.currentController = .nothing
     }
 }
 
@@ -47,10 +47,10 @@ extension HoloKitWatchAppManager: WCSessionDelegate {
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
         print("[HoloKitWatchAppManager] didReceiveApplicationContext")
         if let realityIndex = applicationContext["CurrentReality"] as? Int {
-            if let reality = Reality(rawValue: realityIndex) {
+            if let reality = HoloKitController(rawValue: realityIndex) {
                 print("Switched to reality: \(String(describing: reality))")
                 DispatchQueue.main.async {
-                    self.currentReality = reality
+                    self.currentController = reality
                 }
             }
         }

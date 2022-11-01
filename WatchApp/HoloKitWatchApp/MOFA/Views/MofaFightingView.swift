@@ -4,10 +4,21 @@ struct MofaFightingView: View {
     
     @EnvironmentObject var mofaWatchAppManager: MofaWatchAppManager
     
-    @State var isFighting: Bool = false
-    
     var body: some View {
         VStack {
+            HStack {
+                Button {
+                    mofaWatchAppManager.holokitWatchAppManager?.currentController = .nothing
+                } label: {
+                    Image("back")
+                        .resizable()
+                        .foregroundColor(.white)
+                        .frame(maxWidth: 24, maxHeight: 24)
+                }
+                .buttonStyle(.plain)
+                Spacer()
+            }
+            
             Image("mofa-weapon")
                 .resizable()
                 .frame(maxWidth: 120, maxHeight: 120)
@@ -31,7 +42,7 @@ struct MofaFightingView: View {
                     .frame(maxWidth: 100, maxHeight: 40)
                 
                 HStack {
-                    Text("Start")
+                    Text("Ready")
                         .font(Font.custom("ObjectSans-BoldSlanted", size: 13))
                         .foregroundColor(.black)
                     
