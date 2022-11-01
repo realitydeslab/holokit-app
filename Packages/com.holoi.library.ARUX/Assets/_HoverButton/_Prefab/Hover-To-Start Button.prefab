@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 8116878670602943881}
   - component: {fileID: 455668196329728273}
   - component: {fileID: 537068027906415075}
-  - component: {fileID: 3329040971507865505}
   - component: {fileID: 8760063833723034938}
   - component: {fileID: 8760063833723034937}
   - component: {fileID: 8760063833723034939}
+  - component: {fileID: 8760063833723034940}
   m_Layer: 0
-  m_Name: Default Shape UI Prefab
+  m_Name: Hover-To-Start Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,8 +31,8 @@ Transform:
   m_GameObject: {fileID: 2034980346624289473}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -44,7 +44,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2034980346624289473}
-  m_Mesh: {fileID: -4147266318922990756, guid: c60627091f09d40fdb702ad76616d895, type: 3}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &537068027906415075
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3857ebc2b71ec4ab48b7deb71082b75c, type: 2}
+  - {fileID: 2100000, guid: 4e7865a8f34ce444b84ae146dbdc7989, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -87,20 +87,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3329040971507865505
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2034980346624289473}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &8760063833723034938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,8 +99,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 316ed167c81fe441aa3b0290fcccf8ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnLoadedEvents:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: Holoi.Reality.QuantumBuddhas.QuantumBuddhasSceneManager,
+          Holoi.Reality.QuantumBuddhas
+        m_MethodName: InitTargetGameObject
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: Holoi.Reality.QuantumRealm.QuantumBuddhasSceneManager,
+          Holoi.Reality.QuantumRealm
+        m_MethodName: DisableARRaycastManager
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: Holoi.Reality.QuantumRealm.QuantumBuddhasSceneManager,
+          Holoi.Reality.QuantumRealm
+        m_MethodName: DisableARPlaneManager
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _offset: {x: 0, y: 0, z: 0}
   _triggerDistance: 0.2
   _loadTime: 1
+  _autoReset: 0
 --- !u!114 &8760063833723034937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,9 +157,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68231f92e6c254bc18f3f907b47b2e85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnLoadedEvents:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!95 &8760063833723034939
 Animator:
   serializedVersion: 4
@@ -150,3 +177,24 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8760063833723034940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2034980346624289473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83bfc8036afe94870adce7fe26a8d4d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _followTarget: {fileID: 0}
+  _movementType: 1
+  _rotateType: 0
+  _updateType: 0
+  _worldSpace: 0
+  _offset: {x: 0, y: 0, z: 0.8}
+  _lerpSpeed: 4
+  _needMoveDistance: 0.02
+  _regardAsArriveDistance: 0.01

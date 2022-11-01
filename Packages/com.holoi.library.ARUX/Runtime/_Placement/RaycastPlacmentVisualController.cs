@@ -40,13 +40,12 @@ namespace Holoi.Library.ARUX
 
         public void OnHit()
         {
-            _vfx.SetBool("State", true);
+            _vfx.SetBool("IsHit", true);
             _vfx.SetTexture("MainTex", _trueTexture);
         }
         public void OnNotHit()
         {
-            _vfx.SetBool("State", false);
-
+            _vfx.SetBool("IsHit", false);
             _vfx.SetTexture("MainTex", _falseTexture);
         }
 
@@ -56,7 +55,7 @@ namespace Holoi.Library.ARUX
         }
 
         // animation events
-        public void DisableAfterDieAnimation(AnimationEvent animationEvent)
+        public void DisableAfterDieAnimationOver(AnimationEvent animationEvent)
         {
             gameObject.SetActive(false);
         }
