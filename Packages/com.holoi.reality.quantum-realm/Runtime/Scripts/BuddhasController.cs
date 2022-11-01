@@ -64,6 +64,9 @@ namespace Holoi.Reality.QuantumRealm
                 vfx.SetVector3("Hand Position", new Vector3(0,-99,0));
             }
 
+            vfx.SetFloat("Process", _hoverableObject.Process);
+
+            // haptics: 
             if (HoloKitApp.Instance.IsHost)
             {
                 if (IsActive)
@@ -100,7 +103,6 @@ namespace Holoi.Reality.QuantumRealm
         {
             StopHapticsPlayer();
         }
-
 
         public void InitBuddha()
         {

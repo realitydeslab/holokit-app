@@ -24,7 +24,7 @@ namespace Holoi.Reality.QuantumRealm
         [Header("Hand Objects")]
         [SerializeField] Transform _handJoint;
         [SerializeField] Transform _handHookHead;
-        [SerializeField] Transform _handHoverLoadedVFX;
+        [SerializeField] BuddhasHandController _handController;
         [SerializeField] HandObject _ho;
 
         [Header("AR NetWork Base Objects")]
@@ -99,7 +99,6 @@ namespace Holoi.Reality.QuantumRealm
                 // update hand hook's head position
                 var dir = (_handJoint.position - _serverCenterEye.position).normalized;
 
-                //_handHookHead.position = _handJoint.position + dir * 0.5f + _serverCenterEye.up*0.2f;
                 _handHookHead.position = _handJoint.position + dir * 0.5f;
 
                 SyncHandValidStateCLientRpc(_ho.IsValid);
@@ -179,7 +178,7 @@ namespace Holoi.Reality.QuantumRealm
             
         }
 
-        IEnumerator DisableGameObjectAfterTimes(GameObject go, float time)
+        IEnumerator DisableGOAfterTimes(GameObject go, float time)
         {
             yield return new WaitForSeconds(time);
             go.SetActive(false);
@@ -193,7 +192,7 @@ namespace Holoi.Reality.QuantumRealm
                 // play die animation
                 _raycastVisual.PlayDie();
                 // disable go
-                StartCoroutine(DisableGameObjectAfterTimes(_arRaycastController.gameObject, 2f));
+                StartCoroutine(DisableGOAfterTimes(_arRaycastController.gameObject, 2f));
 
                 OnDisableARRaycastClientRpc();
                 return;
@@ -206,10 +205,18 @@ namespace Holoi.Reality.QuantumRealm
 
         public void SetPlacementLoadButton(bool state)
         {
-            //Debug.Log("SetPlacementLoadButton: " + state);
             if (HoloKitApp.Instance.IsHost)
             {
-                _placementLoadButton.gameObject.SetActive(state);
+                if (state)
+                {
+                    _placementLoadButton.gameObject.SetActive(state);
+                }
+                else
+                {
+                    if (_placementLoadButton.isActiveAndEnabled)
+                    _placementLoadButton.OnDie();
+                }
+
             }
         }
 
@@ -229,7 +236,7 @@ namespace Holoi.Reality.QuantumRealm
             controllerNew.InitBuddha();
 
             // hand vfx:
-            TriggerHandVFX();
+            _handController.OnExplode();
         }
 
         [ClientRpc]
@@ -240,7 +247,7 @@ namespace Holoi.Reality.QuantumRealm
             // play die animation
             _raycastVisual.PlayDie();
             // disable go
-            StartCoroutine(DisableGameObjectAfterTimes(_arRaycastController.gameObject, 2f));
+            StartCoroutine(DisableGOAfterTimes(_arRaycastController.gameObject, 2f));
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -267,7 +274,7 @@ namespace Holoi.Reality.QuantumRealm
             controllerNew.InitBuddha();
 
             // hand vfx:
-            TriggerHandVFX();
+            _handController.OnExplode();
         }
 
         [ClientRpc]
@@ -294,13 +301,7 @@ namespace Holoi.Reality.QuantumRealm
             controllerNew.InitBuddha();
 
             // hand vfx:
-            TriggerHandVFX();
-        }
-
-        void TriggerHandVFX()
-        {
-            _handHoverLoadedVFX.gameObject.SetActive(true);
-            StartCoroutine(DisableGameObjectAfterTimes(_handHoverLoadedVFX.gameObject, 1.5f));
+            _handController.OnExplode();
         }
 
         [ClientRpc]
@@ -341,8 +342,8 @@ namespace Holoi.Reality.QuantumRealm
             }
             else
             {
-                _ho.handAnimator.SetBool("HandValid", valid);
-
+                _ho.IsValid = valid;
+                //_ho.handAnimator.SetBool("HandValid", valid);
             }
         }
     }

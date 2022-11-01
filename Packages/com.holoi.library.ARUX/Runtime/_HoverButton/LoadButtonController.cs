@@ -28,8 +28,7 @@ namespace Holoi.Library.ARUX
         private void OnEnable()
         {
             // reset animations: 
-            _animator.Rebind();
-            _animator.Update(0f);
+            OnBirth();
 
             // reset properties: 
             _process = 0;
@@ -47,7 +46,7 @@ namespace Holoi.Library.ARUX
             if(_process == 1 && !_isTriggered)
             {
                 _isTriggered = true;
-                PlayAnimationDie();
+                OnDie();
             }
             else
             {
@@ -63,10 +62,15 @@ namespace Holoi.Library.ARUX
             _mat.SetTexture("_Texture", tex);
         }
 
-        void PlayAnimationDie()
+        public void OnDie()
         {
-            Debug.Log("PlayAnimationDie");
             _animator.SetTrigger("Die");
+        }
+
+        public void OnBirth()
+        {
+            _animator.Rebind();
+            _animator.Update(0);
         }
 
         // animation events

@@ -19,8 +19,6 @@ namespace Holoi.Library.ARUX
 
         public bool IsSyncedHand = false;
 
-        int count = 0;
-
         private void Awake()
         {
             if (_instance != null && _instance != this)

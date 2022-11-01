@@ -123,6 +123,38 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &6
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072407929793540111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1748544e115c24562a72a4512e3d624d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkPrefabs:
+  - {fileID: 2504822779368527981, guid: 6fe50cf1a5dd04298aa36ee8a21ddb0e, type: 3}
+  UIPanelPrefabs: []
+  _urpAsset: {fileID: 11400000, guid: f6a02f22e32c343589f8290dccd7bebf, type: 2}
+  vfxs: []
+  _objectPrefab: {fileID: 2504822779368527981, guid: 6fe50cf1a5dd04298aa36ee8a21ddb0e, type: 3}
+  BuddhasDisPlay: {fileID: 0}
+  BuddhasTotalCount: 0
+  _handJoint: {fileID: 1781012928}
+  _handHookHead: {fileID: 601333704}
+  _handController: {fileID: 172308142}
+  _ho: {fileID: 172308137}
+  _serverCenterEye: {fileID: 668582293}
+  _placementLoadButton: {fileID: 8760063833723034937}
+  _switchButton: {fileID: 1721068583}
+  _arRaycastManager: {fileID: 2068233603}
+  _arPlaneManager: {fileID: 2068233602}
+  _arOcclusionManager: {fileID: 275482728}
+  _arRaycastController: {fileID: 1861859818}
+  _raycastVisual: {fileID: 1284789102}
 --- !u!1 &36259178 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5626992625800642033, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
@@ -142,6 +174,7 @@ GameObject:
   - component: {fileID: 172308139}
   - component: {fileID: 172308140}
   - component: {fileID: 172308141}
+  - component: {fileID: 172308142}
   m_Layer: 0
   m_Name: HandObject
   m_TagString: Untagged
@@ -161,7 +194,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 468492214}
   - {fileID: 1632013962}
   m_Father: {fileID: 0}
   m_RootOrder: 8
@@ -265,6 +297,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &172308142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 172308135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f92d791e9ef1e4316979ceec2e930809, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HandVisual: {fileID: 1632013961}
+  ExplodeVFX: {fileID: 468492213}
 --- !u!1 &255506838
 GameObject:
   m_ObjectHideFlags: 0
@@ -525,327 +571,11 @@ MonoBehaviour:
   m_EnvironmentDepthMode: 1
   m_EnvironmentDepthTemporalSmoothing: 1
   m_OcclusionPreferenceMode: 1
---- !u!1 &410140516
+--- !u!1 &468492213 stripped
 GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 468492213, guid: ae25f0a95fcd94a6aaf637103bdeb454, type: 3}
+  m_PrefabInstance: {fileID: 724367231666084345}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 410140517}
-  - component: {fileID: 410140519}
-  - component: {fileID: 410140518}
-  m_Layer: 0
-  m_Name: CA
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &410140517
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 410140516}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 468492214}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!73398921 &410140518
-VFXRenderer:
-  serializedVersion: 1
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 410140516}
-  m_Enabled: 0
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 0
-  m_LightProbeUsage: 0
-  m_ReflectionProbeUsage: 0
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!2083052967 &410140519
-VisualEffect:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 410140516}
-  m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: bfa1155b00b59e345ac17cfa7a57d91c, type: 3}
-  m_InitialEventName: OnPlay
-  m_InitialEventNameOverriden: 0
-  m_StartSeed: 0
-  m_ResetSeedOnPlay: 1
-  m_ResourceVersion: 1
-  m_PropertySheet:
-    m_Float:
-      m_Array:
-      - m_Value: 2
-        m_Name: Size Mulitipier
-        m_Overridden: 1
-      - m_Value: 0.25
-        m_Name: LifeTime
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Delay
-        m_Overridden: 1
-      - m_Value: 22
-        m_Name: Brightness
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Burst Amount
-        m_Overridden: 1
-      - m_Value: 1.5
-        m_Name: Size Multipier
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Constant Spawn Rate
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: BornAnimationDuration
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: DeathAnimationDuration
-        m_Overridden: 1
-    m_Vector2f:
-      m_Array:
-      - m_Value: {x: 0, y: 0}
-        m_Name: Initial Speed Range
-        m_Overridden: 1
-      - m_Value: {x: 0, y: 0}
-        m_Name: Gravity and Drag
-        m_Overridden: 1
-    m_Vector3f:
-      m_Array: []
-    m_Vector4f:
-      m_Array:
-      - m_Value: {x: 70.935486, y: 16.506996, z: 16.506996, w: 0}
-        m_Name: Inner Color
-        m_Overridden: 1
-      - m_Value: {x: 15.999998, y: 15.999998, z: 15.999998, w: 0}
-        m_Name: Base Color
-        m_Overridden: 1
-      - m_Value: {x: 1, y: 1, z: 0, w: 0}
-        m_Name: Main Texture Tiling & Offset
-        m_Overridden: 1
-      - m_Value: {x: 1, y: 9, z: 9, w: 0.5}
-        m_Name: Main Texture Adjustment
-        m_Overridden: 1
-      - m_Value: {x: 0, y: 1, z: 0.5, w: 1}
-        m_Name: Turbulence
-        m_Overridden: 1
-      - m_Value: {x: 256, y: 256, z: 256, w: 1}
-        m_Name: Flare Base Color
-        m_Overridden: 1
-      - m_Value: {x: 1, y: 12, z: 1, w: 0.5}
-        m_Name: Adjust
-        m_Overridden: 1
-    m_Uint:
-      m_Array: []
-    m_Int:
-      m_Array:
-      - m_Value: 1
-        m_Name: Type
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Output Type
-        m_Overridden: 1
-    m_Matrix4x4f:
-      m_Array: []
-    m_AnimationCurve:
-      m_Array:
-      - m_Value:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 1.0002289
-            inSlope: -2.0885282
-            outSlope: -2.0885282
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.063253015
-          - serializedVersion: 3
-            time: 1
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        m_Name: Alpha Over Life
-        m_Overridden: 1
-      - m_Value:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 11.067399
-            outSlope: 11.067399
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.039738394
-          - serializedVersion: 3
-            time: 0.24668127
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        m_Name: Size Over Life
-        m_Overridden: 1
-    m_Gradient:
-      m_Array:
-      - m_Value:
-          serializedVersion: 2
-          key0: {r: 4, g: 4, b: 4, a: 1}
-          key1: {r: 1, g: 1, b: 1, a: 1}
-          key2: {r: 0, g: 0, b: 0, a: 0}
-          key3: {r: 0, g: 0, b: 0, a: 0}
-          key4: {r: 0, g: 0, b: 0, a: 0}
-          key5: {r: 0, g: 0, b: 0, a: 0}
-          key6: {r: 0, g: 0, b: 0, a: 0}
-          key7: {r: 0, g: 0, b: 0, a: 0}
-          ctime0: 0
-          ctime1: 65535
-          ctime2: 0
-          ctime3: 0
-          ctime4: 0
-          ctime5: 0
-          ctime6: 0
-          ctime7: 0
-          atime0: 0
-          atime1: 65535
-          atime2: 65535
-          atime3: 65535
-          atime4: 0
-          atime5: 0
-          atime6: 0
-          atime7: 0
-          m_Mode: 0
-          m_NumColorKeys: 2
-          m_NumAlphaKeys: 2
-        m_Name: Color Over Life
-        m_Overridden: 1
-    m_NamedObject:
-      m_Array:
-      - m_Value: {fileID: 2800000, guid: 5044169c7ab3c50489096daebd396381, type: 3}
-        m_Name: Main Texture
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: 6e4421724b20df742b7a38abe43e48bd, type: 3}
-        m_Name: Texture
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: 6e4421724b20df742b7a38abe43e48bd, type: 3}
-        m_Name: Flare Texture
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: 5044169c7ab3c50489096daebd396381, type: 3}
-        m_Name: Flare Texture2D
-        m_Overridden: 1
-    m_Bool:
-      m_Array:
-      - m_Value: 0
-        m_Name: Debug Mode
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Fresnel Support
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Constant
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Burst
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Constant Spawn
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Burst Spawn
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Set Alive
-        m_Overridden: 1
---- !u!1 &468492213
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 468492214}
-  m_Layer: 0
-  m_Name: Hit Explode
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &468492214
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 468492213}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
-  m_Children:
-  - {fileID: 410140517}
-  - {fileID: 1729889542}
-  - {fileID: 671135143}
-  - {fileID: 2124923584}
-  m_Father: {fileID: 172308136}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &595483296
 GameObject:
   m_ObjectHideFlags: 0
@@ -1006,259 +736,6 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
---- !u!1 &671135142
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 671135143}
-  - component: {fileID: 671135145}
-  - component: {fileID: 671135144}
-  m_Layer: 0
-  m_Name: Flare
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &671135143
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 671135142}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 468492214}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!73398921 &671135144
-VFXRenderer:
-  serializedVersion: 1
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 671135142}
-  m_Enabled: 0
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 0
-  m_LightProbeUsage: 0
-  m_ReflectionProbeUsage: 0
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!2083052967 &671135145
-VisualEffect:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 671135142}
-  m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: bfa1155b00b59e345ac17cfa7a57d91c, type: 3}
-  m_InitialEventName: OnPlay
-  m_InitialEventNameOverriden: 0
-  m_StartSeed: 0
-  m_ResetSeedOnPlay: 1
-  m_ResourceVersion: 1
-  m_PropertySheet:
-    m_Float:
-      m_Array:
-      - m_Value: 3
-        m_Name: Size Mulitipier
-        m_Overridden: 1
-      - m_Value: 0.25
-        m_Name: LifeTime
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Delay
-        m_Overridden: 1
-      - m_Value: 2
-        m_Name: Size Multipier
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: BornAnimationDuration
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: DeathAnimationDuration
-        m_Overridden: 1
-      - m_Value: 0.001
-        m_Name: Ca Intensity
-        m_Overridden: 1
-    m_Vector2f:
-      m_Array: []
-    m_Vector3f:
-      m_Array: []
-    m_Vector4f:
-      m_Array:
-      - m_Value: {x: 0.2770917, y: 0.06528339, z: 0.06528339, w: 0}
-        m_Name: Inner Color
-        m_Overridden: 1
-      - m_Value: {x: 1.319508, y: 0.81519336, z: 0.3108788, w: 0}
-        m_Name: Base Color
-        m_Overridden: 1
-      - m_Value: {x: 3.9999995, y: 2.5911696, z: 0.6492144, w: 1}
-        m_Name: Flare Base Color
-        m_Overridden: 1
-      - m_Value: {x: 1, y: 12, z: 1, w: 0.5}
-        m_Name: Adjust
-        m_Overridden: 1
-    m_Uint:
-      m_Array: []
-    m_Int:
-      m_Array:
-      - m_Value: 1
-        m_Name: Type
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Output Type
-        m_Overridden: 1
-    m_Matrix4x4f:
-      m_Array: []
-    m_AnimationCurve:
-      m_Array:
-      - m_Value:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 1.0002289
-            inSlope: -2.0885282
-            outSlope: -2.0885282
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.063253015
-          - serializedVersion: 3
-            time: 1
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        m_Name: Alpha Over Life
-        m_Overridden: 1
-      - m_Value:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 5.7421384
-            outSlope: 5.7421384
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.045871563
-          - serializedVersion: 3
-            time: 0.49246985
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        m_Name: Size Over Life
-        m_Overridden: 1
-    m_Gradient:
-      m_Array:
-      - m_Value:
-          serializedVersion: 2
-          key0: {r: 4, g: 2.8754623, b: 0.74213815, a: 1}
-          key1: {r: 2, g: 0.39215687, b: 0.39215687, a: 1}
-          key2: {r: 0, g: 0, b: 0, a: 0}
-          key3: {r: 0, g: 0, b: 0, a: 0}
-          key4: {r: 0, g: 0, b: 0, a: 0}
-          key5: {r: 0, g: 0, b: 0, a: 0}
-          key6: {r: 0, g: 0, b: 0, a: 0}
-          key7: {r: 0, g: 0, b: 0, a: 0}
-          ctime0: 0
-          ctime1: 65535
-          ctime2: 0
-          ctime3: 0
-          ctime4: 0
-          ctime5: 0
-          ctime6: 0
-          ctime7: 0
-          atime0: 0
-          atime1: 65535
-          atime2: 65535
-          atime3: 65535
-          atime4: 0
-          atime5: 0
-          atime6: 0
-          atime7: 0
-          m_Mode: 0
-          m_NumColorKeys: 2
-          m_NumAlphaKeys: 2
-        m_Name: Color Over Life
-        m_Overridden: 1
-    m_NamedObject:
-      m_Array:
-      - m_Value: {fileID: 0}
-        m_Name: Main Texture
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: 4b45802263cb74f42a778743d0cf1768, type: 3}
-        m_Name: Flare Texture
-        m_Overridden: 1
-      - m_Value: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
-        m_Name: Flare Texture2D
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: 4b45802263cb74f42a778743d0cf1768, type: 3}
-        m_Name: Texture
-        m_Overridden: 1
-    m_Bool:
-      m_Array:
-      - m_Value: 0
-        m_Name: Debug Mode
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Fresnel Support
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Set Alive
-        m_Overridden: 1
 --- !u!1 &725391261
 GameObject:
   m_ObjectHideFlags: 0
@@ -1494,126 +971,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 985332496}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &1009934738
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1009934740, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: _ho
-      value: 
-      objectReference: {fileID: 172308137}
-    - target: {fileID: 1009934740, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: _handJoint
-      value: 
-      objectReference: {fileID: 1781012928}
-    - target: {fileID: 1009934740, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: _handHookHead
-      value: 
-      objectReference: {fileID: 601333704}
-    - target: {fileID: 1009934740, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: _switchButton
-      value: 
-      objectReference: {fileID: 1721068583}
-    - target: {fileID: 1009934740, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: _raycastVisual
-      value: 
-      objectReference: {fileID: 1284789102}
-    - target: {fileID: 1009934740, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: _arPlaneManager
-      value: 
-      objectReference: {fileID: 2068233602}
-    - target: {fileID: 1009934740, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: _serverCenterEye
-      value: 
-      objectReference: {fileID: 668582293}
-    - target: {fileID: 1009934740, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: _arRaycastManager
-      value: 
-      objectReference: {fileID: 2068233603}
-    - target: {fileID: 1009934740, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: _arOcclusionManager
-      value: 
-      objectReference: {fileID: 275482728}
-    - target: {fileID: 1009934740, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: _handHoverLoadedVFX
-      value: 
-      objectReference: {fileID: 468492214}
-    - target: {fileID: 1009934740, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: _arRaycastController
-      value: 
-      objectReference: {fileID: 1861859818}
-    - target: {fileID: 1009934740, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: _placementLoadButton
-      value: 
-      objectReference: {fileID: 8760063833723034937}
-    - target: {fileID: 1072407930396316058, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 2646029699
-      objectReference: {fileID: 0}
-    - target: {fileID: 1072407930396316059, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: m_RootOrder
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 1072407930396316059, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1072407930396316059, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1072407930396316059, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1072407930396316059, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1072407930396316059, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1072407930396316059, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1072407930396316059, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1072407930396316059, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1072407930396316059, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1072407930396316059, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1072407930396316061, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-      propertyPath: m_Name
-      value: QuantumRealm Reality Manager
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
---- !u!114 &1009934740 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1009934740, guid: 7204cdebdd85d401c960ead39e4b0e6f, type: 3}
-  m_PrefabInstance: {fileID: 1009934738}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1748544e115c24562a72a4512e3d624d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1059560610
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1845,8 +1202,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1b03d5bce02e4d5f9a20948ed74f2b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _trueTexture: {fileID: 2800000, guid: 0dd74a517543949b7838759c54701657, type: 3}
-  _falseTexture: {fileID: 2800000, guid: 4e57b53de502b4fdaa5c5d6c931d082c, type: 3}
+  _trueTexture: {fileID: 2800000, guid: bca0e4927ffb04a5ebddbe92ba298109, type: 3}
+  _falseTexture: {fileID: 2800000, guid: 0dd74a517543949b7838759c54701657, type: 3}
 --- !u!114 &1284789103
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -2686,292 +2043,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1721068581}
   m_CullTransparentMesh: 1
---- !u!1 &1729889541
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1729889542}
-  - component: {fileID: 1729889544}
-  - component: {fileID: 1729889543}
-  m_Layer: 0
-  m_Name: Spark
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1729889542
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1729889541}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 468492214}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!73398921 &1729889543
-VFXRenderer:
-  serializedVersion: 1
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1729889541}
-  m_Enabled: 0
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 0
-  m_LightProbeUsage: 0
-  m_ReflectionProbeUsage: 0
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!2083052967 &1729889544
-VisualEffect:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1729889541}
-  m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: bfa1155b00b59e345ac17cfa7a57d91c, type: 3}
-  m_InitialEventName: OnPlay
-  m_InitialEventNameOverriden: 0
-  m_StartSeed: 0
-  m_ResetSeedOnPlay: 1
-  m_ResourceVersion: 1
-  m_PropertySheet:
-    m_Float:
-      m_Array:
-      - m_Value: 2
-        m_Name: Size Mulitipier
-        m_Overridden: 1
-      - m_Value: 0.25
-        m_Name: LifeTime
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Delay
-        m_Overridden: 1
-      - m_Value: 22
-        m_Name: Brightness
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Burst Amount
-        m_Overridden: 1
-      - m_Value: 0.5
-        m_Name: Size Multipier
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Constant Spawn Rate
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: BornAnimationDuration
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: DeathAnimationDuration
-        m_Overridden: 1
-    m_Vector2f:
-      m_Array:
-      - m_Value: {x: 0, y: 0}
-        m_Name: Initial Speed Range
-        m_Overridden: 1
-      - m_Value: {x: 0, y: 0}
-        m_Name: Gravity and Drag
-        m_Overridden: 1
-    m_Vector3f:
-      m_Array: []
-    m_Vector4f:
-      m_Array:
-      - m_Value: {x: 70.935486, y: 16.506996, z: 16.506996, w: 0}
-        m_Name: Inner Color
-        m_Overridden: 1
-      - m_Value: {x: 15.999998, y: 15.999998, z: 15.999998, w: 0}
-        m_Name: Base Color
-        m_Overridden: 1
-      - m_Value: {x: 1, y: 1, z: 0, w: 0}
-        m_Name: Main Texture Tiling & Offset
-        m_Overridden: 1
-      - m_Value: {x: 1, y: 9, z: 9, w: 0.5}
-        m_Name: Main Texture Adjustment
-        m_Overridden: 1
-      - m_Value: {x: 0, y: 1, z: 0.5, w: 1}
-        m_Name: Turbulence
-        m_Overridden: 1
-      - m_Value: {x: 256, y: 256, z: 256, w: 1}
-        m_Name: Flare Base Color
-        m_Overridden: 1
-      - m_Value: {x: 1, y: 12, z: 1, w: 0.5}
-        m_Name: Adjust
-        m_Overridden: 1
-    m_Uint:
-      m_Array: []
-    m_Int:
-      m_Array:
-      - m_Value: 1
-        m_Name: Type
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Output Type
-        m_Overridden: 1
-    m_Matrix4x4f:
-      m_Array: []
-    m_AnimationCurve:
-      m_Array:
-      - m_Value:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 1.0002289
-            inSlope: -2.0885282
-            outSlope: -2.0885282
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.063253015
-          - serializedVersion: 3
-            time: 1
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        m_Name: Alpha Over Life
-        m_Overridden: 1
-      - m_Value:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 11.067399
-            outSlope: 11.067399
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.039738394
-          - serializedVersion: 3
-            time: 0.24668127
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        m_Name: Size Over Life
-        m_Overridden: 1
-    m_Gradient:
-      m_Array:
-      - m_Value:
-          serializedVersion: 2
-          key0: {r: 21.361254, g: 14.287277, b: 2.2367797, a: 1}
-          key1: {r: 1, g: 0.16212882, b: 0.1372549, a: 1}
-          key2: {r: 0, g: 0, b: 0, a: 0}
-          key3: {r: 0, g: 0, b: 0, a: 0}
-          key4: {r: 0, g: 0, b: 0, a: 0}
-          key5: {r: 0, g: 0, b: 0, a: 0}
-          key6: {r: 0, g: 0, b: 0, a: 0}
-          key7: {r: 0, g: 0, b: 0, a: 0}
-          ctime0: 0
-          ctime1: 65535
-          ctime2: 0
-          ctime3: 0
-          ctime4: 0
-          ctime5: 0
-          ctime6: 0
-          ctime7: 0
-          atime0: 0
-          atime1: 65535
-          atime2: 65535
-          atime3: 65535
-          atime4: 0
-          atime5: 0
-          atime6: 0
-          atime7: 0
-          m_Mode: 0
-          m_NumColorKeys: 2
-          m_NumAlphaKeys: 2
-        m_Name: Color Over Life
-        m_Overridden: 1
-    m_NamedObject:
-      m_Array:
-      - m_Value: {fileID: 2800000, guid: 5044169c7ab3c50489096daebd396381, type: 3}
-        m_Name: Main Texture
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: 6e4421724b20df742b7a38abe43e48bd, type: 3}
-        m_Name: Texture
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: a2aecdc85d10f1d4e9b0ff3cccd37ce6, type: 3}
-        m_Name: Flare Texture
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: 5044169c7ab3c50489096daebd396381, type: 3}
-        m_Name: Flare Texture2D
-        m_Overridden: 1
-    m_Bool:
-      m_Array:
-      - m_Value: 0
-        m_Name: Debug Mode
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Fresnel Support
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Constant
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Burst
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Constant Spawn
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Burst Spawn
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Set Alive
-        m_Overridden: 1
 --- !u!1 &1750111617
 GameObject:
   m_ObjectHideFlags: 0
@@ -3177,7 +2248,7 @@ MonoBehaviour:
   HitEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1009934740}
+      - m_Target: {fileID: 6}
         m_TargetAssemblyTypeName: Holoi.Reality.QuantumBuddhas.QuantumBuddhasSceneManager,
           Holoi.Reality.QuantumBuddhas
         m_MethodName: SetPlacementLoadButton
@@ -3206,7 +2277,7 @@ MonoBehaviour:
   NotHitEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1009934740}
+      - m_Target: {fileID: 6}
         m_TargetAssemblyTypeName: Holoi.Reality.QuantumBuddhas.QuantumBuddhasSceneManager,
           Holoi.Reality.QuantumBuddhas
         m_MethodName: SetPlacementLoadButton
@@ -3598,406 +2669,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3fd8ed4d40dfd45f59a9d40cc6463940, type: 3}
---- !u!1 &2124923583
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2124923584}
-  - component: {fileID: 2124923586}
-  - component: {fileID: 2124923585}
-  m_Layer: 0
-  m_Name: Universal Particle
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2124923584
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2124923583}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 468492214}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!73398921 &2124923585
-VFXRenderer:
-  serializedVersion: 1
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2124923583}
-  m_Enabled: 0
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 0
-  m_LightProbeUsage: 0
-  m_ReflectionProbeUsage: 0
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!2083052967 &2124923586
-VisualEffect:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2124923583}
-  m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: d76cf4fcbfc1511418f9b710bcf33fd4, type: 3}
-  m_InitialEventName: OnPlay
-  m_InitialEventNameOverriden: 0
-  m_StartSeed: 0
-  m_ResetSeedOnPlay: 1
-  m_ResourceVersion: 1
-  m_PropertySheet:
-    m_Float:
-      m_Array:
-      - m_Value: 1
-        m_Name: Emit Time
-        m_Overridden: 1
-      - m_Value: 0.1
-        m_Name: Position Random Inside Sphere
-        m_Overridden: 1
-      - m_Value: 128
-        m_Name: Spawn Rate
-        m_Overridden: 1
-      - m_Value: 0.1
-        m_Name: Emitt Sphere Radius
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Emitt Sphere Thickness
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Position Random Inside Sphere Thickness
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Color Multipier
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Delay Before Loop
-        m_Overridden: 1
-      - m_Value: 1.5
-        m_Name: Single Burst Delay
-        m_Overridden: 1
-      - m_Value: 0.5
-        m_Name: LifeTime
-        m_Overridden: 1
-      - m_Value: 33
-        m_Name: Single Burst Number
-        m_Overridden: 1
-      - m_Value: 1.65
-        m_Name: Debug Delay
-        m_Overridden: 1
-      - m_Value: 0.2
-        m_Name: Random Sphere Radius
-        m_Overridden: 1
-      - m_Value: 0.5
-        m_Name: Random Sphere Thickness
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Burst Delay
-        m_Overridden: 1
-      - m_Value: 64
-        m_Name: Burst Amount
-        m_Overridden: 1
-      - m_Value: 0.2
-        m_Name: CA Intensity
-        m_Overridden: 1
-    m_Vector2f:
-      m_Array:
-      - m_Value: {x: 2, y: 3}
-        m_Name: Initial Speed Range
-        m_Overridden: 1
-      - m_Value: {x: 0.01, y: 0.07}
-        m_Name: Random Size Multipier
-        m_Overridden: 1
-      - m_Value: {x: -1, y: 3}
-        m_Name: Gravity and Drag
-        m_Overridden: 1
-      - m_Value: {x: 1, y: 1.5}
-        m_Name: Random LifeTime
-        m_Overridden: 1
-      - m_Value: {x: 0.35, y: 0.75}
-        m_Name: LifeTime
-        m_Overridden: 1
-    m_Vector3f:
-      m_Array:
-      - m_Value: {x: 0, y: 0, z: 0}
-        m_Name: Target_position
-        m_Overridden: 1
-    m_Vector4f:
-      m_Array:
-      - m_Value: {x: 1, y: 3, z: 0.5, w: 0}
-        m_Name: Turbulence
-        m_Overridden: 1
-    m_Uint:
-      m_Array: []
-    m_Int:
-      m_Array:
-      - m_Value: 12
-        m_Name: Random Seed
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Type
-        m_Overridden: 1
-    m_Matrix4x4f:
-      m_Array: []
-    m_AnimationCurve:
-      m_Array:
-      - m_Value:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 1.5
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.13235295
-          - serializedVersion: 3
-            time: 0.10240963
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0.06543625
-          - serializedVersion: 3
-            time: 0.90210634
-            value: 0.99056226
-            inSlope: -0.048243098
-            outSlope: -8.031119
-            tangentMode: 1
-            weightedMode: 0
-            inWeight: 0.05272823
-            outWeight: 0.33333334
-          - serializedVersion: 3
-            time: 1
-            value: 0
-            inSlope: -12.327004
-            outSlope: -12.327004
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.016778529
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        m_Name: Spawn Curve
-        m_Overridden: 1
-      - m_Value:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 6
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 1
-          - serializedVersion: 3
-            time: 0.05
-            value: 1
-            inSlope: 0.0023498507
-            outSlope: 0.0023498507
-            tangentMode: 1
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0.33333334
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        m_Name: Speed Over Life Multipier
-        m_Overridden: 1
-      - m_Value:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 22.321526
-            outSlope: 22.321526
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.33333334
-          - serializedVersion: 3
-            time: 0.044799805
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        m_Name: Size Over Life
-        m_Overridden: 1
-      - m_Value:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.33333334
-          - serializedVersion: 3
-            time: 1
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        m_Name: Scale Y by Speed
-        m_Overridden: 1
-      - m_Value:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.33333334
-          - serializedVersion: 3
-            time: 1
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        m_Name: Add Scale Y by Speed
-        m_Overridden: 1
-    m_Gradient:
-      m_Array:
-      - m_Value:
-          serializedVersion: 2
-          key0: {r: 7.999999, g: 5.4708476, b: 1.5078533, a: 1}
-          key1: {r: 2, g: 0.7473554, b: 0.39790568, a: 1}
-          key2: {r: 0, g: 0, b: 0, a: 0}
-          key3: {r: 0, g: 0, b: 0, a: 0}
-          key4: {r: 0, g: 0, b: 0, a: 0}
-          key5: {r: 0, g: 0, b: 0, a: 0}
-          key6: {r: 0, g: 0, b: 0, a: 0}
-          key7: {r: 0, g: 0, b: 0, a: 0}
-          ctime0: 0
-          ctime1: 65535
-          ctime2: 0
-          ctime3: 0
-          ctime4: 0
-          ctime5: 0
-          ctime6: 0
-          ctime7: 0
-          atime0: 0
-          atime1: 65535
-          atime2: 0
-          atime3: 0
-          atime4: 0
-          atime5: 0
-          atime6: 0
-          atime7: 0
-          m_Mode: 0
-          m_NumColorKeys: 2
-          m_NumAlphaKeys: 2
-        m_Name: Color Over Life
-        m_Overridden: 1
-    m_NamedObject:
-      m_Array:
-      - m_Value: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
-        m_Name: Texture
-        m_Overridden: 1
-    m_Bool:
-      m_Array:
-      - m_Value: 1
-        m_Name: Debug Mode
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Burst Spawn
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Burst
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Constant
-        m_Overridden: 1
 --- !u!1001 &724367231666084345
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4005,13 +2676,33 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 172308136}
     m_Modifications:
+    - target: {fileID: 410140518, guid: ae25f0a95fcd94a6aaf637103bdeb454, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 468492213, guid: ae25f0a95fcd94a6aaf637103bdeb454, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 671135144, guid: ae25f0a95fcd94a6aaf637103bdeb454, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1729889543, guid: ae25f0a95fcd94a6aaf637103bdeb454, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2124923585, guid: ae25f0a95fcd94a6aaf637103bdeb454, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 724367231141894000, guid: ae25f0a95fcd94a6aaf637103bdeb454, type: 3}
       propertyPath: m_Name
-      value: VisualSample
+      value: MOFO Hand
       objectReference: {fileID: 0}
     - target: {fileID: 724367231141894003, guid: ae25f0a95fcd94a6aaf637103bdeb454, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 724367231141894003, guid: ae25f0a95fcd94a6aaf637103bdeb454, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4055,6 +2746,55 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ae25f0a95fcd94a6aaf637103bdeb454, type: 3}
+--- !u!114 &1072407929793540104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072407929793540111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 318753805
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!4 &1072407929793540105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072407929793540111}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1072407929793540111
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1072407929793540105}
+  - component: {fileID: 1072407929793540104}
+  - component: {fileID: 6}
+  m_Layer: 0
+  m_Name: QuantumRealm Reality Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1001 &7326314751565232118
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4117,15 +2857,15 @@ PrefabInstance:
     - target: {fileID: 8760063833723034938, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
       propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1009934740}
+      objectReference: {fileID: 6}
     - target: {fileID: 8760063833723034938, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
       propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 1009934740}
+      objectReference: {fileID: 6}
     - target: {fileID: 8760063833723034938, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
       propertyPath: OnLoadedEvents.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
-      objectReference: {fileID: 1009934740}
+      objectReference: {fileID: 6}
     - target: {fileID: 8760063833723034940, guid: 2cea105a49baa4677b272283010e9e7d, type: 3}
       propertyPath: _followTarget
       value: 
