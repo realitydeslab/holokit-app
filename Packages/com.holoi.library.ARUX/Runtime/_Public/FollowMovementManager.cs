@@ -176,10 +176,6 @@ namespace Holoi.Library.ARUX
 
         Vector3 GetTargetPosition(Vector3 targetPosition, Vector3 offset)
         {
-            Vector3 headsetForward = _followTarget.forward; // get headset forward direction
-            Vector3 headsetUp = _followTarget.up; // get headset forward direction
-            Vector3 headsetRight = _followTarget.right; // get headset forward direction
-
             var localOffset = _followTarget.TransformVector(_offset);
             var worldOffset = offset;
 
@@ -191,10 +187,6 @@ namespace Holoi.Library.ARUX
             {
                 return targetPosition + localOffset;
             }
-
-            //var offsetByTarget = headsetForward * offset.z +
-            //headsetUp * offset.y +
-            //headsetRight * offset.x; 
         }
         public void Reset()
         {
