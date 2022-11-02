@@ -57,22 +57,11 @@ namespace HoloKit
 
         [SerializeField] private VideoEnhancementMode _videoEnhancementMode = VideoEnhancementMode.None;
 
-        [SerializeField] private GameObject _debugCenterEyePrefab;
-
-        private GameObject _debugCenterEye;
-
         public Transform CenterEyePose
         {
             get
             {
-                if (HoloKitUtils.IsRuntime)
-                {
-                    return _centerEyePose;
-                }
-                else
-                {
-                    return _debugCenterEye.transform;
-                }
+                return _centerEyePose;
             }
         }
 
@@ -140,11 +129,6 @@ namespace HoloKit
             HoloKitNFCSessionControllerAPI.OnNFCSessionCompleted += OnNFCSessionCompleted;
             HoloKitARSessionControllerAPI.SetVideoEnhancementMode(_videoEnhancementMode);
 
-            if (HoloKitUtils.IsEditor)
-            {
-                // Spawn debug center eye
-                _debugCenterEye = Instantiate(_debugCenterEyePrefab);
-            }
             _arSessionStartTime = Time.time;
         }
 

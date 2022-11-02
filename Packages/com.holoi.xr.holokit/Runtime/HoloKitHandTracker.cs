@@ -1,10 +1,9 @@
 using System;
 using UnityEngine;
-using UnityEngine.XR.ARFoundation;
 
 namespace HoloKit
 {
-    public enum HandJoint
+    public enum HoloKitHandJoint
     {
         Wrist = 0,
         Thumb0 = 1,
@@ -35,13 +34,24 @@ namespace HoloKit
 
         private static HoloKitHandTracker _instance;
 
+        [SerializeField] private bool _active;
+
+        [SerializeField] private bool _visible;
+
+        [SerializeField] private float _fadeOutDelay = 1.2f;
+
+        [SerializeField] private float _inactiveYOffset = 0.5f;
+
+        [SerializeField] private GameObject _hand;
+
+        [SerializeField] private Transform[] _handJoints;
+
         public bool Active
         {
             get => _active;
             set
             {
                 _active = value;
-                if(value) EnableAROcclusionManager(_active);
                 HoloKitHandTrackingControllerAPI.SetHandTrackingActive(_active);
             }
         }
@@ -56,24 +66,16 @@ namespace HoloKit
             }
         }
 
-        private bool _isValid = false;
         public bool Valid
         {
             get
             {
-                return _isValid;
+                if(HoloKitUtils.IsEditor) { return true; }
+                return _valid;
             }
         }
 
-        [SerializeField] private bool _active;
-
-        [SerializeField] private bool _visible;
-
-        [SerializeField] private float _fadeOutDelay = 1.2f;
-
-        [SerializeField] private GameObject _hand;
-
-        [SerializeField] private Transform[] _handJoints;
+        private bool _valid = false;
 
         private float _lastUpdateTime;
 
@@ -95,7 +97,6 @@ namespace HoloKit
         {
             HoloKitHandTrackingControllerAPI.OnHandPoseUpdated += OnHandPoseUpdated;
             HoloKitHandTrackingControllerAPI.RegisterHandTrackingControllerDelegates();
-            EnableAROcclusionManager(_active);
             HoloKitHandTrackingControllerAPI.SetHandTrackingActive(_active);
             SetupHandJointColors();
             SetHandJointsVisible(_visible);
@@ -111,38 +112,38 @@ namespace HoloKit
         {
             for (int i = 0; i < 21; i++)
             {
-                HandJoint joint = (HandJoint)i;
+                HoloKitHandJoint joint = (HoloKitHandJoint)i;
                 switch (joint)
                 {
-                    case HandJoint.Wrist:
+                    case HoloKitHandJoint.Wrist:
                         _handJoints[i].GetComponent<MeshRenderer>().material.color = Color.red;
                         break;
-                    case HandJoint.Thumb0:
-                    case HandJoint.Index0:
-                    case HandJoint.Middle0:
-                    case HandJoint.Ring0:
-                    case HandJoint.Little0:
+                    case HoloKitHandJoint.Thumb0:
+                    case HoloKitHandJoint.Index0:
+                    case HoloKitHandJoint.Middle0:
+                    case HoloKitHandJoint.Ring0:
+                    case HoloKitHandJoint.Little0:
                         _handJoints[i].GetComponent<MeshRenderer>().material.color = Color.yellow;
                         break;
-                    case HandJoint.Thumb1:
-                    case HandJoint.Index1:
-                    case HandJoint.Middle1:
-                    case HandJoint.Ring1:
-                    case HandJoint.Little1:
+                    case HoloKitHandJoint.Thumb1:
+                    case HoloKitHandJoint.Index1:
+                    case HoloKitHandJoint.Middle1:
+                    case HoloKitHandJoint.Ring1:
+                    case HoloKitHandJoint.Little1:
                         _handJoints[i].GetComponent<MeshRenderer>().material.color = Color.green;
                         break;
-                    case HandJoint.Thumb2:
-                    case HandJoint.Index2:
-                    case HandJoint.Middle2:
-                    case HandJoint.Ring2:
-                    case HandJoint.Little2:
+                    case HoloKitHandJoint.Thumb2:
+                    case HoloKitHandJoint.Index2:
+                    case HoloKitHandJoint.Middle2:
+                    case HoloKitHandJoint.Ring2:
+                    case HoloKitHandJoint.Little2:
                         _handJoints[i].GetComponent<MeshRenderer>().material.color = Color.cyan;
                         break;
-                    case HandJoint.Thumb3:
-                    case HandJoint.Index3:
-                    case HandJoint.Middle3:
-                    case HandJoint.Ring3:
-                    case HandJoint.Little3:
+                    case HoloKitHandJoint.Thumb3:
+                    case HoloKitHandJoint.Index3:
+                    case HoloKitHandJoint.Middle3:
+                    case HoloKitHandJoint.Ring3:
+                    case HoloKitHandJoint.Little3:
                         _handJoints[i].GetComponent<MeshRenderer>().material.color = Color.blue;
                         break;
                 }
@@ -160,11 +161,9 @@ namespace HoloKit
         private void OnHandPoseUpdated(float[] poses)
         {
             _lastUpdateTime = Time.time;
-            if (!_isValid)
+            if (!_valid)
             {
-                _hand.SetActive(true);
-                _isValid = true;
-
+                _valid = true;
                 OnHandValidityChanged?.Invoke(true);
             }
             for (int i = 0; i < 21; i++)
@@ -175,50 +174,30 @@ namespace HoloKit
 
         private void Update()
         {
-            if (Time.time - _lastUpdateTime > _fadeOutDelay)
+            if (_valid)
             {
-                //_hand.SetActive(false);
-                _isValid = false;
-
-                Transform centerEye = HoloKitCamera.Instance.CenterEyePose;
-
+                if (Time.time - _lastUpdateTime > _fadeOutDelay)
+                {
+                    _valid = false;
+                    OnHandValidityChanged?.Invoke(false);
+                }
+            }
+            else
+            {
                 if (HoloKitUtils.IsRuntime)
                 {
+                    Transform centerEye = HoloKitCamera.Instance.CenterEyePose;
                     for (int i = 0; i < 21; i++)
                     {
                         _handJoints[i].position = centerEye.position - centerEye.up * 0.5f;
                     }
                 }
-
-                OnHandValidityChanged?.Invoke(false);
             }
         }
 
-        public Vector3 GetHandJointPosition(HandJoint joint)
+        public Vector3 GetHandJointPosition(HoloKitHandJoint joint)
         {
-            if (!_hand.activeSelf)
-            {
-                Transform centerEye = HoloKitCamera.Instance.CenterEyePose;
-                Vector3 pos = Vector3.zero;
-
-                if (HoloKitUtils.IsRuntime)
-                {
-                    pos = centerEye.position - centerEye.up;
-                }
-
-                return pos;
-            }
-
             return _handJoints[(int)joint].position;
-        }
-
-        private void EnableAROcclusionManager(bool enabled)
-        {
-            var arOcclusionManager = FindObjectOfType<AROcclusionManager>(true);
-            if (arOcclusionManager != null)
-            {
-                arOcclusionManager.enabled = enabled;
-            }
         }
     }
 }

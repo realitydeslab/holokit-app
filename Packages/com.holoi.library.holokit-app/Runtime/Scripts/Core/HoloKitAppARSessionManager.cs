@@ -92,8 +92,14 @@ namespace Holoi.Library.HoloKitApp
 
         public void SetARPlaneManagerActive(bool active)
         {
-            if (_arPlaneManager == null) { return; }
-
+            if (_arPlaneManager == null)
+            {
+                var xrOrigin = HoloKitCamera.Instance.GetComponentInParent<XROrigin>();
+                if (!xrOrigin.TryGetComponent<ARPlaneManager>(out _arPlaneManager))
+                {
+                    return;
+                }
+            }
             _arPlaneManager.enabled = active;
             if (!active)
             {
@@ -127,8 +133,14 @@ namespace Holoi.Library.HoloKitApp
 
         public void SetARRaycastManagerActive(bool active)
         {
-            if (_arRaycastManager == null) { return; }
-
+            if (_arRaycastManager == null)
+            {
+                var xrOrigin = HoloKitCamera.Instance.GetComponentInParent<XROrigin>();
+                if (!xrOrigin.TryGetComponent<ARRaycastManager>(out _arRaycastManager))
+                {
+                    return;
+                }
+            }
             _arRaycastManager.enabled = active;
         }
     }

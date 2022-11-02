@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -5,90 +6,98 @@ namespace Holoi.Library.ARUX
 {
     public class HoverableObject : MonoBehaviour
     {
-        [Header("Events")]
-        public UnityEvent OnLoadedEvents;
+        [SerializeField] private float _radius;
 
-        [Header("Interacton Properties")]
-        [SerializeField] Vector3 _offset = new Vector3(0, 0, 0);
+        [SerializeField] private Vector3 _offset;
 
-        [SerializeField] float _triggerDistance = .2f;
+        [SerializeField] private float _loadTime;
 
-        [SerializeField] float _loadTime = 1f;
-
-        [SerializeField] bool _autoReset = false;
-
-        bool _isInteractable = true;
-        bool _isTriggered = false;
-        bool _isInteracted = false;
-
-        float _loadSpeed;
-
-        HandObject _ho;
-
-        float _process = 0;
-
-        public float Process { get { return _process; } }
-        public bool Interacted { get { return _isInteracted; } }
-
-        private void Start()
+        public Vector3 CenterPosition
         {
-            _ho = HandObject.Instance;
-            _loadSpeed = 1 / _loadTime;
+            get
+            {
+                return transform.position + transform.TransformVector(_offset);
+            }
         }
+
+        public float Radius => _radius;
+
+        public float CurrentLoadPercentage => _currentLoad / _loadTime;
+
+        private float _currentLoad;
+
+        private bool _isLoading;
+
+        private float _lastTriggerTime;
+
+        private const float TriggerCoolDownTime = 5f;
+
+        public UnityEvent OnTriggered;
+
+        public event Action OnStartedLoading;
+
+        public event Action OnStoppedLoading;
+
+        public static event Action<HoverableObject> OnHoverableObjectEnabled;
+
+        public static event Action<HoverableObject> OnHoverableObjectDisabled;
+
         private void OnEnable()
         {
-            Debug.Log($"{gameObject.name} : Onenable");
-            OnReset();
+            Reset();
+            OnHoverableObjectEnabled?.Invoke(this);
         }
+
         private void OnDisable()
         {
-
+            OnHoverableObjectDisabled?.Invoke(this);
         }
 
-        public void OnReset()
+        private void Reset()
         {
-            _isInteractable = true;
-            _isTriggered = false;
-            _process = 0;
+            _currentLoad = 0f;
+            _isLoading = false;
         }
 
-        void Update()
+        public void OnLoaded(float time)
         {
-            if (_isInteractable)
+            if (_currentLoad == _loadTime)
             {
-                if (!_ho.IsSyncedHand && _ho.IsValid) // not sycned, so it is a hand on server
+                return;
+            }
+            _currentLoad += time;
+            if (!_isLoading)
+            {
+                _isLoading = true;
+                OnStartedLoading?.Invoke();
+            }
+            if (_currentLoad > _loadTime)
+            {
+                _currentLoad = _loadTime;
+                if (Time.time - _lastTriggerTime > TriggerCoolDownTime)
                 {
-                    if (Vector3.Distance(_ho.transform.position, transform.position + _offset) < _triggerDistance)
-                    {
-                        _isInteracted = true;
-
-                        _process += Time.deltaTime * _loadSpeed;
-
-                        if (_process > 1)
-                        {
-                            _process = 1;
-                            if (!_isTriggered)
-                            {
-                                _isInteractable = false;
-                                _isInteracted = false;
-                                _isTriggered = true;
-                                OnLoadedEvents?.Invoke();
-                                if (_autoReset)
-                                {
-                                    OnReset();
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        _isInteracted = false;
-                        _process -= Time.deltaTime * _loadSpeed * 0.5f;
-                        if (_process < 0) _process = 0;
-                    }
+                    _lastTriggerTime = Time.time;
+                    OnTriggered?.Invoke();
                 }
             }
+        }
 
+        public void OnUnloaded(float time)
+        {
+            if (_currentLoad == 0)
+            {
+                return;
+            }
+            _currentLoad -= time;
+            if (_isLoading)
+            {
+                _isLoading = false;
+                OnStoppedLoading?.Invoke();
+            }
+            if (_currentLoad < 0f)
+            {
+                _currentLoad = 0f;
+            }
         }
     }
 }

@@ -1,82 +1,44 @@
 using UnityEngine;
-using System.Collections;
-using System;
+using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Library.ARUX
 {
     [RequireComponent(typeof(HoverableObject), typeof(Animator))]
     public class LoadButtonController : MonoBehaviour
     {
-        public event Action OnDisableEvent;
+        private Animator _animator;
 
-        //animator
-        Animator _animator;
-        MeshRenderer _mr;
-        Material _mat;
+        private MeshRenderer _meshRenderer;
 
-        // loading
-        float _process;
-        bool _isTriggered = false;
+        private HoverableObject _hoverableObject;
 
-        private void Awake()
+        private void Start()
         {
             _animator = GetComponent<Animator>();
-            _mr = GetComponent<MeshRenderer>();
-            _mat = _mr.material;
+            _meshRenderer = GetComponent<MeshRenderer>();
+            _hoverableObject = GetComponent<HoverableObject>();
+            gameObject.SetActive(false);
         }
 
-        private void OnEnable()
+        private void Update()
         {
-            // reset animations: 
-            OnBirth();
-
-            // reset properties: 
-            _process = 0;
-            _isTriggered = false;
-        }
-
-        private void OnDisable()
-        {
-            OnDisableEvent?.Invoke();
-        }
-
-        void Update()
-        {
-
-            if(_process == 1 && !_isTriggered)
-            {
-                _isTriggered = true;
-                OnDie();
-            }
-            else
-            {
-
-            }
-
-            _process = GetComponent<HoverableObject>().Process;
-            _mat.SetFloat("_Load", _process);
-        }
-
-        public void SetButtonTexture(Texture2D tex)
-        {
-            _mat.SetTexture("_Texture", tex);
-        }
-
-        public void OnDie()
-        {
-            _animator.SetTrigger("Die");
+            _meshRenderer.material.SetFloat("_Load", _hoverableObject.CurrentLoadPercentage);
         }
 
         public void OnBirth()
         {
+            gameObject.SetActive(true);
             _animator.Rebind();
             _animator.Update(0);
         }
 
-        // animation events
-        public void DisableAfterDieAnimation(AnimationEvent animationEvent)
+        public void OnDeath()
         {
-            gameObject.SetActive(false);
+            _animator.SetTrigger("Die");
+            StartCoroutine(HoloKitAppUtils.WaitAndDo(0.3f, () =>
+            {
+                Destroy(gameObject);
+            }));
         }
     }
 }

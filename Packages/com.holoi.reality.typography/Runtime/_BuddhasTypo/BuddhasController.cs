@@ -20,8 +20,8 @@ namespace Holoi.Reality.Typography
         {
             _ho = HandObject.Instance;
 
-            _hoverableObject.OnLoadedEvents.AddListener(FindObjectOfType<BuddhasRealityManager>().OnInteractionTriggered);
-            _hoverableObject.OnLoadedEvents.AddListener(PlayPhase);
+            _hoverableObject.OnTriggered.AddListener(FindObjectOfType<BuddhasRealityManager>().OnInteractionTriggered);
+            _hoverableObject.OnTriggered.AddListener(PlayPhase);
         }
 
         void PlayPhase()
