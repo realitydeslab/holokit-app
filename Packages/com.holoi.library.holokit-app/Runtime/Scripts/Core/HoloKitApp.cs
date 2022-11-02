@@ -238,6 +238,11 @@ namespace Holoi.Library.HoloKitApp
 
             // Push AR UI Panel
             UIPanelManager.PushUIPanel("MonoAR");
+            // TODO: Add multiple layers of reality UI panels
+            if (_realityManager.UIPanelPrefabs.Count > 0)
+            {
+                UIPanelManager.PushUIPanel(_realityManager.UIPanelPrefabs[0]);
+            }
 
             // Set VideoEnhancementMode in HoloKitSDK
             if (GlobalSettings.HighResHDREnabled && _localPlayerType == HoloKitAppPlayerType.Spectator)

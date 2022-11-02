@@ -27,7 +27,7 @@ namespace Holoi.Library.HoloKitApp.UI
             Debug.LogError($"[HoloKitAppUIPanelManager] Cannot find UIPanel with name {uiPanelName}");
         }
 
-        private void PushUIPanel(HoloKitAppUIPanel uiPanel)
+        public void PushUIPanel(HoloKitAppUIPanel uiPanel)
         {
             var uiPanelInstance = Instantiate(uiPanel);
             if (uiPanel.UIPanelName.Equals("StarAR"))

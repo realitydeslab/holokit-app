@@ -23,6 +23,7 @@ namespace Holoi.Reality.QuantumRealm
                 audioSource.Play();
                 Debug.Log("[BuddhaGroup] Played BGM with Unity");
             }
+            UI.QuantumRealmUIPanel.OnSwitchButtonPressed += OnSwitchButtonPressed;
         }
 
         public override void OnNetworkSpawn()
@@ -36,6 +37,12 @@ namespace Holoi.Reality.QuantumRealm
         {
             base.OnNetworkDespawn();
             _currentBuddhaIndex.OnValueChanged -= OnCurrentBuddhaIndexChanged;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            UI.QuantumRealmUIPanel.OnSwitchButtonPressed -= OnSwitchButtonPressed;
         }
 
         private void OnCurrentBuddhaIndexChanged(int oldValue, int newValue)
@@ -60,6 +67,17 @@ namespace Holoi.Reality.QuantumRealm
             {
                 _currentBuddhaIndex.Value++;
             }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void ActivateNextBuddhaServerRpc()
+        {
+            ActivateNextBuddha();
+        }
+
+        private void OnSwitchButtonPressed()
+        {
+            ActivateNextBuddhaServerRpc();
         }
     }
 }
