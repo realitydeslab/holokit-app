@@ -95,8 +95,6 @@ namespace Holoi.Reality.QuantumRealm
             // Turn off plane detection and raycast
             HoloKitApp.Instance.ARSessionManager.SetARPlaneManagerActive(false);
             HoloKitApp.Instance.ARSessionManager.SetARRaycastManagerActive(false);
-
-            Debug.Log("[QuantumRealmRealityManager] Buddha group spawned");
         }
 
         private void SpawnBuddhaGroup()
