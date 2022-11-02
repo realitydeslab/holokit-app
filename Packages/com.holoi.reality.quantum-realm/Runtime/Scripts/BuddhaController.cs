@@ -16,6 +16,8 @@ namespace Holoi.Reality.QuantumRealm
 
         [SerializeField] private TextAsset _textureAHAP;
 
+        [SerializeField] private AudioClip _startSound;
+
         private CHHapticAdvancedPatternPlayer _textureHapticsPlayer;
 
         private HoverableObject _hoverableObject;
@@ -23,6 +25,17 @@ namespace Holoi.Reality.QuantumRealm
         private bool _vibrationStarted;
 
         private const float FadeAwayDelay = 1f;
+
+        private void OnEnable()
+        {
+            if (!HoloKitApp.Instance.GlobalSettings.PhaseEnabled)
+            {
+                var audioSource = GetComponent<AudioSource>();
+                audioSource.clip = _startSound;
+                audioSource.loop = false;
+                audioSource.Play();
+            }
+        }
 
         private void Start()
         {

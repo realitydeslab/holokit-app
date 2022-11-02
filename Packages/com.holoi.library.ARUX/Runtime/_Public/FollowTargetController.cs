@@ -33,6 +33,24 @@ namespace Holoi.Library.ARUX
 
         [SerializeField] private bool _heightIdenticalToTarget;
 
+        public MovementType MovementType
+        {
+            get => _movementType;
+            set
+            {
+                _movementType = value;
+            }
+        }
+
+        public RotationType RotationType
+        {
+            get => _rotationType;
+            set
+            {
+                _rotationType = value;
+            }
+        }
+
         private void Start()
         {
             if (_targetTransform == null)

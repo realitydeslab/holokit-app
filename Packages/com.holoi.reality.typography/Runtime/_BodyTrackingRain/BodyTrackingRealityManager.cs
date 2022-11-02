@@ -36,7 +36,7 @@ namespace Holoi.Reality.Typography
                 if (!_isFirstTimeFindBody)
                 {
                     IsBodyValid = true;
-                    _phaseManager.PlayPhaseSource();
+                    //_phaseManager.PlayPhaseSource();
                     _isFirstTimeFindBody = true;
                 }
                 else
@@ -49,7 +49,7 @@ namespace Holoi.Reality.Typography
             {
                 Debug.Log("not found a body");
                 IsBodyValid = false;
-                _phaseManager.StopPhaseSource();
+                //_phaseManager.StopPhaseSource();
             }
         }
     }

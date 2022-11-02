@@ -33,6 +33,8 @@ namespace Holoi.Library.HoloKitApp
 
         public bool VibrationEnabled;
 
+        public bool PhaseEnabled;
+
         // 4K HDR
         public bool HighResHDREnabled;
 
@@ -62,6 +64,7 @@ namespace Holoi.Library.HoloKitApp
             {
                 InstructionEnabled = data.InstructionEnabled;
                 VibrationEnabled = data.VibrationEnabled;
+                PhaseEnabled = data.PhaseEnabled;
                 HighResHDREnabled = data.HighResHDREnabled;
                 UseWifiForMultiplayerEnabled = data.UseWifiForMultiplayerEnabled;
                 ShowTechInfoEnabled = data.ShowTechInfoEnabled;
@@ -77,7 +80,8 @@ namespace Holoi.Library.HoloKitApp
         {
             Debug.Log("[GlobalSettings] Loaded default global settings");
             InstructionEnabled = false;
-            VibrationEnabled = false;
+            VibrationEnabled = true;
+            PhaseEnabled = false;
             HighResHDREnabled = true;
             UseWifiForMultiplayerEnabled = false;
             ShowTechInfoEnabled = true;

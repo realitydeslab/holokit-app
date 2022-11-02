@@ -10,6 +10,8 @@ namespace Holoi.Library.HoloKitApp
 
         public bool VibrationEnabled;
 
+        public bool PhaseEnabled;
+
         public bool HighResHDREnabled;
 
         public bool UseWifiForMultiplayerEnabled;
@@ -22,6 +24,7 @@ namespace Holoi.Library.HoloKitApp
         {
             InstructionEnabled = globalSettings.InstructionEnabled;
             VibrationEnabled = globalSettings.VibrationEnabled;
+            PhaseEnabled = globalSettings.PhaseEnabled;
             HighResHDREnabled = globalSettings.HighResHDREnabled;
             UseWifiForMultiplayerEnabled = globalSettings.UseWifiForMultiplayerEnabled;
             ShowTechInfoEnabled = globalSettings.ShowTechInfoEnabled;

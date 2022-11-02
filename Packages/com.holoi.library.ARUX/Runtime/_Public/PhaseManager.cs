@@ -5,42 +5,48 @@ namespace Holoi.Library.ARUX
 {
     public class PhaseManager : MonoBehaviour
     {
-        public PHASESource _phaseSource;
-        public PHASEListener _phaseListener;
+        //public PHASESource _phaseSource;
 
-        private void Awake()
+        //public PHASEListener _phaseListener;
+
+        public bool IsValid
         {
-
+            get
+            {
+                return HoloKit.HoloKitUtils.IsRuntime && HoloKitApp.HoloKitApp.Instance.GlobalSettings.PhaseEnabled;
+            }
         }
+
         private void Start()
         {
 
         }
-        public void PlayPhaseSource()
-        {
-            if (!_phaseSource.IsPlaying())
-            {
-                _phaseSource.Play();
-            }
-        }
 
-        public void StopPhaseSource()
-        {
-            if (_phaseSource.IsPlaying())
-            {
-                _phaseSource.Stop();
-            }
-        }
+        //public void PlayPhaseSource()
+        //{
+        //    if (!_phaseSource.IsPlaying())
+        //    {
+        //        _phaseSource.Play();
+        //    }
+        //}
 
-        // now PHASE has a bug that will not stop playing after exited scene. So for now we need to handle it manully;
-        public void OnSceneExited()
-        {
-            Helpers.PHASEStop();
-        }
+        //public void StopPhaseSource()
+        //{
+        //    if (_phaseSource.IsPlaying())
+        //    {
+        //        _phaseSource.Stop();
+        //    }
+        //}
 
-        private void OnDestroy()
-        {
-            OnSceneExited();
-        }
+        //// now PHASE has a bug that will not stop playing after exited scene. So for now we need to handle it manully;
+        //public void OnSceneExited()
+        //{
+        //    Helpers.PHASEStop();
+        //}
+
+        //private void OnDestroy()
+        //{
+        //    OnSceneExited();
+        //}
     }
 }

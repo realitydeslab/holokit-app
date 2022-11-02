@@ -48,7 +48,7 @@ namespace Holoi.Reality.Typography
             {
                 _isBodyValid = true;
                 _bone = FindObjectOfType<BoneController>();
-                _phaseManager.PlayPhaseSource();
+                //_phaseManager.PlayPhaseSource();
                 _isTrigger = true;
             }
 

@@ -174,6 +174,8 @@ namespace HoloKit
 
         private void Update()
         {
+            if (!_active) { return; }
+
             if (_valid)
             {
                 if (Time.time - _lastUpdateTime > _fadeOutDelay)

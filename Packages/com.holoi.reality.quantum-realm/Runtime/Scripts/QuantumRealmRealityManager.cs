@@ -19,6 +19,8 @@ namespace Holoi.Reality.QuantumRealm
 
         [SerializeField] private ARRaycastManager _arRaycastManager;
 
+        [SerializeField] private GameObject _extendedHandJoint;
+
         [SerializeField] private GameObject _arRaycastPoint;
 
         [SerializeField] private ARRaycastIndicatorController _arRaycastIndicatorController;
@@ -78,7 +80,11 @@ namespace Holoi.Reality.QuantumRealm
                 Destroy(_arRaycastPoint);
                 Destroy(_arRaycastIndicatorController.gameObject);
                 Destroy(_startButton);
+                Destroy(_extendedHandJoint);
+                // There is no vibration on spectators
                 Destroy(CoreHapticsManager.gameObject);
+                // The networked hand is took control by the host
+                HandTransform.GetComponent<FollowTargetController>().MovementType = MovementType.None;
             }
         }
 
