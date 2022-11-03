@@ -113,5 +113,17 @@ namespace Holoi.AssetFoundation
             }
             return false;
         }
+
+        public bool IsPhaseEnabled()
+        {
+            foreach (var realityTag in RealityTags)
+            {
+                if (realityTag.BundleId.Equals("com.holoi.asset-foundation.phase"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

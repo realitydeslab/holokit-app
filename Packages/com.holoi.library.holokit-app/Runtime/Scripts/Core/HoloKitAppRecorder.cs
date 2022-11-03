@@ -44,7 +44,7 @@ namespace Holoi.Library.HoloKitApp
                     
                 }
 
-                if (HoloKitApp.Instance.GlobalSettings.PhaseEnabled)
+                if (HoloKitApp.Instance.GlobalSettings.PhaseEnabled && HoloKitApp.Instance.CurrentReality.IsPhaseEnabled())
                 {
                     _recordMicrophone = false;
                 }
