@@ -5,10 +5,8 @@ using Unity.Netcode;
 
 namespace Holoi.Library.MOFABase
 {
-    public class LifeShield : NetworkBehaviour, IDamageable
+    public class LifeShield : NetworkBehaviour
     {
-        public bool OnHitDelegation => true;
-
         public MagicSchool MagicSchool;
 
         [SerializeField] private AudioClip _beingHitSound;
@@ -31,25 +29,26 @@ namespace Holoi.Library.MOFABase
 
         public static float DestroyDelay = 1f;
 
-        // TODO: Test this value
-        private const float LifeShieldFragmentRadius = 0.3f;
-
         private readonly Dictionary<LifeShieldArea, LifeShieldFragment> _fragments = new();
 
-        public static event Action<ulong> OnCenterDestroyed;
+        public event Action OnCenterDestroyed;
 
-        public static event Action<ulong> OnTopDestroyed;
+        public event Action OnTopDestroyed;
 
-        public static event Action<ulong> OnLeftDestroyed;
+        public event Action OnLeftDestroyed;
 
-        public static event Action<ulong> OnRightDestroyed;
+        public event Action OnRightDestroyed;
 
+        // The parameter is the ownerClientId
+        public static event Action<ulong> OnBeingHit;
+
+        // The paremeter is the ownerClientId
         public static event Action<ulong> OnSpawned;
 
         // The first ulong is the attackerClientId and the second is the ownerClientId
         public static event Action<ulong, ulong> OnDead;
 
-        private void Awake()
+        private void Start()
         {
             _audioSource = GetComponent<AudioSource>();
             for (int i = 0; i < transform.childCount; i++)
@@ -92,111 +91,79 @@ namespace Holoi.Library.MOFABase
             _rightDestroyed.OnValueChanged -= OnRightDestroyedFunc;
         }
 
-        public void OnDamaged(Transform bulletTransform, ulong attackerClientId)
+        // Server only
+        public void OnDamaged(LifeShieldArea area, ulong attackerClientId)
         {
-            int hitFragmentCount = 0;
-            foreach (var fragment in _fragments.Values)
+            _lastAttackerClientId.Value = (int)attackerClientId;
+            switch (area)
             {
-                if (Vector3.Distance(fragment.transform.position, bulletTransform.position) < LifeShieldFragmentRadius)
-                {
-                    _lastAttackerClientId.Value = (int)attackerClientId;
-                    switch (fragment.Area)
-                    {
-                        case LifeShieldArea.Center:
-                            if (_centerDestroyed.Value)
-                            {
-                                continue;
-                            }
-                            _centerDestroyed.Value = true;
-                            GetComponent<Collider>().enabled = false;
-                            bulletTransform.GetComponent<AttackSpell>().OnHitFunc();
-                            return;
-                        case LifeShieldArea.Top:
-                            if (_topDestroyed.Value)
-                            {
-                                continue;
-                            }
-                            hitFragmentCount++;
-                            _topDestroyed.Value = true;
-                            break;
-                        case LifeShieldArea.Left:
-                            if (_leftDestroyed.Value)
-                            {
-                                continue;
-                            }
-                            hitFragmentCount++;
-                            _leftDestroyed.Value = true;
-                            break;
-                        case LifeShieldArea.Right:
-                            if (_rightDestroyed.Value)
-                            {
-                                continue;
-                            }
-                            hitFragmentCount++;
-                            _rightDestroyed.Value = true;
-                            break;
-                    }
-                }
-            }
-            if (hitFragmentCount> 0)
-            {
-                bulletTransform.GetComponent<AttackSpell>().OnHitFunc();
+                case LifeShieldArea.Center:
+                    _centerDestroyed.Value = true;
+                    _topDestroyed.Value = true;
+                    _leftDestroyed.Value = true;
+                    _rightDestroyed.Value = true;
+                    break;
+                case LifeShieldArea.Top:
+                    _topDestroyed.Value = true;
+                    break;
+                case LifeShieldArea.Left:
+                    _leftDestroyed.Value = true;
+                    break;
+                case LifeShieldArea.Right:
+                    _rightDestroyed.Value = true;
+                    break;
             }
         }
 
         private void OnCenterDestroyedFunc(bool oldValue, bool newValue)
         {
-            if (!newValue)
+            if (!oldValue && newValue)
             {
-                return;
-            }
+                OnBeingHit?.Invoke(OwnerClientId);
+                OnCenterDestroyed?.Invoke();
+                PlayHitSound();
+                _fragments[LifeShieldArea.Center].gameObject.SetActive(false);
 
-            if (IsServer)
-            {
-                _topDestroyed.Value = true;
-                _leftDestroyed.Value = true;
-                _rightDestroyed.Value = true;
-            }
-            OnCenterDestroyed?.Invoke(OwnerClientId);
-            PlayHitSound();
-            _fragments[LifeShieldArea.Center].transform.GetChild(0).gameObject.SetActive(false);
-
-            // The entire shield has been destroyed at this point
-            PlayDestroySound();
-            OnDead?.Invoke((ulong)_lastAttackerClientId.Value, OwnerClientId);
-            if (IsServer)
-            {
-                Destroy(gameObject, DestroyDelay);
+                // The entire shield has been destroyed at this point
+                PlayDestroySound();
+                OnDead?.Invoke((ulong)_lastAttackerClientId.Value, OwnerClientId);
+                if (IsServer)
+                {
+                    Destroy(gameObject, DestroyDelay);
+                }
             }
         }
 
         private void OnTopDestroyedFunc(bool oldValue, bool newValue)
         {
-            if (newValue)
+            if (!oldValue && newValue)
             {
-                OnTopDestroyed?.Invoke(OwnerClientId);
+                OnBeingHit?.Invoke(OwnerClientId);
+                OnTopDestroyed?.Invoke();
                 PlayHitSound();
-                _fragments[LifeShieldArea.Top].transform.GetChild(0).gameObject.SetActive(false);
+                _fragments[LifeShieldArea.Top].gameObject.SetActive(false);
             }
         }
 
         private void OnLeftDestroyedFunc(bool oldValue, bool newValue)
         {
-            if (newValue)
+            if (!oldValue && newValue)
             {
-                OnLeftDestroyed?.Invoke(OwnerClientId);
+                OnBeingHit?.Invoke(OwnerClientId);
+                OnLeftDestroyed?.Invoke();
                 PlayHitSound();
-                _fragments[LifeShieldArea.Left].transform.GetChild(0).gameObject.SetActive(false);
+                _fragments[LifeShieldArea.Left].gameObject.SetActive(false);
             }
         }
 
         private void OnRightDestroyedFunc(bool oldValue, bool newValue)
         {
-            if (newValue)
+            if (!oldValue && newValue)
             {
-                OnRightDestroyed?.Invoke(OwnerClientId);
+                OnBeingHit?.Invoke(OwnerClientId);
+                OnRightDestroyed?.Invoke();
                 PlayHitSound();
-                _fragments[LifeShieldArea.Right].transform.GetChild(0).gameObject.SetActive(false);
+                _fragments[LifeShieldArea.Right].gameObject.SetActive(false);
             }
         }
 

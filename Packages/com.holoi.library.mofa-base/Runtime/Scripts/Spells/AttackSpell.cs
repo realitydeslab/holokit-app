@@ -34,22 +34,14 @@ namespace Holoi.Library.MOFABase
                 MofaTeam victimTeam = mofaRealityManager.Players[other.GetComponentInParent<NetworkObject>().OwnerClientId].Team.Value;
                 if (attackerTeam != victimTeam)
                 {
-                    damageable.OnDamaged(transform, OwnerClientId);
-                    if (!damageable.OnHitDelegation)
+                    damageable.OnDamaged(OwnerClientId);
+                    OnHitClientRpc();
+                    if (HitOnce)
                     {
-                        OnHitFunc();
+                        GetComponent<Collider>().enabled = false;
+                        Destroy(gameObject, _destroyDelay);
                     }
                 }
-            }
-        }
-
-        public void OnHitFunc()
-        {
-            OnHitClientRpc();
-            if (HitOnce)
-            {
-                GetComponent<Collider>().enabled = false;
-                Destroy(gameObject, _destroyDelay);
             }
         }
 

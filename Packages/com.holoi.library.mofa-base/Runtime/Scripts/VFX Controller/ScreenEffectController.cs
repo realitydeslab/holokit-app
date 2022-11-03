@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.VFX;
+using Unity.Netcode;
 
 namespace Holoi.Library.MOFABase
 {
@@ -7,30 +8,26 @@ namespace Holoi.Library.MOFABase
     {
         [SerializeField] private VisualEffect vfx;
 
-        private void OnEnable()
-        {
-            LifeShield.OnTopDestroyed += OnBeingHit;
-            LifeShield.OnRightDestroyed += OnBeingHit;
-            LifeShield.OnLeftDestroyed += OnBeingHit;
-            LifeShield.OnCenterDestroyed += OnBeingHit;
-        }
-
-        private void OnDisable()
-        {
-            LifeShield.OnTopDestroyed -= OnBeingHit;
-            LifeShield.OnRightDestroyed -= OnBeingHit;
-            LifeShield.OnLeftDestroyed -= OnBeingHit;
-            LifeShield.OnCenterDestroyed -= OnBeingHit;
-        }
-
         private void Start()
         {
-            if(vfx == null) vfx = GetComponent<VisualEffect>();
+            if (vfx == null)
+            {
+                vfx = GetComponent<VisualEffect>();
+            }
+            LifeShield.OnBeingHit += OnLifeShieldBeingHit;
         }
 
-        public void OnBeingHit(ulong id)
+        private void OnDestroy()
         {
-            vfx.SendEvent("OnBeingHit");
+            LifeShield.OnBeingHit -= OnLifeShieldBeingHit;
+        }
+
+        public void OnLifeShieldBeingHit(ulong ownerClientId)
+        {
+            if (ownerClientId == NetworkManager.Singleton.LocalClientId)
+            {
+                vfx.SendEvent("OnBeingHit");
+            }
         }
     }
 }

@@ -65,6 +65,11 @@ namespace Holoi.Library.HoloKitApp
                 ShowTechInfoEnabled = data.ShowTechInfoEnabled;
                 RealityPreferences = data.RealityPreferences;
                 // TODO: Check if the loaded data is valid?
+                if (!ValidateCurrentSettings())
+                {
+                    Debug.Log("[GlobalSettings] The old settings are not valid anymore due to a recent update");
+                    LoadDefaultSettings();
+                }
             }
             else
             {
@@ -121,6 +126,22 @@ namespace Holoi.Library.HoloKitApp
                 RealityPreferences[reality.BundleId] = realityPreference;
             }
             Debug.Log("[GlobalSettings] Loaded default global settings");
+        }
+
+        /// <summary>
+        /// If the current settings loaded from disk are not valid, we should overwrite them with default settings.
+        /// </summary>
+        /// <returns></returns>
+        private bool ValidateCurrentSettings()
+        {
+            foreach (var reality in GetAllRealities())
+            {
+                if (!RealityPreferences.ContainsKey(reality.BundleId))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public MetaAvatarCollection GetPreferencedAvatarCollection(Reality reality = null)
@@ -251,6 +272,10 @@ namespace Holoi.Library.HoloKitApp
             return null;
         }
 
+        /// <summary>
+        /// Get realities from both formal and test lists.
+        /// </summary>
+        /// <returns></returns>
         public List<Reality> GetAllRealities()
         {
             List<Reality> wholeList = new(RealityList.List);

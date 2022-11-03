@@ -11,8 +11,6 @@ namespace Holoi.Library.MOFABase
     [RequireComponent(typeof(Collider))]
     public class ShieldSpell : NetworkBehaviour, IDamageable
     {
-        public bool OnHitDelegation => false;
-
         // How many times this shield can block attack
         public int MaxHealth;
 
@@ -44,7 +42,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        public void OnDamaged(Transform _, ulong attackerClientId)
+        public void OnDamaged(ulong attackerClientId)
         {
             _currentHealth.Value--;
             if (_currentHealth.Value > 0)

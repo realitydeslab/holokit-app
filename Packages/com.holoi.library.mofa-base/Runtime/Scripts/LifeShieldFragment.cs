@@ -10,8 +10,15 @@ namespace Holoi.Library.MOFABase
         Right = 3
     }
 
-    public class LifeShieldFragment : MonoBehaviour
+    public class LifeShieldFragment : MonoBehaviour, IDamageable
     {
-        public LifeShieldArea Area;
+        [SerializeField] private LifeShieldArea _area;
+
+        public LifeShieldArea Area => _area;
+
+        public void OnDamaged(ulong attackerClientId)
+        {
+            GetComponentInParent<LifeShield>().OnDamaged(_area, attackerClientId);
+        }
     }
 }
