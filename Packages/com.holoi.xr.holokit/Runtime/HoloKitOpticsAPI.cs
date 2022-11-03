@@ -69,16 +69,19 @@ namespace HoloKit
 
         public static bool IsCurrentDeviceSupportedByHoloKit()
         {
+            if (HoloKitUtils.IsEditor) { return true; }
             return HoloKitSDK_IsCurrentDeviceSupportedByHoloKit();
         }
 
         public static bool IsCurrentDeviceIpad()
         {
+            if (HoloKitUtils.IsEditor) { return false; }
             return HoloKitSDK_IsCurrentDeviceIpad();
         }
 
         public static bool IsCurrentDeviceEquippedWithLiDAR()
         {
+            if (HoloKitUtils.IsEditor) { return true; }
             return HoloKitSDK_IsCurrentDeviceEquippedWithLiDAR();
         }
     }

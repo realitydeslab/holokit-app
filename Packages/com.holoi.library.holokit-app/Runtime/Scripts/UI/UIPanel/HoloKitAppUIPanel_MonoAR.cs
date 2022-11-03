@@ -1,4 +1,5 @@
 using UnityEngine;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -36,6 +37,13 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnStarButtonPressed()
         {
+            // Is the device supported by HoloKitX?
+            if (!HoloKitOpticsAPI.IsCurrentDeviceSupportedByHoloKit())
+            {
+                HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_IncompatiblePhoneModel");
+                return;
+            }
+
             // Enter Star Mode
             if (HoloKitApp.Instance.GlobalSettings.InstructionEnabled)
             {
