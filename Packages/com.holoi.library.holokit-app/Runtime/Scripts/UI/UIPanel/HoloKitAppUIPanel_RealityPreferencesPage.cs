@@ -18,7 +18,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
-            if (!HoloKitApp.Instance.CurrentReality.SupportMultiplayer())
+            if (!HoloKitApp.Instance.CurrentReality.IsMultiplayerSupported())
             {
                 _playerButton.SetActive(false);
             }

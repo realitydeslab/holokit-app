@@ -8,6 +8,16 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
+        private void OnEnable()
+        {
+            Camera.main.backgroundColor = new Color(0f, 0f, 0f, 0f);
+        }
+
+        private void OnDisable()
+        {
+            Camera.main.backgroundColor = new Color(1f, 1f, 1f, 0f);
+        }
+
         public void OnBackButtonPressed()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
@@ -51,7 +61,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnDiscordButtonPressed()
         {
-            //Application.OpenURL("https://holokit.io/x/get_it_now/");
+            Application.OpenURL("https://discord.gg/nsPPBfAJ2f");
         }
 
         public void OnInstagramButtonPressed()
@@ -61,7 +71,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnTiktokButtonPressed()
         {
-            //Application.OpenURL("https://holokit.io/x/get_it_now/");
+            Application.OpenURL("https://www.tiktok.com/@holokit.io");
         }
 
         public void OnYoutubeButtonPressed()

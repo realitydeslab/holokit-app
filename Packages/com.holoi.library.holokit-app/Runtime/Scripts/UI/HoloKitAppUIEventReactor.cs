@@ -12,9 +12,10 @@ namespace Holoi.Library.HoloKitApp.UI
             HoloKitAppUIEventManager.OnStoppedAdvertising += OnStoppedSharingReality;
             HoloKitAppUIEventManager.OnStartedRecording += OnStartedRecording;
             HoloKitAppUIEventManager.OnStoppedRecording += OnStoppedRecording;
-            HoloKitAppUIEventManager.OnExit += OnExitReality;
+            HoloKitAppUIEventManager.OnExitReality += OnExitReality;
             HoloKitAppUIEventManager.OnAlignmentMarkChecked += OnAlignmentMarkChecked;
             HoloKitAppUIEventManager.OnRescanQRCode += OnRescanQRCode;
+            HoloKitAppUIEventManager.OnExitNoLiDARScene += OnExitNoLiDARScene;
         }
 
         private void OnDestroy()
@@ -24,9 +25,10 @@ namespace Holoi.Library.HoloKitApp.UI
             HoloKitAppUIEventManager.OnStoppedAdvertising -= OnStoppedSharingReality;
             HoloKitAppUIEventManager.OnStartedRecording -= OnStartedRecording;
             HoloKitAppUIEventManager.OnStoppedRecording -= OnStoppedRecording;
-            HoloKitAppUIEventManager.OnExit -= OnExitReality;
+            HoloKitAppUIEventManager.OnExitReality -= OnExitReality;
             HoloKitAppUIEventManager.OnAlignmentMarkChecked -= OnAlignmentMarkChecked;
             HoloKitAppUIEventManager.OnRescanQRCode -= OnRescanQRCode;
+            HoloKitAppUIEventManager.OnExitNoLiDARScene -= OnExitNoLiDARScene;
         }
 
         private void OnRenderModeChanged(HoloKitRenderMode renderMode)
@@ -88,6 +90,11 @@ namespace Holoi.Library.HoloKitApp.UI
         private void OnRescanQRCode()
         {
             HoloKitApp.Instance.MultiplayerManager.RescanQRCode();
+        }
+
+        private void OnExitNoLiDARScene()
+        {
+            HoloKitApp.Instance.ExitNoLiDARScene();
         }
     }
 }

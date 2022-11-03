@@ -27,7 +27,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Host);
             });
 
-            if (reality.SupportMultiplayer())
+            if (reality.IsMultiplayerSupported())
             {
                 _playerButton.onClick.AddListener(() =>
                 {

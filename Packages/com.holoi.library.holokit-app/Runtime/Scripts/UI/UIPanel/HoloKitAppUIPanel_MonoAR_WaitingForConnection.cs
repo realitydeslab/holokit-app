@@ -24,7 +24,7 @@ namespace Holoi.Library.HoloKitApp.UI
         public void OnExitButtonPressed()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-            HoloKitAppUIEventManager.OnExit?.Invoke();
+            HoloKitAppUIEventManager.OnExitReality?.Invoke();
         }
     }
 }

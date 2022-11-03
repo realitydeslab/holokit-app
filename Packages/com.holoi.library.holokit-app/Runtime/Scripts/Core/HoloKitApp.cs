@@ -181,7 +181,7 @@ namespace Holoi.Library.HoloKitApp
             {
                 InitializeRealityScene();
             }
-            else
+            else if (scene.name.Equals("Start"))
             {
                 UIPanelManager.OnStartSceneLoaded();
                 SetUrpAssetForUI();
@@ -193,6 +193,10 @@ namespace Holoi.Library.HoloKitApp
             if (IsRealityScene(scene))
             {
                 DeinitializeRealityScene();
+            }
+            else if (scene.name.Equals("No LiDAR"))
+            {
+                DeinitializeARSession();
             }
         }
 
@@ -256,13 +260,16 @@ namespace Holoi.Library.HoloKitApp
         {
             if (HoloKitUtils.IsRuntime)
             {
-                // Reset ARSession
-                LoaderUtility.Deinitialize();
-                LoaderUtility.Initialize();
-                HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
-
+                DeinitializeARSession();
                 ResetWatchConnectivity();
             }
+        }
+
+        private void DeinitializeARSession()
+        {
+            LoaderUtility.Deinitialize();
+            LoaderUtility.Initialize();
+            HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
         }
 
         private void ResetWatchConnectivity()
@@ -275,8 +282,29 @@ namespace Holoi.Library.HoloKitApp
 
         public void EnterRealityAs(HoloKitAppPlayerType playerType)
         {
+            // Does the Reality we are going to enter need LiDAR?
+            if (_currentReality.IsLiDARRequired())
+            {
+                if (!HoloKitOpticsAPI.IsCurrentDeviceEquippedWithLiDAR())
+                {
+                    LoadNoLiDARScene();
+                    return;
+                }
+            }
+
             _localPlayerType = playerType;
-            SceneManager.LoadScene(CurrentReality.Scene.SceneName, LoadSceneMode.Single);
+            SceneManager.LoadScene(_currentReality.Scene.SceneName, LoadSceneMode.Single);
+        }
+
+        private void LoadNoLiDARScene()
+        {
+            SceneManager.LoadScene("No LiDAR", LoadSceneMode.Single);
+            UIPanelManager.PushUIPanel("MonoAR_NoLiDAR");
+        }
+
+        public void ExitNoLiDARScene()
+        {
+            SceneManager.LoadScene("Start", LoadSceneMode.Single);
         }
         #endregion
 
@@ -393,7 +421,7 @@ namespace Holoi.Library.HoloKitApp
             NetworkManager.Singleton.Shutdown();
             DeinitializeNetworkManager();
 
-            SceneManager.LoadSceneAsync("Start", LoadSceneMode.Single);
+            SceneManager.LoadScene("Start", LoadSceneMode.Single);
         }
         #endregion
     }

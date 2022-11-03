@@ -42,21 +42,41 @@ namespace Holoi.Library.HoloKitApp.UI
             uiPanelInstance.transform.localRotation = Quaternion.identity;
             uiPanelInstance.transform.localScale = Vector3.one;
 
-            // Inactivate the previous UIPanel
-            if (uiPanel.OverlayPreviousPanel && _uiPanelStack.TryPeek(out var previousUIPanel)) {
-                previousUIPanel.gameObject.SetActive(false);
+            // Deactivate all previous UIPanels
+            if (uiPanel.OverlayPreviousPanel)
+            {
+                foreach (var previousPanel in _uiPanelStack)
+                {
+                    previousPanel.gameObject.SetActive(false);
+                }
             }
             _uiPanelStack.Push(uiPanelInstance);
         }
 
         public void PopUIPanel()
         {
+            // Firstly, we pop and destroy the last UI panel
             if (_uiPanelStack.TryPop(out var lastUIPanel))
             {
                 Destroy(lastUIPanel.gameObject);
-                if (_uiPanelStack.TryPeek(out var secondLastUIPanel))
+
+                var tempStack = new Stack<HoloKitAppUIPanel>();
+                if (_uiPanelStack.TryPop(out var uiPanel1))
                 {
-                    secondLastUIPanel.gameObject.SetActive(true);
+                    uiPanel1.gameObject.SetActive(true);
+                    tempStack.Push(uiPanel1);
+
+                    while (!uiPanel1.OverlayPreviousPanel && _uiPanelStack.TryPop(out var uiPanel2))
+                    {
+                        uiPanel1 = uiPanel2;
+                        uiPanel1.gameObject.SetActive(true);
+                        tempStack.Push(uiPanel1);
+                    }
+
+                    while (tempStack.TryPop(out var uiPanel))
+                    {
+                        _uiPanelStack.Push(uiPanel);
+                    }
                 }
             }
         }
@@ -88,11 +108,11 @@ namespace Holoi.Library.HoloKitApp.UI
                 }
             }
 
-            while (!_uiPanelStack.Peek().UIPanelName.Equals("MonoAR"))
+            while (!_uiPanelStack.Peek().UIPanelName.Equals("MonoAR") && !_uiPanelStack.Peek().UIPanelName.Equals("MonoAR_NoLiDAR"))
             {
                 PopUIPanel();
             }
-            // Pop MonoAR panel
+            // Pop MonoAR panel or MonoAR_NoLiDAR panel
             PopUIPanel();
 
             if (!HoloKitApp.Instance.Test)

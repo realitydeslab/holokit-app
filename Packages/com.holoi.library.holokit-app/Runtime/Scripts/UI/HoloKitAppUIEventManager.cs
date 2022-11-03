@@ -12,7 +12,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public static Action OnStoppedAdvertising;
 
-        public static Action OnExit;
+        public static Action OnExitReality;
 
         public static Action OnStartedRecording;
 
@@ -27,6 +27,10 @@ namespace Holoi.Library.HoloKitApp.UI
         public static Action OnTriggered;
 
         public static Action OnBoosted;
+        #endregion
+
+        #region Others
+        public static Action OnExitNoLiDARScene;
         #endregion
     }
 }

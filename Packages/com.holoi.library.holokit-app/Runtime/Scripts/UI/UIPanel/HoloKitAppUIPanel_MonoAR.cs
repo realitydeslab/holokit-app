@@ -50,7 +50,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnExitButtonPressed()
         {
-            HoloKitAppUIEventManager.OnExit?.Invoke();
+            HoloKitAppUIEventManager.OnExitReality?.Invoke();
         }
 
         public void OnRecordButtonPressed()

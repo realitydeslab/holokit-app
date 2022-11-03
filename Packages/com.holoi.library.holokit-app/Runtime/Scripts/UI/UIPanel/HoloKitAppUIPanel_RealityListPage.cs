@@ -81,6 +81,9 @@ namespace Holoi.Library.HoloKitApp.UI
         // We dynamically spawn and destroy reality rooms to save resources.
         private void OnEnable()
         {
+            // TODO: This might not be good. I just want to save the file more frequently.
+            HoloKitApp.Instance.GlobalSettings.Save();
+
             _roomListRoot = Instantiate(_roomListRootPrefab);
             int realityIndex = -1;
             foreach (var reality in HoloKitApp.Instance.GlobalSettings.RealityList.List)

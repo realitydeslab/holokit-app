@@ -90,11 +90,23 @@ namespace Holoi.AssetFoundation
             }
         }
 
-        public bool SupportMultiplayer()
+        public bool IsMultiplayerSupported()
         {
             foreach (var realityTag in RealityTags)
             {
                 if (realityTag.BundleId.Equals("com.holoi.asset-foundation.support-multiplayer"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsLiDARRequired()
+        {
+            foreach (var realityTag in RealityTags)
+            {
+                if (realityTag.BundleId.Equals("com.holoi.asset-foundation.lidar"))
                 {
                     return true;
                 }
