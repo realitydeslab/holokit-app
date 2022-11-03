@@ -9,6 +9,12 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
+        [SerializeField] private GameObject _spectatorButton;
+
+        [SerializeField] private GameObject _starButton;
+
+        [SerializeField] private GameObject _exitButton;
+
         [SerializeField] private HoloKitAppUIComponent_MonoAR_RecordButton _recordButton;
 
         private void Start()
@@ -64,6 +70,18 @@ namespace Holoi.Library.HoloKitApp.UI
         public void OnRecordButtonPressed()
         {
             _recordButton.ToggleRecording();
+            if (_recordButton.IsRecording)
+            {
+                _spectatorButton.SetActive(false);
+                _starButton.SetActive(false);
+                _exitButton.SetActive(false);
+            }
+            else
+            {
+                _spectatorButton.SetActive(true);
+                _starButton.SetActive(true);
+                _exitButton.SetActive(true);
+            }
         }
     }
 }

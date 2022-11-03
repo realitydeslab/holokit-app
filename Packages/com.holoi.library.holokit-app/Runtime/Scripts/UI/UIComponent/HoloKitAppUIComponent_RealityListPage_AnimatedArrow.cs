@@ -10,9 +10,14 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private const float MovementDuration = 1f;
 
-        private void Start()
+        private void OnEnable()
         {
             StartMoveForward();
+        }
+
+        private void OnDestroy()
+        {
+            LeanTween.cancel(_arrow);
         }
 
         private void StartMoveForward()

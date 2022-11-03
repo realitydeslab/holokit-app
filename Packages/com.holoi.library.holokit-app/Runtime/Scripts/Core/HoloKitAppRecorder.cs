@@ -35,15 +35,6 @@ namespace Holoi.Library.HoloKitApp
         {
             if (HoloKitUtils.IsRuntime)
             {
-                if (_watermarkEnabled)
-                {
-                    
-                }
-                else
-                {
-                    
-                }
-
                 if (HoloKitApp.Instance.GlobalSettings.PhaseEnabled && HoloKitApp.Instance.CurrentReality.IsPhaseEnabled())
                 {
                     _recordMicrophone = false;
@@ -113,6 +104,8 @@ namespace Holoi.Library.HoloKitApp
             var channelCount = _recordMicrophone ? (int)AudioSettings.speakerMode : 0;
             var clock = new RealtimeClock();
             _recorder = new MP4Recorder(_videoWidth, _videoHeight, frameRate, sampleRate, channelCount, audioBitRate: 96_000);
+            // TODO: Add watermark
+            
             // Create recording inputs
             _cameraInput = new(_recorder, clock, new Camera[] { _recordCamera });
             _cameraInput.HDR = true;
