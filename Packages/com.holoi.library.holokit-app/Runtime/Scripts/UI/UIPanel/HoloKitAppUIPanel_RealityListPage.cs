@@ -177,6 +177,8 @@ namespace Holoi.Library.HoloKitApp.UI
                         {
                             return;
                         }
+                        // Cancel all LeanTween operations
+                        LeanTween.cancelAll();
                         // Enter the current room
                         HoloKitApp.Instance.CurrentReality = HoloKitApp.Instance.GlobalSettings.RealityList.List[_currentRoomIndex];
                         HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityDetailPage");
