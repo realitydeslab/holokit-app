@@ -44,6 +44,10 @@ namespace Holoi.Library.HoloKitApp
                     
                 }
 
+                if (HoloKitApp.Instance.GlobalSettings.PhaseEnabled)
+                {
+                    _recordMicrophone = false;
+                }
                 if (_recordMicrophone)
                 {
                     // Start microphone
@@ -64,7 +68,6 @@ namespace Holoi.Library.HoloKitApp
             // Stop microphone
             if (_recordMicrophone)
             {
-
                 _microphoneSource.Stop();
                 Microphone.End(null);
             }
