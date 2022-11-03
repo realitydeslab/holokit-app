@@ -44,11 +44,6 @@ namespace Holoi.Library.HoloKitApp
 
         public Dictionary<string, RealityPreference> RealityPreferences;
 
-        // This is temporary
-        private const string AmbersAvatarCollectionBundleId = "com.holoi.avatar.meebits";
-
-        private const string AmbersAvatarTokenId = "5958";
-
         // Call this function when application quits.
         public void Save()
         {
@@ -69,6 +64,7 @@ namespace Holoi.Library.HoloKitApp
                 UseWifiForMultiplayerEnabled = data.UseWifiForMultiplayerEnabled;
                 ShowTechInfoEnabled = data.ShowTechInfoEnabled;
                 RealityPreferences = data.RealityPreferences;
+                // TODO: Check if the loaded data is valid?
             }
             else
             {
@@ -78,7 +74,6 @@ namespace Holoi.Library.HoloKitApp
 
         public void LoadDefaultSettings()
         {
-            Debug.Log("[GlobalSettings] Loaded default global settings");
             InstructionEnabled = false;
             VibrationEnabled = true;
             PhaseEnabled = false;
@@ -88,7 +83,7 @@ namespace Holoi.Library.HoloKitApp
 
             // Reality preferences
             RealityPreferences = new();
-            foreach (var reality in RealityList.List)
+            foreach (var reality in GetAllRealities())
             {
                 // Set the default avatar
                 string metaAvatarCollectionId = null;
@@ -125,6 +120,7 @@ namespace Holoi.Library.HoloKitApp
                 };
                 RealityPreferences[reality.BundleId] = realityPreference;
             }
+            Debug.Log("[GlobalSettings] Loaded default global settings");
         }
 
         public MetaAvatarCollection GetPreferencedAvatarCollection(Reality reality = null)
@@ -285,31 +281,6 @@ namespace Holoi.Library.HoloKitApp
                 if (metaAvatarCollection.BundleId.Equals(realityPreference.MetaAvatarCollectionBundleId))
                 {
                     return metaAvatarCollection;
-                }
-            }
-            return null;
-        }
-
-        public MetaAvatarCollection GetAmbersAvatarCollection()
-        {
-            foreach (var avatarCollection in AvatarCollectionList.List)
-            {
-                if (avatarCollection.BundleId.Equals(AmbersAvatarCollectionBundleId))
-                {
-                    return avatarCollection;
-                }
-            }
-            return null;
-        }
-
-        public MetaAvatar GetAmbersAvatar()
-        {
-            MetaAvatarCollection avatarCollection = GetAmbersAvatarCollection();
-            foreach (var avatar in avatarCollection.MetaAvatars)
-            {
-                if (avatar.TokenId.Equals(AmbersAvatarTokenId))
-                {
-                    return avatar;
                 }
             }
             return null;

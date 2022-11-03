@@ -56,11 +56,14 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnDestroy()
         {
-            // Stop microphone
-            if (_recordMicrophone)
+            if (HoloKitUtils.IsRuntime)
             {
-                _microphoneSource.Stop();
-                Microphone.End(null);
+                // Stop microphone
+                if (_recordMicrophone)
+                {
+                    _microphoneSource.Stop();
+                    Microphone.End(null);
+                }
             }
         }
 

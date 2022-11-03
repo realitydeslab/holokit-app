@@ -30,8 +30,6 @@ namespace Holoi.AssetFoundation
 
         public SceneField Scene;
 
-        public string WatermarkField = "";
-
         public bool IsCompatibleWithMetaAvatarCollection(MetaAvatarCollection avatarCollection)
         {
             if (CompatibleMetaAvatarTags.Count == 0)
