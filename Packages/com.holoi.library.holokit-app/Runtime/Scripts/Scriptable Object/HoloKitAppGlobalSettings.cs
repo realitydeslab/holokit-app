@@ -35,8 +35,11 @@ namespace Holoi.Library.HoloKitApp
 
         public bool PhaseEnabled;
 
-        // 4K HDR
-        public bool HighResHDREnabled;
+        public bool HighResHDREnabled; // 4K HDR
+
+        public bool RecordMicrophone;
+
+        public bool WatermarkEnabled;
 
         public bool UseWifiForMultiplayerEnabled;
 
@@ -61,6 +64,8 @@ namespace Holoi.Library.HoloKitApp
                 VibrationEnabled = data.VibrationEnabled;
                 PhaseEnabled = data.PhaseEnabled;
                 HighResHDREnabled = data.HighResHDREnabled;
+                RecordMicrophone = data.RecordMicrophone;
+                WatermarkEnabled = data.WatermarkEnabled;
                 UseWifiForMultiplayerEnabled = data.UseWifiForMultiplayerEnabled;
                 ShowTechInfoEnabled = data.ShowTechInfoEnabled;
                 RealityPreferences = data.RealityPreferences;
@@ -79,10 +84,12 @@ namespace Holoi.Library.HoloKitApp
 
         public void LoadDefaultSettings()
         {
-            InstructionEnabled = false;
+            InstructionEnabled = true;
             VibrationEnabled = true;
             PhaseEnabled = false;
             HighResHDREnabled = true;
+            RecordMicrophone = true;
+            WatermarkEnabled = true;
             UseWifiForMultiplayerEnabled = false;
             ShowTechInfoEnabled = true;
 

@@ -194,7 +194,7 @@ namespace Holoi.Library.HoloKitApp
             {
                 DeinitializeRealityScene();
             }
-            else if (scene.name.Equals("No LiDAR"))
+            else if (scene.name.Equals("NoLiDAR"))
             {
                 DeinitializeARSession();
             }
@@ -298,7 +298,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void LoadNoLiDARScene()
         {
-            SceneManager.LoadScene("No LiDAR", LoadSceneMode.Single);
+            SceneManager.LoadScene("NoLiDAR", LoadSceneMode.Single);
             UIPanelManager.PushUIPanel("MonoAR_NoLiDAR");
         }
 

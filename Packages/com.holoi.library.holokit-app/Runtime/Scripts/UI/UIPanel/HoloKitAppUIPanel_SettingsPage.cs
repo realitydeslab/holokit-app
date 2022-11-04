@@ -16,18 +16,25 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private HoloKitAppUIComponent_AnimatedToggle _4khdrToggle;
 
+        [SerializeField] private HoloKitAppUIComponent_AnimatedToggle _recordMicrophoneToggle;
+
+        [SerializeField] private HoloKitAppUIComponent_AnimatedToggle _watermarkEnabledToggle;
+
         [SerializeField] private HoloKitAppUIComponent_AnimatedToggle _wifiToggle;
 
         [SerializeField] private HoloKitAppUIComponent_AnimatedToggle _techInfoToggle;
 
         private void Start()
         {
-            _instructionToggle.Toggled = HoloKitApp.Instance.GlobalSettings.InstructionEnabled;
-            _vibrationToggle.Toggled = HoloKitApp.Instance.GlobalSettings.VibrationEnabled;
-            _phaseToggle.Toggled = HoloKitApp.Instance.GlobalSettings.PhaseEnabled;
-            _4khdrToggle.Toggled = HoloKitApp.Instance.GlobalSettings.HighResHDREnabled;
-            _wifiToggle.Toggled = HoloKitApp.Instance.GlobalSettings.UseWifiForMultiplayerEnabled;
-            _techInfoToggle.Toggled = HoloKitApp.Instance.GlobalSettings.ShowTechInfoEnabled;
+            var globalSettings = HoloKitApp.Instance.GlobalSettings;
+            _instructionToggle.Toggled = globalSettings.InstructionEnabled;
+            _vibrationToggle.Toggled = globalSettings.VibrationEnabled;
+            _phaseToggle.Toggled = globalSettings.PhaseEnabled;
+            _4khdrToggle.Toggled = globalSettings.HighResHDREnabled;
+            _recordMicrophoneToggle.Toggled = globalSettings.RecordMicrophone;
+            _watermarkEnabledToggle.Toggled = globalSettings.WatermarkEnabled;
+            _wifiToggle.Toggled = globalSettings.UseWifiForMultiplayerEnabled;
+            _techInfoToggle.Toggled = globalSettings.ShowTechInfoEnabled;
         }
 
         public void OnBackButtonPressed()
@@ -53,6 +60,16 @@ namespace Holoi.Library.HoloKitApp.UI
         public void On4KHDRToggleValueChanged(bool toggled)
         {
             HoloKitApp.Instance.GlobalSettings.HighResHDREnabled = toggled;
+        }
+
+        public void OnRecordMicrophoneToggleValueChanged(bool toggled)
+        {
+            HoloKitApp.Instance.GlobalSettings.RecordMicrophone = toggled;
+        }
+
+        public void OnWatermarkToggleValueChanged(bool toggled)
+        {
+            HoloKitApp.Instance.GlobalSettings.WatermarkEnabled = toggled;
         }
 
         public void OnWifiToggleValueChanged(bool toggled)

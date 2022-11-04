@@ -6,17 +6,21 @@ namespace Holoi.Library.HoloKitApp
     [Serializable]
     public class HoloKitAppGlobalSettingsData
     {
-        public bool InstructionEnabled;
+        public bool InstructionEnabled = true;
 
-        public bool VibrationEnabled;
+        public bool VibrationEnabled = true;
 
-        public bool PhaseEnabled;
+        public bool PhaseEnabled = false;
 
-        public bool HighResHDREnabled;
+        public bool HighResHDREnabled = true;
 
-        public bool UseWifiForMultiplayerEnabled;
+        public bool RecordMicrophone = true;
 
-        public bool ShowTechInfoEnabled;
+        public bool WatermarkEnabled = true;
+
+        public bool UseWifiForMultiplayerEnabled = false;
+
+        public bool ShowTechInfoEnabled = true;
 
         public Dictionary<string, RealityPreference> RealityPreferences;
 
@@ -26,6 +30,8 @@ namespace Holoi.Library.HoloKitApp
             VibrationEnabled = globalSettings.VibrationEnabled;
             PhaseEnabled = globalSettings.PhaseEnabled;
             HighResHDREnabled = globalSettings.HighResHDREnabled;
+            RecordMicrophone = globalSettings.RecordMicrophone;
+            WatermarkEnabled = globalSettings.WatermarkEnabled;
             UseWifiForMultiplayerEnabled = globalSettings.UseWifiForMultiplayerEnabled;
             ShowTechInfoEnabled = globalSettings.ShowTechInfoEnabled;
             RealityPreferences = globalSettings.RealityPreferences;
