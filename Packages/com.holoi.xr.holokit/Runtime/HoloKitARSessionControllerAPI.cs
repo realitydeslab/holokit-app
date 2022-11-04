@@ -107,6 +107,9 @@ namespace HoloKit {
         [DllImport("__Internal")]
         private static extern double HoloKitSDK_GetSystemUptime();
 
+        [DllImport("__Internal")]
+        private static extern void HoloKitSDK_ResetARSessionFirstFrame();
+
         [AOT.MonoPInvokeCallback(typeof(Action<int>))]
         private static void OnThermalStateChangedDelegate(int state)
         {
@@ -381,6 +384,11 @@ namespace HoloKit {
             {
                 return 0;
             }
+        }
+
+        public static void ResetARSessionFirstFrame()
+        {
+            HoloKitSDK_ResetARSessionFirstFrame();
         }
     }
 }

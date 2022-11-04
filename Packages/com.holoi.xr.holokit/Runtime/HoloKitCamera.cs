@@ -123,12 +123,14 @@ namespace HoloKit
 
         private void Start()
         {
+            HoloKitNFCSessionControllerAPI.OnNFCSessionCompleted += OnNFCSessionCompleted;
+            HoloKitARSessionControllerAPI.ResetARSessionFirstFrame();
+            HoloKitARSessionControllerAPI.SetVideoEnhancementMode(_videoEnhancementMode);
+
             _arCameraBackground = GetComponent<ARCameraBackground>();
             RenderMode = HoloKitRenderMode.Mono;
             OnRenderModeChanged();
-            HoloKitNFCSessionControllerAPI.OnNFCSessionCompleted += OnNFCSessionCompleted;
-            HoloKitARSessionControllerAPI.SetVideoEnhancementMode(_videoEnhancementMode);
-
+  
             _arSessionStartTime = Time.time;
         }
 
