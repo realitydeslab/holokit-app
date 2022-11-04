@@ -94,6 +94,7 @@ namespace Holoi.Reality.QuantumRealm
 
         private void OnStartedLoading()
         {
+            _vfx.SetBool("Interactable", true);
             if (_vibrationStarted)
             {
                 ResumeHapticsPlayer();
@@ -106,6 +107,7 @@ namespace Holoi.Reality.QuantumRealm
 
         private void OnStoppedLoading()
         {
+            _vfx.SetBool("Interactable", false);
             PauseHapticsPlayer();
         }
 

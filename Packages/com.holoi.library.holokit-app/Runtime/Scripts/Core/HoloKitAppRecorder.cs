@@ -119,13 +119,14 @@ namespace Holoi.Library.HoloKitApp
                 _cameraAudioListener = HoloKitCamera.Instance.GetComponent<AudioListener>();
                 yield return null;
             }
-            
 
             // Start recording
-            var sampleRate = _recordMicrophone ? AudioSettings.outputSampleRate : 0;
-            var channelCount = _recordMicrophone ? (int)AudioSettings.speakerMode : 0;
+            var sampleRate = _recordMicrophone ? AudioSettings.outputSampleRate : 24000;
+            var channelCount = _recordMicrophone ? (int)AudioSettings.speakerMode : 2;
+            //Debug.Log($"AudioSettings.outputSampleRate: {AudioSettings.outputSampleRate} and AudioSettings.speakerMode: {(int)AudioSettings.speakerMode}");
             var clock = new RealtimeClock();
-            _recorder = new HEVCRecorder(_videoWidth, _videoHeight, _frameRate, sampleRate, channelCount, audioBitRate: 96_000);
+            //_recorder = new HEVCRecorder(_videoWidth, _videoHeight, _frameRate, sampleRate, channelCount, audioBitRate: 96_000);
+            _recorder = new HEVCRecorder(_videoWidth, _videoHeight, _frameRate, sampleRate, channelCount);
             if (_watermarkEnabled)
             {
                 _watermarkInput = new WatermarkTextureInput(_recorder);
@@ -158,7 +159,6 @@ namespace Holoi.Library.HoloKitApp
             }
             else
             {
-                // TODO: Why the AudioListener doesn't work?
                 _audioInput = new AudioInput(_recorder, clock, _cameraAudioListener);
             }
         }
