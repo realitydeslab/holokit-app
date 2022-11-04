@@ -32,6 +32,11 @@ namespace Holoi.Library.ARUX
             _animator.Update(0);
         }
 
+        public void OnDisappear()
+        {
+            _animator.SetTrigger("Die");
+        }
+
         public void OnDeath()
         {
             _animator.SetTrigger("Die");
