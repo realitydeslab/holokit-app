@@ -388,7 +388,10 @@ namespace HoloKit {
 
         public static void ResetARSessionFirstFrame()
         {
-            HoloKitSDK_ResetARSessionFirstFrame();
+            if (HoloKitUtils.IsRuntime)
+            {
+                HoloKitSDK_ResetARSessionFirstFrame();
+            }
         }
     }
 }

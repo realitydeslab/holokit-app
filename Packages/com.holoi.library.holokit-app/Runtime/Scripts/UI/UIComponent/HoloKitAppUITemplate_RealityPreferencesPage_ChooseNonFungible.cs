@@ -8,14 +8,14 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public abstract class HoloKitAppUITemplate_RealityPreferencesPage_ChooseNonFungible : MonoBehaviour
     {
-        [Header("Artifact Collection Selector")]
+        [Header("Non-Fungible Collection Selector")]
         [SerializeField] private RectTransform _nonFungibleCollectionScrollRoot;
 
         [SerializeField] private HoloKitAppUIComponent_RealityPreferencesPage_NonFungibleCollectionTab _nonFungibleCollectionTabPrefab;
 
         protected NonFungibleCollection CurrentNonFungibleCollection;
 
-        [Header("Artifact Selector")]
+        [Header("Non-Fungible Selector")]
         [SerializeField] private TMP_Text _nonFungibleTokenId;
 
         [SerializeField] private TMP_Text _nonFungibleCollectionName;
@@ -26,7 +26,11 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private Sprite _nonFungibleDefaultImage;
 
+        [SerializeField] private HoloKitAppUIComponent_RealityPreferencesPage_NonFungibleSelectionIndicator _nonFungibleSelectionIndicator;
+
         private int _currentNonFungibleIndex = -1;
+
+        private const float CompleteLeanTweenDuration = 0.8f;
 
         private const float NonFungibleHorizontalScrollbarMovementSpeed = 400f;
 
@@ -72,44 +76,37 @@ namespace Holoi.Library.HoloKitApp.UI
             int preferencedNonfungibleIndex = GetPreferencedNonFungibleIndex();
             float value = preferencedNonfungibleIndex * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x;
             _nonFungibleScrollRoot.anchoredPosition = new Vector2(-value, _nonFungibleScrollRoot.anchoredPosition.y);
+            // Set the dots
+            _nonFungibleSelectionIndicator.Init(preferencedNonfungibleIndex, CurrentNonFungibleCollection.NonFungibles.Count);
         }
 
         private void Update()
         {
-            if (Input.touchCount > 0) { return; }
+            if (Input.touchCount > 0)
+            {
+                LeanTween.cancel(_nonFungibleScrollRoot);
+                return;
+            }
 
-            int step = Mathf.Abs(Mathf.RoundToInt(_nonFungibleScrollRoot.anchoredPosition.x / _nonFungibleSlotPrefab.rectTransform.sizeDelta.x));
+            if (LeanTween.isTweening(_nonFungibleScrollRoot)) { return; }
             float deviation = Mathf.Abs(_nonFungibleScrollRoot.anchoredPosition.x % _nonFungibleSlotPrefab.rectTransform.sizeDelta.x);
-            if (deviation != 0f)
+            if (deviation != 0)
             {
-                if (deviation < 30f)
-                {
-                    _nonFungibleScrollRoot.anchoredPosition = new Vector2(-step * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x,
-                                                                          _nonFungibleScrollRoot.anchoredPosition.y);
-                    return;
-                }
-
-                if (deviation > _nonFungibleSlotPrefab.rectTransform.sizeDelta.x / 2f)
-                {
-                    _nonFungibleScrollRoot.anchoredPosition -= new Vector2(NonFungibleHorizontalScrollbarMovementSpeed * Time.deltaTime,
-                                                                          _nonFungibleScrollRoot.anchoredPosition.y);
-                }
-                else
-                {
-                    _nonFungibleScrollRoot.anchoredPosition += new Vector2(NonFungibleHorizontalScrollbarMovementSpeed * Time.deltaTime,
-                                                                          _nonFungibleScrollRoot.anchoredPosition.y);
-                }
+                // We are not at the center position of an image
+                int step = Mathf.Abs(Mathf.RoundToInt(_nonFungibleScrollRoot.anchoredPosition.x / _nonFungibleSlotPrefab.rectTransform.sizeDelta.x));
+                float leanTweenDuration = deviation / _nonFungibleSlotPrefab.rectTransform.sizeDelta.x * CompleteLeanTweenDuration;
+                LeanTween.moveX(_nonFungibleScrollRoot, -step * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x, leanTweenDuration)
+                    .setEase(LeanTweenType.easeInOutSine)
+                    .setOnComplete(() =>
+                    {
+                        _currentNonFungibleIndex = step;
+                        _nonFungibleTokenId.text = "#" + CurrentNonFungibleCollection.NonFungibles[step].TokenId;
+                        // Set the dots
+                        _nonFungibleSelectionIndicator.UpdateIndex(_currentNonFungibleIndex);
+                        UpdateRealityPreferences(CurrentNonFungibleCollection.BundleId, CurrentNonFungibleCollection.NonFungibles[_currentNonFungibleIndex].TokenId);
+                    });
             }
-            else
-            {
-                if (step != _currentNonFungibleIndex)
-                {
-                    //Debug.Log($"Changed to step: {step}");
-                    _currentNonFungibleIndex = step;
-                    UpdateRealityPreferences(CurrentNonFungibleCollection.BundleId, CurrentNonFungibleCollection.NonFungibles[_currentNonFungibleIndex].TokenId);
-                    _nonFungibleTokenId.text = "#" + CurrentNonFungibleCollection.NonFungibles[step].TokenId;
-                }
-            }
+            // TODO: If the user swipe right onto the center of an image
         }
 
         private void OnNewTabSelected(NonFungibleCollection nonFungibleCollection)
@@ -130,11 +127,16 @@ namespace Holoi.Library.HoloKitApp.UI
 
             UpdateNonFungibleSelector(nonFungibleCollection);
 
-
             int coverNonFungibleIndex = nonFungibleCollection.GetNonFungibleIndex(nonFungibleCollection.CoverNonFungible.TokenId);
             float value = coverNonFungibleIndex * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x;
             _nonFungibleScrollRoot.anchoredPosition = new Vector2(-value, _nonFungibleScrollRoot.anchoredPosition.y);
-
+            // TODO: I don't know the reason, but if I didn't do this, the anchorPosition would be 0 on x
+            StartCoroutine(HoloKitAppUtils.WaitAndDo(0f, () =>
+            {
+                _nonFungibleScrollRoot.anchoredPosition = new Vector2(-value, _nonFungibleScrollRoot.anchoredPosition.y);
+            }));
+            // Set the dots
+            _nonFungibleSelectionIndicator.Init(coverNonFungibleIndex, CurrentNonFungibleCollection.NonFungibles.Count);
             UpdateRealityPreferences(nonFungibleCollection.BundleId, nonFungibleCollection.CoverNonFungible.TokenId);
         }
 
@@ -149,18 +151,18 @@ namespace Holoi.Library.HoloKitApp.UI
                 Destroy(_nonFungibleScrollRoot.GetChild(i).gameObject);
             }
 
-            foreach (var artifact in nonFungibleCollection.NonFungibles)
+            foreach (var nonFungible in nonFungibleCollection.NonFungibles)
             {
                 Image slotInstance = Instantiate(_nonFungibleSlotPrefab);
                 slotInstance.transform.SetParent(_nonFungibleScrollRoot);
                 slotInstance.transform.localScale = Vector3.one;
-                if (artifact.Image == null)
+                if (nonFungible.Image == null)
                 {
                     slotInstance.sprite = _nonFungibleDefaultImage;
                 }
                 else
                 {
-                    slotInstance.sprite = artifact.Image;
+                    slotInstance.sprite = nonFungible.Image;
                 }
             }
         }
