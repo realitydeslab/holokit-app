@@ -51,7 +51,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
 
             // Enter Star Mode
-            if (HoloKitApp.Instance.GlobalSettings.InstructionEnabled)
+            if (HoloKitApp.Instance.GlobalSettings.InstructionEnabled && HoloKitUtils.IsRuntime)
             {
                 HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_GettingStarted");
             }

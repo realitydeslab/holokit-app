@@ -48,9 +48,8 @@ namespace Holoi.Library.MOFABase
         // The first ulong is the attackerClientId and the second is the ownerClientId
         public static event Action<ulong, ulong> OnDead;
 
-        private void Start()
+        private void Awake()
         {
-            _audioSource = GetComponent<AudioSource>();
             for (int i = 0; i < transform.childCount; i++)
             {
                 if (transform.GetChild(i).TryGetComponent<LifeShieldFragment>(out var fragment))
@@ -58,6 +57,7 @@ namespace Holoi.Library.MOFABase
                     _fragments.Add(fragment.Area, fragment);
                 } 
             }
+            _audioSource = GetComponent<AudioSource>();
         }
 
         public override void OnNetworkSpawn()

@@ -88,7 +88,6 @@ namespace Holoi.Library.MOFABase
 
         protected virtual void Start()
         {
-            // We need to respawn life shields when they are destroyed.
             LifeShield.OnDead += OnLifeShieldDead;
         }
 

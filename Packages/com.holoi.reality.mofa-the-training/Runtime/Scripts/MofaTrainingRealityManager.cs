@@ -39,15 +39,6 @@ namespace Holoi.Reality.MOFATheTraining
             MofaWatchConnectivityAPI.OnStartRoundMessageReceived += OnStartRoundMessageReceived;
         }
 
-        public override void OnDestroy()
-        {
-            base.OnDestroy();
-
-            OnPhaseChanged -= OnPhaseChangedFunc;
-            HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
-            MofaWatchConnectivityAPI.OnStartRoundMessageReceived -= OnStartRoundMessageReceived;
-        }
-
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -58,6 +49,15 @@ namespace Holoi.Reality.MOFATheTraining
                 var placementIndicatorInitialPos = HoloKitUtils.IsRuntime ? Vector3.zero : new Vector3(0f, -1f, 5f);
                 _placementIndicator = Instantiate(_placementIndicatorPrefab, placementIndicatorInitialPos, Quaternion.identity);
             }
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            OnPhaseChanged -= OnPhaseChangedFunc;
+            HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
+            MofaWatchConnectivityAPI.OnStartRoundMessageReceived -= OnStartRoundMessageReceived;
         }
 
         private void SpawnMofaPlayerAI()
