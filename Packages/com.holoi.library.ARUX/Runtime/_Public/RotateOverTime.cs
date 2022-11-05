@@ -40,7 +40,7 @@ namespace Holoi.Library.ARUX
             }
 
             //transform.rotation = _rotationOffset * Quaternion.Euler(_angle.x, _angle.y, _angle.z);
-            transform.rotation = Quaternion.Euler(_angle.x, _angle.y, _angle.z);
+            transform.rotation = Quaternion.Euler(_angle);
         }
     }
 }
