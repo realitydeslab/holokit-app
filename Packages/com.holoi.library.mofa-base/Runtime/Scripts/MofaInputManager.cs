@@ -95,7 +95,7 @@ namespace Holoi.Library.MOFABase
 
         private void SetupSpells()
         {
-            var preferencedMofaSpell = HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject(null);
+            var preferencedMofaSpell = HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject();
             
             foreach (var spell in MofaBaseRealityManager.SpellList.List)
             {

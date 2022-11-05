@@ -30,6 +30,8 @@ namespace Holoi.Reality.QuantumRealm
         [Header("Hand")]
         public Transform HandTransform; // This is networked
 
+        [SerializeField] private GameObject _handVisual;
+
         [Header("Apple")]
         public CoreHapticsManager CoreHapticsManager;
 
@@ -47,6 +49,8 @@ namespace Holoi.Reality.QuantumRealm
         // We make the y position of ARRaycastPoint slightly higher than the ground plane,
         // so the indicator is not occluded by the ground plane
         private const float ARRaycastPointGroundOffset = 0.05f;
+
+        private NetworkVariable<bool> _isHostHandValid = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         [Header("Events")]
         public UnityEvent OnARRaycastManagerFoundPlane;
@@ -86,6 +90,25 @@ namespace Holoi.Reality.QuantumRealm
                 // The networked hand is took control by the host
                 HandTransform.GetComponent<FollowTargetController>().MovementType = MovementType.None;
             }
+            HoloKitHandTracker.OnHandValidityChanged += OnHandValidityChanged;
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+            _isHostHandValid.OnValueChanged += OnIsHostHandValidValueChanged;
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            _isHostHandValid.OnValueChanged -= OnIsHostHandValidValueChanged;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            HoloKitHandTracker.OnHandValidityChanged -= OnHandValidityChanged;
         }
 
         public void OnSessionStarted()
@@ -158,6 +181,31 @@ namespace Holoi.Reality.QuantumRealm
                     _arRaycastPoint.SetActive(false);
                     OnARRaycastManagerLostPlane?.Invoke();
                 }
+            }
+        }
+
+        private void OnHandValidityChanged(bool valid)
+        {
+            if (IsServer)
+            {
+                _isHostHandValid.Value = valid;
+            }
+        }
+
+        private void OnIsHostHandValidValueChanged(bool oldValue, bool newValue)
+        {
+            if (!oldValue && newValue)
+            {
+                LeanTween.cancel(_handVisual);
+                LeanTween.alpha(_handVisual, 1f, 1f);
+                return;
+            }
+
+            if (oldValue && !newValue)
+            {
+                LeanTween.cancel(_handVisual);
+                LeanTween.alpha(_handVisual, 0f, 1f);
+                return;
             }
         }
     }

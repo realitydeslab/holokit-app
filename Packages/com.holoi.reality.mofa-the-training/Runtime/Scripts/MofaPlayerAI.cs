@@ -21,6 +21,8 @@ namespace Holoi.Reality.MOFATheTraining
 
         [SerializeField] private RuntimeAnimatorController _mofaAvatarRuntimeAnimatorController;
 
+        [SerializeField] private MagicSchool _magicSchool;
+
         private readonly NetworkVariable<Vector2> _animationVector = new(Vector2.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         private Animator _animator;
@@ -197,7 +199,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             foreach (var spell in ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).SpellList.List)
             {
-                if (spell.MagicSchool.TokenId.Equals("0"))
+                if (spell.MagicSchool.TokenId.Equals(_magicSchool.TokenId))
                 {
                     if (spell.SpellType == SpellType.Basic)
                     {

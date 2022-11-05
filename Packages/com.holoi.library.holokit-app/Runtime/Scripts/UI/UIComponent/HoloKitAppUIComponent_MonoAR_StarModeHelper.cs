@@ -25,6 +25,7 @@ namespace Holoi.Library.HoloKitApp.UI
         private void OnDisable()
         {
             LeanTween.cancel(_arrow);
+            gameObject.SetActive(false);
         }
 
         private void StartMovingUpward()

@@ -23,7 +23,12 @@ namespace Holoi.Library.HoloKitApp.UI
         protected override void OnTriggerred()
         {
             base.OnTriggerred();
-            Screen.orientation = ScreenOrientation.Portrait;
+            // Stop the recording if there is one
+            if (HoloKitApp.Instance.Recorder.IsRecording)
+            {
+                HoloKitApp.Instance.Recorder.StopRecording();
+                Debug.Log("Recording was stopped due to a render mode switch");
+            }
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitAppUIEventManager.OnRenderModeChanged?.Invoke(HoloKit.HoloKitRenderMode.Mono);
         }

@@ -50,11 +50,15 @@ namespace Holoi.Library.HoloKitApp
 
         private const float WatermarkPortraitPosYRatio = 0.1066f;
 
+        private const float WatermarkPortraitWidthRatio = 0.05f;
+
         private const float WatermarkPortraitHeightRatio = 0.0592f;
 
         private const float WatermarkLandscapePosXRatio = 0.0687f;
 
         private const float WatermarkLandscapePosYRatio = 0.1795f;
+
+        private const float WatermarkLandscapeWidthRatio = 0.05f;
 
         private const float WatermarkLandscapeHeightRatio = 0.1282f;
 
@@ -64,7 +68,7 @@ namespace Holoi.Library.HoloKitApp
             {
                 _recordCamera = HoloKitCamera.Instance.GetComponent<Camera>();
 
-                if (HoloKitApp.Instance.GlobalSettings.PhaseEnabled && HoloKitApp.Instance.CurrentReality.IsPhaseEnabled())
+                if (HoloKitApp.Instance.GlobalSettings.PhaseEnabled && HoloKitApp.Instance.CurrentReality.IsPhaseRequired())
                 {
                     _recordMicrophone = false;
                 }
@@ -189,6 +193,11 @@ namespace Holoi.Library.HoloKitApp
                 Microphone.End(null);
                 Destroy(_microphoneAudioSource);
             }
+
+            // Release inputs
+            _watermarkInput = null;
+            _cameraInput = null;
+            _audioInput = null;
         }
     }
 }

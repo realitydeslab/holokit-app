@@ -93,7 +93,31 @@ namespace Holoi.AssetFoundation
         {
             foreach (var realityTag in RealityTags)
             {
-                if (realityTag.BundleId.Equals("com.holoi.asset-foundation.support-multiplayer"))
+                if (realityTag.BundleId.Equals("com.holoi.asset-foundation.multiplayer"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsSpectatorViewSupported()
+        {
+            foreach (var realityTag in RealityTags)
+            {
+                if (realityTag.BundleId.Equals("com.holoi.asset-foundation.spectator-view"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsPuppeteerSupported()
+        {
+            foreach (var realityTag in RealityTags)
+            {
+                if (realityTag.BundleId.Equals("com.holoi.asset-foundation.puppeteer"))
                 {
                     return true;
                 }
@@ -113,11 +137,23 @@ namespace Holoi.AssetFoundation
             return false;
         }
 
-        public bool IsPhaseEnabled()
+        public bool IsPhaseRequired()
         {
             foreach (var realityTag in RealityTags)
             {
                 if (realityTag.BundleId.Equals("com.holoi.asset-foundation.phase"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsHapticsRequired()
+        {
+            foreach (var realityTag in RealityTags)
+            {
+                if (realityTag.BundleId.Equals("com.holoi.asset-foundation.haptics"))
                 {
                     return true;
                 }

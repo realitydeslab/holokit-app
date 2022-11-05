@@ -28,9 +28,9 @@ namespace Holoi.Library.MOFABase
 
         public int MaxUseCount;
 
-        private void Start()
-        {
-            Debug.Log($"[Spell] {Name} spawned with ownership {GetComponent<Unity.Netcode.NetworkObject>().OwnerClientId}");
-        }
+        //private void Start()
+        //{
+        //    Debug.Log($"[Spell] {Name} spawned with ownership {GetComponent<Unity.Netcode.NetworkObject>().OwnerClientId}");
+        //}
     }
 }

@@ -15,7 +15,10 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnDisable()
         {
-            Camera.main.backgroundColor = new Color(1f, 1f, 1f, 0f);
+            if (Camera.main != null)
+            {
+                Camera.main.backgroundColor = new Color(1f, 1f, 1f, 0f);
+            }
         }
 
         public void OnBackButtonPressed()
