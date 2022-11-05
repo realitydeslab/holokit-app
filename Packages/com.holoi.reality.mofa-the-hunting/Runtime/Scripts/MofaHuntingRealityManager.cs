@@ -7,7 +7,7 @@ using Holoi.Library.MOFABase;
 
 namespace Holoi.Reality.MOFATheHunt
 {
-    public class MofaHuntRealityManager : MofaBaseRealityManager
+    public class MofaHuntingRealityManager : MofaBaseRealityManager
     {
         [Header("MOFA The Hunt")]
         [SerializeField] private ARPlaneManager _arPlaneManager;
