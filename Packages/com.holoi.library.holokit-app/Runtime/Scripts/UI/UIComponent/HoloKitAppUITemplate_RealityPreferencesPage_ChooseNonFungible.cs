@@ -28,11 +28,13 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private HoloKitAppUIComponent_RealityPreferencesPage_NonFungibleSelectionIndicator _nonFungibleSelectionIndicator;
 
+        [SerializeField] private RectTransform _nonFungibleImageArea;
+
+        private bool _isTouching;
+
         private int _currentNonFungibleIndex = -1;
 
         private const float CompleteLeanTweenDuration = 0.8f;
-
-        private const float NonFungibleHorizontalScrollbarMovementSpeed = 400f;
 
         protected abstract List<NonFungibleCollection> GetCompatibleNonFungibleCollectionList();
 
@@ -41,6 +43,11 @@ namespace Holoi.Library.HoloKitApp.UI
         protected abstract int GetPreferencedNonFungibleIndex();
 
         protected abstract void UpdateRealityPreferences(string artifactCollectionId, string artifactTokenId);
+
+        private void OnEnable()
+        {
+            _isTouching = false;
+        }
 
         private void Start()
         {
@@ -84,29 +91,52 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             if (Input.touchCount > 0)
             {
-                LeanTween.cancel(_nonFungibleScrollRoot);
-                return;
-            }
-
-            if (LeanTween.isTweening(_nonFungibleScrollRoot)) { return; }
-            float deviation = Mathf.Abs(_nonFungibleScrollRoot.anchoredPosition.x % _nonFungibleSlotPrefab.rectTransform.sizeDelta.x);
-            if (deviation != 0)
-            {
-                // We are not at the center position of an image
-                int step = Mathf.Abs(Mathf.RoundToInt(_nonFungibleScrollRoot.anchoredPosition.x / _nonFungibleSlotPrefab.rectTransform.sizeDelta.x));
-                float leanTweenDuration = deviation / _nonFungibleSlotPrefab.rectTransform.sizeDelta.x * CompleteLeanTweenDuration;
-                LeanTween.moveX(_nonFungibleScrollRoot, -step * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x, leanTweenDuration)
-                    .setEase(LeanTweenType.easeInOutSine)
-                    .setOnComplete(() =>
+                var touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Began)
+                {
+                    if (!IsInsideInputArea(touch.position))
                     {
-                        _currentNonFungibleIndex = step;
-                        _nonFungibleTokenId.text = "#" + CurrentNonFungibleCollection.NonFungibles[step].TokenId;
-                        // Set the dots
-                        _nonFungibleSelectionIndicator.UpdateIndex(_currentNonFungibleIndex);
-                        UpdateRealityPreferences(CurrentNonFungibleCollection.BundleId, CurrentNonFungibleCollection.NonFungibles[_currentNonFungibleIndex].TokenId);
-                    });
+                        _isTouching = false;
+                        return;
+                    }
+                    _isTouching = true;
+                }
+                else if (touch.phase == TouchPhase.Ended)
+                {
+                    if (!_isTouching) { return; }
+
+                    _isTouching = false;
+                    LeanTween.cancel(_nonFungibleScrollRoot);
+                    float deviation = _nonFungibleScrollRoot.anchoredPosition.x % _nonFungibleSlotPrefab.rectTransform.sizeDelta.x;
+                    int step = Mathf.RoundToInt(-_nonFungibleScrollRoot.anchoredPosition.x / _nonFungibleSlotPrefab.rectTransform.sizeDelta.x);
+                    if (deviation == 0f)
+                    {
+                        OnCurrentNonFungibleChanged(step);
+                    }
+                    else
+                    {
+                        float diff = Mathf.Abs(_nonFungibleScrollRoot.anchoredPosition.x + step * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x);
+                        float leanTweenDuration = diff / _nonFungibleSlotPrefab.rectTransform.sizeDelta.x * CompleteLeanTweenDuration;
+                        LeanTween.moveX(_nonFungibleScrollRoot, -step * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x, leanTweenDuration)
+                            .setEase(LeanTweenType.easeInOutSine)
+                            .setOnComplete(() =>
+                            {
+                                OnCurrentNonFungibleChanged(step);
+                            });
+                    }
+                }
             }
-            // TODO: If the user swipe right onto the center of an image
+        }
+
+        private void OnCurrentNonFungibleChanged(int index)
+        {
+            if (_currentNonFungibleIndex == index) { return; }
+
+            _currentNonFungibleIndex = index;
+            _nonFungibleTokenId.text = "#" + CurrentNonFungibleCollection.NonFungibles[index].TokenId;
+            // Set the dots
+            _nonFungibleSelectionIndicator.UpdateIndex(_currentNonFungibleIndex);
+            UpdateRealityPreferences(CurrentNonFungibleCollection.BundleId, CurrentNonFungibleCollection.NonFungibles[_currentNonFungibleIndex].TokenId);
         }
 
         private void OnNewTabSelected(NonFungibleCollection nonFungibleCollection)
@@ -164,6 +194,22 @@ namespace Holoi.Library.HoloKitApp.UI
                 {
                     slotInstance.sprite = nonFungible.Image;
                 }
+            }
+        }
+
+        private bool IsInsideInputArea(Vector2 position)
+        {
+            if (position.x > (_nonFungibleImageArea.position.x - _nonFungibleImageArea.sizeDelta.x / 2f)
+                && position.x < (_nonFungibleImageArea.position.x + _nonFungibleImageArea.sizeDelta.x / 2f)
+                &&
+                position.y > (_nonFungibleImageArea.position.y - _nonFungibleImageArea.sizeDelta.y / 2f)
+                && position.y < (_nonFungibleImageArea.position.y + _nonFungibleImageArea.sizeDelta.y / 2f))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }

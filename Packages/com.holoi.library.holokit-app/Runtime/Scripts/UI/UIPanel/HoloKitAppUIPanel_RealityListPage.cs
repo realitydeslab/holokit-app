@@ -187,7 +187,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
         }
 
-        private bool IsInsideInputArea(Vector3 position)
+        private bool IsInsideInputArea(Vector2 position)
         {
             if (position.x > (_inputArea.position.x - _inputArea.sizeDelta.x / 2f)
                 && position.x < (_inputArea.position.x + _inputArea.sizeDelta.x / 2f)
