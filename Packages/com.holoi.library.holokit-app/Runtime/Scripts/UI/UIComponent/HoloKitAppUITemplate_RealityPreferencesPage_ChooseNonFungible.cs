@@ -32,9 +32,15 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private bool _isTouching;
 
+        private Vector3 _touchBeganPosition;
+
+        private float _touchBeganTime;
+
         private int _currentNonFungibleIndex = -1;
 
-        private const float CompleteLeanTweenDuration = 0.8f;
+        private const float CompleteLeanTweenDuration = 0.5f;
+
+        private const float SwiftSwipeThreshold = 1200f;
 
         protected abstract List<NonFungibleCollection> GetCompatibleNonFungibleCollectionList();
 
@@ -75,11 +81,11 @@ namespace Holoi.Library.HoloKitApp.UI
             }
             UpdateNonFungibleSelector(CurrentNonFungibleCollection);
             // Scroll to the preferenced avatar image
-            int preferencedNonfungibleIndex = GetPreferencedNonFungibleIndex();
-            float value = preferencedNonfungibleIndex * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x;
+            _currentNonFungibleIndex = GetPreferencedNonFungibleIndex();
+            float value = _currentNonFungibleIndex * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x;
             _nonFungibleScrollRoot.anchoredPosition = new Vector2(-value, _nonFungibleScrollRoot.anchoredPosition.y);
             // Set the dots
-            _nonFungibleSelectionIndicator.Init(preferencedNonfungibleIndex, CurrentNonFungibleCollection.NonFungibles.Count);
+            _nonFungibleSelectionIndicator.Init(_currentNonFungibleIndex, CurrentNonFungibleCollection.NonFungibles.Count);
         }
 
         private void Update()
@@ -95,6 +101,8 @@ namespace Holoi.Library.HoloKitApp.UI
                         return;
                     }
                     _isTouching = true;
+                    _touchBeganPosition = touch.position;
+                    _touchBeganTime = Time.time;
                 }
                 else if (touch.phase == TouchPhase.Ended)
                 {
@@ -102,33 +110,42 @@ namespace Holoi.Library.HoloKitApp.UI
 
                     _isTouching = false;
                     LeanTween.cancel(_nonFungibleScrollRoot);
-                    float deviation = _nonFungibleScrollRoot.anchoredPosition.x % _nonFungibleSlotPrefab.rectTransform.sizeDelta.x;
-                    int step = Mathf.RoundToInt(-_nonFungibleScrollRoot.anchoredPosition.x / _nonFungibleSlotPrefab.rectTransform.sizeDelta.x);
-                    if (deviation == 0f)
+
+                    // If this is a swift swipe
+                    float swipeX = touch.position.x - _touchBeganPosition.x;
+                    if (Mathf.Abs(swipeX) / (Time.time - _touchBeganTime) > SwiftSwipeThreshold)
                     {
-                        OnCurrentNonFungibleChanged(step);
+                        //Debug.Log("This is a swift swipe");
+                        _currentNonFungibleIndex = swipeX > 0 ? _currentNonFungibleIndex - 1 : _currentNonFungibleIndex + 1;
+                        if (_currentNonFungibleIndex < 0)
+                        {
+                            _currentNonFungibleIndex = 0;
+                        }
+                        else if (_currentNonFungibleIndex > CurrentNonFungibleCollection.NonFungibles.Count - 1)
+                        {
+                            _currentNonFungibleIndex = CurrentNonFungibleCollection.NonFungibles.Count - 1;
+                        }
                     }
                     else
                     {
-                        float diff = Mathf.Abs(_nonFungibleScrollRoot.anchoredPosition.x + step * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x);
-                        float leanTweenDuration = diff / _nonFungibleSlotPrefab.rectTransform.sizeDelta.x * CompleteLeanTweenDuration;
-                        LeanTween.moveX(_nonFungibleScrollRoot, -step * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x, leanTweenDuration)
-                            .setEase(LeanTweenType.easeInOutSine)
-                            .setOnComplete(() =>
-                            {
-                                OnCurrentNonFungibleChanged(step);
-                            });
+                        //Debug.Log("This is not a swift swipe");
+                        _currentNonFungibleIndex = Mathf.RoundToInt(-_nonFungibleScrollRoot.anchoredPosition.x / _nonFungibleSlotPrefab.rectTransform.sizeDelta.x);
                     }
+                    float diff = Mathf.Abs(_nonFungibleScrollRoot.anchoredPosition.x + _currentNonFungibleIndex * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x);
+                    float leanTweenDuration = diff / _nonFungibleSlotPrefab.rectTransform.sizeDelta.x * CompleteLeanTweenDuration;
+                    LeanTween.moveX(_nonFungibleScrollRoot, -_currentNonFungibleIndex * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x, leanTweenDuration)
+                        .setEase(LeanTweenType.easeInQuad)
+                        .setOnComplete(() =>
+                        {
+                            OnCurrentNonFungibleChanged();
+                        });
                 }
             }
         }
 
-        private void OnCurrentNonFungibleChanged(int index)
+        private void OnCurrentNonFungibleChanged()
         {
-            if (_currentNonFungibleIndex == index) { return; }
-
-            _currentNonFungibleIndex = index;
-            _nonFungibleTokenId.text = "#" + CurrentNonFungibleCollection.NonFungibles[index].TokenId;
+            _nonFungibleTokenId.text = "#" + CurrentNonFungibleCollection.NonFungibles[_currentNonFungibleIndex].TokenId;
             // Set the dots
             _nonFungibleSelectionIndicator.UpdateIndex(_currentNonFungibleIndex);
             UpdateRealityPreferences(CurrentNonFungibleCollection.BundleId, CurrentNonFungibleCollection.NonFungibles[_currentNonFungibleIndex].TokenId);
@@ -152,8 +169,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
             UpdateNonFungibleSelector(nonFungibleCollection);
 
-            int coverNonFungibleIndex = nonFungibleCollection.GetNonFungibleIndex(nonFungibleCollection.CoverNonFungible.TokenId);
-            float value = coverNonFungibleIndex * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x;
+            _currentNonFungibleIndex = nonFungibleCollection.GetNonFungibleIndex(nonFungibleCollection.CoverNonFungible.TokenId);
+            float value = _currentNonFungibleIndex * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x;
             _nonFungibleScrollRoot.anchoredPosition = new Vector2(-value, _nonFungibleScrollRoot.anchoredPosition.y);
             // TODO: I don't know the reason, but if I didn't do this, the anchorPosition would be 0 on x
             StartCoroutine(HoloKitAppUtils.WaitAndDo(0f, () =>
@@ -161,7 +178,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 _nonFungibleScrollRoot.anchoredPosition = new Vector2(-value, _nonFungibleScrollRoot.anchoredPosition.y);
             }));
             // Set the dots
-            _nonFungibleSelectionIndicator.Init(coverNonFungibleIndex, CurrentNonFungibleCollection.NonFungibles.Count);
+            _nonFungibleSelectionIndicator.Init(_currentNonFungibleIndex, CurrentNonFungibleCollection.NonFungibles.Count);
             UpdateRealityPreferences(nonFungibleCollection.BundleId, nonFungibleCollection.CoverNonFungible.TokenId);
         }
 
