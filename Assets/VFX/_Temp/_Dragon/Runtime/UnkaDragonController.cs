@@ -7,8 +7,10 @@ public class UnkaDragonController : MonoBehaviour
     [Header("Attack Behaviour")]
     [SerializeField] Animator _aniamtor;
     [SerializeField] GameObject _fireBallPrefab;
-    [SerializeField] Transform _InitPoint;
+    [SerializeField] GameObject _fireBreathPrefab;
+    [SerializeField] Transform _powerInitPoint;
     GameObject _fireBallInstance;
+    GameObject _fireBreathInstance;
     [SerializeField] Transform _enemyPoint;
     float _vX=0;
     float _vZ=0;
@@ -21,7 +23,7 @@ public class UnkaDragonController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        StartCoroutine(WaitAndFire());
     }
 
     // Update is called once per frame
@@ -82,8 +84,8 @@ public class UnkaDragonController : MonoBehaviour
     {
         Debug.Log("OnFireBallAttack");
         _fireBallInstance = Instantiate(_fireBallPrefab);
-        _fireBallInstance.transform.position = _InitPoint.position;
-        var dir = (_enemyPoint==null?new Vector3(0,-2,2):_enemyPoint.position - _InitPoint.position).normalized;
+        _fireBallInstance.transform.position = _powerInitPoint.position;
+        var dir = (_enemyPoint==null?new Vector3(0,-2,2):_enemyPoint.position - _powerInitPoint.position).normalized;
         var speed = dir * 3f;
         _fireBallInstance.GetComponent<Rigidbody>().velocity = speed;
     }
@@ -91,21 +93,32 @@ public class UnkaDragonController : MonoBehaviour
     public void OnFireBreathAttack()
     {
         Debug.Log("OnFireBreathAttack");
-        //_fireBallInstance = Instantiate(_fireBallPrefab);
-        //_fireBallInstance.transform.position = _InitPoint.position;
+        _fireBreathInstance = Instantiate(_fireBreathPrefab);
+        _fireBreathInstance.GetComponent<FireBreathController>()._followPoint = _powerInitPoint;
+        //_fireBreathInstance.transform.position = _powerInitPoint.position;
+        //_fireBallInstance.transform.rotation = _powerInitPoint.rotation;
         //var dir = (_enemyPoint == null ? new Vector3(0, -2, 2) : _enemyPoint.position - _InitPoint.position).normalized;
         //var speed = dir * 3f;
         //_fireBallInstance.GetComponent<Rigidbody>().velocity = speed;
     }
 
-    private void OnDrawGizmos()
-    {
-        var dir = (_enemyPoint == null ? new Vector3(0, -2, 2) : _enemyPoint.position - _InitPoint.position).normalized;
-        Debug.DrawRay(_InitPoint.position, dir*10f, Color.red);
-    }
+    //private void OnDrawGizmos()
+    //{
+    //    var dir = (_enemyPoint == null ? new Vector3(0, -2, 2) : _enemyPoint.position - _powerInitPoint.position).normalized;
+    //    Debug.DrawRay(_powerInitPoint.position, dir*10f, Color.red);
+    //}
 
     public void PlaySound()
     {
 
+    }
+
+    IEnumerator WaitAndFire()
+    {
+        FireBall = true;
+        yield return new WaitForSeconds(4.5f);
+        FireBreath = true;
+        yield return new WaitForSeconds(4.5f);
+        StartCoroutine(WaitAndFire());
     }
 }
