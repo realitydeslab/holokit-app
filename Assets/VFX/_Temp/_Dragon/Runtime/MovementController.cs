@@ -17,13 +17,12 @@ public class MovementController : MonoBehaviour
     [SerializeField] float _attractDistance = 5f;
 
     Vector3 _velocity = new();
-    float _angluarVelocity = new();
+    float _angluarVelocity = new(); // only in y axis cause it's a flying vreature
     Vector3 _steer = new();
-    Vector3 _lastVelocity = new();
     Vector3 _acceleration = new();
     Vector3 nextAngle = new();
+
     // debug
-    //Vector3 fixedTargetPosition;
     Vector3 realDesired;
 
     void Start()
@@ -108,33 +107,6 @@ public class MovementController : MonoBehaviour
 
         var angle = Vector3.SignedAngle(realDirection, transform.forward, Vector3.up);
 
-        var angle2 = Vector3.SignedAngle(_velocity, transform.forward, Vector3.up);
-
-        if (Mathf.Abs(angle2) > 90 * Time.deltaTime)
-        {
-            //Debug.Log(" too much rotation");
-            //transform.Rotate(0.0f, angle2 /Mathf.Abs(angle2) * 30 * Time.deltaTime, 0.0f, Space.World);
-        }
-        else
-        {
-            //transform.Rotate(0.0f, angle2 , 0.0f, Space.World);
-        }
-
-        var velocity = transform.InverseTransformVector(_velocity);
-
-        Debug.DrawRay(transform.position, velocity / Time.deltaTime * 10f, Color.red);
-
-        //if (_velocity.z >= 0)
-        //{
-        //    transform.LookAt(transform.position + transform.forward + _velocity);
-        //    //Debug.Log("align direction");
-        //}
-        //else
-        //{
-        //    transform.LookAt(transform.position + transform.forward - _velocity);
-        //    //Debug.Log("reverse direction");
-        //}
-
         var absAngle = Mathf.Abs(angle);
         var m = absAngle / 180;
         m = Mathf.Clamp01(m * 8);
@@ -154,8 +126,7 @@ public class MovementController : MonoBehaviour
                 if (_angluarVelocity > 0) _angluarVelocity = 0;
             }
         }
-        else
-        if (angle > 0)
+        else if (angle > 0)
         {
             Debug.Log($">0 with: {angle}");
 
@@ -172,35 +143,12 @@ public class MovementController : MonoBehaviour
             nextAngle -= Vector3.up * _angluarVelocity * Time.deltaTime;
         }
 
-
-
-        //Debug.Log($"delta with: {Vector3.up * _angluarVelocity}");
-
         transform.rotation = Quaternion.Euler(nextAngle);
-
-        //if (Mathf.Abs(angle) > 90f)
-        //{
-        //    Debug.Log("reverse direction");
-        //    transform.LookAt(transform.position + transform.forward  - _velocity);
-        //}
-        //else
-        //{
-        //    Debug.Log("align direction");
-
-        //    transform.LookAt(transform.position + transform.forward + _velocity);
-        //}
     }
 
     void AnimationUpdate()
     {
         var velocity = transform.InverseTransformVector(_velocity);
-        var steer = transform.InverseTransformVector(_steer);
-
-        var realDesiredLocal = Limit(realDesired, _maxSpeed);
-        realDesiredLocal = transform.InverseTransformVector(realDesiredLocal);
-
-        //Debug.Log(velocity.x);
-        //Debug.Log(velocity.z);
 
         //Debug.DrawRay(transform.position, velocity.normalized + velocity / Time.deltaTime, Color.blue);
 
