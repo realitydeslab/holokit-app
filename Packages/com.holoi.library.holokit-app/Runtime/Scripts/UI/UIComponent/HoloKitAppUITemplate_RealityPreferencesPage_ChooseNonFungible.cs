@@ -44,11 +44,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         protected abstract void UpdateRealityPreferences(string artifactCollectionId, string artifactTokenId);
 
-        private void OnEnable()
-        {
-            _isTouching = false;
-        }
-
         private void Start()
         {
             var compatibleNonFungibleCollectionList = GetCompatibleNonFungibleCollectionList();
