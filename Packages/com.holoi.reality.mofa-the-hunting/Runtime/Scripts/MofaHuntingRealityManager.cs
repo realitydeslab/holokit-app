@@ -5,11 +5,11 @@ using UnityEngine.XR.ARFoundation;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.MOFABase;
 
-namespace Holoi.Reality.MOFATheHunt
+namespace Holoi.Reality.MOFATheHunting
 {
     public class MofaHuntingRealityManager : MofaBaseRealityManager
     {
-        [Header("MOFA The Hunt")]
+        [Header("MOFA The Hunting")]
         [SerializeField] private ARPlaneManager _arPlaneManager;
 
         [SerializeField] private ARRaycastManager _arRaycastManager;
