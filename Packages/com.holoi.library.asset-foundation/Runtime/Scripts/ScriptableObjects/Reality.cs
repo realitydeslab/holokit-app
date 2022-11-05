@@ -12,6 +12,7 @@ namespace Holoi.AssetFoundation
 
         public string DisplayName;
 
+        [TextArea]
         public string Description;
 
         public string Author;

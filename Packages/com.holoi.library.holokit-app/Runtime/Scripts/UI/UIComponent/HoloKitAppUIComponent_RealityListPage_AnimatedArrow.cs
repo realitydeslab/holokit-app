@@ -23,12 +23,14 @@ namespace Holoi.Library.HoloKitApp.UI
         private void StartMoveForward()
         {
             LeanTween.moveLocalX(_arrow, -MovementDist, MovementDuration)
+                .setEase(LeanTweenType.linear)
                 .setOnComplete(StartMoveBackward);
         }
 
         private void StartMoveBackward()
         {
             LeanTween.moveLocalX(_arrow, 0f, MovementDuration)
+                .setEase(LeanTweenType.linear)
                 .setOnComplete(StartMoveForward);
         }
     }
