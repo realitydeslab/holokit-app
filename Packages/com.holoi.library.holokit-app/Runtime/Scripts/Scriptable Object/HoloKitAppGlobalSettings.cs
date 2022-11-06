@@ -143,7 +143,67 @@ namespace Holoi.Library.HoloKitApp
         {
             foreach (var reality in GetAllRealities())
             {
-                if (!RealityPreferences.ContainsKey(reality.BundleId))
+                if (RealityPreferences.ContainsKey(reality.BundleId))
+                {
+                    bool foundAvatarCollection = false;
+                    MetaAvatarCollection preferencedAvatarCollection = null;
+                    foreach (var avatarCollection in AvatarCollectionList.List)
+                    {
+                        if (avatarCollection.BundleId.Equals(RealityPreferences[reality.BundleId].MetaAvatarCollectionBundleId))
+                        {
+                            preferencedAvatarCollection = avatarCollection;
+                            foundAvatarCollection = true;
+                            break;
+                        }
+                    }
+                    if (!foundAvatarCollection)
+                    {
+                        return false;
+                    }
+                    bool foundAvatar = false;
+                    foreach (var avatar in preferencedAvatarCollection.MetaAvatars)
+                    {
+                        if (avatar.TokenId.Equals(RealityPreferences[reality.BundleId].MetaAvatarTokenId))
+                        {
+                            foundAvatar = true;
+                            break;
+                        }
+                    }
+                    if (!foundAvatar)
+                    {
+                        return false;
+                    }
+
+                    bool foundObjectCollection = false;
+                    MetaObjectCollection preferencedObjectCollection = null;
+                    foreach (var objectCollection in ObjectCollectionList.List)
+                    {
+                        if (objectCollection.BundleId.Equals(RealityPreferences[reality.BundleId].MetaObjectCollectionBundleId))
+                        {
+                            preferencedObjectCollection = objectCollection;
+                            foundObjectCollection = true;
+                            break;
+                        }
+                    }
+                    if (!foundObjectCollection)
+                    {
+                        return false;
+                    }
+                    bool foundObject = false;
+                    foreach (var metaObject in preferencedObjectCollection.MetaObjects)
+                    {
+                        if (metaObject.TokenId.Equals(RealityPreferences[reality.BundleId].MetaObjectTokenId))
+                        {
+                            foundObject = true;
+                            break;
+                        }
+                    }
+                    if (!foundObject)
+                    {
+                        return false;
+                    }
+                }
+                else
                 {
                     return false;
                 }
@@ -253,30 +313,6 @@ namespace Holoi.Library.HoloKitApp
                 }
             }
             return list;
-        }
-
-        public MetaAvatarCollection GetMetaAvatarCollection(string bundleId)
-        {
-            foreach (var metaAvatarCollection in AvatarCollectionList.List)
-            {
-                if (metaAvatarCollection.BundleId.Equals(bundleId))
-                {
-                    return metaAvatarCollection;
-                }
-            }
-            return null;
-        }
-
-        public MetaObjectCollection GetMetaObjectCollection(string bundleId)
-        {
-            foreach (var metaObjectCollection in ObjectCollectionList.List)
-            {
-                if (metaObjectCollection.BundleId.Equals(bundleId))
-                {
-                    return metaObjectCollection;
-                }
-            }
-            return null;
         }
 
         /// <summary>

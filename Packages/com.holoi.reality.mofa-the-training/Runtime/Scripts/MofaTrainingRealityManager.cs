@@ -140,7 +140,10 @@ namespace Holoi.Reality.MOFATheTraining
                 if (_placementIndicator.gameObject.activeSelf)
                 {
                     _placementIndicator.OnBirth();
-                    _mofaPlayerAI.InitializeAvatarPositionClientRpc(_placementIndicator.transform.position, _placementIndicator.transform.rotation);
+                    _mofaPlayerAI.InitializeAvatarClientRpc(_placementIndicator.transform.position,
+                                                            _placementIndicator.transform.rotation,
+                                                            HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId].MetaAvatarCollectionBundleId,
+                                                            HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId].MetaAvatarTokenId);
                     _arPlaneManager.enabled = false;
                     _arRaycastManager.enabled = false;
                     Destroy(_placementIndicator.gameObject, 3f);

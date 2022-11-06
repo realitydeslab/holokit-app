@@ -30,5 +30,17 @@ namespace Holoi.AssetFoundation
         }
 
         public List<MetaObjectTag> MetaObjectTags;
+
+        public MetaObject GetMetaObject(string tokenId)
+        {
+            foreach (var metaObject in MetaObjects)
+            {
+                if (metaObject.TokenId.Equals(tokenId))
+                {
+                    return metaObject;
+                }
+            }
+            return null;
+        }
     }
 }

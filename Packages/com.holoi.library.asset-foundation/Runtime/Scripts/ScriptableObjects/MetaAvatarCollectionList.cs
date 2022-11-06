@@ -13,5 +13,17 @@ namespace Holoi.AssetFoundation
         {
             return List.Where(collection => collection.MetaAvatarTags.Contains(tag)).ToList();
         }
+
+        public MetaAvatarCollection GetMetaAvatarCollection(string bundleId)
+        {
+            foreach (var metaAvatarCollection in List)
+            {
+                if (metaAvatarCollection.BundleId.Equals(bundleId))
+                {
+                    return metaAvatarCollection;
+                }
+            }
+            return null;
+        }
     }
 }

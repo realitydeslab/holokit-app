@@ -25,6 +25,10 @@ namespace Holoi.Reality.MOFATheTraining
 
         private readonly NetworkVariable<Vector2> _animationVector = new(Vector2.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+        private string _hostPreferencedAvatarCollectionBundleId;
+
+        private string _hostPreferencedAvatarTokenId;
+
         private Animator _animator;
 
         private GameObject _avatar;
@@ -75,6 +79,10 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.OnNetworkSpawn();
 
+            if (IsServer)
+            {
+
+            }
             _animationVector.OnValueChanged += OnAnimationVectorChanged;
         }
 
@@ -95,7 +103,7 @@ namespace Holoi.Reality.MOFATheTraining
         }
 
         [ClientRpc]
-        public void InitializeAvatarPositionClientRpc(Vector3 initialPosition, Quaternion initialRotation)
+        public void InitializeAvatarClientRpc(Vector3 initialPosition, Quaternion initialRotation, string avatarCollectionBundleId, string avatarTokenId)
         {
             if (IsServer)
             {
@@ -111,6 +119,8 @@ namespace Holoi.Reality.MOFATheTraining
 
                 Destroy(go);
             }
+            _hostPreferencedAvatarCollectionBundleId = avatarCollectionBundleId;
+            _hostPreferencedAvatarTokenId = avatarTokenId;
             SpawnAvatar();
         }
 
@@ -118,8 +128,8 @@ namespace Holoi.Reality.MOFATheTraining
         {
             if (_avatar == null)
             {
-                var preferencedAvatarCollection = HoloKitApp.Instance.GlobalSettings.GetPreferencedAvatarCollection(null);
-                var preferencedAvatar = HoloKitApp.Instance.GlobalSettings.GetPreferencedAvatar(null);
+                var preferencedAvatarCollection = HoloKitApp.Instance.GlobalSettings.AvatarCollectionList.GetMetaAvatarCollection(_hostPreferencedAvatarCollectionBundleId);
+                var preferencedAvatar = preferencedAvatarCollection.GetMetaAvatar(_hostPreferencedAvatarTokenId);
                 var avatarCollectionParams = _mofaAvatarCollectionParamsList.GetAvatarCollectionParams(preferencedAvatarCollection);
                 _centerEyeOffset = avatarCollectionParams.CenterEyeOffset;
                 LifeShieldOffset = avatarCollectionParams.LifeShiledOffset;

@@ -30,5 +30,17 @@ namespace Holoi.AssetFoundation
         }
 
         public List<MetaAvatarTag> MetaAvatarTags;
+
+        public MetaAvatar GetMetaAvatar(string tokenId)
+        {
+            foreach (var metaAvatar in MetaAvatars)
+            {
+                if (metaAvatar.TokenId.Equals(tokenId))
+                {
+                    return metaAvatar;
+                }
+            }
+            return null;
+        }
     }
 }

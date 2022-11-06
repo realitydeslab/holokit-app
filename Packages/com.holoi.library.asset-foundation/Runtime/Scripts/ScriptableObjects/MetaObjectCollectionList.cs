@@ -13,5 +13,17 @@ namespace Holoi.AssetFoundation
         {
             return List.Where(collection => collection.MetaObjectTags.Contains(tag)).ToList();
         }
+
+        public MetaObjectCollection GetMetaObjectCollection(string bundleId)
+        {
+            foreach (var metaObjectCollection in List)
+            {
+                if (metaObjectCollection.BundleId.Equals(bundleId))
+                {
+                    return metaObjectCollection;
+                }
+            }
+            return null;
+        }
     }
 }
