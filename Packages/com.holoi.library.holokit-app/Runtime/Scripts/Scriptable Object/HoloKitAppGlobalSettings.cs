@@ -75,6 +75,10 @@ namespace Holoi.Library.HoloKitApp
                     Debug.Log("[GlobalSettings] The old settings are not valid anymore due to a recent update");
                     LoadDefaultSettings();
                 }
+                else
+                {
+                    Debug.Log("[GlobalSettings] The current loaded settings are valid");
+                }
             }
             else
             {
@@ -145,62 +149,64 @@ namespace Holoi.Library.HoloKitApp
             {
                 if (RealityPreferences.ContainsKey(reality.BundleId))
                 {
-                    bool foundAvatarCollection = false;
-                    MetaAvatarCollection preferencedAvatarCollection = null;
-                    foreach (var avatarCollection in AvatarCollectionList.List)
+                    if (GetCompatibleMetaAvatarCollectionList(reality).Count > 0)
                     {
-                        if (avatarCollection.BundleId.Equals(RealityPreferences[reality.BundleId].MetaAvatarCollectionBundleId))
+                        MetaAvatarCollection preferencedAvatarCollection = null;
+                        foreach (var avatarCollection in AvatarCollectionList.List)
                         {
-                            preferencedAvatarCollection = avatarCollection;
-                            foundAvatarCollection = true;
-                            break;
+                            if (avatarCollection.BundleId.Equals(RealityPreferences[reality.BundleId].MetaAvatarCollectionBundleId))
+                            {
+                                preferencedAvatarCollection = avatarCollection;
+                                break;
+                            }
+                        }
+                        if (preferencedAvatarCollection == null)
+                        {
+                            return false;
+                        }
+                        bool foundAvatar = false;
+                        foreach (var avatar in preferencedAvatarCollection.MetaAvatars)
+                        {
+                            if (avatar.TokenId.Equals(RealityPreferences[reality.BundleId].MetaAvatarTokenId))
+                            {
+                                foundAvatar = true;
+                                break;
+                            }
+                        }
+                        if (!foundAvatar)
+                        {
+                            return false;
                         }
                     }
-                    if (!foundAvatarCollection)
+                    
+                    if (GetCompatibleMetaObjectCollectionList(reality).Count > 0)
                     {
-                        return false;
-                    }
-                    bool foundAvatar = false;
-                    foreach (var avatar in preferencedAvatarCollection.MetaAvatars)
-                    {
-                        if (avatar.TokenId.Equals(RealityPreferences[reality.BundleId].MetaAvatarTokenId))
+                        MetaObjectCollection preferencedObjectCollection = null;
+                        foreach (var objectCollection in ObjectCollectionList.List)
                         {
-                            foundAvatar = true;
-                            break;
+                            if (objectCollection.BundleId.Equals(RealityPreferences[reality.BundleId].MetaObjectCollectionBundleId))
+                            {
+                                preferencedObjectCollection = objectCollection;
+                                break;
+                            }
                         }
-                    }
-                    if (!foundAvatar)
-                    {
-                        return false;
-                    }
-
-                    bool foundObjectCollection = false;
-                    MetaObjectCollection preferencedObjectCollection = null;
-                    foreach (var objectCollection in ObjectCollectionList.List)
-                    {
-                        if (objectCollection.BundleId.Equals(RealityPreferences[reality.BundleId].MetaObjectCollectionBundleId))
+                        if (preferencedObjectCollection == null)
                         {
-                            preferencedObjectCollection = objectCollection;
-                            foundObjectCollection = true;
-                            break;
+                            return false;
                         }
-                    }
-                    if (!foundObjectCollection)
-                    {
-                        return false;
-                    }
-                    bool foundObject = false;
-                    foreach (var metaObject in preferencedObjectCollection.MetaObjects)
-                    {
-                        if (metaObject.TokenId.Equals(RealityPreferences[reality.BundleId].MetaObjectTokenId))
+                        bool foundObject = false;
+                        foreach (var metaObject in preferencedObjectCollection.MetaObjects)
                         {
-                            foundObject = true;
-                            break;
+                            if (metaObject.TokenId.Equals(RealityPreferences[reality.BundleId].MetaObjectTokenId))
+                            {
+                                foundObject = true;
+                                break;
+                            }
                         }
-                    }
-                    if (!foundObject)
-                    {
-                        return false;
+                        if (!foundObject)
+                        {
+                            return false;
+                        }
                     }
                 }
                 else
