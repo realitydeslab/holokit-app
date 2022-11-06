@@ -93,6 +93,14 @@ public class MovementController : MonoBehaviour
             realDesired = SetMag(realDesired, _maxSpeed);
         }
 
+        var dH = transform.position.y - (targetPos.y + 1);
+
+        var heightDesired = dH > 0 ? -1f : 1f;
+
+        float mHeight = Mathf.Clamp01(Mathf.Abs(dH));
+
+        realDesired += Vector3.up * heightDesired * mHeight;
+
         _steer = realDesired - _velocity;
 
         _steer = Limit(_steer, _maxForce);
