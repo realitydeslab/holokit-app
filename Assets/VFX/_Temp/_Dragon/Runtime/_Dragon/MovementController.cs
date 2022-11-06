@@ -93,7 +93,7 @@ public class MovementController : MonoBehaviour
             realDesired = SetMag(realDesired, _maxSpeed);
         }
 
-        var dH = transform.position.y - (targetPos.y + 1);
+        var dH = transform.position.y - (targetPos.y + 0.5f);
 
         var heightDesired = dH > 0 ? -1f : 1f;
 
@@ -136,7 +136,7 @@ public class MovementController : MonoBehaviour
         }
         else if (angle > 0)
         {
-            Debug.Log($">0 with: {angle}");
+            //Debug.Log($">0 with: {angle}");
 
             _angluarVelocity += steer;
             if (_angluarVelocity > 90) _angluarVelocity = 90;
@@ -144,7 +144,7 @@ public class MovementController : MonoBehaviour
         }
         else
         {
-            Debug.Log($"<0 with: {angle}");
+            //Debug.Log($"<0 with: {angle}");
 
             _angluarVelocity -= steer;
             if (_angluarVelocity < -90) _angluarVelocity = -90;
