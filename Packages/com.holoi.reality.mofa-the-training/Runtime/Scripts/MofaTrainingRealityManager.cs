@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -18,25 +19,48 @@ namespace Holoi.Reality.MOFATheTraining
 
         [SerializeField] private AvatarPlacementIndicatorController _placementIndicatorPrefab;
 
+        [Header("AR")]
+        [SerializeField] private ARPlaneManager _arPlaneManager;
+
+        [SerializeField] private ARRaycastManager _arRaycastManager;
+
         private MofaPlayerAI _mofaPlayerAI;
 
         private AvatarPlacementIndicatorController _placementIndicator;
+
+        private const float RaycastHorizontalOffset = 1.2f;
+
+        private const float AvatarSpawnHorizontalOffset = 6f;
+
+        public static event Action OnFoundPlane;
+
+        public static event Action OnLostPlane;
 
         protected override void Start()
         {
             base.Start();
 
-            StartCoroutine(HoloKitAppUtils.WaitAndDo(1.5f, () =>
-            {
-                if (HoloKitApp.Instance.IsHost)
-                {
-                    HoloKitApp.Instance.ARSessionManager.AddARPlaneManager();
-                    HoloKitApp.Instance.ARSessionManager.AddARRaycastManager();
-                }
-            }));
             OnPhaseChanged += OnPhaseChangedFunc;
             HoloKitAppUIEventManager.OnTriggered += OnTriggered;
             MofaWatchConnectivityAPI.OnStartRoundMessageReceived += OnStartRoundMessageReceived;
+
+            if (HoloKitApp.Instance.IsHost)
+            {
+                var placementIndicatorInitialPos = HoloKitUtils.IsRuntime ? Vector3.zero : new Vector3(0f, -1f, 5f);
+                _placementIndicator = Instantiate(_placementIndicatorPrefab, placementIndicatorInitialPos, Quaternion.identity);
+                if (HoloKitUtils.IsRuntime)
+                {
+                    _placementIndicator.gameObject.SetActive(false);
+                }
+                else
+                {
+                    _placementIndicator.gameObject.SetActive(true);
+                    OnFoundPlane?.Invoke();
+                }
+
+                _arPlaneManager.enabled = true;
+                _arRaycastManager.enabled = true;
+            }
         }
 
         public override void OnNetworkSpawn()
@@ -46,8 +70,6 @@ namespace Holoi.Reality.MOFATheTraining
             if (IsServer)
             {
                 SpawnMofaPlayerAI();
-                var placementIndicatorInitialPos = HoloKitUtils.IsRuntime ? Vector3.zero : new Vector3(0f, -1f, 5f);
-                _placementIndicator = Instantiate(_placementIndicatorPrefab, placementIndicatorInitialPos, Quaternion.identity);
             }
         }
 
@@ -71,33 +93,38 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void Update()
         {
-            if (_placementIndicator != null
-                && HoloKitApp.Instance.ARSessionManager.ARRaycastManager != null
-                && HoloKitApp.Instance.ARSessionManager.ARPlaneManager != null)
+            if (HoloKitUtils.IsEditor) { return; }
+
+            if (_placementIndicator != null)
             {
-                if (HoloKitUtils.IsRuntime)
+                Vector3 horizontalForward = MofaUtils.GetHorizontalForward(HoloKitCamera.Instance.CenterEyePose);
+                Vector3 rayOrigin = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * RaycastHorizontalOffset;
+                Ray ray = new(rayOrigin, Vector3.down);
+                List<ARRaycastHit> hits = new();
+                if (_arRaycastManager.Raycast(ray, hits, TrackableType.Planes))
                 {
-                    Vector3 horizontalForward = MofaUtils.GetHorizontalForward(HoloKitCamera.Instance.CenterEyePose);
-                    Vector3 rayOrigin = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * 1.5f; // TODO: Changeable
-                    Ray ray = new(rayOrigin, Vector3.down);
-                    List<ARRaycastHit> hits = new();
-                    if (HoloKitApp.Instance.ARSessionManager.ARRaycastManager.Raycast(ray, hits, TrackableType.Planes))
+                    foreach (var hit in hits)
                     {
-                        foreach (var hit in hits)
+                        var arPlane = hit.trackable.GetComponent<ARPlane>();
+                        if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
                         {
-                            var arPlane = hit.trackable.GetComponent<ARPlane>();
-                            if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
+                            Vector3 position = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * AvatarSpawnHorizontalOffset;
+                            _placementIndicator.transform.position = new Vector3(position.x, hit.pose.position.y, position.z);
+                            Vector3 forwardVector = HoloKitCamera.Instance.CenterEyePose.position - _placementIndicator.transform.position;
+                            _placementIndicator.transform.rotation = MofaUtils.GetHorizontalLookRotation(forwardVector);
+                            if (!_placementIndicator.gameObject.activeSelf)
                             {
-                                Vector3 position = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * 6f; // TODO: Changeable
-                                _placementIndicator.transform.position = new Vector3(position.x, hit.pose.position.y, position.z);
-                                Vector3 forwardVector = HoloKitCamera.Instance.CenterEyePose.position - _placementIndicator.transform.position;
-                                _placementIndicator.transform.rotation = MofaUtils.GetHorizontalLookRotation(forwardVector);
                                 _placementIndicator.gameObject.SetActive(true);
-                                return;
+                                OnFoundPlane?.Invoke();
                             }
+                            return;
                         }
                     }
+                }
+                if (_placementIndicator.gameObject.activeSelf)
+                {
                     _placementIndicator.gameObject.SetActive(false);
+                    OnLostPlane?.Invoke();
                 }
             }
         }
@@ -134,8 +161,11 @@ namespace Holoi.Reality.MOFATheTraining
         {
             if (CurrentPhase == MofaPhase.Countdown)
             {
-                HoloKitApp.Instance.ARSessionManager.SetARPlaneManagerActive(false);
-                HoloKitApp.Instance.ARSessionManager.SetARRaycastManagerActive(false);
+                if (IsServer)
+                {
+                    _arPlaneManager.enabled = false;
+                    _arRaycastManager.enabled = false;
+                }
             }
         }
 

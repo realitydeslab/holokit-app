@@ -26,7 +26,7 @@ namespace Holoi.Library.HoloKitApp.UI
             // Stop the recording if there is one
             if (HoloKitApp.Instance.Recorder.IsRecording)
             {
-                HoloKitApp.Instance.Recorder.StopRecording();
+                HoloKitAppUIEventManager.OnStoppedRecording?.Invoke();
                 Debug.Log("Recording was stopped due to a render mode switch");
             }
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();

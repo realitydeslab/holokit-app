@@ -24,25 +24,25 @@ namespace Holoi.Library.MOFABase
 
         private GameObject _currentPopup;
 
-        private void Start()
+        protected virtual void Start()
         {
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
             MofaBaseRealityManager.OnReceivedRoundResult += OnReceivedRoundResult;
             LifeShield.OnDead += OnLifeShieldDestroyed;
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
             MofaBaseRealityManager.OnReceivedRoundResult -= OnReceivedRoundResult;
             LifeShield.OnDead -= OnLifeShieldDestroyed;
         }
 
-        private IEnumerator SpawnPopup(GameObject popupPrefab, float destroyDelay)
+        protected void SpawnPopup(GameObject popupPrefab)
         {
             if (popupPrefab == null)
             {
-                yield return null;
+                return;
             }
             if (_currentPopup != null)
             {
@@ -52,6 +52,26 @@ namespace Holoi.Library.MOFABase
             _currentPopup.transform.SetParent(_fightingPanelTransform);
             _currentPopup.transform.localPosition = Vector3.zero;
             _currentPopup.transform.localRotation = Quaternion.identity;
+            _currentPopup.transform.localScale = Vector3.one;
+        }
+
+        private IEnumerator SpawnPopupAndDestroy(GameObject popupPrefab, float destroyDelay)
+        {
+            Debug.Log($"SpawnPopupAndDestroy: {popupPrefab.name}");
+            if (popupPrefab == null)
+            {
+                yield return null;
+            }
+            if (_currentPopup != null)
+            {
+                Debug.Log($"Destroy current popup: {_currentPopup.name}");
+                Destroy(_currentPopup);
+            }
+            _currentPopup = Instantiate(popupPrefab);
+            _currentPopup.transform.SetParent(_fightingPanelTransform);
+            _currentPopup.transform.localPosition = Vector3.zero;
+            _currentPopup.transform.localRotation = Quaternion.identity;
+            _currentPopup.transform.localScale = Vector3.one;
 
             yield return new WaitForSeconds(destroyDelay);
             if (_currentPopup != null)
@@ -67,12 +87,12 @@ namespace Holoi.Library.MOFABase
                 case MofaPhase.Waiting:
                     break;
                 case MofaPhase.Countdown:
-                    StartCoroutine(SpawnPopup(_countdownPrefab, 4f));
+                    StartCoroutine(SpawnPopupAndDestroy(_countdownPrefab, 4f));
                     break;
                 case MofaPhase.Fighting:
                     break;
                 case MofaPhase.RoundOver:
-                    StartCoroutine(SpawnPopup(_roundOverPrefab, 4f));
+                    StartCoroutine(SpawnPopupAndDestroy(_roundOverPrefab, 4f));
                     break;
                 case MofaPhase.RoundResult:
                     break;
@@ -92,7 +112,7 @@ namespace Holoi.Library.MOFABase
 
             if (roundResult == MofaRoundResult.Draw)
             {
-                StartCoroutine(SpawnPopup(_drawPrefab, 3f));
+                StartCoroutine(SpawnPopupAndDestroy(_drawPrefab, 3f));
                 return;
             }
 
@@ -101,22 +121,22 @@ namespace Holoi.Library.MOFABase
             {
                 if (roundResult == MofaRoundResult.BlueTeamWins)
                 {
-                    StartCoroutine(SpawnPopup(_victoryPrefab, 3f));
+                    StartCoroutine(SpawnPopupAndDestroy(_victoryPrefab, 3f));
                 }
                 else
                 {
-                    StartCoroutine(SpawnPopup(_defeatPrefab, 3f));
+                    StartCoroutine(SpawnPopupAndDestroy(_defeatPrefab, 3f));
                 }
             }
             else if (team == MofaTeam.Red)
             {
                 if (roundResult == MofaRoundResult.RedTeamWins)
                 {
-                    StartCoroutine(SpawnPopup(_victoryPrefab, 3f));
+                    StartCoroutine(SpawnPopupAndDestroy(_victoryPrefab, 3f));
                 }
                 else
                 {
-                    StartCoroutine(SpawnPopup(_defeatPrefab, 3f));
+                    StartCoroutine(SpawnPopupAndDestroy(_defeatPrefab, 3f));
                 }
             }
         }
@@ -131,7 +151,7 @@ namespace Holoi.Library.MOFABase
         {
             if (ownerClientId == NetworkManager.Singleton.LocalClientId)
             {
-                StartCoroutine(SpawnPopup(_deathPrefab, 3f));
+                StartCoroutine(SpawnPopupAndDestroy(_deathPrefab, 3f));
             }
         }
     }
