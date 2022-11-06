@@ -11,9 +11,12 @@ namespace Holoi.Library.ARUX
 
         private void Update()
         {
-            Vector3 handJointPosition = HoloKitHandTracker.Instance.GetHandJointPosition(_handJoint);
-            Vector3 direction = (handJointPosition - HoloKitCamera.Instance.CenterEyePose.position).normalized;
-            transform.position = handJointPosition + _extendedLength * direction;
+            if (HoloKitHandTracker.Instance.IsValid)
+            {
+                Vector3 handJointPosition = HoloKitHandTracker.Instance.GetHandJointPosition(_handJoint);
+                Vector3 direction = (handJointPosition - HoloKitCamera.Instance.CenterEyePose.position).normalized;
+                transform.position = handJointPosition + _extendedLength * direction;
+            }
         }
     }
 }

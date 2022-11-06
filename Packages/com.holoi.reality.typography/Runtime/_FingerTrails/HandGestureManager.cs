@@ -84,7 +84,7 @@ public class HandGestureManager : MonoBehaviour
         }
         else
         {
-            if (GetComponent<HoloKitHandTracker>().Valid)
+            if (GetComponent<HoloKitHandTracker>().IsValid)
             {
                 var wrist = new Vector2(_wrist.position.x, _wrist.position.y);
                 var tip = new Vector2(_handTips[2].position.x, _handTips[2].position.y);

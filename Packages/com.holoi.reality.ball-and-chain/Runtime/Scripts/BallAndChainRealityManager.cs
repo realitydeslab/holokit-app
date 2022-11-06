@@ -34,7 +34,7 @@ namespace Holoi.Reality.BallAndChain
             if (IsServer)
             {
                 _chain.SetActive(true);
-                HoloKitHandTracker.Instance.Active = true;
+                HoloKitHandTracker.Instance.IsActive = true;
             }
         }
 

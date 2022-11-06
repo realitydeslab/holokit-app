@@ -28,7 +28,7 @@ namespace Holoi.Reality.QuantumRealm
         [SerializeField] private GameObject _startButton;
 
         [Header("Hand")]
-        public Transform HandTransform; // This is networked
+        public HoverObject HandPose; // This is networked
 
         [SerializeField] private GameObject _handVisual;
 
@@ -64,7 +64,7 @@ namespace Holoi.Reality.QuantumRealm
                 _arOcclusionManager.enabled = true;
                 _arPlaneManager.enabled = true;
                 _arRaycastManager.enabled = true;
-                HoloKitHandTracker.Instance.Active = true;
+                HoloKitHandTracker.Instance.IsActive = true;
 
                 _arRaycastPoint.transform.position = ARRaycastPointDefaultOffset;
                 _arRaycastPoint.SetActive(false);
@@ -88,7 +88,7 @@ namespace Holoi.Reality.QuantumRealm
                 // There is no vibration on spectators
                 Destroy(CoreHapticsManager.gameObject);
                 // The networked hand is took control by the host
-                HandTransform.GetComponent<FollowTargetController>().MovementType = MovementType.None;
+                HandPose.GetComponent<FollowTargetController>().MovementType = MovementType.None;
             }
             HoloKitHandTracker.OnHandValidityChanged += OnHandValidityChanged;
         }
@@ -196,6 +196,7 @@ namespace Holoi.Reality.QuantumRealm
         {
             if (!oldValue && newValue)
             {
+                HandPose.IsActive = true;
                 LeanTween.cancel(_handVisual);
                 LeanTween.alpha(_handVisual, 1f, 1f);
                 return;
@@ -203,6 +204,7 @@ namespace Holoi.Reality.QuantumRealm
 
             if (oldValue && !newValue)
             {
+                HandPose.IsActive = false;
                 LeanTween.cancel(_handVisual);
                 LeanTween.alpha(_handVisual, 0f, 1f);
                 return;

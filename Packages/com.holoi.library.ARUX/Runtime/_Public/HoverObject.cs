@@ -5,6 +5,17 @@ namespace Holoi.Library.ARUX
 {
     public class HoverObject : MonoBehaviour
     {
+        [SerializeField] private bool _isActive = true;
+
+        public bool IsActive
+        {
+            get => _isActive;
+            set
+            {
+                _isActive = value;
+            }
+        }
+
         private readonly List<HoverableObject> _hoverableObjectList = new();
 
         protected virtual void Awake()

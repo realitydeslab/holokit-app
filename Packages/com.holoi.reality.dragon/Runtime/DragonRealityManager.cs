@@ -36,7 +36,7 @@ namespace Holoi.Reality.Dragon
         {
             if (IsServer)
             {
-                if (HoloKitHandTracker.Instance.Valid)
+                if (HoloKitHandTracker.Instance.IsValid)
                 {
                     //_networkHand.transform.position = HoloKitHandTracker.Instance.GetHandJointPosition(HandJoint.Index3);
                 }

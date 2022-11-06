@@ -69,7 +69,7 @@ namespace Holoi.Reality.QuantumRealm
         private void Update()
         {
             _vfx.SetVector3("Hand Position",
-                ((QuantumRealmRealityManager)HoloKitApp.Instance.RealityManager).HandTransform.transform.position);
+                ((QuantumRealmRealityManager)HoloKitApp.Instance.RealityManager).HandPose.transform.position);
             _vfx.SetFloat("Process", _hoverableObject.CurrentLoadPercentage);
         }
 

@@ -33,14 +33,14 @@ namespace Holoi.Reality.Typography
         }
         public void HideJoint()
         {
-            if (_HHT.Visible)
+            if (_HHT.IsVisible)
             {
-                _HHT.Visible = false;
+                _HHT.IsVisible = false;
 
             }
             else
             {
-                _HHT.Visible = true;
+                _HHT.IsVisible = true;
 
             }
         }

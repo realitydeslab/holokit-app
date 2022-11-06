@@ -71,7 +71,7 @@ namespace Holoi.Reality.Typography
                 _arPlaneManager.enabled = true;
                 _serverCenterEye.GetComponent<FollowMovementManager>().enabled = true;
 
-                HoloKitHandTracker.Instance.Active = true;
+                HoloKitHandTracker.Instance.IsActive = true;
                 HandObject.Instance.IsSyncedHand = false;
                 ARRayCastController.Instance.enabled = true;
             }
@@ -82,7 +82,7 @@ namespace Holoi.Reality.Typography
                 _serverCenterEye.GetComponent<FollowMovementManager>().enabled = false;
 
 
-                HoloKitHandTracker.Instance.Active = false;
+                HoloKitHandTracker.Instance.IsActive = false;
                 HandObject.Instance.IsSyncedHand = true;
                 ARRayCastController.Instance.enabled = false;
             }

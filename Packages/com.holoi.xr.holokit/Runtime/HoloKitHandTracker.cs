@@ -34,48 +34,46 @@ namespace HoloKit
 
         private static HoloKitHandTracker _instance;
 
-        [SerializeField] private bool _active;
+        [SerializeField] private bool _isActive;
 
-        [SerializeField] private bool _visible;
+        [SerializeField] private bool _isVisible;
 
         [SerializeField] private float _fadeOutDelay = 1.2f;
-
-        [SerializeField] private float _inactiveYOffset = 0.5f;
 
         [SerializeField] private GameObject _hand;
 
         [SerializeField] private Transform[] _handJoints;
 
-        public bool Active
+        public bool IsActive
         {
-            get => _active;
+            get => _isActive;
             set
             {
-                _active = value;
-                HoloKitHandTrackingControllerAPI.SetHandTrackingActive(_active);
+                _isActive = value;
+                HoloKitHandTrackingControllerAPI.SetHandTrackingActive(_isActive);
             }
         }
 
-        public bool Visible
+        public bool IsVisible
         {
-            get => _visible;
+            get => _isVisible;
             set
             {
-                _visible = value;
+                _isVisible = value;
                 SetHandJointsVisible(value);
             }
         }
 
-        public bool Valid
+        public bool IsValid
         {
             get
             {
                 if(HoloKitUtils.IsEditor) { return true; }
-                return _valid;
+                return _isValid;
             }
         }
 
-        private bool _valid = false;
+        private bool _isValid = false;
 
         private float _lastUpdateTime;
 
@@ -97,9 +95,14 @@ namespace HoloKit
         {
             HoloKitHandTrackingControllerAPI.OnHandPoseUpdated += OnHandPoseUpdated;
             HoloKitHandTrackingControllerAPI.RegisterHandTrackingControllerDelegates();
-            HoloKitHandTrackingControllerAPI.SetHandTrackingActive(_active);
+            HoloKitHandTrackingControllerAPI.SetHandTrackingActive(_isActive);
             SetupHandJointColors();
-            SetHandJointsVisible(_visible);
+            SetHandJointsVisible(_isVisible);
+
+            if (HoloKitUtils.IsEditor)
+            {
+                _isValid = true;
+            }
         }
 
         private void OnDestroy()
@@ -161,9 +164,10 @@ namespace HoloKit
         private void OnHandPoseUpdated(float[] poses)
         {
             _lastUpdateTime = Time.time;
-            if (!_valid)
+            if (!_isValid)
             {
-                _valid = true;
+                _isValid = true;
+                _hand.SetActive(true);
                 OnHandValidityChanged?.Invoke(true);
             }
             for (int i = 0; i < 21; i++)
@@ -174,25 +178,17 @@ namespace HoloKit
 
         private void Update()
         {
-            if (!_active) { return; }
+            if (!_isActive) { return; }
 
-            if (_valid)
+            if (HoloKitUtils.IsEditor) { return; }
+
+            if (_isValid)
             {
                 if (Time.time - _lastUpdateTime > _fadeOutDelay)
                 {
-                    _valid = false;
+                    _isValid = false;
+                    _hand.SetActive(false);
                     OnHandValidityChanged?.Invoke(false);
-                }
-            }
-            else
-            {
-                if (HoloKitUtils.IsRuntime)
-                {
-                    Transform centerEye = HoloKitCamera.Instance.CenterEyePose;
-                    for (int i = 0; i < 21; i++)
-                    {
-                        _handJoints[i].position = centerEye.position - centerEye.up * 0.5f;
-                    }
                 }
             }
         }

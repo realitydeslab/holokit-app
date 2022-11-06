@@ -41,7 +41,7 @@ namespace Holoi.Library.ARUX
             {
                 if (!IsSyncedHand)
                 {
-                    IsValid = HoloKitHandTracker.Instance.Valid;
+                    IsValid = HoloKitHandTracker.Instance.IsValid;
                 } 
             }
             else
