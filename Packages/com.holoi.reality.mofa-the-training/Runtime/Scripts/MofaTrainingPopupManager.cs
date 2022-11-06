@@ -1,5 +1,6 @@
 using UnityEngine;
 using Holoi.Library.MOFABase;
+using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Reality.MOFATheTraining
 {
@@ -13,16 +14,22 @@ namespace Holoi.Reality.MOFATheTraining
         protected override void Start()
         {
             base.Start();
-            SpawnPopup(_findPlanePrefab);
-            MofaTrainingRealityManager.OnFoundPlane += OnFoundPlane;
-            MofaTrainingRealityManager.OnLostPlane += OnLostPlane;
+            if (HoloKitApp.Instance.IsHost)
+            {
+                SpawnPopup(_findPlanePrefab);
+                MofaTrainingRealityManager.OnFoundPlane += OnFoundPlane;
+                MofaTrainingRealityManager.OnLostPlane += OnLostPlane;
+            }
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            MofaTrainingRealityManager.OnFoundPlane -= OnFoundPlane;
-            MofaTrainingRealityManager.OnLostPlane -= OnLostPlane;
+            if (HoloKitApp.Instance.IsHost)
+            {
+                MofaTrainingRealityManager.OnFoundPlane -= OnFoundPlane;
+                MofaTrainingRealityManager.OnLostPlane -= OnLostPlane;
+            }
         }
 
         private void OnFoundPlane()
