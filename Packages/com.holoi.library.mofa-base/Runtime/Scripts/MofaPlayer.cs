@@ -27,6 +27,8 @@ namespace Holoi.Library.MOFABase
 
         [HideInInspector] public Vector3 LifeShieldOffset = new(0f, -0.4f, 0.5f);
 
+        public static event Action<ulong, bool> OnMofaPlayerReadyStateChanged;
+
         public static event Action OnScoreChanged;
 
         protected virtual void Start()
@@ -70,10 +72,12 @@ namespace Holoi.Library.MOFABase
 
         private void OnReadyStateChangedFunc(bool oldValue, bool newValue)
         {
-            if (IsServer)
+            if (!oldValue && newValue)
             {
-                if (!oldValue && newValue)
+                OnMofaPlayerReadyStateChanged?.Invoke(OwnerClientId, newValue);
+                if (IsServer)
                 {
+
                     ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).OnPlayerReadyStateChanged();
                 }
             }

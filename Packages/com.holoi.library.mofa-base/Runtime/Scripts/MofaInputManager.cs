@@ -286,7 +286,11 @@ namespace Holoi.Library.MOFABase
         #region Apple Watch
         private void OnStartRoundMessageReceived()
         {
-            ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).GetPlayer().Ready.Value = true;
+            var localPlayer = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).GetPlayer();
+            if (!localPlayer.Ready.Value)
+            {
+                localPlayer.Ready.Value = true;
+            }
         }
 
         private void OnWatchStateChanged(MofaWatchState watchState)
