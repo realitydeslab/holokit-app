@@ -5,9 +5,11 @@ namespace Holoi.Library.MOFABase
 {
     public class AvatarPlacementIndicatorController : MonoBehaviour
     {
-        //[SerializeField] Animator _animator;
-        //[SerializeField] VisualEffect _placementVFX;
-        //[SerializeField] VisualEffect _birthVFX;
+        [SerializeField] Animator _animator;
+
+        [SerializeField] VisualEffect _placementVFX;
+
+        [SerializeField] VisualEffect _birthVFX;
 
         //void Start()
         //{

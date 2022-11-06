@@ -40,7 +40,6 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.Start();
 
-            OnPhaseChanged += OnPhaseChangedFunc;
             HoloKitAppUIEventManager.OnTriggered += OnTriggered;
             MofaWatchConnectivityAPI.OnStartRoundMessageReceived += OnStartRoundMessageReceived;
 
@@ -77,7 +76,6 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.OnDestroy();
 
-            OnPhaseChanged -= OnPhaseChangedFunc;
             HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
             MofaWatchConnectivityAPI.OnStartRoundMessageReceived -= OnStartRoundMessageReceived;
         }
@@ -95,7 +93,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             if (HoloKitUtils.IsEditor) { return; }
 
-            if (_placementIndicator != null)
+            if (_placementIndicator != null && _arPlaneManager.enabled)
             {
                 Vector3 horizontalForward = MofaUtils.GetHorizontalForward(HoloKitCamera.Instance.CenterEyePose);
                 Vector3 rayOrigin = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * RaycastHorizontalOffset;
@@ -143,6 +141,8 @@ namespace Holoi.Reality.MOFATheTraining
                 {
                     _placementIndicator.OnBirth();
                     _mofaPlayerAI.InitializeAvatarPositionClientRpc(_placementIndicator.transform.position, _placementIndicator.transform.rotation);
+                    _arPlaneManager.enabled = false;
+                    _arRaycastManager.enabled = false;
                     Destroy(_placementIndicator.gameObject, 3f);
                     StartCoroutine(StartRoundFlow());
                 }
@@ -154,18 +154,6 @@ namespace Holoi.Reality.MOFATheTraining
             else
             {
                 StartCoroutine(StartRoundFlow());
-            }
-        }
-
-        private void OnPhaseChangedFunc(MofaPhase mofaPhase)
-        {
-            if (CurrentPhase == MofaPhase.Countdown)
-            {
-                if (IsServer)
-                {
-                    _arPlaneManager.enabled = false;
-                    _arRaycastManager.enabled = false;
-                }
             }
         }
 

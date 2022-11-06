@@ -55,16 +55,14 @@ namespace Holoi.Library.MOFABase
             _currentPopup.transform.localScale = Vector3.one;
         }
 
-        private IEnumerator SpawnPopupAndDestroy(GameObject popupPrefab, float destroyDelay)
+        protected IEnumerator SpawnPopupAndDestroy(GameObject popupPrefab, float destroyDelay)
         {
-            Debug.Log($"SpawnPopupAndDestroy: {popupPrefab.name}");
             if (popupPrefab == null)
             {
                 yield return null;
             }
             if (_currentPopup != null)
             {
-                Debug.Log($"Destroy current popup: {_currentPopup.name}");
                 Destroy(_currentPopup);
             }
             _currentPopup = Instantiate(popupPrefab);
@@ -80,7 +78,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnPhaseChanged(MofaPhase mofaPhase)
+        protected virtual void OnPhaseChanged(MofaPhase mofaPhase)
         {
             switch (mofaPhase)
             {
