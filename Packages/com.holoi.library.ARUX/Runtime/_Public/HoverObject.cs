@@ -47,7 +47,10 @@ namespace Holoi.Library.ARUX
             {
                 if (Vector3.Distance(transform.position, hoverableObject.CenterPosition) < hoverableObject.Radius)
                 {
-                    hoverableObject.OnLoaded(Time.fixedDeltaTime);
+                    if (_isActive)
+                    {
+                        hoverableObject.OnLoaded(Time.fixedDeltaTime);
+                    }
                 }
                 else
                 {

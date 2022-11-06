@@ -123,17 +123,91 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &6 stripped
+--- !u!114 &6
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-  m_PrefabInstance: {fileID: 3985646674977533334}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1072407929793540111}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1748544e115c24562a72a4512e3d624d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NetworkPrefabs:
+  - {fileID: 2504822779368527981, guid: 6fe50cf1a5dd04298aa36ee8a21ddb0e, type: 3}
+  UIPanelPrefabs:
+  - {fileID: 4657395687608789096, guid: bda09545bfc32413ea33906cdf04a404, type: 3}
+  _urpAsset: {fileID: 11400000, guid: f6a02f22e32c343589f8290dccd7bebf, type: 2}
+  _arOcclusionManager: {fileID: 275482728}
+  _arPlaneManager: {fileID: 2068233602}
+  _arRaycastManager: {fileID: 2068233603}
+  _extendedHandJoint: {fileID: 153230845}
+  _arRaycastPoint: {fileID: 1473807785}
+  _arRaycastIndicatorController: {fileID: 1284789108}
+  _startButton: {fileID: 8760063833723034935}
+  HandPose: {fileID: 172308144}
+  _handVisual: {fileID: 1632013961}
+  CoreHapticsManager: {fileID: 725391263}
+  PhaseManager: {fileID: 1804771041}
+  _buddhaGroupPrefab: {fileID: 2143471666, guid: 6fe50cf1a5dd04298aa36ee8a21ddb0e, type: 3}
+  OnARRaycastManagerFoundPlane:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1284789108}
+        m_TargetAssemblyTypeName: Holoi.Library.ARUX.ARRaycastIndicatorController,
+          NewAssembly
+        m_MethodName: OnFoundPlane
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2034980346624289487}
+        m_TargetAssemblyTypeName: Holoi.Library.ARUX.LoadButtonController, NewAssembly
+        m_MethodName: OnBirth
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnARRaycastManagerLostPlane:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1284789108}
+        m_TargetAssemblyTypeName: Holoi.Library.ARUX.ARRaycastIndicatorController,
+          NewAssembly
+        m_MethodName: OnLostPlane
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2034980346624289487}
+        m_TargetAssemblyTypeName: Holoi.Library.ARUX.LoadButtonController, NewAssembly
+        m_MethodName: OnDisappear
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &36259178 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5626992625800642033, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
@@ -213,7 +287,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 172308135}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3100,6 +3174,55 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1072407929793540104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072407929793540111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 318753805
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!4 &1072407929793540105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072407929793540111}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1072407929793540111
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1072407929793540105}
+  - component: {fileID: 1072407929793540104}
+  - component: {fileID: 6}
+  m_Layer: 0
+  m_Name: Quantum Realm Reality Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &1515670552822696575
 Transform:
   m_ObjectHideFlags: 0
@@ -3178,143 +3301,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68231f92e6c254bc18f3f907b47b2e85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &3985646674977533334
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: HandPose
-      value: 
-      objectReference: {fileID: 172308144}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: _handVisual
-      value: 
-      objectReference: {fileID: 1632013961}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: PhaseManager
-      value: 
-      objectReference: {fileID: 1804771041}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: _startButton
-      value: 
-      objectReference: {fileID: 8760063833723034935}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: HandTransform
-      value: 
-      objectReference: {fileID: 172308144}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: _arPlaneManager
-      value: 
-      objectReference: {fileID: 2068233602}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: _arRaycastPoint
-      value: 
-      objectReference: {fileID: 1473807785}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: _arRaycastManager
-      value: 
-      objectReference: {fileID: 2068233603}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: CoreHapticsManager
-      value: 
-      objectReference: {fileID: 725391263}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: _extendedHandJoint
-      value: 
-      objectReference: {fileID: 153230845}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: _arOcclusionManager
-      value: 
-      objectReference: {fileID: 275482728}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: UIPanelPrefabs.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: UIPanelPrefabs.Array.data[0]
-      value: 
-      objectReference: {fileID: 4657395687608789096, guid: bda09545bfc32413ea33906cdf04a404, type: 3}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: _arRaycastIndicatorController
-      value: 
-      objectReference: {fileID: 1284789108}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: OnARRaycastManagerLostPlane.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1284789108}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: OnARRaycastManagerLostPlane.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 2034980346624289487}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: OnARRaycastManagerFoundPlane.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1284789108}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: OnARRaycastManagerFoundPlane.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 2034980346624289487}
-    - target: {fileID: 3985646674977533328, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: OnARRaycastManagerLostPlane.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: OnDisappear
-      objectReference: {fileID: 0}
-    - target: {fileID: 4156305531984108953, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: m_Name
-      value: Quantum Realm Reality Manager
-      objectReference: {fileID: 0}
-    - target: {fileID: 4156305531984108958, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 512687884
-      objectReference: {fileID: 0}
-    - target: {fileID: 4156305531984108959, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: m_RootOrder
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4156305531984108959, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4156305531984108959, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4156305531984108959, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4156305531984108959, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4156305531984108959, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4156305531984108959, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4156305531984108959, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4156305531984108959, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4156305531984108959, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4156305531984108959, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9d57c6f1841544bd986eb02bc202b32d, type: 3}
 --- !u!23 &7122514234519006741
 MeshRenderer:
   m_ObjectHideFlags: 0

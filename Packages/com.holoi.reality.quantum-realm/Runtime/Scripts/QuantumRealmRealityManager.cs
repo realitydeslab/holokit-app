@@ -184,11 +184,11 @@ namespace Holoi.Reality.QuantumRealm
             }
         }
 
-        private void OnHandValidityChanged(bool valid)
+        private void OnHandValidityChanged(bool isValid)
         {
             if (IsServer)
             {
-                _isHostHandValid.Value = valid;
+                _isHostHandValid.Value = isValid;
             }
         }
 
@@ -197,16 +197,14 @@ namespace Holoi.Reality.QuantumRealm
             if (!oldValue && newValue)
             {
                 HandPose.IsActive = true;
-                LeanTween.cancel(_handVisual);
-                LeanTween.alpha(_handVisual, 1f, 1f);
+                _handVisual.SetActive(true);
                 return;
             }
 
             if (oldValue && !newValue)
             {
                 HandPose.IsActive = false;
-                LeanTween.cancel(_handVisual);
-                LeanTween.alpha(_handVisual, 0f, 1f);
+                _handVisual.SetActive(false);
                 return;
             }
         }
