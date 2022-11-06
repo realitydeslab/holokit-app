@@ -50,7 +50,7 @@ namespace Holoi.Library.HoloKitApp
 
         private const float WatermarkPortraitPosYRatio = 0.1066f;
 
-        private const float WatermarkPortraitWidthRatio = 0.05f;
+        private const float WatermarkPortraitWidthRatio = 0.1564f;
 
         private const float WatermarkPortraitHeightRatio = 0.0592f;
 
@@ -58,7 +58,7 @@ namespace Holoi.Library.HoloKitApp
 
         private const float WatermarkLandscapePosYRatio = 0.1795f;
 
-        private const float WatermarkLandscapeWidthRatio = 0.05f;
+        private const float WatermarkLandscapeWidthRatio = 0.0723f;
 
         private const float WatermarkLandscapeHeightRatio = 0.1282f;
 
@@ -139,14 +139,14 @@ namespace Holoi.Library.HoloKitApp
                 {
                     _watermarkInput.rect = new(Mathf.RoundToInt(_videoWidth * WatermarkPortraitPosXRatio),
                                                Mathf.RoundToInt(_videoHeight * WatermarkPortraitPosYRatio),
-                                               Mathf.RoundToInt(_videoHeight * WatermarkPortraitHeightRatio),
+                                               Mathf.RoundToInt(_videoWidth * WatermarkPortraitWidthRatio),
                                                Mathf.RoundToInt(_videoHeight * WatermarkPortraitHeightRatio));
                 }
                 else
                 {
                     _watermarkInput.rect = new(Mathf.RoundToInt(_videoWidth * WatermarkLandscapePosXRatio),
                                                Mathf.RoundToInt(_videoHeight * WatermarkLandscapePosYRatio),
-                                               Mathf.RoundToInt(_videoHeight * WatermarkLandscapeHeightRatio),
+                                               Mathf.RoundToInt(_videoWidth * WatermarkLandscapeWidthRatio),
                                                Mathf.RoundToInt(_videoHeight * WatermarkLandscapeHeightRatio));
                 }
                 _cameraInput = new(_watermarkInput, clock, _recordCamera);

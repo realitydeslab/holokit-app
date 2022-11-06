@@ -17,7 +17,8 @@ namespace Holoi.Library.HoloKitApp
     {
         Host = 0,
         Spectator = 1,
-        NonHostPlayer = 2
+        NonHostPlayer = 2,
+        Puppeteer = 3
     }
 
     public class HoloKitApp : MonoBehaviour
@@ -69,9 +70,11 @@ namespace Holoi.Library.HoloKitApp
         /// <summary>
         /// If the local player is the host or a non-host-player
         /// </summary>
-        public bool IsPlayer => _localPlayerType != HoloKitAppPlayerType.Spectator;
+        public bool IsPlayer => _localPlayerType == HoloKitAppPlayerType.Host || _localPlayerType == HoloKitAppPlayerType.NonHostPlayer;
 
         public bool IsNonHostPlayer => _localPlayerType == HoloKitAppPlayerType.NonHostPlayer;
+
+        public bool IsPuppeteer => _localPlayerType == HoloKitAppPlayerType.Puppeteer;
 
         public HoloKitAppPlayerType LocalPlayerType => _localPlayerType;
 
