@@ -1,24 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Holoi.Library.HoloKitApp;
-using Unity.Netcode;
-using HoloKit;
+using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
+using Holoi.Library.HoloKitApp;
+using BoidsSimulationOnGPU;
 
 namespace Holoi.Reality.Typography
 {
     public class BoidTypoRealityManager : RealityManager
     {
-        public override void OnNetworkSpawn()
+        [Header("AR")]
+        [SerializeField] private AROcclusionManager _arOcclusionManager;
+
+        [Header("Boid")]
+        [SerializeField] private VisualEffect _boidVfx;
+
+        [SerializeField] private GPUBoids _boidAlgorithm;
+
+        private void Start()
         {
-            base.OnNetworkSpawn();
+            _boidVfx.enabled = true;
+            if (!HoloKitApp.Instance.IsSpectator)
+            {
+                _arOcclusionManager.enabled = true;
+            }
         }
 
-        private void Awake()
+        private void Update()
         {
+            _boidVfx.SetGraphicsBuffer("PositionDataBuffer", _boidAlgorithm.GetBoidPositionDataBuffer());
+            _boidVfx.SetGraphicsBuffer("VelocityDataBuffer", _boidAlgorithm.GetBoidVelocityDataBuffer());
         }
-
     }
 }

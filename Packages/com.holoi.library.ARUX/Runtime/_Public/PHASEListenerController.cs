@@ -9,7 +9,7 @@ namespace Holoi.Library.ARUX
 
         [SerializeField] private AudioListener _unityListener;
 
-        private void Start()
+        private void Awake()
         {
             if (HoloKitApp.HoloKitApp.Instance.GlobalSettings.PhaseEnabled
                 && HoloKitApp.HoloKitApp.Instance.CurrentReality.IsPhaseRequired())
@@ -21,6 +21,15 @@ namespace Holoi.Library.ARUX
             {
                 _phaseListener.enabled = false;
                 _unityListener.enabled = true;
+                Destroy(gameObject);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_phaseListener.enabled)
+            {
+                Apple.PHASE.Helpers.PHASEStop();
             }
         }
     }
