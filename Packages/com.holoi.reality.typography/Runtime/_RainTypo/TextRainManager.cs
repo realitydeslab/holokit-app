@@ -42,22 +42,22 @@ namespace Holoi.Reality.Typography
 
         void UpdateVisual()
         {
-            if (IsServer)
-            {
-                var serverEye = FindObjectOfType<RainTypoRealityManager>().ServerCenterEye;
+            //if (IsServer)
+            //{
+            //    var serverEye = FindObjectOfType<RainTypoRealityManager>().ServerCenterEye;
 
-                _vfxRain.SetVector3("Head Position_position", serverEye.position - (serverEye.up * 0.15f));
+            //    _vfxRain.SetVector3("Head Position_position", serverEye.position - (serverEye.up * 0.15f));
 
-                var estimateChestPos = serverEye.position - (serverEye.up * 0.5f);
+            //    var estimateChestPos = serverEye.position - (serverEye.up * 0.5f);
 
-                _vfxRain.SetVector3("Chest Position_position", estimateChestPos);
+            //    _vfxRain.SetVector3("Chest Position_position", estimateChestPos);
 
-                var hitPos = FindObjectOfType<RainTypoRealityManager>().HitPosition;
+            //    var hitPos = FindObjectOfType<RainTypoRealityManager>().HitPosition;
 
-                _vfxRain.SetVector3("Plane Position_position", hitPos);
+            //    _vfxRain.SetVector3("Plane Position_position", hitPos);
 
-                UpdateVisualClientRpc(serverEye.position, estimateChestPos, hitPos);
-            }
+            //    UpdateVisualClientRpc(serverEye.position, estimateChestPos, hitPos);
+            //}
 
         }
 

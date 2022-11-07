@@ -1,105 +1,96 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Holoi.Library.HoloKitApp;
-using Holoi.Library.ARUX;
-using Unity.Netcode;
-using HoloKit;
+using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using Unity.Netcode;
+using Holoi.Library.HoloKitApp;
+using HoloKit;
 
 namespace Holoi.Reality.Typography
 {
     public class RainTypoRealityManager : RealityManager
     {
-        [Header("AR Objects")]
-        public Transform ServerCenterEye;
-        public Transform CenterEye;
+        [Header("AR")]
+        [SerializeField] private ARPlaneManager _arPlaneManager;
 
-        ARRaycastManager _arRaycastManager;
-        
-        bool _isRaycastHitFloor = false;
+        [SerializeField] private ARRaycastManager _arRaycastManager;
 
-        //
-        BoneController _bone;
-        bool _isBodyValid = false;
-        bool _isTrigger = false;
+        [Header("Rain")]
+        [SerializeField] private Transform _hostCenterEyeTransform;
 
-        [HideInInspector] public Vector3 HitPosition = Vector3.down;
+        [SerializeField] private VisualEffect _rainVfx;
+
+        private readonly NetworkVariable<Vector3> _hostPlaneHeight = new(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+        private float _lastRaycastTime;
+
+        private const float RaycastInterval = 5f;
+
+        private const float RaycastHorizontalOffset = 1.2f;
+
+        private const float CenterEyeToChestOffsetY = 0.5f;
+
+        private void Start()
+        {
+            if (HoloKitApp.Instance.IsHost)
+            {
+                _arPlaneManager.enabled = true;
+                _arRaycastManager.enabled = true;
+            }
+        }
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+            _hostPlaneHeight.OnValueChanged += OnHostPlaneHeightValueChanged;
         }
 
-        private void Start()
+        public override void OnNetworkDespawn()
         {
-            _arRaycastManager = FindObjectOfType<ARRaycastManager>();
-
-            if(CenterEye==null) CenterEye = HoloKitCamera.Instance.CenterEyePose;
-
-            InitServerCenterEye();
+            base.OnNetworkDespawn();
+            _hostPlaneHeight.OnValueChanged -= OnHostPlaneHeightValueChanged;
         }
 
         private void Update()
         {
-            if (FindObjectOfType<BoneController>() != null && !_isTrigger)
+            if (_arRaycastManager.enabled && Time.time - _lastRaycastTime > RaycastInterval)
             {
-                _isBodyValid = true;
-                _bone = FindObjectOfType<BoneController>();
-                //_phaseManager.PlayPhaseSource();
-                _isTrigger = true;
-            }
-
-            UpdateFloorHeight();
-        }
-
-        void InitServerCenterEye()
-        {
-
-            if (HoloKitApp.Instance.IsHost)
-            {
-                ServerCenterEye.GetComponent<FollowMovementManager>().enabled = true;
-            }
-            else
-            {
-                ServerCenterEye.GetComponent<FollowMovementManager>().enabled = false;
-
-            }
-        }
-
-        void UpdateFloorHeight()
-        {
-
-            Vector3 rayOrigin = CenterEye.position + CenterEye.forward * 1f;
-
-            Ray ray = new(rayOrigin, Vector3.down);
-
-            List<ARRaycastHit> hitResults = new();
-
-            if (_arRaycastManager.Raycast(ray, hitResults, TrackableType.Planes))
-            {
-                foreach (var hitResult in hitResults)
+                Vector3 horizontalForward = GetHorizontalForward(HoloKitCamera.Instance.CenterEyePose);
+                Vector3 rayOrigin = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * RaycastHorizontalOffset;
+                Ray ray = new(rayOrigin, Vector3.down);
+                List<ARRaycastHit> hits = new();
+                if (_arRaycastManager.Raycast(ray, hits, TrackableType.Planes))
                 {
-                    var arPlane = hitResult.trackable.GetComponent<ARPlane>();
-
-                    if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
+                    foreach (var hit in hits)
                     {
-                        HitPosition = hitResult.pose.position;
-                        transform.position = HitPosition;
-                        _isRaycastHitFloor = true;
-                        return;
+                        var arPlane = hit.trackable.GetComponent<ARPlane>();
+                        if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
+                        {
+                            _hostPlaneHeight.Value = hit.pose.position;
+                            _lastRaycastTime = Time.time;
+                            return;
+                        }
                     }
                 }
-                _isRaycastHitFloor = false;
-                //transform.position = _centerEye.position + horizontalForward.normalized * 1.5f + (transform.up * -1f);
+            }
+            UpdateRainVfx();
+        }
 
-            }
-            else
-            {
-                _isRaycastHitFloor = false;
-                //transform.position = _centerEye.position + horizontalForward.normalized * 1.5f + (transform.up * -1f);
-            }
+        private void UpdateRainVfx()
+        {
+            _rainVfx.SetVector3("Head Position_position", _hostCenterEyeTransform.position);
+            _rainVfx.SetVector3("Chest Position_position", _hostCenterEyeTransform.position + new Vector3(0f, -CenterEyeToChestOffsetY, 0f));
+        }
+
+        private void OnHostPlaneHeightValueChanged(Vector3 oldPosition, Vector3 newPosition)
+        {
+            _rainVfx.SetVector3("Plane Position_position", newPosition);
+        }
+
+        private static Vector3 GetHorizontalForward(Transform transform)
+        {
+            return new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
         }
     }
 }

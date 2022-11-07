@@ -1,5 +1,6 @@
 using UnityEngine;
 using Apple.PHASE;
+using HoloKit;
 
 namespace Holoi.Library.ARUX
 {
@@ -11,7 +12,8 @@ namespace Holoi.Library.ARUX
 
         private void Awake()
         {
-            if (HoloKitApp.HoloKitApp.Instance.GlobalSettings.PhaseEnabled
+            if (HoloKitUtils.IsRuntime
+                && HoloKitApp.HoloKitApp.Instance.GlobalSettings.PhaseEnabled
                 && HoloKitApp.HoloKitApp.Instance.CurrentReality.IsPhaseRequired())
             {
                 _phaseSource.enabled = true;
