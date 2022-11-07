@@ -48,7 +48,7 @@ namespace Holoi.Reality.QuantumRealm
         // so the indicator is not occluded by the ground plane
         private const float ARRaycastPointGroundOffset = 0.05f;
 
-        private NetworkVariable<bool> _isHostHandValid = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        private readonly NetworkVariable<bool> _isHostHandValid = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         [Header("Events")]
         public UnityEvent OnARRaycastManagerFoundPlane;
@@ -115,7 +115,7 @@ namespace Holoi.Reality.QuantumRealm
             SpawnBuddhaGroup();
 
             // Turn off indicators and buttons
-            _startButton.GetComponent<LoadButtonController>().OnDeath();
+            _startButton.GetComponent<HoverableStartButton>().OnDeath();
             _arRaycastIndicatorController.OnDeath();
             Destroy(_arRaycastPoint);
 

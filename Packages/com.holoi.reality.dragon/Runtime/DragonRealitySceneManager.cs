@@ -13,7 +13,7 @@ namespace Holoi.Reality.Dragon
     public class DragonRealitySceneManager : MonoBehaviour
     {
         [Header("AR UI Components")]
-        [SerializeField] LoadButtonController _placementLoadButton;
+        [SerializeField] HoverableStartButton _placementLoadButton;
         [Header("UI Components")]
         [SerializeField] GameObject _switchButton;
         [SerializeField] GameObject _tipsText;

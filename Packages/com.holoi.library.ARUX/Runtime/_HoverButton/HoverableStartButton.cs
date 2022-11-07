@@ -4,7 +4,7 @@ using Holoi.Library.HoloKitApp;
 namespace Holoi.Library.ARUX
 {
     [RequireComponent(typeof(HoverableObject), typeof(Animator))]
-    public class LoadButtonController : MonoBehaviour
+    public class HoverableStartButton : MonoBehaviour
     {
         private Animator _animator;
 
@@ -12,22 +12,19 @@ namespace Holoi.Library.ARUX
 
         private HoverableObject _hoverableObject;
 
-        private void Start()
-        {
-            _animator = GetComponent<Animator>();
-            _meshRenderer = GetComponent<MeshRenderer>();
-            _hoverableObject = GetComponent<HoverableObject>();
-            gameObject.SetActive(false);
-        }
-
         private void Update()
         {
             _meshRenderer.material.SetFloat("_Load", _hoverableObject.CurrentLoadPercentage);
         }
 
-        public void OnBirth()
+        public void OnAppear()
         {
             gameObject.SetActive(true);
+
+            _animator = GetComponent<Animator>();
+            _meshRenderer = GetComponent<MeshRenderer>();
+            _hoverableObject = GetComponent<HoverableObject>();
+
             _animator.Rebind();
             _animator.Update(0);
         }
@@ -35,6 +32,10 @@ namespace Holoi.Library.ARUX
         public void OnDisappear()
         {
             _animator.SetTrigger("Die");
+            StartCoroutine(HoloKitAppUtils.WaitAndDo(0.3f, () =>
+            {
+                gameObject.SetActive(false);
+            }));
         }
 
         public void OnDeath()

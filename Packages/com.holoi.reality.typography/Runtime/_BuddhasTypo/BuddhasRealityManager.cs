@@ -28,7 +28,7 @@ namespace Holoi.Reality.Typography
          GameObject _buddhasInstance;
 
         [Header("AR UI Components")]
-        [SerializeField] LoadButtonController _placementLoadButton;
+        [SerializeField] HoverableStartButton _placementLoadButton;
         [SerializeField] ARRayCastController _arRaycastController;
         [SerializeField] RaycastPlacmentVisualController _raycastVisualController;
 
