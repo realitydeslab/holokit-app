@@ -22,6 +22,8 @@ public class MovementController : MonoBehaviour
     Vector3 _acceleration = new();
     Vector3 nextAngle = new();
 
+    bool _isFollow = false;
+
     // debug
     Vector3 realDesired;
 
@@ -99,7 +101,15 @@ public class MovementController : MonoBehaviour
 
         float mHeight = Mathf.Clamp01(Mathf.Abs(dH));
 
-        realDesired += Vector3.up * heightDesired * mHeight;
+        if (_isFollow)
+        {
+            realDesired += Vector3.up * heightDesired * mHeight;
+        }
+        else
+        {
+            realDesired = Vector3.up * heightDesired * mHeight; ;
+        }
+        
 
         _steer = realDesired - _velocity;
 
@@ -151,7 +161,7 @@ public class MovementController : MonoBehaviour
             nextAngle -= Vector3.up * _angluarVelocity * Time.deltaTime;
         }
 
-        transform.rotation = Quaternion.Euler(nextAngle);
+        transform.rotation = Quaternion.Euler(nextAngle + new Vector3(0,180,0));
     }
 
     void AnimationUpdate()
@@ -183,6 +193,10 @@ public class MovementController : MonoBehaviour
         return velocity.normalized * length;
     }
 
+    public void OnBeginFollow()
+    {
+        _isFollow = true;
+    }
     //private void OnDrawGizmos()
     //{
     //    Gizmos.DrawWireSphere(fixedTargetPosition, 2);
