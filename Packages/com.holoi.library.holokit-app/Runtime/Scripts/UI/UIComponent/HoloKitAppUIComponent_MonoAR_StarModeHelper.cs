@@ -6,20 +6,30 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         [SerializeField] private GameObject _arrow;
 
-        private const float _arrowInitialY = 100f;
+        private const float ArrowInitialY = 100f;
 
-        private const float _arrowMovingDistance = 30f;
+        private const float ArrowMovingDistance = 30f;
 
-        private const float _arrowMovingDuration = 0.8f;
+        private const float ArrowMovingDuration = 0.8f;
+
+        private const float Duration = 8f;
 
         private void Start()
         {
-            _arrow.GetComponent<RectTransform>().anchoredPosition = new(0f, _arrowInitialY);
-            StartMovingUpward();
-            StartCoroutine(HoloKitAppUtils.WaitAndDo(8f, () =>
+            if (HoloKitApp.Instance.IsSpectator)
             {
                 gameObject.SetActive(false);
-            }));
+            }
+            else
+            {
+                _arrow.GetComponent<RectTransform>().anchoredPosition = new(0f, ArrowInitialY);
+                StartMovingUpward();
+                StartCoroutine(HoloKitAppUtils.WaitAndDo(Duration, () =>
+                {
+                    gameObject.SetActive(false);
+                }));
+                HoloKitAppUIEventManager.OnStartedRecording += OnStartedRecording;
+            }
         }
 
         private void OnDisable()
@@ -28,18 +38,34 @@ namespace Holoi.Library.HoloKitApp.UI
             gameObject.SetActive(false);
         }
 
+        private void OnDestroy()
+        {
+            if (!HoloKitApp.Instance.IsSpectator)
+            {
+                HoloKitAppUIEventManager.OnStartedRecording -= OnStartedRecording;
+            }
+        }
+
         private void StartMovingUpward()
         {
-            LeanTween.moveLocalY(_arrow, _arrowInitialY + _arrowMovingDistance, _arrowMovingDuration)
+            LeanTween.moveLocalY(_arrow, ArrowInitialY + ArrowMovingDistance, ArrowMovingDuration)
                 .setEase(LeanTweenType.easeInOutSine)
                 .setOnComplete(StartMovingDownward);
         }
 
         private void StartMovingDownward()
         {
-            LeanTween.moveLocalY(_arrow, _arrowInitialY, _arrowMovingDuration)
+            LeanTween.moveLocalY(_arrow, ArrowInitialY, ArrowMovingDuration)
                 .setEase(LeanTweenType.easeInOutSine)
                 .setOnComplete(StartMovingUpward);
+        }
+
+        private void OnStartedRecording()
+        {
+            if (gameObject.activeSelf)
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
 }
