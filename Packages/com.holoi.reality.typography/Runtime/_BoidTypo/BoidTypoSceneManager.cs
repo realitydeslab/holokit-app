@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
 using BoidsSimulationOnGPU;
@@ -15,12 +14,14 @@ namespace Holoi.Reality.Typography
     public class BoidTypoSceneManager : MonoBehaviour
     {
         [Header("Reality Objects")]
-        [SerializeField] GameObject _boid;
-        VisualEffect _vfx;
-        [SerializeField] Transform _rotateAroundPlayer;
+        [SerializeField] private GameObject _boid;
+
+        [SerializeField] private VisualEffect _vfx;
+        [SerializeField] private Transform _rotateAroundPlayer;
+
         [Header("AR Base Objects")]
-        [SerializeField] Transform _centerEye;
-        [SerializeField] Transform _serverCenterEye;
+        [SerializeField] private Transform _centerEye;
+        [SerializeField] private Transform _serverCenterEye;
 
         // raycast
         ARRaycastManager _raycastManager;
@@ -39,7 +40,6 @@ namespace Holoi.Reality.Typography
 
             _vfx = _boid.GetComponent<VisualEffect>();
             _vfx.enabled = true;
-
         }
 
         void Update()

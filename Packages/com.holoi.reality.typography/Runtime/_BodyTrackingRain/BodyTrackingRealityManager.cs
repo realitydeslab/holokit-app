@@ -14,7 +14,6 @@ namespace Holoi.Reality.Typography
     {
         [Header("AR Base Objects")]
         [SerializeField] Transform _centerEye;
-        [SerializeField] PhaseManager _phaseManager;
 
         public bool IsBodyValid = false;
         bool _isFirstTimeFindBody = false;

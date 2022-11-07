@@ -15,7 +15,6 @@ namespace Holoi.Reality.Typography
         [Header("AR Objects")]
         public Transform ServerCenterEye;
         public Transform CenterEye;
-        [SerializeField] PhaseManager _phaseManager;
 
         ARRaycastManager _arRaycastManager;
         

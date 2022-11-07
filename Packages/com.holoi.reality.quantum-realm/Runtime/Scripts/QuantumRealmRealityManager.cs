@@ -35,8 +35,6 @@ namespace Holoi.Reality.QuantumRealm
         [Header("Apple")]
         public CoreHapticsManager CoreHapticsManager;
 
-        public PhaseManager PhaseManager;
-
         [Header("Quantum Realm")]
         [SerializeField] private NetworkObject _buddhaGroupPrefab;
 

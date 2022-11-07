@@ -39,9 +39,6 @@ namespace Holoi.Reality.Typography
         [SerializeField] ARRayCastController _arRaycastController;
         [SerializeField] RaycastPlacmentVisualController _raycastVisualController;
 
-        [Header("PHASE")]
-        [SerializeField] PhaseManager _phaseManager;
-
         bool _isCastOnFloor = false;
 
         bool _isObjectInitialized = false;
