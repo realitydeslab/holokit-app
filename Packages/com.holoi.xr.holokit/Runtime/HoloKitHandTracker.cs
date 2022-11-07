@@ -49,8 +49,11 @@ namespace HoloKit
             get => _isActive;
             set
             {
-                _isActive = value;
-                HoloKitHandTrackingControllerAPI.SetHandTrackingActive(_isActive);
+                if (_isActive != value)
+                {
+                    _isActive = value;
+                    HoloKitHandTrackingControllerAPI.SetHandTrackingActive(_isActive);
+                }
             }
         }
 
@@ -59,8 +62,11 @@ namespace HoloKit
             get => _isVisible;
             set
             {
-                _isVisible = value;
-                SetHandJointsVisible(value);
+                if (_isVisible != value)
+                {
+                    _isVisible = value;
+                    SetHandJointsVisible(value);
+                } 
             }
         }
 
@@ -96,6 +102,7 @@ namespace HoloKit
             HoloKitHandTrackingControllerAPI.OnHandPoseUpdated += OnHandPoseUpdated;
             HoloKitHandTrackingControllerAPI.RegisterHandTrackingControllerDelegates();
             HoloKitHandTrackingControllerAPI.SetHandTrackingActive(_isActive);
+            _hand.SetActive(false);
             SetupHandJointColors();
             SetHandJointsVisible(_isVisible);
 
