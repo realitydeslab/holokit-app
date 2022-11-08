@@ -143,69 +143,13 @@ MonoBehaviour:
   _arOcclusionManager: {fileID: 275482728}
   _arPlaneManager: {fileID: 2068233602}
   _arRaycastManager: {fileID: 2068233603}
-  _extendedHandJoint: {fileID: 153230845}
   _arPlacementIndicator: {fileID: 1371218925}
   _hoverableStartButton: {fileID: 1741645498}
+  _extendedHandJoint: {fileID: 153230845}
   HostHandPose: {fileID: 172308144}
   _hostHandVisual: {fileID: 1632013961}
   CoreHapticsManager: {fileID: 725391263}
   _buddhaGroupPrefab: {fileID: 2143471666, guid: 6fe50cf1a5dd04298aa36ee8a21ddb0e, type: 3}
-  OnARRaycastManagerFoundPlane:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Holoi.Library.ARUX.ARRaycastIndicatorController,
-          NewAssembly
-        m_MethodName: OnFoundPlane
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Holoi.Library.ARUX.LoadButtonController, NewAssembly
-        m_MethodName: OnBirth
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnARRaycastManagerLostPlane:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Holoi.Library.ARUX.ARRaycastIndicatorController,
-          NewAssembly
-        m_MethodName: OnLostPlane
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Holoi.Library.ARUX.LoadButtonController, NewAssembly
-        m_MethodName: OnDisappear
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &36259178 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5626992625800642033, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
@@ -858,6 +802,10 @@ PrefabInstance:
     - target: {fileID: 7969130196430727407, guid: 0e148e1f43bd7405db6ccd8847577ea7, type: 3}
       propertyPath: _arRaycastManager
       value: 
+      objectReference: {fileID: 2068233603}
+    - target: {fileID: 7969130196430727407, guid: 0e148e1f43bd7405db6ccd8847577ea7, type: 3}
+      propertyPath: _hitPointGroundOffset
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 7969130196430727407, guid: 0e148e1f43bd7405db6ccd8847577ea7, type: 3}
       propertyPath: OnLostPlane.m_PersistentCalls.m_Calls.Array.data[1].m_Target

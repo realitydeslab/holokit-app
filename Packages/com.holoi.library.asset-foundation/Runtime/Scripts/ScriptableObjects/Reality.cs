@@ -160,5 +160,17 @@ namespace Holoi.AssetFoundation
             }
             return false;
         }
+
+        public bool IsAppleWatchRequired()
+        {
+            foreach (var realityTag in RealityTags)
+            {
+                if (realityTag.BundleId.Equals("com.holoi.asset-foundation.apple-watch"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

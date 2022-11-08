@@ -1,4 +1,6 @@
+using System;
 using System.Runtime.InteropServices;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.WatchConnectivity
 {
@@ -12,7 +14,7 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity
     public static class HoloKitAppWatchConnectivityAPI
     {
         [DllImport("__Internal")]
-        private static extern void HoloKitAppWatchConnectivity_ActivateWCSession();
+        private static extern void HoloKitAppWatchConnectivity_ActivateWCSession(Action<bool> OnSessionReachabilityChanged);
 
         [DllImport("__Internal")]
         private static extern bool HoloKitAppWatchConnectivity_DeviceHasPairedAppleWatch();
@@ -29,27 +31,56 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity
         [DllImport("__Internal")]
         private static extern void HoloKitAppWatchConnectivity_UpdateCurrentReality(int realityIndex);
 
+        [AOT.MonoPInvokeCallback(typeof(Action<bool>))]
+        private static void OnSessionReachabilityChangedFunc(bool isReachable)
+        {
+            OnSessionReachabilityChanged?.Invoke(isReachable);
+        }
+
+        public static event Action<bool> OnSessionReachabilityChanged;
+
         public static void ActivateWatchConnectivitySession()
         {
-            if (HoloKit.HoloKitUtils.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
-                HoloKitAppWatchConnectivity_ActivateWCSession();
+                HoloKitAppWatchConnectivity_ActivateWCSession(OnSessionReachabilityChangedFunc);
             }
         }
 
         public static bool DeviceHasPairedAppleWatch()
         {
-            return HoloKitAppWatchConnectivity_DeviceHasPairedAppleWatch();
+            if (HoloKitUtils.IsRuntime)
+            {
+                return HoloKitAppWatchConnectivity_DeviceHasPairedAppleWatch();
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static bool IsWatchAppInstalled()
         {
-            return HoloKitAppWatchConnectivity_IsWatchAppInstalled();
+            if (HoloKitUtils.IsRuntime)
+            {
+                return HoloKitAppWatchConnectivity_IsWatchAppInstalled();
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static bool IsWatchReachable()
         {
-            return HoloKitAppWatchConnectivity_IsWatchReachable();
+            if (HoloKitUtils.IsRuntime)
+            {
+                return HoloKitAppWatchConnectivity_IsWatchReachable();
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static void TakeControlWatchConnectivitySession()
