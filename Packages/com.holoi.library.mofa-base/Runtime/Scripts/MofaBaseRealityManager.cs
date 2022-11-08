@@ -161,7 +161,7 @@ namespace Holoi.Library.MOFABase
 
         public void SpawnLifeShield(ulong ownerClientId)
         {
-            var lifeShieldPrefab = LifeShieldList.GetLifeShield(_players[ownerClientId].MagicSchoolTokenId.Value.ToString());
+            var lifeShieldPrefab = LifeShieldList.GetLifeShield(_players[ownerClientId].MagicSchoolTokenId.Value);
             var lifeShield = Instantiate(lifeShieldPrefab);
             lifeShield.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
         }

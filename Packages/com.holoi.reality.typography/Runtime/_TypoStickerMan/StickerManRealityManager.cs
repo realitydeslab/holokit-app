@@ -39,6 +39,7 @@ namespace Holoi.Reality.Typography
                 _arPlaneManager.enabled = true;
                 HoloKitHandTracker.OnHandValidityChanged += OnHandValidityChanged;
                 HoloKitHandTracker.Instance.IsActive = true;
+                _hostHandVisual.SetActive(false);
                 _arPlacementIndicator.IsActive = true;
 
                 if (HoloKitUtils.IsEditor)

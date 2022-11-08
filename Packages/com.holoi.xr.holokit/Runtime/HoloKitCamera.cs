@@ -123,6 +123,12 @@ namespace HoloKit
 
         private void Start()
         {
+            if (HoloKitUtils.IsRuntime)
+            {
+                Screen.sleepTimeout = SleepTimeout.NeverSleep;
+                UnityEngine.iOS.Device.hideHomeButton = true;
+            }
+
             HoloKitNFCSessionControllerAPI.OnNFCSessionCompleted += OnNFCSessionCompleted;
             HoloKitARSessionControllerAPI.ResetARSessionFirstFrame();
             HoloKitARSessionControllerAPI.SetVideoEnhancementMode(_videoEnhancementMode);
@@ -165,6 +171,7 @@ namespace HoloKit
             if (_renderMode == HoloKitRenderMode.Stereo)
             {
                 Screen.orientation = ScreenOrientation.LandscapeLeft;
+                HoloKitARSessionControllerAPI.SetScreenBrightness(1f);
                 _monoCamera.enabled = false;
                 _arCameraBackground.enabled = false;
                 _leftEyeCamera.gameObject.SetActive(true);

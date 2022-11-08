@@ -10,11 +10,11 @@ namespace Holoi.Library.MOFABase
 
         public LifeShield DefaultLifeShield;
 
-        public LifeShield GetLifeShield(string magicSchoolTokenId)
+        public LifeShield GetLifeShield(int index)
         {
             foreach (var lifeShield in List)
             {
-                if (lifeShield.MagicSchool.TokenId.Equals(magicSchoolTokenId))
+                if (int.Parse(lifeShield.MagicSchool.TokenId) == index)
                 {
                     return lifeShield;
                 }

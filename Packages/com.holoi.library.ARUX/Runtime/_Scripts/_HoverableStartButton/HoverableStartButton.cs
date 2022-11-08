@@ -49,6 +49,10 @@ namespace Holoi.Library.ARUX
 
         public void OnDeath()
         {
+            if (_animator == null)
+            {
+                _animator = GetComponent<Animator>();
+            }
             _animator.SetTrigger("Die");
             StartCoroutine(HoloKitAppUtils.WaitAndDo(0.3f, () =>
             {

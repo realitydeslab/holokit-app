@@ -110,6 +110,12 @@ namespace HoloKit {
         [DllImport("__Internal")]
         private static extern void HoloKitSDK_ResetARSessionFirstFrame();
 
+        [DllImport("__Internal")]
+        private static extern double HoloKitSDK_GetScreenBrightness();
+
+        [DllImport("__Internal")]
+        private static extern void HoloKitSDK_SetScreenBrightness(double value);
+
         [AOT.MonoPInvokeCallback(typeof(Action<int>))]
         private static void OnThermalStateChangedDelegate(int state)
         {
@@ -392,6 +398,21 @@ namespace HoloKit {
             {
                 HoloKitSDK_ResetARSessionFirstFrame();
             }
+        }
+
+        public static double GetScreenBrightness()
+        {
+            return HoloKitSDK_GetScreenBrightness();
+        }
+
+        public static void SetScreenBrightness(double value)
+        {
+            if (HoloKitUtils.IsEditor) { return; }
+            if (value > 1f || value < 0f)
+            {
+                Debug.Log("Screen brightness value can only be within 0 and 1");
+            }
+            HoloKitSDK_SetScreenBrightness(value);
         }
     }
 }

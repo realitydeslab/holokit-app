@@ -19,18 +19,16 @@ namespace Holoi.Reality.QuantumRealm
 
         [SerializeField] private ARRaycastManager _arRaycastManager;
 
-        [SerializeField] private GameObject _extendedHandJoint;
+        [SerializeField] private ARPlacementIndicator _arPlacementIndicator;
 
-        [SerializeField] private GameObject _arRaycastPoint;
-
-        [SerializeField] private ARRaycastIndicatorController _arRaycastIndicatorController;
-
-        [SerializeField] private GameObject _startButton;
+        [SerializeField] private HoverableStartButton _hoverableStartButton;
 
         [Header("Hand")]
-        public HoverObject HandPose; // This is networked
+        [SerializeField] private GameObject _extendedHandJoint;
 
-        [SerializeField] private GameObject _handVisual;
+        public HoverObject HostHandPose; // This is networked
+
+        [SerializeField] private GameObject _hostHandVisual;
 
         [Header("Apple")]
         public CoreHapticsManager CoreHapticsManager;
@@ -40,20 +38,7 @@ namespace Holoi.Reality.QuantumRealm
 
         private BuddhaGroup _buddhaGroup;
 
-        private const float HorizontalRaycastOffset = 2f;
-
-        private readonly Vector3 ARRaycastPointDefaultOffset = new(0f, -0.6f, 2f);
-
-        // We make the y position of ARRaycastPoint slightly higher than the ground plane,
-        // so the indicator is not occluded by the ground plane
-        private const float ARRaycastPointGroundOffset = 0.05f;
-
         private readonly NetworkVariable<bool> _isHostHandValid = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
-        [Header("Events")]
-        public UnityEvent OnARRaycastManagerFoundPlane;
-
-        public UnityEvent OnARRaycastManagerLostPlane;
 
         private void Start()
         {
@@ -62,33 +47,29 @@ namespace Holoi.Reality.QuantumRealm
                 _arOcclusionManager.enabled = true;
                 _arPlaneManager.enabled = true;
                 _arRaycastManager.enabled = true;
+                HoloKitHandTracker.OnHandValidityChanged += OnHandValidityChanged;
                 HoloKitHandTracker.Instance.IsActive = true;
+                _hostHandVisual.SetActive(false);
+                _arPlacementIndicator.IsActive = true;
 
-                _arRaycastPoint.transform.position = ARRaycastPointDefaultOffset;
-                _arRaycastPoint.SetActive(false);
                 // For debug
                 if (HoloKitUtils.IsEditor)
                 {
-                    StartCoroutine(HoloKitAppUtils.WaitAndDo(2.7f, () =>
-                    {
-                        _arRaycastPoint.SetActive(true);
-                        OnARRaycastManagerFoundPlane?.Invoke();
-                    }));
+                    _hostHandVisual.SetActive(true);
                 }
             }
             else
             {
                 // Delete unnecessary objects on client at the very beginning
-                Destroy(_arRaycastPoint);
-                Destroy(_arRaycastIndicatorController.gameObject);
-                Destroy(_startButton);
+                Destroy(_arPlacementIndicator.gameObject);
+                Destroy(_hoverableStartButton.gameObject);
                 Destroy(_extendedHandJoint);
                 // There is no vibration on spectators
                 Destroy(CoreHapticsManager.gameObject);
                 // The networked hand is took control by the host
-                HandPose.GetComponent<FollowTargetController>().MovementType = MovementType.None;
+                HostHandPose.GetComponent<FollowTargetController>().MovementType = MovementType.None;
             }
-            HoloKitHandTracker.OnHandValidityChanged += OnHandValidityChanged;
+            
         }
 
         public override void OnNetworkSpawn()
@@ -106,7 +87,10 @@ namespace Holoi.Reality.QuantumRealm
         public override void OnDestroy()
         {
             base.OnDestroy();
-            HoloKitHandTracker.OnHandValidityChanged -= OnHandValidityChanged;
+            if (HoloKitApp.Instance.IsHost)
+            {
+                HoloKitHandTracker.OnHandValidityChanged -= OnHandValidityChanged;
+            }
         }
 
         public void OnSessionStarted()
@@ -115,9 +99,8 @@ namespace Holoi.Reality.QuantumRealm
             SpawnBuddhaGroup();
 
             // Turn off indicators and buttons
-            _startButton.GetComponent<HoverableStartButton>().OnDeath();
-            _arRaycastIndicatorController.OnDeath();
-            Destroy(_arRaycastPoint);
+            _arPlacementIndicator.OnDeath();
+            _hoverableStartButton.OnDeath();
 
             // Turn off plane detection and raycast
             HoloKitApp.Instance.ARSessionManager.SetARPlaneManagerActive(false);
@@ -126,60 +109,17 @@ namespace Holoi.Reality.QuantumRealm
 
         private void SpawnBuddhaGroup()
         {
+            var hitPoint = _arPlacementIndicator.HitPoint;
             Vector3 position = new(HoloKitCamera.Instance.CenterEyePose.transform.position.x,
-                                   _arRaycastPoint.transform.position.y,
+                                   hitPoint.position.y,
                                    HoloKitCamera.Instance.CenterEyePose.transform.position.z);
-            var buddhaGroup = Instantiate(_buddhaGroupPrefab, position, _arRaycastPoint.transform.rotation);
+            var buddhaGroup = Instantiate(_buddhaGroupPrefab, position, hitPoint.rotation * Quaternion.Euler(180f * Vector3.up));
             buddhaGroup.Spawn();
         }
 
         public void SetBuddhaGroup(BuddhaGroup buddhaGroup)
         {
             _buddhaGroup = buddhaGroup;
-        }
-
-        private void Update()
-        {
-            if (HoloKitUtils.IsEditor) { return; }
-
-            if (!HoloKitApp.Instance.IsHost) { return; }
-
-            // Wo do raycast when buddha group has not been spawned
-            if (_buddhaGroup == null && _arRaycastPoint != null && _arRaycastManager.enabled)
-            {
-                Transform centerEyePose = HoloKitCamera.Instance.CenterEyePose;
-                Vector3 hozizontalForward = new Vector3(centerEyePose.forward.x, 0f, centerEyePose.forward.z).normalized;
-                Vector3 rayOrigin = centerEyePose.position + HorizontalRaycastOffset * hozizontalForward;
-                Ray ray = new(rayOrigin, Vector3.down);
-                List<ARRaycastHit> hits = new();
-                if (_arRaycastManager.Raycast(ray, hits, TrackableType.Planes))
-                {
-                    foreach (var hit in hits)
-                    {
-                        var arPlane = hit.trackable.GetComponent<ARPlane>();
-                        if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
-                        {
-                            _arRaycastPoint.transform.SetPositionAndRotation(hit.pose.position + new Vector3(0f, ARRaycastPointGroundOffset, 0f),
-                                                                             Quaternion.Euler(0f, centerEyePose.rotation.eulerAngles.y, 0f));
-                            if (!_arRaycastPoint.activeSelf)
-                            {
-                                _arRaycastPoint.SetActive(true);
-                                OnARRaycastManagerFoundPlane?.Invoke();
-                            }
-                            return;
-                        }
-                    }
-                }
-
-                // Set ARRaycastPoint to its default pose relative to the center eye
-                _arRaycastPoint.transform.SetPositionAndRotation(centerEyePose.position + centerEyePose.TransformVector(ARRaycastPointDefaultOffset),
-                                                                 Quaternion.Euler(0f, centerEyePose.rotation.eulerAngles.y, 0f));
-                if (_arRaycastPoint.activeSelf)
-                {
-                    _arRaycastPoint.SetActive(false);
-                    OnARRaycastManagerLostPlane?.Invoke();
-                }
-            }
         }
 
         private void OnHandValidityChanged(bool isValid)
@@ -194,15 +134,15 @@ namespace Holoi.Reality.QuantumRealm
         {
             if (!oldValue && newValue)
             {
-                HandPose.IsActive = true;
-                _handVisual.SetActive(true);
+                HostHandPose.IsActive = true;
+                _hostHandVisual.SetActive(true);
                 return;
             }
 
             if (oldValue && !newValue)
             {
-                HandPose.IsActive = false;
-                _handVisual.SetActive(false);
+                HostHandPose.IsActive = false;
+                _hostHandVisual.SetActive(false);
                 return;
             }
         }
