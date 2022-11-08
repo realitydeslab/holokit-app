@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -37,6 +36,7 @@ public class UnkaDragonController : MonoBehaviour
 
     [Header("Test")]
     public GameObject DeathVFX;
+
     public bool Reset;
 
     public bool Die;
@@ -45,9 +45,16 @@ public class UnkaDragonController : MonoBehaviour
 
     public bool FireBreath;
 
+    public bool AutoFireBall;
+
+    public bool AutoFireBreath;
+
     void Start()
     {
-        //StartCoroutine(WaitAndFire());
+        if(AutoFireBall) 
+        StartCoroutine(WaitAndFireBall());
+        if(AutoFireBreath)
+        StartCoroutine(WaitAndFireBreath());
     }
 
     void Update()
@@ -185,12 +192,17 @@ public class UnkaDragonController : MonoBehaviour
 
     }
 
-    IEnumerator WaitAndFire()
+    IEnumerator WaitAndFireBall()
     {
         FireBall = true;
         yield return new WaitForSeconds(4.5f);
+        StartCoroutine(WaitAndFireBall());
+    }
+
+    IEnumerator WaitAndFireBreath()
+    {
         FireBreath = true;
-        yield return new WaitForSeconds(4.5f);
-        StartCoroutine(WaitAndFire());
+        yield return new WaitForSeconds(10f);
+        StartCoroutine(WaitAndFireBreath());
     }
 }
