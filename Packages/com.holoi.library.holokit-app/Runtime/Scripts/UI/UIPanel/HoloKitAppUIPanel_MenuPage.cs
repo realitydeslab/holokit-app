@@ -1,4 +1,5 @@
 using UnityEngine;
+using Holoi.Library.HoloKitApp.iOSOpenURL;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -33,13 +34,15 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnIntroButtonPressed()
         {
-            Application.OpenURL("https://holokit.io");
+            //Application.OpenURL("https://holokit.io");
+            iOSOpenURLAPI.OpenURL("https://holokit.io");
         }
 
         public void OnBuyHoloKitButtonPressed()
         {
             //HoloKitApp.Instance.UIPanelManager.PushUIPanel("BuyHoloKitPage");
-            Application.OpenURL("https://holokit.io/x/get_it_now/");
+            //Application.OpenURL("https://holokit.io/x/get-it-now/");
+            iOSOpenURLAPI.OpenURL("https://holokit.io/x/get-it-now/");
         }
 
         public void OnGettingStartedButtonPressed()
@@ -59,27 +62,32 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnTwitterButtonPressed()
         {
-            Application.OpenURL("https://twitter.com/holokit_io");
+            //Application.OpenURL("https://twitter.com/holokit_io");
+            iOSOpenURLAPI.OpenURL("https://twitter.com/holokit_io");
         }
 
         public void OnDiscordButtonPressed()
         {
-            Application.OpenURL("https://discord.gg/nsPPBfAJ2f");
+            //Application.OpenURL("https://discord.gg/nsPPBfAJ2f");
+            iOSOpenURLAPI.OpenURL("https://discord.gg/nsPPBfAJ2f");
         }
 
         public void OnInstagramButtonPressed()
         {
-            Application.OpenURL("https://www.instagram.com/holokit.io/");
+            //Application.OpenURL("https://www.instagram.com/holokit.io/");
+            iOSOpenURLAPI.OpenURL("https://www.instagram.com/holokit.io/");
         }
 
         public void OnTiktokButtonPressed()
         {
-            Application.OpenURL("https://www.tiktok.com/@holokit.io");
+            //Application.OpenURL("https://www.tiktok.com/@holokit.io");
+            iOSOpenURLAPI.OpenURL("https://www.tiktok.com/@holokit.io");
         }
 
         public void OnYoutubeButtonPressed()
         {
-            Application.OpenURL("https://www.youtube.com/channel/UCNLdtATBRfPlKbdsTb1Y-5Q");
+            //Application.OpenURL("https://www.youtube.com/channel/UCNLdtATBRfPlKbdsTb1Y-5Q");
+            iOSOpenURLAPI.OpenURL("https://www.youtube.com/channel/UCNLdtATBRfPlKbdsTb1Y-5Q");
         }
 
         public void OnMirrorButtonPressed()
