@@ -888,7 +888,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &738626637
 Transform:
   m_ObjectHideFlags: 0
@@ -1083,7 +1083,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1051613882
 Transform:
   m_ObjectHideFlags: 0
@@ -1331,9 +1331,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _arRaycastManager: {fileID: 1831356270}
   _hitPoint: {fileID: 1051613882}
-  _vfxController: {fileID: 0}
+  _vfxController: {fileID: 1918482974}
+  _isActive: 0
   _horizontalRaycastOffset: 1.8
   _hitPositionDefaultOffset: {x: 0, y: -0.6, z: 1.8}
+  _hitPointGroundOffset: 0.05
   OnFoundPlane:
     m_PersistentCalls:
       m_Calls:
@@ -1582,7 +1584,7 @@ MonoBehaviour:
   m_HumanSegmentationDepthMode: 0
   m_EnvironmentDepthMode: 1
   m_EnvironmentDepthTemporalSmoothing: 0
-  m_OcclusionPreferenceMode: 0
+  m_OcclusionPreferenceMode: 2
 --- !u!4 &1606215181 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5626992624695367093, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
@@ -1917,8 +1919,8 @@ GameObject:
   - component: {fileID: 1762744358}
   - component: {fileID: 1762744357}
   - component: {fileID: 1762744356}
-  - component: {fileID: 1762744355}
   - component: {fileID: 1762744354}
+  - component: {fileID: 1762744355}
   - component: {fileID: 1762744353}
   m_Layer: 0
   m_Name: Hoverable Start Button
@@ -1940,7 +1942,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetTransform: {fileID: 1606215181}
-  _offset: {x: 0, y: 0, z: 0.8}
+  _offset: {x: 0, y: 0, z: 0.6}
   _lerpSpeed: 0.4
   _lerpThreshold: 0.024
   _movementType: 2
@@ -1958,9 +1960,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 316ed167c81fe441aa3b0290fcccf8ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _radius: 0.24
+  _radius: 0.3
   _offset: {x: 0, y: 0, z: 0}
   _loadTime: 2.4
+  OnStartedLoading:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStoppedLoading:
+    m_PersistentCalls:
+      m_Calls: []
   OnTriggered:
     m_PersistentCalls:
       m_Calls:
@@ -2999,5 +3007,5 @@ MonoBehaviour:
   _arPlacementIndicator: {fileID: 1557357388}
   _hoverableStartButton: {fileID: 1762744355}
   HostHandPose: {fileID: 172308142}
-  _hostHandVisual: {fileID: 0}
+  _hostHandVisual: {fileID: 738626636}
   _sculpturePrefab: {fileID: 5261560028918107678, guid: 26f1ba5475268476494a42e5338f5198, type: 3}

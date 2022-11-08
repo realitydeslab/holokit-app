@@ -12,6 +12,12 @@ namespace Holoi.Library.ARUX
 
         private HoverableObject _hoverableObject;
 
+        private void Start()
+        {
+            _meshRenderer = GetComponent<MeshRenderer>();
+            _hoverableObject = GetComponent<HoverableObject>();
+        }
+
         private void Update()
         {
             _meshRenderer.material.SetFloat("_Load", _hoverableObject.CurrentLoadPercentage);
@@ -20,17 +26,20 @@ namespace Holoi.Library.ARUX
         public void OnAppear()
         {
             gameObject.SetActive(true);
-
-            _animator = GetComponent<Animator>();
-            _meshRenderer = GetComponent<MeshRenderer>();
-            _hoverableObject = GetComponent<HoverableObject>();
-
+            if (_animator == null)
+            {
+                _animator = GetComponent<Animator>();
+            }
             _animator.Rebind();
             _animator.Update(0);
         }
 
         public void OnDisappear()
         {
+            if (_animator == null)
+            {
+                _animator = GetComponent<Animator>();
+            }
             _animator.SetTrigger("Die");
             StartCoroutine(HoloKitAppUtils.WaitAndDo(0.3f, () =>
             {

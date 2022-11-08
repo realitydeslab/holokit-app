@@ -39,9 +39,16 @@ namespace Holoi.Reality.Typography
                 _arPlaneManager.enabled = true;
                 HoloKitHandTracker.OnHandValidityChanged += OnHandValidityChanged;
                 HoloKitHandTracker.Instance.IsActive = true;
+                _arPlacementIndicator.IsActive = true;
+
+                if (HoloKitUtils.IsEditor)
+                {
+                    _hostHandVisual.SetActive(true);
+                }
             }
             else
             {
+                _arPlaneManager.enabled = true;
                 Destroy(_arPlacementIndicator.gameObject);
                 Destroy(_hoverableStartButton.gameObject);
                 Destroy(HostHandPose.GetComponent<FollowTargetController>());
@@ -71,9 +78,14 @@ namespace Holoi.Reality.Typography
 
         public void SpawnSculpture()
         {
+            Debug.Log("Spawn The Sculpture");
             var hitPoint = _arPlacementIndicator.HitPoint;
             var sculpture = Instantiate(_sculpturePrefab, hitPoint.position, hitPoint.rotation);
             sculpture.GetComponent<NetworkObject>().Spawn();
+
+            _arRaycastManager.enabled = false;
+            _arPlacementIndicator.OnDeath();
+            _hoverableStartButton.OnDeath();
         }
 
         private void OnHandValidityChanged(bool isValid)
@@ -97,117 +109,5 @@ namespace Holoi.Reality.Typography
                 return;
             }
         }
-
-        //public static Vector3 GetHorizontalForward(Transform transform)
-        //{
-        //    return new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
-        //}
-
-        //public void InitializeRealityObject()
-        //{
-        //    Debug.Log("InitializeRealityObject");
-        //    _prefabInstance = Instantiate(_sculpturePrefab);
-
-        //    _prefabInstance.transform.position = _arRaycastController.transform.position;
-
-        //    //var eyeHorizentalForward = GetHorizontalForward(_centerEye);
-
-        //    var lookAtPoint = _prefabInstance.transform.position;
-
-        //    _prefabInstance.transform.LookAt(lookAtPoint);
-
-        //    _prefabInstance.GetComponent<NetworkObject>().Spawn();
-
-        //    SwitchARPlaneToShadowed();
-        //}
-
-        //IEnumerator DisableGameObjectAfterTimes(GameObject go, float time)
-        //{
-        //    yield return new WaitForSeconds(time);
-        //    go.SetActive(false);
-        //}
-
-        //public void DisableARPlaneManager()
-        //{
-        //    _arPlaneManager.enabled = false;
-        //    _arPlaneManager.enabled = false;
-        //    var planeList = FindObjectsOfType<ARPlane>();
-        //    foreach (var plane in planeList)
-        //    {
-        //        Destroy(plane.gameObject);
-        //    }
-        //}
-
-        //public void DisableARRaycastManager()
-        //{
-        //    // disble ar ui script:
-        //    _arRaycastController.enabled = false;
-        //    // play die animation
-        //    _raycastVisualController.PlayDie();
-        //    // disable go
-        //    StartCoroutine(DisableGameObjectAfterTimes(_arRaycastController.gameObject, 2f));
-        //}
-
-        //public void OnInteractionTriggered()
-        //{
-        //    TriggerHandVFX();
-        //}
-
-        //void TriggerHandVFX()
-        //{
-        //    _handLoadedVFXParent.gameObject.SetActive(true);
-        //    StartCoroutine(DisableGameObjectAfterTimes(_handLoadedVFXParent.gameObject, 2.5f));
-        //}
-
-        //public void SetPlacementLoadButton(bool state)
-        //{
-        //    //Debug.Log("SetPlacementLoadButton: " + state);
-        //    if (HoloKitApp.Instance.IsHost)
-        //    {
-        //        _placementLoadButton.gameObject.SetActive(state);
-        //    }
-        //}
-
-
-        //[ClientRpc]
-        //public void SyncHandValidStateCLientRpc(bool valid)
-        //{
-        //    if (HoloKitApp.Instance.IsHost)
-        //    {
-        //        return;
-        //    }
-        //    else
-        //    {
-        //        if (_ho.IsSyncedHand)
-        //        {
-        //            _ho.IsValid = valid;
-        //        }
-        //    }
-        //}
-
-        //public void SwitchARPlaneToShadowed()
-        //{
-        //    // on host:
-
-        //    _arPlaneManager.planePrefab = _arShadowedPlane;
-        //    _arPlaneManager.enabled = false; // do not update planes
-
-        //    //var planeList = FindObjectsOfType<ARPlane>();
-        //    //foreach (var plane in planeList)
-        //    //{
-        //    //    plane.GetComponent<MeshRenderer>().material = _arShadowedPlaneMat;
-        //    //}
-
-        //    // on client: 
-        //    SwitchARPlaneToShadowedCLientRpc();
-        //}
-
-        //[ClientRpc]
-        //public void SwitchARPlaneToShadowedCLientRpc()
-        //{
-        //    _arPlaneManager.planePrefab = _arShadowedPlane;
-        //    _arPlaneManager.enabled = false;
-
-        //}
     }
 }

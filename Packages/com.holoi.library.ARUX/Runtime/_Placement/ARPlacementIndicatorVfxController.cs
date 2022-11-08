@@ -36,10 +36,6 @@ namespace Holoi.Library.ARUX
         public void OnDeath()
         {
             _animator.SetTrigger("Die");
-            StartCoroutine(HoloKitAppUtils.WaitAndDo(0.3f, () =>
-            {
-                Destroy(gameObject);
-            }));
         }
     }
 }

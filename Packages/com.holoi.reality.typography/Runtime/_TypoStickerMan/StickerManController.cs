@@ -1,43 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
-using Holoi.Library.ARUX;
 using Holoi.Library.HoloKitApp;
-
 
 namespace Holoi.Reality.Typography
 {
     public class StickerManController : MonoBehaviour
     {
-        HandObject _ho;
-        [SerializeField] VisualEffect _vfx;
+        [SerializeField] private VisualEffect _vfx;
 
-        private void Awake()
+        private void Update()
         {
-            Debug.Log("StickerMand Created");
-        }
+            var hostHandPose = ((StickerManRealityManager)HoloKitApp.Instance.RealityManager).HostHandPose;
 
-        // Start is called before the first frame update
-        void Start()
-        {
-            _ho = FindObjectOfType<HandObject>();
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            if (_ho.IsValid)
+            if (hostHandPose.IsActive)
             {
-                Debug.Log("_ho.IsValid");
-                _vfx.SetFloat("Rate", 1);
+                _vfx.SetBool("IsInteractable", true);
+                _vfx.SetVector3("Hand", hostHandPose.transform.position);
             }
             else
             {
-                Debug.Log("_ho.IsNotValid");
-                _vfx.SetFloat("Rate", 0);
+                _vfx.SetBool("IsInteractable", false);
             }
-            _vfx.SetVector3("Hand", _ho.transform.position);
         }
     }
 }

@@ -17,12 +17,21 @@ namespace Holoi.Library.ARUX
         [SerializeField] private ARPlacementIndicatorVfxController _vfxController;
 
         [Header("Parameters")]
+
+        [SerializeField] private bool _isActive;
+
         [SerializeField] private float _horizontalRaycastOffset;
 
         /// <summary>
         /// From the center eye to the point.
         /// </summary>
         [SerializeField] private Vector3 _hitPositionDefaultOffset;
+
+        /// <summary>
+        /// We make the y position of hit point slightly higher than the ground plane,
+        /// so the indicator is not occluded by the ground plane.
+        /// </summary>
+        [SerializeField] private float _hitPointGroundOffset;
 
         public bool IsActive
         {
@@ -37,29 +46,24 @@ namespace Holoi.Library.ARUX
 
         public Transform HitPoint => _hitPoint;
 
-        private bool _isActive;
-
         public UnityEvent OnFoundPlane;
 
         public UnityEvent OnLostPlane;
 
         private void Start()
         {
+            _hitPoint.position = _hitPositionDefaultOffset;
+            _hitPoint.rotation = Quaternion.Euler(0f, 180f, 0f);
+            _hitPoint.gameObject.SetActive(false);
+
             if (HoloKitUtils.IsEditor)
             {
                 StartCoroutine(HoloKitAppUtils.WaitAndDo(1.2f, () =>
                 {
-                    _hitPoint.transform.position = _hitPositionDefaultOffset;
                     _hitPoint.gameObject.SetActive(true);
                     OnFoundPlane?.Invoke();
                 }));
             }
-        }
-
-        private void OnDestroy()
-        {
-            _vfxController.transform.SetParent(null);
-            _vfxController.OnDeath();
         }
 
         private void Update()
@@ -80,7 +84,8 @@ namespace Holoi.Library.ARUX
                         var arPlane = hit.trackable.GetComponent<ARPlane>();
                         if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
                         {
-                            _hitPoint.SetPositionAndRotation(hit.pose.position, hit.pose.rotation);
+                            _hitPoint.SetPositionAndRotation(hit.pose.position + _hitPointGroundOffset * Vector3.up,
+                                                             Quaternion.Euler(0f, centerEyePose.rotation.eulerAngles.y, 0f) * Quaternion.Euler(180f * Vector3.up));
                             if (!_hitPoint.gameObject.activeSelf)
                             {
                                 _hitPoint.gameObject.SetActive(true);
@@ -92,7 +97,7 @@ namespace Holoi.Library.ARUX
                 }
                 // Set ARRaycastPoint to its default pose relative to the center eye
                 _hitPoint.SetPositionAndRotation(centerEyePose.position + centerEyePose.TransformVector(_hitPositionDefaultOffset),
-                                                centerEyePose.rotation);
+                                                 Quaternion.Euler(0f, centerEyePose.rotation.eulerAngles.y, 0f) * Quaternion.Euler(180f * Vector3.up));
                 if (_hitPoint.gameObject.activeSelf)
                 {
                     _hitPoint.gameObject.SetActive(false);
@@ -103,7 +108,12 @@ namespace Holoi.Library.ARUX
 
         public void OnDeath()
         {
-            Destroy(gameObject);
+            _isActive = false;
+            _vfxController.OnDeath();
+            StartCoroutine(HoloKitAppUtils.WaitAndDo(0.3f, () =>
+            {
+                Destroy(gameObject);
+            }));
         }
     }
 }

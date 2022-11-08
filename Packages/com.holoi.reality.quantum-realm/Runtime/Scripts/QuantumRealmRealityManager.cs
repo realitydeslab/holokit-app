@@ -160,7 +160,7 @@ namespace Holoi.Reality.QuantumRealm
                         if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
                         {
                             _arRaycastPoint.transform.SetPositionAndRotation(hit.pose.position + new Vector3(0f, ARRaycastPointGroundOffset, 0f),
-                                Quaternion.Euler(0f, centerEyePose.rotation.eulerAngles.y, 0f));
+                                                                             Quaternion.Euler(0f, centerEyePose.rotation.eulerAngles.y, 0f));
                             if (!_arRaycastPoint.activeSelf)
                             {
                                 _arRaycastPoint.SetActive(true);
@@ -173,7 +173,7 @@ namespace Holoi.Reality.QuantumRealm
 
                 // Set ARRaycastPoint to its default pose relative to the center eye
                 _arRaycastPoint.transform.SetPositionAndRotation(centerEyePose.position + centerEyePose.TransformVector(ARRaycastPointDefaultOffset),
-                                                                 centerEyePose.rotation);
+                                                                 Quaternion.Euler(0f, centerEyePose.rotation.eulerAngles.y, 0f));
                 if (_arRaycastPoint.activeSelf)
                 {
                     _arRaycastPoint.SetActive(false);
