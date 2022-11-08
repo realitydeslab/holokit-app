@@ -22,6 +22,8 @@ namespace Holoi.Library.ARUX
 
         public float Radius => _radius;
 
+        public bool IsLoading => _isLoading;
+
         public float CurrentLoadPercentage => _currentLoad / _loadTime;
 
         private float _currentLoad;
@@ -32,11 +34,11 @@ namespace Holoi.Library.ARUX
 
         private const float TriggerCoolDownTime = 5f;
 
+        public UnityEvent OnStartedLoading;
+
+        public UnityEvent OnStoppedLoading;
+
         public UnityEvent OnTriggered;
-
-        public event Action OnStartedLoading;
-
-        public event Action OnStoppedLoading;
 
         public static event Action<HoverableObject> OnHoverableObjectEnabled;
 

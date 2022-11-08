@@ -40,8 +40,6 @@ namespace Holoi.Reality.QuantumRealm
         private void Start()
         {
             _hoverableObject = GetComponent<HoverableObject>();
-            _hoverableObject.OnStartedLoading += OnStartedLoading;
-            _hoverableObject.OnStoppedLoading += OnStoppedLoading;
 
             if (((QuantumRealmRealityManager)HoloKitApp.Instance.RealityManager).CoreHapticsManager.IsValid)
             {
@@ -57,20 +55,14 @@ namespace Holoi.Reality.QuantumRealm
             StopHapticsPlayer();
         }
 
-        private void OnDestroy()
-        {
-            if (_hoverableObject != null)
-            {
-                _hoverableObject.OnStartedLoading -= OnStartedLoading;
-                _hoverableObject.OnStoppedLoading -= OnStoppedLoading;
-            }
-        }
-
         private void Update()
         {
-            _vfx.SetVector3("Hand Position",
+            if (_hoverableObject.IsLoading)
+            {
+                _vfx.SetVector3("Hand Position",
                 ((QuantumRealmRealityManager)HoloKitApp.Instance.RealityManager).HandPose.transform.position);
-            _vfx.SetFloat("Process", _hoverableObject.CurrentLoadPercentage);
+                _vfx.SetFloat("Process", _hoverableObject.CurrentLoadPercentage);
+            }
         }
 
         public void OnActivated()
@@ -92,7 +84,7 @@ namespace Holoi.Reality.QuantumRealm
             }));
         }
 
-        private void OnStartedLoading()
+        public void OnStartedLoading()
         {
             _vfx.SetBool("Interactable", true);
             if (_vibrationStarted)
@@ -105,7 +97,7 @@ namespace Holoi.Reality.QuantumRealm
             }
         }
 
-        private void OnStoppedLoading()
+        public void OnStoppedLoading()
         {
             _vfx.SetBool("Interactable", false);
             PauseHapticsPlayer();
