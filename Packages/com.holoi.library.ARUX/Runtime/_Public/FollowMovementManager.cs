@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using HoloKit;
 
 namespace Holoi.Library.ARUX
 {
@@ -16,22 +13,15 @@ namespace Holoi.Library.ARUX
 
         enum RotateType
         {
-            InvertFacing,
-            Facing,
             None,
-            CopyRotation,
-            FacingHorizentally
-        }
-
-        enum UpdateType
-        {
-            Always,
-            OnlyBirth
+            FacingTargetInvert,
+            FacingTarget,
+            IdenticalToTarget,
+            FacingTargetHorizentally
         }
 
         [SerializeField] private Transform _followTarget;
 
-        [Tooltip("If you let it be null, it will find centereye as target.")]
         public Transform FollowTarget
         {
             set
@@ -41,16 +31,20 @@ namespace Holoi.Library.ARUX
         }
 
         [SerializeField] MovementType _movementType;
+
         [SerializeField] RotateType _rotateType;
-        [SerializeField] UpdateType _updateType;
 
         [Header("Offset & Space")]
         [SerializeField] bool _worldSpace = false;
+
         [SerializeField] private Vector3 _offset = new Vector3(0, 0, 0.5f);
+
         [Header("Movement")]
         [SerializeField] private float _lerpSpeed = 4f;
-        [SerializeField] private float _needMoveDistance = .01f;
-        [SerializeField] private float _regardAsArriveDistance = .001f;
+
+        [SerializeField] private float _chaseDistance = .01f;
+
+        [SerializeField] private float _reachDistance = .001f;
 
         private bool _needMove = false;
 
@@ -68,15 +62,8 @@ namespace Holoi.Library.ARUX
 
         Vector3 targetPosition;
 
-        private void OnEnable()
-        {
-            
-        }
-
         void Start()
         {
-            if (!_followTarget)
-                _followTarget = HoloKitCamera.Instance.CenterEyePose;
             if (_movementType != MovementType.NotFollow)
             {
                 if (_worldSpace)
@@ -88,33 +75,12 @@ namespace Holoi.Library.ARUX
                     transform.position = _followTarget.position + _followTarget.TransformVector(_offset);
                 }
             }
-                
-
-            switch (_updateType)
-            {
-                case UpdateType.Always:
-
-                    break;
-                case UpdateType.OnlyBirth:
-                    UpdatePosition();
-                    UpdateRotation();
-                    break;
-            }
-            UpdateRotation();
         }
 
-        void LateUpdate()
+        void FixedUpdate()
         {
-            switch (_updateType)
-            {
-                case UpdateType.Always:
-                    UpdatePosition();
-                    UpdateRotation();
-                    break;
-                case UpdateType.OnlyBirth:
-
-                    break;
-            }
+            UpdatePosition();
+            UpdateRotation();
         }
 
         void UpdatePosition()
@@ -126,15 +92,15 @@ namespace Holoi.Library.ARUX
                     transform.position = targetPosition;
                     break;
                 case MovementType.SoftFollow:
-                    if (Vector3.Distance(_followTarget.position, transform.position) > _needMoveDistance)
+                    targetPosition = GetTargetPosition(_followTarget.position, _offset);
+                    if (Vector3.Distance(targetPosition, transform.position) > _chaseDistance)
                     {
                         _needMove = true;
                     }
                     if (_needMove)
                     {
-                        targetPosition = GetTargetPosition(_followTarget.position, _offset);
                         transform.position = PositionAnimationLerp(transform.position, targetPosition, _lerpSpeed);
-                        if (Vector3.Distance(_followTarget.position, transform.position) < _regardAsArriveDistance)
+                        if (Vector3.Distance(_followTarget.position, transform.position) < _reachDistance)
                         {
                             _needMove = false;
                         }
@@ -150,18 +116,18 @@ namespace Holoi.Library.ARUX
         {
             switch (_rotateType)
             {
-                case RotateType.InvertFacing:
+                case RotateType.FacingTargetInvert:
                     transform.rotation = Quaternion.Euler(_followTarget.rotation.eulerAngles.x, _followTarget.rotation.eulerAngles.y, _followTarget.rotation.eulerAngles.z);
                     break;
-                case RotateType.Facing:
+                case RotateType.FacingTarget:
                     transform.LookAt(_followTarget);
                     break;
                 case RotateType.None:
                     break;
-                case RotateType.CopyRotation:
+                case RotateType.IdenticalToTarget:
                     transform.rotation = _followTarget.rotation;
                     break;
-                case RotateType.FacingHorizentally:
+                case RotateType.FacingTargetHorizentally:
                     var pos = new Vector3(_followTarget.position.x, this.transform.position.y, _followTarget.position.z);
                     transform.LookAt(pos);
                     break;
@@ -188,9 +154,10 @@ namespace Holoi.Library.ARUX
                 return targetPosition + localOffset;
             }
         }
-        public void Reset()
-        {
-            transform.position = _followTarget.position + _followTarget.TransformVector(_offset);
-        }
+
+        //public void Reset()
+        //{
+        //    transform.position = _followTarget.position + _followTarget.TransformVector(_offset);
+        //}
     }
 }

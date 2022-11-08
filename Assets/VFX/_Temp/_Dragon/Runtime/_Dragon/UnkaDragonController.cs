@@ -6,27 +6,36 @@ public class UnkaDragonController : MonoBehaviour
 {
     [Header("Attack Behaviour")]
     [SerializeField] Animator _aniamtor;
+
     [SerializeField] GameObject _fireBallPrefab;
+
     [SerializeField] GameObject _fireBreathPrefab;
+
     [SerializeField] Transform _powerInitPoint;
+
     GameObject _fireBallInstance;
+
     GameObject _fireBreathInstance;
-    [SerializeField] Transform _enemyPoint;
-    float _vX=0;
-    float _vZ=0;
+
+    [SerializeField] Transform _enemyTarget;
+
+    [SerializeField] Animator _targetAnimator;
 
     [Header("Test")]
+    public GameObject DeathVFX;
     public bool Reset;
+
     public bool Die;
+
     public bool FireBall;
+
     public bool FireBreath;
-    // Start is called before the first frame update
+
     void Start()
     {
         StartCoroutine(WaitAndFire());
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Die)
@@ -45,6 +54,7 @@ public class UnkaDragonController : MonoBehaviour
         if (FireBreath)
         {
             _aniamtor.SetTrigger("Fire Breath");
+            _targetAnimator.SetTrigger("Fire Breath");
             FireBreath = false;
         }
 
@@ -53,30 +63,6 @@ public class UnkaDragonController : MonoBehaviour
             _aniamtor.Rebind();
             _aniamtor.Update(0);
             Reset = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            _vZ += Time.deltaTime;
-            if (_vZ > 1) _vZ = 1;
-        }
-
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            _vZ -= Time.deltaTime;
-            if (_vZ < 0) _vZ = 0;
-        }
-
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            _vX += Time.deltaTime;
-            if (_vX > 1) _vX = 1;
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            _vX -= Time.deltaTime;
-            if (_vX < 0) _vX = 0;
         }
     }
 
@@ -89,7 +75,7 @@ public class UnkaDragonController : MonoBehaviour
     public void OnFireBallAttack()
     {
         _fireBallInstance.GetComponent<FireBreathController>().IsFollow = false;
-        var dir = (_enemyPoint==null?new Vector3(0,-2,2):_enemyPoint.position - _powerInitPoint.position).normalized;
+        var dir = (_enemyTarget == null ? new Vector3(0, -2, 2) : _enemyTarget.position - _powerInitPoint.position).normalized;
         var speed = dir * 3f;
         _fireBallInstance.GetComponent<Rigidbody>().velocity = speed;
     }
@@ -111,6 +97,22 @@ public class UnkaDragonController : MonoBehaviour
     //    var dir = (_enemyPoint == null ? new Vector3(0, -2, 2) : _enemyPoint.position - _powerInitPoint.position).normalized;
     //    Debug.DrawRay(_powerInitPoint.position, dir*10f, Color.red);
     //}
+    public void OnDeath()
+    {
+        DeathVFX.SetActive(true);
+        StartCoroutine(WaitAndDisableGameObject(DeathVFX, 4f));
+    }
+
+    public void OnAnimationStop()
+    {
+        _aniamtor.StopPlayback();
+    }
+
+    IEnumerator WaitAndDisableGameObject(GameObject go, float time)
+    {
+        yield return new WaitForSeconds(time);
+        go.SetActive(false);
+    }
 
     public void PlaySound()
     {

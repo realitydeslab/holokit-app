@@ -1,9 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MovementController : MonoBehaviour
 {
+    enum MovementControllerType
+    {
+        SelfControl,
+        KeyboardControl
+    }
+
+    [SerializeField] MovementControllerType _controllerType;
+
     [SerializeField] Animator _animator;
 
     [SerializeField] Transform _target;
@@ -61,38 +70,126 @@ public class MovementController : MonoBehaviour
 
     }
 
+    void KeyBoardArrive()
+    {
+        var gamepad = Gamepad.current;
+        if (gamepad == null)
+            return; // No gamepad connected.
+        var steer = Vector3.zero;
+
+        if (gamepad.yButton.isPressed)
+        {
+            steer += Vector3.forward;
+        }
+        if (gamepad.xButton.isPressed)
+        {
+            steer -= Vector3.right;
+        }
+
+        if (gamepad.aButton.isPressed)
+        {
+            steer -= Vector3.forward;
+        }
+        if (gamepad.bButton.isPressed)
+        {
+            steer += Vector3.right;
+        }
+    }
+
     void Arrive(Vector3 targetPos)
     {
-        realDesired = new Vector3(targetPos.x, 0, targetPos.z) - new Vector3(transform.position.x, 0, transform.position.z);
-
-        float realDist = realDesired.magnitude;
-
-        if (realDist < _avoidDistance + 1f && realDist > _avoidDistance - 1f)
+        switch (_controllerType)
         {
-            realDesired = Vector3.zero;
-        }
-        if (realDist < _avoidDistance)
-        {
-            float m = (1f - (realDist / _avoidDistance)) * _maxSpeed;
+            case MovementControllerType.SelfControl:
+                realDesired = new Vector3(targetPos.x, 0, targetPos.z) - new Vector3(transform.position.x, 0, transform.position.z);
 
-            //Debug.Log("avoid");
-            //        Debug.Log($"avoid with a d: {realDist}; " +
-            //$"with a m: {1 - (realDist / _avoidDistance)}; " +
-            //$"with a force: {realDesired}");
+                float realDist = realDesired.magnitude;
 
-            realDesired = SetMag(-realDesired, m);
-        }
-        else if (realDist < _attractDistance)
-        {
-            //Debug.Log("attract");
+                if (realDist < _avoidDistance + 1f && realDist > _avoidDistance - 1f)
+                {
+                    realDesired = Vector3.zero;
+                }
+                if (realDist < _avoidDistance)
+                {
+                    float m = (1f - (realDist / _avoidDistance)) * _maxSpeed;
 
-            float m = ((realDist - _avoidDistance) / (_attractDistance - _avoidDistance)) * _maxSpeed;
+                    //Debug.Log("avoid");
+                    //        Debug.Log($"avoid with a d: {realDist}; " +
+                    //$"with a m: {1 - (realDist / _avoidDistance)}; " +
+                    //$"with a force: {realDesired}");
 
-            realDesired = SetMag(realDesired, m);
-        }
-        else
-        {
-            realDesired = SetMag(realDesired, _maxSpeed);
+                    realDesired = SetMag(-realDesired, m);
+                }
+                else if (realDist < _attractDistance)
+                {
+                    //Debug.Log("attract");
+
+                    float m = ((realDist - _avoidDistance) / (_attractDistance - _avoidDistance)) * _maxSpeed;
+
+                    realDesired = SetMag(realDesired, m);
+                }
+                else
+                {
+                    realDesired = SetMag(realDesired, _maxSpeed);
+                }
+
+                break;
+            case MovementControllerType.KeyboardControl:
+
+                Debug.Log("keyboard type");
+
+                var gamepad = Gamepad.current;
+                if (gamepad == null)
+                {
+                    Debug.Log("not find pad");
+                    return; // No gamepad connected.
+                }
+
+                if (Input.GetKey(KeyCode.UpArrow))
+                {
+                    realDesired += transform.forward * _maxSpeed;
+                }
+
+                if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    realDesired -= transform.forward * _maxSpeed;
+                }
+
+                if (Input.GetKey(KeyCode.RightArrow))
+                {
+                    realDesired -= transform.right * _maxSpeed;
+                }
+
+                if (Input.GetKey(KeyCode.LeftArrow))
+                {
+                    realDesired += transform.right * _maxSpeed;
+                }
+
+                if (gamepad.yButton.isPressed)
+                {
+                    realDesired += transform.forward * _maxSpeed;
+                }
+                if (gamepad.xButton.isPressed)
+                {
+                    realDesired -= transform.right * _maxSpeed;
+                }
+
+                if (gamepad.aButton.isPressed)
+                {
+                    realDesired -= transform.forward * _maxSpeed;
+                }
+                if (gamepad.bButton.isPressed)
+                {
+                    realDesired += transform.right * _maxSpeed;
+                }
+
+                Debug.Log(realDesired);
+
+                if (gamepad.dpad.IsPressed())
+                {
+                    Debug.Log(gamepad.dpad.ReadValue());
+                }
+                break;
         }
 
         var dH = transform.position.y - (targetPos.y + 0.5f);
@@ -109,13 +206,15 @@ public class MovementController : MonoBehaviour
         {
             realDesired = Vector3.up * heightDesired * mHeight; ;
         }
-        
+
 
         _steer = realDesired - _velocity;
 
         _steer = Limit(_steer, _maxForce);
 
         applyForce(_steer);
+
+        realDesired = Vector3.zero;
     }
 
     void RotationUpdate()
@@ -125,26 +224,13 @@ public class MovementController : MonoBehaviour
 
         var angle = Vector3.SignedAngle(realDirection, transform.forward, Vector3.up);
 
-        var absAngle = Mathf.Abs(angle);
-        var m = absAngle / 180;
-        m = Mathf.Clamp01(m * 8);
-        var steer = m * 10f;
+        var steer = angle - _angluarVelocity;
 
-        if (absAngle < 1f)
-        {
-            // avoid shaking
-            if(_angluarVelocity > 0)
-            {
-                _angluarVelocity -= 10f;
-                if (_angluarVelocity < 0) _angluarVelocity = 0;
-            }
-            else
-            {
-                _angluarVelocity += 10f;
-                if (_angluarVelocity > 0) _angluarVelocity = 0;
-            }
-        }
-        else if (angle > 0)
+        steer = Mathf.Clamp(steer, -10f, 10f);
+
+        //Debug.Log($"steer: {steer}");
+
+        if (angle > 0)
         {
             //Debug.Log($">0 with: {angle}");
 
@@ -156,12 +242,12 @@ public class MovementController : MonoBehaviour
         {
             //Debug.Log($"<0 with: {angle}");
 
-            _angluarVelocity -= steer;
+            _angluarVelocity += steer;
             if (_angluarVelocity < -90) _angluarVelocity = -90;
             nextAngle -= Vector3.up * _angluarVelocity * Time.deltaTime;
         }
 
-        transform.rotation = Quaternion.Euler(nextAngle + new Vector3(0,180,0));
+        transform.rotation = Quaternion.Euler(nextAngle + new Vector3(0, 180, 0));
     }
 
     void AnimationUpdate()
@@ -197,6 +283,7 @@ public class MovementController : MonoBehaviour
     {
         _isFollow = true;
     }
+
     //private void OnDrawGizmos()
     //{
     //    Gizmos.DrawWireSphere(fixedTargetPosition, 2);
