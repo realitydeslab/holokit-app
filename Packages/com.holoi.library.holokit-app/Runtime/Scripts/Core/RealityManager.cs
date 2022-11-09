@@ -12,6 +12,8 @@ namespace Holoi.Library.HoloKitApp
 
         public List<UI.HoloKitAppUIPanel> UIPanelPrefabs;
 
+        public List<UI.HoloKitAppUIRealitySettingTab> UIRealitySettingTabs;
+
         [SerializeField] private UniversalRenderPipelineAsset _urpAsset;
 
         public void SetupURPAsset()

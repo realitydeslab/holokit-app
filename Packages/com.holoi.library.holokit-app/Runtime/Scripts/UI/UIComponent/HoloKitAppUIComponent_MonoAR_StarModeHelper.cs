@@ -28,22 +28,12 @@ namespace Holoi.Library.HoloKitApp.UI
                 {
                     gameObject.SetActive(false);
                 }));
-                HoloKitAppUIEventManager.OnStartedRecording += OnStartedRecording;
             }
         }
 
         private void OnDisable()
         {
             LeanTween.cancel(_arrow);
-            gameObject.SetActive(false);
-        }
-
-        private void OnDestroy()
-        {
-            if (!HoloKitApp.Instance.IsSpectator)
-            {
-                HoloKitAppUIEventManager.OnStartedRecording -= OnStartedRecording;
-            }
         }
 
         private void StartMovingUpward()
@@ -58,14 +48,6 @@ namespace Holoi.Library.HoloKitApp.UI
             LeanTween.moveLocalY(_arrow, ArrowInitialY, ArrowMovingDuration)
                 .setEase(LeanTweenType.easeInOutSine)
                 .setOnComplete(StartMovingUpward);
-        }
-
-        private void OnStartedRecording()
-        {
-            if (gameObject.activeSelf)
-            {
-                gameObject.SetActive(false);
-            }
         }
     }
 }

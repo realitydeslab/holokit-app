@@ -15,6 +15,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private GameObject _exitButton;
 
+        [SerializeField] private GameObject _starModeHelper;
+
         [SerializeField] private HoloKitAppUIComponent_MonoAR_RecordButton _recordButton;
 
         private void Start()
@@ -75,6 +77,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 _spectatorButton.SetActive(false);
                 _starButton.SetActive(false);
                 _exitButton.SetActive(false);
+                _starModeHelper.SetActive(false);
             }
             else
             {
@@ -82,6 +85,11 @@ namespace Holoi.Library.HoloKitApp.UI
                 _starButton.SetActive(true);
                 _exitButton.SetActive(true);
             }
+        }
+
+        public void OnHamburgerButtonPressed()
+        {
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_RealitySettings");
         }
     }
 }
