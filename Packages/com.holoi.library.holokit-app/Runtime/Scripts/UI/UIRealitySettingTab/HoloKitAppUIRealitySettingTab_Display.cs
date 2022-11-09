@@ -30,9 +30,18 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnOcclusionToggleValueChanged(bool toggled)
         {
+            if (_arOcclusionManager == null)
+            {
+                AddAROcclusionManager();
+            }
+
             if (toggled)
             {
                 _occlusionStatus.text = "On";
+                if (!_arOcclusionManager.enabled)
+                {
+                    _arOcclusionManager.enabled = true;
+                }
                 _arOcclusionManager.requestedHumanDepthMode = UnityEngine.XR.ARSubsystems.HumanSegmentationDepthMode.Fastest;
                 _arOcclusionManager.requestedHumanStencilMode = UnityEngine.XR.ARSubsystems.HumanSegmentationStencilMode.Fastest;
                 _arOcclusionManager.requestedOcclusionPreferenceMode = UnityEngine.XR.ARSubsystems.OcclusionPreferenceMode.PreferHumanOcclusion;
@@ -44,6 +53,12 @@ namespace Holoi.Library.HoloKitApp.UI
                 _arOcclusionManager.requestedHumanStencilMode = UnityEngine.XR.ARSubsystems.HumanSegmentationStencilMode.Disabled;
                 _arOcclusionManager.requestedOcclusionPreferenceMode = UnityEngine.XR.ARSubsystems.OcclusionPreferenceMode.NoOcclusion;
             }
+        }
+
+        private void AddAROcclusionManager()
+        {
+            _arOcclusionManager = HoloKitCamera.Instance.gameObject.AddComponent<AROcclusionManager>();
+            _arOcclusionManager.requestedEnvironmentDepthMode = UnityEngine.XR.ARSubsystems.EnvironmentDepthMode.Disabled;
         }
     }
 }
