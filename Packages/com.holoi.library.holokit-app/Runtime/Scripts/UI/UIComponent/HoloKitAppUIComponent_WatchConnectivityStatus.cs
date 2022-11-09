@@ -5,9 +5,7 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIComponent_WatchConnectivityStatus : MonoBehaviour
     {
-        [SerializeField] private GameObject _noPairedWatch;
-
-        [SerializeField] private GameObject _watchAppNotInstalled;
+        [SerializeField] private GameObject _watchAppNotDetected;
 
         [SerializeField] private GameObject _watchNotReachable;
 
@@ -60,40 +58,35 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnWatchNotRequired()
         {
-            _noPairedWatch.SetActive(false);
-            _watchAppNotInstalled.SetActive(false);
+            _watchAppNotDetected.SetActive(false);
             _watchNotReachable.SetActive(false);
             _watchReachable.SetActive(false);
         }
 
         private void OnNoPairedWatch()
         {
-            _noPairedWatch.SetActive(true);
-            _watchAppNotInstalled.SetActive(false);
+            _watchAppNotDetected.SetActive(true);
             _watchNotReachable.SetActive(false);
             _watchReachable.SetActive(false);
         }
 
         private void OnWatchAppNotInstalled()
         {
-            _noPairedWatch.SetActive(false);
-            _watchAppNotInstalled.SetActive(true);
+            _watchAppNotDetected.SetActive(true);
             _watchNotReachable.SetActive(false);
             _watchReachable.SetActive(false);
         }
 
         private void OnWatchNotReachable()
         {
-            _noPairedWatch.SetActive(false);
-            _watchAppNotInstalled.SetActive(false);
+            _watchAppNotDetected.SetActive(false);
             _watchNotReachable.SetActive(true);
             _watchReachable.SetActive(false);
         }
 
         private void OnWatchReachable()
         {
-            _noPairedWatch.SetActive(false);
-            _watchAppNotInstalled.SetActive(false);
+            _watchAppNotDetected.SetActive(false);
             _watchNotReachable.SetActive(false);
             _watchReachable.SetActive(true);
         }
