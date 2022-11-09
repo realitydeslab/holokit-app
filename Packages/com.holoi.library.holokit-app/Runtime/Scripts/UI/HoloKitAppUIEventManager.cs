@@ -5,7 +5,7 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public static class HoloKitAppUIEventManager
     {
-        #region Screen AR Panel
+        #region Mono AR Panel
         public static Action<HoloKitRenderMode> OnRenderModeChanged;
 
         public static Action OnStartedAdvertising;
@@ -21,6 +21,10 @@ namespace Holoi.Library.HoloKitApp.UI
         public static Action OnAlignmentMarkChecked;
 
         public static Action OnRescanQRCode;
+        #endregion
+
+        #region Reality Settings Panel
+        public static Action<bool> OnHumanOcclusionToggled;
         #endregion
 
         #region Star AR Panel

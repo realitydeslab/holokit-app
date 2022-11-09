@@ -18,6 +18,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private List<HoloKitAppUIRealitySettingTab> _defaultUIRealitySettingTabs;
 
+        private HoloKitAppUIRealitySettingTab _currentTab;
+
         private List<HoloKitAppUIRealitySettingTabSelector> _tabSelectors;
 
         private const float ScreenWidth = 1170f;
@@ -51,9 +53,13 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void UpdateSelectedTab(HoloKitAppUIRealitySettingTab realitySettingTab)
         {
-            var tab = Instantiate(realitySettingTab);
-            tab.transform.SetParent(transform);
-            var tabRectTransform = tab.GetComponent<RectTransform>();
+            if (_currentTab != null)
+            {
+                Destroy(_currentTab.gameObject);
+            }
+            _currentTab = Instantiate(realitySettingTab);
+            _currentTab.transform.SetParent(transform);
+            var tabRectTransform = _currentTab.GetComponent<RectTransform>();
             tabRectTransform.anchoredPosition = new(0f, _tabSelectorRoot.sizeDelta.y);
             GetComponent<RectTransform>().sizeDelta = new(ScreenWidth, _tabSelectorRoot.sizeDelta.y + tabRectTransform.sizeDelta.y);
         }

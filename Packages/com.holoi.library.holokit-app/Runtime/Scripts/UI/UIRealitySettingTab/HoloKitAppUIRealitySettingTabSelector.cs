@@ -36,8 +36,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnUnselected()
         {
-            _tabName.color = new Color(255f, 255f, 255f, 255f / 2f);
-            _arrowImage.color = new Color(255f, 255f, 255f, 255f / 2f);
+            _tabName.color = new Color(1f, 1f, 1f, 0.5f);
+            _arrowImage.color = new Color(1f, 1f, 1f, 0.5f);
         }
     }
 }
