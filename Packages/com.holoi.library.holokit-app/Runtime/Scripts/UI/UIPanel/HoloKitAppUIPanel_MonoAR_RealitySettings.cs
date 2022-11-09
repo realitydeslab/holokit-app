@@ -34,6 +34,14 @@ namespace Holoi.Library.HoloKitApp.UI
             tabList = tabList.Distinct().ToList();
             foreach (var tab in tabList)
             {
+                if (tab.TabName.Equals("Adjust"))
+                {
+                    // If there is no ARObjectAdjuster in the scene
+                    if (ARObjectAdjuster.Instance == null)
+                    {
+                        continue;
+                    }
+                }
                 var tabSelector = Instantiate(_tabSelectorPrefab);
                 tabSelector.Init(tab.TabName, () =>
                 {

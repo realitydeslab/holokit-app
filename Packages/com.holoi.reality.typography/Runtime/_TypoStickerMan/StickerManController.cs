@@ -8,6 +8,11 @@ namespace Holoi.Reality.Typography
     {
         [SerializeField] private VisualEffect _vfx;
 
+        private void Start()
+        {
+            ARObjectAdjuster.Instance.SetARObject(transform);
+        }
+
         private void Update()
         {
             var hostHandPose = ((StickerManRealityManager)HoloKitApp.Instance.RealityManager).HostHandPose;

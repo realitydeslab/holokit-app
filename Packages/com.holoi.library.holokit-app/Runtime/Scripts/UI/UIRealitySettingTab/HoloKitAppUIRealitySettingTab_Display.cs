@@ -21,7 +21,7 @@ namespace Holoi.Library.HoloKitApp.UI
             if (_arOcclusionManager != null
                 && _arOcclusionManager.requestedHumanDepthMode != UnityEngine.XR.ARSubsystems.HumanSegmentationDepthMode.Disabled
                 && _arOcclusionManager.requestedHumanStencilMode != UnityEngine.XR.ARSubsystems.HumanSegmentationStencilMode.Disabled
-                && _arOcclusionManager.requestedOcclusionPreferenceMode != UnityEngine.XR.ARSubsystems.OcclusionPreferenceMode.PreferHumanOcclusion)
+                && _arOcclusionManager.requestedOcclusionPreferenceMode == UnityEngine.XR.ARSubsystems.OcclusionPreferenceMode.PreferHumanOcclusion)
             {
                 _occlusionToggle.Toggled = true;
                 _occlusionStatus.text = "On";

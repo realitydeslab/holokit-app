@@ -24,6 +24,7 @@ namespace Holoi.Reality.QuantumRealm
                 Debug.Log("[BuddhaGroup] Played BGM with Unity");
             }
             UI.QuantumRealmUIPanel.OnSwitchButtonPressed += OnSwitchButtonPressed;
+            ARObjectAdjuster.Instance.SetARObject(transform);
         }
 
         public override void OnNetworkSpawn()

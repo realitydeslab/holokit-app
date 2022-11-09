@@ -6,16 +6,17 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         [SerializeField] private GameObject _arrow;
 
-        private const float MovementDist = 18f;
+        private const float MovementDist = 30f;
 
         private const float MovementDuration = 1f;
 
         private void OnEnable()
         {
+            _arrow.transform.localPosition = Vector3.zero;
             StartMoveForward();
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             LeanTween.cancel(_arrow);
         }
@@ -23,14 +24,14 @@ namespace Holoi.Library.HoloKitApp.UI
         private void StartMoveForward()
         {
             LeanTween.moveLocalX(_arrow, -MovementDist, MovementDuration)
-                .setEase(LeanTweenType.linear)
+                .setEase(LeanTweenType.easeInOutQuad)
                 .setOnComplete(StartMoveBackward);
         }
 
         private void StartMoveBackward()
         {
             LeanTween.moveLocalX(_arrow, 0f, MovementDuration)
-                .setEase(LeanTweenType.linear)
+                .setEase(LeanTweenType.easeInOutQuad)
                 .setOnComplete(StartMoveForward);
         }
     }
