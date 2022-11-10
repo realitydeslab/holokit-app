@@ -41,7 +41,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d4c867f6b72b714dbb5fd1780afe208, type: 3}
-  m_Name: Explode Trail
+  m_Name: Explode Linear
   m_EditorClassIdentifier: 
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 0}
@@ -317,8 +317,8 @@ MonoBehaviour:
     max: Infinity
     enumValues: []
     descendantCount: 0
-  - name: Add Scale Y by Speed
-    path: Add Scale Y by Speed
+  - name: Set ScaleY by Speed
+    path: Set ScaleY by Speed
     tooltip: 
     sheetType: m_AnimationCurve
     realType: AnimationCurve
@@ -383,7 +383,7 @@ VisualEffectResource:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Explode Trail
+  m_Name: Explode Linear
   m_Graph: {fileID: 114350483966674976}
   m_Infos:
     m_RendererSettings:
@@ -828,7 +828,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614670}
   m_ExposedName: Color Over Life
   m_Exposed: 1
-  m_Order: 7
+  m_Order: 5
   m_Category: Base
   m_Min:
     m_Type:
@@ -847,7 +847,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661614670}
       inputSlot: {fileID: 8926484042661615427}
-    position: {x: 2090, y: 2526.5}
+    position: {x: 2175.5, y: 2546}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661614670
@@ -942,7 +942,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614706}
   m_ExposedName: Size Over Life
   m_Exposed: 1
-  m_Order: 10
+  m_Order: 7
   m_Category: Base
   m_Min:
     m_Type:
@@ -1022,7 +1022,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614729}
   m_ExposedName: Birth Sphere Radius
   m_Exposed: 1
-  m_Order: 21
+  m_Order: 14
   m_Category: Position
   m_Min:
     m_Type:
@@ -1102,7 +1102,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614739}
   m_ExposedName: Alpha Multipier
   m_Exposed: 1
-  m_Order: 15
+  m_Order: 10
   m_Category: Base
   m_Min:
     m_Type:
@@ -1182,7 +1182,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614749}
   m_ExposedName: Brightness
   m_Exposed: 1
-  m_Order: 8
+  m_Order: 6
   m_Category: Base
   m_Min:
     m_Type:
@@ -1201,7 +1201,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661614749}
       inputSlot: {fileID: 8926484042661616965}
-    position: {x: 2030, y: 2617.5}
+    position: {x: 2016, y: 2628.5}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661614749
@@ -1262,7 +1262,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614754}
   m_ExposedName: Texture
   m_Exposed: 1
-  m_Order: 5
+  m_Order: 4
   m_Category: Base
   m_Min:
     m_Type:
@@ -1342,7 +1342,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614846}
   m_ExposedName: Turbulence
   m_Exposed: 1
-  m_Order: 19
+  m_Order: 12
   m_Category: Movement
   m_Min:
     m_Type:
@@ -1568,7 +1568,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614872}
   m_ExposedName: Gravity and Drag
   m_Exposed: 1
-  m_Order: 20
+  m_Order: 13
   m_Category: Movement
   m_Min:
     m_Type:
@@ -1720,7 +1720,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614950}
   m_ExposedName: Birth Sphere Thickness
   m_Exposed: 1
-  m_Order: 22
+  m_Order: 15
   m_Category: Position
   m_Min:
     m_Type:
@@ -1800,7 +1800,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615039}
   m_ExposedName: Burst Speed Range
   m_Exposed: 1
-  m_Order: 18
+  m_Order: 11
   m_Category: Movement
   m_Min:
     m_Type:
@@ -2117,7 +2117,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615063}
   m_ExposedName: Random Size Multipier
   m_Exposed: 1
-  m_Order: 11
+  m_Order: 8
   m_Category: Base
   m_Min:
     m_Type:
@@ -2406,7 +2406,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615320}
   m_ExposedName: Burst Delay
   m_Exposed: 1
-  m_Order: 1
+  m_Order: 2
   m_Category: Spawn
   m_Min:
     m_Type:
@@ -2794,7 +2794,7 @@ MonoBehaviour:
   AlphaComposition: 0
   SampleMode: 0
   Mode: 1
-  ColorMode: 3
+  ColorMode: 1
   channels: 6
 --- !u!114 &8926484042661615427
 MonoBehaviour:
@@ -3083,7 +3083,7 @@ MonoBehaviour:
   m_OutputSlots: []
   m_Disabled: 0
   attribute: scale
-  Composition: 1
+  Composition: 0
   AlphaComposition: 0
   SampleMode: 1
   Mode: 1
@@ -3346,7 +3346,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.AnimationCurve, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"frames":[{"time":0.0,"value":0.0,"inTangent":0.0,"outTangent":0.0,"tangentMode":0,"leftTangentMode":1,"rightTangentMode":1,"broken":false},{"time":1.0,"value":0.0,"inTangent":0.0,"outTangent":0.0,"tangentMode":0,"leftTangentMode":1,"rightTangentMode":1,"broken":false}],"preWrapMode":8,"postWrapMode":8,"version":1}'
+      m_SerializableObject: '{"frames":[{"time":0.0,"value":1.0,"inTangent":0.0,"outTangent":0.0,"tangentMode":0,"leftTangentMode":1,"rightTangentMode":1,"broken":false},{"time":1.0,"value":1.0,"inTangent":0.0,"outTangent":0.0,"tangentMode":0,"leftTangentMode":1,"rightTangentMode":1,"broken":false}],"preWrapMode":8,"postWrapMode":8,"version":1}'
     m_Space: 2147483647
   m_Property:
     name: 
@@ -3412,9 +3412,9 @@ MonoBehaviour:
   m_InputSlots: []
   m_OutputSlots:
   - {fileID: 8926484042661615485}
-  m_ExposedName: Add Scale Y by Speed
+  m_ExposedName: Set ScaleY by Speed
   m_Exposed: 1
-  m_Order: 13
+  m_Order: 9
   m_Category: Base
   m_Min:
     m_Type:
@@ -4382,7 +4382,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 1
+      m_SerializableObject: 0
     m_Space: 2147483647
   m_Property:
     name: _Texture_Sat
@@ -4508,7 +4508,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616542}
   m_ExposedName: CA Intensity
   m_Exposed: 1
-  m_Order: 0
+  m_Order: 1
   m_Category: Materials
   m_Min:
     m_Type:
@@ -6617,7 +6617,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616770}
   m_ExposedName: LifeTime
   m_Exposed: 1
-  m_Order: 2
+  m_Order: 3
   m_Category: Spawn
   m_Min:
     m_Type:
@@ -9040,7 +9040,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: 2199, y: 2586}
+  m_UIPosition: {x: 2185, y: 2597}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
