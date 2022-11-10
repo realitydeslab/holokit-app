@@ -6,6 +6,8 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         [SerializeField] private GameObject _arrow;
 
+        private float _accumulatedExistingTime;
+
         private const float ArrowInitialY = 100f;
 
         private const float ArrowMovingDistance = 30f;
@@ -14,7 +16,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private const float Duration = 8f;
 
-        private void Start()
+        private void OnEnable()
         {
             if (HoloKitApp.Instance.IsSpectator)
             {
@@ -24,16 +26,21 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 _arrow.GetComponent<RectTransform>().anchoredPosition = new(0f, ArrowInitialY);
                 StartMovingUpward();
-                StartCoroutine(HoloKitAppUtils.WaitAndDo(Duration, () =>
-                {
-                    gameObject.SetActive(false);
-                }));
             }
         }
 
         private void OnDisable()
         {
             LeanTween.cancel(_arrow);
+        }
+
+        private void Update()
+        {
+            _accumulatedExistingTime += Time.deltaTime;
+            if (_accumulatedExistingTime > Duration)
+            {
+                gameObject.SetActive(false);
+            }
         }
 
         private void StartMovingUpward()
