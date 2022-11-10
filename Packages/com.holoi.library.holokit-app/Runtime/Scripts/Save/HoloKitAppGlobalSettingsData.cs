@@ -10,7 +10,7 @@ namespace Holoi.Library.HoloKitApp
 
         public bool VibrationEnabled = true;
 
-        public bool PhaseEnabled = false;
+        public bool PhaseEnabled = true;
 
         public bool HighResHDREnabled = true;
 

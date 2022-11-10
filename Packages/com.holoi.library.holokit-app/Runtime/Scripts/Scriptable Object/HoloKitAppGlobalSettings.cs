@@ -90,7 +90,7 @@ namespace Holoi.Library.HoloKitApp
         {
             InstructionEnabled = true;
             VibrationEnabled = true;
-            PhaseEnabled = false;
+            PhaseEnabled = true;
             HighResHDREnabled = true;
             RecordMicrophone = true;
             WatermarkEnabled = true;
