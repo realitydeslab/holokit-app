@@ -4,7 +4,7 @@ using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
-    public class HoloKitAppUIComponent_StarAR_Timer : MonoBehaviour
+    public class HoloKitAppUIComponent_Timer : MonoBehaviour
     {
         [SerializeField] private TMP_Text _timerText;
 

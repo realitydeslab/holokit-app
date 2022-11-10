@@ -6,9 +6,9 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         [SerializeField] private GameObject _arrow;
 
-        private const float MovementDist = 30f;
+        private const float MovementDist = 45f;
 
-        private const float MovementDuration = 1f;
+        private const float MovementDuration = 0.6f;
 
         private void OnEnable()
         {

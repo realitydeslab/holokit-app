@@ -1,12 +1,12 @@
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
-    public class HoloKitAppUIComponent_StarAR_ThermalState : MonoBehaviour
+    public class HoloKitAppUIComponent_ThermalState : MonoBehaviour
     {
-        [SerializeField] private TMP_Text _thermalStateText;
+        [SerializeField] private Image _thermalStateImage;
 
         private readonly Color32 _normalColor = Color.blue;
 
@@ -20,8 +20,8 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             if (HoloKitUtils.IsRuntime)
             {
-                OnThermalStateChanged(HoloKitARSessionControllerAPI.GetThermalState());
                 HoloKitARSessionControllerAPI.OnThermalStateChanged += OnThermalStateChanged;
+                OnThermalStateChanged(HoloKitARSessionControllerAPI.GetThermalState());
             }
         }
 
@@ -38,20 +38,16 @@ namespace Holoi.Library.HoloKitApp.UI
             switch (thermalState)
             {
                 case ThermalState.ThermalStateNominal:
-                    _thermalStateText.text = "Normal";
-                    _thermalStateText.color = _normalColor;
+                    _thermalStateImage.color = _normalColor;
                     break;
                 case ThermalState.ThermalStateFair:
-                    _thermalStateText.text = "Fair";
-                    _thermalStateText.color = _fairColor;
+                    _thermalStateImage.color = _fairColor;
                     break;
                 case ThermalState.ThermalStateSerious:
-                    _thermalStateText.text = "Serious";
-                    _thermalStateText.color = _seriousColor;
+                    _thermalStateImage.color = _seriousColor;
                     break;
                 case ThermalState.ThermalStateCritical:
-                    _thermalStateText.text = "Critical";
-                    _thermalStateText.color = _criticalColor;
+                    _thermalStateImage.color = _criticalColor;
                     break;
             }
         }

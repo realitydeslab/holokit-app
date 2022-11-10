@@ -32,7 +32,7 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity
         private static extern void HoloKitAppWatchConnectivity_UpdateCurrentReality(int realityIndex);
 
         [AOT.MonoPInvokeCallback(typeof(Action<bool>))]
-        private static void OnSessionReachabilityChangedFunc(bool isReachable)
+        public static void OnSessionReachabilityChangedDelegate(bool isReachable)
         {
             OnSessionReachabilityChanged?.Invoke(isReachable);
         }
@@ -43,7 +43,7 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity
         {
             if (HoloKitUtils.IsRuntime)
             {
-                HoloKitAppWatchConnectivity_ActivateWCSession(OnSessionReachabilityChangedFunc);
+                HoloKitAppWatchConnectivity_ActivateWCSession(OnSessionReachabilityChangedDelegate);
             }
         }
 

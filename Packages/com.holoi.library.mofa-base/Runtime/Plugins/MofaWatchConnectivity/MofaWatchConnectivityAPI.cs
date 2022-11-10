@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using Holoi.Library.HoloKitApp.WatchConnectivity;
 
 namespace Holoi.Library.MOFABase.WatchConnectivity
 {
@@ -13,7 +14,8 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
     public static class MofaWatchConnectivityAPI
     {
         [DllImport("__Internal")]
-        private static extern void MofaWatchConnectivity_Initialize(Action OnStartRoundMessageReceived,
+        private static extern void MofaWatchConnectivity_Initialize(Action<bool> OnSessionReachabilityChanged,
+                                                                    Action OnStartRoundMessageReceived,
                                                                     Action<int> OnWatchStateChanged,
                                                                     Action OnWatchTriggered);
 
@@ -28,6 +30,12 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
 
         [DllImport("__Internal")]
         private static extern void MofaWatchConnectivity_QueryWatchState();
+
+        [AOT.MonoPInvokeCallback(typeof(Action<bool>))]
+        private static void OnSessionReachabilityChangedDelegate(bool isReachable)
+        {
+            HoloKitAppWatchConnectivityAPI.OnSessionReachabilityChangedDelegate(isReachable);
+        }
 
         [AOT.MonoPInvokeCallback(typeof(Action))]
         private static void OnStartRoundMessageReceivedDelegate()
@@ -56,7 +64,8 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
         public static void Initialize()
         {
             if (HoloKit.HoloKitUtils.IsEditor) { return; }
-            MofaWatchConnectivity_Initialize(OnStartRoundMessageReceivedDelegate,
+            MofaWatchConnectivity_Initialize(OnSessionReachabilityChangedDelegate,
+                                             OnStartRoundMessageReceivedDelegate,
                                              OnWatchStateChangedDelegate,
                                              OnWatchTriggeredDelegate);
         }

@@ -7,9 +7,9 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         [SerializeField] private GameObject _watchAppNotDetected;
 
-        [SerializeField] private GameObject _watchNotReachable;
+        [SerializeField] private GameObject _watchAppNotReachable;
 
-        [SerializeField] private GameObject _watchReachable;
+        [SerializeField] private GameObject _watchAppReachable;
 
         private void OnEnable()
         {
@@ -59,36 +59,36 @@ namespace Holoi.Library.HoloKitApp.UI
         private void OnWatchNotRequired()
         {
             _watchAppNotDetected.SetActive(false);
-            _watchNotReachable.SetActive(false);
-            _watchReachable.SetActive(false);
+            _watchAppNotReachable.SetActive(false);
+            _watchAppReachable.SetActive(false);
         }
 
         private void OnNoPairedWatch()
         {
             _watchAppNotDetected.SetActive(true);
-            _watchNotReachable.SetActive(false);
-            _watchReachable.SetActive(false);
+            _watchAppNotReachable.SetActive(false);
+            _watchAppReachable.SetActive(false);
         }
 
         private void OnWatchAppNotInstalled()
         {
             _watchAppNotDetected.SetActive(true);
-            _watchNotReachable.SetActive(false);
-            _watchReachable.SetActive(false);
+            _watchAppNotReachable.SetActive(false);
+            _watchAppReachable.SetActive(false);
         }
 
         private void OnWatchNotReachable()
         {
             _watchAppNotDetected.SetActive(false);
-            _watchNotReachable.SetActive(true);
-            _watchReachable.SetActive(false);
+            _watchAppNotReachable.SetActive(true);
+            _watchAppReachable.SetActive(false);
         }
 
         private void OnWatchReachable()
         {
             _watchAppNotDetected.SetActive(false);
-            _watchNotReachable.SetActive(false);
-            _watchReachable.SetActive(true);
+            _watchAppNotReachable.SetActive(false);
+            _watchAppReachable.SetActive(true);
         }
     }
 }
