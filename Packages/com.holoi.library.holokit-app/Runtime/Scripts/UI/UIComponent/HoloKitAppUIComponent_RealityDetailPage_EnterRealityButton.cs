@@ -11,7 +11,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Update()
         {
-            _ringTextImage.transform.Rotate(new Vector3(0f, 0f, 1f), RotationSpeed * Time.deltaTime);
+            _ringTextImage.transform.Rotate(new Vector3(0f, 0f, 1f), -RotationSpeed * Time.deltaTime);
         }
 
         public void OnEnterRealityButtonPressed()

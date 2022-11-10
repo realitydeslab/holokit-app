@@ -18,7 +18,7 @@ namespace Holoi.Reality.QuantumRealm.UI
 
         private void Update()
         {
-            _switchButton.Rotate(new Vector3(0f, 0f, 1f), RotationSpeed * Time.deltaTime);
+            _switchButton.Rotate(new Vector3(0f, 0f, 1f), -RotationSpeed * Time.deltaTime);
         }
 
         public void OnSwitchButtonPressedFunc()
