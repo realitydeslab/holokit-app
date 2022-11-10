@@ -64,8 +64,6 @@ namespace Holoi.Reality.QuantumRealm
                 Destroy(_arPlacementIndicator.gameObject);
                 Destroy(_hoverableStartButton.gameObject);
                 Destroy(_extendedHandJoint);
-                // There is no vibration on spectators
-                Destroy(CoreHapticsManager.gameObject);
                 // The networked hand is took control by the host
                 HostHandPose.GetComponent<FollowTargetController>().MovementType = MovementType.None;
             }

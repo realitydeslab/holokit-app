@@ -9,20 +9,10 @@ namespace Holoi.Reality.QuantumRealm
     {
         [SerializeField] private List<BuddhaController> _buddhas = new();
 
-        [SerializeField] private AudioClip _bgmSound;
-
         private NetworkVariable<int> _currentBuddhaIndex = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         private void Start()
         {
-            if (!HoloKitApp.Instance.GlobalSettings.PhaseEnabled)
-            {
-                var audioSource = GetComponent<AudioSource>();
-                audioSource.clip = _bgmSound;
-                audioSource.loop = true;
-                audioSource.Play();
-                Debug.Log("[BuddhaGroup] Played BGM with Unity");
-            }
             UI.QuantumRealmUIPanel.OnSwitchButtonPressed += OnSwitchButtonPressed;
             ARObjectAdjuster.Instance.SetARObject(transform);
         }

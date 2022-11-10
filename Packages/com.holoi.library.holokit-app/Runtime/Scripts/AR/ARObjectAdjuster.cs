@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Netcode;
 using Holoi.Library.HoloKitApp.UI;
 using HoloKit;
 
@@ -9,7 +10,7 @@ namespace Holoi.Library.HoloKitApp
     /// Adjustment means translating, rotating and scaling.
     /// This class is a singleton.
     /// </summary>
-    public class ARObjectAdjuster : MonoBehaviour
+    public class ARObjectAdjuster : NetworkBehaviour
     {
         public static ARObjectAdjuster Instance { get { return _instance; } }
 
@@ -65,8 +66,9 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
-        private void OnDestroy()
+        public override void OnDestroy()
         {
+            base.OnDestroy();
             if (_translation)
             {
                 HoloKitAppUIRealitySettingTab_Adjust.OnPositionChanged -= OnPositionChanged;
@@ -88,7 +90,31 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnPositionChanged(Vector2 offset)
         {
-            if (_arObject == null) { return; }
+            if (_arObject != null)
+            {
+                OnPositionChangedServerRpc(offset);
+            }
+        }
+
+        private void OnRotationChanged(float angle)
+        {
+            if (_arObject != null)
+            {
+                OnRotationChangedServerRpc(angle);
+            }
+        }
+
+        private void OnScaleChanged(float factor)
+        {
+            if (_arObject != null)
+            {
+                OnScaleChangedServerRpc(factor);
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void OnPositionChangedServerRpc(Vector2 offset)
+        {
             Vector3 forward = HoloKitCamera.Instance.CenterEyePose.forward;
             Vector3 horizontalForward = new(forward.x, 0f, forward.z);
             Vector3 right = HoloKitCamera.Instance.CenterEyePose.right;
@@ -96,15 +122,15 @@ namespace Holoi.Library.HoloKitApp
             _arObject.position += TranslationSpeed * (offset.x * horizontalRight + offset.y * horizontalForward);
         }
 
-        private void OnRotationChanged(float angle)
+        [ServerRpc(RequireOwnership = false)]
+        private void OnRotationChangedServerRpc(float angle)
         {
-            if (_arObject == null) { return; }
             _arObject.Rotate(0f, -RotationSpeed * angle, 0f);
         }
 
-        private void OnScaleChanged(float factor)
+        [ServerRpc(RequireOwnership = false)]
+        private void OnScaleChangedServerRpc(float factor)
         {
-            if (_arObject == null) { return; }
             _arObject.localScale *= factor;
         }
     }
