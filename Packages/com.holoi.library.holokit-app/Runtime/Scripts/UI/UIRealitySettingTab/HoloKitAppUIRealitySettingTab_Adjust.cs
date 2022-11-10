@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -7,11 +8,33 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         public override string TabName => "Adjust";
 
+        [SerializeField] private Image _dragImage;
+
+        [SerializeField] private Image _twistImage;
+
+        [SerializeField] private Image _pinchImage;
+
         public static event Action<Vector2> OnPositionChanged;
 
         public static event Action<float> OnRotationChanged;
 
         public static event Action<float> OnScaleChanged;
+
+        private void Start()
+        {
+            if (!ARObjectAdjuster.Instance.Translation)
+            {
+                _dragImage.color = new(1f, 1f, 1f, 0.5f);
+            }
+            if (!ARObjectAdjuster.Instance.Rotation)
+            {
+                _twistImage.color = new(1f, 1f, 1f, 0.5f);
+            }
+            if (!ARObjectAdjuster.Instance.Scale)
+            {
+                _pinchImage.color = new(1f, 1f, 1f, 0.5f);
+            }
+        }
 
         private void Update()
         {
