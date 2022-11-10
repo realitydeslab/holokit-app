@@ -10,15 +10,21 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private float _arrowInterval;
 
-        [SerializeField] private float _arrowStartXPos;
-
         [SerializeField] private float _arrowZPos;
 
         [SerializeField] private float _arrowScale;
 
+        public float Length
+        {
+            get
+            {
+                return _arrowInterval * _arrowCount;
+            }
+        }
+
         private void Start()
         {
-            float xPos = _arrowStartXPos;
+            float xPos = 0f;
             for (int i = 0; i < _arrowCount; i++)
             {
                 var arrow = Instantiate(_arrowChainElementPrefab);
