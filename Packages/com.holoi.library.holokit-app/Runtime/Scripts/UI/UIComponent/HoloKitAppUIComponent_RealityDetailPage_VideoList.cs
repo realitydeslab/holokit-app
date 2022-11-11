@@ -11,13 +11,15 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private RawImage _videoRawImagePrefab;
 
+        private readonly List<GameObject> _videoPlayers = new();
+
         private readonly List<RenderTexture> _renderTextures = new();
 
         private const int VideoWidth = 1170;
 
         private const int VideoHeight = 1872;
 
-        private void Start()
+        private void OnEnable()
         {
             if (HoloKitApp.Instance.CurrentReality.PreviewVideos.Count == 0)
             {
@@ -37,20 +39,23 @@ namespace Holoi.Library.HoloKitApp.UI
                 videoPlayer.targetTexture = renderTexture;
                 videoPlayer.isLooping = true;
 
-                var video = Instantiate(_videoRawImagePrefab);
-                video.transform.SetParent(_videoListRoot);
-                video.transform.localScale = Vector3.one;
-                video.texture = renderTexture;
+                var videoRawImage = Instantiate(_videoRawImagePrefab);
+                videoRawImage.transform.SetParent(_videoListRoot);
+                videoRawImage.transform.localScale = Vector3.one;
+                videoRawImage.texture = renderTexture;
 
+                _videoPlayers.Add(go);
                 _renderTextures.Add(renderTexture);
             }
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            foreach (var renderTexture in _renderTextures)
+            for (int i = 0; i < _videoListRoot.childCount; i++)
             {
-                renderTexture.Release();
+                Destroy(_videoListRoot.GetChild(i).gameObject);
+                Destroy(_videoPlayers[i]);
+                _renderTextures[i].Release();
             }
         }
     }
