@@ -17,6 +17,17 @@ namespace Holoi.Library.MOFABase
             _birthVFX.enabled = false;
         }
 
+        //public void OnAppear()
+        //{
+        //    _placementVFX.enabled = true;
+        //    _birthVFX.enabled = false;
+        //}
+
+        //public void OnDisappear()
+        //{
+        //    _placementVFX.enabled = false;
+        //}
+
         public void OnBirth()
         {
             _birthVFX.enabled = true;

@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
+using Holoi.Library.HoloKitApp.UI;
 using Holoi.Library.MOFABase;
 using Holoi.Library.ARUX;
-using HoloKit;
 
 namespace Holoi.Reality.MOFATheHunting
 {
@@ -32,6 +30,7 @@ namespace Holoi.Reality.MOFATheHunting
         private void Awake()
         {
             MofaPlayer.OnMofaPlayerSpawned += OnMofaPlayerSpawned;
+            HoloKitAppUIEventManager.OnTriggered += OnTriggered;
         }
 
         protected override void Start()
@@ -47,20 +46,13 @@ namespace Holoi.Reality.MOFATheHunting
             {
                 Destroy(_arPlacementIndicator.gameObject);
             }
-
-            if (HoloKitUtils.IsEditor && HoloKitApp.Instance.IsHost)
-            {
-                StartCoroutine(HoloKitAppUtils.WaitAndDo(1.2f, () =>
-                {
-                    SpawnDragonServerRpc(new Vector3(0f, 0f, 8f), Quaternion.Euler(0f, 180f, 0f));
-                }));
-            }
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
             MofaPlayer.OnMofaPlayerSpawned -= OnMofaPlayerSpawned;
+            HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -90,25 +82,24 @@ namespace Holoi.Reality.MOFATheHunting
             }
         }
 
-        //public void CreatePortalAndDragon(Vector3 targetPosOnFloor)
-        //{
-        //    var portalPos = targetPosOnFloor;
-        //    var portalInstance = Instantiate(_portalPrefab);
-        //    portalInstance.transform.position = portalPos;
-        //    portalInstance.transform.LookAt(portalInstance.transform.position + DirectionHorizental(portalInstance.transform.position, HoloKit.HoloKitCamera.Instance.CenterEyePose.position));
-
-        //    var dragonPos = portalPos - 2 * portalInstance.transform.forward;
-        //    //var dragonTarget = portalPos + 2 * portalInstance.transform.forward;
-        //    var dragonInstance = Instantiate(_dragonPrefab, _dragonContainer);
-        //    dragonInstance.GetComponent<UnkaDragonController>().ClipPlane = -portalInstance.transform.forward;
-        //    dragonInstance.GetComponent<UnkaDragonController>().ClipPlaneHeihgt = portalInstance.transform.position.magnitude;
-        //    dragonInstance.transform.position = dragonPos;
-        //}
-
-        Vector3 DirectionHorizental(Vector3 pos, Vector3 target)
+        private void OnTriggered()
         {
-            var horizentalTarget = new Vector3(target.x, pos.y ,target.z);
-            return (horizentalTarget - pos).normalized;
+            if (HoloKitApp.Instance.IsHost || HoloKitApp.Instance.IsPuppeteer)
+            {
+                if (_arPlacementIndicator != null)
+                {
+                    if (_arPlacementIndicator.IsValid)
+                    {
+                        SpawnDragonServerRpc(_arPlacementIndicator.HitPoint.position, _arPlacementIndicator.HitPoint.rotation);
+                        _arPlacementIndicator.OnDeathFunc();
+                        StartCoroutine(StartRoundFlow());
+                    }
+                    else
+                    {
+                        Debug.Log("[MOFATheHunting] Cannot spawn the dragon at the current target position");
+                    }
+                }
+            }
         }
     }
 }

@@ -89,6 +89,15 @@ namespace Holoi.Reality.MOFATheHunting
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+            SetupHeadTarget();
+            if (IsServer)
+            {
+                StartInitialMovement();
+            }
+        }
+
+        private void SetupHeadTarget()
+        {
             // Get host head target
             Transform headTarget = ((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).HeadTarget;
             // Set head aim
@@ -101,6 +110,15 @@ namespace Holoi.Reality.MOFATheHunting
             _chestAimConstraint.data.sourceObjects = chestData;
             // Rebuild
             _rigBuilder.Build();
+        }
+
+        private void StartInitialMovement()
+        {
+            LeanTween.move(gameObject, transform.position + 4f * transform.forward, 5f)
+                .setOnComplete(() =>
+                {
+                    // Start enemy behaviour
+                });
         }
 
         private void Update()

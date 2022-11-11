@@ -64,23 +64,29 @@ namespace Holoi.Library.MOFABase
 
         public LifeShieldList LifeShieldList;
 
+        [Header("MOFA Settings")]
+        [SerializeField] private float _countdownTime = 3f;
+
+        [Tooltip("The duration of each MOFA round")]
+        [SerializeField] private float _roundTime = 80f;
+
         public MofaPhase CurrentPhase => _currentPhase.Value;
 
-        private NetworkVariable<MofaPhase> _currentPhase = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        public float RoundTime => _roundTime;
 
         public int RoundCount => _roundCount.Value;
 
-        private NetworkVariable<int> _roundCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
         public MofaRoundResult RoundResult => _roundResult.Value;
-
-        private NetworkVariable<MofaRoundResult> _roundResult = new(MofaRoundResult.NotDetermined, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         public Dictionary<ulong, MofaPlayer> Players => _players;
 
-        private readonly Dictionary<ulong, MofaPlayer> _players = new();
+        private NetworkVariable<MofaPhase> _currentPhase = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        private const int RoundDuration = 80;
+        private NetworkVariable<int> _roundCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+        private NetworkVariable<MofaRoundResult> _roundResult = new(MofaRoundResult.NotDetermined, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+        private readonly Dictionary<ulong, MofaPlayer> _players = new();
 
         public static event Action<MofaPhase> OnPhaseChanged;
 
@@ -239,9 +245,9 @@ namespace Holoi.Library.MOFABase
             _roundCount.Value++;
             _roundResult.Value = MofaRoundResult.NotDetermined;
             RespawnAllLifeShields();
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(_countdownTime);
             _currentPhase.Value = MofaPhase.Fighting;
-            yield return new WaitForSeconds(RoundDuration);
+            yield return new WaitForSeconds(_roundTime);
             _currentPhase.Value = MofaPhase.RoundOver;
             yield return new WaitForSeconds(3f);
             _currentPhase.Value = MofaPhase.RoundResult;
