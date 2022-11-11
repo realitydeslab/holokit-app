@@ -140,6 +140,14 @@ namespace Holoi.Reality.MOFATheHunting
             if (oldValue > newValue)
             {
                 Debug.Log($"[DragonController] Current health: {newValue}");
+                if (IsServer)
+                {
+                    if (newValue == 0)
+                    {
+                        // TODO: Dead
+
+                    }
+                }
             }
         }
 
