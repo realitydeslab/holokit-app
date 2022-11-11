@@ -1,12 +1,24 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
+using UnityEngine.Animations.Rigging;
+using Unity.Netcode;
+using Holoi.Library.HoloKitApp;
+using Holoi.Library.MOFABase;
+using Holoi.Library.ARUX;
+using HoloKit;
 
 namespace Holoi.Reality.MOFATheHunting
 {
     [RequireComponent(typeof(MovementController))]
-    public class UnkaDragonController : MonoBehaviour
+    public class UnkaDragonController : NetworkBehaviour
     {
+        [SerializeField] private MultiAimConstraint _headAimConstraint;
+
+        [SerializeField] private MultiAimConstraint _chestAimConstraint;
+
+        [SerializeField] private RigBuilder _rigBuilder;
+
         [Header("Attack Behaviour")]
         [SerializeField] Animator _aniamtor;
 
@@ -66,66 +78,84 @@ namespace Holoi.Reality.MOFATheHunting
 
         void Start()
         {
-            _attackTarget = HoloKit.HoloKitCamera.Instance.CenterEyePose;
+            //_attackTarget = HoloKit.HoloKitCamera.Instance.CenterEyePose;
 
-            if (AutoFireBall)
-                StartCoroutine(WaitAndFireBall());
-            if (AutoFireBreath)
-                StartCoroutine(WaitAndFireBreath());
+            //if (AutoFireBall)
+            //    StartCoroutine(WaitAndFireBall());
+            //if (AutoFireBreath)
+            //    StartCoroutine(WaitAndFireBreath());
         }
 
-        void Update()
+        public override void OnNetworkSpawn()
         {
-            if (Die)
-            {
-                _aniamtor.SetTrigger("Die");
-                Die = false;
-                OnDeath();
-            }
+            base.OnNetworkSpawn();
+            // Get host head target
+            Transform headTarget = ((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).HeadTarget;
+            // Set head aim
+            var headData = _headAimConstraint.data.sourceObjects;
+            headData.SetTransform(0, headTarget);
+            _headAimConstraint.data.sourceObjects = headData;
+            // Set chest aim
+            var chestData = _chestAimConstraint.data.sourceObjects;
+            chestData.SetTransform(0, headTarget);
+            _chestAimConstraint.data.sourceObjects = chestData;
+            // Rebuild
+            _rigBuilder.Build();
+        }
 
-            if (FireBall)
-            {
-                _aniamtor.SetTrigger("Fire Ball");
-                FireBall = false;
-            }
+        private void Update()
+        {
+
+            //if (Die)
+            //{
+            //    _aniamtor.SetTrigger("Die");
+            //    Die = false;
+            //    OnDeath();
+            //}
+
+            //if (FireBall)
+            //{
+            //    _aniamtor.SetTrigger("Fire Ball");
+            //    FireBall = false;
+            //}
 
 
-            if (FireBreath)
-            {
-                _aniamtor.SetTrigger("Fire Breath");
-                _targetAnimator.SetTrigger("Fire Breath");
-                FireBreath = false;
-            }
+            //if (FireBreath)
+            //{
+            //    _aniamtor.SetTrigger("Fire Breath");
+            //    _targetAnimator.SetTrigger("Fire Breath");
+            //    FireBreath = false;
+            //}
 
-            if (Reset)
-            {
-                _clipPlaneHeight = 3f;
+            //if (Reset)
+            //{
+            //    _clipPlaneHeight = 3f;
 
-                var plane = new Vector4(_clipPlane.x, _clipPlane.y, _clipPlane.z, _clipPlaneHeight);
+            //    var plane = new Vector4(_clipPlane.x, _clipPlane.y, _clipPlane.z, _clipPlaneHeight);
 
-                foreach (var material in _dragonRenderer.materials)
-                {
-                    material.SetVector("_Clip_Plane", plane);
-                }
+            //    foreach (var material in _dragonRenderer.materials)
+            //    {
+            //        material.SetVector("_Clip_Plane", plane);
+            //    }
 
-                _eyeRenderer.material.SetVector("_Clip_Plane", plane);
+            //    _eyeRenderer.material.SetVector("_Clip_Plane", plane);
 
-                _dragonDeathVFX.SetVector4("Clip Plane", plane);
+            //    _dragonDeathVFX.SetVector4("Clip Plane", plane);
 
-                _aniamtor.Rebind();
-                _aniamtor.Update(0);
-                Reset = false;
-            }
+            //    _aniamtor.Rebind();
+            //    _aniamtor.Update(0);
+            //    Reset = false;
+            //}
 
-            if (_isDuringDeath)
-            {
-                UpdateRendererClipPlaneDuraingDeathAnimation();
-            }
+            //if (_isDuringDeath)
+            //{
+            //    UpdateRendererClipPlaneDuraingDeathAnimation();
+            //}
 
-            if (true)
-            {
-                SetRendereClip();
-            }
+            //if (true)
+            //{
+            //    SetRendereClip();
+            //}
         }
 
         void UpdateRendererClipPlaneDuraingDeathAnimation()

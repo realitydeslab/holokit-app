@@ -14,10 +14,7 @@ namespace Holoi.Library.ARUX
 
         [SerializeField] private Transform _hitPoint;
 
-        [SerializeField] private ARPlacementIndicatorVfxController _vfxController;
-
         [Header("Parameters")]
-
         [SerializeField] private bool _isActive;
 
         [SerializeField] private float _horizontalRaycastOffset;
@@ -32,6 +29,8 @@ namespace Holoi.Library.ARUX
         /// so the indicator is not occluded by the ground plane.
         /// </summary>
         [SerializeField] private float _hitPointGroundOffset;
+
+        [SerializeField] private float _destroyDelay = 0.3f;
 
         public bool IsActive
         {
@@ -49,6 +48,8 @@ namespace Holoi.Library.ARUX
         public UnityEvent OnFoundPlane;
 
         public UnityEvent OnLostPlane;
+
+        public UnityEvent OnDeath;
 
         private void Start()
         {
@@ -106,14 +107,14 @@ namespace Holoi.Library.ARUX
             }
         }
 
-        public void OnDeath()
+        /// <summary>
+        /// Call this function instead of destroy the gameObject.
+        /// </summary>
+        public void OnDeathFunc()
         {
             _isActive = false;
-            _vfxController.OnDeath();
-            StartCoroutine(HoloKitAppUtils.WaitAndDo(0.3f, () =>
-            {
-                Destroy(gameObject);
-            }));
+            OnDeath?.Invoke();
+            Destroy(gameObject, _destroyDelay);
         }
     }
 }

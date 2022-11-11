@@ -27,6 +27,8 @@ namespace Holoi.Library.MOFABase
 
         [HideInInspector] public Vector3 LifeShieldOffset = new(0f, -0.4f, 0.5f);
 
+        public static event Action<MofaPlayer> OnMofaPlayerSpawned;
+
         public static event Action<ulong, bool> OnMofaPlayerReadyStateChanged;
 
         public static event Action OnScoreChanged;
@@ -43,8 +45,7 @@ namespace Holoi.Library.MOFABase
 
         public override void OnNetworkSpawn()
         {
-            //Debug.Log($"[MofaPlayer] Spawned with MagicSchoolTokenId: {MagicSchoolTokenId.Value}, team: {Team.Value} and ownership: {OwnerClientId}");
-
+            OnMofaPlayerSpawned?.Invoke(this);
             ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).SetPlayer(OwnerClientId, this);
             Ready.OnValueChanged += OnReadyStateChangedFunc;
             KillCount.OnValueChanged += OnScoreChangedFunc;

@@ -64,6 +64,7 @@ namespace Holoi.Library.ARUX
 
         void Start()
         {
+            if (_followTarget == null) { return; }
             if (_movementType != MovementType.NotFollow)
             {
                 if (_worldSpace)
@@ -79,6 +80,7 @@ namespace Holoi.Library.ARUX
 
         void FixedUpdate()
         {
+            if (_followTarget == null) { return; }
             UpdatePosition();
             UpdateRotation();
         }

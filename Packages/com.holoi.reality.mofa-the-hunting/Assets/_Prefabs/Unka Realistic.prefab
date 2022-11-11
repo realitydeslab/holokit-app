@@ -278,7 +278,7 @@ GameObject:
   - component: {fileID: 806401709687789903}
   - component: {fileID: 806401709687789896}
   m_Layer: 0
-  m_Name: ChestAim
+  m_Name: ChestAimConstraint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -364,7 +364,7 @@ GameObject:
   - component: {fileID: 806401710007624083}
   - component: {fileID: 806401710007624092}
   m_Layer: 0
-  m_Name: HeadAim
+  m_Name: HeadAimConstraint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1335,11 +1335,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 802009559803402270}
-  - component: {fileID: 748772697508346248}
+  - component: {fileID: 2757642987659409439}
   - component: {fileID: 806401710996619160}
+  - component: {fileID: 4423228598242881049}
   - component: {fileID: 748772697508346251}
-  - component: {fileID: 748772697508346250}
   - component: {fileID: 748772697508346249}
+  - component: {fileID: 748772697508346248}
   m_Layer: 0
   m_Name: Unka Realistic
   m_TagString: Player
@@ -1366,6 +1367,114 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &2757642987659409439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807373318217150716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &806401710996619160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807373318217150716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d984fca2cb9e44c91b2beb5cf4c218fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _headAimConstraint: {fileID: 806401710007624092}
+  _chestAimConstraint: {fileID: 806401709687789896}
+  _rigBuilder: {fileID: 748772697508346249}
+  _aniamtor: {fileID: 748772697508346248}
+  _fireBallPrefab: {fileID: 1934665775610832516, guid: 29c5962c49d07420ebeb49988030167d, type: 3}
+  _fireBreathPrefab: {fileID: 8983813006078465278, guid: 1cbb2ad13aa504656814992a5ad5bb06, type: 3}
+  _powerInitPoint: {fileID: 806401709518348665}
+  _targetAnimator: {fileID: 0}
+  _dragonRenderer: {fileID: 781160490506691688}
+  _eyeRenderer: {fileID: 781662465958862282}
+  _dragonDeathVFX: {fileID: 806401709252784140}
+  _clipPlane: {x: 0, y: 0, z: 1}
+  _clipPlaneHeight: 6
+  DeathVFX: {fileID: 806401709252784130}
+  Reset: 0
+  Die: 0
+  FireBall: 0
+  FireBreath: 0
+  AutoFireBall: 0
+  AutoFireBreath: 0
+--- !u!114 &4423228598242881049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807373318217150716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 0
+  Interpolate: 1
+--- !u!114 &748772697508346251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807373318217150716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b1006cd213ad4a6298d00ab14412133, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _controllerType: 0
+  _animator: {fileID: 748772697508346248}
+  _maxForce: 0.1
+  _maxSpeed: 4
+  _avoidDistance: 4
+  _attractDistance: 12
+--- !u!114 &748772697508346249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807373318217150716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fff0960ef4ea6e04eac66b4a7fd2189d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RigLayers:
+  - m_Rig: {fileID: 806401709247578978}
+    m_Active: 1
+  m_Effectors: []
 --- !u!95 &748772697508346248
 Animator:
   serializedVersion: 4
@@ -1386,193 +1495,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &806401710996619160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 807373318217150716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d984fca2cb9e44c91b2beb5cf4c218fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _aniamtor: {fileID: 748772697508346248}
-  _fireBallPrefab: {fileID: 1934665775610832516, guid: 29c5962c49d07420ebeb49988030167d, type: 3}
-  _fireBreathPrefab: {fileID: 8983813006078465278, guid: 1cbb2ad13aa504656814992a5ad5bb06, type: 3}
-  _powerInitPoint: {fileID: 806401709518348665}
-  _targetAnimator: {fileID: 0}
-  _dragonRenderer: {fileID: 781160490506691688}
-  _eyeRenderer: {fileID: 781662465958862282}
-  _dragonDeathVFX: {fileID: 806401709252784140}
-  _clipPlane: {x: 0, y: 0, z: 1}
-  _clipPlaneHeight: 6
-  DeathVFX: {fileID: 806401709252784130}
-  Reset: 0
-  Die: 0
-  FireBall: 0
-  FireBreath: 0
-  AutoFireBall: 0
-  AutoFireBreath: 0
---- !u!114 &748772697508346251
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 807373318217150716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b1006cd213ad4a6298d00ab14412133, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _controllerType: 0
-  _animator: {fileID: 748772697508346248}
-  _maxForce: 0.1
-  _maxSpeed: 4
-  _avoidDistance: 4
-  _attractDistance: 12
---- !u!114 &748772697508346250
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 807373318217150716}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2d8418b0b9634b1892b0268dd9c2743, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boneShape: 1
-  drawBones: 1
-  drawTripods: 0
-  boneSize: 1
-  tripodSize: 1
-  boneColor: {r: 0, g: 0, b: 1, a: 0.5}
-  m_Transforms:
-  - {fileID: 810443166631681578}
-  - {fileID: 801648375028148216}
-  - {fileID: 801806158675786418}
-  - {fileID: 801722250349651714}
-  - {fileID: 810456316470758710}
-  - {fileID: 810283792226403144}
-  - {fileID: 810597779466745726}
-  - {fileID: 810451921253278220}
-  - {fileID: 802071166343096854}
-  - {fileID: 810390986473983614}
-  - {fileID: 801800307760436470}
-  - {fileID: 810547675785274550}
-  - {fileID: 810574551241907504}
-  - {fileID: 801806699627971228}
-  - {fileID: 802192153562725034}
-  - {fileID: 801747959212395136}
-  - {fileID: 810510173250002276}
-  - {fileID: 801899244774807870}
-  - {fileID: 810565601820508936}
-  - {fileID: 810584323073781324}
-  - {fileID: 810647726241836846}
-  - {fileID: 801885837958297456}
-  - {fileID: 801701062732557358}
-  - {fileID: 801647655201342942}
-  - {fileID: 810271149320467996}
-  - {fileID: 802175195469635456}
-  - {fileID: 802068526331686506}
-  - {fileID: 810526169306607150}
-  - {fileID: 801752799772910272}
-  - {fileID: 810377123462783366}
-  - {fileID: 801662186328174698}
-  - {fileID: 802023094568646902}
-  - {fileID: 802057337716560698}
-  - {fileID: 802005611161094682}
-  - {fileID: 810233923295130676}
-  - {fileID: 802169599869198266}
-  - {fileID: 802143433084518920}
-  - {fileID: 810128612631509038}
-  - {fileID: 802008195379358056}
-  - {fileID: 810244742973124066}
-  - {fileID: 801849335188712928}
-  - {fileID: 802182790293511786}
-  - {fileID: 810269202210791904}
-  - {fileID: 802125247908617592}
-  - {fileID: 810434762548826574}
-  - {fileID: 801910501848739270}
-  - {fileID: 810230788849967294}
-  - {fileID: 810115366574269828}
-  - {fileID: 801867806969602206}
-  - {fileID: 810099662502320172}
-  - {fileID: 810585822888148166}
-  - {fileID: 810238826616119740}
-  - {fileID: 802198494208627820}
-  - {fileID: 810456730986117806}
-  - {fileID: 810135101477735864}
-  - {fileID: 810222024940549246}
-  - {fileID: 810470576187404158}
-  - {fileID: 810391808328268522}
-  - {fileID: 810633434096850224}
-  - {fileID: 802008189331512298}
-  - {fileID: 810261927826700100}
-  - {fileID: 802005854623984722}
-  - {fileID: 810536951312845274}
-  - {fileID: 802121012188477020}
-  - {fileID: 810638552755262600}
-  - {fileID: 801729058351125046}
-  - {fileID: 801840908851827536}
-  - {fileID: 801642996491748048}
-  - {fileID: 802191240667961876}
-  - {fileID: 810518415242457496}
-  - {fileID: 801788855353075536}
-  - {fileID: 810401182144118152}
-  - {fileID: 810554103442123632}
-  - {fileID: 810423601904389454}
-  - {fileID: 801650378863719102}
-  - {fileID: 810623631182036770}
-  - {fileID: 802047018182842624}
-  - {fileID: 810235248048059374}
-  - {fileID: 802093697343930208}
-  - {fileID: 810124171408147594}
-  - {fileID: 810145794362540206}
-  - {fileID: 810631618784323322}
-  - {fileID: 810423620661835414}
-  - {fileID: 810210913584184552}
-  - {fileID: 810260805378964818}
-  - {fileID: 810116075479129766}
-  - {fileID: 810623607595902246}
-  - {fileID: 810632626435062352}
-  - {fileID: 810413735448471714}
-  - {fileID: 810286697753485912}
-  - {fileID: 801840755681186476}
-  - {fileID: 810133803975401060}
-  - {fileID: 801694487398565852}
-  - {fileID: 810383195588008810}
-  - {fileID: 801765693098746052}
-  - {fileID: 802174972016139104}
-  - {fileID: 810481472734849582}
-  - {fileID: 810177622500760666}
-  - {fileID: 810188827671836098}
-  - {fileID: 801749025922089686}
-  - {fileID: 810128461015051108}
-  - {fileID: 802054586579651784}
-  - {fileID: 810602135881890698}
-  - {fileID: 801871530389201044}
-  - {fileID: 810290226202088816}
---- !u!114 &748772697508346249
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 807373318217150716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fff0960ef4ea6e04eac66b4a7fd2189d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_RigLayers:
-  - m_Rig: {fileID: 806401709247578978}
-    m_Active: 1
-  m_Effectors: []
 --- !u!1 &807397246335382356
 GameObject:
   m_ObjectHideFlags: 0

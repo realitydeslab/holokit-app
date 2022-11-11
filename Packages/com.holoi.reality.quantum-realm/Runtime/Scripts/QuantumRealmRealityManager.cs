@@ -97,7 +97,7 @@ namespace Holoi.Reality.QuantumRealm
             SpawnBuddhaGroup();
 
             // Turn off indicators and buttons
-            _arPlacementIndicator.OnDeath();
+            _arPlacementIndicator.OnDeathFunc();
             _hoverableStartButton.OnDeath();
 
             // Turn off plane detection and raycast
