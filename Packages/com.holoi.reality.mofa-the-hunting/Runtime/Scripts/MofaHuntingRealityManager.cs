@@ -59,9 +59,6 @@ namespace Holoi.Reality.MOFATheHunting
             SpawnPortalClientRpc(position, rotation);
             Vector3 dragonPosition = position - rotation * new Vector3(0f, 0f, 2f);
             var dragon = Instantiate(_dragonPrefab, dragonPosition, rotation);
-            var dragonController = dragon.GetComponent<UnkaDragonController>();
-            dragonController.ClipPlane = rotation * -Vector3.forward;
-            dragonController.ClipPlaneHeihgt = position.magnitude;
             dragon.GetComponent<NetworkObject>().Spawn();
         }
 

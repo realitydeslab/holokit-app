@@ -18,6 +18,8 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private RigBuilder _rigBuilder;
 
+        private bool _isAttacking;
+
         [Header("Attack Behaviour")]
         [SerializeField] Animator _aniamtor;
 
@@ -42,21 +44,27 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] VisualEffect _dragonDeathVFX;
 
-        [SerializeField] Vector3 _clipPlane = new Vector3(2, 0, -1);
-
         public Vector3 ClipPlane
         {
-            set { _clipPlane = value; }
-            get { return _clipPlane; }
+            get => _clipPlane;
+            set
+            {
+                _clipPlane = value;
+            }
         }
-
-        [SerializeField] float _clipPlaneHeight = 3f;
 
         public float ClipPlaneHeihgt
         {
-            set { _clipPlaneHeight = value; }
-            get { return _clipPlaneHeight; }
+            get => _clipPlaneHeight;
+            set
+            {
+                _clipPlaneHeight = value;
+            }
         }
+
+        private Vector3 _clipPlane = new(2f, 0f, -1f);
+
+        private float _clipPlaneHeight = 3f;
 
         bool _isDuringDeath = false;
 
@@ -75,14 +83,16 @@ namespace Holoi.Reality.MOFATheHunting
 
         public bool AutoFireBreath;
 
-        void Start()
+        private void Start()
         {
-            //_attackTarget = HoloKit.HoloKitCamera.Instance.CenterEyePose;
-
             //if (AutoFireBall)
             //    StartCoroutine(WaitAndFireBall());
             //if (AutoFireBreath)
             //    StartCoroutine(WaitAndFireBreath());
+
+            _clipPlane = -transform.forward;
+            _clipPlaneHeight = (transform.position + 2f * transform.forward).magnitude;
+            SetRenderClip();
         }
 
         public override void OnNetworkSpawn()
@@ -117,7 +127,7 @@ namespace Holoi.Reality.MOFATheHunting
             LeanTween.move(gameObject, transform.position + 4f * transform.forward, 5f)
                 .setOnComplete(() =>
                 {
-                    // Start enemy behaviour
+                    _isAttacking = true;
                 });
         }
 
@@ -172,7 +182,7 @@ namespace Holoi.Reality.MOFATheHunting
 
             if (true)
             {
-                SetRendereClip();
+                SetRenderClip();
             }
         }
 
@@ -187,15 +197,10 @@ namespace Holoi.Reality.MOFATheHunting
             }
         }
 
-        void SetRendereClip()
+        private void SetRenderClip()
         {
             var pos = _clipPlane;
-
-            var worldPos = _dragonRenderer.transform.InverseTransformPoint(_clipPlane);
-
             var plane = new Vector4(pos.x, pos.y, pos.z, _clipPlaneHeight);
-
-
 
             foreach (var material in _dragonRenderer.materials)
             {

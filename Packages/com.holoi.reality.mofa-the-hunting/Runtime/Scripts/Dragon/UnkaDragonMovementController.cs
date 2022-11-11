@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 namespace Holoi.Reality.MOFATheHunting
 {
-    public class MovementController : MonoBehaviour
+    public class UnkaDragonMovementController : MonoBehaviour
     {
         Transform _chasingTarget;
 
@@ -88,7 +88,7 @@ namespace Holoi.Reality.MOFATheHunting
                     {
                         realDesired = Vector3.zero;
                     }
-                    if (realDist < _avoidDistance)
+                    else if (realDist < _avoidDistance)
                     {
                         float m = (1f - (realDist / _avoidDistance)) * _maxSpeed;
 
