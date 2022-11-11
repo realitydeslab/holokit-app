@@ -152,10 +152,10 @@ namespace Holoi.Reality.MOFATheHunting
             //    UpdateRendererClipPlaneDuraingDeathAnimation();
             //}
 
-            //if (true)
-            //{
-            //    SetRendereClip();
-            //}
+            if (true)
+            {
+                SetRendereClip();
+            }
         }
 
         void UpdateRendererClipPlaneDuraingDeathAnimation()
