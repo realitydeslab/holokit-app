@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Holoi.Library.MOFABase
@@ -8,7 +6,14 @@ namespace Holoi.Library.MOFABase
     {
         [SerializeField] TMPro.TMP_Text _gameTime;
 
-        float _timeCounter = 80;
+        private bool _isUpdating;
+
+        private float _timeCounter = 80;
+
+        private void Start()
+        {
+            _gameTime.text = Mathf.Ceil(((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).RoundTime) + "s";
+        }
 
         private void OnEnable()
         {
@@ -24,12 +29,20 @@ namespace Holoi.Library.MOFABase
         {
             if (mofaPhase == MofaPhase.Fighting)
             {
-                _timeCounter = 80;
+                _isUpdating = true;
+                _timeCounter = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).RoundTime;
+            }
+            else if (mofaPhase == MofaPhase.RoundOver)
+            {
+                _isUpdating = false;
+                _gameTime.text = 0f + "s";
             }
         }
 
         private void Update()
         {
+            if (!_isUpdating) { return; }
+
             if (_timeCounter > 0)
             {
                 _timeCounter -= Time.deltaTime;
@@ -38,7 +51,7 @@ namespace Holoi.Library.MOFABase
             {
                 _timeCounter = 0;
             }
-            _gameTime.text = "" + Mathf.Ceil(_timeCounter) + "s";
+            _gameTime.text = Mathf.Ceil(_timeCounter) + "s";
         }
     }
 }
