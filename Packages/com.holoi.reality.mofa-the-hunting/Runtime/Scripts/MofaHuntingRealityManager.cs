@@ -19,8 +19,6 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private GameObject _portalPrefab;
 
-        [SerializeField] private float _dragonToPortalOffset = 2f;
-
         [SerializeField] private GameObject _dragonPrefab;
 
         [SerializeField] private Transform _headTarget;
@@ -59,7 +57,7 @@ namespace Holoi.Reality.MOFATheHunting
         public void SpawnDragonServerRpc(Vector3 position, Quaternion rotation)
         {
             SpawnPortalClientRpc(position, rotation);
-            Vector3 dragonPosition = position - rotation * new Vector3(0f, 0f, _dragonToPortalOffset);
+            Vector3 dragonPosition = position - rotation * new Vector3(0f, 0f, 2f);
             var dragon = Instantiate(_dragonPrefab, dragonPosition, rotation);
             var dragonController = dragon.GetComponent<UnkaDragonController>();
             dragonController.ClipPlane = rotation * -Vector3.forward;
