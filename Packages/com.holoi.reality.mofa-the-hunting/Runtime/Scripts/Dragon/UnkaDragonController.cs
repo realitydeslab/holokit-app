@@ -10,7 +10,6 @@ using HoloKit;
 
 namespace Holoi.Reality.MOFATheHunting
 {
-    [RequireComponent(typeof(MovementController))]
     public class UnkaDragonController : NetworkBehaviour
     {
         [SerializeField] private MultiAimConstraint _headAimConstraint;
@@ -34,7 +33,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         Transform _attackTarget;
 
-        [SerializeField] Animator _targetAnimator;
+        private Animator _headTargetAnimator;
 
         [Header("Renderer")]
         [SerializeField] SkinnedMeshRenderer _dragonRenderer;
@@ -110,6 +109,7 @@ namespace Holoi.Reality.MOFATheHunting
             _chestAimConstraint.data.sourceObjects = chestData;
             // Rebuild
             _rigBuilder.Build();
+            _headTargetAnimator = headTarget.GetComponent<Animator>();
         }
 
         private void StartInitialMovement()

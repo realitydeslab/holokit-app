@@ -1336,9 +1336,9 @@ GameObject:
   m_Component:
   - component: {fileID: 802009559803402270}
   - component: {fileID: 2757642987659409439}
-  - component: {fileID: 806401710996619160}
   - component: {fileID: 4423228598242881049}
-  - component: {fileID: 748772697508346251}
+  - component: {fileID: 806401710996619160}
+  - component: {fileID: 5189010234098413512}
   - component: {fileID: 748772697508346249}
   - component: {fileID: 748772697508346248}
   m_Layer: 0
@@ -1383,38 +1383,6 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &806401710996619160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 807373318217150716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d984fca2cb9e44c91b2beb5cf4c218fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _headAimConstraint: {fileID: 806401710007624092}
-  _chestAimConstraint: {fileID: 806401709687789896}
-  _rigBuilder: {fileID: 748772697508346249}
-  _aniamtor: {fileID: 748772697508346248}
-  _fireBallPrefab: {fileID: 1934665775610832516, guid: 29c5962c49d07420ebeb49988030167d, type: 3}
-  _fireBreathPrefab: {fileID: 8983813006078465278, guid: 1cbb2ad13aa504656814992a5ad5bb06, type: 3}
-  _powerInitPoint: {fileID: 806401709518348665}
-  _targetAnimator: {fileID: 0}
-  _dragonRenderer: {fileID: 781160490506691688}
-  _eyeRenderer: {fileID: 781662465958862282}
-  _dragonDeathVFX: {fileID: 806401709252784140}
-  _clipPlane: {x: 0, y: 0, z: 1}
-  _clipPlaneHeight: 6
-  DeathVFX: {fileID: 806401709252784130}
-  Reset: 0
-  Die: 0
-  FireBall: 0
-  FireBreath: 0
-  AutoFireBall: 0
-  AutoFireBreath: 0
 --- !u!114 &4423228598242881049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1441,14 +1409,45 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
---- !u!114 &748772697508346251
+--- !u!114 &806401710996619160
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 807373318217150716}
-  m_Enabled: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d984fca2cb9e44c91b2beb5cf4c218fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _headAimConstraint: {fileID: 806401710007624092}
+  _chestAimConstraint: {fileID: 806401709687789896}
+  _rigBuilder: {fileID: 748772697508346249}
+  _aniamtor: {fileID: 748772697508346248}
+  _fireBallPrefab: {fileID: 1934665775610832516, guid: 29c5962c49d07420ebeb49988030167d, type: 3}
+  _fireBreathPrefab: {fileID: 8983813006078465278, guid: 1cbb2ad13aa504656814992a5ad5bb06, type: 3}
+  _powerInitPoint: {fileID: 806401709518348665}
+  _dragonRenderer: {fileID: 781160490506691688}
+  _eyeRenderer: {fileID: 781662465958862282}
+  _dragonDeathVFX: {fileID: 806401709252784140}
+  _clipPlane: {x: 0, y: 0, z: 1}
+  _clipPlaneHeight: 6
+  DeathVFX: {fileID: 806401709252784130}
+  Reset: 0
+  Die: 0
+  FireBall: 0
+  FireBreath: 0
+  AutoFireBall: 0
+  AutoFireBreath: 0
+--- !u!114 &5189010234098413512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807373318217150716}
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b1006cd213ad4a6298d00ab14412133, type: 3}
   m_Name: 
@@ -1457,8 +1456,8 @@ MonoBehaviour:
   _animator: {fileID: 748772697508346248}
   _maxForce: 0.1
   _maxSpeed: 4
-  _avoidDistance: 4
-  _attractDistance: 12
+  _avoidDistance: 0.1
+  _attractDistance: 8
 --- !u!114 &748772697508346249
 MonoBehaviour:
   m_ObjectHideFlags: 0
