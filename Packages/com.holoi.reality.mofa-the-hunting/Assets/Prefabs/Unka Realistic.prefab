@@ -1364,6 +1364,7 @@ Transform:
   - {fileID: 810165416594345578}
   - {fileID: 806401709247578979}
   - {fileID: 806401709252784141}
+  - {fileID: 3141158408084835309}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -1424,6 +1425,7 @@ MonoBehaviour:
   _headAimConstraint: {fileID: 806401710007624092}
   _chestAimConstraint: {fileID: 806401709687789896}
   _rigBuilder: {fileID: 748772697508346249}
+  _maxHealth: 30
   _aniamtor: {fileID: 748772697508346248}
   _fireBallPrefab: {fileID: 1934665775610832516, guid: 29c5962c49d07420ebeb49988030167d, type: 3}
   _fireBreathPrefab: {fileID: 8983813006078465278, guid: 1cbb2ad13aa504656814992a5ad5bb06, type: 3}
@@ -1431,8 +1433,6 @@ MonoBehaviour:
   _dragonRenderer: {fileID: 781160490506691688}
   _eyeRenderer: {fileID: 781662465958862282}
   _dragonDeathVFX: {fileID: 806401709252784140}
-  _clipPlane: {x: 0, y: 0, z: 1}
-  _clipPlaneHeight: 6
   DeathVFX: {fileID: 806401709252784130}
   Reset: 0
   Die: 0
@@ -4450,3 +4450,63 @@ CapsuleCollider:
   m_Height: 0.95308316
   m_Direction: 0
   m_Center: {x: -0.3831922, y: 0.00568719, z: -0.011803597}
+--- !u!1 &8330568274719257143
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3141158408084835309}
+  - component: {fileID: 4220489307113366403}
+  - component: {fileID: 4670216238262242296}
+  m_Layer: 0
+  m_Name: Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3141158408084835309
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8330568274719257143}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 802009559803402270}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4220489307113366403
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8330568274719257143}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.2, y: 8, z: 3}
+  m_Center: {x: 0, y: 1.5, z: 0.5}
+--- !u!114 &4670216238262242296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8330568274719257143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 797229eec50854397bd82bd82a6b4d18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dragonController: {fileID: 806401710996619160}
+  _damageMultiplier: 1

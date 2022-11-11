@@ -4,9 +4,6 @@ using UnityEngine.VFX;
 using UnityEngine.Animations.Rigging;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
-using Holoi.Library.MOFABase;
-using Holoi.Library.ARUX;
-using HoloKit;
 
 namespace Holoi.Reality.MOFATheHunting
 {
@@ -18,7 +15,13 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private RigBuilder _rigBuilder;
 
+        [SerializeField] private int _maxHealth = 30;
+
         private bool _isAttacking;
+
+        private NetworkVariable<int> _currentHealth = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+        private Animator _dragonHeadTargetAnimator;
 
         [Header("Attack Behaviour")]
         [SerializeField] Animator _aniamtor;
@@ -34,8 +37,6 @@ namespace Holoi.Reality.MOFATheHunting
         GameObject _fireBreathInstance;
 
         Transform _attackTarget;
-
-        private Animator _headTargetAnimator;
 
         [Header("Renderer")]
         [SerializeField] SkinnedMeshRenderer _dragonRenderer;
@@ -85,11 +86,6 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void Start()
         {
-            //if (AutoFireBall)
-            //    StartCoroutine(WaitAndFireBall());
-            //if (AutoFireBreath)
-            //    StartCoroutine(WaitAndFireBreath());
-
             _clipPlane = -transform.forward;
             _clipPlaneHeight = (transform.position + 2f * transform.forward).magnitude;
             SetRenderClip();
@@ -102,24 +98,32 @@ namespace Holoi.Reality.MOFATheHunting
             if (IsServer)
             {
                 StartInitialMovement();
+                _currentHealth.Value = _maxHealth;
             }
+            _currentHealth.OnValueChanged += OnCurrentHealthValueChanged;
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            _currentHealth.OnValueChanged -= OnCurrentHealthValueChanged;
         }
 
         private void SetupHeadTarget()
         {
             // Get host head target
-            Transform headTarget = ((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).HeadTarget;
+            Transform dragonHeadTarget = ((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).DragonHeadTarget;
             // Set head aim
             var headData = _headAimConstraint.data.sourceObjects;
-            headData.SetTransform(0, headTarget);
+            headData.SetTransform(0, dragonHeadTarget);
             _headAimConstraint.data.sourceObjects = headData;
             // Set chest aim
             var chestData = _chestAimConstraint.data.sourceObjects;
-            chestData.SetTransform(0, headTarget);
+            chestData.SetTransform(0, dragonHeadTarget);
             _chestAimConstraint.data.sourceObjects = chestData;
             // Rebuild
             _rigBuilder.Build();
-            _headTargetAnimator = headTarget.GetComponent<Animator>();
+            _dragonHeadTargetAnimator = dragonHeadTarget.GetComponent<Animator>();
         }
 
         private void StartInitialMovement()
@@ -129,6 +133,19 @@ namespace Holoi.Reality.MOFATheHunting
                 {
                     _isAttacking = true;
                 });
+        }
+
+        private void OnCurrentHealthValueChanged(int oldValue, int newValue)
+        {
+            if (oldValue > newValue)
+            {
+                Debug.Log($"[DragonController] Current health: {newValue}");
+            }
+        }
+
+        public void OnDamaged(int damage, ulong attackerClientId)
+        {
+            _currentHealth.Value -= damage;
         }
 
         private void Update()
@@ -180,10 +197,10 @@ namespace Holoi.Reality.MOFATheHunting
             //    UpdateRendererClipPlaneDuraingDeathAnimation();
             //}
 
-            if (true)
-            {
-                SetRenderClip();
-            }
+            //if (true)
+            //{
+            //    SetRenderClip();
+            //}
         }
 
         void UpdateRendererClipPlaneDuraingDeathAnimation()

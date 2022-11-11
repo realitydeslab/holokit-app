@@ -21,9 +21,9 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private GameObject _dragonPrefab;
 
-        [SerializeField] private Transform _headTarget;
+        [SerializeField] private Transform _dragonHeadTarget;
 
-        public Transform HeadTarget => _headTarget;
+        public Transform DragonHeadTarget => _dragonHeadTarget;
 
         private void Awake()
         {
@@ -59,7 +59,7 @@ namespace Holoi.Reality.MOFATheHunting
             SpawnPortalClientRpc(position, rotation);
             Vector3 dragonPosition = position - rotation * new Vector3(0f, 0f, 2f);
             var dragon = Instantiate(_dragonPrefab, dragonPosition, rotation);
-            dragon.GetComponent<NetworkObject>().Spawn();
+            dragon.GetComponent<NetworkObject>().SpawnWithOwnership(999);
         }
 
         [ClientRpc]
@@ -73,7 +73,7 @@ namespace Holoi.Reality.MOFATheHunting
         {
             if (mofaPlayer.OwnerClientId == 0)
             {
-                _headTarget.GetComponent<FollowMovementManager>().FollowTarget = mofaPlayer.transform;
+                _dragonHeadTarget.GetComponent<FollowMovementManager>().FollowTarget = mofaPlayer.transform;
             }
         }
 

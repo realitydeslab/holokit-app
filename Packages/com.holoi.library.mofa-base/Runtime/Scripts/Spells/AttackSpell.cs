@@ -30,18 +30,33 @@ namespace Holoi.Library.MOFABase
             if (other.TryGetComponent<IDamageable>(out var damageable))
             {
                 var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-                MofaTeam attackerTeam = mofaRealityManager.Players[OwnerClientId].Team.Value;
-                MofaTeam victimTeam = mofaRealityManager.Players[other.GetComponentInParent<NetworkObject>().OwnerClientId].Team.Value;
-                if (attackerTeam != victimTeam)
+                ulong victimClientId = other.GetComponentInParent<NetworkObject>().OwnerClientId;
+                if (mofaRealityManager.Players.ContainsKey(victimClientId))
                 {
-                    damageable.OnDamaged(OwnerClientId);
-                    OnHitClientRpc();
-                    if (HitOnce)
+                    MofaTeam attackerTeam = mofaRealityManager.Players[OwnerClientId].Team.Value;
+                    MofaTeam victimTeam = mofaRealityManager.Players[victimClientId].Team.Value;
+                    if (attackerTeam != victimTeam)
                     {
-                        GetComponent<Collider>().enabled = false;
-                        Destroy(gameObject, _destroyDelay);
+                        damageable.OnDamaged(OwnerClientId);
+                        OnHitFunc();
                     }
                 }
+                else
+                {
+                    // The victim is not a player
+                    damageable.OnDamaged(OwnerClientId);
+                    OnHitFunc();
+                }
+            }
+        }
+
+        private void OnHitFunc()
+        {
+            OnHitClientRpc();
+            if (HitOnce)
+            {
+                GetComponent<Collider>().enabled = false;
+                Destroy(gameObject, _destroyDelay);
             }
         }
 
