@@ -18,19 +18,20 @@ namespace Holoi.Library.ARUX
         {
             _vfx = GetComponent<VisualEffect>();
             _animator = GetComponent<Animator>();
-            _animator.SetTrigger("Init");
         }
 
         public void OnFoundPlane()
         {
-            _vfx.SetBool("IsHit", true);
+            _animator.SetBool("Active", true);
             _vfx.SetTexture("MainTex", _trueTexture);
+            //_vfx.SetBool("IsHit", true);
         }
 
         public void OnLostPlane()
         {
-            _vfx.SetBool("IsHit", false);
+            _animator.SetBool("Active", false);
             _vfx.SetTexture("MainTex", _falseTexture);
+            //_vfx.SetBool("IsHit", false);
         }
 
         public void OnDeath()
