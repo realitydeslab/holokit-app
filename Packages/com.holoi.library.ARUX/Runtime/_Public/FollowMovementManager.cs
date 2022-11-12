@@ -30,9 +30,12 @@ namespace Holoi.Library.ARUX
             }
         }
 
+        [Header("Transform")]
         [SerializeField] MovementType _movementType;
 
+        [Header("Rotation")]
         [SerializeField] RotateType _rotateType;
+        [SerializeField] Vector3 _axisWeight = Vector3.one;
 
         [Header("Offset & Space")]
         [SerializeField] bool _worldSpace = false;
@@ -46,7 +49,7 @@ namespace Holoi.Library.ARUX
 
         [SerializeField] private float _reachDistance = .001f;
 
-        private bool _needMove = false;
+        bool _needMove = false;
 
         public Vector3 Offset
         {
@@ -69,11 +72,11 @@ namespace Holoi.Library.ARUX
             {
                 if (_worldSpace)
                 {
-                    transform.position = _followTarget.position + _offset;
+                    transform.position = Vector3.Scale(_followTarget.position, _axisWeight) + Vector3.Scale(_offset, _axisWeight);
                 }
                 else
                 {
-                    transform.position = _followTarget.position + _followTarget.TransformVector(_offset);
+                    transform.position = Vector3.Scale(_followTarget.position, _axisWeight) + Vector3.Scale(_followTarget.TransformVector(_offset), _axisWeight);
                 }
             }
         }
@@ -101,7 +104,7 @@ namespace Holoi.Library.ARUX
                     }
                     if (_needMove)
                     {
-                        transform.position = PositionAnimationLerp(transform.position, targetPosition, _lerpSpeed);
+                        transform.position = Vector3.Scale(PositionAnimationLerp(transform.position, targetPosition, _lerpSpeed), _axisWeight);
                         if (Vector3.Distance(_followTarget.position, transform.position) < _reachDistance)
                         {
                             _needMove = false;
@@ -130,7 +133,7 @@ namespace Holoi.Library.ARUX
                     transform.rotation = _followTarget.rotation;
                     break;
                 case RotateType.FacingTargetHorizentally:
-                    var pos = new Vector3(_followTarget.position.x, this.transform.position.y, _followTarget.position.z);
+                    var pos = new Vector3(_followTarget.position.x, transform.position.y, _followTarget.position.z);
                     transform.LookAt(pos);
                     break;
             }
@@ -156,10 +159,5 @@ namespace Holoi.Library.ARUX
                 return targetPosition + localOffset;
             }
         }
-
-        //public void Reset()
-        //{
-        //    transform.position = _followTarget.position + _followTarget.TransformVector(_offset);
-        //}
     }
 }
