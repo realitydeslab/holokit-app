@@ -22,7 +22,7 @@ namespace Holoi.Library.HoloKitApp.UI
         private void Start()
         {
             // If local device is spectator
-            if (HoloKit.HoloKitUtils.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 if (!HoloKitApp.Instance.IsHost)
                 {

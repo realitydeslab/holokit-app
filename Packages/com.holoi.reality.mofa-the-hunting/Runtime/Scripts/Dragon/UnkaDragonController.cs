@@ -19,9 +19,9 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private int _maxHealth = 30;
 
-        private bool _isAttacking;
+        private readonly NetworkVariable<bool> _isAttacking = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        private NetworkVariable<int> _currentHealth = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        private readonly NetworkVariable<int> _currentHealth = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         private Animator _dragonHeadTargetAnimator;
 
@@ -67,14 +67,10 @@ namespace Holoi.Reality.MOFATheHunting
 
         private float _clipPlaneHeight = 3f;
 
-        bool _isDuringDeath = false;
-
         [Header("Test")]
         public GameObject DeathVFX;
 
         public bool Reset;
-
-        public bool Die;
 
         public bool FireBall;
 
@@ -101,12 +97,14 @@ namespace Holoi.Reality.MOFATheHunting
                 _currentHealth.Value = _maxHealth;
             }
             _currentHealth.OnValueChanged += OnCurrentHealthValueChanged;
+            _isAttacking.OnValueChanged += OnIsAttackingValueChanged;
         }
 
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
             _currentHealth.OnValueChanged -= OnCurrentHealthValueChanged;
+            _isAttacking.OnValueChanged -= OnIsAttackingValueChanged;
         }
 
         private void SetupHeadTarget()
@@ -131,7 +129,7 @@ namespace Holoi.Reality.MOFATheHunting
             LeanTween.move(gameObject, transform.position + 4f * transform.forward, 5f)
                 .setOnComplete(() =>
                 {
-                    _isAttacking = true;
+                    _isAttacking.Value = true;
                 });
         }
 
@@ -142,17 +140,46 @@ namespace Holoi.Reality.MOFATheHunting
                 Debug.Log($"[DragonController] Current health: {newValue}");
                 if (newValue == 0)
                 {
-                    OnDeathFunc();
+                    OnDeath();
                 }
             }
         }
 
+        private void OnIsAttackingValueChanged(bool oldValue, bool newValue)
+        {
+            if (!oldValue && newValue)
+            {
+                if (IsServer)
+                {
+                    // TODO: Start dragon attacking AI
+                }
+            }
+        }
+
+        private IEnumerator StartDragonAttackAI()
+        {
+            yield return new WaitForSeconds(UnityEngine.Random.Range(1f, 5f));
+
+        }
+
+        [ClientRpc]
+        private void SpawnFireBallClientRpc()
+        {
+
+        }
+
+        [ClientRpc]
+        private void SpawnFireBreathClientRpc()
+        {
+
+        }
+        
         public void OnDamaged(int damage, ulong attackerClientId)
         {
             _currentHealth.Value -= damage;
         }
 
-        private void OnDeathFunc()
+        private void OnDeath()
         {
             _animator.SetTrigger("Die");
             LeanTween.value(_clipPlaneHeight, -3f, 3f)
@@ -172,27 +199,18 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void Update()
         {
-
-            if (Die)
+            if (FireBall)
             {
-                _animator.SetTrigger("Die");
-                Die = false;
-                OnDeath();
+                _animator.SetTrigger("Fire Ball");
+                FireBall = false;
             }
 
-            //if (FireBall)
-            //{
-            //    _aniamtor.SetTrigger("Fire Ball");
-            //    FireBall = false;
-            //}
-
-
-            //if (FireBreath)
-            //{
-            //    _aniamtor.SetTrigger("Fire Breath");
-            //    _targetAnimator.SetTrigger("Fire Breath");
-            //    FireBreath = false;
-            //}
+            if (FireBreath)
+            {
+                _animator.SetTrigger("Fire Breath");
+                _dragonHeadTargetAnimator.SetTrigger("Fire Breath");
+                FireBreath = false;
+            }
 
             //if (Reset)
             //{
@@ -213,41 +231,17 @@ namespace Holoi.Reality.MOFATheHunting
             //    _aniamtor.Update(0);
             //    Reset = false;
             //}
-
-            //if (_isDuringDeath)
-            //{
-            //    UpdateRendererClipPlaneDuraingDeathAnimation();
-            //}
-
-            //if (true)
-            //{
-            //    SetRenderClip();
-            //}
-        }
-
-        private void UpdateRendererClipPlaneDuringDeathAnimation()
-        {
-            _clipPlaneHeight -= Time.deltaTime * 3f;
-
-            if (_clipPlaneHeight < -3f)
-            {
-                _clipPlaneHeight = -3f;
-                _isDuringDeath = false;
-            }
         }
 
         private void SetRendererClipPlane()
         {
             var pos = _clipPlane;
             var plane = new Vector4(pos.x, pos.y, pos.z, _clipPlaneHeight);
-
             foreach (var material in _dragonRenderer.materials)
             {
                 material.SetVector("_Clip_Plane", plane);
             }
-
             _eyeRenderer.material.SetVector("_Clip_Plane", plane);
-
             _dragonDeathVFX.SetVector4("Clip Plane", plane);
         }
 
@@ -283,20 +277,9 @@ namespace Holoi.Reality.MOFATheHunting
         //    Debug.DrawRay(_powerInitPoint.position, dir*10f, Color.red);
         //}
 
-        public void OnDeath()
-        {
-            _isDuringDeath = true;
-        }
-
         public void OnAnimationStop()
         {
             _animator.StopPlayback();
-        }
-
-        IEnumerator WaitAndDisableGameObject(GameObject go, float time)
-        {
-            yield return new WaitForSeconds(time);
-            go.SetActive(false);
         }
 
         public void PlaySound()

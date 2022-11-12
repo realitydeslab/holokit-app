@@ -43,38 +43,53 @@ namespace Netcode.Transports.MultipeerConnectivity
         [AOT.MonoPInvokeCallback(typeof(Action<int>))]
         private static void OnClientConnected(int transportID)
         {
-            s_instance.InvokeOnTransportEvent(NetworkEvent.Connect, (ulong)transportID,
-                default, Time.realtimeSinceStartup);
+            if (s_instance != null)
+            {
+                s_instance.InvokeOnTransportEvent(NetworkEvent.Connect, (ulong)transportID,
+                    default, Time.realtimeSinceStartup);
+            }
         }
 
         [AOT.MonoPInvokeCallback(typeof(Action))]
         private static void OnConnectedToHost()
         {
-            s_instance.InvokeOnTransportEvent(NetworkEvent.Connect, 0,
-                default, Time.realtimeSinceStartup);
+            if (s_instance != null)
+            {
+                s_instance.InvokeOnTransportEvent(NetworkEvent.Connect, 0,
+                    default, Time.realtimeSinceStartup);
+            }
         }
 
         [AOT.MonoPInvokeCallback(typeof(Action<int, IntPtr, int>))]
         private static void OnReceivedData(int transportID, IntPtr dataPtr, int length)
         {
-            byte[] data = new byte[length];
-            Marshal.Copy(dataPtr, data, 0, length);
-            s_instance.InvokeOnTransportEvent(NetworkEvent.Data, (ulong)transportID,
-                new ArraySegment<byte>(data, 0, length), Time.realtimeSinceStartup);
+            if (s_instance != null)
+            {
+                byte[] data = new byte[length];
+                Marshal.Copy(dataPtr, data, 0, length);
+                s_instance.InvokeOnTransportEvent(NetworkEvent.Data, (ulong)transportID,
+                    new ArraySegment<byte>(data, 0, length), Time.realtimeSinceStartup);
+            }
         }
 
         [AOT.MonoPInvokeCallback(typeof(Action<int>))]
         private static void OnClientDisconnected(int transportID)
         {
-            s_instance.InvokeOnTransportEvent(NetworkEvent.Disconnect, (ulong)transportID,
-                default, Time.realtimeSinceStartup);
+            if (s_instance != null)
+            {
+                s_instance.InvokeOnTransportEvent(NetworkEvent.Disconnect, (ulong)transportID,
+                    default, Time.realtimeSinceStartup);
+            }
         }
 
         [AOT.MonoPInvokeCallback(typeof(Action))]
         private static void OnHostDisconnected()
         {
-            s_instance.InvokeOnTransportEvent(NetworkEvent.Disconnect, 0,
-                default, Time.realtimeSinceStartup);
+            if (s_instance != null)
+            {
+                s_instance.InvokeOnTransportEvent(NetworkEvent.Disconnect, 0,
+                    default, Time.realtimeSinceStartup);
+            }
         }
 
         private void Awake()
@@ -97,11 +112,11 @@ namespace Netcode.Transports.MultipeerConnectivity
 
             if (BundleId == null)
             {
-                Debug.Log("[MultipeerConnectivityTransport] Initialized without BundleId");
+                Debug.Log("[MPCTransport] Initialized without BundleId");
             }
             else
             {
-                Debug.Log($"[MultipeerConnectivityTransport] Initilized with BundleId: {BundleId}");
+                Debug.Log($"[MPCTransport] Initilized with BundleId: {BundleId}");
             }
         }
 
