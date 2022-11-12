@@ -409,11 +409,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6964064994324406459, guid: 7cf446a3bf24041fc8d375f3485f77a3, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6964064995198953935, guid: 7cf446a3bf24041fc8d375f3485f77a3, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7cf446a3bf24041fc8d375f3485f77a3, type: 3}
@@ -893,13 +893,14 @@ MonoBehaviour:
   _mofaPlayerPrefab: {fileID: 5531124449187713469, guid: 5180be57b37b4499b813f534629c92ee, type: 3}
   SpellList: {fileID: 11400000, guid: b4e94e5ffa1d74c20813c68747a2d3cc, type: 2}
   LifeShieldList: {fileID: 11400000, guid: 6232ecefe87994ff798dbb39acb2abd6, type: 2}
+  _countdownTime: 3
+  _roundTime: 80
   _arPlaneManager: {fileID: 2068233603}
   _arRaycastManager: {fileID: 2068233602}
   _arPlacementIndicator: {fileID: 0}
   _portalPrefab: {fileID: 6964064994324406459, guid: 7cf446a3bf24041fc8d375f3485f77a3, type: 3}
-  _dragonToPortalOffset: 2
   _dragonPrefab: {fileID: 807373318217150716, guid: 3a45c81c2325542ce8cc73e20352793d, type: 3}
-  _headTarget: {fileID: 0}
+  _dragonHeadTarget: {fileID: 0}
 --- !u!1 &849723728
 GameObject:
   m_ObjectHideFlags: 0
@@ -3401,16 +3402,14 @@ MonoBehaviour:
   _headAimConstraint: {fileID: 806401709871805512}
   _chestAimConstraint: {fileID: 806401709556223132}
   _rigBuilder: {fileID: 748772697367276637}
+  _maxHealth: 30
   _aniamtor: {fileID: 748772697367276636}
   _fireBallPrefab: {fileID: 1934665775610832516, guid: 29c5962c49d07420ebeb49988030167d, type: 3}
   _fireBreathPrefab: {fileID: 8983813006078465278, guid: 1cbb2ad13aa504656814992a5ad5bb06, type: 3}
   _powerInitPoint: {fileID: 806401709658305709}
-  _targetAnimator: {fileID: 0}
   _dragonRenderer: {fileID: 781160490374017468}
   _eyeRenderer: {fileID: 781662466094614558}
   _dragonDeathVFX: {fileID: 806401709385393624}
-  _clipPlane: {x: 0, y: 0, z: -1}
-  _clipPlaneHeight: 0
   DeathVFX: {fileID: 806401709385393622}
   Reset: 0
   Die: 0
