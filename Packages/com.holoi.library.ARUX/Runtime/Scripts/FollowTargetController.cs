@@ -21,17 +21,25 @@ namespace Holoi.Library.ARUX
     {
         [SerializeField] private Transform _targetTransform;
 
+        [Header("Position")]
+        [SerializeField] private MovementType _movementType;
+
+        [SerializeField] private bool _syncPositionX = true;
+
+        [SerializeField] private bool _syncPositionY = true;
+
+        [SerializeField] private bool _syncPositionZ = true;
+
+        [SerializeField] private bool _heightIdenticalToTarget;
+
         [SerializeField] private Vector3 _offset;
 
         [SerializeField] private float _lerpSpeed;
 
         [SerializeField] private float _lerpThreshold;
 
-        [SerializeField] private MovementType _movementType;
-
+        [Header("Rotation")]
         [SerializeField] private RotationType _rotationType;
-
-        [SerializeField] private bool _heightIdenticalToTarget;
 
         public MovementType MovementType
         {
@@ -80,21 +88,27 @@ namespace Holoi.Library.ARUX
                 return;
             }
 
-            Vector3 realTargetPosition = _targetTransform.position + _targetTransform.TransformVector(_offset);
+            Vector3 targetPosition = _targetTransform.position + _targetTransform.TransformVector(_offset);
             if (_heightIdenticalToTarget)
             {
-                realTargetPosition = new(realTargetPosition.x, _targetTransform.position.y, realTargetPosition.z);
+                targetPosition = new(targetPosition.x, _targetTransform.position.y, targetPosition.z);
             }
             switch (_movementType)
             {
                 case MovementType.Instant:
-                    transform.position = realTargetPosition;
+                    //transform.position = realTargetPosition;
+                    transform.position = new Vector3(_syncPositionX ? targetPosition.x : transform.position.x,
+                                                     _syncPositionY ? targetPosition.y : transform.position.y,
+                                                     _syncPositionZ ? targetPosition.z : transform.position.z);
                     break;
                 case MovementType.Lerp:
-                    float distance = Vector3.Distance(transform.position, realTargetPosition);
+                    float distance = Vector3.Distance(transform.position, targetPosition);
                     if (distance > _lerpThreshold)
                     {
-                        transform.position += _lerpSpeed * Time.deltaTime * (realTargetPosition - transform.position).normalized;
+                        Vector3 newPosition = transform.position + _lerpSpeed * Time.deltaTime * (targetPosition - transform.position).normalized;
+                        transform.position = new Vector3(_syncPositionX ? newPosition.x : transform.position.x,
+                                                         _syncPositionY ? newPosition.y : transform.position.y,
+                                                         _syncPositionZ ? newPosition.z : transform.position.z);
                     }
                     break;
             }
