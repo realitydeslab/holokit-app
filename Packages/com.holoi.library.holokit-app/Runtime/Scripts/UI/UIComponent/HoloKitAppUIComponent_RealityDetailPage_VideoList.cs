@@ -38,6 +38,11 @@ namespace Holoi.Library.HoloKitApp.UI
                 videoPlayer.renderMode = VideoRenderMode.RenderTexture;
                 videoPlayer.targetTexture = renderTexture;
                 videoPlayer.isLooping = true;
+                videoPlayer.audioOutputMode = VideoAudioOutputMode.Direct;
+                for (ushort i = 0; i < videoPlayer.audioTrackCount; i++)
+                {
+                    videoPlayer.SetDirectAudioMute(i, true);
+                }
 
                 var videoRawImage = Instantiate(_videoRawImagePrefab);
                 videoRawImage.transform.SetParent(_videoListRoot);

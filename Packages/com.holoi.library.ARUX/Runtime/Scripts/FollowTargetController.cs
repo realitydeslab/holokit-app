@@ -24,11 +24,11 @@ namespace Holoi.Library.ARUX
         [Header("Position")]
         [SerializeField] private MovementType _movementType;
 
-        [SerializeField] private bool _syncPositionX = true;
+        [SerializeField] private bool _syncX = true;
 
-        [SerializeField] private bool _syncPositionY = true;
+        [SerializeField] private bool _syncY = true;
 
-        [SerializeField] private bool _syncPositionZ = true;
+        [SerializeField] private bool _syncZ = true;
 
         [SerializeField] private bool _heightIdenticalToTarget;
 
@@ -97,18 +97,18 @@ namespace Holoi.Library.ARUX
             {
                 case MovementType.Instant:
                     //transform.position = realTargetPosition;
-                    transform.position = new Vector3(_syncPositionX ? targetPosition.x : transform.position.x,
-                                                     _syncPositionY ? targetPosition.y : transform.position.y,
-                                                     _syncPositionZ ? targetPosition.z : transform.position.z);
+                    transform.position = new Vector3(_syncX ? targetPosition.x : transform.position.x,
+                                                     _syncY ? targetPosition.y : transform.position.y,
+                                                     _syncZ ? targetPosition.z : transform.position.z);
                     break;
                 case MovementType.Lerp:
                     float distance = Vector3.Distance(transform.position, targetPosition);
                     if (distance > _lerpThreshold)
                     {
                         Vector3 newPosition = transform.position + _lerpSpeed * Time.deltaTime * (targetPosition - transform.position).normalized;
-                        transform.position = new Vector3(_syncPositionX ? newPosition.x : transform.position.x,
-                                                         _syncPositionY ? newPosition.y : transform.position.y,
-                                                         _syncPositionZ ? newPosition.z : transform.position.z);
+                        transform.position = new Vector3(_syncX ? newPosition.x : transform.position.x,
+                                                         _syncY ? newPosition.y : transform.position.y,
+                                                         _syncZ ? newPosition.z : transform.position.z);
                     }
                     break;
             }

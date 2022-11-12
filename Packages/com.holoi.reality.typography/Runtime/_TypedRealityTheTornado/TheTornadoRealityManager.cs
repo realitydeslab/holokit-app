@@ -16,6 +16,14 @@ namespace Holoi.Reality.Typography
 
         [SerializeField] private float _raycastHorizontalOffset;
 
+        private void Start()
+        {
+            if (HoloKitApp.Instance.IsHost)
+            {
+                _arRaycastManager.enabled = true;
+            }
+        }
+
         private void Update()
         {
             if (_arRaycastManager.enabled)
