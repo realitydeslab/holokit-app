@@ -180,7 +180,6 @@ namespace Holoi.Library.HoloKitApp
         #region Reality Scene Management
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
-            Debug.Log($"[HoloKitApp] OnSceneLoaded {scene.name}");
             if (IsRealityScene(scene))
             {
                 InitializeRealityScene();
@@ -194,7 +193,6 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnSceneUnloaded(Scene scene)
         {
-            Debug.Log($"[HoloKitApp] OnSceneUnloaded {scene.name}");
             if (IsRealityScene(scene))
             {
                 DeinitializeRealityScene();
@@ -423,11 +421,8 @@ namespace Holoi.Library.HoloKitApp
 
         public void Shutdown()
         {
-            Debug.Log("[HoloKitApp] NetworkManager.Singleton.Shutdown()");
             NetworkManager.Singleton.Shutdown();
-            Debug.Log("[HoloKitApp] DeinitializeNetworkManager()");
             DeinitializeNetworkManager();
-            Debug.Log("[HoloKitApp] SceneManager.LoadSceneAsync");
             SceneManager.LoadSceneAsync("Start", LoadSceneMode.Single);
         }
         #endregion

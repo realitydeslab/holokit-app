@@ -14,7 +14,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             HoloKitAppUIEventManager.OnStoppedAdvertising?.Invoke();
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+            //HoloKitApp.Instance.UIPanelManager.PopUIPanel();
         }
     }
 }

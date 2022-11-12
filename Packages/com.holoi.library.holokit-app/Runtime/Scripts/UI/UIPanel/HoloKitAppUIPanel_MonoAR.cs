@@ -35,7 +35,9 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             if (HoloKitApp.Instance.IsHost)
             {
-                HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ShareReality");
+                //HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ShareReality");
+                HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ShareQRCode");
+                HoloKitAppUIEventManager.OnStartedAdvertising?.Invoke();
             }
             else
             {
