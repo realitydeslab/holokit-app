@@ -83,7 +83,7 @@ namespace Holoi.Reality.MOFATheHunting
             {
                 if (_arPlacementIndicator != null)
                 {
-                    if (_arPlacementIndicator.IsValid)
+                    if (_arPlacementIndicator.IsActive && _arPlacementIndicator.IsValid)
                     {
                         SpawnDragonServerRpc(_arPlacementIndicator.HitPoint.position, _arPlacementIndicator.HitPoint.rotation);
                         _arPlacementIndicator.OnDeathFunc();

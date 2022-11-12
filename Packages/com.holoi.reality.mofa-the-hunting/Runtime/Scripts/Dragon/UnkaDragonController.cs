@@ -15,6 +15,8 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private RigBuilder _rigBuilder;
 
+        [SerializeField] Animator _animator;
+
         [SerializeField] private int _maxHealth = 30;
 
         private bool _isAttacking;
@@ -24,8 +26,6 @@ namespace Holoi.Reality.MOFATheHunting
         private Animator _dragonHeadTargetAnimator;
 
         [Header("Attack Behaviour")]
-        [SerializeField] Animator _aniamtor;
-
         [SerializeField] GameObject _fireBallPrefab;
 
         [SerializeField] GameObject _fireBreathPrefab;
@@ -140,13 +140,9 @@ namespace Holoi.Reality.MOFATheHunting
             if (oldValue > newValue)
             {
                 Debug.Log($"[DragonController] Current health: {newValue}");
-                if (IsServer)
+                if (newValue == 0)
                 {
-                    if (newValue == 0)
-                    {
-                        // TODO: Dead
-
-                    }
+                    OnDeathFunc();
                 }
             }
         }
@@ -156,12 +152,30 @@ namespace Holoi.Reality.MOFATheHunting
             _currentHealth.Value -= damage;
         }
 
+        private void OnDeathFunc()
+        {
+            _animator.SetTrigger("Die");
+            LeanTween.value(_clipPlaneHeight, -3f, 3f)
+            .setOnUpdate((float value) =>
+            {
+                _clipPlaneHeight = value;
+                SetRendererClipPlane();
+            })
+            .setOnComplete(() =>
+            {
+                if (IsServer)
+                {
+                    Destroy(gameObject);
+                }
+            });
+        }
+
         private void Update()
         {
 
             if (Die)
             {
-                _aniamtor.SetTrigger("Die");
+                _animator.SetTrigger("Die");
                 Die = false;
                 OnDeath();
             }
@@ -276,7 +290,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         public void OnAnimationStop()
         {
-            _aniamtor.StopPlayback();
+            _animator.StopPlayback();
         }
 
         IEnumerator WaitAndDisableGameObject(GameObject go, float time)
