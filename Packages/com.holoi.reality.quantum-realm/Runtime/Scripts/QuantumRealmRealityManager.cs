@@ -124,6 +124,10 @@ namespace Holoi.Reality.QuantumRealm
         {
             if (IsServer)
             {
+                if (isValid)
+                {
+                    HostHandPose.transform.position = HoloKitCamera.Instance.CenterEyePose.position - 0.5f * Vector3.down;
+                }
                 _isHostHandValid.Value = isValid;
             }
         }

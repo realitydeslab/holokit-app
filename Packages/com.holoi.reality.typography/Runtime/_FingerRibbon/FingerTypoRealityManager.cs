@@ -78,7 +78,7 @@ namespace Holoi.Reality.Typography
             }
             else if (oldValue && !newValue)
             {
-                _fingerVfxManager.SetActive(false);
+                //_fingerVfxManager.SetActive(false);
             }
         }
     }
