@@ -101,8 +101,8 @@ namespace Holoi.Reality.QuantumRealm
             _hoverableStartButton.OnDeath();
 
             // Turn off plane detection and raycast
-            HoloKitApp.Instance.ARSessionManager.SetARPlaneManagerActive(false);
-            HoloKitApp.Instance.ARSessionManager.SetARRaycastManagerActive(false);
+            HoloKitApp.Instance.ARSessionManager.SetARPlaneManagerEnabled(false);
+            HoloKitApp.Instance.ARSessionManager.SetARRaycastManagerEnabled(false);
         }
 
         private void SpawnBuddhaGroup()

@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.XR.ARFoundation;
 using TMPro;
-using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -13,15 +11,9 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private HoloKitAppUIComponent_AnimatedToggle _occlusionToggle;
 
-        private AROcclusionManager _arOcclusionManager;
-
         private void Start()
         {
-            _arOcclusionManager = HoloKitCamera.Instance.GetComponent<AROcclusionManager>();
-            if (_arOcclusionManager != null
-                && _arOcclusionManager.requestedHumanDepthMode != UnityEngine.XR.ARSubsystems.HumanSegmentationDepthMode.Disabled
-                && _arOcclusionManager.requestedHumanStencilMode != UnityEngine.XR.ARSubsystems.HumanSegmentationStencilMode.Disabled
-                && _arOcclusionManager.requestedOcclusionPreferenceMode == UnityEngine.XR.ARSubsystems.OcclusionPreferenceMode.PreferHumanOcclusion)
+            if (HoloKitApp.Instance.ARSessionManager.GetHumanOcclusionEnabled())
             {
                 _occlusionToggle.Toggled = true;
                 _occlusionStatus.text = "On";
@@ -30,35 +22,16 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnOcclusionToggleValueChanged(bool toggled)
         {
-            if (_arOcclusionManager == null)
-            {
-                AddAROcclusionManager();
-            }
-
             if (toggled)
             {
                 _occlusionStatus.text = "On";
-                if (!_arOcclusionManager.enabled)
-                {
-                    _arOcclusionManager.enabled = true;
-                }
-                _arOcclusionManager.requestedHumanDepthMode = UnityEngine.XR.ARSubsystems.HumanSegmentationDepthMode.Fastest;
-                _arOcclusionManager.requestedHumanStencilMode = UnityEngine.XR.ARSubsystems.HumanSegmentationStencilMode.Fastest;
-                _arOcclusionManager.requestedOcclusionPreferenceMode = UnityEngine.XR.ARSubsystems.OcclusionPreferenceMode.PreferHumanOcclusion;
+                HoloKitApp.Instance.ARSessionManager.SetHumanOcclusionEnabled(true);
             }
             else
             {
                 _occlusionStatus.text = "Off";
-                _arOcclusionManager.requestedHumanDepthMode = UnityEngine.XR.ARSubsystems.HumanSegmentationDepthMode.Disabled;
-                _arOcclusionManager.requestedHumanStencilMode = UnityEngine.XR.ARSubsystems.HumanSegmentationStencilMode.Disabled;
-                _arOcclusionManager.requestedOcclusionPreferenceMode = UnityEngine.XR.ARSubsystems.OcclusionPreferenceMode.NoOcclusion;
+                HoloKitApp.Instance.ARSessionManager.SetHumanOcclusionEnabled(false);
             }
-        }
-
-        private void AddAROcclusionManager()
-        {
-            _arOcclusionManager = HoloKitCamera.Instance.gameObject.AddComponent<AROcclusionManager>();
-            _arOcclusionManager.requestedEnvironmentDepthMode = UnityEngine.XR.ARSubsystems.EnvironmentDepthMode.Disabled;
         }
     }
 }

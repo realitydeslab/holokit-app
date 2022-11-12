@@ -22,16 +22,21 @@ namespace Holoi.Library.HoloKitApp
 
         public ARRaycastManager ARRaycastManager => _arRaycastManager;
 
+        public AROcclusionManager AROcclusionManager => _arOcclusionManager;
+
         private ARTrackedImageManager _arTrackedImageManager;
 
         private ARPlaneManager _arPlaneManager;
 
         private ARRaycastManager _arRaycastManager;
 
+        private AROcclusionManager _arOcclusionManager;
+
+        private bool _humanOcclusionEnabled;
+
         private void Start()
         {
             var xrOrigin = HoloKitCamera.Instance.GetComponentInParent<XROrigin>();
-
             // Image Tracking
             if (xrOrigin.TryGetComponent(out _arTrackedImageManager))
             {
@@ -54,6 +59,12 @@ namespace Holoi.Library.HoloKitApp
                     SetupARTrackedImageManager();
                 }
             }
+            HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
+        }
+
+        private void OnDestroy()
+        {
+            HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
         }
 
         private void SetupARTrackedImageManager()
@@ -64,15 +75,15 @@ namespace Holoi.Library.HoloKitApp
             _arTrackedImageManager.trackedImagePrefab = _trackedImagePrefab;
         }
 
-        public void SetARTrackedImageManagerActive(bool active)
+        public void SetARTrackedImageManagerEnabled(bool enabled)
         {
             if (_arTrackedImageManager == null) { return; }
 
             foreach (var trackable in _arTrackedImageManager.trackables)
             {
-                trackable.gameObject.SetActive(active);
+                trackable.gameObject.SetActive(enabled);
             }
-            _arTrackedImageManager.enabled = active;
+            _arTrackedImageManager.enabled = enabled;
         }
 
         public void AddARPlaneManager()
@@ -90,7 +101,7 @@ namespace Holoi.Library.HoloKitApp
             _arPlaneManager.enabled = true;
         }
 
-        public void SetARPlaneManagerActive(bool active)
+        public void SetARPlaneManagerEnabled(bool enabled)
         {
             if (_arPlaneManager == null)
             {
@@ -100,8 +111,8 @@ namespace Holoi.Library.HoloKitApp
                     return;
                 }
             }
-            _arPlaneManager.enabled = active;
-            if (!active)
+            _arPlaneManager.enabled = enabled;
+            if (!enabled)
             {
                 // Destory all detected ARPlane objects
                 DestroyExistingARPlanes();
@@ -131,17 +142,90 @@ namespace Holoi.Library.HoloKitApp
             _arRaycastManager.enabled = true;
         }
 
-        public void SetARRaycastManagerActive(bool active)
+        public void SetARRaycastManagerEnabled(bool enabled)
         {
             if (_arRaycastManager == null)
             {
                 var xrOrigin = HoloKitCamera.Instance.GetComponentInParent<XROrigin>();
-                if (!xrOrigin.TryGetComponent<ARRaycastManager>(out _arRaycastManager))
+                if (!xrOrigin.TryGetComponent(out _arRaycastManager))
                 {
                     return;
                 }
             }
-            _arRaycastManager.enabled = active;
+            _arRaycastManager.enabled = enabled;
+        }
+
+        private void AddAROcclusionManager()
+        {
+            _arOcclusionManager = HoloKitCamera.Instance.gameObject.AddComponent<AROcclusionManager>();
+            _arOcclusionManager.requestedEnvironmentDepthMode = EnvironmentDepthMode.Disabled;
+            _arOcclusionManager.environmentDepthTemporalSmoothingRequested = false;
+            _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Disabled;
+            _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Disabled;
+            _arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.NoOcclusion;
+        }
+
+        public bool GetHumanOcclusionEnabled()
+        {
+            if (_arOcclusionManager == null)
+            {
+                _arOcclusionManager = HoloKitCamera.Instance.GetComponent<AROcclusionManager>();
+                if (_arOcclusionManager == null)
+                {
+                    return false;
+                }
+            }
+            if (_arOcclusionManager.requestedHumanDepthMode != HumanSegmentationDepthMode.Disabled
+                && _arOcclusionManager.requestedHumanStencilMode != HumanSegmentationStencilMode.Disabled
+                && _arOcclusionManager.requestedOcclusionPreferenceMode == OcclusionPreferenceMode.PreferHumanOcclusion)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void SetHumanOcclusionEnabled(bool enabled)
+        {
+            if (_arOcclusionManager == null)
+            {
+                _arOcclusionManager = HoloKitCamera.Instance.GetComponent<AROcclusionManager>();
+                if (_arOcclusionManager == null)
+                {
+                    AddAROcclusionManager();
+                }
+            }
+
+            if (enabled)
+            {
+                _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Fastest;
+                _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Fastest;
+                _arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.PreferHumanOcclusion;
+            }
+            else
+            {
+                _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Disabled;
+                _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Disabled;
+                _arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.NoOcclusion;
+            }
+        }
+
+        private void OnHoloKitRenderModeChanged(HoloKitRenderMode renderMode)
+        {
+            if (renderMode == HoloKitRenderMode.Stereo)
+            {
+                _humanOcclusionEnabled = GetHumanOcclusionEnabled();
+                SetHumanOcclusionEnabled(false);
+            }
+            else if (renderMode == HoloKitRenderMode.Mono)
+            {
+                if (_humanOcclusionEnabled)
+                {
+                    SetHumanOcclusionEnabled(true);
+                }
+            }
         }
     }
 }
