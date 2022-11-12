@@ -21,6 +21,8 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] float _maxForce = .1f;
 
+        [SerializeField] float _maxAngularForce = 1f;
+
         [SerializeField] float _maxSpeed = 4f;
 
         [Header("Distance Control")]
@@ -33,9 +35,7 @@ namespace Holoi.Reality.MOFATheHunting
         float _angularSteer = new();
         Vector3 _steer = new();
         Vector3 _acceleration = new();
-        Vector3 nextAngle = new();
-
-        bool _isFollow = false;
+        Vector3 Rotation = new();
 
         // debug
         Vector3 realDesired;
@@ -63,16 +63,16 @@ namespace Holoi.Reality.MOFATheHunting
 
             transform.position += _velocity * Time.deltaTime;
 
+            Debug.Log($"transform.position: {transform.position}");
+            Debug.Log($"_velocity: {_velocity}");
+            Debug.Log($"_acceleration: {_acceleration}");
+
             _acceleration = Vector3.zero;
         }
 
         void applyForce(Vector3 force)
         {
-            // We could add mass here if we want A = F / M
             _acceleration += force;
-
-            //Debug.DrawRay(transform.position, _acceleration / Time.deltaTime * 10f, Color.blue);
-
         }
 
         void Arrive(Vector3 targetPos)
@@ -114,72 +114,7 @@ namespace Holoi.Reality.MOFATheHunting
 
                     break;
                 case MovementControllerType.KeyboardControl:
-
-                    //Debug.Log("keyboard type");
-
-                    var gamepad = Gamepad.current;
-                    if (gamepad == null)
-                    {
-                        //Debug.Log("not find pad");
-                        return; // No gamepad connected.
-                    }
-
-                    if (Input.GetKey(KeyCode.UpArrow))
-                    {
-                        realDesired += transform.forward * _maxSpeed;
-                    }
-
-                    if (Input.GetKey(KeyCode.DownArrow))
-                    {
-                        realDesired -= transform.forward * _maxSpeed * 0.5f;
-                    }
-
-                    if (Input.GetKey(KeyCode.RightArrow))
-                    {
-                        realDesired -= transform.right * _maxSpeed;
-                    }
-
-                    if (Input.GetKey(KeyCode.LeftArrow))
-                    {
-                        realDesired += transform.right * _maxSpeed;
-                    }
-
-                    if (gamepad.yButton.isPressed)
-                    {
-                        realDesired += transform.forward * _maxSpeed;
-                    }
-                    if (gamepad.xButton.isPressed)
-                    {
-                        realDesired -= transform.right * _maxSpeed;
-                    }
-
-                    if (gamepad.aButton.isPressed)
-                    {
-                        realDesired -= transform.forward * _maxSpeed;
-                    }
-                    if (gamepad.bButton.isPressed)
-                    {
-                        realDesired += transform.right * _maxSpeed;
-                    }
-
-                    if (gamepad.leftShoulder.wasPressedThisFrame)
-                    {
-                        // fire breath
-                        FindObjectOfType<UnkaDragonController>().FireBall = true;
-                    }
-
-                    if (gamepad.rightShoulder.wasPressedThisFrame)
-                    {
-                        // fire ball
-                        FindObjectOfType<UnkaDragonController>().FireBreath = true;
-                    }
-
-                    //Debug.Log(realDesired);
-
-                    if (gamepad.dpad.IsPressed())
-                    {
-                        //Debug.Log(gamepad.dpad.ReadValue());
-                    }
+                    UpdateGamepad();
                     break;
             }
 
@@ -189,19 +124,16 @@ namespace Holoi.Reality.MOFATheHunting
 
             float mHeight = Mathf.Clamp01(Mathf.Abs(dH));
 
-            if (_isFollow)
-            {
-                realDesired += Vector3.up * heightDesired * mHeight;
-            }
-            else
-            {
-                realDesired = Vector3.up * heightDesired * mHeight; ;
-            }
 
+            realDesired += Vector3.up * heightDesired * mHeight;
+
+            Debug.Log($"realDesired: {realDesired}");
 
             _steer = realDesired - _velocity;
 
             _steer = Limit(_steer, _maxForce);
+
+            Debug.Log($"_steer: {_steer}");
 
             applyForce(_steer);
 
@@ -210,35 +142,48 @@ namespace Holoi.Reality.MOFATheHunting
 
         void RotationUpdate()
         {
-            var realDirection = (new Vector3(_chasingTarget.position.x, 0, _chasingTarget.position.z)
+            var desiredDirection = (new Vector3(_chasingTarget.position.x, 0, _chasingTarget.position.z)
                 - new Vector3(transform.position.x, 0, transform.position.z)).normalized;
 
-            var angle = Vector3.SignedAngle(realDirection, transform.forward, Vector3.up);
+            var signedAngle = Vector3.SignedAngle(transform.forward, desiredDirection, Vector3.up);
 
-            _angularSteer = angle - _angluarVelocity;
+            var angle = Mathf.Abs(signedAngle);
 
-            _angularSteer = Mathf.Clamp(_angularSteer, -10f, 10f);
+            var m = 1f;
 
-            //Debug.Log($"steer: {steer}");
+            if (angle < 90f)
+            {
+                m = angle / 90f;
+            }
+            else
+            {
+                m = 1;
+            }
 
-            if (angle > 0)
+            _angularSteer = (signedAngle - _angluarVelocity) * m;
+
+            _angularSteer = Mathf.Clamp(_angularSteer, -_maxAngularForce, _maxAngularForce);
+
+            var angularAcceleration = _angularSteer;
+
+            if (signedAngle > 0)
             {
                 //Debug.Log($">0 with: {angle}");
-
-                _angluarVelocity += _angularSteer;
+                _angluarVelocity += angularAcceleration;
                 if (_angluarVelocity > 90) _angluarVelocity = 90;
-                nextAngle -= Vector3.up * _angluarVelocity * Time.deltaTime;
+                Rotation += Vector3.up * _angluarVelocity * Time.deltaTime;
             }
             else
             {
                 //Debug.Log($"<0 with: {angle}");
-
-                _angluarVelocity += _angularSteer;
+                _angluarVelocity += angularAcceleration;
                 if (_angluarVelocity < -90) _angluarVelocity = -90;
-                nextAngle -= Vector3.up * _angluarVelocity * Time.deltaTime;
+                Rotation += Vector3.up * _angluarVelocity * Time.deltaTime;
             }
 
-            transform.rotation = Quaternion.Euler(nextAngle + new Vector3(0, 180, 0));
+            transform.rotation = Quaternion.Euler(Rotation + new Vector3(0, 180, 0));
+
+            //transform.LookAt(transform.position + _velocity);
         }
 
         void AnimationUpdate()
@@ -247,7 +192,9 @@ namespace Holoi.Reality.MOFATheHunting
 
             //Debug.DrawRay(transform.position, velocity.normalized + velocity / Time.deltaTime, Color.blue);
 
-            _animator.SetFloat("Velocity X", (_velocity.x / _maxSpeed) + (_angularSteer / 10f));
+            //_animator.SetFloat("Velocity X", (_velocity.x / _maxSpeed) + (_angularSteer));
+
+            _animator.SetFloat("Velocity X", (_velocity.x / _maxSpeed) + Mathf.Abs(_angluarVelocity) / 90f);
 
             _animator.SetFloat("Velocity Z", -_velocity.z / _maxSpeed);
         }
@@ -270,14 +217,71 @@ namespace Holoi.Reality.MOFATheHunting
             return velocity.normalized * length;
         }
 
-        public void OnBeginFollow()
+        void UpdateGamepad()
         {
-            _isFollow = true;
-        }
+            var gamepad = Gamepad.current;
+            if (gamepad == null)
+            {
+                //Debug.Log("not find pad");
+                return; // No gamepad connected.
+            }
 
-        //private void OnDrawGizmos()
-        //{
-        //    Gizmos.DrawWireSphere(fixedTargetPosition, 2);
-        //}
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                realDesired += transform.forward * _maxSpeed;
+            }
+
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                realDesired -= transform.forward * _maxSpeed * 0.5f;
+            }
+
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                realDesired -= transform.right * _maxSpeed;
+            }
+
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                realDesired += transform.right * _maxSpeed;
+            }
+
+            if (gamepad.yButton.isPressed)
+            {
+                realDesired += transform.forward * _maxSpeed;
+            }
+            if (gamepad.xButton.isPressed)
+            {
+                realDesired -= transform.right * _maxSpeed;
+            }
+
+            if (gamepad.aButton.isPressed)
+            {
+                realDesired -= transform.forward * _maxSpeed;
+            }
+            if (gamepad.bButton.isPressed)
+            {
+                realDesired += transform.right * _maxSpeed;
+            }
+
+            if (gamepad.leftShoulder.wasPressedThisFrame)
+            {
+                // fire breath
+                FindObjectOfType<UnkaDragonController>().FireBall = true;
+            }
+
+            if (gamepad.rightShoulder.wasPressedThisFrame)
+            {
+                // fire ball
+                FindObjectOfType<UnkaDragonController>().FireBreath = true;
+            }
+
+            //Debug.Log(realDesired);
+
+            if (gamepad.dpad.IsPressed())
+            {
+                //Debug.Log(gamepad.dpad.ReadValue());
+            }
+        }
     }
 }
