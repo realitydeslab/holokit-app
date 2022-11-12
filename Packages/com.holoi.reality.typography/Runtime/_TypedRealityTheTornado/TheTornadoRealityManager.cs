@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
 using HoloKit;
 
@@ -15,6 +16,8 @@ namespace Holoi.Reality.Typography
         [SerializeField] private GameObject _tornado;
 
         [SerializeField] private float _raycastHorizontalOffset;
+
+        public NetworkVariable<float> GroundPosY = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         private void Start()
         {
@@ -40,9 +43,7 @@ namespace Holoi.Reality.Typography
                         var arPlane = hit.trackable.GetComponent<ARPlane>();
                         if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
                         {
-                            _tornado.transform.position = new Vector3(_tornado.transform.position.x,
-                                                                      hit.pose.position.y,
-                                                                      _tornado.transform.position.z);
+                            GroundPosY.Value = hit.pose.position.y;
                             return;
                         }
                     }

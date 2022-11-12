@@ -570,6 +570,7 @@ GameObject:
   - component: {fileID: 1268464190}
   - component: {fileID: 1268464189}
   - component: {fileID: 1268464192}
+  - component: {fileID: 1268464193}
   m_Layer: 0
   m_Name: Tornado
   m_TagString: Untagged
@@ -691,9 +692,21 @@ MonoBehaviour:
   _syncZ: 1
   _heightIdenticalToTarget: 0
   _offset: {x: 0, y: 0, z: 0}
-  _lerpSpeed: 0.8
-  _lerpThreshold: 0.024
+  _lerpSpeed: 1
+  _lerpThreshold: 0.01
   _rotationType: 0
+--- !u!114 &1268464193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268464188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca623d4c8d1cf4ca4a30a4bd649e11cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1366359021
 GameObject:
   m_ObjectHideFlags: 0
@@ -1075,6 +1088,8 @@ MonoBehaviour:
   _arRaycastManager: {fileID: 1888875255}
   _tornado: {fileID: 1268464188}
   _raycastHorizontalOffset: 1
+  GroundPosY:
+    m_InternalValue: 0
 --- !u!4 &1790596519
 Transform:
   m_ObjectHideFlags: 0
