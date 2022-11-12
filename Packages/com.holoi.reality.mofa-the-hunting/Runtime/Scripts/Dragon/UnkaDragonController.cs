@@ -88,7 +88,7 @@ namespace Holoi.Reality.MOFATheHunting
         {
             _clipPlane = -transform.forward;
             _clipPlaneHeight = (transform.position + 2f * transform.forward).magnitude;
-            SetRenderClip();
+            SetRendererClipPlane();
         }
 
         public override void OnNetworkSpawn()
@@ -159,12 +159,12 @@ namespace Holoi.Reality.MOFATheHunting
         private void Update()
         {
 
-            //if (Die)
-            //{
-            //    _aniamtor.SetTrigger("Die");
-            //    Die = false;
-            //    OnDeath();
-            //}
+            if (Die)
+            {
+                _aniamtor.SetTrigger("Die");
+                Die = false;
+                OnDeath();
+            }
 
             //if (FireBall)
             //{
@@ -211,7 +211,7 @@ namespace Holoi.Reality.MOFATheHunting
             //}
         }
 
-        void UpdateRendererClipPlaneDuraingDeathAnimation()
+        private void UpdateRendererClipPlaneDuringDeathAnimation()
         {
             _clipPlaneHeight -= Time.deltaTime * 3f;
 
@@ -222,7 +222,7 @@ namespace Holoi.Reality.MOFATheHunting
             }
         }
 
-        private void SetRenderClip()
+        private void SetRendererClipPlane()
         {
             var pos = _clipPlane;
             var plane = new Vector4(pos.x, pos.y, pos.z, _clipPlaneHeight);
