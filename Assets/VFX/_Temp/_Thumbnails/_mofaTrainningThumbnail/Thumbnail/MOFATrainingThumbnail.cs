@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 public class MOFATrainingThumbnail : MonoBehaviour
 {
     [SerializeField] Transform _parent;
-    [SerializeField] Animator _avatarAnimator;
+    Animator _avatarAnimator;
     [SerializeField] Vector2 _avatarVelocity;
     Animator _boltAnimator;
     [SerializeField] GameObject _boltPrefab;
@@ -15,12 +16,12 @@ public class MOFATrainingThumbnail : MonoBehaviour
     void Start()
     {
         if (_avatarAnimator == null)
-            _avatarAnimator = GetComponent<Animator>();
-        if (_avatarVelocity.magnitude != 0)
         {
-            _avatarAnimator.SetFloat("Velocity Z", _avatarVelocity.x);
-            _avatarAnimator.SetFloat("Velocity X", _avatarVelocity.y);
-
+            _avatarAnimator = GetComponent<Animator>();
+        }
+        else
+        {
+            Debug.Log("No Animator Assign to this Avatar");
         }
 
         if (_boltPrefab)
@@ -31,7 +32,8 @@ public class MOFATrainingThumbnail : MonoBehaviour
 
     void Update()
     {
-
+        _avatarAnimator.SetFloat("Velocity Z", _avatarVelocity.x);
+        _avatarAnimator.SetFloat("Velocity X", _avatarVelocity.y);
     }
 
     IEnumerator WaitAndBegin(float time, float interval)
