@@ -8,10 +8,13 @@ public class MOFATrainingThumbnail : MonoBehaviour
     [SerializeField] Transform _parent;
     Animator _avatarAnimator;
     [SerializeField] Vector2 _avatarVelocity;
-    Animator _boltAnimator;
+
+    [Header("Attack")]
+    [SerializeField] bool _autoFire = true;
     [SerializeField] GameObject _boltPrefab;
     [SerializeField] float _attackInterval = 3f;
     [SerializeField] float _attackPreset = 0f;
+    Animator _boltAnimator;
 
     void Start()
     {
@@ -24,9 +27,17 @@ public class MOFATrainingThumbnail : MonoBehaviour
             Debug.Log("No Animator Assign to this Avatar");
         }
 
-        if (_boltPrefab)
+        if (_autoFire)
         {
-            StartCoroutine(WaitAndBegin(_attackPreset, _attackInterval));
+            if (_boltPrefab)
+            {
+                StartCoroutine(WaitAndBegin(_attackPreset, _attackInterval));
+            }
+            else
+            {
+                Debug.Log("missing fire bolt prefab.");
+            }
+            
         }
     }
 

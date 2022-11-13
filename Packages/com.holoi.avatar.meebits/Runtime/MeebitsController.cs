@@ -7,11 +7,13 @@ namespace Holoi.Avatar.Meebits
     public class MeebitsController : MonoBehaviour
     {
         [Header("Emission")]
+        [Tooltip("if false, do not need to modifiy following variables.")]
         [SerializeField] bool _emission;
         public SkinnedMeshRenderer MeshRenderer;
         public float Emission = 0.1f;
 
         [Header("Weapon")]
+        [Tooltip("if false, do not need to modifiy following variables.")]
         [SerializeField] bool _holdWeapon;
         public Transform HandJoint;
         public GameObject WeaponPrefab;
