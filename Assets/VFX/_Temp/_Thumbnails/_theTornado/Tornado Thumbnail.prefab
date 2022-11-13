@@ -269,6 +269,7 @@ GameObject:
   - component: {fileID: 5226117784774502220}
   - component: {fileID: 7190508460651671852}
   - component: {fileID: 8781062777994969569}
+  - component: {fileID: 1671990806}
   m_Layer: 0
   m_Name: 14709
   m_TagString: Untagged
@@ -284,7 +285,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2180549141946249981}
   m_LocalRotation: {x: -0, y: -0.9386596, z: -0, w: 0.34484518}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.66, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -303,7 +304,7 @@ Animator:
   m_GameObject: {fileID: 2180549141946249981}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 953b805a5d44b43d89719065dd9b934a, type: 3}
-  m_Controller: {fileID: 9100000, guid: b0119a0fd66a549739d35b5d7961ebcc, type: 2}
+  m_Controller: {fileID: 9100000, guid: 9abd0b150d5eb4539a498cc3bb53be59, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -325,8 +326,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99172a27291fc48cc954a8e10e39f114, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _emission: 1
   MeshRenderer: {fileID: 6532871294617232329}
   Emission: 0.15
+  _holdWeapon: 0
   HandJoint: {fileID: 0}
   WeaponPrefab: {fileID: 0}
   Offset: {x: -0.025, y: 0.05, z: 0.01}
@@ -343,8 +346,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99172a27291fc48cc954a8e10e39f114, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _emission: 0
   MeshRenderer: {fileID: 0}
   Emission: 0.15
+  _holdWeapon: 0
   HandJoint: {fileID: 0}
   WeaponPrefab: {fileID: 0}
   Offset: {x: -0.025, y: 0.05, z: 0.01}
@@ -367,6 +372,23 @@ MonoBehaviour:
   _boltPrefab: {fileID: 0}
   _attackInterval: 3
   _attackPreset: 0
+--- !u!114 &1671990806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2180549141946249981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad1dc7da56a7549288da0618f82a41ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RotateSpeed: -720
+  RotateVector: {x: 0, y: 1, z: 0}
+  _isSineWave: 0
+  _amp: 1
+  _fre: 1
 --- !u!1 &2197961972705987113
 GameObject:
   m_ObjectHideFlags: 0

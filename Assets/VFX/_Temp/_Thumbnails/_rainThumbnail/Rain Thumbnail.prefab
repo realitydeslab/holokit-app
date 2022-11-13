@@ -311,12 +311,12 @@ MonoBehaviour:
   _followTarget: {fileID: 8769815031280587737}
   _movementType: 1
   _rotateType: 2
-  _updateType: 0
+  _axisWeight: {x: 1, y: 1, z: 1}
   _worldSpace: 1
   _offset: {x: 0, y: 6.5, z: 0}
   _lerpSpeed: 3
-  _needMoveDistance: 0.1
-  _regardAsArriveDistance: 0.01
+  _chaseDistance: 0.01
+  _reachDistance: 0.001
 --- !u!114 &1807629670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,6 +331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NetworkPrefabs: []
   UIPanelPrefabs: []
+  UIRealitySettingTabs: []
   _urpAsset: {fileID: 0}
 --- !u!114 &1807629669
 MonoBehaviour:
@@ -2694,8 +2695,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99172a27291fc48cc954a8e10e39f114, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _emission: 0
   MeshRenderer: {fileID: 3896953787936446551}
   Emission: 0.15
+  _holdWeapon: 0
   HandJoint: {fileID: 0}
   WeaponPrefab: {fileID: 0}
   Offset: {x: -0.025, y: 0.05, z: 0.01}
@@ -2712,8 +2715,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99172a27291fc48cc954a8e10e39f114, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MeshRenderer: {fileID: 0}
+  _emission: 1
+  MeshRenderer: {fileID: 3896953787936446551}
   Emission: 0.15
+  _holdWeapon: 0
   HandJoint: {fileID: 0}
   WeaponPrefab: {fileID: 0}
   Offset: {x: -0.025, y: 0.05, z: 0.01}
@@ -2731,7 +2736,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parent: {fileID: 55808703336855308}
-  _avatarAnimator: {fileID: 0}
+  _avatarAnimator: {fileID: 5460838963655402144}
   _avatarVelocity: {x: 0, y: 0}
   _boltPrefab: {fileID: 0}
   _attackInterval: 3
