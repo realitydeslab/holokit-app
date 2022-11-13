@@ -294,12 +294,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetTransform: {fileID: 153230847}
+  _movementType: 2
+  _syncX: 1
+  _syncY: 1
+  _syncZ: 1
+  _heightIdenticalToTarget: 0
   _offset: {x: 0, y: 0, z: 0}
   _lerpSpeed: 0.6
   _lerpThreshold: 0.024
-  _movementType: 2
   _rotationType: 0
-  _heightIdenticalToTarget: 0
 --- !u!114 &172308144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -982,8 +985,16 @@ PrefabInstance:
       value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 7969130196430727407, guid: 0e148e1f43bd7405db6ccd8847577ea7, type: 3}
+      propertyPath: _horizontalRaycastOffset
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7969130196430727407, guid: 0e148e1f43bd7405db6ccd8847577ea7, type: 3}
       propertyPath: _horizontalPlacementOffset
-      value: 0
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7969130196430727407, guid: 0e148e1f43bd7405db6ccd8847577ea7, type: 3}
+      propertyPath: _hitPositionDefaultOffset.z
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7969130196430727407, guid: 0e148e1f43bd7405db6ccd8847577ea7, type: 3}
       propertyPath: OnDeath.m_PersistentCalls.m_Calls.Array.size
