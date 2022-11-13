@@ -24,7 +24,7 @@ namespace Holoi.Reality.Typography
             }
             else
             {
-                //_vfx.SetBool("IsInteractable", false);
+                _vfx.SetBool("IsInteractable", false);
             }
         }
     }
