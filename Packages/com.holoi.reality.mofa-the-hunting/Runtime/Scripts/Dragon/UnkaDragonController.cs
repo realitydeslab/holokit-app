@@ -161,7 +161,7 @@ namespace Holoi.Reality.MOFATheHunting
                 if (IsServer)
                 {
                     _dragonAttackAI = StartCoroutine(DragonAttackAI());
-                    _dragonMovementAI = StartCoroutine(DragonMovementAI());
+                    //_dragonMovementAI = StartCoroutine(DragonMovementAI());
                 }
             }
             else if (oldValue && !newValue)

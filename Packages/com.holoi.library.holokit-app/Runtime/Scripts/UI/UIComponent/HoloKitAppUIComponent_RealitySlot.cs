@@ -15,6 +15,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private Button _playerButton;
 
+        [SerializeField] private Button _puppeteerButton;
+
         [SerializeField] private Button _spectatorButton;
 
         public void Init(Reality reality, int index)
@@ -40,11 +42,31 @@ namespace Holoi.Library.HoloKitApp.UI
                 _playerButton.interactable = false;
             }
 
-            _spectatorButton.onClick.AddListener(() =>
+            if (reality.IsPuppeteerSupported())
             {
-                HoloKitApp.Instance.CurrentReality = reality;
-                HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Spectator);
-            });
+                _puppeteerButton.onClick.AddListener(() =>
+                {
+                    HoloKitApp.Instance.CurrentReality = reality;
+                    HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Puppeteer);
+                });
+            }
+            else
+            {
+                _puppeteerButton.interactable = false;
+            }
+
+            if (reality.IsSpectatorViewSupported())
+            {
+                _spectatorButton.onClick.AddListener(() =>
+                {
+                    HoloKitApp.Instance.CurrentReality = reality;
+                    HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Spectator);
+                });
+            }
+            else
+            {
+                _spectatorButton.interactable = false;
+            }
         }
     }
 }

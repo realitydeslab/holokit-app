@@ -12,6 +12,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private GameObject _playerButton;
 
+        [SerializeField] private GameObject _puppeteerButton;
+
         [SerializeField] private GameObject _spectatorButton;
 
         [SerializeField] private GameObject _spacer;
@@ -21,6 +23,14 @@ namespace Holoi.Library.HoloKitApp.UI
             if (!HoloKitApp.Instance.CurrentReality.IsMultiplayerSupported())
             {
                 _playerButton.SetActive(false);
+            }
+            if (!HoloKitApp.Instance.CurrentReality.IsPuppeteerSupported())
+            {
+                _puppeteerButton.SetActive(false);
+            }
+            if (!HoloKitApp.Instance.CurrentReality.IsSpectatorViewSupported())
+            {
+                _spectatorButton.SetActive(false);
             }
 
             if (HoloKitApp.Instance.GlobalSettings.GetCompatibleMetaAvatarCollectionList().Count == 0
@@ -47,6 +57,11 @@ namespace Holoi.Library.HoloKitApp.UI
         public void OnStartNonHostPlayerButtonPressed()
         {
             HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.NonHostPlayer);
+        }
+
+        public void OnStartPuppeteerButtonPressed()
+        {
+            HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Puppeteer);
         }
 
         public void OnStartSpectatorButtonPressed()
