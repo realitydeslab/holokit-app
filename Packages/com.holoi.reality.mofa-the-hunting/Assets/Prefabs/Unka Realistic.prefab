@@ -1336,7 +1336,6 @@ GameObject:
   m_Component:
   - component: {fileID: 802009559803402270}
   - component: {fileID: 2757642987659409439}
-  - component: {fileID: 4423228598242881049}
   - component: {fileID: 806401710996619160}
   - component: {fileID: 5189010234098413512}
   - component: {fileID: 748772697508346249}
@@ -1384,32 +1383,6 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &4423228598242881049
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 807373318217150716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 0
-  SyncScaleY: 0
-  SyncScaleZ: 0
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  InLocalSpace: 0
-  Interpolate: 1
 --- !u!114 &806401710996619160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1426,10 +1399,11 @@ MonoBehaviour:
   _chestAimConstraint: {fileID: 806401709687789896}
   _rigBuilder: {fileID: 748772697508346249}
   _animator: {fileID: 748772697508346248}
-  _maxHealth: 10
+  _maxHealth: 30
   _fireBallPrefab: {fileID: 1934665775610832516, guid: 29c5962c49d07420ebeb49988030167d, type: 3}
   _fireBreathPrefab: {fileID: 8983813006078465278, guid: 1cbb2ad13aa504656814992a5ad5bb06, type: 3}
   _dragonMousePose: {fileID: 806401709518348665}
+  _dragonMovementController: {fileID: 5189010234098413512}
   _dragonRenderer: {fileID: 781160490506691688}
   _eyeRenderer: {fileID: 781662465958862282}
   _dragonDeathVFX: {fileID: 806401709252784140}
@@ -1456,8 +1430,8 @@ MonoBehaviour:
   _maxForce: 0.1
   _maxAngularForce: 1
   _maxSpeed: 4
-  _avoidDistance: 4
-  _attractDistance: 8
+  _minDistance: 6
+  _maxSpeedDistance: 8
 --- !u!114 &748772697508346249
 MonoBehaviour:
   m_ObjectHideFlags: 0

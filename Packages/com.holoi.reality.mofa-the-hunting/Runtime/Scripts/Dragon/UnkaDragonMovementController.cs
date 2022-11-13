@@ -1,14 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Reality.MOFATheHunting
 {
     public class UnkaDragonMovementController : MonoBehaviour
     {
-        Transform _chasingTarget;
-
         enum MovementControllerType
         {
             SelfControl,
@@ -25,32 +22,55 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] float _maxSpeed = 4f;
 
-        [Header("Distance Control")]
-        [SerializeField] float _avoidDistance = 2f;
+        [Header("Target Distance Control")]
+        [SerializeField] float _minDistance = 2f;
 
-        [SerializeField] float _attractDistance = 5f;
+        [SerializeField] float _maxSpeedDistance = 5f;
 
-        Vector3 _velocity = new();
-        float _angluarVelocity = new(); // only in y axis cause it's a flying vreature
-        float _angularSteer = new();
-        Vector3 _steer = new();
-        Vector3 _acceleration = new();
-        Vector3 Rotation = new();
+        public float MinDistance
+        {
+            get => _minDistance;
+            set
+            {
+                _minDistance = value;
+            }
+        }
+
+        public float MaxSpeedDistance
+        {
+            get => _maxSpeedDistance;
+            set
+            {
+                _maxSpeedDistance = value;
+            }
+        }
+
+        private Transform _chasingTarget;
+
+        Vector3 _velocity;
+        float _angluarVelocity; // only in y axis cause it's a flying vreature
+        float _angularSteer;
+        Vector3 _steer;
+        Vector3 _acceleration;
+        Vector3 Rotation;
 
         // debug
         Vector3 realDesired;
 
-        void Start()
+        private void Start()
         {
-            _chasingTarget = HoloKit.HoloKitCamera.Instance.CenterEyePose;
+            _chasingTarget = ((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).DragonBodyTarget;
         }
 
         private void FixedUpdate()
         {
-            Arrive(_chasingTarget.position);
-            VelocityUpdate();
-            RotationUpdate();
-            AnimationUpdate();
+            if (_chasingTarget != null)
+            {
+                Arrive(_chasingTarget.position);
+                VelocityUpdate();
+                RotationUpdate();
+                AnimationUpdate();
+            }
         }
 
         void VelocityUpdate()
@@ -84,13 +104,13 @@ namespace Holoi.Reality.MOFATheHunting
 
                     float realDist = realDesired.magnitude;
 
-                    if (realDist < _avoidDistance + 1f && realDist > _avoidDistance - 1f)
+                    if (realDist < _minDistance + 1f && realDist > _minDistance - 1f)
                     {
                         realDesired = Vector3.zero;
                     }
-                    else if (realDist < _avoidDistance)
+                    else if (realDist < _minDistance)
                     {
-                        float m = (1f - (realDist / _avoidDistance)) * _maxSpeed;
+                        float m = (1f - (realDist / _minDistance)) * _maxSpeed;
 
                         //Debug.Log("avoid");
                         //        Debug.Log($"avoid with a d: {realDist}; " +
@@ -99,11 +119,11 @@ namespace Holoi.Reality.MOFATheHunting
 
                         realDesired = SetMag(-realDesired, m);
                     }
-                    else if (realDist < _attractDistance)
+                    else if (realDist < _maxSpeedDistance)
                     {
                         //Debug.Log("attract");
 
-                        float m = ((realDist - _avoidDistance) / (_attractDistance - _avoidDistance)) * _maxSpeed;
+                        float m = ((realDist - _minDistance) / (_maxSpeedDistance - _minDistance)) * _maxSpeed;
 
                         realDesired = SetMag(realDesired, m);
                     }

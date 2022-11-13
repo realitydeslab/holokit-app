@@ -4,6 +4,8 @@ using UnityEngine.VFX;
 using UnityEngine.Animations.Rigging;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
+using Holoi.Library.MOFABase;
+using HoloKit;
 
 namespace Holoi.Reality.MOFATheHunting
 {
@@ -25,16 +27,21 @@ namespace Holoi.Reality.MOFATheHunting
 
         private Animator _dragonHeadTargetAnimator;
 
-        [Header("Attack Behaviour")]
         [SerializeField] private GameObject _fireBallPrefab;
 
         [SerializeField] private GameObject _fireBreathPrefab;
 
         [SerializeField] private Transform _dragonMousePose;
 
+        [SerializeField] private UnkaDragonMovementController _dragonMovementController;
+
         private GameObject _currentFireBall;
 
         private GameObject _currentFireBreath;
+
+        private Coroutine _dragonAttackAI;
+
+        private Coroutine _dragonMovementAI;
 
         [Header("Renderer")]
         [SerializeField] SkinnedMeshRenderer _dragonRenderer;
@@ -83,15 +90,17 @@ namespace Holoi.Reality.MOFATheHunting
             _clipPlane = -transform.forward;
             _clipPlaneHeight = (transform.position + 2f * transform.forward).magnitude;
             SetRendererClipPlane();
+            MofaBaseRealityManager.OnPhaseChanged += OnMofaPhaseChanged;
         }
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+            ((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).SetDragonController(this);
             SetupHeadTarget();
             if (IsServer)
             {
-                StartInitialMovement();
+                //StartInitialMovement();
                 _currentHealth.Value = _maxHealth;
             }
             _currentHealth.OnValueChanged += OnCurrentHealthValueChanged;
@@ -103,6 +112,12 @@ namespace Holoi.Reality.MOFATheHunting
             base.OnNetworkDespawn();
             _currentHealth.OnValueChanged -= OnCurrentHealthValueChanged;
             _isAttacking.OnValueChanged -= OnIsAttackingValueChanged;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            MofaBaseRealityManager.OnPhaseChanged -= OnMofaPhaseChanged;
         }
 
         private void SetupHeadTarget()
@@ -124,11 +139,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void StartInitialMovement()
         {
-            LeanTween.move(gameObject, transform.position + 4f * transform.forward, 5f)
-                .setOnComplete(() =>
-                {
-                    _isAttacking.Value = true;
-                });
+            LeanTween.move(gameObject, transform.position + 4f * transform.forward, 5f);
         }
 
         private void OnCurrentHealthValueChanged(int oldValue, int newValue)
@@ -149,15 +160,70 @@ namespace Holoi.Reality.MOFATheHunting
             {
                 if (IsServer)
                 {
-                    // TODO: Start dragon attacking AI
+                    _dragonAttackAI = StartCoroutine(DragonAttackAI());
+                    _dragonMovementAI = StartCoroutine(DragonMovementAI());
+                }
+            }
+            else if (oldValue && !newValue)
+            {
+                if (IsServer)
+                {
+                    StopCoroutine(_dragonAttackAI);
+                    StopCoroutine(_dragonMovementAI);
                 }
             }
         }
 
-        private IEnumerator StartDragonAttackAI()
+        private void OnMofaPhaseChanged(MofaPhase phase)
         {
-            yield return new WaitForSeconds(UnityEngine.Random.Range(1f, 5f));
+            if (IsServer)
+            {
+                if (phase == MofaPhase.Fighting)
+                {
+                    _isAttacking.Value = true;
+                    return;
+                }
 
+                if (phase == MofaPhase.RoundOver)
+                {
+                    _isAttacking.Value = false;
+                    return;
+                }
+            }
+        }
+
+        private IEnumerator DragonAttackAI()
+        {
+            yield return new WaitForSeconds(Random.Range(1f, 5f));
+            while (true)
+            {
+                PlaySpawnFireBallAnimationClientRpc();
+                yield return new WaitForSeconds(Random.Range(8f, 12f));
+            }
+        }
+
+        private IEnumerator DragonMovementAI()
+        {
+            yield return new WaitForSeconds(Random.Range(12f, 24f));
+            Debug.Log("[DragonController] Start circular movement");
+            var mofaHuntingRealityManager = (MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager;
+            Transform dragonBodyTarget = mofaHuntingRealityManager.DragonBodyTarget;
+            dragonBodyTarget.position = transform.position;
+            Transform targetObjectPose = mofaHuntingRealityManager.Players[0].transform;
+            float radius = Vector3.Distance(transform.position, targetObjectPose.position);
+            _dragonMovementController.MinDistance = 0.01f;
+            LeanTween.value(0f, 360f, 30f)
+                .setOnUpdate((float value) =>
+                {
+                    float radians = Mathf.Deg2Rad * value;
+                    dragonBodyTarget.position = new(Mathf.Sin(radians) * radius, dragonBodyTarget.position.y, Mathf.Cos(radians) * radius);
+                })
+                .setOnComplete(() =>
+                {
+                    
+                    //Quaternion lookAtRotation = Quaternion.LookRotation(targetObjectPose.position - transform.position, Vector3.up);
+                    //LeanTween.rotate(gameObject, lookAtRotation.eulerAngles, 3f);
+                });
         }
         
         public void OnDamaged(int damage, ulong attackerClientId)
@@ -169,18 +235,18 @@ namespace Holoi.Reality.MOFATheHunting
         {
             _animator.SetTrigger("Die");
             LeanTween.value(_clipPlaneHeight, -3f, 3f)
-            .setOnUpdate((float value) =>
-            {
-                _clipPlaneHeight = value;
-                SetRendererClipPlane();
-            })
-            .setOnComplete(() =>
-            {
-                if (IsServer)
+                .setOnUpdate((float value) =>
                 {
-                    Destroy(gameObject);
-                }
-            });
+                    _clipPlaneHeight = value;
+                    SetRendererClipPlane();
+                })
+                .setOnComplete(() =>
+                {
+                    if (IsServer)
+                    {
+                        Destroy(gameObject);
+                    }
+                });
         }
 
         private void Update()
@@ -266,12 +332,6 @@ namespace Holoi.Reality.MOFATheHunting
             _currentFireBreath.GetComponent<FireBreathController>().OnAttack();
         }
 
-        //private void OnDrawGizmos()
-        //{
-        //    var dir = (_enemyPoint == null ? new Vector3(0, -2, 2) : _enemyPoint.position - _powerInitPoint.position).normalized;
-        //    Debug.DrawRay(_powerInitPoint.position, dir*10f, Color.red);
-        //}
-
         public void OnAnimationStop()
         {
             _animator.StopPlayback();
@@ -280,20 +340,6 @@ namespace Holoi.Reality.MOFATheHunting
         public void PlaySound()
         {
 
-        }
-
-        IEnumerator WaitAndFireBall()
-        {
-            FireBall = true;
-            yield return new WaitForSeconds(4.5f);
-            StartCoroutine(WaitAndFireBall());
-        }
-
-        IEnumerator WaitAndFireBreath()
-        {
-            FireBreath = true;
-            yield return new WaitForSeconds(10f);
-            StartCoroutine(WaitAndFireBreath());
         }
     }
 }

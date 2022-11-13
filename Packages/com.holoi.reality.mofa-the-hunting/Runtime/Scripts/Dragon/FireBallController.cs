@@ -24,7 +24,7 @@ namespace Holoi.Reality.MOFATheHunting
         private bool _isCharging = true;
 
         // Meters per second
-        private const float Speed = 5f;
+        private const float Speed = 3f;
 
         private void Update()
         {
@@ -47,6 +47,17 @@ namespace Holoi.Reality.MOFATheHunting
                 {
                     Destroy(gameObject, 1f);
                 });
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent<IDamageable>(out var damageable))
+            {
+                if (other.GetComponentInParent<NetworkObject>().OwnerClientId != 999)
+                {
+                    damageable.OnDamaged(999);
+                }
+            }
         }
     }
 }

@@ -23,7 +23,13 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private Transform _dragonHeadTarget;
 
+        [SerializeField] private Transform _dragonBodyTarget;
+
         public Transform DragonHeadTarget => _dragonHeadTarget;
+
+        public Transform DragonBodyTarget => _dragonBodyTarget;
+
+        private UnkaDragonController _dragonController;
 
         private void Awake()
         {
@@ -67,6 +73,11 @@ namespace Holoi.Reality.MOFATheHunting
         {
             var portal = Instantiate(_portalPrefab, position, rotation);
             Destroy(portal, 10f);
+        }
+
+        public void SetDragonController(UnkaDragonController dragonController)
+        {
+            _dragonController = dragonController;
         }
 
         private void OnMofaPlayerSpawned(MofaPlayer mofaPlayer)
