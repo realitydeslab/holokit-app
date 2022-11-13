@@ -124,10 +124,6 @@ namespace Holoi.Reality.QuantumRealm
         {
             if (IsServer)
             {
-                if (isValid)
-                {
-                    HostHandPose.transform.position = HoloKitCamera.Instance.CenterEyePose.position - 0.5f * Vector3.down;
-                }
                 _isHostHandValid.Value = isValid;
             }
         }
@@ -136,6 +132,10 @@ namespace Holoi.Reality.QuantumRealm
         {
             if (!oldValue && newValue)
             {
+                if (IsServer)
+                {
+                    HostHandPose.transform.position = HoloKitCamera.Instance.CenterEyePose.position + 0.5f * Vector3.down;
+                }
                 HostHandPose.IsActive = true;
                 _hostHandVisual.SetActive(true);
                 return;

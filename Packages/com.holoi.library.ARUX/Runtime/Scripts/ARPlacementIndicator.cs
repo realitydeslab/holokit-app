@@ -95,7 +95,6 @@ namespace Holoi.Library.ARUX
                             {
                                 _hitPoint.gameObject.SetActive(true);
                                 OnFoundPlane?.Invoke();
-                                Debug.Log("[ARPlacementIndicator] OnFoundPlane");
                             }
                             return;
                         }
@@ -108,7 +107,6 @@ namespace Holoi.Library.ARUX
                 {
                     _hitPoint.gameObject.SetActive(false);
                     OnLostPlane?.Invoke();
-                    Debug.Log("[ARPlacementIndicator] OnLostPlane");
                 }
             }
         }
