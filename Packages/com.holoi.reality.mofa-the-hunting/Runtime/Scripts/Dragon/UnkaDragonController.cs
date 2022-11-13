@@ -32,11 +32,9 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private Transform _dragonMousePose;
 
-        GameObject _fireBallInstance;
+        private GameObject _currentFireBall;
 
-        GameObject _fireBreathInstance;
-
-        Transform _attackTarget;
+        private GameObject _currentFireBreath;
 
         [Header("Renderer")]
         [SerializeField] SkinnedMeshRenderer _dragonRenderer;
@@ -243,33 +241,29 @@ namespace Holoi.Reality.MOFATheHunting
         {
             if (IsServer)
             {
-                var fireBall = Instantiate(_fireBallPrefab, _dragonMousePose.position, _dragonMousePose.rotation);
-                fireBall.GetComponent<FireBallController>().DragonMousePose = _dragonMousePose;
-                fireBall.GetComponent<NetworkObject>().SpawnWithOwnership(999);
+                _currentFireBall = Instantiate(_fireBallPrefab, _dragonMousePose.position, _dragonMousePose.rotation);
+                _currentFireBall.GetComponent<FireBallController>().DragonMousePose = _dragonMousePose;
+                _currentFireBall.GetComponent<NetworkObject>().SpawnWithOwnership(999);
             }
         }
 
         public void OnFireBallAttack()
         {
-            //if (IsServer)
-            //{
-            //    _fireBallInstance.GetComponent<FireBreathController>().IsFollow = false;
-            //    var dir = (_attackTarget == null ? new Vector3(0, -2, 2) : _attackTarget.position - _dragonMousePose.position).normalized;
-            //    var speed = dir * 3f;
-            //    _fireBallInstance.GetComponent<Rigidbody>().velocity = speed;
-            //}
+            if (IsServer)
+            {
+                _currentFireBall.GetComponent<FireBallController>().FlyToTarget();
+            }
         }
 
         public void OnFireBreathInit()
         {
-            Debug.Log("OnFireBreathInit");
-            _fireBreathInstance = Instantiate(_fireBreathPrefab);
-            _fireBreathInstance.GetComponent<FireBreathController>().followPoint = _dragonMousePose;
+            _currentFireBreath = Instantiate(_fireBreathPrefab);
+            _currentFireBreath.GetComponent<FireBreathController>().followPoint = _dragonMousePose;
         }
 
         public void OnFireBreathAttack()
         {
-            _fireBreathInstance.GetComponent<FireBreathController>().OnAttack();
+            _currentFireBreath.GetComponent<FireBreathController>().OnAttack();
         }
 
         //private void OnDrawGizmos()
