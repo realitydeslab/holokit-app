@@ -26,11 +26,11 @@ namespace Holoi.Reality.MOFATheHunting
         private Animator _dragonHeadTargetAnimator;
 
         [Header("Attack Behaviour")]
-        [SerializeField] GameObject _fireBallPrefab;
+        [SerializeField] private GameObject _fireBallPrefab;
 
-        [SerializeField] GameObject _fireBreathPrefab;
+        [SerializeField] private GameObject _fireBreathPrefab;
 
-        [SerializeField] Transform _powerInitPoint;
+        [SerializeField] private Transform _dragonMousePose;
 
         GameObject _fireBallInstance;
 
@@ -161,18 +161,6 @@ namespace Holoi.Reality.MOFATheHunting
             yield return new WaitForSeconds(UnityEngine.Random.Range(1f, 5f));
 
         }
-
-        [ClientRpc]
-        private void SpawnFireBallClientRpc()
-        {
-
-        }
-
-        [ClientRpc]
-        private void SpawnFireBreathClientRpc()
-        {
-
-        }
         
         public void OnDamaged(int damage, ulong attackerClientId)
         {
@@ -201,7 +189,7 @@ namespace Holoi.Reality.MOFATheHunting
         {
             if (FireBall)
             {
-                _animator.SetTrigger("Fire Ball");
+                PlaySpawnFireBallAnimationClientRpc();
                 FireBall = false;
             }
 
@@ -245,25 +233,38 @@ namespace Holoi.Reality.MOFATheHunting
             _dragonDeathVFX.SetVector4("Clip Plane", plane);
         }
 
-        public void OnFireBallInit()
+        [ClientRpc]
+        private void PlaySpawnFireBallAnimationClientRpc()
         {
-            _fireBallInstance = Instantiate(_fireBallPrefab);
-            _fireBallInstance.GetComponent<FireBreathController>().followPoint = _powerInitPoint;
+            _animator.SetTrigger("Fire Ball");
+        }
+
+        public void OnSpawnFireBall()
+        {
+            if (IsServer)
+            {
+                var fireBall = Instantiate(_fireBallPrefab, _dragonMousePose.position, _dragonMousePose.rotation);
+                fireBall.GetComponent<FireBallController>().DragonMousePose = _dragonMousePose;
+                fireBall.GetComponent<NetworkObject>().SpawnWithOwnership(999);
+            }
         }
 
         public void OnFireBallAttack()
         {
-            _fireBallInstance.GetComponent<FireBreathController>().IsFollow = false;
-            var dir = (_attackTarget == null ? new Vector3(0, -2, 2) : _attackTarget.position - _powerInitPoint.position).normalized;
-            var speed = dir * 3f;
-            _fireBallInstance.GetComponent<Rigidbody>().velocity = speed;
+            //if (IsServer)
+            //{
+            //    _fireBallInstance.GetComponent<FireBreathController>().IsFollow = false;
+            //    var dir = (_attackTarget == null ? new Vector3(0, -2, 2) : _attackTarget.position - _dragonMousePose.position).normalized;
+            //    var speed = dir * 3f;
+            //    _fireBallInstance.GetComponent<Rigidbody>().velocity = speed;
+            //}
         }
 
         public void OnFireBreathInit()
         {
             Debug.Log("OnFireBreathInit");
             _fireBreathInstance = Instantiate(_fireBreathPrefab);
-            _fireBreathInstance.GetComponent<FireBreathController>().followPoint = _powerInitPoint;
+            _fireBreathInstance.GetComponent<FireBreathController>().followPoint = _dragonMousePose;
         }
 
         public void OnFireBreathAttack()

@@ -63,9 +63,9 @@ namespace Holoi.Reality.MOFATheHunting
 
             transform.position += _velocity * Time.deltaTime;
 
-            Debug.Log($"transform.position: {transform.position}");
-            Debug.Log($"_velocity: {_velocity}");
-            Debug.Log($"_acceleration: {_acceleration}");
+            //Debug.Log($"transform.position: {transform.position}");
+            //Debug.Log($"_velocity: {_velocity}");
+            //Debug.Log($"_acceleration: {_acceleration}");
 
             _acceleration = Vector3.zero;
         }
@@ -127,13 +127,13 @@ namespace Holoi.Reality.MOFATheHunting
 
             realDesired += Vector3.up * heightDesired * mHeight;
 
-            Debug.Log($"realDesired: {realDesired}");
+            //Debug.Log($"realDesired: {realDesired}");
 
             _steer = realDesired - _velocity;
 
             _steer = Limit(_steer, _maxForce);
 
-            Debug.Log($"_steer: {_steer}");
+            //Debug.Log($"_steer: {_steer}");
 
             applyForce(_steer);
 

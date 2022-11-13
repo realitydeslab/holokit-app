@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.VFX;
+using Unity.Netcode;
 
-public class FireBreathController : MonoBehaviour
+public class FireBreathController : NetworkBehaviour
 {
     [HideInInspector] public bool IsFollow = true; // fireball follow at first and then unfollow and shoot
                                                     // firebreath always follow
