@@ -44,7 +44,7 @@ namespace Holoi.Reality.QuantumRealm
         {
             if (HoloKitApp.Instance.IsHost)
             {
-                _arOcclusionManager.enabled = true;
+                _arOcclusionManager.requestedEnvironmentDepthMode = EnvironmentDepthMode.Fastest;
                 _arPlaneManager.enabled = true;
                 _arRaycastManager.enabled = true;
                 HoloKitHandTracker.OnHandValidityChanged += OnHandValidityChanged;

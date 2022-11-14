@@ -34,7 +34,7 @@ namespace Holoi.Reality.Typography
         {
             if (HoloKitApp.Instance.IsHost)
             {
-                _arOcclusionManager.enabled = true;
+                _arOcclusionManager.requestedEnvironmentDepthMode = UnityEngine.XR.ARSubsystems.EnvironmentDepthMode.Fastest;
                 _arRaycastManager.enabled = true;
                 _arPlaneManager.enabled = true;
                 HoloKitHandTracker.OnHandValidityChanged += OnHandValidityChanged;

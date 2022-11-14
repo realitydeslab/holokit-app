@@ -24,7 +24,7 @@ namespace Holoi.Reality.Typography
         {
             if (HoloKitApp.Instance.IsHost)
             {
-                _arOcclusionManager.enabled = true;
+                _arOcclusionManager.requestedEnvironmentDepthMode = UnityEngine.XR.ARSubsystems.EnvironmentDepthMode.Fastest;
                 HoloKitHandTracker.OnHandValidityChanged += OnHandValidityChanged;
                 HoloKitHandTracker.Instance.IsActive = true;
                 foreach (var tip in _softTips)  
@@ -34,7 +34,6 @@ namespace Holoi.Reality.Typography
             }
             else
             {
-                _arOcclusionManager.enabled = false;
                 HoloKitHandTracker.Instance.IsActive = false;
                 foreach (var tip in _softTips)
                 {
