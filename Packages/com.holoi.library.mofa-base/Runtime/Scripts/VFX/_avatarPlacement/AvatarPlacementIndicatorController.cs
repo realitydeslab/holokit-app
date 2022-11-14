@@ -24,9 +24,10 @@ namespace Holoi.Library.MOFABase
 
         private void Update()
         {
+            if (_hitPoint == null) { return; }
+
             if (_hitPoint.gameObject.activeSelf)
             {
-                Debug.Log($"[HitPoint] {_hitPoint.position}");
                 _hookVFX.gameObject.SetActive(true);
                 _placementVFX.gameObject.SetActive(true);
 
@@ -49,9 +50,11 @@ namespace Holoi.Library.MOFABase
 
         public void OnTriggered()
         {
+            _hitPoint = null;
+            _hookVFX.gameObject.SetActive(false);
             _birthVFX.enabled = true;
             _animator.SetTrigger("Birth");
-            Destroy(gameObject, 3f);
+            Destroy(gameObject, 2f);
         }
     }
 }

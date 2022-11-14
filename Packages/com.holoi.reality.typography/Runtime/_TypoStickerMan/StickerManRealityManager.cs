@@ -85,7 +85,7 @@ namespace Holoi.Reality.Typography
             sculpture.GetComponent<NetworkObject>().Spawn();
 
             _arRaycastManager.enabled = false;
-            _arPlacementIndicator.OnDeathFunc();
+            _arPlacementIndicator.OnPlacedFunc();
             _hoverableStartButton.OnDeath();
         }
 

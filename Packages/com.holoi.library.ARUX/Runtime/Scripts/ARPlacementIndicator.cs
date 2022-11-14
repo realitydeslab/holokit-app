@@ -51,7 +51,7 @@ namespace Holoi.Library.ARUX
 
         public UnityEvent OnLostPlane;
 
-        public UnityEvent OnDeath;
+        public UnityEvent OnPlaced;
 
         private void Start()
         {
@@ -77,7 +77,7 @@ namespace Holoi.Library.ARUX
             {
                 Transform centerEyePose = HoloKitCamera.Instance.CenterEyePose;
                 Vector3 horizontalForward = new Vector3(centerEyePose.forward.x, 0f, centerEyePose.forward.z).normalized;
-                Vector3 rayOrigin = centerEyePose.position + _horizontalPlacementOffset * horizontalForward;
+                Vector3 rayOrigin = centerEyePose.position + _horizontalRaycastOffset * horizontalForward;
                 Ray ray = new(rayOrigin, Vector3.down);
                 List<ARRaycastHit> hits = new();
                 if (_arRaycastManager.Raycast(ray, hits, TrackableType.Planes))
@@ -87,7 +87,7 @@ namespace Holoi.Library.ARUX
                         var arPlane = hit.trackable.GetComponent<ARPlane>();
                         if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
                         {
-                            Vector3 position = centerEyePose.position + _horizontalRaycastOffset * horizontalForward;
+                            Vector3 position = centerEyePose.position + _horizontalPlacementOffset * horizontalForward;
                             Vector3 hitPosition = new(position.x, hit.pose.position.y, position.z);
                             _hitPoint.SetPositionAndRotation(hitPosition + _hitPointGroundOffset * Vector3.up,
                                                              Quaternion.Euler(0f, centerEyePose.rotation.eulerAngles.y, 0f) * Quaternion.Euler(180f * Vector3.up));
@@ -114,10 +114,10 @@ namespace Holoi.Library.ARUX
         /// <summary>
         /// Call this function instead of destroy the gameObject.
         /// </summary>
-        public void OnDeathFunc()
+        public void OnPlacedFunc()
         {
             _isActive = false;
-            OnDeath?.Invoke();
+            OnPlaced?.Invoke();
             Destroy(gameObject, _destroyDelay);
         }
     }
