@@ -1,0 +1,136 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e33e187dc72d4a48aaede99913c6393, type: 3}
+  m_Name: ACW Bow Attack
+  m_EditorClassIdentifier: 
+  ID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  tasks:
+  - {fileID: 5873187726266594735}
+  - {fileID: 142892002813213620}
+  - {fileID: 5113721999917422380}
+  - {fileID: 9002399122284257095}
+  transitions:
+  - decision: {fileID: -9146517405615920704, guid: dba72204417307d4ab61354a5f13db91,
+      type: 2}
+    trueState: {fileID: 0}
+    falseState: {fileID: 11400000, guid: dba72204417307d4ab61354a5f13db91, type: 2}
+  GizmoStateColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  CreateTaskAsset: 1
+  CreateDecisionAsset: 1
+--- !u!114 &142892002813213620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aaefcc8cb0c31046bdac1700fd93837, type: 3}
+  m_Name: Aim to the Head
+  m_EditorClassIdentifier: 
+  active: 1
+  Description: 'Find a child gameObject with the name given on the Target and set
+    it as the Target for the Look At and the Aim Component on the Animal '
+  MessageID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  UpdateInterval: 0.2
+  WaitForPreviousTask: 1
+  SetAimOn: 0
+  LookAtTargetS: 1
+  LookAtTargetT: 0
+  TargetVar: {fileID: 11400000, guid: 0c45a2c5e368c004eb9efaa6152aa0ea, type: 2}
+  UseTag: 0
+  BoneName: Head
+  tag: {fileID: 0}
+  DisableOnExit: 0
+  showTransformVar: 1
+--- !u!114 &5113721999917422380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a2106e56718a0c43ba1182c65e3aa2c, type: 3}
+  m_Name: T_Weapon_Aim
+  m_EditorClassIdentifier: 
+  active: 1
+  Description: 'Use common Methods of the Weapon Manager to play on the '
+  MessageID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  UpdateInterval: 0.2
+  WaitForPreviousTask: 1
+  near: 0
+  Actions: 4
+  Weapon: {fileID: 0}
+  HolsterID: {fileID: 0}
+  AimValue: 1
+--- !u!114 &5873187726266594735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a2106e56718a0c43ba1182c65e3aa2c, type: 3}
+  m_Name: Draw Bow
+  m_EditorClassIdentifier: 
+  active: 1
+  Description: 'Use common Methods of the Weapon Manager to play on the '
+  MessageID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  UpdateInterval: 0.2
+  WaitForPreviousTask: 0
+  near: 0
+  Actions: 0
+  Weapon: {fileID: 0}
+  HolsterID: {fileID: 11400000, guid: 31941dcdef3462d4c959c444d5b4ad1b, type: 2}
+  AimValue: 1
+--- !u!114 &9002399122284257095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a2106e56718a0c43ba1182c65e3aa2c, type: 3}
+  m_Name: T_Weapon_Attack
+  m_EditorClassIdentifier: 
+  active: 1
+  Description: 'Use common Methods of the Weapon Manager to play on the '
+  MessageID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  UpdateInterval: 1
+  WaitForPreviousTask: 1
+  near: 0
+  Actions: 5
+  Weapon: {fileID: 0}
+  HolsterID: {fileID: 0}
+  AimValue: 1

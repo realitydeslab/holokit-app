@@ -10,16 +10,16 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         public override bool OverlayPreviousPanel => false;
 
-        [SerializeField] private Joystick _joystick;
+        [SerializeField] private GameObject _dragonControllerButton;
 
         private void Start()
         {
             transform.SetSiblingIndex(transform.GetSiblingIndex() - 1);
+        }
 
-            if (!HoloKitApp.Instance.IsPuppeteer)
-            {
-                _joystick.gameObject.SetActive(false);
-            }
+        public void OnDragonControllerButtonPressed()
+        {
+
         }
     }
 }

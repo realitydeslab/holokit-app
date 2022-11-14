@@ -1,0 +1,258 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7792262008306046854
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3702501652830921620}
+  - component: {fileID: 6700208723664367700}
+  - component: {fileID: 5839280746971734829}
+  - component: {fileID: 666434199206194545}
+  - component: {fileID: 7609262087823140131}
+  - component: {fileID: 2607602551856700531}
+  - component: {fileID: 932034424072638879}
+  m_Layer: 2
+  m_Name: Lock on Target
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3702501652830921620
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7792262008306046854}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.58}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6700208723664367700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7792262008306046854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e0b5b9d4af0f31439aabd6b5de7b49e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: "Store  gameobjects with the Malbers Tag \"Target\" to a the Collection <Lock
+    on Targets> using a Trigger Proxy. These are used by the Lock On Target component
+    to Lock on a Target. \nConnect it to any Input using: LockOnTarget.LockTargetToggle();\nFor
+    more Info check the Help Button on the component"
+  reference: {fileID: 0}
+  ShowDescription: 0
+--- !u!135 &5839280746971734829
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7792262008306046854}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 20
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &666434199206194545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7792262008306046854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 245ebac0932779642866956d927ec17e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aim: {fileID: 0}
+  Targets: {fileID: 11400000, guid: 1a69e13d366af4b49bc1d9e96ca49bbc, type: 2}
+  debug: 0
+  OnTargetChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 2a60c9d3a0ea68e47b30753459e3042b, type: 2}
+        m_TargetAssemblyTypeName: MalbersAnimations.Events.MEvent, Assembly-CSharp
+        m_MethodName: Invoke
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 11400000, guid: a53f41947a81d0e43a2abf9c2e87a2bc, type: 2}
+        m_TargetAssemblyTypeName: MalbersAnimations.Scriptables.TransformVar, Assembly-CSharp
+        m_MethodName: SetValue
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnLockingTarget:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 932034424072638879}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &7609262087823140131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7792262008306046854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42b20103f05ec694e9515e126d8eb956, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitLayer:
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1083179008
+    Variable: {fileID: 0}
+  triggerInteraction: 1
+  Tags:
+  - {fileID: 11400000, guid: 6d1f17f4e5ea02440806b4b6afafa7d0, type: 2}
+  OnTrigger_Enter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTrigger_Exit:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTrigger_Stay:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGameObjectEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 1a69e13d366af4b49bc1d9e96ca49bbc, type: 2}
+        m_TargetAssemblyTypeName: MalbersAnimations.Scriptables.RuntimeCollection`1[[UnityEngine.GameObject,
+          UnityEngine
+        m_MethodName: Item_Add
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnGameObjectExit:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 1a69e13d366af4b49bc1d9e96ca49bbc, type: 2}
+        m_TargetAssemblyTypeName: MalbersAnimations.Scriptables.RuntimeCollection`1[[UnityEngine.GameObject,
+          UnityEngine
+        m_MethodName: Item_Remove
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnGameObjectStay:
+    m_PersistentCalls:
+      m_Calls: []
+  m_debug: 0
+  useOnTriggerStay:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  trigger: {fileID: 0}
+  Editor_Tabs1: 0
+--- !u!114 &2607602551856700531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7792262008306046854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b4de088e089c164bb239be84964ea4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseColliders: 1
+  gizmoType: 0
+  debugSize: 0.03
+  DebugColor: {r: 1, g: 0.99197686, b: 0, a: 0}
+  DrawAxis: 0
+  AxisSize: 0.65
+--- !u!114 &932034424072638879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7792262008306046854}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0de379cfd30d65a4da8d0d1115c494a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnScrollUp:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 666434199206194545}
+        m_TargetAssemblyTypeName: MalbersAnimations.Utilities.LockOnTarget, Assembly-CSharp
+        m_MethodName: Target_Next
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnScrollDown:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 666434199206194545}
+        m_TargetAssemblyTypeName: MalbersAnimations.Utilities.LockOnTarget, Assembly-CSharp
+        m_MethodName: Target_Previous
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

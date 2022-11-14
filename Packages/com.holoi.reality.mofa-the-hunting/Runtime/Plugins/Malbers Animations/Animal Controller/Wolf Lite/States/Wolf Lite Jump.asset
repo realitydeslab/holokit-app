@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0428e807d0c4eb44f80a4bf8193243f9, type: 3}
+  m_Name: Wolf Lite Jump
+  m_EditorClassIdentifier: 
+  Active: 1
+  Input: Jump
+  ExitInput:
+    UseConstant: 1
+    ConstantValue: 
+    Variable: {fileID: 0}
+  Priority: 5
+  General:
+    modify: 7375
+    RootMotion: 1
+    Sprint: 1
+    Gravity: 0
+    Grounded: 0
+    OrientToGround: 0
+    CustomRotation: 1
+    FreeMovement: 0
+    AdditivePosition: 1
+    AdditiveRotation: 1
+    Persistent: 0
+    IgnoreLowerStates: 1
+    LockMovement: 0
+    LockInput: 0
+  GeneralMessage: []
+  TagModifiers: []
+  UseSendMessage: 0
+  IncludeChildren: 1
+  AllowExitFromAnim: 0
+  IncludeSleepState: 1
+  SleepFromState:
+  - {fileID: 11400000, guid: 8078fbdb01991b44b9c1351f444b5efe, type: 2}
+  SleepFromMode:
+  - {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
+  - {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
+  - {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
+  - {fileID: 11400000, guid: 36ebf5306b7174949934aa62255781b1, type: 2}
+  - {fileID: 11400000, guid: 4d183b4d42bdb3f47a6f19b36e4a7d4d, type: 2}
+  QueueFrom: []
+  ResetFrom: []
+  SleepFromStance: []
+  stances: []
+  TryLoop:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  Duration:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  EnterTag:
+    UseConstant: 1
+    ConstantValue: JumpStart
+    Variable: {fileID: 0}
+  ExitTag:
+    UseConstant: 1
+    ConstantValue: JumpEnd
+    Variable: {fileID: 0}
+  ExitFrame: 1
+  ExitOnMain: 1
+  EnterCooldown:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  ExitCooldown:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  CanStrafe: 0
+  StrafeAnimations: 1
+  MovementStrafe: 1
+  IdleStrafe: 1
+  debug: 1
+  Editor_Tabs1: 3
+  ID: {fileID: 11400000, guid: 9ae07cd2f8f4c054687fecf634f8e5b3, type: 2}
+  JumpPressed:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  ForwardPressed:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  JumpPressedLerp: 4
+  AirControl:
+    UseConstant: 0
+    ConstantValue: 1
+    Variable: {fileID: 11400000, guid: f39bbadf72c684c4d804bfe47b409b80, type: 2}
+  AirRotation:
+    UseConstant: 1
+    ConstantValue: 5
+    Variable: {fileID: 11400000, guid: 5c4fe0b08ccfb364689cd2dfa25c82aa, type: 2}
+  jumpProfiles:
+  - name: In Place
+    VerticalSpeed: 0
+    JumpLandDistance: 1.53
+    fallingTime: 0.66
+    ExitTime: 0.967
+    CliffTime:
+      minValue: 0.55
+      maxValue: 0.7
+    CliffLandDistance: 1
+    HeightMultiplier: 1
+    ForwardMultiplier: 1
+    ForwardPressed: 3
+    LastState: {fileID: 0}
+  - name: Walk
+    VerticalSpeed: 0.9
+    JumpLandDistance: 1.75
+    fallingTime: 0.7
+    ExitTime: 0.9
+    CliffTime:
+      minValue: 0.55
+      maxValue: 0.7
+    CliffLandDistance: 0.75
+    HeightMultiplier: 0.9
+    ForwardMultiplier: 1
+    ForwardPressed: 0
+    LastState: {fileID: 0}
+  - name: Run
+    VerticalSpeed: 2.9
+    JumpLandDistance: 1.6
+    fallingTime: 0.65
+    ExitTime: 0.9
+    CliffTime:
+      minValue: 0.55
+      maxValue: 0.7
+    CliffLandDistance: 0.75
+    HeightMultiplier: 0.7
+    ForwardMultiplier: 1
+    ForwardPressed: 0
+    LastState: {fileID: 0}

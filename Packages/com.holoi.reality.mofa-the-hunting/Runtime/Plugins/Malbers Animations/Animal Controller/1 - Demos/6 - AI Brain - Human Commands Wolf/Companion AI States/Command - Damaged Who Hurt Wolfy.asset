@@ -1,0 +1,152 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7325566803595564494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcb15355fb5af304ebab1307cd8dab67, type: 3}
+  m_Name: Wait 2 Sec
+  m_EditorClassIdentifier: 
+  active: 1
+  Description: Type Description Here
+  DecisionID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  send: 0
+  interval:
+    UseConstant: 1
+    ConstantValue: 0.2
+    Variable: {fileID: 0}
+  WaitForAllTasks: 0
+  waitForTask: -1
+  WaitMinTime:
+    UseConstant: 1
+    ConstantValue: 2
+    Variable: {fileID: 0}
+  WaitMaxTime:
+    UseConstant: 1
+    ConstantValue: 2
+    Variable: {fileID: 0}
+--- !u!114 &-1026194662117239060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20de7ec569e280e4dbc951b31fe6319e, type: 3}
+  m_Name: Stop
+  m_EditorClassIdentifier: 
+  active: 1
+  Description: Type Description Here
+  MessageID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  UpdateInterval: 0.2
+  WaitForPreviousTask: 0
+  task: 3
+  distance:
+    UseConstant: 1
+    ConstantValue: 10
+    Variable: {fileID: 0}
+  distanceThreshold:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  stoppingDistance:
+    UseConstant: 1
+    ConstantValue: 0.5
+    Variable: {fileID: 0}
+  direction: 0
+  arcsCount: 12
+  LookAtTarget: 0
+  debugColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.25}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e33e187dc72d4a48aaede99913c6393, type: 3}
+  m_Name: Command - Damaged Who Hurt Wolfy
+  m_EditorClassIdentifier: 
+  ID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  tasks:
+  - {fileID: -1026194662117239060}
+  transitions:
+  - decision: {fileID: -7325566803595564494}
+    trueState: {fileID: 11400000, guid: cec8ca0e2b3e8714f9a55a3cb8a208d2, type: 2}
+    falseState: {fileID: 0}
+  - decision: {fileID: 3260110051006137647}
+    trueState: {fileID: 11400000, guid: 4d361877d37787a44b7a5bcb4eef75ae, type: 2}
+    falseState: {fileID: 0}
+  GizmoStateColor: {r: 0, g: 1, b: 0.1323154, a: 1}
+  CreateTaskAsset: 1
+  CreateDecisionAsset: 1
+--- !u!114 &3260110051006137647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00a63bfc37e3794ea3b0af5a3c6381e, type: 3}
+  m_Name: Look For Enemies 360
+  m_EditorClassIdentifier: 
+  active: 1
+  Description: The Animal will look for an Object using a cone view
+  DecisionID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  send: 0
+  interval:
+    UseConstant: 1
+    ConstantValue: 0.2
+    Variable: {fileID: 0}
+  WaitForAllTasks: 0
+  waitForTask: -1
+  LookRange:
+    UseConstant: 1
+    ConstantValue: 15
+    Variable: {fileID: 0}
+  LookAngle: 360
+  lookFor: 1
+  ObstacleLayer:
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1
+    Variable: {fileID: 0}
+  AssignTarget: 1
+  MoveToTarget: 1
+  RemoveTarget: 0
+  UnityTag: 
+  GameObjectName: 
+  transform: {fileID: 0}
+  gameObject: {fileID: 0}
+  gameObjectSet: {fileID: 0}
+  tags:
+  - {fileID: 11400000, guid: 9d80b30d48e415e4daefefb2e359ad3d, type: 2}
+  zoneType: 0
+  AllZones: 1
+  ZoneID: -1
+  ZoneModeAbility: -1
+  debugColor: {r: 0, g: 0, b: 0.7, a: 0.3}

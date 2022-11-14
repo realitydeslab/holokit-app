@@ -33,30 +33,30 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void Awake()
         {
-            MofaPlayer.OnMofaPlayerSpawned += OnMofaPlayerSpawned;
-            HoloKitAppUIEventManager.OnTriggered += OnTriggered;
+            //MofaPlayer.OnMofaPlayerSpawned += OnMofaPlayerSpawned;
+            //HoloKitAppUIEventManager.OnTriggered += OnTriggered;
         }
 
         protected override void Start()
         {
             base.Start();
 
-            if (HoloKitApp.Instance.IsHost || HoloKitApp.Instance.IsPuppeteer)
-            {
-                _arRaycastManager.enabled = true;
-                _arPlacementIndicator.IsActive = true;
-            }
-            else
-            {
-                Destroy(_arPlacementIndicator.gameObject);
-            }
+            //if (HoloKitApp.Instance.IsHost || HoloKitApp.Instance.IsPuppeteer)
+            //{
+            //    _arRaycastManager.enabled = true;
+            //    _arPlacementIndicator.IsActive = true;
+            //}
+            //else
+            //{
+            //    Destroy(_arPlacementIndicator.gameObject);
+            //}
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
-            MofaPlayer.OnMofaPlayerSpawned -= OnMofaPlayerSpawned;
-            HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
+            //MofaPlayer.OnMofaPlayerSpawned -= OnMofaPlayerSpawned;
+            //HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
         }
 
         [ServerRpc(RequireOwnership = false)]

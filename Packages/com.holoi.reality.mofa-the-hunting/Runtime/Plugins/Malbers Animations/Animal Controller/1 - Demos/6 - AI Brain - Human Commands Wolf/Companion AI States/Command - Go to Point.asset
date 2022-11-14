@@ -1,0 +1,234 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8394877007844835637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ddfe86ec8471054ea1c7a31dd80598f, type: 3}
+  m_Name: T_SetDestinationTask
+  m_EditorClassIdentifier: 
+  active: 1
+  Description: Set a new Destination to the AI Animal Control, it uses Run time sets
+    Transforms or GameObjects
+  MessageID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  UpdateInterval: 0.2
+  WaitForPreviousTask: 0
+  SlowMultiplier: 2
+  targetType: 3
+  TargetT: {fileID: 11400000, guid: 755326b3110044f42bead6fd6041c678, type: 2}
+  Destination: {fileID: 11400000, guid: d28cfdfecdb16f04cb2b7074c347a352, type: 2}
+  TargetG: {fileID: 0}
+  TargetRG: {fileID: 0}
+  rtype: 1
+  RTIndex:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  RTName:
+    UseConstant: 1
+    ConstantValue: 
+    Variable: {fileID: 0}
+  MoveToTarget: 0
+--- !u!114 &-7115772963515801959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00a63bfc37e3794ea3b0af5a3c6381e, type: 3}
+  m_Name: Look for Enemies
+  m_EditorClassIdentifier: 
+  active: 1
+  Description: Look for all the Gameobjects Tagged as Enemies
+  DecisionID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  send: 0
+  interval:
+    UseConstant: 1
+    ConstantValue: 0.2
+    Variable: {fileID: 0}
+  WaitForAllTasks: 0
+  waitForTask: -1
+  LookRange:
+    UseConstant: 1
+    ConstantValue: 20
+    Variable: {fileID: 0}
+  LookAngle: 120
+  lookFor: 1
+  ObstacleLayer:
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1
+    Variable: {fileID: 0}
+  AssignTarget: 1
+  MoveToTarget: 0
+  RemoveTarget: 0
+  UnityTag: 
+  GameObjectName: 
+  transform: {fileID: 11400000, guid: 0c45a2c5e368c004eb9efaa6152aa0ea, type: 2}
+  gameObject: {fileID: 0}
+  gameObjectSet: {fileID: 0}
+  tags:
+  - {fileID: 11400000, guid: 9d80b30d48e415e4daefefb2e359ad3d, type: 2}
+  zoneType: 0
+  AllZones: 1
+  ZoneID: 0
+  ZoneModeAbility: -1
+  debugColor: {r: 0.77254903, g: 0.565494, b: 0, a: 0.0627451}
+--- !u!114 &-6052121016320391843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a307bf2814ef6d742b57b5b280dd5d46, type: 3}
+  m_Name: D_Am I Hurt
+  m_EditorClassIdentifier: 
+  active: 1
+  Description: 'Am I on the Damage Mode??
+
+    If true then Someone Hit me'
+  DecisionID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  send: 0
+  interval:
+    UseConstant: 1
+    ConstantValue: 0.2
+    Variable: {fileID: 0}
+  WaitForAllTasks: 0
+  waitForTask: -1
+  checkOn: 0
+  ModeState: 1
+  ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
+  Ability:
+    UseConstant: 1
+    ConstantValue: -1
+    Variable: {fileID: 0}
+--- !u!114 &-5707594851299956587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4681abb1579a87d4ca46923c098ddece, type: 3}
+  m_Name: D_Enemy Spotted!
+  m_EditorClassIdentifier: 
+  active: 0
+  Description: All Decisions on the list  must be TRUE in order to sent a True Decision
+  DecisionID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  send: 0
+  interval:
+    UseConstant: 1
+    ConstantValue: 0.2
+    Variable: {fileID: 0}
+  WaitForAllTasks: 0
+  waitForTask: -1
+  list_index: 1
+  decisions:
+  - {fileID: -1789487713141472007}
+  - {fileID: -7115772963515801959}
+  invert: 0000
+  debug: 0
+--- !u!114 &-1789487713141472007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b74a9381c853d664c87e919a6ed0253e, type: 3}
+  m_Name: D_Enemy IS Not Spotted
+  m_EditorClassIdentifier: 
+  active: 1
+  Description: 'Check if the Enemy has not already been spotted
+
+'
+  DecisionID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  send: 0
+  interval:
+    UseConstant: 1
+    ConstantValue: 0.2
+    Variable: {fileID: 0}
+  WaitForAllTasks: 0
+  waitForTask: -1
+  ListenerID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  checkOn: 0
+  PlacedOn: 0
+  tag: {fileID: 0}
+  Transform: {fileID: 0}
+  GameObject: {fileID: 0}
+  GameObjectSet: {fileID: 0}
+  varType: 0
+  comparer: 0
+  boolValue: 0
+  intValue: 0
+  floatValue: 0
+  debug: 0
+  showFloatValue: 0
+  showBoolValue: 1
+  showIntValue: 0
+  showTag: 0
+  showTrans: 0
+  showGO: 0
+  showGOSet: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e33e187dc72d4a48aaede99913c6393, type: 3}
+  m_Name: Command - Go to Point
+  m_EditorClassIdentifier: 
+  ID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  tasks:
+  - {fileID: -8394877007844835637}
+  transitions:
+  - decision: {fileID: -6052121016320391843}
+    trueState: {fileID: 11400000, guid: a62f7427844772f43b1088f2b08953a9, type: 2}
+    falseState: {fileID: 0}
+  - decision: {fileID: -5707594851299956587}
+    trueState: {fileID: 11400000, guid: a7eaff8b6de07b44ca2568f019daf84b, type: 2}
+    falseState: {fileID: 0}
+  GizmoStateColor: {r: 0, g: 1, b: 0.1323154, a: 1}
+  CreateTaskAsset: 1
+  CreateDecisionAsset: 1

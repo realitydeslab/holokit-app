@@ -1,0 +1,196 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 924b1a89b1a888647b2c8549ebaffed4, type: 3}
+  m_Name: Wolf Lite LedgeGrab
+  m_EditorClassIdentifier: 
+  Active: 1
+  Input: Jump
+  ExitInput:
+    UseConstant: 1
+    ConstantValue: 
+    Variable: {fileID: 0}
+  Priority: 7
+  General:
+    modify: -1
+    RootMotion: 1
+    Sprint: 1
+    Gravity: 0
+    Grounded: 0
+    OrientToGround: 0
+    CustomRotation: 1
+    FreeMovement: 0
+    AdditivePosition: 1
+    AdditiveRotation: 0
+    Persistent: 0
+    IgnoreLowerStates: 1
+    LockMovement: 0
+    LockInput: 0
+  GeneralMessage: []
+  TagModifiers: []
+  UseSendMessage: 0
+  IncludeChildren: 1
+  AllowExitFromAnim: 0
+  IncludeSleepState: 1
+  SleepFromState: []
+  SleepFromMode: []
+  QueueFrom: []
+  ResetFrom: []
+  SleepFromStance: []
+  stances: []
+  TryLoop:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  Duration:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  EnterTag:
+    UseConstant: 1
+    ConstantValue: 
+    Variable: {fileID: 0}
+  ExitTag:
+    UseConstant: 1
+    ConstantValue: 
+    Variable: {fileID: 0}
+  ExitFrame: 1
+  ExitOnMain: 1
+  EnterCooldown:
+    UseConstant: 1
+    ConstantValue: 0.1
+    Variable: {fileID: 0}
+  ExitCooldown:
+    UseConstant: 1
+    ConstantValue: 0.1
+    Variable: {fileID: 0}
+  CanStrafe: 0
+  StrafeAnimations: 1
+  MovementStrafe: 1
+  IdleStrafe: 1
+  debug: 1
+  Editor_Tabs1: 3
+  ID: {fileID: 11400000, guid: 3fbb696c31f7ed846b7ec9b2f76fd0e5, type: 2}
+  LedgeLayer:
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1
+    Variable: {fileID: 0}
+  automatic:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  Kinematic:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  wallDistance: 0.7
+  ForwardLength: 1.5
+  WallChecker: 0.15
+  AlignSmoothness: 10
+  profiles:
+  - name: Ledge Grab
+    EnterStatus: 0
+    MaxVSpeed: 0
+    ForwardMultiplier: 1
+    Height: 1.55
+    LedgeExitDistance: 0.65
+    ExitTime: 0.9
+    AlingOffset: {x: 0, y: -1.15}
+    Orient: 1
+    AdditivePosition: 0
+    HeightSpeed: 1
+    ForwardSpeed: 2
+    HeightCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.45
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.55
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    ForwardCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.45
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.55
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4

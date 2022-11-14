@@ -1,0 +1,148 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5215940074420742478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00a63bfc37e3794ea3b0af5a3c6381e, type: 3}
+  m_Name: D_Who Hurt Me
+  m_EditorClassIdentifier: 
+  Description: 'True if we have the Animal Main Player on Sight.
+
+
+    Do not assign
+    it as Target!'
+  DecisionID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  send: 0
+  interval:
+    UseConstant: 1
+    ConstantValue: 0.2
+    Variable: {fileID: 0}
+  LookRange:
+    UseConstant: 1
+    ConstantValue: 40
+    Variable: {fileID: 11400000, guid: 3dd235f208372774abd19441f61149c9, type: 2}
+  LookAngle: 360
+  lookFor: 0
+  ObstacleLayer:
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1
+    Variable: {fileID: 0}
+  AssignTarget: 1
+  MoveToTarget: 0
+  RemoveTarget: 0
+  UnityTag: 
+  GameObjectName: 
+  transform: {fileID: 0}
+  gameObject: {fileID: 0}
+  tags: []
+  zoneType: 0
+  ZoneID: 0
+  ZoneModeAbility: -1
+  debugColor: {r: 1, g: 0.46227258, b: 0, a: 0.1254902}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e33e187dc72d4a48aaede99913c6393, type: 3}
+  m_Name: Unka 03 Find who Hurt me
+  m_EditorClassIdentifier: 
+  ID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  tasks:
+  - {fileID: 8835260027465841597}
+  transitions:
+  - decision: {fileID: -5215940074420742478}
+    trueState: {fileID: 11400000, guid: 8a4b355f0e354124f817877ff69f34e1, type: 2}
+    falseState: {fileID: 0}
+  - decision: {fileID: 4717921823414541681}
+    trueState: {fileID: 11400000, guid: d305d1e1e20a3664d950173a6e28f960, type: 2}
+    falseState: {fileID: 0}
+  GizmoStateColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  CreateTaskAsset: 1
+  CreateDecisionAsset: 1
+--- !u!114 &4717921823414541681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcb15355fb5af304ebab1307cd8dab67, type: 3}
+  m_Name: D_Wait2
+  m_EditorClassIdentifier: 
+  Description: Type Description Here
+  DecisionID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  send: 0
+  interval:
+    UseConstant: 1
+    ConstantValue: 0.2
+    Variable: {fileID: 0}
+  WaitMinTime:
+    UseConstant: 1
+    ConstantValue: 2
+    Variable: {fileID: 0}
+  WaitMaxTime:
+    UseConstant: 1
+    ConstantValue: 2
+    Variable: {fileID: 0}
+--- !u!114 &8835260027465841597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20de7ec569e280e4dbc951b31fe6319e, type: 3}
+  m_Name: T_Stop
+  m_EditorClassIdentifier: 
+  Description: Stop
+  MessageID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  WaitForPreviousTask: 0
+  task: 3
+  distance:
+    UseConstant: 1
+    ConstantValue: 10
+    Variable: {fileID: 0}
+  distanceThreshold:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  stoppingDistance:
+    UseConstant: 1
+    ConstantValue: 0.5
+    Variable: {fileID: 0}
+  direction: 0
+  arcsCount: 12
+  UpdateFleeMovingTarget: 1
+  LookAtTarget: 0
+  Interact: 1
+  interval: 0.2
+  debugColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.25}
