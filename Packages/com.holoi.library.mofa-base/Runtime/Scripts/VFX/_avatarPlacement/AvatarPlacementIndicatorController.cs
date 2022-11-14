@@ -32,13 +32,17 @@ namespace Holoi.Library.MOFABase
         {
             var pos = new Vector3(_centerEye.position.x, HitPosition.y, _centerEye.position.z);
 
-            transform.position = pos;
+            var direction = (HitPosition - pos).normalized;
+
+            _hookVFX.transform.position = pos;
+
+            _hookVFX.transform.LookAt(pos + direction);
+
+            _hookVFX.SetVector3("Hit Position", HitPosition);
 
             _placementVFX.transform.position = HitPosition;
 
             _birthVFX.transform.position = HitPosition;
-
-            _hookVFX.SetVector3("Hit Position", HitPosition);
         }
 
         public void OnBirth()
