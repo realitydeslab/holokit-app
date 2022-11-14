@@ -9,6 +9,7 @@ namespace Holoi.Reality.Typography
     {
         //Objects that will interact with the rope
         public Transform whatTheRopeIsConnectedTo;
+
         public Transform whatIsHangingFromTheRope;
 
         //Line renderer used to display the rope
@@ -113,7 +114,7 @@ namespace Holoi.Reality.Typography
                     currentRopeSection.pos.z + Time.time * noiseFrq))
                     * t * noiseAmp * i / allRopeSections.Count;
                 //Add header force
-                currentRopeSection.pos += ropeHeaderMultipier * ropeHeaderDirection * t;
+                //currentRopeSection.pos += ropeHeaderMultipier * ropeHeaderDirection * t;
 
                 //Add it back to the array
                 allRopeSections[i] = currentRopeSection;
