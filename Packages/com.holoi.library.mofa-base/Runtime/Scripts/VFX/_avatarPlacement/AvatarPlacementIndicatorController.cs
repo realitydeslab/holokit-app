@@ -5,51 +5,53 @@ namespace Holoi.Library.MOFABase
 {
     public class AvatarPlacementIndicatorController : MonoBehaviour
     {
-        [HideInInspector] public Vector3 HitPosition;
+        [SerializeField] private Transform _hitPoint;
 
-        [SerializeField] Animator _animator;
+        [SerializeField] private Animator _animator;
 
-        [SerializeField] VisualEffect _hookVFX;
+        [SerializeField] private VisualEffect _hookVFX;
 
-        [SerializeField] VisualEffect _placementVFX;
+        [SerializeField] private VisualEffect _placementVFX;
 
-        [SerializeField] VisualEffect _birthVFX;
-
-        Transform _centerEye;
+        [SerializeField] private VisualEffect _birthVFX;
 
         private void Start()
         {
-            _centerEye = HoloKit.HoloKitCamera.Instance.CenterEyePose;
-
             _hookVFX.enabled = true;
-
             _placementVFX.enabled = true;
-
             _birthVFX.enabled = false;
         }
 
         private void Update()
         {
-            var pos = new Vector3(_centerEye.position.x, HitPosition.y, _centerEye.position.z);
+            if (_hitPoint.gameObject.activeSelf)
+            {
+                Debug.Log($"[HitPoint] {_hitPoint.position}");
+                _hookVFX.gameObject.SetActive(true);
+                _placementVFX.gameObject.SetActive(true);
 
-            var direction = (HitPosition - pos).normalized;
+                var centerEyePose = HoloKit.HoloKitCamera.Instance.CenterEyePose;
+                var pos = new Vector3(centerEyePose.position.x, _hitPoint.position.y, centerEyePose.position.z);
+                var direction = (_hitPoint.position - pos).normalized;
 
-            _hookVFX.transform.position = pos;
-
-            _hookVFX.transform.LookAt(pos + direction);
-
-            _hookVFX.SetVector3("Hit Position", HitPosition);
-
-            _placementVFX.transform.position = HitPosition;
-
-            _birthVFX.transform.position = HitPosition;
+                _hookVFX.transform.localPosition = pos;
+                _hookVFX.transform.LookAt(pos + direction);
+                _hookVFX.SetVector3("Hit Position", _hitPoint.position);
+                _placementVFX.transform.localPosition = _hitPoint.position;
+                _birthVFX.transform.localPosition = _hitPoint.position;
+            }
+            else
+            {
+                _hookVFX.gameObject.SetActive(false);
+                _placementVFX.gameObject.SetActive(false);
+            }
         }
 
-        public void OnBirth()
+        public void OnTriggered()
         {
             _birthVFX.enabled = true;
-
             _animator.SetTrigger("Birth");
+            Destroy(gameObject, 3f);
         }
     }
 }
