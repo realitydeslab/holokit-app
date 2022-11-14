@@ -90,7 +90,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void SpawnTheDragon(Vector3 position, Quaternion rotation)
         {
-            Instantiate(_theDragonPrefab, position + new Vector3(0f, _dragonSpawnOffsetY, 0f), rotation);
+            var theDragon = Instantiate(_theDragonPrefab, position + new Vector3(0f, _dragonSpawnOffsetY, 0f), rotation);
         }
     }
 }
