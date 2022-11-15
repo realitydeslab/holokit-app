@@ -48,13 +48,20 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        public void OnTriggered()
+        public void OnPlaced()
         {
             _hitPoint = null;
             _hookVFX.gameObject.SetActive(false);
             _birthVFX.enabled = true;
             _animator.SetTrigger("Birth");
             Destroy(gameObject, 2f);
+        }
+
+        public void OnDisabled()
+        {
+            _hitPoint = null;
+            _hookVFX.gameObject.SetActive(false);
+            Destroy(gameObject);
         }
     }
 }

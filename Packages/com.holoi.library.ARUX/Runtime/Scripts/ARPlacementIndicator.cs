@@ -53,6 +53,8 @@ namespace Holoi.Library.ARUX
 
         public UnityEvent OnPlaced;
 
+        public UnityEvent OnDisabled;
+
         private void Start()
         {
             _hitPoint.position = _hitPositionDefaultOffset;
@@ -119,6 +121,13 @@ namespace Holoi.Library.ARUX
             _isActive = false;
             OnPlaced?.Invoke();
             Destroy(gameObject, _destroyDelay);
+        }
+
+        public void OnDisabledFunc()
+        {
+            _isActive = false;
+            OnDisabled?.Invoke();
+            Destroy(gameObject);
         }
     }
 }

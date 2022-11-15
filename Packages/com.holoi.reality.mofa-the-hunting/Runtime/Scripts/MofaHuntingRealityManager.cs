@@ -64,16 +64,27 @@ namespace Holoi.Reality.MOFATheHunting
         {
             if (_arPlacementIndicator != null && _arPlacementIndicator.IsActive && _arPlacementIndicator.IsValid)
             {
-                // Spawn the invisible ground plane
-                SpawnInvisibleFloorClientRpc(_arPlacementIndicator.HitPoint.position.y);
-                // Spawn the dragon
-                SpawnTheDragon(_arPlacementIndicator.HitPoint.position, _arPlacementIndicator.HitPoint.rotation);
+                Vector3 position = _arPlacementIndicator.HitPoint.position;
+                Quaternion rotation = _arPlacementIndicator.HitPoint.rotation;
                 _arRaycastManager.enabled = false;
                 _arPlacementIndicator.OnPlacedFunc();
+                StartRoundServerRpc(position, rotation);
             }
             else
             {
                 Debug.Log("[MofaHuntingRealityManager] Failed to start round");
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void StartRoundServerRpc(Vector3 position, Quaternion rotation, ServerRpcParams serverRpcParams = default)
+        {
+            SpawnInvisibleFloorClientRpc(position.y);
+            SpawnTheDragon(position, rotation, serverRpcParams.Receive.SenderClientId);
+            if (_arRaycastManager.enabled)
+            {
+                _arRaycastManager.enabled = false;
+                _arPlacementIndicator.OnDisabledFunc();
             }
         }
 
@@ -88,9 +99,10 @@ namespace Holoi.Reality.MOFATheHunting
             }
         }
 
-        private void SpawnTheDragon(Vector3 position, Quaternion rotation)
+        private void SpawnTheDragon(Vector3 position, Quaternion rotation, ulong ownerClientId)
         {
             var theDragon = Instantiate(_theDragonPrefab, position + new Vector3(0f, _dragonSpawnOffsetY, 0f), rotation);
+            theDragon.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
         }
     }
 }

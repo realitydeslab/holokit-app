@@ -139,7 +139,7 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 if (_placementIndicator.gameObject.activeSelf)
                 {
-                    _placementIndicator.OnTriggered();
+                    _placementIndicator.OnPlaced();
                     _mofaPlayerAI.InitializeAvatarClientRpc(_placementIndicator.transform.position,
                                                             _placementIndicator.transform.rotation,
                                                             HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId].MetaAvatarCollectionBundleId,

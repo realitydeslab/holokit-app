@@ -2,7 +2,8 @@ using UnityEngine;
 using Unity.Netcode;
 using MalbersAnimations.Controller;
 using MalbersAnimations.Utilities;
-using HoloKit;
+using Holoi.Library.HoloKitApp;
+using Holoi.Library.MOFABase;
 
 namespace Holoi.Reality.MOFATheHunting
 {
@@ -14,18 +15,12 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void Awake()
         {
-            _animal.m_MainCamera = HoloKitCamera.Instance.CenterEyePose;
+            _animal.m_MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).Players[0].transform;
         }
 
         private void Start()
         {
-            _aim.MainCamera = HoloKitCamera.Instance.CenterEyePose;
+            _aim.MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).Players[0].transform;
         }
-
-        //public override void OnNetworkSpawn()
-        //{
-        //    base.OnNetworkSpawn();
-        //    _aim.MainCamera = HoloKitCamera.Instance.CenterEyePose;
-        //}
     }
 }
