@@ -18,7 +18,7 @@ namespace HoloKit
 
         private void OnARSessionUpdatedFrame(double timestamp, Matrix4x4 matrix)
         {
-            if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Stereo)
+            if (Screen.orientation == ScreenOrientation.LandscapeLeft)
             {
                 matrix *= RotationMatrix;
             }

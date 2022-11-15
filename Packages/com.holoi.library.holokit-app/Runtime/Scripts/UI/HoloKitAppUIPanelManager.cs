@@ -3,40 +3,53 @@ using UnityEngine;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
+    public enum HoloKitAppUICanvasType
+    {
+        Portrait = 0,
+        Landscape = 1,
+        StAR = 2
+    }
+
     public class HoloKitAppUIPanelManager : MonoBehaviour
     {
         public List<HoloKitAppUIPanel> UIPanelList;
 
         [SerializeField] private Canvas _portraitCanvas;
 
+        [SerializeField] private Canvas _landscapeCanvas;
+
         [SerializeField] private Canvas _starCanvas;
 
         private readonly Stack<HoloKitAppUIPanel> _uiPanelStack = new();
 
-        public void PushUIPanel(string uiPanelName)
+        public void PushUIPanel(string uiPanelName, HoloKitAppUICanvasType canvasType = HoloKitAppUICanvasType.Portrait)
         {
             foreach (var uiPanel in UIPanelList)
             {
                 if (uiPanel.UIPanelName.Equals(uiPanelName))
                 {
                     // This is the UIPanel we are looking for
-                    PushUIPanel(uiPanel);
+                    PushUIPanel(uiPanel, canvasType);
                     return;
                 }
             }
             Debug.LogError($"[HoloKitAppUIPanelManager] Cannot find UIPanel with name {uiPanelName}");
         }
 
-        public void PushUIPanel(HoloKitAppUIPanel uiPanel)
+        public void PushUIPanel(HoloKitAppUIPanel uiPanel, HoloKitAppUICanvasType canvasType = HoloKitAppUICanvasType.Portrait)
         {
             var uiPanelInstance = Instantiate(uiPanel);
-            if (uiPanel.UIPanelName.Equals("StarAR"))
+            switch (canvasType)
             {
-                uiPanelInstance.transform.SetParent(_starCanvas.transform);
-            }
-            else
-            {
-                uiPanelInstance.transform.SetParent(_portraitCanvas.transform);
+                case HoloKitAppUICanvasType.Portrait:
+                    uiPanelInstance.transform.SetParent(_portraitCanvas.transform);
+                    break;
+                case HoloKitAppUICanvasType.Landscape:
+                    uiPanelInstance.transform.SetParent(_landscapeCanvas.transform);
+                    break;
+                case HoloKitAppUICanvasType.StAR:
+                    uiPanelInstance.transform.SetParent(_starCanvas.transform);
+                    break;
             }
             uiPanelInstance.transform.localPosition = Vector3.zero;
             uiPanelInstance.transform.localRotation = Quaternion.identity;

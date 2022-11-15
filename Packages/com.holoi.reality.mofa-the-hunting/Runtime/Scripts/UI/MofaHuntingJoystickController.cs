@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Events;
-using HoloKit;
 
 namespace Holoi.Reality.MOFATheHunting.UI
 {
@@ -14,7 +13,7 @@ namespace Holoi.Reality.MOFATheHunting.UI
         {
             if (_joystick.Horizontal !=0 || _joystick.Vertical != 0)
             {
-                OnAxisChanged?.Invoke(new Vector2(-_joystick.Vertical, _joystick.Horizontal));
+                OnAxisChanged?.Invoke(_joystick.Direction);
             }
         }
     }

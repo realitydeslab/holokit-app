@@ -21,7 +21,8 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         public void OnDragonControllerButtonPressed()
         {
-            HoloKitApp.Instance.UIPanelManager.PushUIPanel(_dragonControllerUIPanel);
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel(_dragonControllerUIPanel, HoloKitAppUICanvasType.Landscape);
+            Screen.orientation = ScreenOrientation.LandscapeLeft;
         }
     }
 }

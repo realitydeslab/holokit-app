@@ -1,3 +1,4 @@
+using UnityEngine;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.HoloKitApp.UI;
 
@@ -12,6 +13,7 @@ namespace Holoi.Reality.MOFATheHunting.UI
         public void OnExitButtonPressed()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+            Screen.orientation = ScreenOrientation.Portrait;
         }
     }
 }

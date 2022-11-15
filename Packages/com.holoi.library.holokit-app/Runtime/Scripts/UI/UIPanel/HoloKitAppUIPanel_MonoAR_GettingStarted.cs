@@ -43,7 +43,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 HoloKitApp.Instance.GlobalSettings.InstructionEnabled = false;
             }
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-            HoloKitApp.Instance.UIPanelManager.PushUIPanel("StarAR");
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("StarAR", HoloKitAppUICanvasType.StAR);
             HoloKitAppUIEventManager.OnRenderModeChanged?.Invoke(HoloKit.HoloKitRenderMode.Stereo);
         }
     }
