@@ -88,10 +88,10 @@ namespace Holoi.Reality.MOFATheHunting
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void StartRoundServerRpc(Vector3 position, Quaternion rotation, ServerRpcParams serverRpcParams = default)
+        private void StartRoundServerRpc(Vector3 position, Quaternion rotation)
         {
             SpawnInvisibleFloorClientRpc(position.y);
-            SpawnTheDragon(position, rotation, serverRpcParams.Receive.SenderClientId);
+            SpawnTheDragon(position, rotation);
             if (_arRaycastManager.enabled)
             {
                 _arRaycastManager.enabled = false;
@@ -110,10 +110,10 @@ namespace Holoi.Reality.MOFATheHunting
             }
         }
 
-        private void SpawnTheDragon(Vector3 position, Quaternion rotation, ulong ownerClientId)
+        private void SpawnTheDragon(Vector3 position, Quaternion rotation)
         {
             var theDragon = Instantiate(_theDragonPrefab, position + new Vector3(0f, _dragonSpawnOffsetY, 0f), rotation);
-            theDragon.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
+            theDragon.GetComponent<NetworkObject>().Spawn();
         }
 
         public void SetTheDragonController(TheDragonController theDragonController)
