@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Unity.Netcode;
 using MalbersAnimations.Controller;
@@ -13,6 +14,8 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private Aim _aim;
 
+        public static event Action OnDragonSpawned;
+
         private void Awake()
         {
             _animal.m_MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).Players[0].transform;
@@ -21,6 +24,13 @@ namespace Holoi.Reality.MOFATheHunting
         private void Start()
         {
             _aim.MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).Players[0].transform;
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+            ((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).SetTheDragonController(this);
+            OnDragonSpawned?.Invoke();
         }
     }
 }

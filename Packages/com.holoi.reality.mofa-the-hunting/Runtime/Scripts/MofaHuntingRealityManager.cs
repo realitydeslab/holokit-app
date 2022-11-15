@@ -26,10 +26,13 @@ namespace Holoi.Reality.MOFATheHunting
 
         private GameObject _invisibleFloor;
 
+        private TheDragonController _theDragonController;
+
         protected override void Start()
         {
             base.Start();
             HoloKitAppUIEventManager.OnTriggered += OnStarUITriggered;
+            UI.MofaHuntingUIPanel.OnSpawnDragonButtonPressed += OnStarUITriggered;
         }
 
         public override void OnNetworkSpawn()
@@ -46,6 +49,7 @@ namespace Holoi.Reality.MOFATheHunting
         {
             base.OnDestroy();
             HoloKitAppUIEventManager.OnTriggered -= OnStarUITriggered;
+            UI.MofaHuntingUIPanel.OnSpawnDragonButtonPressed -= OnStarUITriggered;
         }
 
         private void OnStarUITriggered()
@@ -103,6 +107,11 @@ namespace Holoi.Reality.MOFATheHunting
         {
             var theDragon = Instantiate(_theDragonPrefab, position + new Vector3(0f, _dragonSpawnOffsetY, 0f), rotation);
             theDragon.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
+        }
+
+        public void SetTheDragonController(TheDragonController theDragonController)
+        {
+            _theDragonController = theDragonController;
         }
     }
 }
