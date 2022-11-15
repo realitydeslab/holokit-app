@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using HoloKit;
 
 namespace Holoi.Reality.MOFATheHunting.UI
 {
