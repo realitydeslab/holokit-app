@@ -18,6 +18,8 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private ARPlacementIndicator _arPlacementIndicator;
 
+        [SerializeField] private GameObject _arPlacementIndicatorVisual;
+
         [SerializeField] private GameObject _invisibleFloorPrefab;
 
         [SerializeField] private GameObject _theDragonPrefab;
@@ -42,6 +44,11 @@ namespace Holoi.Reality.MOFATheHunting
             {
                 _arRaycastManager.enabled = true;
                 _arPlacementIndicator.IsActive = true;
+            }
+            else
+            {
+                Destroy(_arPlacementIndicator.gameObject);
+                Destroy(_arPlacementIndicatorVisual);
             }
         }
 

@@ -32,5 +32,25 @@ namespace Holoi.Reality.MOFATheHunting
             ((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).SetTheDragonController(this);
             OnDragonSpawned?.Invoke();
         }
+
+        #region Network Callbacks
+        [ClientRpc]
+        public void Movement_SetUpDownAxisClientRpc(float value)
+        {
+            if (!IsOwner)
+            {
+                _animal.SetUpDownAxis(value);
+            }
+        }
+
+        [ClientRpc]
+        public void Movement_SetInputAxisClientRpc(Vector2 value)
+        {
+            if (!IsOwner)
+            {
+                _animal.SetInputAxis(value);
+            }
+        }
+        #endregion
     }
 }
