@@ -24,6 +24,9 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private ModeID _action;
 
+        [Header("StateID")]
+        [SerializeField] private StateID _fly;
+
         public static event Action OnDragonSpawned;
 
         private void Awake()
@@ -150,6 +153,42 @@ namespace Holoi.Reality.MOFATheHunting
             if (!IsOwner)
             {
                 _animal.Mode_Pin_Status(value);
+            }
+        }
+
+        [ClientRpc]
+        public void State_Pin_FlyClientRpc()
+        {
+            if (!IsOwner)
+            {
+                _animal.State_Pin(_fly);
+            }
+        }
+
+        [ClientRpc]
+        public void State_Pin_ByInputClientRpc(bool value)
+        {
+            if (!IsOwner)
+            {
+                _animal.State_Pin_ByInput(value);
+            }
+        }
+
+        [ClientRpc]
+        public void SpeedDownClientRpc()
+        {
+            if (!IsOwner)
+            {
+                _animal.SpeedDown();
+            }
+        }
+
+        [ClientRpc]
+        public void SpeedUpClientRpc()
+        {
+            if (!IsOwner)
+            {
+                _animal.SpeedUp();
             }
         }
         #endregion
