@@ -36,6 +36,11 @@ namespace Holoi.Reality.QuantumRealm
             }
         }
 
+        private void OnEnable()
+        {
+            _vfx.SetFloat("Process", 0);
+        }
+
         private void OnDisable()
         {
             StopHapticsPlayer();
