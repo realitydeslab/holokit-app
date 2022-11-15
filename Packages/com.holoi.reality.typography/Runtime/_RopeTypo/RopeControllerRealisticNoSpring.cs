@@ -163,7 +163,6 @@ namespace Holoi.Reality.Typography
                     continue;
                 }
 
-
                 Vector3 change = changeDir * distError;
 
                 if (i != 0)
