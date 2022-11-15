@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Holoi.Library.HoloKitApp;
 using Holoi.Library.HoloKitApp.UI;
 
 namespace Holoi.Reality.MOFATheHunting.UI
@@ -10,5 +8,10 @@ namespace Holoi.Reality.MOFATheHunting.UI
         public override string UIPanelName => "MofaHuntingDragonController";
 
         public override bool OverlayPreviousPanel => true;
+
+        public void OnExitButtonPressed()
+        {
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+        }
     }
 }

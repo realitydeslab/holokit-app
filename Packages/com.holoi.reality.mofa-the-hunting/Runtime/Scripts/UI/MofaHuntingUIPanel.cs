@@ -10,6 +10,8 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         public override bool OverlayPreviousPanel => false;
 
+        [SerializeField] private HoloKitAppUIPanel _dragonControllerUIPanel;
+
         [SerializeField] private GameObject _dragonControllerButton;
 
         private void Start()
@@ -19,7 +21,7 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         public void OnDragonControllerButtonPressed()
         {
-
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel(_dragonControllerUIPanel);
         }
     }
 }
