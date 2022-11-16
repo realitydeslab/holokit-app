@@ -78,6 +78,11 @@ namespace Holoi.Reality.MOFATheHunting
                 {
                     // TODO: dragon death animation
                     _animal.State_Activate(_dealth);
+                    if (IsServer)
+                    {
+                        StartCoroutine(((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).OnDragonDead());
+                        Destroy(gameObject, 5f);
+                    }
                 }
             }
         }

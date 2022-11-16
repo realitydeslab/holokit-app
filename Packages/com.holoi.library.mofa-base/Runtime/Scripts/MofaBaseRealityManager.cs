@@ -85,7 +85,14 @@ namespace Holoi.Library.MOFABase
 
         public int RoundCount => _roundCount.Value;
 
-        public MofaRoundResult RoundResult => _roundResult.Value;
+        public MofaRoundResult RoundResult
+        {
+            get => _roundResult.Value;
+            set
+            {
+                _roundResult.Value = value;
+            }
+        }
 
         public Dictionary<ulong, MofaPlayer> Players => _players;
 
@@ -259,8 +266,8 @@ namespace Holoi.Library.MOFABase
             yield return new WaitForSeconds(_roundTime);
             _currentPhase.Value = MofaPhase.RoundOver;
             yield return new WaitForSeconds(3f);
-            _currentPhase.Value = MofaPhase.RoundResult;
             _roundResult.Value = GetRoundResult();
+            _currentPhase.Value = MofaPhase.RoundResult;
             yield return new WaitForSeconds(3f);
             _currentPhase.Value = MofaPhase.RoundData;
             

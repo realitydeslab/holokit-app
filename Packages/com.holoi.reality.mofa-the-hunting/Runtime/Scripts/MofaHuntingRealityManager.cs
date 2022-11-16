@@ -143,5 +143,15 @@ namespace Holoi.Reality.MOFATheHunting
             yield return new WaitForSeconds(CountdownTime);
             CurrentPhase = MofaPhase.Fighting;
         }
+
+        public IEnumerator OnDragonDead()
+        {
+            CurrentPhase = MofaPhase.RoundOver;
+            yield return new WaitForSeconds(3f);
+            RoundResult = MofaRoundResult.RedTeamWins;
+            CurrentPhase = MofaPhase.RoundResult;
+            yield return new WaitForSeconds(3f);
+            CurrentPhase = MofaPhase.RoundData;
+        }
     }
 }
