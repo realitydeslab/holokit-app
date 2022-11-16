@@ -7,12 +7,26 @@ namespace Holoi.Reality.MOFATheHunting.UI
     {
         [SerializeField] private Joystick _joystick;
 
+        private bool _isEmptyInput = true;
+
         public UnityEvent<Vector2> OnAxisChanged;
 
         private void Update()
         {
-            if (_joystick.Horizontal !=0 || _joystick.Vertical != 0)
+            if (_joystick.Horizontal == 0f && _joystick.Vertical == 0f)
             {
+                if (!_isEmptyInput)
+                {
+                    _isEmptyInput = true;
+                    OnAxisChanged?.Invoke(_joystick.Direction);
+                }
+            }
+            else
+            {
+                if (_isEmptyInput)
+                {
+                    _isEmptyInput = false;
+                }
                 OnAxisChanged?.Invoke(_joystick.Direction);
             }
         }
