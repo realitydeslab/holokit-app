@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using Unity.Netcode;
@@ -40,7 +41,7 @@ namespace Holoi.Reality.MOFATheHunting
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-            if (HoloKitApp.Instance.IsHost || HoloKitApp.Instance.IsPuppeteer)
+            if (HoloKitApp.Instance.IsHost)
             {
                 _arRaycastManager.enabled = true;
                 _arPlacementIndicator.IsActive = true;
@@ -61,7 +62,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void OnStarUITriggered()
         {
-            if (HoloKitApp.Instance.IsHost || HoloKitApp.Instance.IsPuppeteer)
+            if (HoloKitApp.Instance.IsHost)
             {
                 if (CurrentPhase == MofaPhase.Waiting || CurrentPhase == MofaPhase.RoundData)
                 {
@@ -71,6 +72,7 @@ namespace Holoi.Reality.MOFATheHunting
             }
         }
 
+        // Host only
         private void TryStartRound()
         {
             if (_arPlacementIndicator != null && _arPlacementIndicator.IsActive && _arPlacementIndicator.IsValid)
@@ -79,7 +81,7 @@ namespace Holoi.Reality.MOFATheHunting
                 Quaternion rotation = _arPlacementIndicator.HitPoint.rotation;
                 _arRaycastManager.enabled = false;
                 _arPlacementIndicator.OnPlacedFunc();
-                StartRoundServerRpc(position, rotation);
+                StartRound(position, rotation);
             }
             else
             {
@@ -87,38 +89,59 @@ namespace Holoi.Reality.MOFATheHunting
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        private void StartRoundServerRpc(Vector3 position, Quaternion rotation)
+        // Host only
+        private void StartRound(Vector3 position, Quaternion rotation)
         {
-            SpawnInvisibleFloorClientRpc(position.y);
+            SpawnInvisibleFloor(position.y);
             SpawnTheDragon(position, rotation);
-            if (_arRaycastManager.enabled)
-            {
-                _arRaycastManager.enabled = false;
-                _arPlacementIndicator.OnDisabledFunc();
-            }
+            SpawnLifeShieldsForNonHostPlayers();
+            StartCoroutine(StartHuntingFlow());
         }
 
-        [ClientRpc]
-        private void SpawnInvisibleFloorClientRpc(float posY)
+        private void SpawnInvisibleFloor(float posY)
         {
             if (_invisibleFloor != null) { return; }
             _invisibleFloor = Instantiate(_invisibleFloorPrefab, new Vector3(0f, posY, 0f), Quaternion.identity);
-            if (HoloKitUtils.IsRuntime)
-            {
-                _invisibleFloor.GetComponentInChildren<MeshRenderer>().enabled = false;
-            }
+            _invisibleFloor.GetComponent<NetworkObject>().Spawn();
         }
 
         private void SpawnTheDragon(Vector3 position, Quaternion rotation)
         {
+            if (_theDragonController != null) { return; }
             var theDragon = Instantiate(_theDragonPrefab, position + new Vector3(0f, _dragonSpawnOffsetY, 0f), rotation);
             theDragon.GetComponent<NetworkObject>().Spawn();
+        }
+
+        public void SetInvisibleFloor(GameObject floor)
+        {
+            _invisibleFloor = floor;
         }
 
         public void SetTheDragonController(TheDragonController theDragonController)
         {
             _theDragonController = theDragonController;
+        }
+
+        private void SpawnLifeShieldsForNonHostPlayers()
+        {
+            foreach (ulong playerClientId in Players.Keys)
+            {
+                if (playerClientId == 0) { continue; }
+                
+                var lifeShield = Players[playerClientId].LifeShield;
+                if (lifeShield != null)
+                {
+                    Destroy(lifeShield.gameObject);
+                }
+                SpawnLifeShield(playerClientId);
+            }
+        }
+
+        private IEnumerator StartHuntingFlow()
+        {
+            CurrentPhase = MofaPhase.Countdown;
+            yield return new WaitForSeconds(CountdownTime);
+            CurrentPhase = MofaPhase.Fighting;
         }
     }
 }

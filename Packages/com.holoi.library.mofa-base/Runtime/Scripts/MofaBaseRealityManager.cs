@@ -70,7 +70,16 @@ namespace Holoi.Library.MOFABase
         [Tooltip("The duration of each MOFA round")]
         [SerializeField] private float _roundTime = 80f;
 
-        public MofaPhase CurrentPhase => _currentPhase.Value;
+        public MofaPhase CurrentPhase
+        {
+            get => _currentPhase.Value;
+            set
+            {
+                _currentPhase.Value = value;
+            }
+        }
+
+        public float CountdownTime => _countdownTime;
 
         public float RoundTime => _roundTime;
 

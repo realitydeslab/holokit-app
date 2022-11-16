@@ -55,7 +55,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnCountdown()
+        protected virtual void OnCountdown()
         {
             if (HoloKitApp.HoloKitApp.Instance.IsSpectator) // Spectator
             {
