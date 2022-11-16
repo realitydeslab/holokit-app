@@ -46,6 +46,11 @@ namespace Holoi.Reality.MOFATheHunting
             OnDragonSpawned?.Invoke();
         }
 
+        public void OnDamaged(int damage, ulong attackerClientId)
+        {
+            Debug.Log($"[TheDragonController] OnDamaged with damage: {damage} and attackerClientId: {attackerClientId}");
+        }
+
         #region Network Callbacks
         [ClientRpc]
         public void Movement_UseCameraInputClientRpc(bool value)
