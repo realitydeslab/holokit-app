@@ -27,6 +27,13 @@ namespace Holoi.Reality.MOFATheHunting
         [Header("StateID")]
         [SerializeField] private StateID _fly;
 
+        [SerializeField] private StateID _dealth;
+
+        [Header("Parameters")]
+        [SerializeField] private int _maxHealth = 50;
+
+        private NetworkVariable<int> _currentHealth = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
         public static event Action OnDragonSpawned;
 
         private void Awake()
@@ -44,11 +51,35 @@ namespace Holoi.Reality.MOFATheHunting
             base.OnNetworkSpawn();
             ((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).SetTheDragonController(this);
             OnDragonSpawned?.Invoke();
+            if (IsServer)
+            {
+                _currentHealth.Value = _maxHealth;
+            }
+            _currentHealth.OnValueChanged += OnCurrentHealthValueChanged;
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            _currentHealth.OnValueChanged -= OnCurrentHealthValueChanged;
         }
 
         public void OnDamaged(int damage, ulong attackerClientId)
         {
-            Debug.Log($"[TheDragonController] OnDamaged with damage: {damage} and attackerClientId: {attackerClientId}");
+            _currentHealth.Value -= damage;
+        }
+
+        private void OnCurrentHealthValueChanged(int oldValue, int newValue)
+        {
+            if (oldValue > newValue)
+            {
+                Debug.Log($"[DragonHealth] oldValue: {oldValue}, newValue: {newValue}");
+                if (newValue <= 0)
+                {
+                    // TODO: dragon death animation
+                    _animal.State_Activate(_dealth);
+                }
+            }
         }
 
         #region Network Callbacks
