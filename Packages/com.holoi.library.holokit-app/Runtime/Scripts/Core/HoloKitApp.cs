@@ -114,28 +114,12 @@ namespace Holoi.Library.HoloKitApp
             }
             DontDestroyOnLoad(gameObject);
 
-            // Initialize HoloKit SDK
-            if (HoloKitUtils.IsRuntime)
-            {
-                HoloKitNFCSessionControllerAPI.RegisterNFCSessionControllerDelegates();
-                HoloKitARSessionControllerAPI.RegisterARSessionControllerDelegates();
-                HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
-                HoloKitARSessionControllerAPI.SetSessionShouldAttemptRelocalization(false);
-            }
-
-            // Trigger WirelessData permission
-            if (HoloKitUtils.IsRuntime)
-            {
-                PermissionsAPI.Initialize();
-                StartCoroutine(HoloKitAppPermissionsManager.RequestWirelessDataPermission());
-            }
-            
             // Load Global Settings
             GlobalSettings.Load();
             // Register scene management delegates
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
-
+            // Push the initial UIPanel
             if (!IsRealityScene(SceneManager.GetActiveScene()))
             {
                 // Push initial UI panel
@@ -150,13 +134,24 @@ namespace Holoi.Library.HoloKitApp
                     UIPanelManager.PushUIPanel("LandingPage");
                 }
             }
-
-            // Set a default reality
-            CurrentReality = GlobalSettings.RealityList.List[0];
-
+            // Initialize HoloKit SDK
+            if (HoloKitUtils.IsRuntime)
+            {
+                HoloKitNFCSessionControllerAPI.RegisterNFCSessionControllerDelegates();
+                HoloKitARSessionControllerAPI.RegisterARSessionControllerDelegates();
+                HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
+                HoloKitARSessionControllerAPI.SetSessionShouldAttemptRelocalization(false);
+            }
+            // Trigger WirelessData permission
+            if (HoloKitUtils.IsRuntime)
+            {
+                PermissionsAPI.Initialize();
+                StartCoroutine(HoloKitAppPermissionsManager.RequestWirelessDataPermission());
+            }
             // Activate WCSession
             HoloKitAppWatchConnectivityAPI.ActivateWatchConnectivitySession();
-
+            // Set a default reality
+            CurrentReality = GlobalSettings.RealityList.List[0];
             // Simulate iOS's FPS when testing on Editor
             if (HoloKitUtils.IsEditor)
             {
@@ -339,7 +334,7 @@ namespace Holoi.Library.HoloKitApp
                     Debug.Log($"[HoloKitApp] NetworkPrefab {prefab.name} does not have a NetworkObject component");
                 }
             }
-            Debug.Log("[HoloKitApp] NetworkManager initialized");
+            //Debug.Log("[HoloKitApp] NetworkManager initialized");
         }
 
         private void DeinitializeNetworkManager()
@@ -347,7 +342,7 @@ namespace Holoi.Library.HoloKitApp
             if (NetworkManager.Singleton != null)
             {
                 Destroy(NetworkManager.Singleton.gameObject);
-                Debug.Log("[HoloKitApp] NetworkManager deinitialized");
+                //Debug.Log("[HoloKitApp] NetworkManager deinitialized");
             }
         }
 

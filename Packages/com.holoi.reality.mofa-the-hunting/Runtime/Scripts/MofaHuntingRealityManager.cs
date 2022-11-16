@@ -6,7 +6,6 @@ using Holoi.Library.HoloKitApp;
 using Holoi.Library.HoloKitApp.UI;
 using Holoi.Library.MOFABase;
 using Holoi.Library.ARUX;
-using HoloKit;
 
 namespace Holoi.Reality.MOFATheHunting
 {
@@ -36,13 +35,10 @@ namespace Holoi.Reality.MOFATheHunting
             base.Start();
             HoloKitAppUIEventManager.OnTriggered += OnStarUITriggered;
             UI.MofaHuntingUIPanel.OnSpawnDragonButtonPressed += OnStarUITriggered;
-        }
 
-        public override void OnNetworkSpawn()
-        {
-            base.OnNetworkSpawn();
             if (HoloKitApp.Instance.IsHost)
             {
+                _arPlaneManager.enabled = true;
                 _arRaycastManager.enabled = true;
                 _arPlacementIndicator.IsActive = true;
             }
@@ -79,6 +75,7 @@ namespace Holoi.Reality.MOFATheHunting
             {
                 Vector3 position = _arPlacementIndicator.HitPoint.position;
                 Quaternion rotation = _arPlacementIndicator.HitPoint.rotation;
+                _arPlaneManager.enabled = false;
                 _arRaycastManager.enabled = false;
                 _arPlacementIndicator.OnPlacedFunc();
                 StartRound(position, rotation);

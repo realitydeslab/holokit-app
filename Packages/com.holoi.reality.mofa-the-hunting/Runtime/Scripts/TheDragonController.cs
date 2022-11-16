@@ -27,7 +27,7 @@ namespace Holoi.Reality.MOFATheHunting
         [Header("StateID")]
         [SerializeField] private StateID _fly;
 
-        [SerializeField] private StateID _dealth;
+        [SerializeField] private StateID _death;
 
         [Header("Parameters")]
         [SerializeField] private int _maxHealth = 50;
@@ -77,7 +77,7 @@ namespace Holoi.Reality.MOFATheHunting
                 if (newValue <= 0)
                 {
                     // TODO: dragon death animation
-                    _animal.State_Activate(_dealth);
+                    _animal.State_Activate(_death);
                     if (IsServer)
                     {
                         StartCoroutine(((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).OnDragonDead());

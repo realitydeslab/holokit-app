@@ -200,6 +200,10 @@ namespace Holoi.Library.HoloKitApp
 
             if (enabled)
             {
+                if (!_arOcclusionManager.enabled)
+                {
+                    _arOcclusionManager.enabled = true;
+                }
                 _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Fastest;
                 _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Fastest;
                 _arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.PreferHumanOcclusion;

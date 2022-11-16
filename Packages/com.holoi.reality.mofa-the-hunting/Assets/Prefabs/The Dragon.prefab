@@ -1698,7 +1698,7 @@ MonoBehaviour:
     OnStop:
       m_PersistentCalls:
         m_Calls: []
-  SelectedEffect: -1
+  SelectedEffect: 0
   debug: 0
 --- !u!114 &3772864312837584909
 MonoBehaviour:
@@ -4349,6 +4349,7 @@ GameObject:
   - component: {fileID: 5625317418273118226}
   - component: {fileID: 1681340457345037598}
   - component: {fileID: 7366999127201343351}
+  - component: {fileID: 1041075968703430910}
   m_Layer: 20
   m_Name: The Dragon
   m_TagString: Animal
@@ -11008,7 +11009,7 @@ MonoBehaviour:
   _attack2: {fileID: 11400000, guid: 36ebf5306b7174949934aa62255781b1, type: 2}
   _action: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   _fly: {fileID: 11400000, guid: c44e7e8d6840aa243b6c33ec85052763, type: 2}
-  _dealth: {fileID: 11400000, guid: adfa24f62d6db4d40a1d837f4ec1a6e9, type: 2}
+  _death: {fileID: 11400000, guid: adfa24f62d6db4d40a1d837f4ec1a6e9, type: 2}
   _maxHealth: 50
 --- !u!114 &7366999127201343351
 MonoBehaviour:
@@ -11026,6 +11027,32 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &1041075968703430910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5729086837905743168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 0
+  Interpolate: 1
 --- !u!1 &5729188862182956954
 GameObject:
   m_ObjectHideFlags: 0

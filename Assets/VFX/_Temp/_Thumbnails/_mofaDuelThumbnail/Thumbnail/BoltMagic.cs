@@ -1,25 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BoltMagic : MonoBehaviour
 {
     [SerializeField] float _liftime = 3f; 
-    // Start is called before the first frame update
-    void Start()
+    
+    private void Start()
     {
-        Destroy(this.gameObject, _liftime);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Destroy(gameObject, _liftime);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("trigger enter");
         GetComponent<Animator>().SetTrigger("Hit");
+        Destroy(gameObject, 0.3f);
     }
 }

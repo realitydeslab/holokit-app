@@ -16,10 +16,10 @@ namespace Holoi.Reality.MOFATheHunting
             {
                 Reticle.SetActive(true);
             }
-            else // Not spectator
+            else
             {
-                Scores.SetActive(true);
-                Time.SetActive(true);
+                //Scores.SetActive(true);
+                //Time.SetActive(true);
                 Reticle.SetActive(true);
                 Status.SetActive(true);
                 RedScreen.SetActive(true);
