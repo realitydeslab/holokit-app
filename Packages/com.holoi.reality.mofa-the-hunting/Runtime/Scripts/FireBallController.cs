@@ -5,7 +5,7 @@ namespace Holoi.Reality.MOFATheHunting
 {
     public class FireBallController : MonoBehaviour
     {
-        [SerializeField] private GameObject _fireBall;
+        [SerializeField] private VisualEffect _fireBall;
 
         [SerializeField] private VisualEffect _explosionVfx;
 
@@ -20,10 +20,10 @@ namespace Holoi.Reality.MOFATheHunting
                 var rigidbody = GetComponent<Rigidbody>();
                 rigidbody.useGravity = false;
                 rigidbody.velocity = Vector3.zero;
-                _fireBall.SetActive(false);
+                _fireBall.SetBool("IsFireBallAlive", false);
                 _pointLight.SetActive(false);
                 _explosionVfx.SendEvent("OnExplode");
-                Destroy(gameObject, 1.2f);
+                Destroy(gameObject, 2f);
             }
         }
     }
