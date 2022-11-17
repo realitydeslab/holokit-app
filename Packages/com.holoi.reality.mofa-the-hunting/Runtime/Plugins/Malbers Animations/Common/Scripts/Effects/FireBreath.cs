@@ -15,12 +15,18 @@ namespace MalbersAnimations
             if (value)
             {
                 _vfx.SendEvent("OnStart");
-                _collider.enabled = true;
+                if (_collider != null)
+                {
+                    _collider.enabled = true;
+                }
             }
             else
             {
                 _vfx.SendEvent("OnStop");
-                _collider.enabled = false;
+                if (_collider != null)
+                {
+                    _collider.enabled = false;
+                }
             }
         }
     }
