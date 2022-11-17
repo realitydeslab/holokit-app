@@ -10,6 +10,12 @@ using Holoi.Library.MOFABase;
 
 namespace Holoi.Reality.MOFATheHunting
 {
+    public enum AimMode
+    {
+        Camera = 0,
+        Target = 1
+    }
+
     public class TheDragonController : NetworkBehaviour
     {
         [SerializeField] private MAnimal _animal;
@@ -39,6 +45,29 @@ namespace Holoi.Reality.MOFATheHunting
 
         private NetworkVariable<int> _currentHealth = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+        public AimMode AimMode
+        {
+            get => _aimMode;
+            set
+            {
+                _aimMode = value;
+                if (value == AimMode.Camera)
+                {
+                    _aim.AimTarget = null;
+                    _aim.UseCamera = true;
+                    _aim.MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).Players[0].transform; 
+                }
+                else
+                {
+                    _aim.AimTarget = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).Players[0].transform;
+                    _aim.UseCamera = false;
+                    _aim.MainCamera = null;
+                }
+            }
+        }
+
+        private AimMode _aimMode = AimMode.Camera;
+
         public static event Action OnDragonSpawned;
 
         private void Awake()
@@ -48,7 +77,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void Start()
         {
-            _aim.MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).Players[0].transform;
+            AimMode = AimMode.Camera;
         }
 
         public override void OnNetworkSpawn()
