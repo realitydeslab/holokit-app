@@ -210,6 +210,7 @@ namespace Holoi.Reality.MOFATheHunting
             LeanTween.value(3f, -2f, duration)
                 .setOnUpdate((float height) =>
                 {
+                    if (gameObject == null) { return; }
                     Vector4 clipVector4 = new(0f, 1f, 0f, transform.position.y + height);
                     _bodyMaterial.SetVector("_Clip_Plane", clipVector4);
                     _wingMaterial.SetVector("_Clip_Plane", clipVector4);
@@ -221,7 +222,7 @@ namespace Holoi.Reality.MOFATheHunting
                     if (IsServer)
                     {
                         StartCoroutine(((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).OnDragonDead());
-                        Destroy(gameObject);
+                        Destroy(gameObject, 3f);
                     }
                 });
         }

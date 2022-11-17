@@ -87,7 +87,7 @@ namespace Holoi.Reality.MOFATheHunting
                 Quaternion rotation = _arPlacementIndicator.HitPoint.rotation;
                 _arPlaneManager.enabled = false;
                 _arRaycastManager.enabled = false;
-                _arPlacementIndicator.OnPlacedFunc();
+                _arPlacementIndicator.OnDisabledFunc();
                 StartRound(position, rotation);
             }
             else
