@@ -11,10 +11,10 @@ namespace Holoi.Library.HoloKitApp
 {
     public enum ClientSyncPhase
     {
-        NotStarted = 0,
+        None = 0,
         SyncingTimestamp = 1,
         TimestampSynced = 2,
-        ScanningQRCode = 3,
+        SyncingPose = 3,
         PoseSynced = 4
     }
 
@@ -24,7 +24,7 @@ namespace Holoi.Library.HoloKitApp
         public Matrix4x4 PoseMatrix;
     }
 
-    public struct ImagePositionPair
+    public struct ImagePosePair
     {
         public Vector3 ServerImagePosition; // QRCode image pose in server's coordinate system
         public Quaternion ServerImageRotation;
@@ -41,21 +41,21 @@ namespace Holoi.Library.HoloKitApp
 
     public class HoloKitAppMultiplayerManager : NetworkBehaviour
     {
-        [SerializeField] private NetworkHostCameraPose _networkHostCameraPosePrefab;
+        [SerializeField] private HostCameraPose _hostCameraPosePrefab;
 
-        [SerializeField] private GameObject _phoneAlignmentMarkPrefab;
+        [SerializeField] private GameObject _phoneAlignmentMarkerPrefab;
 
-        private NetworkHostCameraPose _networkHostCameraPose;
+        private HostCameraPose _hostCameraPose;
 
-        private GameObject _phoneAlignmentMark;
+        private GameObject _phoneAlignmentMarker;
 
         private readonly NetworkVariable<Vector3> _hostCameraToDisplayCenterOffset = new(Vector3.zero, NetworkVariableReadPermission.Everyone);
 
-        private readonly Dictionary<ulong, string> _connectedSpectatorDevices = new();
+        private readonly Dictionary<ulong, string> _connectedDevices = new();
 
         public static event Action OnLocalClientConnected;
 
-        public static event Action<List<string>> OnSpectatorDeviceListUpdated;
+        public static event Action<List<string>> OnConnectedDeviceListUpdated;
 
         public static event Action OnFinishedScanningQRCode;
 
@@ -68,15 +68,27 @@ namespace Holoi.Library.HoloKitApp
         {
             HoloKitApp.Instance.SetMultiplayerManager(this);
             OnLocalClientConnected?.Invoke();
+
+            //if (IsServer)
+            //{
+
+            //}
+            //else
+            //{
+            //    if (HoloKitUtils.IsRuntime)
+            //    {
+            //        StartClientCalibration();
+            //    }
+            //}
         }
 
         private void Update()
         {
-            if (_phoneAlignmentMark != null)
+            if (_phoneAlignmentMarker != null)
             {
-                _phoneAlignmentMark.transform.SetPositionAndRotation(
-                    _networkHostCameraPose.transform.position + _networkHostCameraPose.transform.rotation * _hostCameraToDisplayCenterOffset.Value,
-                    _networkHostCameraPose.transform.rotation);
+                _phoneAlignmentMarker.transform.SetPositionAndRotation(
+                    _hostCameraPose.transform.position + _hostCameraPose.transform.rotation * _hostCameraToDisplayCenterOffset.Value,
+                    _hostCameraPose.transform.rotation);
             }
         }
 
@@ -86,7 +98,7 @@ namespace Holoi.Library.HoloKitApp
             {
                 if (!IsSpawned) { return; }
 
-                if (_currentClientSyncPhase == ClientSyncPhase.NotStarted)
+                if (_currentClientSyncPhase == ClientSyncPhase.None)
                 {
                     if (HoloKitUtils.IsRuntime)
                     {
@@ -103,7 +115,7 @@ namespace Holoi.Library.HoloKitApp
                 }
                 else if (_currentClientSyncPhase == ClientSyncPhase.TimestampSynced)
                 {
-                    _currentClientSyncPhase = ClientSyncPhase.ScanningQRCode;
+                    _currentClientSyncPhase = ClientSyncPhase.SyncingPose;
                     StartScanningQRCode();
                 }
             }
@@ -118,7 +130,7 @@ namespace Holoi.Library.HoloKitApp
                 HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnServerARSessionUpdatedFrame;
                 MultipeerConnectivityTransport.StartAdvertising();
             }
-            SpawnNetworkHostCameraPose();
+            SpawnHostCameraPose();
             UpdateCameraToDisplayCenterOffset();
         }
 
@@ -162,7 +174,7 @@ namespace Holoi.Library.HoloKitApp
 
         private const double MaxTimestampDiff = 0.035; // For 30 FPS
 
-        private Queue<ImagePositionPair> _clientImagePositionPairQueue = new();
+        private Queue<ImagePosePair> _clientImagePositionPairQueue = new();
 
         private const int ClientImagePositionPairQueueStablizationCount = 50;
 
@@ -174,8 +186,7 @@ namespace Holoi.Library.HoloKitApp
 
         private const float OptimizationPenaltyConstant = 10; // A constant whose unit from Cos(Angle) to m meter. 
 
-
-        // Step 1: Calculate timestamp offset between two devices
+        // Step 1: Calculate the timestamp offset from the local client to the server
         private void StartClientCalibration()
         {
             _timestampOffsetQueue.Clear();
@@ -319,10 +330,10 @@ namespace Holoi.Library.HoloKitApp
         [ClientRpc]
         private void OnReponseServerImagePositionClientRpc(Vector3 serverImagePosition, Quaternion serverImageRotation, Vector3 clientImagePosition, Quaternion clientImageRotation, ClientRpcParams clientRpcParams = default)
         {
-            if (_currentClientSyncPhase != ClientSyncPhase.ScanningQRCode) { return; }
+            if (_currentClientSyncPhase != ClientSyncPhase.SyncingPose) { return; }
 
             //Debug.Log($"[Reality] Got image position pair server {serverImagePosition} and client {clientImagePosition}");
-            _clientImagePositionPairQueue.Enqueue(new ImagePositionPair()
+            _clientImagePositionPairQueue.Enqueue(new ImagePosePair()
             {
                 ServerImagePosition = serverImagePosition,
                 ServerImageRotation = serverImageRotation,
@@ -410,18 +421,18 @@ namespace Holoi.Library.HoloKitApp
         [ServerRpc(RequireOwnership = false)]
         private void OnSpectatorJoinedServerRpc(string spectatorDeviceName, ServerRpcParams serverRpcParams = default)
         {
-            if (!_connectedSpectatorDevices.ContainsKey(serverRpcParams.Receive.SenderClientId))
+            if (!_connectedDevices.ContainsKey(serverRpcParams.Receive.SenderClientId))
             {
-                _connectedSpectatorDevices.Add(serverRpcParams.Receive.SenderClientId, spectatorDeviceName);
+                _connectedDevices.Add(serverRpcParams.Receive.SenderClientId, spectatorDeviceName);
                 UpdateSpectatorDeviceList();
             }
         }
 
         private void OnSpectatorDisconnected(ulong clientId)
         {
-            if (_connectedSpectatorDevices.ContainsKey(clientId))
+            if (_connectedDevices.ContainsKey(clientId))
             {
-                _connectedSpectatorDevices.Remove(clientId);
+                _connectedDevices.Remove(clientId);
                 UpdateSpectatorDeviceList();
             }
         }
@@ -430,34 +441,34 @@ namespace Holoi.Library.HoloKitApp
         {
             List<string> spectatorDeviceList = new();
             Debug.Log("[RealityManager] OnSpectatorDeviceListUpdated");
-            foreach (var spectatorDevice in _connectedSpectatorDevices.Values)
+            foreach (var spectatorDevice in _connectedDevices.Values)
             {
                 Debug.Log($"[RealityManager] Device name: {spectatorDevice}");
                 spectatorDeviceList.Add(spectatorDevice);
             }
-            OnSpectatorDeviceListUpdated?.Invoke(spectatorDeviceList);
+            OnConnectedDeviceListUpdated?.Invoke(spectatorDeviceList);
         }
 
-        private void SpawnNetworkHostCameraPose()
+        private void SpawnHostCameraPose()
         {
-            if (_networkHostCameraPose == null)
+            if (_hostCameraPose == null)
             {
-                var instance = Instantiate(_networkHostCameraPosePrefab);
+                var instance = Instantiate(_hostCameraPosePrefab);
                 instance.GetComponent<NetworkObject>().Spawn();
             }
         }
 
-        public void SetNetworkHostCameraPose(NetworkHostCameraPose networkHostCameraPose)
+        public void SetNetworkHostCameraPose(HostCameraPose networkHostCameraPose)
         {
-            _networkHostCameraPose = networkHostCameraPose;
-            _networkHostCameraPose.transform.SetParent(transform);
+            _hostCameraPose = networkHostCameraPose;
+            _hostCameraPose.transform.SetParent(transform);
         }
 
         private void DestroyNetworkHostCameraPose()
         {
-            if (_networkHostCameraPose != null)
+            if (_hostCameraPose != null)
             {
-                Destroy(_networkHostCameraPose.gameObject);
+                Destroy(_hostCameraPose.gameObject);
             }
         }
 
@@ -475,17 +486,17 @@ namespace Holoi.Library.HoloKitApp
         // We only need to spawn this on client machine locally
         private void SpawnPhoneAlignmentMark()
         {
-            if (_phoneAlignmentMark == null)
+            if (_phoneAlignmentMarker == null)
             {
-                _phoneAlignmentMark = Instantiate(_phoneAlignmentMarkPrefab);
+                _phoneAlignmentMarker = Instantiate(_phoneAlignmentMarkerPrefab);
             }
         }
 
         private void DestroyPhoneAlignmentMark()
         {
-            if (_phoneAlignmentMark != null)
+            if (_phoneAlignmentMarker != null)
             {
-                Destroy(_phoneAlignmentMark);
+                Destroy(_phoneAlignmentMarker);
             }
         }
 
@@ -499,7 +510,7 @@ namespace Holoi.Library.HoloKitApp
         {
             DestroyPhoneAlignmentMark();
             //StartScanningQRCode();
-            _currentClientSyncPhase = ClientSyncPhase.NotStarted;
+            _currentClientSyncPhase = ClientSyncPhase.None;
         }
     }
 }

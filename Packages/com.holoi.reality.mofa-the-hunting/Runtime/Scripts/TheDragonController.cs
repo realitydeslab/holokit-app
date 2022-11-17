@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Unity.Netcode;
 using MalbersAnimations;
@@ -29,6 +30,10 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private StateID _death;
 
+        [SerializeField] private StateID _idle;
+
+        [SerializeField] private StateID _fall;
+
         [Header("Parameters")]
         [SerializeField] private int _maxHealth = 50;
 
@@ -56,6 +61,8 @@ namespace Holoi.Reality.MOFATheHunting
                 _currentHealth.Value = _maxHealth;
             }
             _currentHealth.OnValueChanged += OnCurrentHealthValueChanged;
+
+            StartCoroutine(EntranceAnimation());
         }
 
         public override void OnNetworkDespawn()
@@ -85,6 +92,29 @@ namespace Holoi.Reality.MOFATheHunting
                     }
                 }
             }
+        }
+
+        private void SwitchToFly()
+        {
+            _animal.State_Activate(_fly);
+        }
+
+        private void SwitchToGround()
+        {
+            _animal.State_AllowExit(_fly);
+            _animal.State_Activate(_fall);
+        }
+
+        private IEnumerator EntranceAnimation()
+        {
+            SwitchToFly();
+            // Fly forward
+            if (IsServer)
+            {
+                LeanTween.move(gameObject, transform.position + transform.forward * 2f, 3f);
+            }
+            yield return new WaitForSeconds(3.5f);
+            SwitchToGround();
         }
 
         #region Network Callbacks
