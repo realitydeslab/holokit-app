@@ -71,7 +71,15 @@ namespace Holoi.Reality.MOFATheHunting
                 }
                 else
                 {
-                    _aim.AimTarget = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).Players[0].transform;
+                    var mofaBaseRealityManager = (MofaBaseRealityManager)HoloKitApp.Instance.RealityManager;
+                    if (mofaBaseRealityManager.Players[1] != null)
+                    {
+                        _aim.AimTarget = mofaBaseRealityManager.Players[1].transform;
+                    }
+                    else
+                    {
+                        _aim.AimTarget = mofaBaseRealityManager.Players[0].transform;
+                    }
                     _aim.UseCamera = false;
                     //_aim.MainCamera = null;
                 }
