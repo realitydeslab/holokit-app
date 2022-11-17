@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.VFX;
 using Unity.Netcode;
 using MalbersAnimations;
 using MalbersAnimations.Controller;
@@ -18,9 +19,18 @@ namespace Holoi.Reality.MOFATheHunting
 
     public class TheDragonController : NetworkBehaviour
     {
+        [Header("Reference")]
         [SerializeField] private MAnimal _animal;
 
         [SerializeField] private Aim _aim;
+
+        [SerializeField] private Material _bodyMaterial;
+
+        [SerializeField] private Material _wingMaterial;
+
+        [SerializeField] private Material _eyeMaterial;
+
+        [SerializeField] private VisualEffect _dragonParticleVfx;
 
         [Header("ModeID")]
         [SerializeField] private ModeID _attack1;
@@ -91,7 +101,7 @@ namespace Holoi.Reality.MOFATheHunting
             }
             _currentHealth.OnValueChanged += OnCurrentHealthValueChanged;
 
-            StartCoroutine(EntranceAnimation());
+            EntranceAnimation();
         }
 
         public override void OnNetworkDespawn()
@@ -134,16 +144,42 @@ namespace Holoi.Reality.MOFATheHunting
             _animal.State_Activate(_fall);
         }
 
-        private IEnumerator EntranceAnimation()
+        private void EntranceAnimation()
         {
+            float flyDistance = 4f;
+            float flyDuration = 5;
             SwitchToFly();
             // Fly forward
             if (IsServer)
             {
-                LeanTween.move(gameObject, transform.position + transform.forward * 2f, 3f);
+                LeanTween.move(gameObject, transform.position + transform.forward * flyDistance, flyDuration);
             }
-            yield return new WaitForSeconds(3.5f);
-            SwitchToGround();
+            _bodyMaterial.SetInt("_IsClip", 1);
+            _wingMaterial.SetInt("_IsClip", 1);
+            _eyeMaterial.SetInt("_IsClip", 1);
+            _dragonParticleVfx.SetBool("IsClip", true);
+            var mofaHuntingRealityManager = (MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager;
+            LeanTween.value(0f, 1f, flyDuration)
+                .setOnUpdate((float _) =>
+                {
+                    if (mofaHuntingRealityManager.PortalController != null)
+                    {
+                        Vector3 portalForward = mofaHuntingRealityManager.PortalController.transform.forward;
+                        //float distance = mofaHuntingRealityManager.PortalController.transform.position.magnitude;
+                        float distance = Vector3.ProjectOnPlane(mofaHuntingRealityManager.PortalController.transform.position, Vector3.up).magnitude;
+                        Vector4 clipVector4 = new Vector4(-portalForward.x, -portalForward.y, -portalForward.z, distance);
+                        _bodyMaterial.SetVector("_Clip_Plane", clipVector4);
+                        _dragonParticleVfx.SetVector4("Clip Plane", clipVector4);
+                    }
+                })
+                .setOnComplete(() =>
+                {
+                    _bodyMaterial.SetInt("_IsClip", 0);
+                    _wingMaterial.SetInt("_IsClip", 0);
+                    _eyeMaterial.SetInt("_IsClip", 0);
+                    _dragonParticleVfx.SetBool("IsClip", false);
+                    SwitchToGround();
+                });
         }
 
         #region Network Callbacks

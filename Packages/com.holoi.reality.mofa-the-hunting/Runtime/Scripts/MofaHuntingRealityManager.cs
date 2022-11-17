@@ -22,11 +22,19 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private GameObject _invisibleFloorPrefab;
 
+        [SerializeField] private GameObject _portalPrefab;
+
         [SerializeField] private GameObject _theDragonPrefab;
+
+        [SerializeField] private float _portalSpawnOffsetY;
 
         [SerializeField] private float _dragonSpawnOffsetY;
 
+        public PortalController PortalController => _portalController;
+
         private GameObject _invisibleFloor;
+
+        private PortalController _portalController;
 
         private TheDragonController _theDragonController;
 
@@ -105,13 +113,22 @@ namespace Holoi.Reality.MOFATheHunting
         private void SpawnTheDragon(Vector3 position, Quaternion rotation)
         {
             if (_theDragonController != null) { return; }
-            var theDragon = Instantiate(_theDragonPrefab, position + new Vector3(0f, _dragonSpawnOffsetY, 0f), rotation);
+            // Spawn portal
+            var portal = Instantiate(_portalPrefab, position + new Vector3(0f, _portalSpawnOffsetY, 0f), rotation);
+            portal.GetComponent<NetworkObject>().Spawn();
+            // Spawn dragon
+            var theDragon = Instantiate(_theDragonPrefab, position + new Vector3(0f, _dragonSpawnOffsetY, 0f) - 2f * (rotation * Vector3.forward), rotation);
             theDragon.GetComponent<NetworkObject>().Spawn();
         }
 
         public void SetInvisibleFloor(GameObject floor)
         {
             _invisibleFloor = floor;
+        }
+
+        public void SetPortalController(PortalController portalController)
+        {
+            _portalController = portalController;
         }
 
         public void SetTheDragonController(TheDragonController theDragonController)
