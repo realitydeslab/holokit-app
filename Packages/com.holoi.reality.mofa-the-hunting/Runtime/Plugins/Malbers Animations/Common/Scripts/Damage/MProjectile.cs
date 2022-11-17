@@ -119,6 +119,7 @@ namespace MalbersAnimations.Weapons
         
         public virtual void Fire(Vector3 ProjectileVelocity)
         {
+            Debug.Log($"Fire: {ProjectileVelocity}");
             this.Velocity = ProjectileVelocity;
             this.Force = Velocity.magnitude;
             Fire();
