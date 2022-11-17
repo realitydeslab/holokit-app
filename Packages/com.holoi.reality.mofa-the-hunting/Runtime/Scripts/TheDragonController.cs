@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
 using Unity.Netcode;
@@ -71,8 +70,9 @@ namespace Holoi.Reality.MOFATheHunting
                 {
                     _aim.AimTarget = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).Players[0].transform;
                     _aim.UseCamera = false;
-                    _aim.MainCamera = null;
+                    //_aim.MainCamera = null;
                 }
+                Debug.Log($"[TheDragonController] AimMode changed to {_aimMode}");
             }
         }
 
@@ -88,6 +88,7 @@ namespace Holoi.Reality.MOFATheHunting
         private void Start()
         {
             AimMode = AimMode.Camera;
+            LockTargetButton.OnLockTargetButtonPressed += OnLockTargetButtonPressedClientRpc;
         }
 
         public override void OnNetworkSpawn()
@@ -108,6 +109,12 @@ namespace Holoi.Reality.MOFATheHunting
         {
             base.OnNetworkDespawn();
             _currentHealth.OnValueChanged -= OnCurrentHealthValueChanged;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            LockTargetButton.OnLockTargetButtonPressed -= OnLockTargetButtonPressedClientRpc;
         }
 
         public void OnDamaged(int damage, ulong attackerClientId)
@@ -165,9 +172,8 @@ namespace Holoi.Reality.MOFATheHunting
                     if (mofaHuntingRealityManager.PortalController != null)
                     {
                         Vector3 portalForward = mofaHuntingRealityManager.PortalController.transform.forward;
-                        //float distance = mofaHuntingRealityManager.PortalController.transform.position.magnitude;
                         float distance = Vector3.ProjectOnPlane(mofaHuntingRealityManager.PortalController.transform.position, Vector3.up).magnitude;
-                        Vector4 clipVector4 = new Vector4(-portalForward.x, -portalForward.y, -portalForward.z, distance);
+                        Vector4 clipVector4 = new(-portalForward.x, -portalForward.y, -portalForward.z, distance);
                         _bodyMaterial.SetVector("_Clip_Plane", clipVector4);
                         _dragonParticleVfx.SetVector4("Clip Plane", clipVector4);
                     }
@@ -180,6 +186,19 @@ namespace Holoi.Reality.MOFATheHunting
                     _dragonParticleVfx.SetBool("IsClip", false);
                     SwitchToGround();
                 });
+        }
+
+        [ClientRpc]
+        private void OnLockTargetButtonPressedClientRpc(bool value)
+        {
+            if (value)
+            {
+                AimMode = AimMode.Target;
+            }
+            else
+            {
+                AimMode = AimMode.Camera;
+            }
         }
 
         #region Network Callbacks
@@ -213,7 +232,6 @@ namespace Holoi.Reality.MOFATheHunting
         [ClientRpc]
         public void Mode_Pin_Attack1ClientRpc()
         {
-            Debug.Log("Mode_Pin_Attack1ClientRpc");
             if (!IsOwner)
             {
                 _animal.Mode_Pin(_attack1);

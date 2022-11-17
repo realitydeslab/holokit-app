@@ -32,6 +32,8 @@ namespace Holoi.Reality.MOFATheHunting
 
         public PortalController PortalController => _portalController;
 
+        public TheDragonController TheDragonController => _theDragonController;
+
         private GameObject _invisibleFloor;
 
         private PortalController _portalController;
