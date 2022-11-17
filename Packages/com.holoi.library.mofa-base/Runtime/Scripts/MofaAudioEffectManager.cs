@@ -9,7 +9,7 @@ namespace Holoi.Library.MOFABase
     {
         [SerializeField] private MofaAudioEffectList _mofaAudioEffectList;
 
-        [SerializeField] private AudioSource _bgmAudioSource;
+        [SerializeField] protected AudioSource _bgmAudioSource;
 
         [SerializeField] private AudioSource _effectAudioSource;
 
@@ -48,7 +48,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void StartPlayingFightingBGM()
+        protected virtual void StartPlayingFightingBGM()
         {
             if (_mofaAudioEffectList.FightingBackgroundMusic != null)
             {
@@ -58,7 +58,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void StopPlayingFightingBGM()
+        protected virtual void StopPlayingFightingBGM()
         {
             if (_bgmAudioSource.isPlaying)
             {
