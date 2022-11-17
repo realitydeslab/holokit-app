@@ -1,53 +1,27 @@
-﻿using MalbersAnimations.Scriptables;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.VFX;
 
 namespace MalbersAnimations
 {
     [AddComponentMenu("Malbers/Utilities/Effects - Audio/FireBreath")]
     public class FireBreath : MonoBehaviour
     {
-        public ParticleSystem[] m_Particles;
-        
-        public float rateOverTime = 500f;
+        [SerializeField] private VisualEffect _vfx;
 
-
-        void Awake()
-        {
-            if (m_Particles == null)
-                m_Particles = GetComponentsInChildren<ParticleSystem>();
-
-            if (m_Particles != null && m_Particles.Length > 0)
-            {
-                foreach (var p in m_Particles)
-                {
-                    var emission = p.emission;
-                    emission.rateOverTime = new ParticleSystem.MinMaxCurve(0);
-                }
-            }
-            else
-            {
-                Destroy(this);
-            }
-        }
+        [SerializeField] private Collider _collider;
 
         public void Activate(bool value)
         {
-            foreach (var p in m_Particles)
+            if (value)
             {
-                var emission = p.emission;
-                emission.rateOverTime = new ParticleSystem.MinMaxCurve(value ? rateOverTime : 0);
+                _vfx.SendEvent("OnStart");
+                _collider.enabled = true;
+            }
+            else
+            {
+                _vfx.SendEvent("OnStop");
+                _collider.enabled = false;
             }
         }
-
-
-        public void FireBreathColor(Color newcolor)
-        {
-            foreach (var p in m_Particles)
-            {
-                var particle = p.main;
-                particle.startColor = new ParticleSystem.MinMaxGradient(newcolor);
-            }
-        }
-        public void FireBreathColor(ColorVar newcolor) => FireBreathColor(newcolor.Value);
     }
 }
