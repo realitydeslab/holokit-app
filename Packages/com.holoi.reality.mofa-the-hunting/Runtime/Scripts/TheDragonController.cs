@@ -52,6 +52,9 @@ namespace Holoi.Reality.MOFATheHunting
         [Header("Parameters")]
         [SerializeField] private int _maxHealth = 50;
 
+        [Header("Debug")]
+        [SerializeField] private bool _isDead;
+
         private NetworkVariable<int> _currentHealth = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         public AimMode AimMode
@@ -89,6 +92,7 @@ namespace Holoi.Reality.MOFATheHunting
         {
             AimMode = AimMode.Camera;
             LockTargetButton.OnLockTargetButtonPressed += OnLockTargetButtonPressedClientRpc;
+            TheDragonColliderController.OnDragonBeingHit += OnDragonBeingHit;
         }
 
         public override void OnNetworkSpawn()
@@ -105,6 +109,15 @@ namespace Holoi.Reality.MOFATheHunting
             EntranceAnimation();
         }
 
+        private void Update()
+        {
+            if (_isDead)
+            {
+                _isDead = false;
+                _currentHealth.Value = 0;
+            }
+        }
+
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
@@ -115,6 +128,7 @@ namespace Holoi.Reality.MOFATheHunting
         {
             base.OnDestroy();
             LockTargetButton.OnLockTargetButtonPressed -= OnLockTargetButtonPressedClientRpc;
+            TheDragonColliderController.OnDragonBeingHit -= OnDragonBeingHit;
         }
 
         public void OnDamaged(int damage, ulong attackerClientId)
@@ -129,13 +143,7 @@ namespace Holoi.Reality.MOFATheHunting
                 Debug.Log($"[DragonHealth] oldValue: {oldValue}, newValue: {newValue}");
                 if (newValue <= 0)
                 {
-                    // TODO: dragon death animation
-                    _animal.State_Activate(_death);
-                    if (IsServer)
-                    {
-                        StartCoroutine(((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).OnDragonDead());
-                        Destroy(gameObject, 5f);
-                    }
+                    DeathAnimation();
                 }
             }
         }
@@ -175,6 +183,8 @@ namespace Holoi.Reality.MOFATheHunting
                         float distance = Vector3.ProjectOnPlane(mofaHuntingRealityManager.PortalController.transform.position, Vector3.up).magnitude;
                         Vector4 clipVector4 = new(-portalForward.x, -portalForward.y, -portalForward.z, distance);
                         _bodyMaterial.SetVector("_Clip_Plane", clipVector4);
+                        _wingMaterial.SetVector("_Clip_Plane", clipVector4);
+                        _eyeMaterial.SetVector("_Clip_Plane", clipVector4);
                         _dragonParticleVfx.SetVector4("Clip Plane", clipVector4);
                     }
                 })
@@ -185,6 +195,34 @@ namespace Holoi.Reality.MOFATheHunting
                     _eyeMaterial.SetInt("_IsClip", 0);
                     _dragonParticleVfx.SetBool("IsClip", false);
                     SwitchToGround();
+                });
+        }
+
+        private void DeathAnimation()
+        {
+            _animal.State_Activate(_death);
+          
+            float duration = 5f;
+            _bodyMaterial.SetInt("_IsClip", 1);
+            _wingMaterial.SetInt("_IsClip", 1);
+            _eyeMaterial.SetInt("_IsClip", 1);
+            _dragonParticleVfx.SetBool("IsClip", true);
+            LeanTween.value(3f, -2f, duration)
+                .setOnUpdate((float height) =>
+                {
+                    Vector4 clipVector4 = new(0f, 1f, 0f, transform.position.y + height);
+                    _bodyMaterial.SetVector("_Clip_Plane", clipVector4);
+                    _wingMaterial.SetVector("_Clip_Plane", clipVector4);
+                    _eyeMaterial.SetVector("_Clip_Plane", clipVector4);
+                    _dragonParticleVfx.SetVector4("Clip Plane", clipVector4);
+                })
+                .setOnComplete(() =>
+                {
+                    if (IsServer)
+                    {
+                        StartCoroutine(((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).OnDragonDead());
+                        Destroy(gameObject);
+                    }
                 });
         }
 
@@ -199,6 +237,11 @@ namespace Holoi.Reality.MOFATheHunting
             {
                 AimMode = AimMode.Camera;
             }
+        }
+
+        private void OnDragonBeingHit(Vector3 hitPosition)
+        {
+            // TODO: Sizheng
         }
 
         #region Network Callbacks

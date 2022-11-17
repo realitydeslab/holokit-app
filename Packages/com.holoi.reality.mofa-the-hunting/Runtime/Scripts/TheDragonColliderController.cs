@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Holoi.Library.MOFABase;
 using Holoi.Library.HoloKitApp;
@@ -10,6 +11,8 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private int _multiplier = 1;
 
+        public static event Action<Vector3> OnDragonBeingHit;
+
         private void Start()
         {
             if (!HoloKitApp.Instance.IsHost)
@@ -20,6 +23,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         public void OnDamaged(ulong attackerClientId)
         {
+            OnDragonBeingHit(transform.position);
             _theDragonController.OnDamaged(_multiplier, attackerClientId);
         }
     }
