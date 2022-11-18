@@ -3,7 +3,7 @@ using UnityEngine.VFX;
 
 namespace Holoi.Library.MOFABase
 {
-    public class AvatarPlacementIndicatorController : MonoBehaviour
+    public class ARPlacementIndicatorVfxController : MonoBehaviour
     {
         [SerializeField] private Transform _hitPoint;
 
