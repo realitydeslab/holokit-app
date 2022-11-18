@@ -102,7 +102,6 @@ namespace Holoi.Reality.MOFATheHunting
         {
             AimMode = AimMode.Camera;
             LockTargetButton.OnLockTargetButtonPressed += OnLockTargetButtonPressedClientRpc;
-            TheDragonColliderController.OnDragonBeingHit += OnDragonBeingHit;
         }
 
         public override void OnNetworkSpawn()
@@ -138,7 +137,6 @@ namespace Holoi.Reality.MOFATheHunting
         {
             base.OnDestroy();
             LockTargetButton.OnLockTargetButtonPressed -= OnLockTargetButtonPressedClientRpc;
-            TheDragonColliderController.OnDragonBeingHit -= OnDragonBeingHit;
         }
 
         public void OnDamaged(int damage, ulong attackerClientId)
@@ -250,7 +248,8 @@ namespace Holoi.Reality.MOFATheHunting
             }
         }
 
-        private void OnDragonBeingHit(Vector3 hitPosition)
+        [ClientRpc]
+        public void OnDragonBeingHitClientRpc(Vector3 hitPosition)
         {
             _dragonExplodeVfx.SetVector3("HitPosition", hitPosition);
             _dragonExplodeVfx.SendEvent("OnHit");

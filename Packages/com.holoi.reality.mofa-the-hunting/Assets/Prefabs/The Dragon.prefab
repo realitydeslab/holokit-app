@@ -650,7 +650,6 @@ Transform:
   - {fileID: 466707414807330514}
   - {fileID: 3473699461664686421}
   - {fileID: 2316143297475027800}
-  - {fileID: 4997397961178709808}
   m_Father: {fileID: 5731245009349679522}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8897,7 +8896,7 @@ MonoBehaviour:
   OnSprintEnabled:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4726529464132650994}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Invoke
         m_Mode: 0
@@ -11366,7 +11365,7 @@ MonoBehaviour:
   _death: {fileID: 11400000, guid: adfa24f62d6db4d40a1d837f4ec1a6e9, type: 2}
   _idle: {fileID: 11400000, guid: 7370df9c769c2764381ad7c76eb3d949, type: 2}
   _fall: {fileID: 11400000, guid: 8078fbdb01991b44b9c1351f444b5efe, type: 2}
-  _maxHealth: 10
+  _maxHealth: 50
   _isDead: 0
 --- !u!114 &7366999127201343351
 MonoBehaviour:
@@ -13510,166 +13509,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _theDragonController: {fileID: 1681340457345037598}
   _multiplier: 1
---- !u!1 &7962531363654135623
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4997397961178709808}
-  - component: {fileID: 8354459939812944236}
-  - component: {fileID: 4726529464132650994}
-  m_Layer: 2
-  m_Name: Stamina Data
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &4997397961178709808
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7962531363654135623}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.019, y: 0.02, z: -0.121}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4114578961842203435}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8354459939812944236
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7962531363654135623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c40057955ac3324f9b900fad19f1651, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Delayed:
-    UseConstant: 1
-    ConstantValue: 0
-    Variable: {fileID: 0}
-  RepeatTime:
-    UseConstant: 1
-    ConstantValue: 0
-    Variable: {fileID: 0}
-  Repeat: 0
-  onEnable:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 7cf722dd04e074d4eb5c291280cdd5aa, type: 2}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Invoke
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 4997397961178709808}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  Description: Notify the UI, that the position of the stamina Icon, is this gameobject
-  ShowDescription: 1
---- !u!114 &4726529464132650994
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7962531363654135623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7878c94402156f54bac49f74151e0507, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowEvents: 1
-  ID:
-    UseConstant: 1
-    ConstantValue: 0
-    Variable: {fileID: 0}
-  Auto: 1
-  InvokeOnEnable: 1
-  Description: 'Stamina Logics (True : Sprint is Enable)
-
-    - Degenerate the Stamina
-    Stat when Sprint is activated
-
-    - Shows the Stamina UI'
-  ShowDescription: 1
-  debug: 0
-  value:
-    UseConstant: 1
-    ConstantValue: 0
-    Variable: {fileID: 0}
-  invert: 0
-  OnValueChanged:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5625655851983592486}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Stat_Pin
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 8f96533110b305a4792c37a844108d26, type: 2}
-          m_ObjectArgumentAssemblyTypeName: MalbersAnimations.StatID, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 5625655851983592486}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Stat_Pin_Degenerate
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 11400000, guid: e5d916c64bda38744b0188f0294c69ae, type: 2}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Invoke
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnTrue:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 7cf722dd04e074d4eb5c291280cdd5aa, type: 2}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Invoke
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  OnFalse:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &8010244384764049169
 GameObject:
   m_ObjectHideFlags: 0
