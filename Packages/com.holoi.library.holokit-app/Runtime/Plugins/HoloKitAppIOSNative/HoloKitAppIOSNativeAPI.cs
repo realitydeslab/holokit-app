@@ -18,7 +18,7 @@ namespace Holoi.Library.HoloKitApp.IOSNative
         public static void ShowFeedbackAlert()
         {
             HoloKitAppIOSNative_ShowFeedbackAlert("Feedback",
-                "We are currently under Beta testing, please go to our discord to give your feedback.",
+                "We are currently under Beta testing.\nPlease go to our discord to give your feedback.",
                 "Go to Discord",
                 "https://discord.gg/nsPPBfAJ2f");
         }
