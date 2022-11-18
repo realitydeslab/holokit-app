@@ -202,6 +202,7 @@ namespace Holoi.Reality.MOFATheHunting
                     _wingMaterial.SetInt("_IsClip", 0);
                     _eyeMaterial.SetInt("_IsClip", 0);
                     _dragonParticleVfx.SetBool("IsClip", false);
+                    _dragonParticleVfx.Reinit();
                     SwitchToGround();
                 });
         }
