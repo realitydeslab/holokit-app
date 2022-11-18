@@ -31,6 +31,8 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private VisualEffect _dragonParticleVfx;
 
+        [SerializeField] private VisualEffect _dragonExplodeVfx;
+
         [Header("ModeID")]
         [SerializeField] private ModeID _attack1;
 
@@ -250,7 +252,8 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void OnDragonBeingHit(Vector3 hitPosition)
         {
-            // TODO: Sizheng
+            _dragonExplodeVfx.SetVector3("HitPosition", hitPosition);
+            _dragonExplodeVfx.SendEvent("OnHit");
         }
 
         #region Network Callbacks
