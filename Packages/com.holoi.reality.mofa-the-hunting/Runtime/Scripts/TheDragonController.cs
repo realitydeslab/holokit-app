@@ -254,6 +254,7 @@ namespace Holoi.Reality.MOFATheHunting
         {
             _dragonExplodeVfx.SetVector3("HitPosition", hitPosition);
             _dragonExplodeVfx.SendEvent("OnHit");
+            Debug.Log("hit: " + hitPosition);
         }
 
         #region Network Callbacks
