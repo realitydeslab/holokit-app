@@ -7,9 +7,11 @@ namespace Holoi.Reality.MOFATheHunting
     {
         [SerializeField] private AudioClip _huntingBGM;
 
+        [SerializeField] private bool _playBGM = true;
+
         protected override void StartPlayingFightingBGM()
         {
-            if (_huntingBGM != null)
+            if (_huntingBGM != null && _playBGM)
             {
                 _bgmAudioSource.clip = _huntingBGM;
                 _bgmAudioSource.loop = true;
