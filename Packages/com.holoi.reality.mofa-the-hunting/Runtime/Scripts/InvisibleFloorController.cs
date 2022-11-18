@@ -1,7 +1,5 @@
-using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
-using HoloKit;
 
 namespace Holoi.Reality.MOFATheHunting
 {
@@ -11,10 +9,10 @@ namespace Holoi.Reality.MOFATheHunting
         {
             base.OnNetworkSpawn();
             ((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).SetInvisibleFloor(gameObject);
-            if (HoloKitUtils.IsRuntime)
-            {
-                GetComponentInChildren<MeshRenderer>().enabled = false;
-            }
+            //if (HoloKitUtils.IsRuntime)
+            //{
+            //    GetComponentInChildren<MeshRenderer>().enabled = false;
+            //}
         }
     }
 }
