@@ -72,7 +72,7 @@ namespace Holoi.Reality.MOFATheHunting
                 else
                 {
                     var mofaBaseRealityManager = (MofaBaseRealityManager)HoloKitApp.Instance.RealityManager;
-                    if (mofaBaseRealityManager.Players[1] != null)
+                    if (mofaBaseRealityManager.Players.ContainsKey(1))
                     {
                         _aim.AimTarget = mofaBaseRealityManager.Players[1].transform;
                     }
