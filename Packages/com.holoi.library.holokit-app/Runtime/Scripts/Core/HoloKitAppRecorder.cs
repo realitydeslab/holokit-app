@@ -135,14 +135,14 @@ namespace Holoi.Library.HoloKitApp
             {
                 _watermarkInput = new WatermarkTextureInput(_recorder);
                 _watermarkInput.watermark = _watermarkImage;
-                if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono)
+                if (Screen.orientation == ScreenOrientation.Portrait)
                 {
                     _watermarkInput.rect = new(Mathf.RoundToInt(_videoWidth * WatermarkPortraitPosXRatio),
                                                Mathf.RoundToInt(_videoHeight * WatermarkPortraitPosYRatio),
                                                Mathf.RoundToInt(_videoWidth * WatermarkPortraitWidthRatio),
                                                Mathf.RoundToInt(_videoHeight * WatermarkPortraitHeightRatio));
                 }
-                else
+                else if (Screen.orientation == ScreenOrientation.LandscapeLeft)
                 {
                     _watermarkInput.rect = new(Mathf.RoundToInt(_videoWidth * WatermarkLandscapePosXRatio),
                                                Mathf.RoundToInt(_videoHeight * WatermarkLandscapePosYRatio),
