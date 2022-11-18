@@ -1,12 +1,17 @@
 using System.Collections;
 using UnityEngine;
-using MalbersAnimations;
 
 namespace Holoi.Reality.MOFATheHunting
 {
     public class PolyDragonController : MonoBehaviour
     {
-        [SerializeField] private FireBreath _fireBreath;
+        [SerializeField] private GameObject _fireBallPrefab;
+
+        [SerializeField] private Transform _dragonMouse;
+
+        private const float SpawnFireBallInterval = 3f;
+
+        private const float FireBallSpeed = 100f;
 
         private void Start()
         {
@@ -17,11 +22,16 @@ namespace Holoi.Reality.MOFATheHunting
         {
             while(true)
             {
-                yield return new WaitForSeconds(2f);
-                _fireBreath.Activate(true);
-                yield return new WaitForSeconds(2f);
-                _fireBreath.Activate(false);
+                yield return new WaitForSeconds(SpawnFireBallInterval);
+                SpawnFireBall();
             }
+        }
+
+        private void SpawnFireBall()
+        {
+            var fireBall = Instantiate(_fireBallPrefab, _dragonMouse);
+            fireBall.GetComponent<Rigidbody>().AddForce(FireBallSpeed * _dragonMouse.forward);
+            Destroy(fireBall, 3f);
         }
 
         public void PlaySound()

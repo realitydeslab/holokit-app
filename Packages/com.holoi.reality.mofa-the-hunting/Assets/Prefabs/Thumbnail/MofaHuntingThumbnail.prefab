@@ -5197,7 +5197,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57337f97e12114b71a07508ca43663a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fireBreath: {fileID: 1651771094336628708}
+  _fireBallPrefab: {fileID: 1757608949838354, guid: a5b4058a59e0747a9a3c9f863bd00432, type: 3}
+  _spawnFireBallInterval: 3
+  _dragonMouse: {fileID: 7820097586997564177}
 --- !u!1 &5776330058126186888
 GameObject:
   m_ObjectHideFlags: 0
@@ -6450,6 +6452,7 @@ Transform:
   - {fileID: 5694612024640066166}
   - {fileID: 505804370968300140}
   - {fileID: 3927187296995432941}
+  - {fileID: 365863596916850067}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8462,6 +8465,51 @@ Transform:
   m_Father: {fileID: 897940142788744153}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9168749507465364121
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 365863596916850067}
+  - component: {fileID: 7892955877869394707}
+  m_Layer: 0
+  m_Name: Plane Collider
+  m_TagString: Plane
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &365863596916850067
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168749507465364121}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 10, y: 0.1, z: 10}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6991864379998363290}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7892955877869394707
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168749507465364121}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9178513787570645581
 GameObject:
   m_ObjectHideFlags: 0
