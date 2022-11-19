@@ -174,6 +174,8 @@ namespace Holoi.Reality.MOFATheHunting
             yield return new WaitForSeconds(3f);
             CurrentPhase = MofaPhase.RoundData;
             // Let the host to spawn a new dragon
+            _arPlaneManager.enabled = true;
+            _arRaycastManager.enabled = true;
             _arPlacementIndicator.OnRestartFunc();
         }
     }

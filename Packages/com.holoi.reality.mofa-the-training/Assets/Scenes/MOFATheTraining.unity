@@ -175,7 +175,7 @@ MonoBehaviour:
   _horizontalPlacementOffset: 6
   _hitPositionDefaultOffset: {x: 0, y: -0.6, z: 6}
   _hitPointGroundOffset: 0.01
-  _destroyDelay: 0.3
+  _destroyAfterPlaced: 1
   OnFoundPlane:
     m_PersistentCalls:
       m_Calls: []
@@ -186,10 +186,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1069267984}
-        m_TargetAssemblyTypeName: Holoi.Library.MOFABase.AvatarPlacementIndicatorController,
+        m_TargetAssemblyTypeName: Holoi.Library.MOFABase.MofaARPlacementIndicatorVfxController,
           Holoi.Library.MOFABase
         m_MethodName: OnPlaced
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -202,9 +202,25 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1069267984}
-        m_TargetAssemblyTypeName: Holoi.Library.MOFABase.AvatarPlacementIndicatorController,
+        m_TargetAssemblyTypeName: Holoi.Library.MOFABase.MofaARPlacementIndicatorVfxController,
           Holoi.Library.MOFABase
         m_MethodName: OnDisabled
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnRestart:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1069267984}
+        m_TargetAssemblyTypeName: Holoi.Library.MOFABase.MofaARPlacementIndicatorVfxController,
+          Holoi.Library.MOFABase
+        m_MethodName: OnRestart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -699,6 +715,7 @@ MonoBehaviour:
   _hookVFX: {fileID: 1609149533}
   _placementVFX: {fileID: 1928511456}
   _birthVFX: {fileID: 396681494}
+  _destroyDelay: 2
 --- !u!95 &1069267985
 Animator:
   serializedVersion: 4

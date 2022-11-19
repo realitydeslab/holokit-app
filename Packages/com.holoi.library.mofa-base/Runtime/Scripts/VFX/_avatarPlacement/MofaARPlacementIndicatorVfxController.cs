@@ -18,8 +18,11 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] private float _destroyDelay = 2f;
 
+        private bool _isActive;
+
         private void Start()
         {
+            _isActive = true;
             _hookVFX.enabled = true;
             _placementVFX.enabled = true;
             _birthVFX.enabled = false;
@@ -27,7 +30,7 @@ namespace Holoi.Library.MOFABase
 
         private void Update()
         {
-            if (_hitPoint == null) { return; }
+            if (_hitPoint == null || !_isActive) { return; }
 
             if (_hitPoint.gameObject.activeSelf)
             {
@@ -53,6 +56,7 @@ namespace Holoi.Library.MOFABase
 
         public void OnPlaced(bool destroy)
         {
+            _isActive = false;
             _hookVFX.gameObject.SetActive(false);
             _placementVFX.gameObject.SetActive(false);
             _birthVFX.enabled = true;
@@ -72,7 +76,9 @@ namespace Holoi.Library.MOFABase
 
         public void OnDisabled(bool destroy)
         {
+            _isActive = false;
             _hookVFX.gameObject.SetActive(false);
+            _placementVFX.gameObject.SetActive(false);
             if (destroy)
             {
                 Destroy(gameObject);
@@ -85,6 +91,7 @@ namespace Holoi.Library.MOFABase
 
         public void OnRestart()
         {
+            _isActive = true;
             gameObject.SetActive(true);
             _hookVFX.gameObject.SetActive(true);
             _placementVFX.gameObject.SetActive(true);

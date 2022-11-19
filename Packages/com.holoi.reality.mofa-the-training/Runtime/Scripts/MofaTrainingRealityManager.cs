@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.HoloKitApp.UI;
 using Holoi.Library.MOFABase;
 using Holoi.Library.MOFABase.WatchConnectivity;
 using Holoi.Library.ARUX;
-using HoloKit;
 
 namespace Holoi.Reality.MOFATheTraining
 {
