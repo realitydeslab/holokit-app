@@ -93,7 +93,7 @@ namespace Holoi.Library.HoloKitApp
             PhaseEnabled = true;
             HighResHDREnabled = true;
             RecordMicrophone = true;
-            WatermarkEnabled = true;
+            WatermarkEnabled = false;
             UseWifiForMultiplayerEnabled = false;
             ShowTechInfoEnabled = true;
 

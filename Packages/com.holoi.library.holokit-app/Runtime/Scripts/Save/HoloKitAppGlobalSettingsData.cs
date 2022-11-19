@@ -16,7 +16,7 @@ namespace Holoi.Library.HoloKitApp
 
         public bool RecordMicrophone = true;
 
-        public bool WatermarkEnabled = true;
+        public bool WatermarkEnabled = false;
 
         public bool UseWifiForMultiplayerEnabled = false;
 
