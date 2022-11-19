@@ -59,6 +59,7 @@ namespace Holoi.Library.MOFABase
             _isActive = false;
             _hookVFX.gameObject.SetActive(false);
             _placementVFX.gameObject.SetActive(false);
+            _birthVFX.gameObject.SetActive(true);
             _birthVFX.enabled = true;
             _animator.SetTrigger("Birth");
             if (destroy)
