@@ -119,6 +119,7 @@ namespace Holoi.Library.ARUX
         public void OnPlacedFunc()
         {
             _isActive = false;
+            _hitPoint.gameObject.SetActive(false);
             OnPlaced?.Invoke();
             Destroy(gameObject, _destroyDelay);
         }
@@ -126,6 +127,7 @@ namespace Holoi.Library.ARUX
         public void OnDisabledFunc()
         {
             _isActive = false;
+            _hitPoint.gameObject.SetActive(false);
             OnDisabled?.Invoke();
             Destroy(gameObject);
         }

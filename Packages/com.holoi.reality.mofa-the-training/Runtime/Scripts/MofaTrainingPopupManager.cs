@@ -17,27 +17,15 @@ namespace Holoi.Reality.MOFATheTraining
             if (HoloKitApp.Instance.IsHost)
             {
                 SpawnPopup(_findPlanePrefab);
-                MofaTrainingRealityManager.OnFoundPlane += OnFoundPlane;
-                MofaTrainingRealityManager.OnLostPlane += OnLostPlane;
             }
         }
 
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-            if (HoloKitApp.Instance.IsHost)
-            {
-                MofaTrainingRealityManager.OnFoundPlane -= OnFoundPlane;
-                MofaTrainingRealityManager.OnLostPlane -= OnLostPlane;
-            }
-        }
-
-        private void OnFoundPlane()
+        public void OnFoundPlane()
         {
             SpawnPopup(_placeAvatarPrefab);
         }
 
-        private void OnLostPlane()
+        public void OnLostPlane()
         {
             SpawnPopup(_findPlanePrefab);
         }

@@ -30,6 +30,7 @@ namespace Holoi.Reality.MOFATheHunting
         private void SpawnFireBall()
         {
             var fireBall = Instantiate(_fireBallPrefab, _dragonMouse);
+            fireBall.GetComponent<AudioSource>().enabled = false;
             fireBall.GetComponent<Rigidbody>().AddForce(FireBallSpeed * _dragonMouse.forward);
             Destroy(fireBall, 3f);
         }
