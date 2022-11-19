@@ -48,6 +48,12 @@ namespace Holoi.Library.HoloKitApp
         // Set this to true to load TestRealityList at the beginning
         [SerializeField] private bool _test;
 
+        [Tooltip("Uncheck this when deploying the app to App Store")]
+        [SerializeField] private bool _logEnabled = true;
+
+        [Tooltip("Set this value to true to restrict the fps to 60 in editor mode")]
+        [SerializeField] private bool _lockFps;
+
         public Reality CurrentReality
         {
             get => _currentReality;
@@ -114,6 +120,7 @@ namespace Holoi.Library.HoloKitApp
             }
             DontDestroyOnLoad(gameObject);
 
+            Debug.unityLogger.logEnabled = _logEnabled;
             // Load Global Settings
             GlobalSettings.Load();
             // Register scene management delegates
@@ -153,7 +160,7 @@ namespace Holoi.Library.HoloKitApp
             // Set a default reality
             CurrentReality = GlobalSettings.RealityList.List[0];
             // Simulate iOS's FPS when testing on Editor
-            if (HoloKitUtils.IsEditor)
+            if (HoloKitUtils.IsEditor && _lockFps)
             {
                 Application.targetFrameRate = 60;
             }
