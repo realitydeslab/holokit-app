@@ -160,7 +160,12 @@ namespace Holoi.Reality.MOFATheHunting
             CurrentPhase = MofaPhase.Fighting;
         }
 
-        public IEnumerator OnDragonDead()
+        public void OnDragonDead()
+        {
+            StartCoroutine(OnDragonDeadCoroutine());
+        }
+
+        private IEnumerator OnDragonDeadCoroutine()
         {
             CurrentPhase = MofaPhase.RoundOver;
             yield return new WaitForSeconds(3f);
@@ -168,6 +173,8 @@ namespace Holoi.Reality.MOFATheHunting
             CurrentPhase = MofaPhase.RoundResult;
             yield return new WaitForSeconds(3f);
             CurrentPhase = MofaPhase.RoundData;
+            // Let the host to spawn a new dragon
+            _arPlacementIndicator.OnRestartFunc();
         }
     }
 }

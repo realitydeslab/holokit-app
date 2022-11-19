@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.HoloKitApp.UI;
+using Holoi.Library.MOFABase;
 
 namespace Holoi.Reality.MOFATheHunting.UI
 {
@@ -30,11 +31,13 @@ namespace Holoi.Reality.MOFATheHunting.UI
             }
 
             TheDragonController.OnDragonSpawned += OnDragonSpawned;
+            MofaBaseRealityManager.OnPhaseChanged += OnMofaPhaseChanged;
         }
 
         private void OnDestroy()
         {
             TheDragonController.OnDragonSpawned -= OnDragonSpawned;
+            MofaBaseRealityManager.OnPhaseChanged -= OnMofaPhaseChanged;
         }
 
         public void OnSpawnDragonButtonPressedFunc()
@@ -55,6 +58,15 @@ namespace Holoi.Reality.MOFATheHunting.UI
         {
             HoloKitApp.Instance.UIPanelManager.PushUIPanel(_dragonControllerUIPanel, HoloKitAppUICanvasType.Landscape);
             Screen.orientation = ScreenOrientation.LandscapeLeft;
+        }
+
+        private void OnMofaPhaseChanged(MofaPhase mofaPhase)
+        {
+            if (mofaPhase == MofaPhase.RoundData)
+            {
+                _dragonControllerButton.SetActive(false);
+                _spawnDragonButton.SetActive(true);
+            }
         }
     }
 }

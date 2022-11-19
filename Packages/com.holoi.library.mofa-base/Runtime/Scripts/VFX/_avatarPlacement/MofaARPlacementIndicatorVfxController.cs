@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.VFX;
+using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Library.MOFABase
 {
@@ -14,6 +15,8 @@ namespace Holoi.Library.MOFABase
         [SerializeField] private VisualEffect _placementVFX;
 
         [SerializeField] private VisualEffect _birthVFX;
+
+        [SerializeField] private float _destroyDelay = 2f;
 
         private void Start()
         {
@@ -48,20 +51,43 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        public void OnPlaced()
+        public void OnPlaced(bool destroy)
         {
-            _hitPoint = null;
             _hookVFX.gameObject.SetActive(false);
+            _placementVFX.gameObject.SetActive(false);
             _birthVFX.enabled = true;
             _animator.SetTrigger("Birth");
-            Destroy(gameObject, 2f);
+            if (destroy)
+            {
+                Destroy(gameObject, _destroyDelay);
+            }
+            else
+            {
+                StartCoroutine(HoloKitAppUtils.WaitAndDo(_destroyDelay, () =>
+                {
+                    gameObject.SetActive(false);
+                }));
+            }
         }
 
-        public void OnDisabled()
+        public void OnDisabled(bool destroy)
         {
-            _hitPoint = null;
             _hookVFX.gameObject.SetActive(false);
-            Destroy(gameObject);
+            if (destroy)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
+        public void OnRestart()
+        {
+            gameObject.SetActive(true);
+            _hookVFX.gameObject.SetActive(true);
+            _placementVFX.gameObject.SetActive(true);
         }
     }
 }

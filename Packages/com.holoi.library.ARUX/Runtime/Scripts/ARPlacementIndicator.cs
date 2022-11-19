@@ -10,6 +10,7 @@ namespace Holoi.Library.ARUX
 {
     public class ARPlacementIndicator : MonoBehaviour
     {
+        [Header("References")]
         [SerializeField] private ARRaycastManager _arRaycastManager;
 
         [SerializeField] private Transform _hitPoint;
@@ -32,7 +33,7 @@ namespace Holoi.Library.ARUX
         /// </summary>
         [SerializeField] private float _hitPointGroundOffset;
 
-        [SerializeField] private float _destroyDelay = 0.3f;
+        [SerializeField] private bool _destroyAfterPlaced = true;
 
         public bool IsActive
         {
@@ -47,13 +48,16 @@ namespace Holoi.Library.ARUX
 
         public Transform HitPoint => _hitPoint;
 
+        [Header("Events")]
         public UnityEvent OnFoundPlane;
 
         public UnityEvent OnLostPlane;
 
-        public UnityEvent OnPlaced;
+        public UnityEvent<bool> OnPlaced;
 
-        public UnityEvent OnDisabled;
+        public UnityEvent<bool> OnDisabled;
+
+        public UnityEvent OnRestart;
 
         private void Start()
         {
@@ -119,17 +123,36 @@ namespace Holoi.Library.ARUX
         public void OnPlacedFunc()
         {
             _isActive = false;
-            _hitPoint.gameObject.SetActive(false);
-            OnPlaced?.Invoke();
-            Destroy(gameObject, _destroyDelay);
+            OnPlaced?.Invoke(_destroyAfterPlaced);
+            if (_destroyAfterPlaced)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
         }
 
         public void OnDisabledFunc()
         {
             _isActive = false;
-            _hitPoint.gameObject.SetActive(false);
-            OnDisabled?.Invoke();
-            Destroy(gameObject);
+            OnDisabled?.Invoke(_destroyAfterPlaced);
+            if (_destroyAfterPlaced)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
+        public void OnRestartFunc()
+        {
+            _isActive = true;
+            OnRestart?.Invoke();
+            gameObject.SetActive(true);
         }
     }
 }

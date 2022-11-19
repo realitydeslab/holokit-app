@@ -190,7 +190,7 @@ MonoBehaviour:
   _horizontalPlacementOffset: 6
   _hitPositionDefaultOffset: {x: 0, y: -0.6, z: 6}
   _hitPointGroundOffset: 0.01
-  _destroyDelay: 0.3
+  _destroyAfterPlaced: 0
   OnFoundPlane:
     m_PersistentCalls:
       m_Calls: []
@@ -201,10 +201,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6059966207339402325}
-        m_TargetAssemblyTypeName: Holoi.Library.MOFABase.AvatarPlacementIndicatorController,
+        m_TargetAssemblyTypeName: Holoi.Library.MOFABase.MofaARPlacementIndicatorVfxController,
           Holoi.Library.MOFABase
         m_MethodName: OnPlaced
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -217,9 +217,25 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6059966207339402325}
-        m_TargetAssemblyTypeName: Holoi.Library.MOFABase.AvatarPlacementIndicatorController,
+        m_TargetAssemblyTypeName: Holoi.Library.MOFABase.MofaARPlacementIndicatorVfxController,
           Holoi.Library.MOFABase
         m_MethodName: OnDisabled
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnRestart:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6059966207339402325}
+        m_TargetAssemblyTypeName: Holoi.Library.MOFABase.MofaARPlacementIndicatorVfxController,
+          Holoi.Library.MOFABase
+        m_MethodName: OnRestart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2049,6 +2065,7 @@ MonoBehaviour:
   _hookVFX: {fileID: 8558839063803589547}
   _placementVFX: {fileID: 6856670901981851243}
   _birthVFX: {fileID: 3346739902614695552}
+  _destroyDelay: 2
 --- !u!222 &6233064526044627340
 CanvasRenderer:
   m_ObjectHideFlags: 0

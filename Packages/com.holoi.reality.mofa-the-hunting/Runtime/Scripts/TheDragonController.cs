@@ -148,7 +148,7 @@ namespace Holoi.Reality.MOFATheHunting
         {
             if (oldValue > newValue)
             {
-                Debug.Log($"[DragonHealth] oldValue: {oldValue}, newValue: {newValue}");
+                //Debug.Log($"[DragonHealth] oldValue: {oldValue}, newValue: {newValue}");
                 if (newValue <= 0)
                 {
                     DeathAnimation();
@@ -230,7 +230,7 @@ namespace Holoi.Reality.MOFATheHunting
                 {
                     if (IsServer)
                     {
-                        StartCoroutine(((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).OnDragonDead());
+                        ((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).OnDragonDead();
                         Destroy(gameObject, 3f);
                     }
                 });
