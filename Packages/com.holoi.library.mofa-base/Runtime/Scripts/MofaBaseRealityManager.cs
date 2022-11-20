@@ -50,9 +50,13 @@ namespace Holoi.Library.MOFABase
 
         public int Kill;
 
+        public int Death;
+
         public float HitRate;
 
         public float Distance;
+
+        public float Calorie;
     }
 
     public abstract class MofaBaseRealityManager : RealityManager
@@ -67,7 +71,7 @@ namespace Holoi.Library.MOFABase
         [Header("MOFA Settings")]
         [SerializeField] private float _countdownTime = 3f;
 
-        [Tooltip("The duration of each MOFA round")]
+        [Tooltip("The duration of each round")]
         [SerializeField] private float _roundTime = 80f;
 
         public MofaPhase CurrentPhase
@@ -96,11 +100,11 @@ namespace Holoi.Library.MOFABase
 
         public Dictionary<ulong, MofaPlayer> Players => _players;
 
-        private NetworkVariable<MofaPhase> _currentPhase = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        private readonly NetworkVariable<MofaPhase> _currentPhase = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        private NetworkVariable<int> _roundCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        private readonly NetworkVariable<int> _roundCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        private NetworkVariable<MofaRoundResult> _roundResult = new(MofaRoundResult.NotDetermined, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        private readonly NetworkVariable<MofaRoundResult> _roundResult = new(MofaRoundResult.NotDetermined, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         private readonly Dictionary<ulong, MofaPlayer> _players = new();
 
@@ -141,12 +145,13 @@ namespace Holoi.Library.MOFABase
             LifeShield.OnDead -= OnLifeShieldDead;
         }
 
-        // This delegate method will be called on every client.
+        // This delegate method is called on every client.
         private void OnPhaseChangedFunc(MofaPhase oldValue, MofaPhase newValue)
         {
+            if (oldValue == newValue) { return; }
+
             Debug.Log($"Mofa phase changed to: {newValue}");
             OnPhaseChanged?.Invoke(newValue);
-
             if (newValue == MofaPhase.RoundData)
             {
                 if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
@@ -158,10 +163,7 @@ namespace Holoi.Library.MOFABase
 
         private void OnRoundResultChangedFunc(MofaRoundResult oldValue, MofaRoundResult newValue)
         {
-            if (newValue == MofaRoundResult.NotDetermined)
-            {
-                return;
-            }
+            if (newValue == MofaRoundResult.NotDetermined) { return; }
             Debug.Log($"Round result: {newValue}");
             OnReceivedRoundResult?.Invoke(newValue);
         }
