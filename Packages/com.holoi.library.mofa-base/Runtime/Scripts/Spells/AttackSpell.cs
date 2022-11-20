@@ -9,7 +9,8 @@ namespace Holoi.Library.MOFABase
     [RequireComponent(typeof(Collider))]
     public class AttackSpell : NetworkBehaviour
     {
-        public bool HitOnce = true;
+        [Tooltip("Will the spell explode after its first hit?")]
+        [SerializeField] private bool _hitOnce = true;
 
         [SerializeField] private AudioClip _hitSound;
 
@@ -53,7 +54,7 @@ namespace Holoi.Library.MOFABase
         private void OnHitFunc()
         {
             OnHitClientRpc();
-            if (HitOnce)
+            if (_hitOnce)
             {
                 GetComponent<Collider>().enabled = false;
                 Destroy(gameObject, _destroyDelay);
@@ -63,7 +64,7 @@ namespace Holoi.Library.MOFABase
         [ClientRpc]
         private void OnHitClientRpc()
         {
-            if (HitOnce)
+            if (_hitOnce)
             {
                 GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
             }

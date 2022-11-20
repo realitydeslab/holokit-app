@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Unity.Netcode;
-using System;
 
 namespace Holoi.Library.MOFABase
 {
@@ -10,23 +8,32 @@ namespace Holoi.Library.MOFABase
     [RequireComponent(typeof(AudioSource))]
     public class SpellLifetimeController : NetworkBehaviour
     {
-        public float Lifetime;
+        [SerializeField] private float _lifetime;
 
         [SerializeField] private AudioClip _spawnSound;
 
         [SerializeField] private float _destroyDelay;
 
-        private float _spawnTime;
+        private float _duration;
 
-        public event Action OnSpawned;
+        public event Action OnLifetimeEnded;
 
-        public event Action OnDead;
-
-        public override void OnNetworkSpawn()
+        private void Start()
         {
-            _spawnTime = NetworkManager.ServerTime.TimeAsFloat;
-            OnSpawned?.Invoke();
             PlaySpawnSound();
+        }
+
+        private void FixedUpdate()
+        {
+            if (IsServer)
+            {
+                _duration += Time.fixedDeltaTime;
+                if (_duration > _lifetime)
+                {
+                    OnLifetimeEndedClientRpc();
+                    GetComponent<NetworkObject>().Despawn();
+                }
+            }
         }
 
         private void PlaySpawnSound()
@@ -39,22 +46,10 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void FixedUpdate()
-        {
-            if (IsServer)
-            {
-                if (NetworkManager.ServerTime.TimeAsFloat - _spawnTime > Lifetime)
-                {
-                    OnDeadClientRpc();
-                    Destroy(gameObject, _destroyDelay);
-                }
-            }
-        }
-
         [ClientRpc]
-        private void OnDeadClientRpc()
+        private void OnLifetimeEndedClientRpc()
         {
-            OnDead?.Invoke();
+            OnLifetimeEnded?.Invoke();
         }
     }
 }

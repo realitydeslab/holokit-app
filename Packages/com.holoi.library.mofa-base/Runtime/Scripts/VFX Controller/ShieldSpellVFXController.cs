@@ -16,8 +16,7 @@ namespace Holoi.Library.MOFABase
             _shieldController.OnBeingHit += OnBeingHit;
             _shieldController.OnBeingDestroyed += OnBeingDestoryed;
 
-            _lifeTimeController.OnSpawned += OnSpawn;
-            _lifeTimeController.OnDead += OnDie;
+            _lifeTimeController.OnLifetimeEnded += OnDie;
         }
 
         private void OnDisable()
@@ -25,15 +24,10 @@ namespace Holoi.Library.MOFABase
             _shieldController.OnBeingHit -= OnBeingHit;
             _shieldController.OnBeingDestroyed -= OnBeingDestoryed;
 
-            _lifeTimeController.OnSpawned -= OnSpawn;
-            _lifeTimeController.OnDead -= OnDie;
+            _lifeTimeController.OnLifetimeEnded -= OnDie;
 
         }
 
-        void OnSpawn()
-        {
-
-        }
         void OnBeingHit()
         {
             _animator.SetTrigger("BeingHit");

@@ -1,40 +1,38 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Holoi.Library.MOFABase
 {
     public class AttackSpellVFXController : MonoBehaviour
     {
-        [SerializeField] AttackSpell _attackController;
-        [SerializeField] SpellLifetimeController _lifeTimeController;
-        [SerializeField] Animator _animator;
+        [SerializeField] private AttackSpell _attackSpell;
 
-        private void OnEnable()
+        [SerializeField] private SpellLifetimeController _lifetimeController;
+
+        [SerializeField] private Animator _animator;
+
+        private void Start()
         {
-            if (_attackController == null) Debug.LogError("not found attackSpell");
-            _attackController.OnHit += OnHit;
-            _lifeTimeController.OnSpawned += OnSpawn;
-            _lifeTimeController.OnDead += OnDie;
+            _attackSpell.OnHit += OnHit;
+            _lifetimeController.OnLifetimeEnded += OnLifetimeEnded;
         }
 
         private void OnDisable()
         {
-            _attackController.OnHit -= OnHit;
-            _lifeTimeController.OnSpawned -= OnSpawn;
-            _lifeTimeController.OnDead -= OnDie;
+            
         }
 
-        void OnSpawn()
+        private void OnDestroy()
         {
-
+            _attackSpell.OnHit -= OnHit;
+            _lifetimeController.OnLifetimeEnded -= OnLifetimeEnded;
         }
-        void OnHit()
+
+        private void OnHit()
         {
             _animator.SetTrigger("Hit");
         }
 
-        void OnDie()
+        private void OnLifetimeEnded()
         {
             _animator.SetTrigger("Die");
         }
