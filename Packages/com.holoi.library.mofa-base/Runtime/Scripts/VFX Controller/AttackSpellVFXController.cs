@@ -18,7 +18,9 @@ namespace Holoi.Library.MOFABase
 
         private void OnDisable()
         {
-            
+            // Reset
+            _animator.Rebind();
+            _animator.Update(0f);
         }
 
         private void OnDestroy()

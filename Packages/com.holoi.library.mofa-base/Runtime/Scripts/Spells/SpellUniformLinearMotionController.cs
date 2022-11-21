@@ -6,9 +6,28 @@ namespace Holoi.Library.MOFABase
     {
         [SerializeField] private float _speed;
 
+        public bool IsMoving
+        {
+            get => _isMoving;
+            set
+            {
+                _isMoving = value;
+            }
+        }
+
+        private bool _isMoving;
+
+        private void OnEnable()
+        {
+            _isMoving = true;
+        }
+
         private void FixedUpdate()
         {
-            transform.position += _speed * Time.fixedDeltaTime * transform.forward;
+            if (_isMoving)
+            {
+                transform.position += _speed * Time.fixedDeltaTime * transform.forward;
+            }
         }
     }
 }

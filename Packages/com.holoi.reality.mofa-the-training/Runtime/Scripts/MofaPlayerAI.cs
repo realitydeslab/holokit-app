@@ -158,20 +158,20 @@ namespace Holoi.Reality.MOFATheTraining
                 }
 
                 // Position
-                if (_mofaRealityManager.CurrentPhase == MofaPhase.Fighting)
-                {
-                    if (Vector3.Distance(transform.position, _destPosition) < 0.1f)
-                    {
-                        // Find a new destination position
-                        GetNextDestPos();
-                    }
-                    else
-                    {
-                        // Approaching to the destination
-                        transform.position += Speed * Time.fixedDeltaTime * (_destPosition - transform.position).normalized;
-                        UpdateAvatarMovementAnimation();
-                    }
-                }
+                //if (_mofaRealityManager.CurrentPhase == MofaPhase.Fighting)
+                //{
+                //    if (Vector3.Distance(transform.position, _destPosition) < 0.1f)
+                //    {
+                //        // Find a new destination position
+                //        GetNextDestPos();
+                //    }
+                //    else
+                //    {
+                //        // Approaching to the destination
+                //        transform.position += Speed * Time.fixedDeltaTime * (_destPosition - transform.position).normalized;
+                //        UpdateAvatarMovementAnimation();
+                //    }
+                //}
             }
         }
 
@@ -192,7 +192,7 @@ namespace Holoi.Reality.MOFATheTraining
                 if (mofaPhase == MofaPhase.Fighting)
                 {
                     SetupSpellsForAI();
-                    _attackAICoroutine = StartCoroutine(AttackAI());
+                    //_attackAICoroutine = StartCoroutine(AttackAI());
                 }
                 else if (mofaPhase == MofaPhase.RoundOver)
                 {

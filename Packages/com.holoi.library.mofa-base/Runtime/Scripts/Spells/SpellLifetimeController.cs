@@ -18,9 +18,10 @@ namespace Holoi.Library.MOFABase
 
         public event Action OnLifetimeEnded;
 
-        private void Start()
+        private void OnEnable()
         {
             PlaySpawnSound();
+            _duration = 0f;
         }
 
         private void FixedUpdate()

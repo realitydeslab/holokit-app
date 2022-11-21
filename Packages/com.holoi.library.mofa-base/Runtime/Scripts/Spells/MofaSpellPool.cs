@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
@@ -11,7 +10,7 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] private int _secondarySpellPrewarmCount = 2;
 
-        private readonly Dictionary<Spell, Queue<NetworkObject>> _pooledSpells = new();
+        private readonly Dictionary<GameObject, Queue<NetworkObject>> _pooledSpells = new();
 
         public override void OnNetworkSpawn()
         {
@@ -24,7 +23,7 @@ namespace Holoi.Library.MOFABase
             foreach (var spell in _pooledSpells.Keys)
             {
                 // Unregister Netcode spawn handlers
-                NetworkManager.Singleton.PrefabHandler.RemoveHandler(spell.gameObject);
+                NetworkManager.Singleton.PrefabHandler.RemoveHandler(spell);
             }
             _pooledSpells.Clear();
         }
@@ -39,7 +38,7 @@ namespace Holoi.Library.MOFABase
                 if (int.Parse(spell.MagicSchool.TokenId) == magicSchoolTokenId)
                 {
                     count++;
-                    RegisterSpell(spell, spell.SpellType == SpellType.Basic ? _basicSpellPrewarmCount : _secondarySpellPrewarmCount);
+                    RegisterSpell(spell.gameObject, spell.SpellType == SpellType.Basic ? _basicSpellPrewarmCount : _secondarySpellPrewarmCount);
                 }
                 if (count == 2)
                 {
@@ -48,7 +47,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void RegisterSpell(Spell spell, int prewarmCount)
+        public void RegisterSpell(GameObject spell, int prewarmCount)
         {
             Queue<NetworkObject> spellQueue = new();
             if (!_pooledSpells.ContainsKey(spell))
@@ -59,16 +58,16 @@ namespace Holoi.Library.MOFABase
                 ReturnSpell(spellInstance.GetComponent<NetworkObject>(), spell);
             }
             // Register Netcode spawn handlers
-            NetworkManager.Singleton.PrefabHandler.AddHandler(spell.gameObject, new PooledSpellInstanceHandler(spell, this));
+            NetworkManager.Singleton.PrefabHandler.AddHandler(spell, new PooledSpellInstanceHandler(spell, this));
         }
 
-        public void ReturnSpell(NetworkObject networkObject, Spell spell)
+        public void ReturnSpell(NetworkObject networkObject, GameObject spell)
         {
             networkObject.gameObject.SetActive(false);
             _pooledSpells[spell].Enqueue(networkObject);
         }
 
-        public NetworkObject GetSpell(Spell spell, Vector3 position, Quaternion rotation)
+        public NetworkObject GetSpell(GameObject spell, Vector3 position, Quaternion rotation)
         {
             var spellQueue = _pooledSpells[spell];
             if (spellQueue.Count == 0)
@@ -84,11 +83,11 @@ namespace Holoi.Library.MOFABase
 
     class PooledSpellInstanceHandler: INetworkPrefabInstanceHandler
     {
-        private readonly Spell _spell;
+        private readonly GameObject _spell;
 
         private readonly MofaSpellPool _pool;
 
-        public PooledSpellInstanceHandler(Spell spell, MofaSpellPool pool)
+        public PooledSpellInstanceHandler(GameObject spell, MofaSpellPool pool)
         {
             _spell = spell;
             _pool = pool;

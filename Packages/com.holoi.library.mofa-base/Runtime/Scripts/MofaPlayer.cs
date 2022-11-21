@@ -46,7 +46,10 @@ namespace Holoi.Library.MOFABase
         public override void OnNetworkSpawn()
         {
             OnMofaPlayerSpawned?.Invoke(this);
-            ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).SetPlayer(OwnerClientId, this);
+            var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            mofaBaseRealityManager.SetPlayer(OwnerClientId, this);
+            mofaBaseRealityManager.SpellPool.OnPlayerJoined(MagicSchoolTokenId.Value);
+
             Ready.OnValueChanged += OnReadyStateChangedFunc;
             KillCount.OnValueChanged += OnScoreChangedFunc;
         }

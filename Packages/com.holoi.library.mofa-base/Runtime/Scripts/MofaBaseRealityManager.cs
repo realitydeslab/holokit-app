@@ -62,11 +62,13 @@ namespace Holoi.Library.MOFABase
     public abstract class MofaBaseRealityManager : RealityManager
     {
         [Header("MOFA Base")]
-        [SerializeField] private MofaPlayer _mofaPlayerPrefab;
-
         public SpellList SpellList;
 
         public LifeShieldList LifeShieldList;
+
+        public MofaSpellPool SpellPool;
+
+        [SerializeField] private MofaPlayer _mofaPlayerPrefab;
 
         [Header("MOFA Settings")]
         [SerializeField] private float _countdownTime = 3f;
@@ -300,8 +302,8 @@ namespace Holoi.Library.MOFABase
             {
                 rotation = MofaUtils.GetHorizontalRotation(rotation);
             }
-            var spellInstance = Instantiate(spell, position, rotation);
-            spellInstance.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
+            NetworkObject no = SpellPool.GetSpell(spell.gameObject, position, rotation);
+            no.SpawnWithOwnership(ownerClientId);
         }
 
         private void OnLifeShieldDead(ulong attackerClientId, ulong ownerClientId)

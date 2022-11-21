@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Unity.Netcode;
+using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Library.MOFABase
 {
@@ -57,7 +58,10 @@ namespace Holoi.Library.MOFABase
             if (_hitOnce)
             {
                 GetComponent<Collider>().enabled = false;
-                Destroy(gameObject, _destroyDelay);
+                StartCoroutine(HoloKitAppUtils.WaitAndDo(_destroyDelay, () =>
+                {
+                    GetComponent<NetworkObject>().Despawn();
+                }));
             }
         }
 
@@ -66,7 +70,7 @@ namespace Holoi.Library.MOFABase
         {
             if (_hitOnce)
             {
-                GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
+                GetComponent<SpellUniformLinearMotionController>().IsMoving = false;
             }
             OnHit?.Invoke();
             PlayHitSound();
