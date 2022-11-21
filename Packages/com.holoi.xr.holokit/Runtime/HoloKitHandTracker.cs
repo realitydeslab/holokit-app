@@ -102,7 +102,6 @@ namespace HoloKit
             HoloKitHandTrackingControllerAPI.OnHandPoseUpdated += OnHandPoseUpdated;
             HoloKitHandTrackingControllerAPI.RegisterHandTrackingControllerDelegates();
             HoloKitHandTrackingControllerAPI.SetHandTrackingActive(_isActive);
-            _hand.SetActive(false);
             SetupHandJointColors();
             SetHandJointsVisible(_isVisible);
 
