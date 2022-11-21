@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Unity.Netcode;
-using System;
+using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Library.MOFABase
 {
@@ -12,7 +11,7 @@ namespace Holoi.Library.MOFABase
     public class ShieldSpell : NetworkBehaviour, IDamageable
     {
         // How many times this shield can block attack
-        public int MaxHealth;
+        [SerializeField] private int _maxHealth;
 
         [SerializeField] private AudioClip _beingHitSound;
 
@@ -20,7 +19,7 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] private float _destroyDelay;
 
-        private NetworkVariable<int> _currentHealth;
+        private readonly NetworkVariable<int> _currentHealth = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         private AudioSource _audioSource;
 
@@ -28,20 +27,24 @@ namespace Holoi.Library.MOFABase
 
         public event Action OnBeingDestroyed;
 
-        private void Awake()
+        private void Start()
         {
-            _currentHealth = new(MaxHealth, NetworkVariableReadPermission.Everyone);
             _audioSource = GetComponent<AudioSource>();
         }
 
         public override void OnNetworkSpawn()
         {
-            if (!IsServer)
+            if (IsServer)
+            {
+                _currentHealth.Value = _maxHealth;
+            }
+            else
             {
                 GetComponent<Collider>().enabled = false;
             }
         }
 
+        // Host only
         public void OnDamaged(ulong attackerClientId)
         {
             _currentHealth.Value--;
@@ -53,7 +56,10 @@ namespace Holoi.Library.MOFABase
             {
                 OnBeingDestroyedClientRpc();
                 GetComponent<Collider>().enabled = false;
-                Destroy(gameObject, _destroyDelay);
+                StartCoroutine(HoloKitAppUtils.WaitAndDo(_destroyDelay, () =>
+                {
+                    GetComponent<NetworkObject>().Despawn();
+                }));
             }
         }
 
