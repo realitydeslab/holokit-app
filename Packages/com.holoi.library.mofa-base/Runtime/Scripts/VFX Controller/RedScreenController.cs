@@ -4,16 +4,12 @@ using Unity.Netcode;
 
 namespace Holoi.Library.MOFABase
 {
-    public class ScreenEffectController : MonoBehaviour
+    public class RedScreenController : MonoBehaviour
     {
         [SerializeField] private VisualEffect vfx;
 
         private void Start()
         {
-            if (vfx == null)
-            {
-                vfx = GetComponent<VisualEffect>();
-            }
             LifeShield.OnBeingHit += OnLifeShieldBeingHit;
         }
 
@@ -22,7 +18,7 @@ namespace Holoi.Library.MOFABase
             LifeShield.OnBeingHit -= OnLifeShieldBeingHit;
         }
 
-        public void OnLifeShieldBeingHit(ulong ownerClientId)
+        public void OnLifeShieldBeingHit(ulong _, ulong ownerClientId)
         {
             if (ownerClientId == NetworkManager.Singleton.LocalClientId)
             {

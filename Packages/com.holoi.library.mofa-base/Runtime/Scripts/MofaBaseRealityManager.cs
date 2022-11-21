@@ -116,7 +116,8 @@ namespace Holoi.Library.MOFABase
 
         protected virtual void Start()
         {
-            LifeShield.OnDead += OnLifeShieldDead;
+            LifeShield.OnBeingHit += OnLifeShieldBeingHit;
+            LifeShield.OnDestroyed += OnLifeShieldDestroyed;
         }
 
         public override void OnNetworkSpawn()
@@ -144,7 +145,8 @@ namespace Holoi.Library.MOFABase
         public override void OnDestroy()
         {
             base.OnDestroy();
-            LifeShield.OnDead -= OnLifeShieldDead;
+            LifeShield.OnBeingHit -= OnLifeShieldBeingHit;
+            LifeShield.OnDestroyed -= OnLifeShieldDestroyed;
         }
 
         // This delegate method is called on every client.
@@ -229,7 +231,7 @@ namespace Holoi.Library.MOFABase
         }
 
         // Host only
-        public void OnPlayerReadyStateChanged()
+        public virtual void OnPlayerReadyStateChanged()
         {
             if (_players.Count < 2)
             {
@@ -274,7 +276,6 @@ namespace Holoi.Library.MOFABase
             _currentPhase.Value = MofaPhase.RoundResult;
             yield return new WaitForSeconds(3f);
             _currentPhase.Value = MofaPhase.RoundData;
-            
         }
 
         // Host only
@@ -304,9 +305,19 @@ namespace Holoi.Library.MOFABase
             }
             NetworkObject no = SpellPool.GetSpell(spell.gameObject, position, rotation);
             no.SpawnWithOwnership(ownerClientId);
+            // Record this cast event on the server
+            _players[ownerClientId].CastCount.Value++;
         }
 
-        private void OnLifeShieldDead(ulong attackerClientId, ulong ownerClientId)
+        private void OnLifeShieldBeingHit(ulong attackerClientId, ulong ownerClientId)
+        {
+            if (IsServer)
+            {
+                _players[attackerClientId].HitCount.Value++;
+            }
+        }
+
+        private void OnLifeShieldDestroyed(ulong attackerClientId, ulong ownerClientId)
         {
             if (IsServer)
             {
@@ -320,7 +331,6 @@ namespace Holoi.Library.MOFABase
 
         private IEnumerator RespawnLifeShield(ulong ownerClientId)
         {
-            //yield return new WaitForSeconds(3f - LifeShield.DestroyDelay);
             yield return new WaitForSeconds(3f);
             SpawnLifeShield(ownerClientId);
         }
@@ -392,7 +402,8 @@ namespace Holoi.Library.MOFABase
             }
             // Kills
             stats.Kill = player.KillCount.Value;
-            // TODO: Hit rate and distance
+            // Hit rate
+            stats.HitRate = (float)player.HitCount.Value / player.CastCount.Value;
 
             return stats;
         }

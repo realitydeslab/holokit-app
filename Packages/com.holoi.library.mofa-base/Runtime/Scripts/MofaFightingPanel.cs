@@ -1,25 +1,33 @@
 using UnityEngine;
 using Holoi.Library.HoloKitApp.UI;
+using HoloKit;
 
 namespace Holoi.Library.MOFABase
 {
     public class MofaFightingPanel : MonoBehaviour
     {
-        public GameObject Scores;
+        [Header("References")]
+        [SerializeField] protected GameObject Scores;
 
-        public GameObject Time;
+        [SerializeField] protected GameObject Time;
 
-        public GameObject Reticle;
+        [SerializeField] protected GameObject Reticle;
 
-        public GameObject Status;
+        [SerializeField] protected GameObject Status;
 
-        public GameObject RedScreen;
+        [SerializeField] protected GameObject RedScreen;
+
+        [Header("Settings"), Tooltip("Will this panel rotate with the device orientation?")]
+        [SerializeField] private bool _autoRotate = true;
+
+        private DeviceOrientation _deviceOrientation = DeviceOrientation.Portrait;
 
         private void Start()
         {
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
             HoloKitAppUIEventManager.OnStartedRecording += OnStartedRecording;
             HoloKitAppUIEventManager.OnStoppedRecording += OnStoppedRecording;
+            HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
 
             Scores.SetActive(false);
             Time.SetActive(false);
@@ -28,11 +36,30 @@ namespace Holoi.Library.MOFABase
             RedScreen.SetActive(false);
         }
 
+        private void Update()
+        {
+            if (!_autoRotate || Screen.orientation == ScreenOrientation.LandscapeLeft) return;
+
+            if (Input.deviceOrientation != _deviceOrientation)
+            {
+                if (Input.deviceOrientation == DeviceOrientation.Portrait)
+                {
+                    GetComponent<RectTransform>().localRotation = Quaternion.identity;
+                }
+                else if (Input.deviceOrientation == DeviceOrientation.LandscapeLeft)
+                {
+                    GetComponent<RectTransform>().localRotation = Quaternion.Euler(0f, 0f, -90f);
+                }
+                _deviceOrientation = Input.deviceOrientation;
+            }
+        }
+
         private void OnDestroy()
         {
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
             HoloKitAppUIEventManager.OnStartedRecording -= OnStartedRecording;
             HoloKitAppUIEventManager.OnStoppedRecording -= OnStoppedRecording;
+            HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
         }
 
         private void OnPhaseChanged(MofaPhase mofaPhase)
@@ -80,6 +107,14 @@ namespace Holoi.Library.MOFABase
         private void OnStoppedRecording()
         {
             GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 1f);
+        }
+
+        private void OnHoloKitRenderModeChanged(HoloKitRenderMode renderMode)
+        {
+            if (renderMode == HoloKitRenderMode.Stereo)
+            {
+                GetComponent<RectTransform>().localRotation = Quaternion.identity;
+            }
         }
     }
 }

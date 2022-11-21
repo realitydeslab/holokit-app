@@ -10,25 +10,13 @@ namespace Holoi.Library.MOFABase
 {
     public class MofaInputManager : MonoBehaviour
     {
-        [HideInInspector] public Spell BasicSpell;
-
-        [HideInInspector] public Spell SecondarySpell;
-
-        [HideInInspector] public bool Active;
-
-        [HideInInspector] public float BasicSpellCharge;
-
-        [HideInInspector] public float SecondarySpellCharge;
-
-        [HideInInspector] public float SecondarySpellUseCount;
-
-        [HideInInspector] public MofaWatchState CurrentWatchState;
+        public bool IsActive => _isActive;
 
         public float BasicSpellChargePercentage
         {
             get
             {
-                return BasicSpellCharge / (BasicSpell.ChargeTime * BasicSpell.MaxChargeCount);
+                return _basicSpellCharge / (_basicSpell.ChargeTime * _basicSpell.MaxChargeCount);
             }
         }
 
@@ -36,9 +24,9 @@ namespace Holoi.Library.MOFABase
         {
             get
             {
-                if (SecondarySpell != null)
+                if (_secondarySpell != null)
                 {
-                    return SecondarySpellCharge / SecondarySpell.ChargeTime;
+                    return _secondarySpellCharge / _secondarySpell.ChargeTime;
                 }
                 else
                 {
@@ -47,18 +35,45 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private MofaBaseRealityManager MofaBaseRealityManager => (MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager;
+        public float Distance => _distance;
+
+        private bool _isActive;
+
+        private Spell _basicSpell;
+
+        private Spell _secondarySpell;
+
+        private float _basicSpellCharge;
+
+        private float _secondarySpellCharge;
+
+        private float _secondarySpellUseCount;
+
+        private MofaWatchState _currentWatchState;
+
+        private Vector3 _lastFramePosition;
+
+        // The moving distance of the local player in a round.
+        private float _distance;
+
+        private MofaBaseRealityManager _mofaBaseRealityManager;
+
+        private Transform _centerEyePose;
 
         public static event Action<SpellType> OnSpawnSpellFailed;
 
         private void Start()
         {
-            if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
+            // Only players need inputs
+            if (!HoloKitApp.HoloKitApp.Instance.IsPlayer)
             {
                 Destroy(gameObject);
                 return;
             }
 
+            // Find necessary references
+            _mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            _centerEyePose = HoloKitCamera.Instance.CenterEyePose;
             // Setup MofaWatchConnectivity
             MofaWatchConnectivityAPI.Initialize();
             // MofaWatchConnectivityManager should take control first
@@ -66,57 +81,56 @@ namespace Holoi.Library.MOFABase
             // We then update the control on Watch side so that MofaWatchConnectivityManager won't miss messages.
             HoloKitAppWatchConnectivityAPI.UpdateCurrentReality(WatchReality.MOFATheTraining);
 
-            SetupSpells();
-            MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
-            LifeShield.OnSpawned += OnLifeShieldSpawned;
-            LifeShield.OnDead += OnLifeShieldDestroyed;
-
-            HoloKitAppUIEventManager.OnTriggered += OnStarUITriggered;
-            HoloKitAppUIEventManager.OnBoosted += OnStarUIBoosted;
-
             MofaWatchConnectivityAPI.OnStartRoundMessageReceived += OnStartRoundMessageReceived;
             MofaWatchConnectivityAPI.OnWatchStateChanged += OnWatchStateChanged;
             MofaWatchConnectivityAPI.OnWatchTriggered += OnWatchTriggered;
+
+            SetupSpells();
+            MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
+            LifeShield.OnSpawned += OnLifeShieldSpawned;
+            LifeShield.OnDestroyed += OnLifeShieldDestroyed;
+
+            HoloKitAppUIEventManager.OnTriggered += OnStarUITriggered;
+            HoloKitAppUIEventManager.OnBoosted += OnStarUIBoosted;
         }
 
         private void OnDestroy()
         {
-            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
-            LifeShield.OnSpawned -= OnLifeShieldSpawned;
-            LifeShield.OnDead -= OnLifeShieldDestroyed;
-
-            HoloKitAppUIEventManager.OnTriggered -= OnStarUITriggered;
-            HoloKitAppUIEventManager.OnBoosted -= OnStarUIBoosted;
-
             MofaWatchConnectivityAPI.OnStartRoundMessageReceived -= OnStartRoundMessageReceived;
             MofaWatchConnectivityAPI.OnWatchStateChanged -= OnWatchStateChanged;
             MofaWatchConnectivityAPI.OnWatchTriggered -= OnWatchTriggered;
+
+            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
+            LifeShield.OnSpawned -= OnLifeShieldSpawned;
+            LifeShield.OnDestroyed -= OnLifeShieldDestroyed;
+
+            HoloKitAppUIEventManager.OnTriggered -= OnStarUITriggered;
+            HoloKitAppUIEventManager.OnBoosted -= OnStarUIBoosted;
         }
 
         private void SetupSpells()
         {
-            var preferencedMofaSpell = HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject();
-            
-            foreach (var spell in MofaBaseRealityManager.SpellList.List)
+            var preferencedMagicSchool = HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject();
+            int count = 0;
+            foreach (var spell in _mofaBaseRealityManager.SpellList.List)
             {
-                if (spell.MagicSchool.TokenId.Equals(preferencedMofaSpell.TokenId))
+                if (spell.MagicSchool.TokenId.Equals(preferencedMagicSchool.TokenId))
                 {
                     if (spell.SpellType == SpellType.Basic)
                     {
-                        BasicSpell = spell;
+                        _basicSpell = spell;
+                        count++;
                     }
                     else
                     {
-                        SecondarySpell = spell;
+                        _secondarySpell = spell;
+                        count++;
                     }
                 }
-            }
-
-            // If the currently selected spell set does not have a secondary spell yet,
-            // we give the player a default one
-            if (SecondarySpell == null)
-            {
-                SecondarySpell = MofaBaseRealityManager.SpellList.GetSpell(2);
+                if (count == 2)
+                {
+                    return;
+                }
             }
         }
 
@@ -131,11 +145,11 @@ namespace Holoi.Library.MOFABase
                     MofaWatchConnectivityAPI.SyncRoundStartToWatch();
                     break;
                 case MofaPhase.Fighting:
-                    Active = true;
+                    _isActive = true;
                     MofaWatchConnectivityAPI.QueryWatchState();
                     break;
                 case MofaPhase.RoundOver:
-                    Active = false;
+                    _isActive = false;
                     break;
                 case MofaPhase.RoundResult:
                     break;
@@ -150,7 +164,8 @@ namespace Holoi.Library.MOFABase
             if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
             {
                 
-                var localPlayerStats = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).GetIndividualStats();
+                var localPlayerStats = _mofaBaseRealityManager.GetIndividualStats();
+                localPlayerStats.Distance = _distance;
                 MofaWatchConnectivityAPI.SyncRoundResultToWatch(localPlayerStats.IndividualRoundResult,
                                                                 localPlayerStats.Kill,
                                                                 localPlayerStats.HitRate,
@@ -158,102 +173,112 @@ namespace Holoi.Library.MOFABase
             }
         }
 
+        private void Update()
+        {
+            if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting)
+            {
+                _distance = Vector3.Distance(_lastFramePosition, _centerEyePose.position);
+                _lastFramePosition = _centerEyePose.position;
+            }
+        }
+
         private void FixedUpdate()
         {
-            if (!Active)
+            if (!IsActive)
             {
                 return;
             }
 
-            if (BasicSpellCharge < BasicSpell.ChargeTime * BasicSpell.MaxChargeCount)
+            if (_basicSpellCharge < _basicSpell.ChargeTime * _basicSpell.MaxChargeCount)
             {
-                BasicSpellCharge += Time.fixedDeltaTime;
-                if (BasicSpellCharge > BasicSpell.ChargeTime * BasicSpell.MaxChargeCount)
+                _basicSpellCharge += Time.fixedDeltaTime;
+                if (_basicSpellCharge > _basicSpell.ChargeTime * _basicSpell.MaxChargeCount)
                 {
-                    BasicSpellCharge = BasicSpell.ChargeTime * BasicSpell.MaxChargeCount;
+                    _basicSpellCharge = _basicSpell.ChargeTime * _basicSpell.MaxChargeCount;
                 }
             }
 
-            if (CurrentWatchState == MofaWatchState.Ground)
+            if (_currentWatchState == MofaWatchState.Ground)
             {
-                if (SecondarySpellCharge < SecondarySpell.ChargeTime)
+                if (_secondarySpellCharge < _secondarySpell.ChargeTime)
                 {
-                    SecondarySpellCharge += Time.fixedDeltaTime;
-                    if (SecondarySpellCharge > SecondarySpell.ChargeTime)
+                    _secondarySpellCharge += Time.fixedDeltaTime;
+                    if (_secondarySpellCharge > _secondarySpell.ChargeTime)
                     {
-                        SecondarySpellCharge = SecondarySpell.ChargeTime;
+                        _secondarySpellCharge = _secondarySpell.ChargeTime;
                     }
                 }
             }
             else
             {
-                if (SecondarySpellCharge > 0f)
+                if (_secondarySpellCharge > 0f)
                 {
-                    SecondarySpellCharge -= Time.fixedDeltaTime;
+                    _secondarySpellCharge -= Time.fixedDeltaTime;
                 }
             }
         }
 
         public void Reset()
         {
-            BasicSpellCharge = 0f;
-            SecondarySpellCharge = 0f;
-            SecondarySpellUseCount = 0;
+            _basicSpellCharge = 0f;
+            _secondarySpellCharge = 0f;
+            _secondarySpellUseCount = 0;
+            _distance = 0;
         }
 
         private void SpawnBasicSpell()
         {
-            if (!Active)
+            if (!IsActive)
             {
                 Debug.Log("[MofaInputManager] Not active");
                 return;
             }
 
-            if (BasicSpellCharge < BasicSpell.ChargeTime)
+            if (_basicSpellCharge < _basicSpell.ChargeTime)
             {
                 Debug.Log("[MofaInputManager] Basic spell not charged");
                 OnSpawnSpellFailed?.Invoke(SpellType.Basic);
             }
             else
             {
-                MofaBaseRealityManager.SpawnSpellServerRpc(BasicSpell.Id,
+                _mofaBaseRealityManager.SpawnSpellServerRpc(_basicSpell.Id,
                     HoloKitCamera.Instance.CenterEyePose.position,
                     HoloKitCamera.Instance.CenterEyePose.rotation,
                     NetworkManager.Singleton.LocalClientId);
-                BasicSpellCharge -= BasicSpell.ChargeTime;
+                _basicSpellCharge -= _basicSpell.ChargeTime;
             }
         }
 
         private void SpawnSecondarySpell()
         {
-            if (!Active)
+            if (!IsActive)
             {
                 Debug.Log("[MofaInputManager] Not active");
                 return;
             }
 
-            if (SecondarySpellUseCount > SecondarySpell.MaxUseCount)
+            if (_secondarySpellUseCount > _secondarySpell.MaxUseCount)
             {
                 Debug.Log("[MofaInputManager] Exceed secondary spell use count");
                 OnSpawnSpellFailed?.Invoke(SpellType.Secondary);
                 return;
             }
 
-            MofaBaseRealityManager.SpawnSpellServerRpc(SecondarySpell.Id,
+            _mofaBaseRealityManager.SpawnSpellServerRpc(_secondarySpell.Id,
                 HoloKitCamera.Instance.CenterEyePose.position,
                 HoloKitCamera.Instance.CenterEyePose.rotation,
                 NetworkManager.Singleton.LocalClientId);
-            SecondarySpellCharge -= SecondarySpell.ChargeTime;
-            SecondarySpellUseCount++;
+            _secondarySpellCharge -= _secondarySpell.ChargeTime;
+            _secondarySpellUseCount++;
         }
 
         private void OnLifeShieldSpawned(ulong ownerClientId)
         {
             if (ownerClientId == NetworkManager.Singleton.LocalClientId)
             {
-                if (MofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting)
+                if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting)
                 {
-                    Active = true;
+                    _isActive = true;
                     MofaWatchConnectivityAPI.QueryWatchState();
                 }
             }
@@ -263,13 +288,13 @@ namespace Holoi.Library.MOFABase
         {
             if (ownerClientId == NetworkManager.Singleton.LocalClientId)
             {
-                Active = false;
+                _isActive = false;
             }
         }
 
         private void OnStarUITriggered()
         {
-            if (Active)
+            if (IsActive)
             {
                 SpawnBasicSpell();
             }
@@ -277,7 +302,7 @@ namespace Holoi.Library.MOFABase
 
         private void OnStarUIBoosted()
         {
-            if (Active)
+            if (IsActive)
             {
                 SpawnSecondarySpell();
             }
@@ -295,14 +320,14 @@ namespace Holoi.Library.MOFABase
 
         private void OnWatchStateChanged(MofaWatchState watchState)
         {
-            CurrentWatchState = watchState;
+            _currentWatchState = watchState;
         }
 
         private void OnWatchTriggered()
         {
-            if (Active)
+            if (IsActive)
             {
-                if (SecondarySpellCharge >= SecondarySpell.ChargeTime)
+                if (_secondarySpellCharge >= _secondarySpell.ChargeTime)
                 {
                     SpawnSecondarySpell();
                 }

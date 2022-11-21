@@ -23,6 +23,16 @@ namespace Holoi.Library.MOFABase
 
         [HideInInspector] public NetworkVariable<int> DeathCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+        /// <summary>
+        /// How many times does the player cast spells in this round?
+        /// </summary>
+        [HideInInspector] public NetworkVariable<int> CastCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+        /// <summary>
+        /// How many times does the player hit in this round?
+        /// </summary>
+        [HideInInspector] public NetworkVariable<int> HitCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
         [HideInInspector] public LifeShield LifeShield;
 
         [HideInInspector] public Vector3 LifeShieldOffset = new(0f, -0.4f, 0.5f);

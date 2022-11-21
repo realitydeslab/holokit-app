@@ -23,7 +23,7 @@ namespace Holoi.Library.MOFABase
 
         private readonly NetworkVariable<bool> _rightDestroyed = new(false, NetworkVariableReadPermission.Everyone);
 
-        private readonly NetworkVariable<int> _lastAttackerClientId = new(0, NetworkVariableReadPermission.Everyone);
+        private readonly NetworkVariable<byte> _lastAttackerClientId = new(0, NetworkVariableReadPermission.Everyone);
 
         private AudioSource _audioSource;
 
@@ -39,14 +39,16 @@ namespace Holoi.Library.MOFABase
 
         public event Action OnRightDestroyed;
 
-        // The parameter is the ownerClientId
-        public static event Action<ulong> OnBeingHit;
-
         // The paremeter is the ownerClientId
         public static event Action<ulong> OnSpawned;
 
         // The first ulong is the attackerClientId and the second is the ownerClientId
-        public static event Action<ulong, ulong> OnDead;
+        public static event Action<ulong, ulong> OnBeingHit;
+
+        // The first ulong is the attackerClientId and the second is the ownerClientId
+        public static event Action<ulong, ulong> OnDestroyed;
+
+        public static event Action<ulong> OnRenovated;
 
         private void Awake()
         {
@@ -80,7 +82,8 @@ namespace Holoi.Library.MOFABase
             _leftDestroyed.OnValueChanged += OnLeftDestroyedFunc;
             _rightDestroyed.OnValueChanged += OnRightDestroyedFunc;
 
-            OnSpawned?.Invoke(OwnerClientId);
+            //OnSpawned?.Invoke(OwnerClientId);
+            OnRenovated?.Invoke(OwnerClientId);
         }
 
         public override void OnNetworkDespawn()
@@ -91,10 +94,11 @@ namespace Holoi.Library.MOFABase
             _rightDestroyed.OnValueChanged -= OnRightDestroyedFunc;
         }
 
-        // Server only
+        // Host only
         public void OnDamaged(LifeShieldArea area, ulong attackerClientId)
         {
-            _lastAttackerClientId.Value = (int)attackerClientId;
+            OnBeingHitClientRpc((byte)attackerClientId);
+            _lastAttackerClientId.Value = (byte)attackerClientId;
             switch (area)
             {
                 case LifeShieldArea.Center:
@@ -115,18 +119,23 @@ namespace Holoi.Library.MOFABase
             }
         }
 
+        [ClientRpc]
+        private void OnBeingHitClientRpc(byte attackerClientId)
+        {
+            OnBeingHit?.Invoke(attackerClientId, OwnerClientId);
+        }
+
         private void OnCenterDestroyedFunc(bool oldValue, bool newValue)
         {
             if (!oldValue && newValue)
             {
-                OnBeingHit?.Invoke(OwnerClientId);
                 OnCenterDestroyed?.Invoke();
                 PlayHitSound();
                 _fragments[LifeShieldArea.Center].gameObject.SetActive(false);
 
                 // The entire shield has been destroyed at this point
                 PlayDestroySound();
-                OnDead?.Invoke((ulong)_lastAttackerClientId.Value, OwnerClientId);
+                OnDestroyed?.Invoke((ulong)_lastAttackerClientId.Value, OwnerClientId);
                 if (IsServer)
                 {
                     Destroy(gameObject, DestroyDelay);
@@ -138,7 +147,6 @@ namespace Holoi.Library.MOFABase
         {
             if (!oldValue && newValue)
             {
-                OnBeingHit?.Invoke(OwnerClientId);
                 OnTopDestroyed?.Invoke();
                 PlayHitSound();
                 _fragments[LifeShieldArea.Top].gameObject.SetActive(false);
@@ -149,7 +157,6 @@ namespace Holoi.Library.MOFABase
         {
             if (!oldValue && newValue)
             {
-                OnBeingHit?.Invoke(OwnerClientId);
                 OnLeftDestroyed?.Invoke();
                 PlayHitSound();
                 _fragments[LifeShieldArea.Left].gameObject.SetActive(false);
@@ -160,7 +167,6 @@ namespace Holoi.Library.MOFABase
         {
             if (!oldValue && newValue)
             {
-                OnBeingHit?.Invoke(OwnerClientId);
                 OnRightDestroyed?.Invoke();
                 PlayHitSound();
                 _fragments[LifeShieldArea.Right].gameObject.SetActive(false);
@@ -183,6 +189,12 @@ namespace Holoi.Library.MOFABase
                 _audioSource.clip = _beingDestroyedSound;
                 _audioSource.Play();
             }
+        }
+
+        // Use this instead of destroying and instantiating again.
+        public void Renovate()
+        {
+            
         }
     }
 }

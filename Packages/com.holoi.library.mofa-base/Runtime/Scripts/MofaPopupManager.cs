@@ -28,14 +28,14 @@ namespace Holoi.Library.MOFABase
         {
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
             MofaBaseRealityManager.OnReceivedRoundResult += OnReceivedRoundResult;
-            LifeShield.OnDead += OnLifeShieldDestroyed;
+            LifeShield.OnDestroyed += OnLifeShieldDestroyed;
         }
 
         protected virtual void OnDestroy()
         {
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
             MofaBaseRealityManager.OnReceivedRoundResult -= OnReceivedRoundResult;
-            LifeShield.OnDead -= OnLifeShieldDestroyed;
+            LifeShield.OnDestroyed -= OnLifeShieldDestroyed;
         }
 
         protected void SpawnPopup(GameObject popupPrefab)
