@@ -7,7 +7,7 @@ namespace Holoi.Reality.Typography
 {
     public class TheForceCubeController : MonoBehaviour
     {
-        TypoTheForceRealityManager _manager;
+        TheForceRealityManager _manager;
 
         [SerializeField] FollowMovementManager _followManager;
 
@@ -46,7 +46,7 @@ namespace Holoi.Reality.Typography
 
         private void OnEnable()
         {
-            _manager = FindObjectOfType<TypoTheForceRealityManager>();
+            _manager = FindObjectOfType<TheForceRealityManager>();
             _manager.OnCastCubeAction += OnCasted;
             _manager.OnNotCastCubeAction += OnNotCasted;
         }

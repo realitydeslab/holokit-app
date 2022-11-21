@@ -6,7 +6,7 @@ using Holoi.Library.ARUX;
 
 namespace Holoi.Reality.Typography
 {
-    public class TypoTheForceRealityManager : MonoBehaviour
+    public class TheForceRealityManager : MonoBehaviour
     {
         public event Action OnCastCubeAction;
 
