@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.VFX;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
 
@@ -30,7 +28,7 @@ namespace Holoi.Reality.Typography
 
         void Start()
         {
-
+            HoloKit.HoloKitHandTracker.Instance.IsActive = true;
         }
 
         void Update()
@@ -38,7 +36,7 @@ namespace Holoi.Reality.Typography
             switch (_state)
             {
                 case State.Idle:
-                    Debug.Log("idle");
+                    //Debug.Log("idle");
                     if (HoloKit.HoloKitHandTracker.Instance.IsActive)
                     {
                         var distance = Vector3.Distance(ThumbJoint.position, IndexJoint.position);
@@ -51,7 +49,7 @@ namespace Holoi.Reality.Typography
                     }
                     break;
                 case State.Creating:
-                    Debug.Log("Creating");
+                    //Debug.Log("Creating");
 
                     if (HoloKit.HoloKitHandTracker.Instance.IsActive)
                     {
@@ -59,7 +57,7 @@ namespace Holoi.Reality.Typography
                         if (distance > 0.12f && _textInstance.GetComponent<TextController>().isUpdated)
                         {
                             _creationProcess += Time.deltaTime * 1f;
-                            if(_creationProcess > 1)
+                            if (_creationProcess > 1)
                             {
                                 _creationProcess = 1;
                                 _textInstance.GetComponent<TextController>().isUpdated = false;
@@ -72,10 +70,12 @@ namespace Holoi.Reality.Typography
                             _creationProcess -= Time.deltaTime * 1f;
                             if (_creationProcess < 0) _creationProcess = 0;
                         }
+
+                        _textInstance.GetComponent<TextController>().AnimationProcess = _creationProcess;
                     }
                     break;
                 case State.Coolingdown:
-                    Debug.Log("Coolingdown");
+                    //Debug.Log("Coolingdown");
                     
                     break;
 

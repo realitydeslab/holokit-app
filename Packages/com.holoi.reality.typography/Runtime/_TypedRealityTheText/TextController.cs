@@ -6,8 +6,12 @@ namespace Holoi.Reality.Typography
 {
     public class TextController : MonoBehaviour
     {
+        [HideInInspector] public bool isUpdated = false;
+
+        [HideInInspector] public float AnimationProcess = 0;
+
         [SerializeField] VisualEffect _vfx;
-        public bool isUpdated = false;
+
         TheTextRealityManager _manager;
 
         void Start()
@@ -21,6 +25,7 @@ namespace Holoi.Reality.Typography
             {
                 _vfx.SetVector3("ThumbPosition", _manager.ThumbJoint.position);
                 _vfx.SetVector3("IndexPosition", _manager.IndexJoint.position);
+                _vfx.SetFloat("AnimationProcess", AnimationProcess);
             }
             else
             {
