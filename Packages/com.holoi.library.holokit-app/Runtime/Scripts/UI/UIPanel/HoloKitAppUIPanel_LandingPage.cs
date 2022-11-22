@@ -17,11 +17,9 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private const float PageDuration = 2f;
 
-        private const float LogoAppearTime = 0.6f;
+        private const float LogoAppearTime = 1.2f;
 
-        private const float SloganAppearDelay = 0.6f;
-
-        private const float SloganAppearTime = 0.6f;
+        private const float SloganAppearTime = 1.2f;
 
         private const float HeadsetEndPosY = -960f;
 
@@ -35,10 +33,9 @@ namespace Holoi.Library.HoloKitApp.UI
                 .setEase(LeanTweenType.easeInOutSine);
 
             // Slogan
-            _logoImage.color = new Color(1f, 1f, 1f, 0f);
+            _sloganImage.color = new Color(1f, 1f, 1f, 0f);
             LeanTween.alpha(_sloganImage.rectTransform, 1f, SloganAppearTime)
-                .setEase(LeanTweenType.easeInOutSine)
-                .setDelay(SloganAppearDelay);
+                .setEase(LeanTweenType.easeInOutSine);
 
             // Headset
             LeanTween.moveY(_headsetImage.rectTransform, HeadsetEndPosY, HeadsetMovementDuration)
