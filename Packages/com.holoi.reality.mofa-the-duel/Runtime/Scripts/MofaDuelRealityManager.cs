@@ -20,6 +20,11 @@ namespace Holoi.Reality.MOFATheDuel
             HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
         }
 
+        public override void TryStartRound()
+        {
+            
+        }
+
         private void OnTriggered()
         {
             if (CurrentPhase == MofaPhase.Waiting || CurrentPhase == MofaPhase.RoundData)

@@ -84,7 +84,7 @@ namespace Holoi.Reality.MOFATheHunting
         }
 
         // Host only
-        private void TryStartRound()
+        public override void TryStartRound()
         {
             if (_arPlacementIndicator != null && _arPlacementIndicator.IsActive && _arPlacementIndicator.IsValid)
             {

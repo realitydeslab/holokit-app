@@ -35,6 +35,12 @@ namespace Holoi.Library.MOFABase
             }
         }
 
+        public int SecondarySpellMaxUseCount => _secondarySpell.MaxUseCount;
+
+        public int SecondarySpellUseCount => _secondarySpellUseCount;
+
+        public MofaWatchState CurrentWatchState => _currentWatchState;
+
         public float Distance => _distance;
 
         private bool _isActive;
@@ -47,7 +53,7 @@ namespace Holoi.Library.MOFABase
 
         private float _secondarySpellCharge;
 
-        private float _secondarySpellUseCount;
+        private int _secondarySpellUseCount;
 
         private MofaWatchState _currentWatchState;
 
@@ -90,8 +96,8 @@ namespace Holoi.Library.MOFABase
             LifeShield.OnSpawned += OnLifeShieldSpawned;
             LifeShield.OnDestroyed += OnLifeShieldDestroyed;
 
-            HoloKitAppUIEventManager.OnTriggered += OnStarUITriggered;
-            HoloKitAppUIEventManager.OnBoosted += OnStarUIBoosted;
+            HoloKitAppUIEventManager.OnTriggered += OnTriggered;
+            HoloKitAppUIEventManager.OnBoosted += OnBoosted;
         }
 
         private void OnDestroy()
@@ -104,8 +110,8 @@ namespace Holoi.Library.MOFABase
             LifeShield.OnSpawned -= OnLifeShieldSpawned;
             LifeShield.OnDestroyed -= OnLifeShieldDestroyed;
 
-            HoloKitAppUIEventManager.OnTriggered -= OnStarUITriggered;
-            HoloKitAppUIEventManager.OnBoosted -= OnStarUIBoosted;
+            HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
+            HoloKitAppUIEventManager.OnBoosted -= OnBoosted;
         }
 
         private void SetupSpells()
@@ -292,15 +298,31 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnStarUITriggered()
+        private void OnLifeShieldRenovated(ulong ownerClientId)
+        {
+            if (ownerClientId == NetworkManager.Singleton.LocalClientId)
+            {
+                if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting)
+                {
+                    _isActive = true;
+                    MofaWatchConnectivityAPI.QueryWatchState();
+                }
+            }
+        }
+
+        private void OnTriggered()
         {
             if (IsActive)
             {
                 SpawnBasicSpell();
             }
+            else
+            {
+                _mofaBaseRealityManager.TryStartRound();
+            }
         }
 
-        private void OnStarUIBoosted()
+        private void OnBoosted()
         {
             if (IsActive)
             {
@@ -311,11 +333,7 @@ namespace Holoi.Library.MOFABase
         #region Apple Watch
         private void OnStartRoundMessageReceived()
         {
-            var localPlayer = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).GetPlayer();
-            if (!localPlayer.Ready.Value)
-            {
-                localPlayer.Ready.Value = true;
-            }
+            _mofaBaseRealityManager.TryStartRound();
         }
 
         private void OnWatchStateChanged(MofaWatchState watchState)

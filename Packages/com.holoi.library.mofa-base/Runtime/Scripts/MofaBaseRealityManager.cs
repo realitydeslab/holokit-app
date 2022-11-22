@@ -246,22 +246,13 @@ namespace Holoi.Library.MOFABase
                 }
             }
             // Everyone is ready
-            StartRound();
+            //StartRound();
         }
 
-        // Host only
-        protected virtual void StartRound()
-        {
-            if (_currentPhase.Value != MofaPhase.Waiting && _currentPhase.Value != MofaPhase.RoundData)
-            {
-                Debug.Log($"[MofaBaseRealityManager] You cannot start round at the current phase: {_currentPhase.Value}");
-                return;
-            }
-            StartCoroutine(StartRoundFlow());
-        }
+        public abstract void TryStartRound();
 
         // Host only
-        protected IEnumerator StartRoundFlow()
+        protected virtual IEnumerator StartRoundFlow()
         {
             _currentPhase.Value = MofaPhase.Countdown;
             _roundCount.Value++;
@@ -400,8 +391,10 @@ namespace Holoi.Library.MOFABase
                         MofaIndividualRoundResult.Victory : MofaIndividualRoundResult.Defeat;
                 }
             }
-            // Kills
+            // Kill
             stats.Kill = player.KillCount.Value;
+            // Death
+            stats.Death = player.DeathCount.Value;
             // Hit rate
             stats.HitRate = (float)player.HitCount.Value / player.CastCount.Value;
 

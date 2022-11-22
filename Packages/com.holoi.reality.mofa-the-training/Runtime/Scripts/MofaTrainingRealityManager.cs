@@ -2,9 +2,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
-using Holoi.Library.HoloKitApp.UI;
 using Holoi.Library.MOFABase;
-using Holoi.Library.MOFABase.WatchConnectivity;
 using Holoi.Library.ARUX;
 
 namespace Holoi.Reality.MOFATheTraining
@@ -28,8 +26,6 @@ namespace Holoi.Reality.MOFATheTraining
         protected override void Start()
         {
             base.Start();
-            HoloKitAppUIEventManager.OnTriggered += OnTriggered;
-            MofaWatchConnectivityAPI.OnStartRoundMessageReceived += OnStartRoundMessageReceived;
 
             if (HoloKitApp.Instance.IsHost)
             {
@@ -54,14 +50,6 @@ namespace Holoi.Reality.MOFATheTraining
             }
         }
 
-        public override void OnDestroy()
-        {
-            base.OnDestroy();
-
-            HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
-            MofaWatchConnectivityAPI.OnStartRoundMessageReceived -= OnStartRoundMessageReceived;
-        }
-
         private void SpawnMofaPlayerAI()
         {
             _mofaPlayerAI = Instantiate(_mofaPlayerAIPrefab);
@@ -71,11 +59,11 @@ namespace Holoi.Reality.MOFATheTraining
             _mofaPlayerAI.GetComponent<NetworkObject>().SpawnWithOwnership(999);
         }
 
-        protected override void StartRound()
+        public override void TryStartRound()
         {
             if (CurrentPhase != MofaPhase.Waiting && CurrentPhase != MofaPhase.RoundData)
             {
-                Debug.Log($"[MofaBaseRealityManager] You cannot start round at the current phase: {CurrentPhase}");
+                Debug.Log($"[MofaTrainingRealityManager] You cannot start round at the current phase: {CurrentPhase}");
                 return;
             }
 
@@ -83,13 +71,16 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 if (_arPlacementIndicator != null && _arPlacementIndicator.IsActive && _arPlacementIndicator.IsValid)
                 {
+                    Vector3 position = _arPlacementIndicator.HitPoint.position;
+                    Quaternion rotation = _arPlacementIndicator.HitPoint.rotation;
                     _arPlaneManager.enabled = false;
                     _arRaycastManager.enabled = false;
                     _arPlacementIndicator.OnPlacedFunc();
-                    _mofaPlayerAI.InitializeAvatarClientRpc(_arPlacementIndicator.HitPoint.position,
-                                                            _arPlacementIndicator.HitPoint.rotation,
-                                                            HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId].MetaAvatarCollectionBundleId,
-                                                            HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId].MetaAvatarTokenId);
+                    var realityPreferences = HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId];
+                    _mofaPlayerAI.InitializeAvatarClientRpc(position,
+                                                            rotation,
+                                                            realityPreferences.MetaAvatarCollectionBundleId,
+                                                            realityPreferences.MetaAvatarTokenId);
                     StartCoroutine(StartRoundFlow());
                 }
                 else
@@ -101,22 +92,6 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 StartCoroutine(StartRoundFlow());
             }
-        }
-
-        private void OnTriggered()
-        {
-            if (!HoloKitApp.Instance.IsHost) { return; }
-
-            if (CurrentPhase == MofaPhase.Waiting || CurrentPhase == MofaPhase.RoundData)
-            {
-                StartRound();
-            }
-        }
-
-        // Apple Watch
-        private void OnStartRoundMessageReceived()
-        {
-            StartRound();
         }
     }
 }
