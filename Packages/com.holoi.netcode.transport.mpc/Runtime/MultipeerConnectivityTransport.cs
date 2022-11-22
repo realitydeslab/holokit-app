@@ -16,11 +16,13 @@ namespace Netcode.Transports.MultipeerConnectivity
         private static MultipeerConnectivityTransport s_instance;
 
         [DllImport("__Internal")]
-        private static extern void MPC_Initialize(Action<int> OnClientConnected,
-                                                  Action OnConnectedToHost,
-                                                  Action<int, IntPtr, int> OnReceivedData,
-                                                  Action<int> OnClientDisconnected,
-                                                  Action OnHostDisconnected);
+        private static extern void MPC_Initialize(Action<string> OnBrowserFoundPeer,
+                                                  Action<string> OnBrowserLostPeer,
+                                                  Action<string> OnAdvertiserReceivedInvitation,
+                                                  Action<string> OnConnectingWithPeer,
+                                                  Action<int, string> OnConnectedWithPeer,
+                                                  Action<int, string> OnDisconnectedWithPeer,
+                                                  Action<int, IntPtr, int> OnReceivedData);
 
         [DllImport("__Internal")]
         private static extern void MPC_StartAdvertising(string bundleId);
@@ -40,23 +42,61 @@ namespace Netcode.Transports.MultipeerConnectivity
         [DllImport("__Internal")]
         private static extern void MPC_SendData(int transportID, byte[] data, int length, bool reliable);
 
-        [AOT.MonoPInvokeCallback(typeof(Action<int>))]
-        private static void OnClientConnected(int transportID)
+        [AOT.MonoPInvokeCallback(typeof(Action<string>))]
+        private static void OnBrowserFoundPeerDelegate(string peerName)
+        {
+            if (s_instance != null)
+            {
+                OnBrowserFoundPeer?.Invoke(peerName);
+            } 
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(Action<string>))]
+        private static void OnBrowserLostPeerDelegate(string peerName)
+        {
+            if (s_instance != null)
+            {
+                OnBrowserLostPeer?.Invoke(peerName);
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(Action<string>))]
+        private static void OnAdvertiserReceivedInvitationDelegate(string peerName)
+        {
+            if (s_instance != null)
+            {
+                OnAdvertiserReceivedInvitation?.Invoke(peerName);
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(Action<string>))]
+        private static void OnConnectingWithPeerDelegate(string peerName)
+        {
+            if (s_instance != null)
+            {
+                OnConnectingWithPeer?.Invoke(peerName);
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(Action<int, string>))]
+        private static void OnConnectedWithPeerDelegate(int transportID, string peerName)
         {
             if (s_instance != null)
             {
                 s_instance.InvokeOnTransportEvent(NetworkEvent.Connect, (ulong)transportID,
                     default, Time.realtimeSinceStartup);
+                OnConnectedWithPeer?.Invoke((ulong)transportID, peerName);
             }
         }
 
-        [AOT.MonoPInvokeCallback(typeof(Action))]
-        private static void OnConnectedToHost()
+        [AOT.MonoPInvokeCallback(typeof(Action<int, string>))]
+        private static void OnDisconnectedWithPeerDelegate(int transportID, string peerName)
         {
             if (s_instance != null)
             {
-                s_instance.InvokeOnTransportEvent(NetworkEvent.Connect, 0,
-                    default, Time.realtimeSinceStartup);
+                s_instance.InvokeOnTransportEvent(NetworkEvent.Disconnect, (ulong)transportID,
+                   default, Time.realtimeSinceStartup);
+                OnDisconnectedWithPeer?.Invoke((ulong)transportID, peerName);
             }
         }
 
@@ -72,25 +112,17 @@ namespace Netcode.Transports.MultipeerConnectivity
             }
         }
 
-        [AOT.MonoPInvokeCallback(typeof(Action<int>))]
-        private static void OnClientDisconnected(int transportID)
-        {
-            if (s_instance != null)
-            {
-                s_instance.InvokeOnTransportEvent(NetworkEvent.Disconnect, (ulong)transportID,
-                    default, Time.realtimeSinceStartup);
-            }
-        }
+        public static event Action<string> OnBrowserFoundPeer;
 
-        [AOT.MonoPInvokeCallback(typeof(Action))]
-        private static void OnHostDisconnected()
-        {
-            if (s_instance != null)
-            {
-                s_instance.InvokeOnTransportEvent(NetworkEvent.Disconnect, 0,
-                    default, Time.realtimeSinceStartup);
-            }
-        }
+        public static event Action<string> OnBrowserLostPeer;
+
+        public static event Action<string> OnAdvertiserReceivedInvitation;
+
+        public static event Action<string> OnConnectingWithPeer;
+
+        public static event Action<ulong, string> OnConnectedWithPeer;
+
+        public static event Action<ulong, string> OnDisconnectedWithPeer;
 
         private void Awake()
         {
@@ -104,11 +136,13 @@ namespace Netcode.Transports.MultipeerConnectivity
 
         public override void Initialize(NetworkManager networkManager)
         {
-            MPC_Initialize(OnClientConnected,
-                           OnConnectedToHost,
-                           OnReceivedData,
-                           OnClientDisconnected,
-                           OnHostDisconnected);
+            MPC_Initialize(OnBrowserFoundPeerDelegate,
+                           OnBrowserLostPeerDelegate,
+                           OnAdvertiserReceivedInvitationDelegate,
+                           OnConnectingWithPeerDelegate,
+                           OnConnectedWithPeerDelegate,
+                           OnDisconnectedWithPeerDelegate,
+                           OnReceivedData);
 
             if (BundleId == null)
             {
