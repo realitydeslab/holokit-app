@@ -4,6 +4,7 @@ using UnityEngine.XR.ARFoundation;
 using NatML.Recorders;
 using NatML.Recorders.Clocks;
 using NatML.Recorders.Inputs;
+using NatML.Devices;
 using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
@@ -42,7 +43,7 @@ namespace Holoi.Library.HoloKitApp
         // Audio input
         private AudioInput _audioInput;
 
-        private AudioSource _microphoneAudioSource;
+        private AudioDevice _audioDevice;
 
         private AudioListener _cameraAudioListener;
 
@@ -68,13 +69,17 @@ namespace Holoi.Library.HoloKitApp
             {
                 _recordCamera = HoloKitCamera.Instance.GetComponent<Camera>();
 
-                if (HoloKitApp.Instance.GlobalSettings.PhaseEnabled && HoloKitApp.Instance.CurrentReality.IsPhaseRequired())
-                {
-                    _recordMicrophone = false;
-                }
-                else if (HoloKitApp.Instance.GlobalSettings.RecordMicrophone)
+                if (HoloKitApp.Instance.GlobalSettings.RecordMicrophone)
                 {
                     _recordMicrophone = true;
+                    // Initialize NatDevice
+                    var query = new MediaDeviceQuery(MediaDeviceCriteria.AudioDevice);
+                    _audioDevice = query.current as AudioDevice;
+                }
+                else
+                {
+                    _recordMicrophone = false;
+                    _cameraAudioListener = HoloKitCamera.Instance.GetComponent<AudioListener>();
                 }
 
                 _watermarkEnabled = HoloKitApp.Instance.GlobalSettings.WatermarkEnabled;
@@ -83,10 +88,10 @@ namespace Holoi.Library.HoloKitApp
 
         public void StartRecording()
         {
-            StartCoroutine(StartRecordingCoroutine());
+            StartRecordingInternal();
         }
 
-        private IEnumerator StartRecordingCoroutine()
+        private void CalculateVideoResolution()
         {
             // Set video width and height, notice that they can only be even numbers
             _videoWidth = Screen.width;
@@ -99,6 +104,11 @@ namespace Holoi.Library.HoloKitApp
             {
                 _videoHeight--;
             }
+        }
+
+        private void StartRecordingInternal()
+        {
+            CalculateVideoResolution();
             // Open the screen AR camera if it is not already open
             if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Stereo)
             {
@@ -106,30 +116,10 @@ namespace Holoi.Library.HoloKitApp
                 _recordCamera.enabled = true;
             }
 
-            if (_recordMicrophone)
-            {
-                _microphoneAudioSource = gameObject.AddComponent<AudioSource>();
-                // TODO: What does 'mute' mean here?
-                _microphoneAudioSource.mute = false;
-                _microphoneAudioSource.loop = true;
-                _microphoneAudioSource.bypassEffects = false;
-                _microphoneAudioSource.bypassListenerEffects = false;
-                _microphoneAudioSource.clip = Microphone.Start(null, true, 1, AudioSettings.outputSampleRate);
-                yield return new WaitUntil(() => Microphone.GetPosition(null) > 0);
-                _microphoneAudioSource.Play();
-            }
-            else
-            {
-                _cameraAudioListener = HoloKitCamera.Instance.GetComponent<AudioListener>();
-                yield return null;
-            }
-
             // Start recording
-            var sampleRate = _recordMicrophone ? AudioSettings.outputSampleRate : 24000;
-            var channelCount = _recordMicrophone ? (int)AudioSettings.speakerMode : 2;
-            //Debug.Log($"AudioSettings.outputSampleRate: {AudioSettings.outputSampleRate} and AudioSettings.speakerMode: {(int)AudioSettings.speakerMode}");
+            var sampleRate = _recordMicrophone ? _audioDevice.sampleRate : 24000;
+            var channelCount = _recordMicrophone ? _audioDevice.channelCount : 2;
             var clock = new RealtimeClock();
-            //_recorder = new HEVCRecorder(_videoWidth, _videoHeight, _frameRate, sampleRate, channelCount, audioBitRate: 96_000);
             _recorder = new HEVCRecorder(_videoWidth, _videoHeight, _frameRate, sampleRate, channelCount);
             if (_watermarkEnabled)
             {
@@ -159,7 +149,10 @@ namespace Holoi.Library.HoloKitApp
             _cameraInput.HDR = true;
             if (_recordMicrophone)
             {
-                _audioInput = new AudioInput(_recorder, clock, _microphoneAudioSource, true);
+                _audioDevice.StartRunning(audioBuffer =>
+                {
+                    _recorder.CommitSamples(audioBuffer.sampleBuffer, clock.timestamp);
+                });
             }
             else
             {
@@ -171,9 +164,15 @@ namespace Holoi.Library.HoloKitApp
         {
             _watermarkInput?.Dispose();
             _cameraInput?.Dispose();
-            _audioInput?.Dispose();
+            if (_recordMicrophone)
+            {
+                _audioDevice.StopRunning();
+            }
+            else
+            {
+                _audioInput?.Dispose();
+            }
             var path = await _recorder.FinishWriting();
-            Debug.Log($"Saved recording to: {path}");
 
             // Save to Photo Library
             var payload = new NatSuite.Sharing.SavePayload();
@@ -185,13 +184,6 @@ namespace Holoi.Library.HoloKitApp
             {
                 _recordCamera.GetComponent<ARCameraBackground>().enabled = false;
                 _recordCamera.enabled = false;
-            }
-
-            if (_recordMicrophone)
-            {
-                _microphoneAudioSource.Stop();
-                Microphone.End(null);
-                Destroy(_microphoneAudioSource);
             }
 
             // Release inputs
