@@ -56,7 +56,7 @@ namespace Holoi.Reality.MOFATheTraining
             // TODO: This is hard-coded
             _mofaPlayerAI.MagicSchoolTokenId.Value = 0;
             _mofaPlayerAI.Team.Value = MofaTeam.Red;
-            _mofaPlayerAI.GetComponent<NetworkObject>().SpawnWithOwnership(999);
+            _mofaPlayerAI.GetComponent<NetworkObject>().SpawnWithOwnership(MofaPlayerAI.AIClientId);
         }
 
         public override void TryStartRound()

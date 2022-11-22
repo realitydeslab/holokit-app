@@ -122,7 +122,8 @@ namespace Holoi.Library.MOFABase
         [ClientRpc]
         private void OnBeingHitClientRpc(byte attackerClientId)
         {
-            OnBeingHit?.Invoke(attackerClientId, OwnerClientId);
+
+            OnBeingHit?.Invoke((ulong)attackerClientId, OwnerClientId);
         }
 
         private void OnCenterDestroyedFunc(bool oldValue, bool newValue)

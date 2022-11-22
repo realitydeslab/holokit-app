@@ -10,7 +10,7 @@ namespace Holoi.Reality.MOFATheTraining
 {
     public enum AIAttackState
     {
-        Nothing = 0,
+        None = 0,
         BasicSpell = 1,
         SecondarySpell = 2
     }
@@ -25,10 +25,6 @@ namespace Holoi.Reality.MOFATheTraining
 
         private readonly NetworkVariable<Vector2> _animationVector = new(Vector2.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        private string _hostPreferencedAvatarCollectionBundleId;
-
-        private string _hostPreferencedAvatarTokenId;
-
         private Animator _animator;
 
         private GameObject _avatar;
@@ -36,7 +32,7 @@ namespace Holoi.Reality.MOFATheTraining
         // From avatar origin to avatar's center eye
         private Vector3 _centerEyeOffset;
 
-        private MofaBaseRealityManager _mofaRealityManager;
+        private MofaBaseRealityManager _mofaBaseRealityManager;
 
         private Vector3 _initialPosition;
 
@@ -64,32 +60,23 @@ namespace Holoi.Reality.MOFATheTraining
 
         private const float Speed = 0.3f;
 
+        public const ulong AIClientId = 99;
+
         private readonly Vector4 VelocityRemap = new(-.02f, .02f, -1f, 1f);
 
         public static event Action<SpellType> OnAISpawnedSpell;
 
-        protected override void Start()
-        {
-            base.Start();
-
-            _mofaRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-        }
-
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-
-            if (IsServer)
-            {
-
-            }
+            _mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            SetupSpellsForAI();
             _animationVector.OnValueChanged += OnAnimationVectorChanged;
         }
 
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
-
             _animationVector.OnValueChanged -= OnAnimationVectorChanged;
         }
 
@@ -119,17 +106,15 @@ namespace Holoi.Reality.MOFATheTraining
 
                 Destroy(go);
             }
-            _hostPreferencedAvatarCollectionBundleId = avatarCollectionBundleId;
-            _hostPreferencedAvatarTokenId = avatarTokenId;
-            SpawnAvatar();
+            SpawnAvatar(avatarCollectionBundleId, avatarTokenId);
         }
 
-        private void SpawnAvatar()
+        private void SpawnAvatar(string avatarCollectionBundleId, string avatarTokenId)
         {
             if (_avatar == null)
             {
-                var preferencedAvatarCollection = HoloKitApp.Instance.GlobalSettings.AvatarCollectionList.GetMetaAvatarCollection(_hostPreferencedAvatarCollectionBundleId);
-                var preferencedAvatar = preferencedAvatarCollection.GetMetaAvatar(_hostPreferencedAvatarTokenId);
+                var preferencedAvatarCollection = HoloKitApp.Instance.GlobalSettings.AvatarCollectionList.GetMetaAvatarCollection(avatarCollectionBundleId);
+                var preferencedAvatar = preferencedAvatarCollection.GetMetaAvatar(avatarTokenId);
                 var avatarCollectionParams = _mofaAvatarCollectionParamsList.GetAvatarCollectionParams(preferencedAvatarCollection);
                 _centerEyeOffset = avatarCollectionParams.CenterEyeOffset;
                 LifeShieldOffset = avatarCollectionParams.LifeShiledOffset;
@@ -157,21 +142,20 @@ namespace Holoi.Reality.MOFATheTraining
                     transform.rotation = MofaUtils.GetHorizontalLookRotation(forwardVector);
                 }
 
-                // Position
-                //if (_mofaRealityManager.CurrentPhase == MofaPhase.Fighting)
-                //{
-                //    if (Vector3.Distance(transform.position, _destPosition) < 0.1f)
-                //    {
-                //        // Find a new destination position
-                //        GetNextDestPos();
-                //    }
-                //    else
-                //    {
-                //        // Approaching to the destination
-                //        transform.position += Speed * Time.fixedDeltaTime * (_destPosition - transform.position).normalized;
-                //        UpdateAvatarMovementAnimation();
-                //    }
-                //}
+                if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting && IsAIAlive())
+                {
+                    if (Vector3.Distance(transform.position, _destPosition) < 0.1f)
+                    {
+                        // Find a new destination position
+                        GetNextDestPos();
+                    }
+                    else
+                    {
+                        // Approaching to the destination
+                        transform.position += Speed * Time.fixedDeltaTime * (_destPosition - transform.position).normalized;
+                        UpdateAvatarMovementAnimation();
+                    }
+                }
             }
         }
 
@@ -191,23 +175,19 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 if (mofaPhase == MofaPhase.Fighting)
                 {
-                    SetupSpellsForAI();
-                    //_attackAICoroutine = StartCoroutine(AttackAI());
+                    _attackAICoroutine = StartCoroutine(AttackAI());
                 }
                 else if (mofaPhase == MofaPhase.RoundOver)
                 {
                     StopCoroutine(_attackAICoroutine);
-                    if (IsServer)
-                    {
-                        _animationVector.Value = new Vector2(0f, 0f);
-                    }
+                    _animationVector.Value = new Vector2(0f, 0f);
                 }
             }
         }
 
         private void SetupSpellsForAI()
         {
-            foreach (var spell in ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).SpellList.List)
+            foreach (var spell in _mofaBaseRealityManager.SpellList.List)
             {
                 if (spell.MagicSchool.TokenId.Equals(_magicSchool.TokenId))
                 {
@@ -232,20 +212,20 @@ namespace Holoi.Reality.MOFATheTraining
                 float random = UnityEngine.Random.Range(0f, 1f);
                 if (random < 0.2f) // Do nothing
                 {
-                    if (_lastAIAttackState == AIAttackState.Nothing)
+                    if (_lastAIAttackState == AIAttackState.None)
                     {
                         StartCoroutine(SpawnSpellWithDelay(SpellType.Basic));
                     }
                     else
                     {
-                        _lastAIAttackState = AIAttackState.Nothing;
+                        _lastAIAttackState = AIAttackState.None;
                     }
                 }
                 else if (random > 0.9) // Secondary spell
                 {
                     if (_lastAIAttackState == AIAttackState.SecondarySpell)
                     {
-                        _lastAIAttackState = AIAttackState.Nothing;
+                        _lastAIAttackState = AIAttackState.None;
                     }
                     else
                     {
@@ -279,7 +259,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         private bool IsHostAlive()
         {
-            var hostLifeShield = _mofaRealityManager.Players[0].LifeShield;
+            var hostLifeShield = _mofaBaseRealityManager.Players[0].LifeShield;
             if (hostLifeShield != null && !hostLifeShield.IsDestroyed)
             {
                 return true;
@@ -311,7 +291,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void SpawnSpell(SpellType spellType)
         {
-            var hostLifeShield = _mofaRealityManager.Players[0].LifeShield;
+            var hostLifeShield = _mofaBaseRealityManager.Players[0].LifeShield;
             Vector3 avatarCenterEyePos = transform.position + transform.rotation * _centerEyeOffset;
             Quaternion rotation = Quaternion.LookRotation(hostLifeShield.transform.position - avatarCenterEyePos);
             // TODO: Random deviation
@@ -326,7 +306,7 @@ namespace Holoi.Reality.MOFATheTraining
                 rotation = Quaternion.Euler(UnityEngine.Random.Range(-30f, 30f), 0f, 0f) * rotation;
             }
 
-            _mofaRealityManager.SpawnSpellServerRpc(spellType == SpellType.Basic ? _basicSpell.Id : _secondarySpell.Id,
+            _mofaBaseRealityManager.SpawnSpellServerRpc(spellType == SpellType.Basic ? _basicSpell.Id : _secondarySpell.Id,
                 avatarCenterEyePos, rotation, OwnerClientId);
             _lastAIAttackState = spellType == SpellType.Basic ? AIAttackState.BasicSpell : AIAttackState.SecondarySpell;
         }
@@ -380,7 +360,6 @@ namespace Holoi.Reality.MOFATheTraining
         {
             if (spellType == SpellType.Basic)
             {
-
                 _animator.SetTrigger("Attack A");
             }
             else
