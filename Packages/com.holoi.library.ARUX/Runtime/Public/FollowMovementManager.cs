@@ -49,6 +49,8 @@ namespace Holoi.Library.ARUX
 
         [SerializeField] private float _reachDistance = .001f;
 
+        [SerializeField] AnimationCurve _lerpCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
+
         bool _needMove = false;
 
         public Vector3 Offset
@@ -141,7 +143,18 @@ namespace Holoi.Library.ARUX
 
         Vector3 PositionAnimationLerp(Vector3 position, Vector3 targetPosition, float lerpSpeed)
         {
+            var m = Vector3.Distance(targetPosition, position)/_chaseDistance;
+            if (m > 1)
+            {
+                m = 1;
+            }
+            else
+            {
+                m = _lerpCurve.Evaluate(m);
+            }
+
             position += (targetPosition - position) * Time.deltaTime * lerpSpeed;
+
             return position;
         }
 
