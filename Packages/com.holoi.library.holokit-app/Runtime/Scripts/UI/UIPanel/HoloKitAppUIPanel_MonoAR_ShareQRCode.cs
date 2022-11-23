@@ -17,7 +17,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private GameObject _deviceSlotPrefab;
 
-        [SerializeField] private Transform _qrCode;
+        [SerializeField] private RectTransform _qrCode;
 
         private const float BackgroundDefaultHeight = 1162f;
 
@@ -47,7 +47,7 @@ namespace Holoi.Library.HoloKitApp.UI
         private void AdjustQRCodeSize()
         {
             float qrCodeWithInPixel = HoloKitUtils.MeterToPixel(QRCodeWidth);
-            GetComponent<RectTransform>().sizeDelta = new Vector2(qrCodeWithInPixel, qrCodeWithInPixel);
+            _qrCode.sizeDelta = new Vector2(qrCodeWithInPixel, qrCodeWithInPixel);
         }
 
         private void CalculateCameraToQRCodeOffset()

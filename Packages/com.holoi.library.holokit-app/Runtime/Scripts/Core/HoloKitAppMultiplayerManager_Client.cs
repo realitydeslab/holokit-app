@@ -136,12 +136,9 @@ namespace Holoi.Library.HoloKitApp
 
         private void FixedUpdate_Client()
         {
-            if (IsSpawned && !IsServer)
+            if (_currentClientSyncPhase == ClientSyncPhase.SyncingTimestamp)
             {
-                if (_currentClientSyncPhase == ClientSyncPhase.SyncingTimestamp)
-                {
-                    OnRequestTimestampServerRpc(HoloKitARSessionControllerAPI.GetSystemUptime());
-                }
+                OnRequestTimestampServerRpc(HoloKitARSessionControllerAPI.GetSystemUptime());
             }
         }
 
