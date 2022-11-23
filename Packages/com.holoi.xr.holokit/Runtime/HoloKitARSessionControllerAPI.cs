@@ -102,7 +102,8 @@ namespace HoloKit {
             Action<bool, string, IntPtr, int> OnGotARWorldMapFromDisk,
             Action OnARWorldMapLoaded,
             Action OnRelocalizationSucceeded,
-            Action<double, IntPtr> OnARSessionUpdatedFrame);
+            Action<double, IntPtr> OnARSessionUpdatedFrame,
+            Action<double, IntPtr> OnARSessionUpdatedImageAnchor);
 
         [DllImport("__Internal")]
         private static extern double HoloKitSDK_GetSystemUptime();
@@ -174,6 +175,8 @@ namespace HoloKit {
         [AOT.MonoPInvokeCallback(typeof(Action<double, IntPtr>))]
         private static void OnARSessionUpdatedFrameDelegate(double timestamp, IntPtr matrixPtr)
         {
+            if (OnARSessionUpdatedFrame == null) return;
+
             float[] matrixData = new float[16];
             Marshal.Copy(matrixPtr, matrixData, 0, 16);
             Matrix4x4 matrix = new();
@@ -184,7 +187,25 @@ namespace HoloKit {
                     matrix[i, j] = matrixData[(4 * i) + j];
                 }
             }
-            OnARSessionUpdatedFrame?.Invoke(timestamp, matrix);
+            OnARSessionUpdatedFrame(timestamp, matrix);
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(Action<double, IntPtr>))]
+        private static void OnARSessionUpdatedImageAnchorDelegate(double timestamp, IntPtr matrixPtr)
+        {
+            if (OnARSessionUpdatedImageAnchor == null) return;
+
+            float[] matrixData = new float[16];
+            Marshal.Copy(matrixPtr, matrixData, 0, 16);
+            Matrix4x4 matrix = new();
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    matrix[i, j] = matrixData[(4 * i) + j];
+                }
+            }
+            OnARSessionUpdatedImageAnchor(timestamp, matrix);
         }
 
         public static event Action<ThermalState> OnThermalStateChanged;
@@ -206,6 +227,8 @@ namespace HoloKit {
         public static event Action OnRelocalizationSucceeded;
 
         public static event Action<double, Matrix4x4> OnARSessionUpdatedFrame;
+
+        public static event Action<double, Matrix4x4> OnARSessionUpdatedImageAnchor;
 
         private static XRSessionSubsystem GetLoadedXRSessionSubsystem()
         {
@@ -310,7 +333,8 @@ namespace HoloKit {
                     OnGotARWorldMapFromDiskDelegate,
                     OnARWorldMapLoadedDelegate,
                     OnRelocalizationSucceededDelegate,
-                    OnARSessionUpdatedFrameDelegate);
+                    OnARSessionUpdatedFrameDelegate,
+                    OnARSessionUpdatedImageAnchorDelegate);
             }
         }
 

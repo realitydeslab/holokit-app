@@ -84,7 +84,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnAlignmentMarkChecked()
         {
-            HoloKitApp.Instance.MultiplayerManager.CheckAlignmentMark();
+            HoloKitApp.Instance.MultiplayerManager.CheckAlignmentMarker();
         }
 
         private void OnRescanQRCode()

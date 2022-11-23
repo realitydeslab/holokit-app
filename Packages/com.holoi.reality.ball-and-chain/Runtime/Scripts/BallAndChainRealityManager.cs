@@ -15,14 +15,14 @@ namespace Holoi.Reality.BallAndChain
 
         private void Awake()
         {
-            HoloKitAppMultiplayerManager.OnAlignmentMarkChecked += OnRelocalizationSucceeded;
+            HoloKitAppMultiplayerManager.OnAlignmentMarkerChecked += OnRelocalizationSucceeded;
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
 
-            HoloKitAppMultiplayerManager.OnAlignmentMarkChecked -= OnRelocalizationSucceeded;
+            HoloKitAppMultiplayerManager.OnAlignmentMarkerChecked -= OnRelocalizationSucceeded;
         }
 
         public override void OnNetworkSpawn()

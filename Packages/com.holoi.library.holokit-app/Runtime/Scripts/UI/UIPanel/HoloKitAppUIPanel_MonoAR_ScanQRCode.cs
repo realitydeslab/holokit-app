@@ -8,25 +8,17 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
-        private void Awake()
+        private void Start()
         {
-            HoloKitAppMultiplayerManager.OnFinishedScanningQRCode += OnFinishedScanningQRCode;
+            HoloKitAppMultiplayerManager.OnPoseSynced += OnPoseSynced;
         }
 
         private void OnDestroy()
         {
-            HoloKitAppMultiplayerManager.OnFinishedScanningQRCode -= OnFinishedScanningQRCode;
+            HoloKitAppMultiplayerManager.OnPoseSynced -= OnPoseSynced;
         }
 
-        private void Start()
-        {
-            if (HoloKitUtils.IsEditor)
-            {
-                OnFinishedScanningQRCode();
-            }
-        }
-
-        private void OnFinishedScanningQRCode()
+        private void OnPoseSynced()
         {
             HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_CheckAlignmentMark");
         }

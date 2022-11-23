@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -16,21 +17,52 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private GameObject _deviceSlotPrefab;
 
+        [SerializeField] private Transform _qrCode;
+
         private const float BackgroundDefaultHeight = 1162f;
 
         private const float DeviceSlotHeight = 50f;
 
         private const float DeviceListBottomPadding = 40f;
 
+        private const float QRCodeWidth = 0.04f;
+
         private void Start()
         {
             HoloKitAppMultiplayerManager.OnConnectedDeviceListUpdated += OnConnectedDeviceListUpdated;
             OnConnectedDeviceListUpdated(HoloKitApp.Instance.MultiplayerManager.ConnectedDevicesList);
+            AdjustQRCodeSize();
+            if (HoloKitUtils.IsRuntime)
+            {
+                CalculateCameraToQRCodeOffset();
+                HoloKitAppUIEventManager.OnStartedAdvertising?.Invoke();
+            }
         }
 
         private void OnDestroy()
         {
             HoloKitAppMultiplayerManager.OnConnectedDeviceListUpdated += OnConnectedDeviceListUpdated;
+        }
+
+        private void AdjustQRCodeSize()
+        {
+            float qrCodeWithInPixel = HoloKitUtils.MeterToPixel(QRCodeWidth);
+            GetComponent<RectTransform>().sizeDelta = new Vector2(qrCodeWithInPixel, qrCodeWithInPixel);
+        }
+
+        private void CalculateCameraToQRCodeOffset()
+        {
+            // The offset from the left screen center to the QRCode
+            Vector3 leftEdgeCenterToQRCodeOffset = Vector3.zero;
+            leftEdgeCenterToQRCodeOffset.x = HoloKitUtils.PixelToMeter(Screen.width / 2f);
+            leftEdgeCenterToQRCodeOffset.y = -HoloKitUtils.PixelToMeter(Screen.height / 2f - _qrCode.position.y);
+
+            // The offset from the camera to the left screen center
+            Vector3 originalPhoneModelCameraOffset = HoloKitOpticsAPI.GetPhoneModelCameraOffset(HoloKitType.HoloKitX);
+            Vector3 phoneModelCameraOffset = new(originalPhoneModelCameraOffset.y, -originalPhoneModelCameraOffset.x, originalPhoneModelCameraOffset.z);
+
+            Vector3 cameraToQRCodeOffset = leftEdgeCenterToQRCodeOffset + phoneModelCameraOffset;
+            HoloKitApp.Instance.MultiplayerManager.HostCameraToQRCodeOffset = cameraToQRCodeOffset;
         }
 
         private void OnConnectedDeviceListUpdated(List<DeviceInfo> deviceInfos)

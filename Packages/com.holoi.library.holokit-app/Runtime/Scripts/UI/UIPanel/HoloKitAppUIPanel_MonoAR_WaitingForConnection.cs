@@ -12,12 +12,16 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private TMP_Text _text;
 
+        private string _peerName;
+
         private void Start()
         {
             MultipeerConnectivityTransport.OnBrowserFoundPeer += OnBrowserFoundPeer;
             MultipeerConnectivityTransport.OnBrowserLostPeer += OnBrowserLostPeer;
             MultipeerConnectivityTransport.OnConnectingWithPeer += OnConnectingWithPeer;
             HoloKitAppMultiplayerManager.OnLocalClientConnected += OnLocalClientConnected;
+            HoloKitAppMultiplayerManager.OnStartedSyncingTimestamp += OnStartedSyncingTimestamp;
+            HoloKitAppMultiplayerManager.OnStartedSyncingPose += OnStartedSyncingPose;
         }
 
         private void OnDestroy()
@@ -26,9 +30,39 @@ namespace Holoi.Library.HoloKitApp.UI
             MultipeerConnectivityTransport.OnBrowserLostPeer -= OnBrowserLostPeer;
             MultipeerConnectivityTransport.OnConnectingWithPeer -= OnConnectingWithPeer;
             HoloKitAppMultiplayerManager.OnLocalClientConnected -= OnLocalClientConnected;
+            HoloKitAppMultiplayerManager.OnStartedSyncingTimestamp -= OnStartedSyncingTimestamp;
+            HoloKitAppMultiplayerManager.OnStartedSyncingPose -= OnStartedSyncingPose;
+        }
+
+        private void OnBrowserFoundPeer(string peerName)
+        {
+            _peerName = peerName;
+            _text.text = $"Found nearby host\n{peerName}...";
+        }
+
+        private void OnBrowserLostPeer(string peerName)
+        {
+            _peerName = peerName;
+            _text.text = $"Lost nearby host\n{peerName}";
+        }
+
+        private void OnConnectingWithPeer(string peerName)
+        {
+            _peerName = peerName;
+            _text.text = $"Connecting to nearby\nhost {peerName}...";
         }
 
         private void OnLocalClientConnected()
+        {
+            _text.text = $"Connected to nearby\nhost {_peerName}";
+        }
+
+        private void OnStartedSyncingTimestamp()
+        {
+            _text.text = $"Syncing timestamp with\nnearby host {_peerName}...";
+        }
+
+        private void OnStartedSyncingPose()
         {
             HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ScanQRCode");
         }
@@ -37,21 +71,6 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitAppUIEventManager.OnExitReality?.Invoke();
-        }
-
-        private void OnBrowserFoundPeer(string peerName)
-        {
-            _text.text = $"Found nearby device\n{peerName}...";
-        }
-
-        private void OnBrowserLostPeer(string peerName)
-        {
-            _text.text = $"Lost nearby device\n{peerName}";
-        }
-
-        private void OnConnectingWithPeer(string peerName)
-        {
-            _text.text = $"Connecting to nearby\ndevice {peerName}...";
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Holoi.Library.HoloKitApp
     {
         public override void OnNetworkSpawn()
         {
-            HoloKitApp.Instance.MultiplayerManager.SetNetworkHostCameraPose(this);
+            HoloKitApp.Instance.MultiplayerManager.SetHostCameraPose(this);
             if (IsServer)
             {
                 var parentConstraint = gameObject.AddComponent<ParentConstraint>();
