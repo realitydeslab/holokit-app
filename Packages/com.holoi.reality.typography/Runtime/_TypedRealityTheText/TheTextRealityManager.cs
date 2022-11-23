@@ -56,11 +56,12 @@ namespace Holoi.Reality.Typography
                         var distance = Vector3.Distance(ThumbJoint.position, IndexJoint.position);
                         if (distance > 0.12f && _textInstance.GetComponent<TextController>().isUpdated)
                         {
-                            _creationProcess += Time.deltaTime * 1f;
-                            if (_creationProcess > 1)
+                            _creationProcess += Time.deltaTime * 0.5f;
+                            if (_creationProcess > 0.5f)
                             {
-                                _creationProcess = 1;
+                                _creationProcess = 0.5f;
                                 _textInstance.GetComponent<TextController>().isUpdated = false;
+                                _textInstance.GetComponent<TextController>().OnLoaded();
                                 StartCoroutine(WaitAndSwitchToIdle());
                                 _state = State.Coolingdown;
                             }
@@ -75,8 +76,11 @@ namespace Holoi.Reality.Typography
                     }
                     break;
                 case State.Coolingdown:
-                    //Debug.Log("Coolingdown");
-                    
+
+                    _creationProcess -= Time.deltaTime * 3f;
+                    if (_creationProcess < 0) _creationProcess = 0;
+                    _textInstance.GetComponent<TextController>().AnimationProcess = _creationProcess;
+
                     break;
 
             }

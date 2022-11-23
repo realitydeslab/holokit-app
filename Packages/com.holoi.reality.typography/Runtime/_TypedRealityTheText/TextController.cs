@@ -11,6 +11,7 @@ namespace Holoi.Reality.Typography
         [HideInInspector] public float AnimationProcess = 0;
 
         [SerializeField] VisualEffect _vfx;
+        [SerializeField] Animator  _animator;
 
         TheTextRealityManager _manager;
 
@@ -21,6 +22,11 @@ namespace Holoi.Reality.Typography
 
         void Update()
         {
+            if(AnimationProcess == 0.5f)
+            {
+
+            }
+
             if (isUpdated)
             {
                 _vfx.SetVector3("ThumbPosition", _manager.ThumbJoint.position);
@@ -29,8 +35,14 @@ namespace Holoi.Reality.Typography
             }
             else
             {
-
+                _vfx.SetFloat("AnimationProcess", 0);
+                //_vfx.SetFloat("TensityMultipier", 0);
             }
+        }
+
+        public void OnLoaded()
+        {
+            _animator.SetTrigger("Loaded");
         }
     }
 }

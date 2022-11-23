@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5940430814628660038}
   - component: {fileID: 5940430814628660037}
   - component: {fileID: 4577810865940059116}
+  - component: {fileID: 1090574310}
   m_Layer: 0
   m_Name: test smaple vfx
   m_TagString: Untagged
@@ -50,7 +51,13 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 0
+        m_Name: AnimationProcess
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: TensityMultipier
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -129,5 +136,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07d404b977e904889ba97dd7775f44b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _vfx: {fileID: 5940430814628660038}
   isUpdated: 0
+  AnimationProcess: 0
+  _vfx: {fileID: 5940430814628660038}
+--- !u!95 &1090574310
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5940430814628660036}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9cb400fb29c5149e4971cd4bc231bd26, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
