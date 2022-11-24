@@ -179,8 +179,18 @@ namespace Holoi.Reality.Typography
 
             if (renderer && renderer.positionCount >= 2)
             {
-                renderer.SetPosition(0, spring.transform.position);
-                renderer.SetPosition(1, connectedPosition);
+                for (int i = 0; i < renderer.positionCount; i++)
+                {
+                    renderer.SetPosition(
+                        i,
+                        spring.transform.position +
+                        (((connectedPosition - spring.transform.position) * i)
+                        /
+                        (renderer.positionCount-1))
+                        );
+                }
+                //renderer.SetPosition(0, spring.transform.position);
+                //renderer.SetPosition(1, connectedPosition);
             }
             //}
         }

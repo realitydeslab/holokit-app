@@ -30,16 +30,9 @@ public class HandGestureManager : MonoBehaviour
     { get { return _handSeconds; } }
 
     [Header("Features")]
-    //[SerializeField] bool _position;
-    //[SerializeField] float _offset = 0.5f;
-    //public float Offset{
-    //    get { return _offset; }
-    //    set { _offset = value; }
-    //}
     [SerializeField] bool _velocity;
     [SerializeField] bool _normal;
     [SerializeField] bool _gesture;
-
     [SerializeField] bool _smoothFilter;
 
     [HideInInspector]
