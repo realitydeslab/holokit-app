@@ -68,6 +68,8 @@ namespace Holoi.Library.MOFABase
 
         public MofaSpellPool SpellPool;
 
+        [SerializeField] private MofaInputManager _inputManager;
+
         [SerializeField] private MofaPlayer _mofaPlayerPrefab;
 
         [Header("MOFA Settings")]
@@ -113,6 +115,8 @@ namespace Holoi.Library.MOFABase
         public static event Action<MofaPhase> OnPhaseChanged;
 
         public static event Action<MofaRoundResult> OnReceivedRoundResult;
+
+        public static event Action<MofaIndividualStats> OnReceivedIndividualStats;
 
         protected virtual void Start()
         {
@@ -160,6 +164,7 @@ namespace Holoi.Library.MOFABase
             {
                 if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
                 {
+                    OnReceivedIndividualStats?.Invoke(GetIndividualStats());
                     ResetLocalPlayerReadyState();
                 }
             }
@@ -167,7 +172,7 @@ namespace Holoi.Library.MOFABase
 
         private void OnRoundResultChangedFunc(MofaRoundResult oldValue, MofaRoundResult newValue)
         {
-            if (newValue == MofaRoundResult.NotDetermined) { return; }
+            if (newValue == MofaRoundResult.NotDetermined) return;
             Debug.Log($"Round result: {newValue}");
             OnReceivedRoundResult?.Invoke(newValue);
         }
@@ -226,25 +231,6 @@ namespace Holoi.Library.MOFABase
                 Debug.Log($"[MofaBaseRealityManager] There is no player with clientId: {clientId}");
                 return null;
             }
-        }
-
-        // Host only
-        public virtual void OnPlayerReadyStateChanged()
-        {
-            if (_players.Count < 2)
-            {
-                return;
-            }
-
-            foreach (var player in _players.Values)
-            {
-                if (!player.Ready.Value)
-                {
-                    return;
-                }
-            }
-            // Everyone is ready
-            //StartRound();
         }
 
         public abstract void TryStartRound();

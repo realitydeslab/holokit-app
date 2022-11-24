@@ -1,11 +1,14 @@
+using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
+using Unity.Services.Core;
 using AppleAuth;
 using AppleAuth.Enums;
 using AppleAuth.Extensions;
 using AppleAuth.Interfaces;
 using AppleAuth.Native;
+using TMPro;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -41,7 +44,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _userInfo.SetActive(false);
         }
 
-        private void Start()
+        private async void Start()
         {
             if (HoloKit.HoloKitUtils.IsEditor)
             {
@@ -49,60 +52,76 @@ namespace Holoi.Library.HoloKitApp.UI
                 return;
             }
 
+            //await InitializeUnityGamingServices();
+            InitializeSIWA();
+        }
+
+        private async Task InitializeUnityGamingServices()
+        {
+            try
+            {
+                OnInitializingUnityGamingServices();
+                await UnityServices.InitializeAsync();
+                Debug.Log("Unity Gaming Service initialized");
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Failed to initialize Unity Gaming Services");
+                Debug.LogException(e);
+            }
+        }
+
+        private void InitializeSIWA()
+        {
             // If the current platform is supported
-            if (!AppleAuthManager.IsCurrentPlatformSupported) { return; }
+            if (!AppleAuthManager.IsCurrentPlatformSupported) return;
 
             // Creates a default JSON deserializer, to transform JSON Native responses to C# instances
             var deserializer = new PayloadDeserializer();
             // Creates an Apple Authentication manager with the deserializer
             _appleAuthManager = new AppleAuthManager(deserializer);
 
-            Initialize();
-        }
-
-        private void Update()
-        {
-            // Updates the AppleAuthManager instance to execute
-            // pending callbacks inside Unity's execution loop
-            if (_appleAuthManager != null)
-            {
-                _appleAuthManager.Update();
-            }
-        }
-
-        private void Initialize()
-        {
             // Check if the current platform supports Sign In With Apple
             if (_appleAuthManager == null)
             {
                 return;
             }
 
+            // TODO: I don't think we need this revoke credential functionality now. Maybe we can add it in the future.
             // If at any point we receive a credentials revoked notification, we delete the stored User ID, and go back to login
-            _appleAuthManager.SetCredentialsRevokedCallback(result =>
-            {
-                Debug.Log("Received revoked callback " + result);
-                OnNotSignedIn();
-                PlayerPrefs.DeleteKey(AppleUserIdKey);
-            });
+            //_appleAuthManager.SetCredentialsRevokedCallback(result =>
+            //{
+            //    Debug.Log("Received revoked callback " + result);
+            //    OnNotSignedIn();
+            //    PlayerPrefs.DeleteKey(AppleUserIdKey);
+            //});
 
             // If we have an Apple User Id available, get the credential status for it
             if (PlayerPrefs.HasKey(AppleUserIdKey))
             {
                 var storedAppleUserId = PlayerPrefs.GetString(AppleUserIdKey);
-                OnCheckingCredentials();
                 CheckCredentialStatusForUserId(storedAppleUserId);
             }
             // If we do not have an stored Apple User Id, attempt a quick login
             else
             {
-                OnAttemptingQuickLogin();
                 AttemptQuickLogin();
+            }
+        }
+
+        private void Update()
+        {
+            // Updates the AppleAuthManager instance to execute pending callbacks inside Unity's execution loop
+            if (_appleAuthManager != null)
+            {
+                _appleAuthManager.Update();
             }
         }
 
         private void CheckCredentialStatusForUserId(string appleUserId)
         {
+            Debug.Log($"[CheckCredentialStatusForUserId] appleUserId: {appleUserId}");
+            OnCheckingCredentials();
             // If there is an apple ID available, we should check the credential state
             _appleAuthManager.GetCredentialState(
                 appleUserId,
@@ -134,6 +153,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void AttemptQuickLogin()
         {
+            OnAttemptingQuickLogin();
             var quickLoginArgs = new AppleAuthQuickLoginArgs();
 
             // Quick login should succeed if the credential was authorized before and not revoked
@@ -215,6 +235,15 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 OnSignedIn();
             }
+        }
+
+        private void OnInitializingUnityGamingServices()
+        {
+            _descriptionText.gameObject.SetActive(true);
+            _signInButton.gameObject.SetActive(true);
+            _signInButton.interactable = false;
+            _notificationText.gameObject.SetActive(true);
+            _notificationText.text = "Initializing Unity Gaming Services...";
         }
 
         private void OnNotSignedIn()

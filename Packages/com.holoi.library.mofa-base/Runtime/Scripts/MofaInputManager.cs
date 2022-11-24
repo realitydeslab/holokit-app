@@ -93,6 +93,7 @@ namespace Holoi.Library.MOFABase
 
             SetupSpells();
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
+            MofaBaseRealityManager.OnReceivedIndividualStats += OnReceivedIndividualStats;
             LifeShield.OnDestroyed += OnLifeShieldDestroyed;
             LifeShield.OnRenovated += OnLifeShieldRenovated;
 
@@ -107,6 +108,7 @@ namespace Holoi.Library.MOFABase
             MofaWatchConnectivityAPI.OnWatchTriggered -= OnWatchTriggered;
 
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
+            MofaBaseRealityManager.OnReceivedIndividualStats -= OnReceivedIndividualStats;
             LifeShield.OnDestroyed -= OnLifeShieldDestroyed;
             LifeShield.OnRenovated -= OnLifeShieldRenovated;
 
@@ -160,23 +162,16 @@ namespace Holoi.Library.MOFABase
                 case MofaPhase.RoundResult:
                     break;
                 case MofaPhase.RoundData:
-                    OnRoundData();
                     break;
             }
         }
 
-        private void OnRoundData()
+        private void OnReceivedIndividualStats(MofaIndividualStats individualStats)
         {
-            if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
-            {
-                
-                var localPlayerStats = _mofaBaseRealityManager.GetIndividualStats();
-                localPlayerStats.Distance = _distance;
-                MofaWatchConnectivityAPI.SyncRoundResultToWatch(localPlayerStats.IndividualRoundResult,
-                                                                localPlayerStats.Kill,
-                                                                localPlayerStats.HitRate,
-                                                                localPlayerStats.Distance);
-            }
+            MofaWatchConnectivityAPI.SyncRoundResultToWatch(individualStats.IndividualRoundResult,
+                                                            individualStats.Kill,
+                                                            individualStats.HitRate,
+                                                            individualStats.Distance);
         }
 
         private void Update()

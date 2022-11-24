@@ -52,7 +52,7 @@ namespace Holoi.Library.HoloKitApp
         [SerializeField] private bool _logEnabled = true;
 
         [Tooltip("Set this value to true to restrict the fps to 60 in editor mode")]
-        [SerializeField] private bool _lockFps;
+        [SerializeField] private bool _lockFpsInEditor;
 
         public Reality CurrentReality
         {
@@ -160,7 +160,7 @@ namespace Holoi.Library.HoloKitApp
             // Set a default reality
             CurrentReality = GlobalSettings.RealityList.List[0];
             // Simulate iOS's FPS when testing on Editor
-            if (HoloKitUtils.IsEditor && _lockFps)
+            if (HoloKitUtils.IsEditor && _lockFpsInEditor)
             {
                 Application.targetFrameRate = 60;
             }
