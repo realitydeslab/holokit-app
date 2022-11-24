@@ -86,14 +86,11 @@ namespace Holoi.Library.MOFABase
 
         private void OnReadyStateChangedFunc(bool oldValue, bool newValue)
         {
+            // We only react to the situation where the ready state changes
+            // from false to true
             if (!oldValue && newValue)
             {
                 OnMofaPlayerReadyStateChanged?.Invoke(OwnerClientId, newValue);
-                if (IsServer)
-                {
-
-                    ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).OnPlayerReadyStateChanged();
-                }
             }
         }
 

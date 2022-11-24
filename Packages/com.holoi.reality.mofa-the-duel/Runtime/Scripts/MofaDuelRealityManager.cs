@@ -1,5 +1,3 @@
-using System;
-using Holoi.Library.HoloKitApp.UI;
 using Holoi.Library.MOFABase;
 
 namespace Holoi.Reality.MOFATheDuel
@@ -9,28 +7,37 @@ namespace Holoi.Reality.MOFATheDuel
         protected override void Start()
         {
             base.Start();
-
-            HoloKitAppUIEventManager.OnTriggered += OnTriggered;
+            MofaPlayer.OnMofaPlayerReadyStateChanged += OnPlayerReadyStateChanged;
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
-
-            HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
+            MofaPlayer.OnMofaPlayerReadyStateChanged -= OnPlayerReadyStateChanged;
         }
 
         public override void TryStartRound()
-        {
-            
-        }
-
-        private void OnTriggered()
         {
             if (CurrentPhase == MofaPhase.Waiting || CurrentPhase == MofaPhase.RoundData)
             {
                 GetPlayer().Ready.Value = true;
             }
+        }
+
+        public virtual void OnPlayerReadyStateChanged(ulong clientId, bool ready)
+        {
+            if (!IsServer) return;
+            if (!ready) return;
+            if (Players.Count < 2) return;
+
+            foreach (var player in Players.Values)
+            {
+                if (!player.Ready.Value)
+                {
+                    return;
+                }
+            }
+            StartCoroutine(StartRoundFlow());
         }
     }
 }
