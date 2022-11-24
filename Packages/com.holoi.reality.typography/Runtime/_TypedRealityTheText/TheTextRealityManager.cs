@@ -77,7 +77,7 @@ namespace Holoi.Reality.Typography
                     break;
                 case State.Coolingdown:
 
-                    _creationProcess -= Time.deltaTime * 3f;
+                    _creationProcess -= Time.deltaTime * 2f;
                     if (_creationProcess < 0) _creationProcess = 0;
                     _textInstance.GetComponent<TextController>().AnimationProcess = _creationProcess;
 
