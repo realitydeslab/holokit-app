@@ -6,7 +6,7 @@ namespace Holoi.Library.ARUX
     {
         None = 0,
         Instant = 1,
-        Lerp = 2
+        Smooth = 2
     }
 
     public enum RotationType
@@ -34,9 +34,7 @@ namespace Holoi.Library.ARUX
 
         [SerializeField] private Vector3 _offset;
 
-        [SerializeField] private float _lerpSpeed;
-
-        [SerializeField] private float _lerpThreshold;
+        [SerializeField] private float _smoothTime;
 
         [Header("Rotation")]
         [SerializeField] private RotationType _rotationType;
@@ -58,6 +56,8 @@ namespace Holoi.Library.ARUX
                 _rotationType = value;
             }
         }
+
+        private Vector3 _velocity = Vector3.zero;
 
         private void Start()
         {
@@ -96,20 +96,15 @@ namespace Holoi.Library.ARUX
             switch (_movementType)
             {
                 case MovementType.Instant:
-                    //transform.position = realTargetPosition;
                     transform.position = new Vector3(_syncX ? targetPosition.x : transform.position.x,
                                                      _syncY ? targetPosition.y : transform.position.y,
                                                      _syncZ ? targetPosition.z : transform.position.z);
                     break;
-                case MovementType.Lerp:
-                    float distance = Vector3.Distance(transform.position, targetPosition);
-                    if (distance > _lerpThreshold)
-                    {
-                        Vector3 newPosition = transform.position + _lerpSpeed * Time.deltaTime * (targetPosition - transform.position).normalized;
-                        transform.position = new Vector3(_syncX ? newPosition.x : transform.position.x,
-                                                         _syncY ? newPosition.y : transform.position.y,
-                                                         _syncZ ? newPosition.z : transform.position.z);
-                    }
+                case MovementType.Smooth:
+                    Vector3 newPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref _velocity, _smoothTime);
+                    transform.position = new Vector3(_syncX ? newPosition.x : transform.position.x,
+                                                     _syncY ? newPosition.y : transform.position.y,
+                                                     _syncZ ? newPosition.z : transform.position.z);
                     break;
             }
         }

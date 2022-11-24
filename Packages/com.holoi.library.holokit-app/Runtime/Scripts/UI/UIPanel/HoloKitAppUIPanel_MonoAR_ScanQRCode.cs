@@ -20,6 +20,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnPoseSynced()
         {
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_CheckAlignmentMark");
         }
 

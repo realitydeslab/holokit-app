@@ -187,7 +187,7 @@ namespace Holoi.Library.MOFABase
             player.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
         }
 
-        public void SpawnLifeShield(ulong ownerClientId)
+        protected void SpawnLifeShield(ulong ownerClientId)
         {
             var lifeShieldPrefab = LifeShieldList.GetLifeShield(_players[ownerClientId].MagicSchoolTokenId.Value);
             var lifeShield = Instantiate(lifeShieldPrefab);
@@ -203,13 +203,11 @@ namespace Holoi.Library.MOFABase
         {
             MofaPlayer shieldOwner = Players[lifeShield.OwnerClientId];
             shieldOwner.LifeShield = lifeShield;
-            //if (IsServer)
-            //{
-                lifeShield.transform.SetParent(shieldOwner.transform);
-                lifeShield.transform.localPosition = shieldOwner.LifeShieldOffset;
-                lifeShield.transform.localRotation = Quaternion.identity;
-                lifeShield.transform.localScale = Vector3.one;
-            //}
+
+            lifeShield.transform.SetParent(shieldOwner.transform);
+            lifeShield.transform.localPosition = shieldOwner.LifeShieldOffset;
+            lifeShield.transform.localRotation = Quaternion.identity;
+            lifeShield.transform.localScale = Vector3.one;
         }
 
         public MofaPlayer GetPlayer(ulong clientId = 0)
@@ -255,9 +253,9 @@ namespace Holoi.Library.MOFABase
         protected virtual IEnumerator StartRoundFlow()
         {
             _currentPhase.Value = MofaPhase.Countdown;
+            PutTheArmorOn();
             _roundCount.Value++;
             _roundResult.Value = MofaRoundResult.NotDetermined;
-            RespawnAllLifeShields();
             yield return new WaitForSeconds(_countdownTime);
             _currentPhase.Value = MofaPhase.Fighting;
             yield return new WaitForSeconds(_roundTime);
@@ -269,17 +267,17 @@ namespace Holoi.Library.MOFABase
             _currentPhase.Value = MofaPhase.RoundData;
         }
 
-        // Host only
-        private void RespawnAllLifeShields()
+        /// <summary>
+        /// Spawn life shield for every player.
+        /// </summary>
+        private void PutTheArmorOn()
         {
             foreach (var clientId in Players.Keys)
             {
-                var lifeShield = Players[clientId].LifeShield;
-                if (lifeShield != null)
+                if (Players[clientId].LifeShield == null)
                 {
-                    Destroy(lifeShield.gameObject);
+                    SpawnLifeShield(clientId);
                 }
-                SpawnLifeShield(clientId);
             }
         }
 
@@ -314,16 +312,8 @@ namespace Holoi.Library.MOFABase
             {
                 // Update the score
                 _players[attackerClientId].KillCount.Value++;
-                _players[ownerClientId].DeathCount.Value++;
-                // Respawn life shield
-                StartCoroutine(RespawnLifeShield(ownerClientId));
+                _players[ownerClientId].DeathCount.Value++;;
             }
-        }
-
-        private IEnumerator RespawnLifeShield(ulong ownerClientId)
-        {
-            yield return new WaitForSeconds(3f);
-            SpawnLifeShield(ownerClientId);
         }
 
         // Host only
@@ -331,7 +321,7 @@ namespace Holoi.Library.MOFABase
         {
             if (!IsServer)
             {
-                Debug.LogError("[MofaBaseRealityManager] Only the host can compute round result");
+                Debug.LogError("[MofaBaseRealityManager] Only the host can compute the round result");
                 return MofaRoundResult.Draw;
             }
 

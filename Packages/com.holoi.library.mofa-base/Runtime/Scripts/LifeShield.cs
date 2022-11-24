@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
@@ -10,8 +11,6 @@ namespace Holoi.Library.MOFABase
         public MagicSchool MagicSchool;
 
         [SerializeField] private AudioClip _beingHitSound;
-
-        [SerializeField] private AudioClip _beingDestroyedSound;
 
         public bool IsDestroyed => _centerDestroyed.Value;
 
@@ -25,11 +24,17 @@ namespace Holoi.Library.MOFABase
 
         private readonly NetworkVariable<byte> _lastAttackerClientId = new(0, NetworkVariableReadPermission.Everyone);
 
+        private readonly Dictionary<LifeShieldArea, LifeShieldFragment> _fragments = new();
+
+        /// <summary>
+        /// Get a reference of this so we can easily play being hit sound.
+        /// </summary>
         private AudioSource _audioSource;
 
-        public static float DestroyDelay = 1f;
-
-        private readonly Dictionary<LifeShieldArea, LifeShieldFragment> _fragments = new();
+        /// <summary>
+        /// The life shield will automatically renovate itself after being destroyed.
+        /// </summary>
+        public const float RenovateTime = 3f;
 
         public event Action OnCenterDestroyed;
 
@@ -39,15 +44,16 @@ namespace Holoi.Library.MOFABase
 
         public event Action OnRightDestroyed;
 
-        // The paremeter is the ownerClientId
-        public static event Action<ulong> OnSpawned;
-
         // The first ulong is the attackerClientId and the second is the ownerClientId
         public static event Action<ulong, ulong> OnBeingHit;
 
         // The first ulong is the attackerClientId and the second is the ownerClientId
         public static event Action<ulong, ulong> OnDestroyed;
 
+        /// <summary>
+        /// This event is called when the life shield is renovated. The parameter
+        /// is the ownerClientId.
+        /// </summary>
         public static event Action<ulong> OnRenovated;
 
         private void Awake()
@@ -64,7 +70,8 @@ namespace Holoi.Library.MOFABase
 
         public override void OnNetworkSpawn()
         {
-            ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).SetLifeShield(this);
+            var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            mofaBaseRealityManager.SetLifeShield(this);
 
             //Hide local player's shield
             if (HoloKit.HoloKitUtils.IsRuntime && OwnerClientId == NetworkManager.LocalClientId)
@@ -74,16 +81,14 @@ namespace Holoi.Library.MOFABase
                 _fragments[LifeShieldArea.Left].transform.GetChild(0).gameObject.SetActive(false);
                 _fragments[LifeShieldArea.Right].transform.GetChild(0).gameObject.SetActive(false);
             }
-
-            // TODO: Destroy fragments that have already been destroyed for late joined spectator.
-
+           
             _centerDestroyed.OnValueChanged += OnCenterDestroyedFunc;
             _topDestroyed.OnValueChanged += OnTopDestroyedFunc;
             _leftDestroyed.OnValueChanged += OnLeftDestroyedFunc;
             _rightDestroyed.OnValueChanged += OnRightDestroyedFunc;
 
-            //OnSpawned?.Invoke(OwnerClientId);
-            OnRenovated?.Invoke(OwnerClientId);
+            // TODO: Destroy fragments that have already been destroyed for late joined spectator.
+
         }
 
         public override void OnNetworkDespawn()
@@ -122,7 +127,6 @@ namespace Holoi.Library.MOFABase
         [ClientRpc]
         private void OnBeingHitClientRpc(byte attackerClientId)
         {
-
             OnBeingHit?.Invoke((ulong)attackerClientId, OwnerClientId);
         }
 
@@ -135,13 +139,23 @@ namespace Holoi.Library.MOFABase
                 _fragments[LifeShieldArea.Center].gameObject.SetActive(false);
 
                 // The entire shield has been destroyed at this point
-                PlayDestroySound();
                 OnDestroyed?.Invoke((ulong)_lastAttackerClientId.Value, OwnerClientId);
-                if (IsServer)
-                {
-                    Destroy(gameObject, DestroyDelay);
-                }
+                StartCoroutine(OnDestroyedInternal());
             }
+        }
+
+        /// <summary>
+        /// Renovate life shield after a certian period of time.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator OnDestroyedInternal()
+        {
+            yield return new WaitForSeconds(RenovateTime);
+            _fragments[LifeShieldArea.Center].gameObject.SetActive(true);
+            _fragments[LifeShieldArea.Top].gameObject.SetActive(true);
+            _fragments[LifeShieldArea.Left].gameObject.SetActive(true);
+            _fragments[LifeShieldArea.Right].gameObject.SetActive(true);
+            OnRenovated?.Invoke(OwnerClientId);
         }
 
         private void OnTopDestroyedFunc(bool oldValue, bool newValue)
@@ -181,21 +195,6 @@ namespace Holoi.Library.MOFABase
                 _audioSource.clip = _beingHitSound;
                 _audioSource.Play();
             }
-        }
-
-        private void PlayDestroySound()
-        {
-            if (_beingDestroyedSound != null)
-            {
-                _audioSource.clip = _beingDestroyedSound;
-                _audioSource.Play();
-            }
-        }
-
-        // Use this instead of destroying and instantiating again.
-        public void Renovate()
-        {
-            
         }
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
@@ -29,13 +30,17 @@ namespace Holoi.Library.HoloKitApp.UI
                     HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_WaitingForConnection");
                 }
             }
+
+            if (!HoloKitApp.Instance.CurrentReality.IsSpectatorViewSupported())
+            {
+                _spectatorButton.GetComponent<Button>().interactable = false;
+            }
         }
 
         public void OnSpectatorButtonPressed()
         {
             if (HoloKitApp.Instance.IsHost)
             {
-                //HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ShareReality");
                 HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ShareQRCode");
             }
             else

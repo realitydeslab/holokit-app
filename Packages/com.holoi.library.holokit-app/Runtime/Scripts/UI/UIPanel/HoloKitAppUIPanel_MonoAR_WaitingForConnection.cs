@@ -64,6 +64,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnStartedSyncingPose()
         {
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ScanQRCode");
         }
 

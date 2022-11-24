@@ -93,8 +93,8 @@ namespace Holoi.Library.MOFABase
 
             SetupSpells();
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
-            LifeShield.OnSpawned += OnLifeShieldSpawned;
             LifeShield.OnDestroyed += OnLifeShieldDestroyed;
+            LifeShield.OnRenovated += OnLifeShieldRenovated;
 
             HoloKitAppUIEventManager.OnTriggered += OnTriggered;
             HoloKitAppUIEventManager.OnBoosted += OnBoosted;
@@ -107,8 +107,8 @@ namespace Holoi.Library.MOFABase
             MofaWatchConnectivityAPI.OnWatchTriggered -= OnWatchTriggered;
 
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
-            LifeShield.OnSpawned -= OnLifeShieldSpawned;
             LifeShield.OnDestroyed -= OnLifeShieldDestroyed;
+            LifeShield.OnRenovated -= OnLifeShieldRenovated;
 
             HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
             HoloKitAppUIEventManager.OnBoosted -= OnBoosted;
@@ -278,18 +278,6 @@ namespace Holoi.Library.MOFABase
             _secondarySpellUseCount++;
         }
 
-        private void OnLifeShieldSpawned(ulong ownerClientId)
-        {
-            if (ownerClientId == NetworkManager.Singleton.LocalClientId)
-            {
-                if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting)
-                {
-                    _isActive = true;
-                    MofaWatchConnectivityAPI.QueryWatchState();
-                }
-            }
-        }
-
         private void OnLifeShieldDestroyed(ulong _, ulong ownerClientId)
         {
             if (ownerClientId == NetworkManager.Singleton.LocalClientId)
@@ -312,11 +300,18 @@ namespace Holoi.Library.MOFABase
 
         private void OnTriggered()
         {
-            if (IsActive)
+            if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting)
             {
-                SpawnBasicSpell();
+                if (IsActive)
+                {
+                    SpawnBasicSpell();
+                }
+                else
+                {
+                    Debug.Log("[MofaInputManager] You cannot cast spells when you are dead :(");
+                }
             }
-            else
+            else if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Waiting || _mofaBaseRealityManager.CurrentPhase == MofaPhase.RoundData)
             {
                 _mofaBaseRealityManager.TryStartRound();
             }

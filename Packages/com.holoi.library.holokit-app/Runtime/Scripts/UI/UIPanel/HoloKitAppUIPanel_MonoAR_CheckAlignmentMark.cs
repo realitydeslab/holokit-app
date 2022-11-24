@@ -8,16 +8,14 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnCheckedButtonPressed()
         {
-            while (!HoloKitApp.Instance.UIPanelManager.PeekUIPanel().Equals("MonoAR"))
-            {
-                HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-            }
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitAppUIEventManager.OnAlignmentMarkChecked?.Invoke();
         }
 
         public void OnRescanButtonPressed()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ScanQRCode");
             HoloKitAppUIEventManager.OnRescanQRCode?.Invoke();
         }
     }
