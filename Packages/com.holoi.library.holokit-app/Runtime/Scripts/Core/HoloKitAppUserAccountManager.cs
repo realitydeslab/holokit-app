@@ -49,7 +49,6 @@ namespace Holoi.Library.HoloKitApp
         {
             AuthenticationService.Instance.SignedIn += () =>
             {
-                Debug.Log("[Authentication] Signed in");
                 OnAuthenticatingAppleUserIdSucceeded?.Invoke();
             };
 
