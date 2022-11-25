@@ -373,6 +373,8 @@ namespace Holoi.Library.MOFABase
             stats.Death = player.DeathCount.Value;
             // Hit rate
             stats.HitRate = (float)player.HitCount.Value / player.CastCount.Value;
+            // Distance
+            stats.Distance = _inputManager.Distance;
 
             return stats;
         }

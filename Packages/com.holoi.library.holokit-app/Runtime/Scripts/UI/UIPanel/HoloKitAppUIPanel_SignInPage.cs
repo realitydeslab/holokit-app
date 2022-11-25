@@ -52,8 +52,8 @@ namespace Holoi.Library.HoloKitApp.UI
                 return;
             }
 
-            //await InitializeUnityGamingServices();
-            InitializeSIWA();
+            await InitializeUnityGamingServices();
+            //InitializeSIWA();
         }
 
         private async Task InitializeUnityGamingServices()

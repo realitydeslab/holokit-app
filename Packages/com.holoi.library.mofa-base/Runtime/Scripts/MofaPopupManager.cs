@@ -28,6 +28,7 @@ namespace Holoi.Library.MOFABase
         {
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
             MofaBaseRealityManager.OnReceivedRoundResult += OnReceivedRoundResult;
+            MofaBaseRealityManager.OnReceivedIndividualStats += OnReceivedIndividualStats;
             LifeShield.OnDestroyed += OnLifeShieldDestroyed;
         }
 
@@ -35,6 +36,7 @@ namespace Holoi.Library.MOFABase
         {
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
             MofaBaseRealityManager.OnReceivedRoundResult -= OnReceivedRoundResult;
+            MofaBaseRealityManager.OnReceivedIndividualStats -= OnReceivedIndividualStats;
             LifeShield.OnDestroyed -= OnLifeShieldDestroyed;
         }
 
@@ -95,7 +97,6 @@ namespace Holoi.Library.MOFABase
                 case MofaPhase.RoundResult:
                     break;
                 case MofaPhase.RoundData:
-                    OnRoundData();
                     break;
             }
         }
@@ -139,10 +140,11 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnRoundData()
+        private void OnReceivedIndividualStats(MofaIndividualStats individualStats)
         {
-            //StartCoroutine(SpawnPopup(_summaryBoardPrefab, 30f));
-            // TODO: Display detailed data
+            SpawnPopup(_summaryBoardPrefab);
+            var summaryBoard = _currentPopup.GetComponent<SummaryBoard>();
+
         }
 
         private void OnLifeShieldDestroyed(ulong _, ulong ownerClientId)

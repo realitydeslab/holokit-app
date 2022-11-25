@@ -33,6 +33,11 @@ namespace Holoi.Library.MOFABase
         /// </summary>
         [HideInInspector] public NetworkVariable<int> HitCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+        /// <summary>
+        /// The distance the player has moved in this round.
+        /// </summary>
+        [HideInInspector] public NetworkVariable<float> Distance = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
         [HideInInspector] public LifeShield LifeShield;
 
         [HideInInspector] public Vector3 LifeShieldOffset = new(0f, -0.4f, 0.5f);
