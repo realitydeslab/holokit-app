@@ -22,20 +22,15 @@ namespace Holoi.Reality.Typography
 
         void Update()
         {
-            if(AnimationProcess == 0.5f)
-            {
-
-            }
-
             if (isUpdated)
             {
                 _vfx.SetVector3("ThumbPosition", _manager.ThumbJoint.position);
                 _vfx.SetVector3("IndexPosition", _manager.IndexJoint.position);
-                _vfx.SetFloat("AnimationProcess", AnimationProcess);
+                //_vfx.SetFloat("AnimationProcess", AnimationProcess);
             }
             else
             {
-                _vfx.SetFloat("AnimationProcess", 0);
+                //_vfx.SetFloat("AnimationProcess", 0);
                 //_vfx.SetFloat("TensityMultipier", 0);
             }
         }

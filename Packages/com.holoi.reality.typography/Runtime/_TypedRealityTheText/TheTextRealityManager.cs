@@ -54,7 +54,7 @@ namespace Holoi.Reality.Typography
                     if (HoloKit.HoloKitHandTracker.Instance.IsActive)
                     {
                         var distance = Vector3.Distance(ThumbJoint.position, IndexJoint.position);
-                        if (distance > 0.12f && _textInstance.GetComponent<TextController>().isUpdated)
+                        if (distance > 0.1f && _textInstance.GetComponent<TextController>().isUpdated)
                         {
                             _creationProcess += Time.deltaTime * 0.5f;
                             if (_creationProcess > 0.5f)
