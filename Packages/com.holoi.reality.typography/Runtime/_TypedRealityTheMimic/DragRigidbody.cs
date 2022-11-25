@@ -60,6 +60,7 @@ namespace Holoi.Reality.Typography
             m_SpringJoint.spring = Spring;
             m_SpringJoint.damper = Damper;
             m_SpringJoint.maxDistance = Distance;
+            m_SpringJoint.minDistance = Distance * 0.9f;
             m_SpringJoint.connectedBody = bodyJoint.GetComponent<Rigidbody>();
             Debug.Log("connectedBody = BodyJoint");
             m_SpringJoint.transform.position = fingerJoint.position;
