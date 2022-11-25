@@ -1,13 +1,5 @@
-using System;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using Unity.Services.Core;
-using AppleAuth;
-using AppleAuth.Enums;
-using AppleAuth.Extensions;
-using AppleAuth.Interfaces;
-using AppleAuth.Native;
 using TMPro;
 
 namespace Holoi.Library.HoloKitApp.UI
@@ -18,287 +10,117 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
-        [SerializeField] private TMP_Text _descriptionText;
+        [SerializeField] private Button _siwaButton;
 
-        [SerializeField] private Button _signInButton;
+        [SerializeField] private TMP_Text _processText;
 
-        [SerializeField] private TMP_Text _notificationText;
-
-        [SerializeField] private GameObject _userInfo;
-
-        [SerializeField] private TMP_Text _emailText;
-
-        private const string AppleUserIdKey = "AppleUserId";
-
-        private const string AppleUserNameKey = "AppleUserName";
-
-        private const string AppleUserEmailKey = "AppleUserEmail";
-
-        private IAppleAuthManager _appleAuthManager;
-
-        private void Awake()
+        private void Start()
         {
-            _descriptionText.gameObject.SetActive(false);
-            _signInButton.gameObject.SetActive(false);
-            _notificationText.gameObject.SetActive(false);
-            _userInfo.SetActive(false);
-        }
+            HoloKitAppUserAccountManager.OnInitializingUGS += OnInitializingUGS;
+            HoloKitAppUserAccountManager.OnInitializingUGSFailed += OnInitializingUGSFailed;
+            HoloKitAppUserAccountManager.OnSigningInWithCachedUser += OnSigningInWithCachedUser;
+            HoloKitAppSIWAManager.OnAttemptingQuickLogin += OnAttemptingQuickLogin;
+            HoloKitAppSIWAManager.OnAttemptingQuickLoginFailed += OnAttemptingQuickLoginFailed;
+            HoloKitAppSIWAManager.OnSigningInWithApple += OnSigningInWithApple;
+            HoloKitAppSIWAManager.OnSigningInWithAppleFailed += OnSigningInWithAppleFailed;
+            HoloKitAppUserAccountManager.OnAuthenticatingAppleUserId += OnAuthenticatingAppleUserId;
+            HoloKitAppUserAccountManager.OnAuthenticatingAppleUserIdSucceeded += OnAuthenticatingAppleUserIdSucceeded;
+            HoloKitAppUserAccountManager.OnAuthenticatingAppleUserIdFailed += OnAuthenticatingAppleUserIdFailed;
 
-        private async void Start()
-        {
-            if (HoloKit.HoloKitUtils.IsEditor)
+            if (HoloKit.HoloKitUtils.IsRuntime)
             {
-                OnNotSignedIn();
-                return;
+                HoloKitApp.Instance.UserAccountManager.StartProcess();
             }
-
-            await InitializeUnityGamingServices();
-            //InitializeSIWA();
-        }
-
-        private async Task InitializeUnityGamingServices()
-        {
-            try
-            {
-                OnInitializingUnityGamingServices();
-                await UnityServices.InitializeAsync();
-                Debug.Log("Unity Gaming Service initialized");
-            }
-            catch (Exception e)
-            {
-                Debug.Log("Failed to initialize Unity Gaming Services");
-                Debug.LogException(e);
-            }
-        }
-
-        private void InitializeSIWA()
-        {
-            // If the current platform is supported
-            if (!AppleAuthManager.IsCurrentPlatformSupported) return;
-
-            // Creates a default JSON deserializer, to transform JSON Native responses to C# instances
-            var deserializer = new PayloadDeserializer();
-            // Creates an Apple Authentication manager with the deserializer
-            _appleAuthManager = new AppleAuthManager(deserializer);
-
-            // Check if the current platform supports Sign In With Apple
-            if (_appleAuthManager == null)
-            {
-                return;
-            }
-
-            // TODO: I don't think we need this revoke credential functionality now. Maybe we can add it in the future.
-            // If at any point we receive a credentials revoked notification, we delete the stored User ID, and go back to login
-            //_appleAuthManager.SetCredentialsRevokedCallback(result =>
-            //{
-            //    Debug.Log("Received revoked callback " + result);
-            //    OnNotSignedIn();
-            //    PlayerPrefs.DeleteKey(AppleUserIdKey);
-            //});
-
-            // If we have an Apple User Id available, get the credential status for it
-            if (PlayerPrefs.HasKey(AppleUserIdKey))
-            {
-                var storedAppleUserId = PlayerPrefs.GetString(AppleUserIdKey);
-                CheckCredentialStatusForUserId(storedAppleUserId);
-            }
-            // If we do not have an stored Apple User Id, attempt a quick login
             else
             {
-                AttemptQuickLogin();
-            }
+                OnAttemptingQuickLoginFailed();
+            }  
         }
 
-        private void Update()
+        private void OnDestroy()
         {
-            // Updates the AppleAuthManager instance to execute pending callbacks inside Unity's execution loop
-            if (_appleAuthManager != null)
-            {
-                _appleAuthManager.Update();
-            }
+            HoloKitAppUserAccountManager.OnInitializingUGS += OnInitializingUGS;
+            HoloKitAppUserAccountManager.OnInitializingUGSFailed += OnInitializingUGSFailed;
+            HoloKitAppUserAccountManager.OnSigningInWithCachedUser += OnSigningInWithCachedUser;
+            HoloKitAppSIWAManager.OnAttemptingQuickLogin += OnAttemptingQuickLogin;
+            HoloKitAppSIWAManager.OnAttemptingQuickLoginFailed += OnAttemptingQuickLoginFailed;
+            HoloKitAppSIWAManager.OnSigningInWithApple += OnSigningInWithApple;
+            HoloKitAppSIWAManager.OnSigningInWithAppleFailed += OnSigningInWithAppleFailed;
+            HoloKitAppUserAccountManager.OnAuthenticatingAppleUserId += OnAuthenticatingAppleUserId;
+            HoloKitAppUserAccountManager.OnAuthenticatingAppleUserIdSucceeded += OnAuthenticatingAppleUserIdSucceeded;
+            HoloKitAppUserAccountManager.OnAuthenticatingAppleUserIdFailed += OnAuthenticatingAppleUserIdFailed;
         }
 
-        private void CheckCredentialStatusForUserId(string appleUserId)
-        {
-            Debug.Log($"[CheckCredentialStatusForUserId] appleUserId: {appleUserId}");
-            OnCheckingCredentials();
-            // If there is an apple ID available, we should check the credential state
-            _appleAuthManager.GetCredentialState(
-                appleUserId,
-                state =>
-                {
-                    switch (state)
-                    {
-                        // If it's authorized, login with that user id
-                        case CredentialState.Authorized:
-                            OnSignedIn();
-                            return;
-
-                        // If it was revoked, or not found, we need a new sign in with apple attempt
-                        // Discard previous apple user id
-                        case CredentialState.Revoked:
-                        case CredentialState.NotFound:
-                            OnNotSignedIn();
-                            PlayerPrefs.DeleteKey(AppleUserIdKey);
-                            return;
-                    }
-                },
-                error =>
-                {
-                    var authorizationErrorCode = error.GetAuthorizationErrorCode();
-                    Debug.LogWarning("Error while trying to get credential state " + authorizationErrorCode.ToString() + " " + error.ToString());
-                    OnNotSignedIn();
-                });
-        }
-
-        private void AttemptQuickLogin()
-        {
-            OnAttemptingQuickLogin();
-            var quickLoginArgs = new AppleAuthQuickLoginArgs();
-
-            // Quick login should succeed if the credential was authorized before and not revoked
-            _appleAuthManager.QuickLogin(
-                quickLoginArgs,
-                credential =>
-                {
-                    // If it's an Apple credential, save the user ID, for later logins
-                    if (credential is IAppleIDCredential appleIdCredential)
-                    {
-                        PlayerPrefs.SetString(AppleUserIdKey, credential.User);
-                        if (appleIdCredential.FullName != null)
-                        {
-                            PlayerPrefs.SetString(AppleUserNameKey, appleIdCredential.FullName.ToString());
-                        }
-                        else
-                        {
-                            Debug.Log("[SIWA] User's fullname is not available through quick login");
-                        }
-                        if (appleIdCredential.Email != null)
-                        {
-                            PlayerPrefs.SetString(AppleUserEmailKey, appleIdCredential.Email.ToString());
-                        }
-                        else
-                        {
-                            Debug.Log("[SIWA] User's email is not available through quick login");
-                        }
-                    }
-                    Debug.Log($"[SignInWithApple] Quick logged in with user full name: {PlayerPrefs.GetString(AppleUserNameKey)} and email: {PlayerPrefs.GetString(AppleUserEmailKey)}");
-
-                    OnSignedIn();
-                },
-                error =>
-                {
-                    // If Quick Login fails, we should show the normal sign in with apple menu, to allow for a normal Sign In with apple
-                    var authorizationErrorCode = error.GetAuthorizationErrorCode();
-                    Debug.LogWarning("Quick Login Failed " + authorizationErrorCode.ToString() + " " + error.ToString());
-                    OnNotSignedIn();
-                });
-        }
-
-        private void SignInWithApple()
-        {
-            var loginArgs = new AppleAuthLoginArgs(LoginOptions.IncludeEmail | LoginOptions.IncludeFullName);
-
-            _appleAuthManager.LoginWithAppleId(
-                loginArgs,
-                credential =>
-                {
-                    // If a sign in with apple succeeds, we should have obtained the credential with the user id, name, and email, save it
-                    if (credential is IAppleIDCredential appleIdCredential)
-                    {
-                        PlayerPrefs.SetString(AppleUserIdKey, credential.User);
-                        PlayerPrefs.SetString(AppleUserNameKey, appleIdCredential.FullName.ToString());
-                        PlayerPrefs.SetString(AppleUserEmailKey, appleIdCredential.Email.ToString());
-                    }
-                    Debug.Log($"[SignInWithApple] Signed in with user full name: {PlayerPrefs.GetString(AppleUserNameKey)} and email: {PlayerPrefs.GetString(AppleUserEmailKey)}");
-
-                    // TODO: Send user data to Unity backend
-
-                    OnSignedInWithEmailDisplayed();
-                },
-                error =>
-                {
-                    var authorizationErrorCode = error.GetAuthorizationErrorCode();
-                    Debug.LogWarning("Sign in with Apple failed " + authorizationErrorCode.ToString() + " " + error.ToString());
-                    OnNotSignedIn();
-                });
-        }
-
-        public void OnSignInWithAppleButtonPressed()
+        public void OnSIWAButtonPressed()
         {
             if (HoloKit.HoloKitUtils.IsRuntime)
             {
-                OnSigningIn();
-                SignInWithApple();
+                HoloKitApp.Instance.UserAccountManager.SIWAManager.SignInWithApple();
             }
             else
             {
-                OnSignedIn();
+                OnAuthenticatingAppleUserIdSucceeded();
             }
         }
 
-        private void OnInitializingUnityGamingServices()
+        private void OnInitializingUGS()
         {
-            _descriptionText.gameObject.SetActive(true);
-            _signInButton.gameObject.SetActive(true);
-            _signInButton.interactable = false;
-            _notificationText.gameObject.SetActive(true);
-            _notificationText.text = "Initializing Unity Gaming Services...";
+            _siwaButton.interactable = false;
+            _processText.text = "Initializing Unity Game Services...";
         }
 
-        private void OnNotSignedIn()
+        private void OnInitializingUGSFailed()
         {
-            _descriptionText.gameObject.SetActive(true);
-            _signInButton.gameObject.SetActive(true);
-            _signInButton.interactable = true;
-            _notificationText.gameObject.SetActive(false);
+            _siwaButton.interactable = false;
+            _processText.text = "Failed to initialize Unity Gaming Services";
         }
 
-        private void OnCheckingCredentials()
+        private void OnSigningInWithCachedUser()
         {
-            _descriptionText.gameObject.SetActive(true);
-            _signInButton.gameObject.SetActive(true);
-            _signInButton.interactable = false;
-            _notificationText.gameObject.SetActive(true);
-            _notificationText.text = "Checking Apple Credentials...";
+            _siwaButton.interactable = false;
+            _processText.text = "Signing in with cached user...";
         }
 
         private void OnAttemptingQuickLogin()
         {
-            _descriptionText.gameObject.SetActive(true);
-            _signInButton.gameObject.SetActive(true);
-            _signInButton.interactable = false;
-            _notificationText.gameObject.SetActive(true);
-            _notificationText.text = "Attempting Quick Login...";
+            _siwaButton.interactable = false;
+            _processText.text = "Attempting Apple Quick Login...";
         }
 
-        private void OnSigningIn()
+        private void OnAttemptingQuickLoginFailed()
         {
-            _descriptionText.gameObject.SetActive(true);
-            _signInButton.gameObject.SetActive(true);
-            _signInButton.interactable = false;
-            _notificationText.gameObject.SetActive(true);
-            _notificationText.text = "Signing In with Apple...";
+            _siwaButton.interactable = true;
+            _processText.text = "";
         }
 
-        private void OnSignedInWithEmailDisplayed()
+        private void OnSigningInWithApple()
         {
-            _descriptionText.gameObject.SetActive(false);
-            _signInButton.gameObject.SetActive(false);
-            _notificationText.gameObject.SetActive(false);
-            _userInfo.SetActive(true);
-            _emailText.text = PlayerPrefs.GetString(AppleUserEmailKey);
-            StartCoroutine(HoloKitAppUtils.WaitAndDo(2f, () =>
-            {
-                OnSignedIn();
-            }));
+            _siwaButton.interactable = false;
+            _processText.text = "Signing in with Apple...";
         }
 
-        private void OnSignedIn()
+        private void OnSigningInWithAppleFailed()
         {
-            // Load next page
+            _siwaButton.interactable = true;
+            _processText.text = "";
+        }
+
+        private void OnAuthenticatingAppleUserId()
+        {
+            _siwaButton.interactable = false;
+            _processText.text = "Authenticating Apple User ID...";
+        }
+
+        private void OnAuthenticatingAppleUserIdSucceeded()
+        {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityListPage");
+        }
+
+        private void OnAuthenticatingAppleUserIdFailed()
+        {
+            _siwaButton.interactable = false;
+            _processText.text = "Authentication failed";
         }
     }
 }

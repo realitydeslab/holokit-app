@@ -27,6 +27,11 @@ namespace Holoi.Library.HoloKitApp
 
         private static HoloKitApp _instance;
 
+        [Header("References")]
+        public HoloKitAppGlobalSettings GlobalSettings;
+
+        [SerializeField] private HoloKitAppUserAccountManager _userAccountManager;
+
         [Header("Prefabs")]
         [SerializeField] private NetworkManager _networkManagerPrefab;
 
@@ -35,9 +40,6 @@ namespace Holoi.Library.HoloKitApp
         [SerializeField] private HoloKitAppARSessionManager _arSessioinManagerPrefab;
 
         [SerializeField] private HoloKitAppRecorder _recorderPrefab;
-
-        [Header("Scriptable Objects")]
-        public HoloKitAppGlobalSettings GlobalSettings;
 
         [Header("UI")]
         public UI.HoloKitAppUIPanelManager UIPanelManager;
@@ -85,6 +87,8 @@ namespace Holoi.Library.HoloKitApp
         public HoloKitAppPlayerType LocalPlayerType => _localPlayerType;
 
         public bool Test => _test;
+
+        public HoloKitAppUserAccountManager UserAccountManager => _userAccountManager;
 
         public HoloKitAppMultiplayerManager MultiplayerManager => _multiplayerManager;
 

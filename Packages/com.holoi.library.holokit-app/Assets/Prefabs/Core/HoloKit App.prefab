@@ -1,5 +1,64 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5803341310891078447
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8642501743885207706}
+  - component: {fileID: 2490834666712456516}
+  - component: {fileID: 3818177116470693533}
+  m_Layer: 0
+  m_Name: User Account Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8642501743885207706
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5803341310891078447}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2088026539129220745}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2490834666712456516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5803341310891078447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f251a623485442095c40810385f3a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SIWAManager: {fileID: 3818177116470693533}
+  _clearSessionToken: 0
+--- !u!114 &3818177116470693533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5803341310891078447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 134d8095b3156471c8349b4a96775186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5943210170912577281
 GameObject:
   m_ObjectHideFlags: 0
@@ -31,6 +90,7 @@ Transform:
   m_Children:
   - {fileID: 1449521019988223079}
   - {fileID: 9062226364742872389}
+  - {fileID: 8642501743885207706}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -50,10 +110,13 @@ MonoBehaviour:
   _multiplayerManagerPrefab: {fileID: 4764031356507306451, guid: 29828c50c94e04d7cbd81142d7fbeed7, type: 3}
   _arSessioinManagerPrefab: {fileID: 7741548546626648775, guid: 7eecc09bf9f0143349059474c1e72027, type: 3}
   _recorderPrefab: {fileID: 9186413053739398034, guid: 83bc2a2c5ede64318876dbbed30c8db7, type: 3}
+  _userAccountManager: {fileID: 2490834666712456516}
   GlobalSettings: {fileID: 11400000, guid: cd9b3f974061c4cbb8f5608d52b1a3b1, type: 2}
   UIPanelManager: {fileID: 1449521019988223078}
   _urpAssetForUI: {fileID: 11400000, guid: 3956eb6eaf69547e58413124ee884018, type: 2}
   _test: 0
+  _logEnabled: 1
+  _lockFpsInEditor: 0
 --- !u!1001 &730342391688054603
 PrefabInstance:
   m_ObjectHideFlags: 0
