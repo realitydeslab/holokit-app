@@ -23,9 +23,9 @@ namespace Holoi.Library.HoloKitApp.UI
             HoloKitAppSIWAManager.OnAttemptingQuickLoginFailed += OnAttemptingQuickLoginFailed;
             HoloKitAppSIWAManager.OnSigningInWithApple += OnSigningInWithApple;
             HoloKitAppSIWAManager.OnSigningInWithAppleFailed += OnSigningInWithAppleFailed;
-            HoloKitAppUserAccountManager.OnAuthenticatingAppleUserId += OnAuthenticatingAppleUserId;
-            HoloKitAppUserAccountManager.OnAuthenticatingAppleUserIdSucceeded += OnAuthenticatingAppleUserIdSucceeded;
-            HoloKitAppUserAccountManager.OnAuthenticatingAppleUserIdFailed += OnAuthenticatingAppleUserIdFailed;
+            HoloKitAppUserAccountManager.OnAuthenticatingAppleId += OnAuthenticatingAppleId;
+            HoloKitAppUserAccountManager.OnAuthenticatingAppleIdSucceeded += OnAuthenticatingAppleIdSucceeded;
+            HoloKitAppUserAccountManager.OnAuthenticatingAppleIdFailed += OnAuthenticatingAppleIdFailed;
 
             if (HoloKit.HoloKitUtils.IsRuntime)
             {
@@ -46,9 +46,9 @@ namespace Holoi.Library.HoloKitApp.UI
             HoloKitAppSIWAManager.OnAttemptingQuickLoginFailed += OnAttemptingQuickLoginFailed;
             HoloKitAppSIWAManager.OnSigningInWithApple += OnSigningInWithApple;
             HoloKitAppSIWAManager.OnSigningInWithAppleFailed += OnSigningInWithAppleFailed;
-            HoloKitAppUserAccountManager.OnAuthenticatingAppleUserId += OnAuthenticatingAppleUserId;
-            HoloKitAppUserAccountManager.OnAuthenticatingAppleUserIdSucceeded += OnAuthenticatingAppleUserIdSucceeded;
-            HoloKitAppUserAccountManager.OnAuthenticatingAppleUserIdFailed += OnAuthenticatingAppleUserIdFailed;
+            HoloKitAppUserAccountManager.OnAuthenticatingAppleId += OnAuthenticatingAppleId;
+            HoloKitAppUserAccountManager.OnAuthenticatingAppleIdSucceeded += OnAuthenticatingAppleIdSucceeded;
+            HoloKitAppUserAccountManager.OnAuthenticatingAppleIdFailed += OnAuthenticatingAppleIdFailed;
         }
 
         public void OnSIWAButtonPressed()
@@ -59,7 +59,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
             else
             {
-                OnAuthenticatingAppleUserIdSucceeded();
+                OnAuthenticatingAppleIdSucceeded();
             }
         }
 
@@ -105,22 +105,25 @@ namespace Holoi.Library.HoloKitApp.UI
             _processText.text = "";
         }
 
-        private void OnAuthenticatingAppleUserId()
+        private void OnAuthenticatingAppleId()
         {
             _siwaButton.interactable = false;
-            _processText.text = "Authenticating Apple User ID...";
+            _processText.text = "Authenticating Apple ID...";
         }
 
-        private void OnAuthenticatingAppleUserIdSucceeded()
+        private void OnAuthenticatingAppleIdSucceeded()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityListPage");
         }
 
-        private void OnAuthenticatingAppleUserIdFailed()
+        private void OnAuthenticatingAppleIdFailed()
         {
-            _siwaButton.interactable = false;
-            _processText.text = "Authentication failed";
+            //_siwaButton.interactable = false;
+            //_processText.text = "Authentication failed";
+
+            // Enter as offline mode
+            OnAuthenticatingAppleIdSucceeded();
         }
     }
 }

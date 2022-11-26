@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 using AppleAuth;
@@ -11,11 +12,7 @@ namespace Holoi.Library.HoloKitApp
 {
     public class HoloKitAppSIWAManager : MonoBehaviour
     {
-        public string IdToken => _idToken;
-
         private IAppleAuthManager _appleAuthManager;
-
-        private string _idToken;
 
         private const string AppleUserIdKey = "AppleUserId";
 
@@ -149,8 +146,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnReceivedCredential(ICredential credential)
         {
-            var appleIdCredential = credential as IAppleIDCredential;
-            if (appleIdCredential != null)
+            if (credential is IAppleIDCredential appleIdCredential)
             {
                 // Apple User ID
                 // You should save the user ID somewhere in the device
@@ -161,16 +157,17 @@ namespace Holoi.Library.HoloKitApp
                 var email = appleIdCredential.Email;
                 if (email != null)
                 {
-                    Debug.Log($"[SIWA] email: {email}");
                     PlayerPrefs.SetString(AppleUserEmailKey, email);
+                    Debug.Log($"[SIWA] email: {email}");
                 }
 
                 // Full name (Received ONLY in the first login)
                 var fullName = appleIdCredential.FullName;
                 if (fullName != null)
                 {
-                    Debug.Log($"[SIWA] fullName: {fullName}");
-                    PlayerPrefs.SetString(AppleUserFullNameKey, fullName.ToString());
+                    string displayName = $"{GetRidOfWhiteSpaces(fullName.GivenName)} {GetRidOfWhiteSpaces(fullName.FamilyName)}";
+                    PlayerPrefs.SetString(AppleUserFullNameKey, displayName);
+                    Debug.Log($"[SIWA] DisplayName: {displayName}");
                 }
 
                 // Identity token
@@ -187,6 +184,13 @@ namespace Holoi.Library.HoloKitApp
 
                 OnSignedInWithApple?.Invoke(identityToken);
             }
+        }
+
+        public static string GetRidOfWhiteSpaces(string str)
+        {
+            return new string(str.ToCharArray()
+                .Where(c => !char.IsWhiteSpace(c))
+                .ToArray());
         }
     }
 }

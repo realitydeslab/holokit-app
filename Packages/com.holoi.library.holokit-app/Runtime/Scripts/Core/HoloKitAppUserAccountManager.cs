@@ -12,7 +12,11 @@ namespace Holoi.Library.HoloKitApp
 
         [SerializeField] private bool _clearSessionToken = false;
 
-        private bool _ugsInitialized;
+        public bool Authenticated => _authenticated;
+
+        private bool _ugsInitialized = false;
+
+        private bool _authenticated = false;
 
         /// <summary>
         /// This event is called when we start to initialize UGS.
@@ -29,11 +33,11 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         public static event Action OnSigningInWithCachedUser;
 
-        public static event Action OnAuthenticatingAppleUserId;
+        public static event Action OnAuthenticatingAppleId;
 
-        public static event Action OnAuthenticatingAppleUserIdSucceeded;
+        public static event Action OnAuthenticatingAppleIdSucceeded;
 
-        public static event Action OnAuthenticatingAppleUserIdFailed;
+        public static event Action OnAuthenticatingAppleIdFailed;
 
         private void Start()
         {
@@ -49,22 +53,26 @@ namespace Holoi.Library.HoloKitApp
         {
             AuthenticationService.Instance.SignedIn += () =>
             {
-                OnAuthenticatingAppleUserIdSucceeded?.Invoke();
+                _authenticated = true;
+                OnAuthenticatingAppleIdSucceeded?.Invoke();
             };
 
             AuthenticationService.Instance.SignInFailed += (error) =>
             {
+                _authenticated = false;
+                OnAuthenticatingAppleIdFailed?.Invoke();
                 Debug.LogError(error);
-                OnAuthenticatingAppleUserIdFailed?.Invoke();
             };
 
             AuthenticationService.Instance.SignedOut += () =>
             {
+                _authenticated = false;
                 Debug.Log("Player signed out.");
             };
 
             AuthenticationService.Instance.Expired += () =>
             {
+                _authenticated = false;
                 Debug.Log("Player session could not be refreshed and expired.");
             };
         }
@@ -134,7 +142,7 @@ namespace Holoi.Library.HoloKitApp
         {
             try
             {
-                OnAuthenticatingAppleUserId?.Invoke();
+                OnAuthenticatingAppleId?.Invoke();
                 await AuthenticationService.Instance.SignInWithAppleAsync(idToken);
             }
             catch (AuthenticationException e)
