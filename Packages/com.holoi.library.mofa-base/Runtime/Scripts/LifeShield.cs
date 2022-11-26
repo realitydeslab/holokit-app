@@ -151,6 +151,13 @@ namespace Holoi.Library.MOFABase
         private IEnumerator OnDestroyedInternal()
         {
             yield return new WaitForSeconds(RenovateTime);
+            if (IsServer)
+            {
+                _centerDestroyed.Value = false;
+                _topDestroyed.Value = false;
+                _leftDestroyed.Value = false;
+                _rightDestroyed.Value = false;
+            }
             _fragments[LifeShieldArea.Center].gameObject.SetActive(true);
             _fragments[LifeShieldArea.Top].gameObject.SetActive(true);
             _fragments[LifeShieldArea.Left].gameObject.SetActive(true);

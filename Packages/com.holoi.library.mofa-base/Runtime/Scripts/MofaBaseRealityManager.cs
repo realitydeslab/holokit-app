@@ -68,8 +68,6 @@ namespace Holoi.Library.MOFABase
 
         public MofaSpellPool SpellPool;
 
-        [SerializeField] private MofaInputManager _inputManager;
-
         [SerializeField] private MofaPlayer _mofaPlayerPrefab;
 
         [Header("MOFA Settings")]
@@ -115,8 +113,6 @@ namespace Holoi.Library.MOFABase
         public static event Action<MofaPhase> OnPhaseChanged;
 
         public static event Action<MofaRoundResult> OnReceivedRoundResult;
-
-        public static event Action<MofaIndividualStats> OnReceivedIndividualStats;
 
         protected virtual void Start()
         {
@@ -164,7 +160,6 @@ namespace Holoi.Library.MOFABase
             {
                 if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
                 {
-                    OnReceivedIndividualStats?.Invoke(GetIndividualStats());
                     ResetLocalPlayerReadyState();
                 }
             }
@@ -297,8 +292,8 @@ namespace Holoi.Library.MOFABase
             if (IsServer)
             {
                 // Update the score
-                _players[attackerClientId].KillCount.Value++;
-                _players[ownerClientId].DeathCount.Value++;;
+                _players[attackerClientId].Kill.Value++;
+                _players[ownerClientId].Death.Value++;;
             }
         }
 
@@ -317,11 +312,11 @@ namespace Holoi.Library.MOFABase
             {
                 if (mofaPlayer.Team.Value == MofaTeam.Blue)
                 {
-                    blueTeamScore += mofaPlayer.KillCount.Value;
+                    blueTeamScore += mofaPlayer.Kill.Value;
                 }
                 else
                 {
-                    redTeamScore += mofaPlayer.KillCount.Value;
+                    redTeamScore += mofaPlayer.Kill.Value;
                 }
             }
 
@@ -368,13 +363,13 @@ namespace Holoi.Library.MOFABase
                 }
             }
             // Kill
-            stats.Kill = player.KillCount.Value;
+            stats.Kill = player.Kill.Value;
             // Death
-            stats.Death = player.DeathCount.Value;
+            stats.Death = player.Death.Value;
             // Hit rate
             stats.HitRate = (float)player.HitCount.Value / player.CastCount.Value;
             // Distance
-            stats.Distance = _inputManager.Distance;
+            stats.Distance = player.Distance.Value;
 
             return stats;
         }

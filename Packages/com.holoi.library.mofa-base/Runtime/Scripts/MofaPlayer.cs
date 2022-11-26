@@ -19,9 +19,9 @@ namespace Holoi.Library.MOFABase
 
         [HideInInspector] public NetworkVariable<bool> Ready = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        [HideInInspector] public NetworkVariable<int> KillCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        [HideInInspector] public NetworkVariable<int> Kill = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        [HideInInspector] public NetworkVariable<int> DeathCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        [HideInInspector] public NetworkVariable<int> Death = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         /// <summary>
         /// How many times does the player cast spells in this round?
@@ -66,13 +66,13 @@ namespace Holoi.Library.MOFABase
             mofaBaseRealityManager.SpellPool.OnPlayerJoined(MagicSchoolTokenId.Value);
 
             Ready.OnValueChanged += OnReadyStateChangedFunc;
-            KillCount.OnValueChanged += OnScoreChangedFunc;
+            Kill.OnValueChanged += OnScoreChangedFunc;
         }
 
         public override void OnNetworkDespawn()
         {
             Ready.OnValueChanged -= OnReadyStateChangedFunc;
-            KillCount.OnValueChanged -= OnScoreChangedFunc;
+            Kill.OnValueChanged -= OnScoreChangedFunc;
         }
 
         protected virtual void FixedUpdate()
@@ -105,9 +105,16 @@ namespace Holoi.Library.MOFABase
             {
                 if (mofaPhase == MofaPhase.Countdown)
                 {
-                    KillCount.Value = 0;
-                    DeathCount.Value = 0;
+                    Kill.Value = 0;
+                    Death.Value = 0;
+                    CastCount.Value = 0;
+                    HitCount.Value = 0;
                 }
+            }
+
+            if (IsOwner)
+            {
+                Distance.Value = 0;
             }
         }
     }

@@ -93,7 +93,6 @@ namespace Holoi.Library.MOFABase
 
             SetupSpells();
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
-            MofaBaseRealityManager.OnReceivedIndividualStats += OnReceivedIndividualStats;
             LifeShield.OnDestroyed += OnLifeShieldDestroyed;
             LifeShield.OnRenovated += OnLifeShieldRenovated;
 
@@ -108,7 +107,6 @@ namespace Holoi.Library.MOFABase
             MofaWatchConnectivityAPI.OnWatchTriggered -= OnWatchTriggered;
 
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
-            MofaBaseRealityManager.OnReceivedIndividualStats -= OnReceivedIndividualStats;
             LifeShield.OnDestroyed -= OnLifeShieldDestroyed;
             LifeShield.OnRenovated -= OnLifeShieldRenovated;
 
@@ -158,25 +156,33 @@ namespace Holoi.Library.MOFABase
                     break;
                 case MofaPhase.RoundOver:
                     _isActive = false;
+                    OnRoundOver();
                     break;
                 case MofaPhase.RoundResult:
                     break;
                 case MofaPhase.RoundData:
+                    OnRoundData();
                     break;
             }
         }
 
-        private void OnReceivedIndividualStats(MofaIndividualStats individualStats)
+        private void OnRoundOver()
         {
-            MofaWatchConnectivityAPI.SyncRoundResultToWatch(individualStats.IndividualRoundResult,
-                                                            individualStats.Kill,
-                                                            individualStats.HitRate,
-                                                            individualStats.Distance);
+            _mofaBaseRealityManager.GetPlayer().Distance.Value = _distance;
+        }
+
+        private void OnRoundData()
+        {
+            var localPlayerIndividualStats = _mofaBaseRealityManager.GetIndividualStats();
+            MofaWatchConnectivityAPI.SyncRoundResultToWatch(localPlayerIndividualStats.IndividualRoundResult,
+                                                            localPlayerIndividualStats.Kill,
+                                                            localPlayerIndividualStats.HitRate,
+                                                            localPlayerIndividualStats.Distance);
         }
 
         private void Update()
         {
-            if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting)
+            if (_isActive)
             {
                 _distance = Vector3.Distance(_lastFramePosition, _centerEyePose.position);
                 _lastFramePosition = _centerEyePose.position;

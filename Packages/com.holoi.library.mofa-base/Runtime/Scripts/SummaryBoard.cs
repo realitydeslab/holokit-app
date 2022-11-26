@@ -8,7 +8,7 @@ namespace Holoi.Library.MOFABase
         [Header("Blue Team")]
         [SerializeField] private TMP_Text _blueTeamNameText;
 
-        [SerializeField] private TMP_Text _blueTeamKillCountText;
+        [SerializeField] private TMP_Text _blueTeamKillText;
 
         [SerializeField] private TMP_Text _blueTeamHitRateText;
 
@@ -19,7 +19,7 @@ namespace Holoi.Library.MOFABase
         [Header("Red Team")]
         [SerializeField] private TMP_Text _redTeamNameText;
 
-        [SerializeField] private TMP_Text _redTeamKillCountText;
+        [SerializeField] private TMP_Text _redTeamKillText;
 
         [SerializeField] private TMP_Text _redTeamHitRateText;
 
@@ -35,11 +35,11 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        public string BlueTeamKillCount
+        public string BlueTeamKill
         {
             set
             {
-                _blueTeamKillCountText.text = value;
+                _blueTeamKillText.text = value;
             }
         }
 
@@ -75,11 +75,11 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        public string RedTeamKillCount
+        public string RedTeamKill
         {
             set
             {
-                _redTeamKillCountText.text = value;
+                _redTeamKillText.text = value;
             }
         }
 

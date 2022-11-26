@@ -51,11 +51,11 @@ namespace Holoi.Library.MOFABase
             {
                 if (mofaPlayer.Team.Value == MofaTeam.Blue)
                 {
-                    blueTeamScore += mofaPlayer.KillCount.Value;
+                    blueTeamScore += mofaPlayer.Kill.Value;
                 }
                 else if (mofaPlayer.Team.Value == MofaTeam.Red)
                 {
-                    redTeamScore += mofaPlayer.KillCount.Value;
+                    redTeamScore += mofaPlayer.Kill.Value;
                 }
             }
 

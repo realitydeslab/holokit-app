@@ -78,6 +78,7 @@ namespace Holoi.Library.MOFABase
                 case MofaPhase.RoundResult:
                     break;
                 case MofaPhase.RoundData:
+                    OnRoundData();
                     break;
             }
         }
@@ -97,6 +98,14 @@ namespace Holoi.Library.MOFABase
                 Status.SetActive(true);
                 RedScreen.SetActive(true);
             }
+        }
+
+        protected virtual void OnRoundData()
+        {
+            Scores.SetActive(false);
+            Time.SetActive(false);
+            Reticle.SetActive(false);
+            Status.SetActive(false);
         }
 
         private void OnStartedRecording()
