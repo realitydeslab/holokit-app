@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
+using Unity.Services.CloudSave;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -16,7 +18,21 @@ namespace Holoi.Library.HoloKitApp
 
         private bool _ugsInitialized = false;
 
+        /// <summary>
+        /// Whether the local user is currently logged in?
+        /// </summary>
         private bool _authenticated = false;
+
+        /// <summary>
+        /// Whether the current logged in user's name and email are synced on the cloud?
+        /// </summary>
+        private bool _userInfoSynced = false;
+
+        /// <summary>
+        /// After a connection failure, we wait for a certian period of time and try again.
+        /// The unit here is second.
+        /// </summary>
+        private const int RetryConnectionInterval = 30;
 
         /// <summary>
         /// This event is called when we start to initialize UGS.
@@ -54,6 +70,7 @@ namespace Holoi.Library.HoloKitApp
             AuthenticationService.Instance.SignedIn += () =>
             {
                 _authenticated = true;
+                SyncUserInfo();
                 OnAuthenticatingAppleIdSucceeded?.Invoke();
             };
 
@@ -156,6 +173,74 @@ namespace Holoi.Library.HoloKitApp
                 // Compare error code to CommonErrorCodes
                 // Notify the player with the proper error message
                 Debug.LogException(e);
+            }
+        }
+
+        private async void SyncUserInfo()
+        {
+            // First we have to make sure the user info is stored in the local device
+            // If we have the user email stored, we can be sure that we have all
+            // the info about this user (this implies this was not a quick login).
+            const string appleUserEmailKey = HoloKitAppSIWAManager.AppleUserEmailKey;
+            if (PlayerPrefs.HasKey(appleUserEmailKey))
+            {
+                Debug.Log("[UserAccountManager] Found user info on the current device");
+                // Then we want to check whether the user info is already stored in the cloud
+                var keySet = new HashSet<string> { appleUserEmailKey };
+                try
+                {
+                    Debug.Log("[UserAccountManager] Fetching user info");
+                    Dictionary<string, string> savedData = await CloudSaveService.Instance.Data.LoadAsync(keySet);
+                    if (savedData.ContainsKey(appleUserEmailKey))
+                    {
+                        // The user info has already been synced in the cloud
+                        _userInfoSynced = true;
+                        Debug.Log("[UserAccountManager] User info fetched");
+                    }
+                    else
+                    {
+                        _userInfoSynced = false;
+                        Debug.Log("[UserAccountManager] User info not stored in the cloud");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e);
+                    Debug.Log("[UserAccountManager] Failed to get user data, let's try again...");
+                    await Task.Delay(RetryConnectionInterval * 1000);
+                    SyncUserInfo();
+                    return;
+                }
+
+                if (!_userInfoSynced)
+                {
+                    const string appleUserIdKey = HoloKitAppSIWAManager.AppleUserIdKey;
+                    const string appleUserFullNameKey = HoloKitAppSIWAManager.AppleUserFullNameKey;
+                    var data = new Dictionary<string, object>
+                    {
+                        { appleUserIdKey, PlayerPrefs.GetString(appleUserIdKey) },
+                        { appleUserFullNameKey, PlayerPrefs.HasKey(appleUserFullNameKey) ? PlayerPrefs.GetString(appleUserFullNameKey) : "Anonymous" },
+                        { appleUserEmailKey, PlayerPrefs.GetString(appleUserEmailKey) }
+                    };
+                    try
+                    {
+                        Debug.Log("[UserAccountManager] Uploading user info");
+                        await CloudSaveService.Instance.Data.ForceSaveAsync(data);
+                        _userInfoSynced = true;
+                        Debug.Log("[UserAccountManager] User info uploaded");
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogException(e);
+                        Debug.Log("[UserAccountManager] Failed to upload user data, let's try again...");
+                        await Task.Delay(RetryConnectionInterval * 1000);
+                        SyncUserInfo();
+                        return;
+                    }
+                }
+            }
+            else {
+                Debug.Log("[UserAccountManager] User info not found on the current device");
             }
         }
     }

@@ -14,11 +14,11 @@ namespace Holoi.Library.HoloKitApp
     {
         private IAppleAuthManager _appleAuthManager;
 
-        private const string AppleUserIdKey = "AppleUserId";
+        public const string AppleUserIdKey = "AppleUserId";
 
-        private const string AppleUserFullNameKey = "AppleUserName";
+        public const string AppleUserFullNameKey = "AppleUserName";
 
-        private const string AppleUserEmailKey = "AppleUserEmail";
+        public const string AppleUserEmailKey = "AppleUserEmail";
 
         public static event Action OnAttemptingQuickLogin;
 
@@ -140,6 +140,7 @@ namespace Holoi.Library.HoloKitApp
                 {
                     var authorizationErrorCode = error.GetAuthorizationErrorCode();
                     Debug.LogWarning("Sign in with Apple failed " + authorizationErrorCode.ToString() + " " + error.ToString());
+                    // TODO: This might be because there is no network connection, handle this
                     OnSigningInWithAppleFailed?.Invoke();
                 });
         }
@@ -150,15 +151,21 @@ namespace Holoi.Library.HoloKitApp
             {
                 // Apple User ID
                 // You should save the user ID somewhere in the device
+                // This Apple User ID is constant and not changed for a user
                 var userId = appleIdCredential.User;
                 PlayerPrefs.SetString(AppleUserIdKey, userId);
+                Debug.Log($"[SIWA] Apple User ID: {userId}");
 
                 // Email (Received ONLY in the first login)
                 var email = appleIdCredential.Email;
                 if (email != null)
                 {
                     PlayerPrefs.SetString(AppleUserEmailKey, email);
-                    Debug.Log($"[SIWA] email: {email}");
+                    Debug.Log($"[SIWA] Email: {email}");
+                }
+                else
+                {
+                    Debug.Log("[SIWA] Cannot get user's email");
                 }
 
                 // Full name (Received ONLY in the first login)
@@ -168,6 +175,10 @@ namespace Holoi.Library.HoloKitApp
                     string displayName = $"{GetRidOfWhiteSpaces(fullName.GivenName)} {GetRidOfWhiteSpaces(fullName.FamilyName)}";
                     PlayerPrefs.SetString(AppleUserFullNameKey, displayName);
                     Debug.Log($"[SIWA] DisplayName: {displayName}");
+                }
+                else
+                {
+                    Debug.Log("[SIWA] Cannot get user's fullname");
                 }
 
                 // Identity token
