@@ -69,13 +69,15 @@ namespace Holoi.Library.HoloKitApp
         {
             AuthenticationService.Instance.SignedIn += () =>
             {
+                Debug.Log("[UserAccountManager] Player signed in");
                 _authenticated = true;
-                SyncUserInfo();
                 OnAuthenticatingAppleIdSucceeded?.Invoke();
+                SyncUserInfo();
             };
 
             AuthenticationService.Instance.SignInFailed += (error) =>
             {
+                Debug.Log("[UserAccountManager] Player failed to sign in");
                 _authenticated = false;
                 OnAuthenticatingAppleIdFailed?.Invoke();
                 Debug.LogError(error);
@@ -83,14 +85,14 @@ namespace Holoi.Library.HoloKitApp
 
             AuthenticationService.Instance.SignedOut += () =>
             {
+                Debug.Log("Player signed out");
                 _authenticated = false;
-                Debug.Log("Player signed out.");
             };
 
             AuthenticationService.Instance.Expired += () =>
-            {
+            {   
+                Debug.Log("Player session could not be refreshed and expired");
                 _authenticated = false;
-                Debug.Log("Player session could not be refreshed and expired.");
             };
         }
 
@@ -138,6 +140,7 @@ namespace Holoi.Library.HoloKitApp
             // This call will sign in the cached user.
             try
             {
+                Debug.Log("[UserAccountManager] Signing in with cached user");
                 OnSigningInWithCachedUser?.Invoke();
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
             }
@@ -159,6 +162,7 @@ namespace Holoi.Library.HoloKitApp
         {
             try
             {
+                Debug.Log("[UserAccountManager] Signing in with Apple");
                 OnAuthenticatingAppleId?.Invoke();
                 await AuthenticationService.Instance.SignInWithAppleAsync(idToken);
             }

@@ -76,7 +76,7 @@ namespace Holoi.Library.HoloKitApp
 
         //private void CheckCredentialStatusForUserId(string appleUserId)
         //{
-        //    OnCheckCredentialStatus?.Invoke();
+        //    //OnCheckCredentialStatus?.Invoke();
         //    // If there is an apple ID available, we should check the credential state
         //    _appleAuthManager.GetCredentialState(
         //        appleUserId,
@@ -86,13 +86,13 @@ namespace Holoi.Library.HoloKitApp
         //            {
         //                // If it's authorized, login with that user id
         //                case CredentialState.Authorized:
+                            
         //                    return;
         //                // If it was revoked, or not found, we need a new sign in with apple attempt
         //                // Discard previous apple user id
         //                case CredentialState.Revoked:
         //                case CredentialState.NotFound:
         //                    PlayerPrefs.DeleteKey(AppleUserIdKey);
-        //                    OnSignInFailed?.Invoke();
         //                    return;
         //            }
         //        },
@@ -100,7 +100,6 @@ namespace Holoi.Library.HoloKitApp
         //        {
         //            var authorizationErrorCode = error.GetAuthorizationErrorCode();
         //            Debug.LogWarning("Error while trying to get credential state " + authorizationErrorCode.ToString() + " " + error.ToString());
-        //            OnSignInFailed?.Invoke();
         //        });
         //}
 
@@ -181,17 +180,19 @@ namespace Holoi.Library.HoloKitApp
                     Debug.Log("[SIWA] Cannot get user's fullname");
                 }
 
-                // Identity token
+                // Identity token, this is different for each login
                 var identityToken = Encoding.UTF8.GetString(
                     appleIdCredential.IdentityToken,
                     0,
                     appleIdCredential.IdentityToken.Length);
+                Debug.Log($"[SIWA] IdentityToken: {identityToken}");
 
-                // Authorization code
+                // Authorization code, this is different for each login
                 var authorizationCode = Encoding.UTF8.GetString(
                     appleIdCredential.AuthorizationCode,
                     0,
                     appleIdCredential.AuthorizationCode.Length);
+                Debug.Log($"[SIWA] AuthorizationCode: {authorizationCode}");
 
                 OnSignedInWithApple?.Invoke(identityToken);
             }
