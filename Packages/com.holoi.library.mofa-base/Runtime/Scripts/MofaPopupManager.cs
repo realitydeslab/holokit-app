@@ -28,14 +28,14 @@ namespace Holoi.Library.MOFABase
         {
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
             MofaBaseRealityManager.OnReceivedRoundResult += OnReceivedRoundResult;
-            LifeShield.OnDestroyed += OnLifeShieldDestroyed;
+            LifeShield.OnBeingDestroyed += OnLifeShieldBeingDestroyed;
         }
 
         protected virtual void OnDestroy()
         {
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
             MofaBaseRealityManager.OnReceivedRoundResult -= OnReceivedRoundResult;
-            LifeShield.OnDestroyed -= OnLifeShieldDestroyed;
+            LifeShield.OnBeingDestroyed -= OnLifeShieldBeingDestroyed;
         }
 
         protected void SpawnPopup(GameObject popupPrefab)
@@ -150,7 +150,7 @@ namespace Holoi.Library.MOFABase
             
         }
 
-        private void OnLifeShieldDestroyed(ulong _, ulong ownerClientId)
+        private void OnLifeShieldBeingDestroyed(ulong _, ulong ownerClientId)
         {
             if (ownerClientId == NetworkManager.Singleton.LocalClientId)
             {

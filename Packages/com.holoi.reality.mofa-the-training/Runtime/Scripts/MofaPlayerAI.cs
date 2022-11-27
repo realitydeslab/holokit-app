@@ -66,6 +66,20 @@ namespace Holoi.Reality.MOFATheTraining
 
         public static event Action<SpellType> OnAISpawnedSpell;
 
+        protected override void Start()
+        {
+            base.Start();
+            LifeShield.OnBeingDestroyed += OnLifeShieldBeingDestroyed;
+            LifeShield.OnRenovated += OnLifeShieldRenovated;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            LifeShield.OnBeingDestroyed -= OnLifeShieldBeingDestroyed;
+            LifeShield.OnRenovated -= OnLifeShieldRenovated;
+        }
+
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -182,6 +196,22 @@ namespace Holoi.Reality.MOFATheTraining
                     StopCoroutine(_attackAICoroutine);
                     _animationVector.Value = new Vector2(0f, 0f);
                 }
+            }
+        }
+
+        private void OnLifeShieldBeingDestroyed(ulong _, ulong ownerClientId)
+        {
+            if (ownerClientId == OwnerClientId)
+            {
+                _animationVector.Value = Vector2.zero;
+            }
+        }
+
+        private void OnLifeShieldRenovated(ulong ownerClientId)
+        {
+            if (ownerClientId == OwnerClientId)
+            {
+                GetNextDestPos();
             }
         }
 

@@ -48,7 +48,7 @@ namespace Holoi.Library.MOFABase
         public static event Action<ulong, ulong> OnBeingHit;
 
         // The first ulong is the attackerClientId and the second is the ownerClientId
-        public static event Action<ulong, ulong> OnDestroyed;
+        public static event Action<ulong, ulong> OnBeingDestroyed;
 
         /// <summary>
         /// This event is called when the life shield is renovated. The parameter
@@ -139,7 +139,7 @@ namespace Holoi.Library.MOFABase
                 _fragments[LifeShieldArea.Center].gameObject.SetActive(false);
 
                 // The entire shield has been destroyed at this point
-                OnDestroyed?.Invoke((ulong)_lastAttackerClientId.Value, OwnerClientId);
+                OnBeingDestroyed?.Invoke((ulong)_lastAttackerClientId.Value, OwnerClientId);
                 StartCoroutine(OnDestroyedInternal());
             }
         }

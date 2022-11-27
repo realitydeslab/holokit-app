@@ -93,7 +93,7 @@ namespace Holoi.Library.MOFABase
 
             SetupSpells();
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
-            LifeShield.OnDestroyed += OnLifeShieldDestroyed;
+            LifeShield.OnBeingDestroyed += OnLifeShieldDestroyed;
             LifeShield.OnRenovated += OnLifeShieldRenovated;
 
             HoloKitAppUIEventManager.OnTriggered += OnTriggered;
@@ -107,7 +107,7 @@ namespace Holoi.Library.MOFABase
             MofaWatchConnectivityAPI.OnWatchTriggered -= OnWatchTriggered;
 
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
-            LifeShield.OnDestroyed -= OnLifeShieldDestroyed;
+            LifeShield.OnBeingDestroyed -= OnLifeShieldDestroyed;
             LifeShield.OnRenovated -= OnLifeShieldRenovated;
 
             HoloKitAppUIEventManager.OnTriggered -= OnTriggered;

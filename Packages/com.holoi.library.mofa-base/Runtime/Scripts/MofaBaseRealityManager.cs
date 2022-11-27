@@ -117,7 +117,7 @@ namespace Holoi.Library.MOFABase
         protected virtual void Start()
         {
             LifeShield.OnBeingHit += OnLifeShieldBeingHit;
-            LifeShield.OnDestroyed += OnLifeShieldDestroyed;
+            LifeShield.OnBeingDestroyed += OnLifeShieldBeingDestroyed;
         }
 
         public override void OnNetworkSpawn()
@@ -146,7 +146,7 @@ namespace Holoi.Library.MOFABase
         {
             base.OnDestroy();
             LifeShield.OnBeingHit -= OnLifeShieldBeingHit;
-            LifeShield.OnDestroyed -= OnLifeShieldDestroyed;
+            LifeShield.OnBeingDestroyed -= OnLifeShieldBeingDestroyed;
         }
 
         // This delegate method is called on every client.
@@ -287,7 +287,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnLifeShieldDestroyed(ulong attackerClientId, ulong ownerClientId)
+        private void OnLifeShieldBeingDestroyed(ulong attackerClientId, ulong ownerClientId)
         {
             if (IsServer)
             {
