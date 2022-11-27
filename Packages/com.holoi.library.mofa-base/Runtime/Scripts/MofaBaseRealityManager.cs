@@ -154,7 +154,7 @@ namespace Holoi.Library.MOFABase
         {
             if (oldValue == newValue) { return; }
 
-            Debug.Log($"Mofa phase changed to: {newValue}");
+            //Debug.Log($"Mofa phase changed to: {newValue}");
             OnPhaseChanged?.Invoke(newValue);
             if (newValue == MofaPhase.RoundData)
             {

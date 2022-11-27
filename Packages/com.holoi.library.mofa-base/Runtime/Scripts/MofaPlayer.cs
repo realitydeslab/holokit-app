@@ -36,11 +36,20 @@ namespace Holoi.Library.MOFABase
         /// <summary>
         /// The distance the player has moved in this round.
         /// </summary>
-        [HideInInspector] public NetworkVariable<float> Distance = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        [HideInInspector] public NetworkVariable<float> Distance = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         [HideInInspector] public LifeShield LifeShield;
 
         [HideInInspector] public Vector3 LifeShieldOffset = new(0f, -0.4f, 0.5f);
+
+        private bool _isFighting;
+
+        /// <summary>
+        /// We update this value during the fight to reduce network throughput.
+        /// </summary>
+        private float _distance;
+
+        private Vector3 _lastFramePosition;
 
         public static event Action<MofaPlayer> OnMofaPlayerSpawned;
 
@@ -73,6 +82,18 @@ namespace Holoi.Library.MOFABase
         {
             Ready.OnValueChanged -= OnReadyStateChangedFunc;
             Kill.OnValueChanged -= OnScoreChangedFunc;
+        }
+
+        protected virtual void Update()
+        {
+            if (IsServer)
+            {
+                if (_isFighting)
+                {
+                    _distance += Vector3.Distance(_lastFramePosition, transform.position);
+                    _lastFramePosition = transform.position;
+                }
+            }
         }
 
         protected virtual void FixedUpdate()
@@ -109,12 +130,20 @@ namespace Holoi.Library.MOFABase
                     Death.Value = 0;
                     CastCount.Value = 0;
                     HitCount.Value = 0;
+                    Distance.Value = 0f;
+                    _distance = 0f;
                 }
-            }
-
-            if (IsOwner)
-            {
-                Distance.Value = 0;
+                else if (mofaPhase == MofaPhase.Fighting)
+                {
+                    _lastFramePosition = transform.position;
+                    _isFighting = true;
+                }
+                else if (mofaPhase == MofaPhase.RoundOver)
+                {
+                    _isFighting = false;
+                    // We only update this network variable once in each round
+                    Distance.Value = _distance;
+                }
             }
         }
     }

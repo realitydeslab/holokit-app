@@ -41,8 +41,6 @@ namespace Holoi.Library.MOFABase
 
         public MofaWatchState CurrentWatchState => _currentWatchState;
 
-        public float Distance => _distance;
-
         private bool _isActive;
 
         private Spell _basicSpell;
@@ -56,11 +54,6 @@ namespace Holoi.Library.MOFABase
         private int _secondarySpellUseCount;
 
         private MofaWatchState _currentWatchState;
-
-        private Vector3 _lastFramePosition;
-
-        // The moving distance of the local player in a round.
-        private float _distance;
 
         private MofaBaseRealityManager _mofaBaseRealityManager;
 
@@ -156,7 +149,6 @@ namespace Holoi.Library.MOFABase
                     break;
                 case MofaPhase.RoundOver:
                     _isActive = false;
-                    OnRoundOver();
                     break;
                 case MofaPhase.RoundResult:
                     break;
@@ -166,11 +158,6 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnRoundOver()
-        {
-            _mofaBaseRealityManager.GetPlayer().Distance.Value = _distance;
-        }
-
         private void OnRoundData()
         {
             var localPlayerIndividualStats = _mofaBaseRealityManager.GetIndividualStats();
@@ -178,15 +165,6 @@ namespace Holoi.Library.MOFABase
                                                             localPlayerIndividualStats.Kill,
                                                             localPlayerIndividualStats.HitRate,
                                                             localPlayerIndividualStats.Distance);
-        }
-
-        private void Update()
-        {
-            if (_isActive)
-            {
-                _distance = Vector3.Distance(_lastFramePosition, _centerEyePose.position);
-                _lastFramePosition = _centerEyePose.position;
-            }
         }
 
         private void FixedUpdate()
@@ -230,7 +208,6 @@ namespace Holoi.Library.MOFABase
             _basicSpellCharge = 0f;
             _secondarySpellCharge = 0f;
             _secondarySpellUseCount = 0;
-            _distance = 0;
         }
 
         private void SpawnBasicSpell()

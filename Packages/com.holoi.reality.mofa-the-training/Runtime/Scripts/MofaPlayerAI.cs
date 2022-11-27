@@ -94,8 +94,9 @@ namespace Holoi.Reality.MOFATheTraining
             _animationVector.OnValueChanged -= OnAnimationVectorChanged;
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
             // For Chibi Apes local position bug
             if (_avatar != null)
             {
