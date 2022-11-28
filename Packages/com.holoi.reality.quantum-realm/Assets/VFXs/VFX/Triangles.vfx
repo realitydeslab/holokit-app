@@ -293,7 +293,7 @@ MonoBehaviour:
       x: -871
       y: 1896
       width: 1968
-      height: 598
+      height: 565
     contents:
     - model: {fileID: 8926484042661616704}
       id: 0
@@ -305,9 +305,6 @@ MonoBehaviour:
       id: 0
       isStickyNote: 0
     - model: {fileID: 8926484042661616798}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661616794}
       id: 0
       isStickyNote: 0
     - model: {fileID: 8926484042661616704}
@@ -331,11 +328,14 @@ MonoBehaviour:
     - model: {fileID: 8926484042661616841}
       id: 0
       isStickyNote: 0
+    - model: {fileID: 8926484042661616846}
+      id: 0
+      isStickyNote: 0
   stickyNoteInfos: []
   categories:
   - name: Base
     collapsed: 0
-  - name: Controller
+  - name: Visual Controller
     collapsed: 0
   uiBounds:
     serializedVersion: 2
@@ -413,7 +413,6 @@ MonoBehaviour:
   - {fileID: 8926484042661616758}
   - {fileID: 8926484042661616763}
   - {fileID: 8926484042661616774}
-  - {fileID: 8926484042661616794}
   - {fileID: 8926484042661616798}
   - {fileID: 8926484042661616803}
   - {fileID: 8926484042661616817}
@@ -422,11 +421,25 @@ MonoBehaviour:
   - {fileID: 8926484042661616833}
   - {fileID: 8926484042661616837}
   - {fileID: 8926484042661616841}
+  - {fileID: 8926484042661616846}
   m_UIPosition: {x: 0, y: 0}
   m_UICollapsed: 1
   m_UISuperCollapsed: 0
   m_UIInfos: {fileID: 114340500867371532}
   m_ParameterInfo:
+  - name: Base
+    path: 
+    tooltip: 
+    sheetType: 
+    realType: 
+    defaultValue:
+      m_Type:
+        m_SerializableType: 
+      m_SerializableObject: 
+    min: -Infinity
+    max: Infinity
+    enumValues: []
+    descendantCount: 0
   - name: PositionMap
     path: PositionMap
     tooltip: 
@@ -455,7 +468,7 @@ MonoBehaviour:
     max: Infinity
     enumValues: []
     descendantCount: 0
-  - name: Base
+  - name: Visual Controller
     path: 
     tooltip: 
     sheetType: 
@@ -482,17 +495,18 @@ MonoBehaviour:
     max: 1
     enumValues: []
     descendantCount: 0
-  - name: Controller
-    path: 
+  - name: Process
+    path: Process
     tooltip: 
-    sheetType: 
-    realType: 
+    sheetType: m_Float
+    realType: Single
     defaultValue:
       m_Type:
-        m_SerializableType: 
-      m_SerializableObject: 
-    min: -Infinity
-    max: Infinity
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 0
+    min: 0
+    max: 1
     enumValues: []
     descendantCount: 0
   - name: Hand Position
@@ -509,8 +523,8 @@ MonoBehaviour:
     max: Infinity
     enumValues: []
     descendantCount: 0
-  - name: Process
-    path: Process
+  - name: InteractiableRadius
+    path: InteractiableRadius
     tooltip: 
     sheetType: m_Float
     realType: Single
@@ -518,9 +532,9 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 0
-    min: 0
-    max: 1
+      m_SerializableObject: 1
+    min: -Infinity
+    max: Infinity
     enumValues: []
     descendantCount: 0
   - name: Interactable
@@ -13066,7 +13080,7 @@ MonoBehaviour:
   m_ExposedName: PositionMap
   m_Exposed: 1
   m_Order: 0
-  m_Category: 
+  m_Category: Base
   m_Min:
     m_Type:
       m_SerializableType: 
@@ -13153,8 +13167,8 @@ MonoBehaviour:
   - {fileID: 8926484042661616650}
   m_ExposedName: ColorMap
   m_Exposed: 1
-  m_Order: 5
-  m_Category: 
+  m_Order: 1
+  m_Category: Base
   m_Min:
     m_Type:
       m_SerializableType: 
@@ -14056,8 +14070,8 @@ MonoBehaviour:
   - {fileID: 8926484042661616685}
   m_ExposedName: Alpha
   m_Exposed: 1
-  m_Order: 3
-  m_Category: Base
+  m_Order: 0
+  m_Category: Visual Controller
   m_Min:
     m_Type:
       m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
@@ -14748,8 +14762,8 @@ MonoBehaviour:
   - {fileID: 8926484042661616705}
   m_ExposedName: Hand Position
   m_Exposed: 1
-  m_Order: 1
-  m_Category: Controller
+  m_Order: 2
+  m_Category: Visual Controller
   m_Min:
     m_Type:
       m_SerializableType: 
@@ -16922,7 +16936,6 @@ MonoBehaviour:
         PublicKeyToken=b77a5c561934e089
   m_Direction: 1
   m_LinkedSlots:
-  - {fileID: 8926484042661616795}
   - {fileID: 8926484042661616818}
 --- !u!114 &8926484042661616784
 MonoBehaviour:
@@ -17265,136 +17278,6 @@ MonoBehaviour:
       m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
         PublicKeyToken=b77a5c561934e089
   m_Direction: 0
-  m_LinkedSlots: []
---- !u!114 &8926484042661616794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e25f6e0f52a260847818fb8b116806ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UIIgnoredErrors: []
-  m_Parent: {fileID: 114350483966674976}
-  m_Children: []
-  m_UIPosition: {x: 5, y: 2094}
-  m_UICollapsed: 0
-  m_UISuperCollapsed: 0
-  m_InputSlots:
-  - {fileID: 8926484042661616795}
-  - {fileID: 8926484042661616796}
-  m_OutputSlots:
-  - {fileID: 8926484042661616797}
-  m_Type:
-    m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-      PublicKeyToken=b77a5c561934e089
-  condition: 2
---- !u!114 &8926484042661616795
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UIIgnoredErrors: []
-  m_Parent: {fileID: 0}
-  m_Children: []
-  m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 1
-  m_UISuperCollapsed: 0
-  m_MasterSlot: {fileID: 8926484042661616795}
-  m_MasterData:
-    m_Owner: {fileID: 8926484042661616794}
-    m_Value:
-      m_Type:
-        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 
-    m_Space: 2147483647
-  m_Property:
-    name: left
-    m_serializedType:
-      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-  m_Direction: 0
-  m_LinkedSlots:
-  - {fileID: 8926484042661616783}
---- !u!114 &8926484042661616796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UIIgnoredErrors: []
-  m_Parent: {fileID: 0}
-  m_Children: []
-  m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 1
-  m_UISuperCollapsed: 0
-  m_MasterSlot: {fileID: 8926484042661616796}
-  m_MasterData:
-    m_Owner: {fileID: 8926484042661616794}
-    m_Value:
-      m_Type:
-        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 0.8
-    m_Space: 2147483647
-  m_Property:
-    name: right
-    m_serializedType:
-      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-  m_Direction: 0
-  m_LinkedSlots: []
---- !u!114 &8926484042661616797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4c11ff25089a324daf359f4b0629b33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UIIgnoredErrors: []
-  m_Parent: {fileID: 0}
-  m_Children: []
-  m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 1
-  m_UISuperCollapsed: 0
-  m_MasterSlot: {fileID: 8926484042661616797}
-  m_MasterData:
-    m_Owner: {fileID: 8926484042661616794}
-    m_Value:
-      m_Type:
-        m_SerializableType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: False
-    m_Space: 2147483647
-  m_Property:
-    name: o
-    m_serializedType:
-      m_SerializableType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-  m_Direction: 1
   m_LinkedSlots: []
 --- !u!114 &8926484042661616798
 MonoBehaviour:
@@ -17988,7 +17871,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: -12, y: 2278}
+  m_UIPosition: {x: -8, y: 2243}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -18113,7 +17996,8 @@ MonoBehaviour:
       m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
         PublicKeyToken=b77a5c561934e089
   m_Direction: 0
-  m_LinkedSlots: []
+  m_LinkedSlots:
+  - {fileID: 8926484042661616847}
 --- !u!114 &8926484042661616821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18367,8 +18251,8 @@ MonoBehaviour:
   - {fileID: 8926484042661616829}
   m_ExposedName: Process
   m_Exposed: 1
-  m_Order: 2
-  m_Category: Controller
+  m_Order: 1
+  m_Category: Visual Controller
   m_Min:
     m_Type:
       m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
@@ -18711,7 +18595,7 @@ MonoBehaviour:
   m_ExposedName: Interactable
   m_Exposed: 1
   m_Order: 4
-  m_Category: Controller
+  m_Category: Visual Controller
   m_Min:
     m_Type:
       m_SerializableType: 
@@ -18767,3 +18651,83 @@ MonoBehaviour:
   m_Direction: 1
   m_LinkedSlots:
   - {fileID: 8926484042661616799}
+--- !u!114 &8926484042661616846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 330e0fca1717dde4aaa144f48232aa64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 114350483966674976}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_InputSlots: []
+  m_OutputSlots:
+  - {fileID: 8926484042661616847}
+  m_ExposedName: InteractiableRadius
+  m_Exposed: 1
+  m_Order: 3
+  m_Category: Visual Controller
+  m_Min:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_Max:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_IsOutput: 0
+  m_EnumValues: []
+  m_ValueFilter: 0
+  m_Tooltip: 
+  m_Nodes:
+  - m_Id: 0
+    linkedSlots:
+    - outputSlot: {fileID: 8926484042661616847}
+      inputSlot: {fileID: 8926484042661616820}
+    position: {x: -220, y: 2358}
+    expandedSlots: []
+    expanded: 0
+--- !u!114 &8926484042661616847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661616847}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661616846}
+    m_Value:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 1
+    m_Space: 2147483647
+  m_Property:
+    name: o
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 1
+  m_LinkedSlots:
+  - {fileID: 8926484042661616820}
