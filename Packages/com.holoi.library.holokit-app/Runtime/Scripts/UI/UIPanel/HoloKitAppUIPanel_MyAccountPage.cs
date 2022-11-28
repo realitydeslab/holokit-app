@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Unity.Services.CloudSave;
 using TMPro;
 
 namespace Holoi.Library.HoloKitApp.UI
@@ -21,7 +24,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
             else
             {
-                _appleIdEmailText.text = "Not found";
+                FetchAppleUserEmail();
             }
         }
 
@@ -30,9 +33,39 @@ namespace Holoi.Library.HoloKitApp.UI
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
         }
 
-        public void OnVerifyHoloKitButtonPressed()
+        // Try fetching the user's email in the cloud
+        private async void FetchAppleUserEmail()
         {
-            // TODO:
+            // We can only fetch from cloud if the user has already signed in
+            if (!HoloKitApp.Instance.UserAccountManager.Authenticated)
+            {
+                _appleIdEmailText.text = "Not signed in";
+                return;
+            };
+
+            var keySet = new HashSet<string> { AppleUserEmailKey };
+            try
+            {
+                Dictionary<string, string> savedData = await CloudSaveService.Instance.Data.LoadAsync(keySet);
+                if (savedData.ContainsKey(AppleUserEmailKey))
+                {
+                    var email = savedData[AppleUserEmailKey];
+                    PlayerPrefs.SetString(AppleUserEmailKey, email);
+                    _appleIdEmailText.text = email;
+                    return;
+                }
+                else
+                {
+                    _appleIdEmailText.text = "Not found";
+                    return;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                _appleIdEmailText.text = "Connection failed";
+                return;
+            }
         }
     }
 }
