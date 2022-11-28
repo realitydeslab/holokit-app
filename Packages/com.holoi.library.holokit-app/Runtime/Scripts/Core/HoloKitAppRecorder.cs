@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using NatML.Recorders;
@@ -63,6 +63,10 @@ namespace Holoi.Library.HoloKitApp
 
         private const float WatermarkLandscapeHeightRatio = 0.1282f;
 
+        public static event Action OnStartedRecording;
+
+        public static event Action OnStoppedRecording;
+
         private void Start()
         {
             if (HoloKitUtils.IsRuntime)
@@ -83,6 +87,29 @@ namespace Holoi.Library.HoloKitApp
                 }
 
                 _watermarkEnabled = HoloKitApp.Instance.GlobalSettings.WatermarkEnabled;
+            }
+            HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
+        }
+
+        private void Update()
+        {
+            // TODO: Dynamically adjust watermark based on device orientation
+        }
+
+        private void OnDestroy()
+        {
+            HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
+        }
+
+        public void ToggleRecording()
+        {
+            if (IsRecording)
+            {
+                StopRecording();
+            }
+            else
+            {
+                StartRecording();
             }
         }
 
@@ -158,6 +185,7 @@ namespace Holoi.Library.HoloKitApp
             {
                 _audioInput = new AudioInput(_recorder, clock, _cameraAudioListener);
             }
+            OnStartedRecording?.Invoke();
         }
 
         public async void StopRecording()
@@ -190,6 +218,17 @@ namespace Holoi.Library.HoloKitApp
             _watermarkInput = null;
             _cameraInput = null;
             _audioInput = null;
+
+            OnStoppedRecording?.Invoke();
+        }
+
+        private void OnHoloKitRenderModeChanged(HoloKitRenderMode renderMode)
+        {
+            if (IsRecording)
+            {
+                StopRecording();
+                Debug.Log("[Recorder] Recording interrupted due to a render mode change");
+            }
         }
     }
 }

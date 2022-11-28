@@ -71,7 +71,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 _recordText.color = _inactiveColor;
                 _dotImage.color = _inactiveColor;
                 _triggeredText.text = "Recording Stopped";
-                HoloKitAppUIEventManager.OnStoppedRecording?.Invoke();
+                HoloKitApp.Instance.Recorder.StopRecording();
             }
             else
             {
@@ -81,7 +81,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 _recordText.color = _activeColor;
                 _dotImage.color = _activeColor;
                 _triggeredText.text = "Recording Started";
-                HoloKitAppUIEventManager.OnStartedRecording?.Invoke();
+                HoloKitApp.Instance.Recorder.StartRecording();
             }
         }
     }

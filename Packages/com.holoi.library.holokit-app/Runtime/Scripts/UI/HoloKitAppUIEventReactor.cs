@@ -10,8 +10,6 @@ namespace Holoi.Library.HoloKitApp.UI
             HoloKitAppUIEventManager.OnRenderModeChanged += OnRenderModeChanged;
             HoloKitAppUIEventManager.OnStartedAdvertising += OnStartedSharingReality;
             HoloKitAppUIEventManager.OnStoppedAdvertising += OnStoppedSharingReality;
-            HoloKitAppUIEventManager.OnStartedRecording += OnStartedRecording;
-            HoloKitAppUIEventManager.OnStoppedRecording += OnStoppedRecording;
             HoloKitAppUIEventManager.OnExitReality += OnExitReality;
             HoloKitAppUIEventManager.OnAlignmentMarkChecked += OnAlignmentMarkChecked;
             HoloKitAppUIEventManager.OnRescanQRCode += OnRescanQRCode;
@@ -23,8 +21,6 @@ namespace Holoi.Library.HoloKitApp.UI
             HoloKitAppUIEventManager.OnRenderModeChanged -= OnRenderModeChanged;
             HoloKitAppUIEventManager.OnStartedAdvertising -= OnStartedSharingReality;
             HoloKitAppUIEventManager.OnStoppedAdvertising -= OnStoppedSharingReality;
-            HoloKitAppUIEventManager.OnStartedRecording -= OnStartedRecording;
-            HoloKitAppUIEventManager.OnStoppedRecording -= OnStoppedRecording;
             HoloKitAppUIEventManager.OnExitReality -= OnExitReality;
             HoloKitAppUIEventManager.OnAlignmentMarkChecked -= OnAlignmentMarkChecked;
             HoloKitAppUIEventManager.OnRescanQRCode -= OnRescanQRCode;
@@ -56,30 +52,6 @@ namespace Holoi.Library.HoloKitApp.UI
         private void OnExitReality()
         {
             HoloKitApp.Instance.Shutdown();
-        }
-
-        private void OnStartedRecording()
-        {
-            if (HoloKitUtils.IsRuntime)
-            {
-                HoloKitApp.Instance.Recorder.StartRecording();
-            }
-            else
-            {
-                Debug.Log("[HoloKitApp] You can only record video on iOS devices");
-            }
-        }
-
-        private void OnStoppedRecording()
-        {
-            if (HoloKitUtils.IsRuntime)
-            {
-                HoloKitApp.Instance.Recorder.StopRecording();
-            }
-            else
-            {
-                Debug.Log("[HoloKitApp] You can only record video on iOS devices");
-            }
         }
 
         private void OnAlignmentMarkChecked()

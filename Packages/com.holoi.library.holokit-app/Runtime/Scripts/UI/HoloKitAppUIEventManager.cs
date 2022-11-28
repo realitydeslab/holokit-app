@@ -14,10 +14,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public static Action OnExitReality;
 
-        public static Action OnStartedRecording;
-
-        public static Action OnStoppedRecording;
-
         public static Action OnAlignmentMarkChecked;
 
         public static Action OnRescanQRCode;

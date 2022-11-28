@@ -5,25 +5,31 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIComponent_MonoAR_RecordButton : MonoBehaviour
     {
-        [HideInInspector] public bool IsRecording = false;
+        public bool IsRecording => _image.sprite == _rectangle;
 
         [SerializeField] private Sprite _round;
 
         [SerializeField] private Sprite _rectangle;
 
+        private Image _image;
+
+        private void Start()
+        {
+            _image = GetComponent<Image>();
+        }
+
         public void ToggleRecording()
         {
+            var recorder = HoloKitApp.Instance.Recorder;
             if (IsRecording)
             {
-                IsRecording = false;
-                GetComponent<Image>().sprite = _round;
-                HoloKitAppUIEventManager.OnStoppedRecording?.Invoke();
+                _image.sprite = _round;
+                recorder.StopRecording();
             }
             else
             {
-                IsRecording = true;
-                GetComponent<Image>().sprite = _rectangle;
-                HoloKitAppUIEventManager.OnStartedRecording?.Invoke();
+                _image.sprite = _rectangle;
+                recorder.StartRecording();
             }
         }
     }

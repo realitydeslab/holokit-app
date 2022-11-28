@@ -1,5 +1,5 @@
 using UnityEngine;
-using Holoi.Library.HoloKitApp.UI;
+using Holoi.Library.HoloKitApp;
 using HoloKit;
 
 namespace Holoi.Library.MOFABase
@@ -25,8 +25,8 @@ namespace Holoi.Library.MOFABase
         private void Start()
         {
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
-            HoloKitAppUIEventManager.OnStartedRecording += OnStartedRecording;
-            HoloKitAppUIEventManager.OnStoppedRecording += OnStoppedRecording;
+            HoloKitAppRecorder.OnStartedRecording += OnStartedRecording;
+            HoloKitAppRecorder.OnStoppedRecording += OnStoppedRecording;
             HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
 
             Scores.SetActive(false);
@@ -57,8 +57,8 @@ namespace Holoi.Library.MOFABase
         private void OnDestroy()
         {
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
-            HoloKitAppUIEventManager.OnStartedRecording -= OnStartedRecording;
-            HoloKitAppUIEventManager.OnStoppedRecording -= OnStoppedRecording;
+            HoloKitAppRecorder.OnStartedRecording -= OnStartedRecording;
+            HoloKitAppRecorder.OnStoppedRecording -= OnStoppedRecording;
             HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
         }
 
