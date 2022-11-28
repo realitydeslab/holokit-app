@@ -8,10 +8,6 @@ namespace Holoi.Library.HoloKitApp.UI
         #region Mono AR Panel
         public static Action<HoloKitRenderMode> OnRenderModeChanged;
 
-        public static Action OnStartedAdvertising;
-
-        public static Action OnStoppedAdvertising;
-
         public static Action OnExitReality;
 
         public static Action OnAlignmentMarkChecked;

@@ -21,7 +21,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private const float SloganAppearTime = 1.2f;
 
-        private const float HeadsetEndPosY = -960f;
+        private const float HeadsetEndPosY = -972f;
 
         private const float HeadsetMovementDuration = 1.2f;
 

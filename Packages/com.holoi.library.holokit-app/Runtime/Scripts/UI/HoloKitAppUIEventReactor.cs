@@ -8,8 +8,6 @@ namespace Holoi.Library.HoloKitApp.UI
         private void Awake()
         {
             HoloKitAppUIEventManager.OnRenderModeChanged += OnRenderModeChanged;
-            HoloKitAppUIEventManager.OnStartedAdvertising += OnStartedSharingReality;
-            HoloKitAppUIEventManager.OnStoppedAdvertising += OnStoppedSharingReality;
             HoloKitAppUIEventManager.OnExitReality += OnExitReality;
             HoloKitAppUIEventManager.OnAlignmentMarkChecked += OnAlignmentMarkChecked;
             HoloKitAppUIEventManager.OnRescanQRCode += OnRescanQRCode;
@@ -19,8 +17,6 @@ namespace Holoi.Library.HoloKitApp.UI
         private void OnDestroy()
         {
             HoloKitAppUIEventManager.OnRenderModeChanged -= OnRenderModeChanged;
-            HoloKitAppUIEventManager.OnStartedAdvertising -= OnStartedSharingReality;
-            HoloKitAppUIEventManager.OnStoppedAdvertising -= OnStoppedSharingReality;
             HoloKitAppUIEventManager.OnExitReality -= OnExitReality;
             HoloKitAppUIEventManager.OnAlignmentMarkChecked -= OnAlignmentMarkChecked;
             HoloKitAppUIEventManager.OnRescanQRCode -= OnRescanQRCode;
@@ -37,16 +33,6 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 HoloKitCamera.Instance.RenderMode = HoloKitRenderMode.Mono;
             }
-        }
-
-        private void OnStartedSharingReality()
-        {
-            HoloKitApp.Instance.MultiplayerManager.StartAdvertising();
-        }
-
-        private void OnStoppedSharingReality()
-        {
-            HoloKitApp.Instance.MultiplayerManager.StopAdvertising();
         }
 
         private void OnExitReality()

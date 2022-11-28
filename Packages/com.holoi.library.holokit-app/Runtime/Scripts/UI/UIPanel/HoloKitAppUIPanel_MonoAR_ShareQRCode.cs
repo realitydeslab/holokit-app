@@ -35,13 +35,17 @@ namespace Holoi.Library.HoloKitApp.UI
             if (HoloKitUtils.IsRuntime)
             {
                 CalculateCameraToQRCodeOffset();
-                HoloKitAppUIEventManager.OnStartedAdvertising?.Invoke();
+                //HoloKitApp.Instance.MultiplayerManager.StartAdvertising();
+                StartCoroutine(HoloKitAppUtils.WaitAndDo(1f, () =>
+                {
+                    HoloKitApp.Instance.MultiplayerManager.StartAdvertising();
+                }));
             }
         }
 
         private void OnDestroy()
         {
-            HoloKitAppMultiplayerManager.OnConnectedDeviceListUpdated += OnConnectedDeviceListUpdated;
+            HoloKitAppMultiplayerManager.OnConnectedDeviceListUpdated -= OnConnectedDeviceListUpdated;
         }
 
         private void AdjustQRCodeSize()
@@ -68,9 +72,9 @@ namespace Holoi.Library.HoloKitApp.UI
         private void OnConnectedDeviceListUpdated(List<DeviceInfo> deviceInfos)
         {
             // Destroy previous slots
-            for (int i = 0; i < _deviceListRoot.childCount; i++)
+            foreach (Transform child in _deviceListRoot)
             {
-                Destroy(_deviceListRoot.GetChild(i).gameObject);
+                Destroy(child.gameObject);
             }
             int deviceCount = 0;
             foreach (var deviceInfo in deviceInfos)
@@ -93,8 +97,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnExitButtonPressed()
         {
-            HoloKitAppUIEventManager.OnStoppedAdvertising?.Invoke();
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+            HoloKitApp.Instance.MultiplayerManager.StopAdvertising();
         }
     }
 }
