@@ -185,7 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c89933f02ee7247fdbcc5c96fb801c40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _handJoint: 8
+  _handJoint: 5
   _extendedLength: 0.5
 --- !u!4 &153230847
 Transform:
@@ -300,7 +300,7 @@ MonoBehaviour:
   _syncZ: 1
   _heightIdenticalToTarget: 0
   _offset: {x: 0, y: 0, z: 0}
-  _smoothTime: 0.6
+  _smoothTime: 0.2
   _rotationType: 0
 --- !u!114 &172308144
 MonoBehaviour:
@@ -818,7 +818,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1326649296
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -833,7 +833,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Property:
     m_Name: Target Position
-  Target: {fileID: 0}
+  Target: {fileID: 172308136}
 --- !u!114 &1326649297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -847,7 +847,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ExecuteInEditor: 1
-  m_Bindings: []
+  m_Bindings:
+  - {fileID: 1326649296}
   m_VisualEffect: {fileID: 1326649299}
 --- !u!73398921 &1326649298
 VFXRenderer:
@@ -857,7 +858,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326649294}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -910,7 +911,7 @@ VisualEffect:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: 0.26, y: 0, z: 0.81}
+      - m_Value: {x: 0, y: 100, z: 0}
         m_Name: Target Position
         m_Overridden: 1
     m_Vector4f:
