@@ -42,7 +42,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private const float RoomRotationSpeed = 0.3f;
 
-        private const float CamaraOrthographicSize = 10f;
+        private const float CamaraOrthographicSize = 12f;
 
         private readonly Vector3 TargetPosition = new(0f, 3f, 0f);
 

@@ -23,6 +23,8 @@ namespace Holoi.AssetFoundation
 
         public List<VideoClip> PreviewVideos;
 
+        public VideoClip TutorialVideo;
+
         public List<RealityTag> RealityTags;
 
         public List<MetaAvatarTag> CompatibleMetaAvatarTags;
