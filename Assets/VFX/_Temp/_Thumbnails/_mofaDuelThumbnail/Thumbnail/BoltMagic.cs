@@ -1,17 +1,21 @@
 using UnityEngine;
+using Holoi.Library.HoloKitApp;
 
 public class BoltMagic : MonoBehaviour
 {
-    [SerializeField] float _liftime = 3f; 
-    
-    private void Start()
+    private MOFATrainingThumbnail _pool;
+
+    public void SetPool(MOFATrainingThumbnail pool)
     {
-        Destroy(gameObject, _liftime);
+        _pool = pool;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         GetComponent<Animator>().SetTrigger("Hit");
-        Destroy(gameObject, 0.3f);
+        StartCoroutine(HoloKitAppUtils.WaitAndDo(0.3f, () =>
+        {
+            _pool.ReturnObjectToQueue(gameObject);
+        }));
     }
 }

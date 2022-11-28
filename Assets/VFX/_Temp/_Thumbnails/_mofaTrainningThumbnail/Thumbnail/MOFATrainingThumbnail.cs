@@ -1,19 +1,26 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
 public class MOFATrainingThumbnail : MonoBehaviour
 {
     [SerializeField] Transform _parent;
-    Animator _avatarAnimator;
+
     [SerializeField] Vector2 _avatarVelocity;
 
     [Header("Attack")]
     [SerializeField] bool _autoFire = true;
+
     [SerializeField] GameObject _boltPrefab;
+
     [SerializeField] float _attackInterval = 3f;
+
     [SerializeField] float _attackPreset = 0f;
-    Animator _boltAnimator;
+
+    Animator _avatarAnimator;
+
+    private readonly Queue<GameObject> _pool = new();
 
     void Start()
     {
@@ -36,7 +43,6 @@ public class MOFATrainingThumbnail : MonoBehaviour
             {
                 Debug.Log("missing fire bolt prefab.");
             }
-            
         }
     }
 
@@ -51,6 +57,7 @@ public class MOFATrainingThumbnail : MonoBehaviour
         yield return new WaitForSecondsRealtime(time);
         StartCoroutine(WaitAndShoot(interval));
     }
+
     IEnumerator WaitAndShoot(float time)
     {
         _avatarAnimator.SetTrigger("Attack A");
@@ -60,13 +67,36 @@ public class MOFATrainingThumbnail : MonoBehaviour
         StartCoroutine(WaitAndShoot(_attackInterval));
     }
 
+    private void AddObjectToQueue(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            var bolt = Instantiate(_boltPrefab, _parent);
+            bolt.GetComponent<BoltMagic>().SetPool(this);
+            bolt.SetActive(false);
+            _pool.Enqueue(bolt);
+        }
+    }
+
+    public void ReturnObjectToQueue(GameObject go)
+    {
+        go.SetActive(false);
+        _pool.Enqueue(go);
+    }
+
     void ShootBolt()
     {
-        var go = Instantiate(_boltPrefab, _parent);
-        _boltAnimator = go.GetComponent<Animator>();
-        go.transform.LookAt(transform.forward * 5f);
-        go.transform.position = transform.position + Vector3.up * 1.5f + transform.forward * 1f;
-        go.GetComponent<Rigidbody>().velocity = transform.forward * 3f;
-        //StartCoroutine(WaitAndExplode());
+        if (_pool.Count == 0)
+        {
+            AddObjectToQueue(1);
+        }
+        var bolt = _pool.Dequeue();
+        bolt.SetActive(true);
+        // Rotation
+        bolt.transform.LookAt(transform.forward * 5f);
+        // Position
+        bolt.transform.position = transform.position + Vector3.up * 1.5f + transform.forward * 1f;
+        // Add velocity
+        bolt.GetComponent<Rigidbody>().velocity = transform.forward * 3f;
     }
 }
