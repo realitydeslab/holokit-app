@@ -27,6 +27,7 @@ namespace Holoi.Library.ARUX
         float _inTime = 2f;
         bool _isTriggerIn = false;
         float _outTime = 0.25f;
+        bool _isTriggerOut = false;
 
         float _process = 0;
 
@@ -47,8 +48,9 @@ namespace Holoi.Library.ARUX
             {
                 _process += Time.deltaTime;
                 if (_process > _inTime) _process = _inTime;
-                if(_process == _inTime && !_isTriggerIn)
+                if (_process == _inTime && !_isTriggerIn)
                 {
+                    _isTriggerIn = true;
                     FadeIn();
                 }
 
@@ -57,11 +59,17 @@ namespace Holoi.Library.ARUX
             {
                 _process -= Time.deltaTime;
                 if (_process < _outTime) _process = _outTime;
+                if (_process == _outTime && !_isTriggerOut)
+                {
+                    _isTriggerOut = false;
+                    FadeOut();
+                }
 
 
                 var direction = (_target.transform.position - _player.position).normalized;
 
                 var SignedAngle = Vector3.SignedAngle(_player.forward, direction, Vector3.up);
+
                 var angle = Mathf.Abs(SignedAngle);
 
 
@@ -75,20 +83,11 @@ namespace Holoi.Library.ARUX
 
                     var projectDirection = Vector3.ProjectOnPlane(direction, _player.forward);
 
-                    //Debug.Log(projectDirection);
-
                     projectDirection = projectDirection.normalized * (0.5f) * (Mathf.Pow(3, 0.5f) * _radius);
-                    //projectDirection = projectDirection.normalized * (Mathf.Sin(threshold - 90f) * _radius) * (Mathf.Cos(threshold - 90f) * _radius);
-                    Debug.Log("long: " + projectDirection);
+
                     var cc = -_player.forward * (0.5f * _radius);
-                    Debug.Log("short: " + cc);
-
-
 
                     var finalDirection = cc + projectDirection;
-
-                    Debug.Log("final: " + cc);
-
 
                     _realTargetposition = _player.position + finalDirection;
                 }
