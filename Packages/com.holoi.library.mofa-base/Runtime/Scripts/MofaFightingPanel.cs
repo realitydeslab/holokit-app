@@ -20,10 +20,14 @@ namespace Holoi.Library.MOFABase
         [Header("Settings"), Tooltip("Will this panel rotate with the device orientation?")]
         [SerializeField] private bool _autoRotate = true;
 
+        private Canvas _canvas;
+
         private DeviceOrientation _deviceOrientation = DeviceOrientation.Portrait;
 
         private void Start()
         {
+            _canvas = GetComponent<Canvas>();
+
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
             HoloKitAppRecorder.OnStartedRecording += OnStartedRecording;
             HoloKitAppRecorder.OnStoppedRecording += OnStoppedRecording;
@@ -42,15 +46,33 @@ namespace Holoi.Library.MOFABase
 
             if (Input.deviceOrientation != _deviceOrientation)
             {
-                if (Input.deviceOrientation == DeviceOrientation.Portrait)
-                {
-                    GetComponent<RectTransform>().localRotation = Quaternion.identity;
-                }
-                else if (Input.deviceOrientation == DeviceOrientation.LandscapeLeft)
-                {
-                    GetComponent<RectTransform>().localRotation = Quaternion.Euler(0f, 0f, -90f);
-                }
                 _deviceOrientation = Input.deviceOrientation;
+                OnDeviceOrientationChanged();
+            }
+        }
+
+        private void OnDeviceOrientationChanged()
+        {
+            if (_deviceOrientation == DeviceOrientation.Portrait)
+            {
+                GetComponent<RectTransform>().localRotation = Quaternion.identity;
+            }
+            else if (_deviceOrientation == DeviceOrientation.LandscapeLeft)
+            {
+                GetComponent<RectTransform>().localRotation = Quaternion.Euler(0f, 0f, -90f);
+            }
+        }
+
+        private void OnHoloKitRenderModeChanged(HoloKitRenderMode renderMode)
+        {
+            if (renderMode == HoloKitRenderMode.Stereo)
+            {
+                GetComponent<RectTransform>().localRotation = Quaternion.identity;
+                _canvas.renderMode = RenderMode.WorldSpace;
+            }
+            else if (renderMode == HoloKitRenderMode.Mono)
+            {
+                _canvas.renderMode = RenderMode.ScreenSpaceCamera;
             }
         }
 
@@ -116,14 +138,6 @@ namespace Holoi.Library.MOFABase
         private void OnStoppedRecording()
         {
             GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 1f);
-        }
-
-        private void OnHoloKitRenderModeChanged(HoloKitRenderMode renderMode)
-        {
-            if (renderMode == HoloKitRenderMode.Stereo)
-            {
-                GetComponent<RectTransform>().localRotation = Quaternion.identity;
-            }
         }
     }
 }
