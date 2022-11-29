@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.VFX;
+using Unity.Netcode;
 using Holoi.Library.MOFABase.WatchConnectivity;
 
 namespace Holoi.Library.MOFABase
@@ -66,10 +67,13 @@ namespace Holoi.Library.MOFABase
 
         private void OnLifeShieldRenovated(ulong ownerClientId)
         {
-            _lifeCircles.SetBool("Center", true);
-            _lifeCircles.SetBool("Up", true);
-            _lifeCircles.SetBool("Left", true);
-            _lifeCircles.SetBool("Right", true);
+            if (ownerClientId == NetworkManager.Singleton.LocalClientId)
+            {
+                _lifeCircles.SetBool("Center", true);
+                _lifeCircles.SetBool("Up", true);
+                _lifeCircles.SetBool("Left", true);
+                _lifeCircles.SetBool("Right", true);
+            }
         }
 
         private void OnLifeShieldCenterDestroyed()

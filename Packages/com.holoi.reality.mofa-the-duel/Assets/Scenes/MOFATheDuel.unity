@@ -207,7 +207,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5626992624204144708, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5626992624204144710, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
       propertyPath: m_RenderPostProcessing
@@ -227,7 +227,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5626992624492686540, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5626992624492686542, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
       propertyPath: m_RenderPostProcessing
@@ -235,7 +235,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5626992625134311568, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5626992625134311570, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
       propertyPath: m_RenderPostProcessing
@@ -733,7 +733,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4c7e5732b1bf4fb4bf6319e93e2c289, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fightingPanelTransform: {fileID: 1078102007662147411}
+  _fightingPanelRoot: {fileID: 2814851242572158573}
   _countdownPrefab: {fileID: 2535899623042805528, guid: 25e73d5d079fa46319e64b4a24f672ee, type: 3}
   _roundOverPrefab: {fileID: 4426060658807849151, guid: 4bbead301064a4375889b9a2e24a93b7, type: 3}
   _victoryPrefab: {fileID: 4372161653748229449, guid: 604331f1a3b3248fea64c9b115191ba5, type: 3}
@@ -1360,13 +1360,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mofa Fighting Panel
       objectReference: {fileID: 0}
+    - target: {fileID: 3019219737344401726, guid: a52ee14d8ad774911906000298a66025, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 275482712}
     - target: {fileID: 3019219737344401727, guid: a52ee14d8ad774911906000298a66025, type: 3}
       propertyPath: m_Pivot.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3019219737344401727, guid: a52ee14d8ad774911906000298a66025, type: 3}
       propertyPath: m_Pivot.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3019219737344401727, guid: a52ee14d8ad774911906000298a66025, type: 3}
       propertyPath: m_RootOrder
@@ -1390,11 +1394,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3019219737344401727, guid: a52ee14d8ad774911906000298a66025, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1170
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3019219737344401727, guid: a52ee14d8ad774911906000298a66025, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 2532
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3019219737344401727, guid: a52ee14d8ad774911906000298a66025, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1406,7 +1410,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3019219737344401727, guid: a52ee14d8ad774911906000298a66025, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3019219737344401727, guid: a52ee14d8ad774911906000298a66025, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1446,6 +1450,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a52ee14d8ad774911906000298a66025, type: 3}
+--- !u!224 &2814851242572158573 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8793353450489827932, guid: a52ee14d8ad774911906000298a66025, type: 3}
+  m_PrefabInstance: {fileID: 2814851242572158572}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6664846613387252980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1474,9 +1483,10 @@ MonoBehaviour:
   - {fileID: 7460444132525488055, guid: 2685ff49be8ba4dd2b6a88c33e39b21e, type: 3}
   - {fileID: 7460444132525488055, guid: 1ef047936f218493c8e2383fc9ec4396, type: 3}
   - {fileID: 4253559872470446980, guid: ee08f329fcb824823a3589be3fab8963, type: 3}
-  UIPanelPrefabs: []
+  UIPanelPrefabs:
+  - {fileID: 6114804334400054014, guid: f05688d6fac784e78b3a51ae3f457489, type: 3}
   UIRealitySettingTabs: []
-  _urpAsset: {fileID: 0}
+  _urpAsset: {fileID: 11400000, guid: 3e11a6d46ac8242e6baa92c0c60f7945, type: 2}
   SpellList: {fileID: 11400000, guid: b4e94e5ffa1d74c20813c68747a2d3cc, type: 2}
   LifeShieldList: {fileID: 11400000, guid: 6232ecefe87994ff798dbb39acb2abd6, type: 2}
   SpellPool: {fileID: 42871691}
