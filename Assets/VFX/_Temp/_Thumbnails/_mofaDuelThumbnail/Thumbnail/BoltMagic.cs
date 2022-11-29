@@ -5,6 +5,13 @@ public class BoltMagic : MonoBehaviour
 {
     private MOFATrainingThumbnail _pool;
 
+    private Animator _animator;
+
+    private void Start()
+    {
+        _animator = GetComponent<Animator>();
+    }
+
     public void SetPool(MOFATrainingThumbnail pool)
     {
         _pool = pool;
@@ -12,9 +19,12 @@ public class BoltMagic : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        GetComponent<Animator>().SetTrigger("Hit");
+        _animator.SetTrigger("Hit");
         StartCoroutine(HoloKitAppUtils.WaitAndDo(0.3f, () =>
         {
+            // Reset animator
+            _animator.Rebind();
+            _animator.Update(0f);
             _pool.ReturnObjectToQueue(gameObject);
         }));
     }
