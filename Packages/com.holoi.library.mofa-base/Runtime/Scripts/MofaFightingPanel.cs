@@ -4,18 +4,29 @@ using HoloKit;
 
 namespace Holoi.Library.MOFABase
 {
+    public struct MofaFightingPanelParams
+    {
+        public float HeaderPosY;
+        public float HeaderScale;
+        public float StatusPosX;
+        public float StatusPosY;
+        public float StatusScale;
+    }
+
     public class MofaFightingPanel : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] protected GameObject Scores;
+        [SerializeField] protected RectTransform Rotator;
 
-        [SerializeField] protected GameObject Time;
+        [SerializeField] protected RectTransform Scores;
 
-        [SerializeField] protected GameObject Reticle;
+        [SerializeField] protected RectTransform Time;
 
-        [SerializeField] protected GameObject Status;
+        [SerializeField] protected RectTransform Reticle;
 
-        [SerializeField] protected GameObject RedScreen;
+        [SerializeField] protected RectTransform Status;
+
+        [SerializeField] protected RectTransform RedScreen;
 
         [Header("Settings"), Tooltip("Will this panel rotate with the device orientation?")]
         [SerializeField] private bool _autoRotate = true;
@@ -23,6 +34,29 @@ namespace Holoi.Library.MOFABase
         private Canvas _canvas;
 
         private DeviceOrientation _deviceOrientation = DeviceOrientation.Portrait;
+
+        private readonly MofaFightingPanelParams _monoPortraitParams = new()
+        {
+            HeaderPosY = 800f,
+            HeaderScale = 1f,
+            StatusPosX = 240f,
+            StatusPosY = -720f,
+            StatusScale = 3000f
+        };
+
+        private readonly MofaFightingPanelParams _monoLandscapeParams = new()
+        {
+            HeaderPosY = 460f,
+            HeaderScale = 1f,
+            StatusPosX = 240f,
+            StatusPosY = -460f,
+            StatusScale = 3000f
+        };
+
+        private readonly MofaFightingPanelParams _starParams = new()
+        {
+
+        };
 
         private void Start()
         {
@@ -33,11 +67,11 @@ namespace Holoi.Library.MOFABase
             HoloKitAppRecorder.OnStoppedRecording += OnStoppedRecording;
             HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
 
-            Scores.SetActive(false);
-            Time.SetActive(false);
-            Reticle.SetActive(false);
-            Status.SetActive(false);
-            RedScreen.SetActive(false);
+            Scores.gameObject.SetActive(false);
+            Time.gameObject.SetActive(false);
+            Reticle.gameObject.SetActive(false);
+            Status.gameObject.SetActive(false);
+            RedScreen.gameObject.SetActive(false);
         }
 
         private void Update()
@@ -55,11 +89,13 @@ namespace Holoi.Library.MOFABase
         {
             if (_deviceOrientation == DeviceOrientation.Portrait)
             {
-                GetComponent<RectTransform>().localRotation = Quaternion.identity;
+                Rotator.localRotation = Quaternion.identity;
+                UpdateMofaFightingPanelParams(_monoPortraitParams);
             }
             else if (_deviceOrientation == DeviceOrientation.LandscapeLeft)
             {
-                GetComponent<RectTransform>().localRotation = Quaternion.Euler(0f, 0f, -90f);
+                Rotator.localRotation = Quaternion.Euler(0f, 0f, -90f);
+                UpdateMofaFightingPanelParams(_monoLandscapeParams);
             }
         }
 
@@ -67,13 +103,26 @@ namespace Holoi.Library.MOFABase
         {
             if (renderMode == HoloKitRenderMode.Stereo)
             {
-                GetComponent<RectTransform>().localRotation = Quaternion.identity;
                 _canvas.renderMode = RenderMode.WorldSpace;
+                Rotator.localRotation = Quaternion.identity;
+                UpdateMofaFightingPanelParams(_starParams);
             }
             else if (renderMode == HoloKitRenderMode.Mono)
             {
                 _canvas.renderMode = RenderMode.ScreenSpaceCamera;
+                _deviceOrientation = Input.deviceOrientation;
+                OnDeviceOrientationChanged();
             }
+        }
+
+        private void UpdateMofaFightingPanelParams(MofaFightingPanelParams fightingPanelParams)
+        {
+            Scores.anchoredPosition = new(0f, fightingPanelParams.HeaderPosY);
+            Scores.localScale = new(fightingPanelParams.HeaderScale, fightingPanelParams.HeaderScale, fightingPanelParams.HeaderScale);
+            Time.anchoredPosition = new(0f, fightingPanelParams.HeaderPosY);
+            Time.localScale = new(fightingPanelParams.HeaderScale, fightingPanelParams.HeaderScale, fightingPanelParams.HeaderScale);
+            Status.anchoredPosition = new(fightingPanelParams.StatusPosX, fightingPanelParams.StatusPosY);
+            Status.localScale = new(fightingPanelParams.StatusScale, fightingPanelParams.StatusScale, fightingPanelParams.StatusScale);
         }
 
         private void OnDestroy()
@@ -109,25 +158,25 @@ namespace Holoi.Library.MOFABase
         {
             if (HoloKitApp.HoloKitApp.Instance.IsSpectator) // Spectator
             {
-                Scores.SetActive(true);
-                Time.SetActive(true);
+                Scores.gameObject.SetActive(true);
+                Time.gameObject.SetActive(true);
             }
             else // Not spectator
             {
-                Scores.SetActive(true);
-                Time.SetActive(true);
-                Reticle.SetActive(true);
-                Status.SetActive(true);
-                RedScreen.SetActive(true);
+                Scores.gameObject.SetActive(true);
+                Time.gameObject.SetActive(true);
+                Reticle.gameObject.SetActive(true);
+                Status.gameObject.SetActive(true);
+                RedScreen.gameObject.SetActive(true);
             }
         }
 
         protected virtual void OnRoundData()
         {
-            Scores.SetActive(false);
-            Time.SetActive(false);
-            Reticle.SetActive(false);
-            Status.SetActive(false);
+            Scores.gameObject.SetActive(false);
+            Time.gameObject.SetActive(false);
+            Reticle.gameObject.SetActive(false);
+            Status.gameObject.SetActive(false);
         }
 
         private void OnStartedRecording()

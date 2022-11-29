@@ -9,20 +9,20 @@ namespace Holoi.Reality.MOFATheHunting
         {
             if (HoloKitApp.Instance.IsSpectator) // Spectator
             {
-                Scores.SetActive(true);
-                Time.SetActive(true);
+                Scores.gameObject.SetActive(true);
+                Time.gameObject.SetActive(true);
             }
             else if (HoloKitApp.Instance.IsHost)
             {
-                Reticle.SetActive(true);
+                Reticle.gameObject.SetActive(true);
             }
             else
             {
                 //Scores.SetActive(true);
                 //Time.SetActive(true);
-                Reticle.SetActive(true);
-                Status.SetActive(true);
-                RedScreen.SetActive(true);
+                Reticle.gameObject.SetActive(true);
+                Status.gameObject.SetActive(true);
+                RedScreen.gameObject.SetActive(true);
             }
         }
     }
