@@ -48,7 +48,7 @@ namespace Holoi.Library.ARUX
         {
             if (_isVisible)
             {
-                FadeOut();
+                //FadeOut();
 
                 //_process += Time.deltaTime;
                 //if (_process > _inTime) _process = _inTime;
@@ -60,7 +60,7 @@ namespace Holoi.Library.ARUX
             }
             else
             {
-                FadeIn();
+                //FadeIn();
                 //_process -= Time.deltaTime;
                 //if (_process < _outTime) _process = _outTime;
                 //if (_process == _outTime && !_isTriggerOut)
@@ -83,7 +83,7 @@ namespace Holoi.Library.ARUX
                 }
                 else
                 {
-                    Debug.Log($"> {threshold}");
+                    //Debug.Log($"> {threshold}");
 
                     var projectDirection = Vector3.ProjectOnPlane(direction, _player.forward);
 
@@ -121,11 +121,14 @@ namespace Holoi.Library.ARUX
         public void ToVisible()
         {
             _isVisible = true;
+            FadeOut();
         }
 
         public void ToInVisible()
         {
             _isVisible = false;
+            FadeIn();
+
 
         }
     }
