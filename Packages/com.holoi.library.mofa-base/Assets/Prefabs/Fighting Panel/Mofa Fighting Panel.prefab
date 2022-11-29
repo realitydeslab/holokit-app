@@ -185,9 +185,9 @@ Canvas:
   m_GameObject: {fileID: 3019219737344401699}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_PlaneDistance: 1.2
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -249,12 +249,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25050a36e6995427dbd22269c1c42c54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Rotator: {fileID: 8793353450489827932}
   Scores: {fileID: 7254070172706848978}
   Time: {fileID: 8183066238556490552}
   Reticle: {fileID: 476466993471633493}
   Status: {fileID: 6520216935479991587}
   RedScreen: {fileID: 6009963366604902101}
-  Rotator: {fileID: 8793353450489827932}
   _autoRotate: 1
 --- !u!1 &5319672712129784908
 GameObject:
@@ -283,7 +283,7 @@ RectTransform:
   m_GameObject: {fileID: 5319672712129784908}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1250, y: 1250, z: 1250}
+  m_LocalScale: {x: 3000, y: 3000, z: 3000}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5319672712903240372}
@@ -294,7 +294,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 115, y: -300}
+  m_AnchoredPosition: {x: 240, y: -720}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &5319672712129785264
@@ -392,6 +392,9 @@ VisualEffect:
       - m_Value: {x: 2, y: 2, z: 2, w: 1}
         m_Name: Life Color
         m_Overridden: 1
+      - m_Value: {x: 2, y: 2, z: 2, w: 1}
+        m_Name: LifeColor
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
@@ -417,6 +420,9 @@ VisualEffect:
         m_Overridden: 1
       - m_Value: 1
         m_Name: BOT
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Center
         m_Overridden: 1
 --- !u!73398921 &5319672712903240370
 VFXRenderer:
