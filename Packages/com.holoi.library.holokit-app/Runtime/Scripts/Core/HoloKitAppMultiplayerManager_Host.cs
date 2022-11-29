@@ -77,6 +77,10 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         private readonly NetworkVariable<Vector3> _hostCameraToScreenCenterOffset = new(Vector3.zero, NetworkVariableReadPermission.Everyone);
 
+        public static event Action OnAdvertisingStarted;
+
+        public static event Action OnAdvertisingStopped;
+
         public static event Action<List<DeviceInfo>> OnConnectedDeviceListUpdated;
 
         private void Start_Host()
@@ -99,6 +103,7 @@ namespace Holoi.Library.HoloKitApp
             SetHostCameraToScreenCenterOffset();
             HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnARSessionUpdatedFrame_Host;
             MultipeerConnectivityTransport.StartAdvertising();
+            OnAdvertisingStarted?.Invoke();
         }
 
         private void SpawnHostCameraPose()
@@ -158,6 +163,7 @@ namespace Holoi.Library.HoloKitApp
             MultipeerConnectivityTransport.StopAdvertising();
             DestroyHostCameraPose();
             _hostTimedCameraPoseQueue.Clear();
+            OnAdvertisingStopped?.Invoke();
         }
 
         private void OnConnectedWithPeer_Host(ulong clientId, string peerName)

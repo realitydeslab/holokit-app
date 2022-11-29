@@ -72,8 +72,10 @@ namespace Holoi.Library.MOFABase
             _canvas = GetComponent<Canvas>();
 
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
-            HoloKitAppRecorder.OnStartedRecording += OnStartedRecording;
-            HoloKitAppRecorder.OnStoppedRecording += OnStoppedRecording;
+            HoloKitAppRecorder.OnRecordingStarted += OnRecordingStarted;
+            HoloKitAppRecorder.OnRecordingStopped += OnRecordingStopped;
+            HoloKitAppMultiplayerManager.OnAdvertisingStarted += OnRecordingStarted;
+            HoloKitAppMultiplayerManager.OnAdvertisingStopped += OnRecordingStopped;
             HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
             LifeShield.OnSpawned += OnLifeShieldSpawned;
 
@@ -98,8 +100,8 @@ namespace Holoi.Library.MOFABase
         private void OnDestroy()
         {
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
-            HoloKitAppRecorder.OnStartedRecording -= OnStartedRecording;
-            HoloKitAppRecorder.OnStoppedRecording -= OnStoppedRecording;
+            HoloKitAppRecorder.OnRecordingStarted -= OnRecordingStarted;
+            HoloKitAppRecorder.OnRecordingStopped -= OnRecordingStopped;
             HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
             LifeShield.OnSpawned -= OnLifeShieldSpawned;
         }
@@ -192,12 +194,12 @@ namespace Holoi.Library.MOFABase
             Status.gameObject.SetActive(false);
         }
 
-        private void OnStartedRecording()
+        private void OnRecordingStarted()
         {
             Rotator.anchoredPosition = new Vector2(0f, 3000f);
         }
 
-        private void OnStoppedRecording()
+        private void OnRecordingStopped()
         {
             Rotator.anchoredPosition = Vector2.zero;
         }

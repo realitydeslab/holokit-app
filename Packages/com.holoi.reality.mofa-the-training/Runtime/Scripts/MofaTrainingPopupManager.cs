@@ -14,6 +14,7 @@ namespace Holoi.Reality.MOFATheTraining
         protected override void Start()
         {
             base.Start();
+
             if (HoloKitApp.Instance.IsHost)
             {
                 SpawnPopup(_findPlanePrefab);

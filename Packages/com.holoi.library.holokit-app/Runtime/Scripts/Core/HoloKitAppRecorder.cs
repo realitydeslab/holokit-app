@@ -63,9 +63,9 @@ namespace Holoi.Library.HoloKitApp
 
         private const float WatermarkLandscapeHeightRatio = 0.0615f;
 
-        public static event Action OnStartedRecording;
+        public static event Action OnRecordingStarted;
 
-        public static event Action OnStoppedRecording;
+        public static event Action OnRecordingStopped;
 
         private void Start()
         {
@@ -185,7 +185,7 @@ namespace Holoi.Library.HoloKitApp
             {
                 _audioInput = new AudioInput(_recorder, clock, _cameraAudioListener);
             }
-            OnStartedRecording?.Invoke();
+            OnRecordingStarted?.Invoke();
         }
 
         public async void StopRecording()
@@ -219,7 +219,7 @@ namespace Holoi.Library.HoloKitApp
             _cameraInput = null;
             _audioInput = null;
 
-            OnStoppedRecording?.Invoke();
+            OnRecordingStopped?.Invoke();
         }
 
         private void OnHoloKitRenderModeChanged(HoloKitRenderMode renderMode)
