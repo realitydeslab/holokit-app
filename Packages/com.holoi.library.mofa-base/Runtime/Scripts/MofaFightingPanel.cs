@@ -59,8 +59,8 @@ namespace Holoi.Library.MOFABase
 
         private readonly MofaFightingPanelParams _starParams = new()
         {
-            RotatorScale = 1.6f,
-            HeaderPosY = 460f,
+            RotatorScale = 1.2f,
+            HeaderPosY = 360f,
             HeaderScale = 1f,
             StatusPosX = 240f,
             StatusPosY = -460f,
@@ -194,10 +194,7 @@ namespace Holoi.Library.MOFABase
 
         private void OnStartedRecording()
         {
-            if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono)
-            {
-                Rotator.anchoredPosition = new Vector2(0f, 3000f);
-            }
+            Rotator.anchoredPosition = new Vector2(0f, 3000f);
         }
 
         private void OnStoppedRecording()
