@@ -31,20 +31,15 @@ namespace Holoi.Library.MOFABase
 
         private void OnHit()
         {
-            Debug.Log("OnHit");
             if (_attackSpell.HitOnce)
             {
                 _animator.SetTrigger("Hit");
-                Debug.Log("OnHit2");
-
             }
         }
 
         private void OnLifetimeEnded()
         {
             _animator.SetTrigger("Die");
-            Debug.Log("OnLifetimeEnded");
-
         }
     }
 }
