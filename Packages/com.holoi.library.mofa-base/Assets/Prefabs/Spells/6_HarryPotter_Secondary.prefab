@@ -923,7 +923,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2895361232057151020}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -2133,8 +2133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47545e9eafa4a474e83d23a43c41f7be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackController: {fileID: 8051939751654401163}
-  _lifeTimeController: {fileID: 8051939751654401160}
+  _attackSpell: {fileID: 8051939751654401163}
+  _lifetimeController: {fileID: 8051939751654401160}
   _animator: {fileID: 1836926758}
 --- !u!1 &2895361232686315864
 GameObject:
@@ -2679,8 +2679,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8051939751654401172}
-  - component: {fileID: 8051939751654401181}
   - component: {fileID: 8051939751654401182}
+  - component: {fileID: 8051939751654401181}
   - component: {fileID: 8051939751654401177}
   - component: {fileID: 8051939751654401175}
   - component: {fileID: 8051939751654401174}
@@ -2711,19 +2711,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &8051939751654401181
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8051939751654401173}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &8051939751654401182
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2740,6 +2727,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!135 &8051939751654401181
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8051939751654401173}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.8
+  m_Center: {x: 0, y: -0.5, z: -0.3}
 --- !u!82 &8051939751654401177
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2885,7 +2885,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d2549ca7cef4e1485712e3c7d1663b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Lifetime: 3
+  _lifetime: 5
   _spawnSound: {fileID: 8300000, guid: 54aae184d290a4636a94f02ff03a9107, type: 3}
   _destroyDelay: 1
 --- !u!114 &8051939751654401161
@@ -2900,7 +2900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96a8e88bcbb6407490fbf329b443eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 5
+  _speed: 3
 --- !u!114 &8051939751654401163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2913,7 +2913,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1349d2545f9e94e3299bcb1643e43413, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HitOnce: 1
+  _hitOnce: 0
   _hitSound: {fileID: 0}
   _destroyDelay: 1
 --- !u!95 &1477859813

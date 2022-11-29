@@ -17,6 +17,8 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] private float _destroyDelay;
 
+        public bool HitOnce => _hitOnce;
+
         public event Action OnHit;
 
         public override void OnNetworkSpawn()

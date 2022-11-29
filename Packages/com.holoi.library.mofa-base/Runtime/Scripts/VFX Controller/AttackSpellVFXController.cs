@@ -31,7 +31,10 @@ namespace Holoi.Library.MOFABase
 
         private void OnHit()
         {
-            _animator.SetTrigger("Hit");
+            if (_attackSpell.HitOnce)
+            {
+                _animator.SetTrigger("Hit");
+            }
         }
 
         private void OnLifetimeEnded()
