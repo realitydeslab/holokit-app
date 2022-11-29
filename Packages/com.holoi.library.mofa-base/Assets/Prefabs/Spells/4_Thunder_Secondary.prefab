@@ -3971,8 +3971,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8051939751654401172}
-  - component: {fileID: -3560239214677023810}
   - component: {fileID: 8051939751654401182}
+  - component: {fileID: -3560239214677023810}
   - component: {fileID: 8051939751654401177}
   - component: {fileID: 8051939751654401175}
   - component: {fileID: 8051939751654401174}
@@ -4002,19 +4002,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &-3560239214677023810
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8051939751654401173}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 0.1, z: 0.1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &8051939751654401182
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4031,6 +4018,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &-3560239214677023810
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8051939751654401173}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.4, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!82 &8051939751654401177
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4176,8 +4176,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d2549ca7cef4e1485712e3c7d1663b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Lifetime: 3
-  _spawnSound: {fileID: 8300000, guid: 54aae184d290a4636a94f02ff03a9107, type: 3}
+  _lifetime: 5
+  _spawnSound: {fileID: 8300000, guid: 0980e2249cc4d47b087550a02a3510a0, type: 3}
   _destroyDelay: 1
 --- !u!114 &8051939751654401161
 MonoBehaviour:
@@ -4191,7 +4191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96a8e88bcbb6407490fbf329b443eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 5
+  _speed: 3
 --- !u!114 &8051939751654401163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4204,7 +4204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1349d2545f9e94e3299bcb1643e43413, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HitOnce: 1
+  _hitOnce: 1
   _hitSound: {fileID: 0}
   _destroyDelay: 1
 --- !u!1 &9105670037701195218

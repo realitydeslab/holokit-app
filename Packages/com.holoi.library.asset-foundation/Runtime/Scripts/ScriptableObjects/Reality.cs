@@ -27,7 +27,13 @@ namespace Holoi.AssetFoundation
 
         public List<RealityTag> RealityTags;
 
+        [TextArea, Tooltip("A description on why this reality needs to use meta avatars")]
+        public string MetaAvatarDescription;
+
         public List<MetaAvatarTag> CompatibleMetaAvatarTags;
+
+        [TextArea, Tooltip("A description on why this reality needs to use meta objects")]
+        public string MetaObjectDescription;
 
         public List<MetaObjectTag> CompatibleMetaObjectTags;
 

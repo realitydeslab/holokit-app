@@ -8,6 +8,8 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public abstract class HoloKitAppUITemplate_RealityPreferencesPage_ChooseNonFungible : MonoBehaviour
     {
+        [SerializeField] protected TMP_Text NonFungibleDescription;
+
         [Header("Non-Fungible Collection Selector")]
         [SerializeField] private RectTransform _nonFungibleCollectionScrollRoot;
 
@@ -50,6 +52,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
         protected abstract void UpdateRealityPreferences(string artifactCollectionId, string artifactTokenId);
 
+        protected abstract void UpdateNonFungibleDescription();
+
         private void Start()
         {
             var compatibleNonFungibleCollectionList = GetCompatibleNonFungibleCollectionList();
@@ -86,6 +90,8 @@ namespace Holoi.Library.HoloKitApp.UI
             _nonFungibleScrollRoot.anchoredPosition = new Vector2(-value, _nonFungibleScrollRoot.anchoredPosition.y);
             // Set the dots
             _nonFungibleSelectionIndicator.Init(_currentNonFungibleIndex, CurrentNonFungibleCollection.NonFungibles.Count);
+
+            UpdateNonFungibleDescription();
         }
 
         private void Update()

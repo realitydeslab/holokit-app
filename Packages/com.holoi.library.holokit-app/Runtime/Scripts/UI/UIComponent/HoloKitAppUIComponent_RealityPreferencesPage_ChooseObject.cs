@@ -34,5 +34,14 @@ namespace Holoi.Library.HoloKitApp.UI
                 MetaObjectTokenId = artifactTokenId
             };
         }
+
+        protected override void UpdateNonFungibleDescription()
+        {
+            var currentReality = HoloKitApp.Instance.CurrentReality;
+            if (!currentReality.MetaObjectDescription.Equals(""))
+            {
+                NonFungibleDescription.text = currentReality.MetaObjectDescription;
+            }
+        }
     }
 }
