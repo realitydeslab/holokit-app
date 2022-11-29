@@ -7,6 +7,7 @@ namespace Holoi.Library.MOFABase
 {
     public struct MofaFightingPanelParams
     {
+        public float RotatorScale;
         public float HeaderPosY;
         public float HeaderScale;
         public float StatusPosX;
@@ -38,6 +39,7 @@ namespace Holoi.Library.MOFABase
 
         private readonly MofaFightingPanelParams _monoPortraitParams = new()
         {
+            RotatorScale = 1f,
             HeaderPosY = 800f,
             HeaderScale = 1f,
             StatusPosX = 240f,
@@ -47,6 +49,7 @@ namespace Holoi.Library.MOFABase
 
         private readonly MofaFightingPanelParams _monoLandscapeParams = new()
         {
+            RotatorScale = 1f,
             HeaderPosY = 460f,
             HeaderScale = 1f,
             StatusPosX = 240f,
@@ -56,7 +59,12 @@ namespace Holoi.Library.MOFABase
 
         private readonly MofaFightingPanelParams _starParams = new()
         {
-
+            RotatorScale = 1.6f,
+            HeaderPosY = 460f,
+            HeaderScale = 1f,
+            StatusPosX = 240f,
+            StatusPosY = -460f,
+            StatusScale = 3000f
         };
 
         private void Start()
@@ -64,8 +72,8 @@ namespace Holoi.Library.MOFABase
             _canvas = GetComponent<Canvas>();
 
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
-            //HoloKitAppRecorder.OnStartedRecording += OnStartedRecording;
-            //HoloKitAppRecorder.OnStoppedRecording += OnStoppedRecording;
+            HoloKitAppRecorder.OnStartedRecording += OnStartedRecording;
+            HoloKitAppRecorder.OnStoppedRecording += OnStoppedRecording;
             HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
             LifeShield.OnSpawned += OnLifeShieldSpawned;
 
@@ -90,8 +98,8 @@ namespace Holoi.Library.MOFABase
         private void OnDestroy()
         {
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
-            //HoloKitAppRecorder.OnStartedRecording -= OnStartedRecording;
-            //HoloKitAppRecorder.OnStoppedRecording -= OnStoppedRecording;
+            HoloKitAppRecorder.OnStartedRecording -= OnStartedRecording;
+            HoloKitAppRecorder.OnStoppedRecording -= OnStoppedRecording;
             HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
             LifeShield.OnSpawned -= OnLifeShieldSpawned;
         }
@@ -129,6 +137,7 @@ namespace Holoi.Library.MOFABase
 
         private void UpdateMofaFightingPanelParams(MofaFightingPanelParams fightingPanelParams)
         {
+            Rotator.localScale = new(fightingPanelParams.RotatorScale, fightingPanelParams.RotatorScale, fightingPanelParams.RotatorScale);
             Scores.anchoredPosition = new(0f, fightingPanelParams.HeaderPosY);
             Scores.localScale = new(fightingPanelParams.HeaderScale, fightingPanelParams.HeaderScale, fightingPanelParams.HeaderScale);
             Time.anchoredPosition = new(0f, fightingPanelParams.HeaderPosY);
@@ -185,12 +194,15 @@ namespace Holoi.Library.MOFABase
 
         private void OnStartedRecording()
         {
-            GetComponent<RectTransform>().localPosition = new Vector3(0f, 99f, 1f);
+            if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono)
+            {
+                Rotator.anchoredPosition = new Vector2(0f, 3000f);
+            }
         }
 
         private void OnStoppedRecording()
         {
-            GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 1f);
+            Rotator.anchoredPosition = Vector2.zero;
         }
 
         private void OnLifeShieldSpawned(LifeShield lifeShield)
