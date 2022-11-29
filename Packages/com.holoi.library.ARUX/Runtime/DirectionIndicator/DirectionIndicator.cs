@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 namespace Holoi.Library.ARUX
 {
@@ -8,6 +9,7 @@ namespace Holoi.Library.ARUX
     {
         [SerializeField] Transform _player;
         [SerializeField] Renderer _target;
+        [SerializeField] VisualEffect _vfx;
         DirectionTarget _dT;
         [Tooltip("for debug")]
         //[SerializeField] Transform _realTarget;
@@ -46,24 +48,26 @@ namespace Holoi.Library.ARUX
         {
             if (_isVisible)
             {
-                _process += Time.deltaTime;
-                if (_process > _inTime) _process = _inTime;
-                if (_process == _inTime && !_isTriggerIn)
-                {
-                    _isTriggerIn = true;
-                    FadeIn();
-                }
+                FadeOut();
 
+                //_process += Time.deltaTime;
+                //if (_process > _inTime) _process = _inTime;
+                //if (_process == _inTime && !_isTriggerIn)
+                //{
+                //    _isTriggerIn = true;
+                //    FadeIn();
+                //}
             }
             else
             {
-                _process -= Time.deltaTime;
-                if (_process < _outTime) _process = _outTime;
-                if (_process == _outTime && !_isTriggerOut)
-                {
-                    _isTriggerOut = false;
-                    FadeOut();
-                }
+                FadeIn();
+                //_process -= Time.deltaTime;
+                //if (_process < _outTime) _process = _outTime;
+                //if (_process == _outTime && !_isTriggerOut)
+                //{
+                //    _isTriggerOut = false;
+                //    FadeOut();
+                //}
 
 
                 var direction = (_target.transform.position - _player.position).normalized;
@@ -103,12 +107,15 @@ namespace Holoi.Library.ARUX
 
         public void FadeIn()
         {
-
+            Debug.Log("FadeIn");
+            _vfx.enabled = true;
         }
 
         public void FadeOut()
         {
+            Debug.Log("FadeOut");
 
+            _vfx.enabled = false;
         }
 
         public void ToVisible()

@@ -37,11 +37,15 @@ namespace BoidsSimulationOnGPU
         // 分離する力の重み
         public float SeparateWeight = 3.0f;
 
+        [Header("Boundary")]
+
+        public Transform BoidVfx;
+
         // 壁を避ける力の重み
         public float AvoidWallWeight = 10.0f;
 
         // 壁の中心座標   
-        //public Vector3 WallCenter = Vector3.zero;
+        public Vector3 Center = Vector3.zero;
 
         // 壁のサイズ
         public Vector3 WallSize = new Vector3(32.0f, 32.0f, 32.0f);
@@ -128,7 +132,7 @@ namespace BoidsSimulationOnGPU
             // デバッグとしてシミュレーション領域をワイヤーフレームで描画
             Gizmos.color = Color.cyan;
             //Gizmos.DrawWireCube(transform.position, WallSize);
-            Gizmos.DrawWireSphere(transform.position, SphereRadius);
+            Gizmos.DrawWireSphere(BoidVfx.position, SphereRadius);
         }
 
         #endregion
@@ -189,7 +193,7 @@ namespace BoidsSimulationOnGPU
             cs.SetFloat("_SeparateWeight", SeparateWeight);
             cs.SetFloat("_CohesionWeight", CohesionWeight);
             cs.SetFloat("_AlignmentWeight", AlignmentWeight);
-            cs.SetVector("_WallCenter", transform.position);
+            cs.SetVector("_WallCenter", BoidVfx.position);
             cs.SetVector("_WallSize", WallSize);
             cs.SetFloat("_SphereRadius", SphereRadius);
             cs.SetFloat("_AvoidWallWeight", AvoidWallWeight);
