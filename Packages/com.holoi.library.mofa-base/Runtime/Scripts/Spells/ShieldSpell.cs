@@ -37,6 +37,7 @@ namespace Holoi.Library.MOFABase
             if (IsServer)
             {
                 _currentHealth.Value = _maxHealth;
+                GetComponent<Collider>().enabled = true;
             }
             else
             {

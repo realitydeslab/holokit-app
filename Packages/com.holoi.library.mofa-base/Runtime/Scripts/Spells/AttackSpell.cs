@@ -23,7 +23,11 @@ namespace Holoi.Library.MOFABase
 
         public override void OnNetworkSpawn()
         {
-            if (!IsServer)
+            if (IsServer)
+            {
+                GetComponent<Collider>().enabled = true;
+            }
+            else
             {
                 GetComponent<Collider>().enabled = false;
             }
@@ -54,6 +58,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
+        // Host only
         private void OnHitFunc()
         {
             OnHitClientRpc();
