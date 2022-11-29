@@ -47,21 +47,21 @@ namespace Holoi.Library.HoloKitApp
 
         private AudioListener _cameraAudioListener;
 
-        private const float WatermarkPortraitPosXRatio = 0.1487f;
+        private const float WatermarkPortraitPosXRatio = 0.0615f;
 
-        private const float WatermarkPortraitPosYRatio = 0.1066f;
+        private const float WatermarkPortraitPosYRatio = 0.0284f;
 
-        private const float WatermarkPortraitWidthRatio = 0.1564f;
+        private const float WatermarkPortraitWidthRatio = 0.2949f;
 
-        private const float WatermarkPortraitHeightRatio = 0.0592f;
+        private const float WatermarkPortraitHeightRatio = 0.0284f;
 
-        private const float WatermarkLandscapePosXRatio = 0.0687f;
+        private const float WatermarkLandscapePosXRatio = 0.0284f;
 
-        private const float WatermarkLandscapePosYRatio = 0.1795f;
+        private const float WatermarkLandscapePosYRatio = 0.0615f;
 
-        private const float WatermarkLandscapeWidthRatio = 0.0723f;
+        private const float WatermarkLandscapeWidthRatio = 0.1363f;
 
-        private const float WatermarkLandscapeHeightRatio = 0.1282f;
+        private const float WatermarkLandscapeHeightRatio = 0.0615f;
 
         public static event Action OnStartedRecording;
 
