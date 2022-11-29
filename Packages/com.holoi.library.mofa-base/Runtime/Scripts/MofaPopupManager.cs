@@ -6,7 +6,7 @@ namespace Holoi.Library.MOFABase
 {
     public class MofaPopupManager : MonoBehaviour
     {
-        [SerializeField] private Transform _fightingPanelTransform;
+        [SerializeField] private Transform _fightingPanelRoot;
 
         [SerializeField] private GameObject _countdownPrefab;
 
@@ -49,7 +49,7 @@ namespace Holoi.Library.MOFABase
                 Destroy(_currentPopup);
             }
             _currentPopup = Instantiate(popupPrefab);
-            _currentPopup.transform.SetParent(_fightingPanelTransform);
+            _currentPopup.transform.SetParent(_fightingPanelRoot);
             _currentPopup.transform.localPosition = Vector3.zero;
             _currentPopup.transform.localRotation = Quaternion.identity;
             _currentPopup.transform.localScale = Vector3.one;
@@ -66,7 +66,7 @@ namespace Holoi.Library.MOFABase
                 Destroy(_currentPopup);
             }
             _currentPopup = Instantiate(popupPrefab);
-            _currentPopup.transform.SetParent(_fightingPanelTransform);
+            _currentPopup.transform.SetParent(_fightingPanelRoot);
             _currentPopup.transform.localPosition = Vector3.zero;
             _currentPopup.transform.localRotation = Quaternion.identity;
             _currentPopup.transform.localScale = Vector3.one;
