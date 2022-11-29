@@ -38,7 +38,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private int _currentNonFungibleIndex = -1;
 
-        private const float CompleteLeanTweenDuration = 0.5f;
+        private const float CompleteLeanTweenDuration = 0.4f;
 
         private const float SwiftSwipeThreshold = 1200f;
 
@@ -115,7 +115,7 @@ namespace Holoi.Library.HoloKitApp.UI
                     float swipeX = touch.position.x - _touchBeganPosition.x;
                     if (Mathf.Abs(swipeX) / (Time.time - _touchBeganTime) > SwiftSwipeThreshold)
                     {
-                        //Debug.Log("This is a swift swipe");
+                        // This is a swift swipe
                         _currentNonFungibleIndex = swipeX > 0 ? _currentNonFungibleIndex - 1 : _currentNonFungibleIndex + 1;
                         if (_currentNonFungibleIndex < 0)
                         {
@@ -128,13 +128,13 @@ namespace Holoi.Library.HoloKitApp.UI
                     }
                     else
                     {
-                        //Debug.Log("This is not a swift swipe");
+                        // This is not a swift swipe
                         _currentNonFungibleIndex = Mathf.RoundToInt(-_nonFungibleScrollRoot.anchoredPosition.x / _nonFungibleSlotPrefab.rectTransform.sizeDelta.x);
                     }
                     float diff = Mathf.Abs(_nonFungibleScrollRoot.anchoredPosition.x + _currentNonFungibleIndex * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x);
                     float leanTweenDuration = diff / _nonFungibleSlotPrefab.rectTransform.sizeDelta.x * CompleteLeanTweenDuration;
                     LeanTween.moveX(_nonFungibleScrollRoot, -_currentNonFungibleIndex * _nonFungibleSlotPrefab.rectTransform.sizeDelta.x, leanTweenDuration)
-                        .setEase(LeanTweenType.easeInQuad)
+                        .setEase(LeanTweenType.easeOutCubic)
                         .setOnComplete(() =>
                         {
                             OnCurrentNonFungibleChanged();
