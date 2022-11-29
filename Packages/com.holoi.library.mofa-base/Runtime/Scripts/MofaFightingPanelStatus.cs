@@ -6,29 +6,36 @@ namespace Holoi.Library.MOFABase
 {
     public class MofaFightingPanelStatus : MonoBehaviour
     {
-        [SerializeField] MofaInputManager _inputManager;
+        [SerializeField] private MofaInputManager _inputManager;
 
-        [SerializeField] Animator _animator;
+        [SerializeField] private Animator _animator;
 
         [Header("UI Elements")]
-        [SerializeField] VisualEffect _attackBar;
+        [SerializeField] private VisualEffect _lifeCircles;
 
-        [SerializeField] VisualEffect _ultimateBar;
+        [SerializeField] private VisualEffect _attackBar;
 
-        private bool _isPointingGround;
+        [SerializeField] private VisualEffect _ultimateBar;
 
-        private void OnEnable()
+        // The life shield of the local player.
+        private LifeShield _lifeShield;
+
+        private void Start()
         {
             MofaWatchConnectivityAPI.OnWatchStateChanged += OnWatchStateChanged;
+            LifeShield.OnRenovated += OnLifeShieldRenovated;
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             MofaWatchConnectivityAPI.OnWatchStateChanged -= OnWatchStateChanged;
+            LifeShield.OnRenovated -= OnLifeShieldRenovated;
         }
 
         private void OnWatchStateChanged(MofaWatchState watchState)
         {
+            if (!gameObject.activeSelf) return;
+
             if (watchState == MofaWatchState.Ground)
             {
                 _animator.SetBool("Attack", false);
@@ -46,6 +53,43 @@ namespace Holoi.Library.MOFABase
                 _attackBar.SetFloat("Loading Process", _inputManager.BasicSpellChargePercentage);
                 _ultimateBar.SetFloat("Loading Process", _inputManager.SecondarySpellChargePercentage);
             }
+        }
+
+        public void SetLifeShield(LifeShield lifeShield)
+        {
+            _lifeShield = lifeShield;
+            _lifeShield.OnCenterDestroyed += OnLifeShieldCenterDestroyed;
+            _lifeShield.OnTopDestroyed += OnLifeShieldTopDestroyed;
+            _lifeShield.OnLeftDestroyed += OnLifeShieldLeftDestroyed;
+            _lifeShield.OnRightDestroyed += OnLifeShieldRightDestroyed;
+        }
+
+        private void OnLifeShieldRenovated(ulong ownerClientId)
+        {
+            _lifeCircles.SetBool("Center", true);
+            _lifeCircles.SetBool("Up", true);
+            _lifeCircles.SetBool("Left", true);
+            _lifeCircles.SetBool("Right", true);
+        }
+
+        private void OnLifeShieldCenterDestroyed()
+        {
+            _lifeCircles.SetBool("Center", false);
+        }
+
+        private void OnLifeShieldTopDestroyed()
+        {
+            _lifeCircles.SetBool("Up", false);
+        }
+
+        private void OnLifeShieldLeftDestroyed()
+        {
+            _lifeCircles.SetBool("Left", false);
+        }
+
+        private void OnLifeShieldRightDestroyed()
+        {
+            _lifeCircles.SetBool("Right", false);
         }
     }
 }

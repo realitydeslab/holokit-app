@@ -44,6 +44,8 @@ namespace Holoi.Library.MOFABase
 
         public event Action OnRightDestroyed;
 
+        public static event Action<LifeShield> OnSpawned;
+
         // The first ulong is the attackerClientId and the second is the ownerClientId
         public static event Action<ulong, ulong> OnBeingHit;
 
@@ -74,7 +76,7 @@ namespace Holoi.Library.MOFABase
             mofaBaseRealityManager.SetLifeShield(this);
 
             //Hide local player's shield
-            if (/*HoloKit.HoloKitUtils.IsRuntime && */OwnerClientId == NetworkManager.LocalClientId)
+            if (HoloKit.HoloKitUtils.IsRuntime && OwnerClientId == NetworkManager.LocalClientId)
             {
                 _fragments[LifeShieldArea.Center].transform.GetChild(0).gameObject.SetActive(false);
                 _fragments[LifeShieldArea.Top].transform.GetChild(0).gameObject.SetActive(false);
@@ -89,6 +91,7 @@ namespace Holoi.Library.MOFABase
 
             // TODO: Destroy fragments that have already been destroyed for late joined spectator.
 
+            OnSpawned?.Invoke(this);
         }
 
         public override void OnNetworkDespawn()

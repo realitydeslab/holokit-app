@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
 using HoloKit;
 
@@ -63,9 +64,10 @@ namespace Holoi.Library.MOFABase
             _canvas = GetComponent<Canvas>();
 
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
-            HoloKitAppRecorder.OnStartedRecording += OnStartedRecording;
-            HoloKitAppRecorder.OnStoppedRecording += OnStoppedRecording;
+            //HoloKitAppRecorder.OnStartedRecording += OnStartedRecording;
+            //HoloKitAppRecorder.OnStoppedRecording += OnStoppedRecording;
             HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
+            LifeShield.OnSpawned += OnLifeShieldSpawned;
 
             Scores.gameObject.SetActive(false);
             Time.gameObject.SetActive(false);
@@ -83,6 +85,15 @@ namespace Holoi.Library.MOFABase
                 _deviceOrientation = Input.deviceOrientation;
                 OnDeviceOrientationChanged();
             }
+        }
+
+        private void OnDestroy()
+        {
+            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
+            //HoloKitAppRecorder.OnStartedRecording -= OnStartedRecording;
+            //HoloKitAppRecorder.OnStoppedRecording -= OnStoppedRecording;
+            HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
+            LifeShield.OnSpawned -= OnLifeShieldSpawned;
         }
 
         private void OnDeviceOrientationChanged()
@@ -110,6 +121,7 @@ namespace Holoi.Library.MOFABase
             else if (renderMode == HoloKitRenderMode.Mono)
             {
                 _canvas.renderMode = RenderMode.ScreenSpaceCamera;
+                _canvas.worldCamera = HoloKitCamera.Instance.GetComponent<Camera>();
                 _deviceOrientation = Input.deviceOrientation;
                 OnDeviceOrientationChanged();
             }
@@ -123,14 +135,6 @@ namespace Holoi.Library.MOFABase
             Time.localScale = new(fightingPanelParams.HeaderScale, fightingPanelParams.HeaderScale, fightingPanelParams.HeaderScale);
             Status.anchoredPosition = new(fightingPanelParams.StatusPosX, fightingPanelParams.StatusPosY);
             Status.localScale = new(fightingPanelParams.StatusScale, fightingPanelParams.StatusScale, fightingPanelParams.StatusScale);
-        }
-
-        private void OnDestroy()
-        {
-            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
-            HoloKitAppRecorder.OnStartedRecording -= OnStartedRecording;
-            HoloKitAppRecorder.OnStoppedRecording -= OnStoppedRecording;
-            HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
         }
 
         private void OnPhaseChanged(MofaPhase mofaPhase)
@@ -187,6 +191,14 @@ namespace Holoi.Library.MOFABase
         private void OnStoppedRecording()
         {
             GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 1f);
+        }
+
+        private void OnLifeShieldSpawned(LifeShield lifeShield)
+        {
+            if (lifeShield.OwnerClientId == NetworkManager.Singleton.LocalClientId)
+            {
+                Status.GetComponent<MofaFightingPanelStatus>().SetLifeShield(lifeShield);
+            }
         }
     }
 }

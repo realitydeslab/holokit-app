@@ -233,8 +233,8 @@ namespace Holoi.Library.MOFABase
         // Host only
         protected virtual IEnumerator StartRoundFlow()
         {
-            _currentPhase.Value = MofaPhase.Countdown;
             PutTheArmorOn();
+            _currentPhase.Value = MofaPhase.Countdown;
             _roundCount.Value++;
             _roundResult.Value = MofaRoundResult.NotDetermined;
             yield return new WaitForSeconds(_countdownTime);
