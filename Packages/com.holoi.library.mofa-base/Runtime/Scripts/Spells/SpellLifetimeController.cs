@@ -32,6 +32,10 @@ namespace Holoi.Library.MOFABase
                 if (_duration > _lifetime)
                 {
                     OnLifetimeEndedClientRpc();
+                }
+
+                if (_duration > _lifetime + _destroyDelay)
+                {
                     GetComponent<NetworkObject>().Despawn();
                 }
             }
@@ -50,7 +54,6 @@ namespace Holoi.Library.MOFABase
         [ClientRpc]
         private void OnLifetimeEndedClientRpc()
         {
-            Debug.Log($"{gameObject.name}: OnLifetimeEndedClientRpc");
             OnLifetimeEnded?.Invoke();
         }
     }
