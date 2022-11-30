@@ -50,6 +50,7 @@ namespace Holoi.Library.MOFABase
         [ClientRpc]
         private void OnLifetimeEndedClientRpc()
         {
+            Debug.Log($"{gameObject.name}: OnLifetimeEndedClientRpc");
             OnLifetimeEnded?.Invoke();
         }
     }
