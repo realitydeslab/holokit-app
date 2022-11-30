@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-public class MOFATrainingThumbnail : MonoBehaviour
+public class MofaThumbnailAvatar : MonoBehaviour
 {
     [SerializeField] Transform _parent;
 
     [SerializeField] Vector2 _avatarVelocity;
 
-    [Header("Attack")]
     [SerializeField] bool _autoFire = true;
 
     [SerializeField] GameObject _boltPrefab;
@@ -44,13 +43,16 @@ public class MOFATrainingThumbnail : MonoBehaviour
                 Debug.Log("missing fire bolt prefab.");
             }
         }
-    }
 
-    void Update()
-    {
         _avatarAnimator.SetFloat("Velocity Z", _avatarVelocity.x);
         _avatarAnimator.SetFloat("Velocity X", _avatarVelocity.y);
     }
+
+    //void Update()
+    //{
+    //    _avatarAnimator.SetFloat("Velocity Z", _avatarVelocity.x);
+    //    _avatarAnimator.SetFloat("Velocity X", _avatarVelocity.y);
+    //}
 
     IEnumerator WaitAndBegin(float time, float interval)
     {

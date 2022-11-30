@@ -3,7 +3,7 @@ using Holoi.Library.HoloKitApp;
 
 public class BoltMagic : MonoBehaviour
 {
-    private MOFATrainingThumbnail _pool;
+    private MofaThumbnailAvatar _pool;
 
     private Animator _animator;
 
@@ -12,7 +12,7 @@ public class BoltMagic : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    public void SetPool(MOFATrainingThumbnail pool)
+    public void SetPool(MofaThumbnailAvatar pool)
     {
         _pool = pool;
     }
