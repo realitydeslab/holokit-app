@@ -10,7 +10,7 @@ namespace Holoi.Library.ARUX
         [SerializeField] Transform _player;
         [SerializeField] Renderer _target;
         [SerializeField] VisualEffect _vfx;
-        DirectionTarget _dT;
+         DirectionTarget _dT;
         [Tooltip("for debug")]
         //[SerializeField] Transform _realTarget;
 

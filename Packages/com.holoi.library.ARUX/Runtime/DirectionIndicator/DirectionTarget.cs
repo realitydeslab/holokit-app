@@ -17,11 +17,14 @@ namespace Holoi.Library.ARUX
 
         private void OnBecameVisible()
         {
+            Debug.Log($"{gameObject.name} become visible.");
             OnVisibleEvent?.Invoke();
         }
 
         private void OnBecameInvisible()
         {
+            Debug.Log($"{gameObject.name} become invisible.");
+
             OnInVisibleEvent?.Invoke();
         }
     }
