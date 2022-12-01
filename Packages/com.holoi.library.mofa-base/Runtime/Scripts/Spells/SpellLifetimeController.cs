@@ -14,29 +14,38 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] private float _destroyDelay;
 
-        private float _duration;
+        private float _timeElapsed;
+
+        private bool _isAlive;
 
         public event Action OnLifetimeEnded;
 
         private void OnEnable()
         {
+            _isAlive = true;
+            _timeElapsed = 0f;
             PlaySpawnSound();
-            _duration = 0f;
         }
 
         private void FixedUpdate()
         {
             if (IsServer)
             {
-                _duration += Time.fixedDeltaTime;
-                if (_duration > _lifetime)
+                _timeElapsed += Time.fixedDeltaTime;
+                if (_isAlive)
                 {
-                    OnLifetimeEndedClientRpc();
+                    if (_timeElapsed > _lifetime)
+                    {
+                        _isAlive = false;
+                        OnLifetimeEndedClientRpc();
+                    }
                 }
-
-                if (_duration > _lifetime + _destroyDelay)
+                else
                 {
-                    GetComponent<NetworkObject>().Despawn();
+                    if (_timeElapsed > _lifetime + _destroyDelay)
+                    {
+                        GetComponent<NetworkObject>().Despawn();
+                    }
                 }
             }
         }

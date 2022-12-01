@@ -41,16 +41,18 @@ namespace Holoi.Reality.MOFATheDuel
 
         protected override void UpdateSummaryBoard()
         {
-            var summaryBoard = SpawnSummaryBoard();
             var mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            if (mofaBaseRealityManager.CurrentPhase != MofaPhase.RoundData) return;
+
+            var summaryBoard = SpawnSummaryBoard();
             // For the player, which in blue team
             var humanPlayer = mofaBaseRealityManager.Players[0];
             var humanPlayerStats = mofaBaseRealityManager.GetIndividualStats(humanPlayer);
             summaryBoard.BlueTeamName = "Blue";
             summaryBoard.BlueTeamKill = humanPlayerStats.Kill.ToString();
-            summaryBoard.BlueTeamHitRate = humanPlayerStats.HitRate.ToString("F2");
-            summaryBoard.BlueTeamDistance = humanPlayerStats.Distance.ToString("F2");
-            summaryBoard.BlueTeamCalories = humanPlayerStats.Calories.ToString("F2");
+            summaryBoard.BlueTeamHitRate = humanPlayerStats.HitRate.ToString();
+            summaryBoard.BlueTeamDistance = humanPlayerStats.Distance.ToString();
+            summaryBoard.BlueTeamCalories = humanPlayerStats.Calories.ToString();
 
             // For the avatar, which is red team
             MofaPlayer secondPlayer = null;
@@ -66,9 +68,9 @@ namespace Holoi.Reality.MOFATheDuel
             var secondPlayerStats = mofaBaseRealityManager.GetIndividualStats(secondPlayer);
             summaryBoard.RedTeamName = "Red";
             summaryBoard.RedTeamKill = secondPlayerStats.Kill.ToString();
-            summaryBoard.RedTeamHitRate = secondPlayerStats.HitRate.ToString("F2");
-            summaryBoard.RedTeamDistance = secondPlayerStats.Distance.ToString("F2");
-            summaryBoard.RedTeamCalories = secondPlayerStats.Calories.ToString("F2");
+            summaryBoard.RedTeamHitRate = secondPlayerStats.HitRate.ToString();
+            summaryBoard.RedTeamDistance = secondPlayerStats.Distance.ToString();
+            summaryBoard.RedTeamCalories = secondPlayerStats.Calories.ToString();
         }
     }
 }

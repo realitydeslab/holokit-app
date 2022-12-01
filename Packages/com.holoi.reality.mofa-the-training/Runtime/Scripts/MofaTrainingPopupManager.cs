@@ -33,10 +33,10 @@ namespace Holoi.Reality.MOFATheTraining
 
         protected override void UpdateSummaryBoard()
         {
-            base.UpdateSummaryBoard();
+            var mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            if (mofaBaseRealityManager.CurrentPhase != MofaPhase.RoundData) return;
 
             var summaryBoard = SpawnSummaryBoard();
-            var mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             // For the player, which in blue team
             var humanPlayer = mofaBaseRealityManager.Players[0];
             var humanPlayerStats = mofaBaseRealityManager.GetIndividualStats(humanPlayer);

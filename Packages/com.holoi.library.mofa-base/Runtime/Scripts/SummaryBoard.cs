@@ -55,7 +55,7 @@ namespace Holoi.Library.MOFABase
         {
             set
             {
-                _blueTeamDistanceText.text = value + "m";
+                _blueTeamDistanceText.text = value + "ft";
             }
         }
 

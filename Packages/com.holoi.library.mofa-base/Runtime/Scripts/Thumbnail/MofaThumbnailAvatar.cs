@@ -19,8 +19,6 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] float _attackInterval = 3f;
 
-
-
         Animator _avatarAnimator;
 
         private readonly Queue<GameObject> _pool = new();
