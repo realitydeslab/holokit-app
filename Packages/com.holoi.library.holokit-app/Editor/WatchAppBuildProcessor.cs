@@ -87,11 +87,12 @@ namespace Holoi.Library.HoloKitApp.Editor
 
                 // Mofa
                 "MOFA/MofaWatchAppManager.swift",
-                "MOFA/Views/MofaFightingView.swift",
-                "MOFA/Views/MofaHandednessView.swift",
                 "MOFA/Views/MofaHomeView.swift",
-                "MOFA/Views/MofaIntroView.swift",
+                "MOFA/Views/MofaReadyView.swift",
+                "MOFA/Views/MofaHandednessView.swift",
+                "MOFA/Views/MofaFightingView.swift",
                 "MOFA/Views/MofaResultView.swift",
+                "MOFA/Views/MofaActivityRingView.swift"
             };
 
             foreach (var path in filesToBuild)

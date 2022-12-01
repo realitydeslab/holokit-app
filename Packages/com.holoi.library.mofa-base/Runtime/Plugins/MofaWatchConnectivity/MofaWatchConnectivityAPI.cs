@@ -60,6 +60,7 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
         private static void OnReceivedHealthDataMessageDelegate(float distance, float calories)
         {
             OnReceivedHealthDataMessage?.Invoke(distance, calories);
+            UnityEngine.Debug.Log($"[MofaWatchConnectivity] Health data distance: {distance} and calories: {calories}");
         }
 
         public static event Action OnReceivedStartRoundMessage;
