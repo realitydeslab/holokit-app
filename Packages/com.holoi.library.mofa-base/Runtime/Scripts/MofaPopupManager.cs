@@ -29,6 +29,7 @@ namespace Holoi.Library.MOFABase
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
             MofaBaseRealityManager.OnReceivedRoundResult += OnReceivedRoundResult;
             LifeShield.OnBeingDestroyed += OnLifeShieldBeingDestroyed;
+            MofaPlayer.OnHealthDataUpdated += UpdateSummaryBoard;
         }
 
         protected virtual void OnDestroy()
@@ -36,6 +37,7 @@ namespace Holoi.Library.MOFABase
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
             MofaBaseRealityManager.OnReceivedRoundResult -= OnReceivedRoundResult;
             LifeShield.OnBeingDestroyed -= OnLifeShieldBeingDestroyed;
+            MofaPlayer.OnHealthDataUpdated -= UpdateSummaryBoard;
         }
 
         protected void SpawnPopup(GameObject popupPrefab)
@@ -95,7 +97,7 @@ namespace Holoi.Library.MOFABase
                 case MofaPhase.RoundResult:
                     break;
                 case MofaPhase.RoundData:
-                    OnRoundData();
+                    UpdateSummaryBoard();
                     break;
             }
         }
@@ -145,7 +147,7 @@ namespace Holoi.Library.MOFABase
             return _currentPopup.GetComponent<SummaryBoard>();
         }
 
-        protected virtual void OnRoundData()
+        protected virtual void UpdateSummaryBoard()
         {
             
         }

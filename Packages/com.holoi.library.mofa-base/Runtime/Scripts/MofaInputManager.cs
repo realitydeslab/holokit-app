@@ -153,20 +153,19 @@ namespace Holoi.Library.MOFABase
                     _isActive = false;
                     break;
                 case MofaPhase.RoundResult:
+                    OnRoundResult();
                     break;
                 case MofaPhase.RoundData:
-                    OnRoundData();
                     break;
             }
         }
 
-        private void OnRoundData()
+        private void OnRoundResult()
         {
             var localPlayerIndividualStats = _mofaBaseRealityManager.GetIndividualStats();
             MofaWatchConnectivityAPI.SyncRoundResultToWatch(localPlayerIndividualStats.IndividualRoundResult,
                                                             localPlayerIndividualStats.Kill,
-                                                            localPlayerIndividualStats.HitRate,
-                                                            localPlayerIndividualStats.Distance);
+                                                            localPlayerIndividualStats.HitRate);
         }
 
         private void FixedUpdate()

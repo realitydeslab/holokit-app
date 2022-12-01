@@ -39,7 +39,7 @@ namespace Holoi.Reality.MOFATheDuel
             }
         }
 
-        protected override void OnRoundData()
+        protected override void UpdateSummaryBoard()
         {
             var summaryBoard = SpawnSummaryBoard();
             var mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;

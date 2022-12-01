@@ -67,6 +67,8 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     var groundVector = simd_double3(-1, 0, 0)
     var lastStartRoundTime: Double = 0
     
+    let meterToFeet: Double = 3.2808
+    
     override init() {
         super.init()
         if (WCSession.isSupported()) {

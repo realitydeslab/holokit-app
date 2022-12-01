@@ -52,11 +52,11 @@ namespace Holoi.Library.MOFABase
 
         public int Death;
 
-        public float HitRate;
+        public int HitRate;
 
-        public float Distance;
+        public int Distance;
 
-        public float Calories;
+        public int Calories;
     }
 
     public abstract class MofaBaseRealityManager : RealityManager
@@ -154,7 +154,7 @@ namespace Holoi.Library.MOFABase
         {
             if (oldValue == newValue) { return; }
 
-            //Debug.Log($"Mofa phase changed to: {newValue}");
+            Debug.Log($"MOFA phase: {newValue}");
             OnPhaseChanged?.Invoke(newValue);
             if (newValue == MofaPhase.RoundData)
             {
@@ -367,11 +367,11 @@ namespace Holoi.Library.MOFABase
             // Death
             stats.Death = player.Death.Value;
             // Hit rate
-            stats.HitRate = (float)player.HitCount.Value / player.CastCount.Value;
+            stats.HitRate = Mathf.RoundToInt((float)player.HitCount.Value / player.CastCount.Value * 100);
             // Distance
-            stats.Distance = player.Distance.Value;
+            stats.Distance = Mathf.RoundToInt(player.Distance.Value * MofaUtils.MeterToFoot);
             // Calories
-            stats.Calories = player.Calories.Value;
+            stats.Calories = Mathf.RoundToInt(player.Calories.Value);
 
             return stats;
         }

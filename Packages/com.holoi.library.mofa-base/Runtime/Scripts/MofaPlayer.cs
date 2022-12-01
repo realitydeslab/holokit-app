@@ -59,6 +59,8 @@ namespace Holoi.Library.MOFABase
 
         public static event Action OnScoreChanged;
 
+        public static event Action OnHealthDataUpdated;
+
         protected virtual void Start()
         {
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
@@ -78,12 +80,16 @@ namespace Holoi.Library.MOFABase
 
             Ready.OnValueChanged += OnReadyStateChangedFunc;
             Kill.OnValueChanged += OnScoreChangedFunc;
+            Distance.OnValueChanged += OnDistanceChangedFunc;
+            Calories.OnValueChanged += OnCaloriesChangedFunc;
         }
 
         public override void OnNetworkDespawn()
         {
             Ready.OnValueChanged -= OnReadyStateChangedFunc;
             Kill.OnValueChanged -= OnScoreChangedFunc;
+            Distance.OnValueChanged -= OnDistanceChangedFunc;
+            Calories.OnValueChanged -= OnCaloriesChangedFunc;
         }
 
         protected virtual void Update()
@@ -92,8 +98,10 @@ namespace Holoi.Library.MOFABase
             {
                 if (_isFighting)
                 {
-                    _distance += Vector3.Distance(_lastFramePosition, transform.position);
-                    _lastFramePosition = transform.position;
+                    // We only compute horizontal distance
+                    Vector3 position = Vector3.ProjectOnPlane(transform.position, Vector3.up);
+                    _distance += Vector3.Distance(_lastFramePosition, position);
+                    _lastFramePosition = position;
                 }
             }
         }
@@ -110,6 +118,22 @@ namespace Holoi.Library.MOFABase
         private void OnScoreChangedFunc(int oldValue, int newValue)
         {
             OnScoreChanged?.Invoke();
+        }
+
+        private void OnDistanceChangedFunc(float oldValue, float newValue)
+        {
+            if (oldValue != newValue)
+            {
+                OnHealthDataUpdated?.Invoke();
+            }
+        }
+
+        private void OnCaloriesChangedFunc(float oldValue, float newValue)
+        {
+            if (oldValue != newValue)
+            {
+                OnHealthDataUpdated?.Invoke();
+            }
         }
 
         private void OnReadyStateChangedFunc(bool oldValue, bool newValue)
@@ -133,6 +157,7 @@ namespace Holoi.Library.MOFABase
                     CastCount.Value = 0;
                     HitCount.Value = 0;
                     Distance.Value = 0f;
+                    Calories.Value = 0f;
                     _distance = 0f;
                 }
                 else if (mofaPhase == MofaPhase.Fighting)
@@ -144,7 +169,7 @@ namespace Holoi.Library.MOFABase
                 {
                     _isFighting = false;
                     // We only update this network variable once in each round
-                    Distance.Value = _distance;
+                    Distance.Value = Mathf.RoundToInt(_distance);
                 }
             }
         }

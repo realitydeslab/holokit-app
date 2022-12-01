@@ -27,7 +27,7 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
         private static extern void MofaWatchConnectivity_SyncRoundStartToWatch(int magicSchool);
 
         [DllImport("__Internal")]
-        private static extern void MofaWatchConnectivity_SyncRoundResultToWatch(int roundResultIndex, int kill, float hitRate, float distance);
+        private static extern void MofaWatchConnectivity_SyncRoundResultToWatch(int roundResultIndex, int kill, float hitRate);
 
         [DllImport("__Internal")]
         private static extern void MofaWatchConnectivity_QueryWatchState();
@@ -93,10 +93,10 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
             MofaWatchConnectivity_SyncRoundStartToWatch(magicSchool);
         }
 
-        public static void SyncRoundResultToWatch(MofaIndividualRoundResult roundResult, int kill, float hitRate, float distance)
+        public static void SyncRoundResultToWatch(MofaIndividualRoundResult roundResult, int kill, float hitRate)
         {
             if (HoloKit.HoloKitUtils.IsEditor) { return; }
-            MofaWatchConnectivity_SyncRoundResultToWatch((int)roundResult, kill, hitRate, distance);
+            MofaWatchConnectivity_SyncRoundResultToWatch((int)roundResult, kill, hitRate);
         }
 
         public static void QueryWatchState()

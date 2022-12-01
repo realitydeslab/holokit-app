@@ -31,7 +31,7 @@ namespace Holoi.Reality.MOFATheTraining
             SpawnPopup(_findPlanePrefab);
         }
 
-        protected override void OnRoundData()
+        protected override void UpdateSummaryBoard()
         {
             var summaryBoard = SpawnSummaryBoard();
             var mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
@@ -40,18 +40,18 @@ namespace Holoi.Reality.MOFATheTraining
             var humanPlayerStats = mofaBaseRealityManager.GetIndividualStats(humanPlayer);
             summaryBoard.BlueTeamName = "Player";
             summaryBoard.BlueTeamKill = humanPlayerStats.Kill.ToString();
-            summaryBoard.BlueTeamHitRate = humanPlayerStats.HitRate.ToString("F2");
-            summaryBoard.BlueTeamDistance = humanPlayerStats.Distance.ToString("F2");
-            summaryBoard.BlueTeamCalories = humanPlayerStats.Calories.ToString("F2");
+            summaryBoard.BlueTeamHitRate = humanPlayerStats.HitRate.ToString();
+            summaryBoard.BlueTeamDistance = humanPlayerStats.Distance.ToString();
+            summaryBoard.BlueTeamCalories = humanPlayerStats.Calories.ToString();
 
             // For the avatar, which is red team
             var aiPlayer = mofaBaseRealityManager.Players[MofaPlayerAI.AIClientId];
             var aiPlayerStats = mofaBaseRealityManager.GetIndividualStats(aiPlayer);
             summaryBoard.RedTeamName = "Avatar";
             summaryBoard.RedTeamKill = aiPlayerStats.Kill.ToString();
-            summaryBoard.RedTeamHitRate = aiPlayerStats.HitRate.ToString("F2");
-            summaryBoard.RedTeamDistance = aiPlayerStats.Distance.ToString("F2");
-            summaryBoard.RedTeamCalories = aiPlayerStats.Calories.ToString("F2");
+            summaryBoard.RedTeamHitRate = aiPlayerStats.HitRate.ToString();
+            summaryBoard.RedTeamDistance = aiPlayerStats.Distance.ToString();
+            summaryBoard.RedTeamCalories = aiPlayerStats.Calories.ToString();
         }
     }
 }

@@ -4,6 +4,8 @@ namespace Holoi.Library.MOFABase
 {
     public static class MofaUtils
     {
+        public const float MeterToFoot = 3.2808f;
+
         public static Vector3 GetHorizontalForward(Transform transform)
         {
             return new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;

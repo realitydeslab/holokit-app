@@ -15,7 +15,7 @@ struct MofaResultView: View {
                 .padding(.top)
                 .padding(.bottom)
             Spacer()
-                .frame(height: 10)
+                .frame(height: 5)
             playAgainButton
         }
     }
@@ -39,7 +39,7 @@ struct MofaResultView: View {
             VStack (alignment: .leading, spacing: 5) {
                 Text("Kills: \(self.mofaWatchAppManager.kill)")
                 Text("Hit Rate: \(self.mofaWatchAppManager.hitRate)%")
-                Text("Dist: \(String(format: "%.2f", self.mofaWatchAppManager.distance)) m")
+                Text("Dist: \(String(format: "%.2f", self.mofaWatchAppManager.distance * self.mofaWatchAppManager.meterToFeet)) ft")
                 Text("Calorie: \(Int(self.mofaWatchAppManager.activeEnergy)) kcal")
             }
             .font(Font.custom("ObjectSans-BoldSlanted", size: 12))
@@ -64,7 +64,7 @@ struct MofaResultView: View {
                     .resizable()
                     .frame(maxWidth: 10, maxHeight: 10)
             }
-                .frame(maxWidth: 80, maxHeight: 16)
+                .frame(width: 100, height: 16)
                 .font(.headline)
                 .fontWeight(.semibold)
                 .foregroundColor(.black)
