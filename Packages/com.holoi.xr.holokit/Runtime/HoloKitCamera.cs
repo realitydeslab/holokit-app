@@ -107,6 +107,11 @@ namespace HoloKit
 
         private ARCameraBackground _arCameraBackground;
 
+        /// <summary>
+        /// Increase iOS screen brightness gradually in each frame.
+        /// </summary>
+        private const float ScreenBrightnessIncreaseStep = 0.005f;
+
         public static event Action<HoloKitRenderMode> OnHoloKitRenderModeChanged;
 
         private void Awake()
@@ -125,8 +130,8 @@ namespace HoloKit
         {
             if (HoloKitUtils.IsRuntime)
             {
-                Screen.sleepTimeout = SleepTimeout.NeverSleep;
                 UnityEngine.iOS.Device.hideHomeButton = true;
+                Screen.sleepTimeout = SleepTimeout.NeverSleep;
             }
 
             HoloKitNFCSessionControllerAPI.OnNFCSessionCompleted += OnNFCSessionCompleted;
@@ -138,6 +143,21 @@ namespace HoloKit
             OnRenderModeChanged();
   
             _arSessionStartTime = Time.time;
+        }
+
+        private void Update()
+        {
+            if (_renderMode == HoloKitRenderMode.Stereo)
+            {
+                var screenBrightness = HoloKitARSessionControllerAPI.GetScreenBrightness();
+                if (screenBrightness < 1f)
+                {
+                    var newScreenBrightness = screenBrightness + ScreenBrightnessIncreaseStep;
+                    if (newScreenBrightness > 1f) newScreenBrightness = 1f;
+                    HoloKitARSessionControllerAPI.SetScreenBrightness(newScreenBrightness);
+                    HoloKitARSessionControllerAPI.SetScreenBrightness(1f);
+                }
+            }
         }
 
         private void OnDestroy()
