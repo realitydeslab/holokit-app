@@ -33,6 +33,8 @@ namespace Holoi.Reality.MOFATheTraining
 
         protected override void UpdateSummaryBoard()
         {
+            base.UpdateSummaryBoard();
+
             var summaryBoard = SpawnSummaryBoard();
             var mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             // For the player, which in blue team

@@ -327,9 +327,9 @@ extension MofaWatchAppManager: WCSessionDelegate {
                         self.kill = kill
                     }
                 }
-                if let hitRate = applicationContext["HitRate"] as? Double {
+                if let hitRate = applicationContext["HitRate"] as? Int {
                     DispatchQueue.main.async {
-                        self.hitRate = Int(hitRate * 100)
+                        self.hitRate = Int(hitRate)
                     }
                 }
                 

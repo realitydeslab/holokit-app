@@ -149,7 +149,8 @@ namespace Holoi.Library.MOFABase
 
         protected virtual void UpdateSummaryBoard()
         {
-            
+            var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            if (mofaBaseRealityManager.CurrentPhase != MofaPhase.RoundData) return;
         }
 
         private void OnLifeShieldBeingDestroyed(ulong _, ulong ownerClientId)

@@ -39,7 +39,7 @@ struct MofaResultView: View {
             VStack (alignment: .leading, spacing: 5) {
                 Text("Kills: \(self.mofaWatchAppManager.kill)")
                 Text("Hit Rate: \(self.mofaWatchAppManager.hitRate)%")
-                Text("Dist: \(String(format: "%.2f", self.mofaWatchAppManager.distance * self.mofaWatchAppManager.meterToFeet)) ft")
+                Text("Dist: \(Int(self.mofaWatchAppManager.distance * self.mofaWatchAppManager.meterToFeet)) ft")
                 Text("Calorie: \(Int(self.mofaWatchAppManager.activeEnergy)) kcal")
             }
             .font(Font.custom("ObjectSans-BoldSlanted", size: 12))
