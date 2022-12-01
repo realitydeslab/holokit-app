@@ -23,7 +23,10 @@ namespace Holoi.AssetFoundation
 
         public List<VideoClip> PreviewVideos;
 
-        public VideoClip TutorialVideo;
+        public List<VideoClip> TutorialVideos;
+
+        [TextArea]
+        public string HardwareRequirement;
 
         public List<RealityTag> RealityTags;
 

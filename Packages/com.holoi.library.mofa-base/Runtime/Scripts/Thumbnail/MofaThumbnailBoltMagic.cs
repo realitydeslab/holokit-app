@@ -24,8 +24,8 @@ namespace Holoi.Library.MOFABase
             _animator.SetTrigger("Hit");
             StartCoroutine(HoloKitAppUtils.WaitAndDo(0.3f, () =>
             {
-            // Reset animator
-            _animator.Rebind();
+                // Reset animator
+                _animator.Rebind();
                 _animator.Update(0f);
                 _pool.ReturnObjectToQueue(gameObject);
             }));

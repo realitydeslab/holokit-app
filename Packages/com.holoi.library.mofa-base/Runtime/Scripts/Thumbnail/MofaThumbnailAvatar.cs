@@ -15,9 +15,11 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] GameObject _boltPrefab;
 
+        [SerializeField] float _attackPreset = 0f;
+
         [SerializeField] float _attackInterval = 3f;
 
-        [SerializeField] float _attackPreset = 0f;
+
 
         Animator _avatarAnimator;
 

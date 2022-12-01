@@ -5566,7 +5566,7 @@ GameObject:
   m_Component:
   - component: {fileID: 505804370968300140}
   - component: {fileID: 8360541085556277123}
-  - component: {fileID: 9119077114149127547}
+  - component: {fileID: 4222662019059668877}
   - component: {fileID: 2416109826334065474}
   m_Layer: 0
   m_Name: 13173
@@ -5612,7 +5612,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &9119077114149127547
+--- !u!114 &4222662019059668877
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5621,14 +5621,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 6231984763662579140}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54af90b3eaa484543ba312d1adea510f, type: 3}
+  m_Script: {fileID: 11500000, guid: 6ade50265c76e4981819f5f4b76070c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _room: {fileID: 6991864379998363290}
-  _animator: {fileID: 8360541085556277123}
-  _magicBallPrefab: {fileID: 3328958359171429209, guid: ebd684c3e5a0d4dc59a46809998c2fb5, type: 3}
-  _castSpellDelay: 0
-  _castSpellInterval: 3
+  _parent: {fileID: 6991864379998363290}
+  _avatarVelocity: {x: 0, y: 0}
+  _autoFire: 1
+  _boltPrefab: {fileID: 3328958359171429209, guid: ebd684c3e5a0d4dc59a46809998c2fb5, type: 3}
+  _attackPreset: 0
+  _attackInterval: 3
 --- !u!114 &2416109826334065474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7311,7 +7312,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3927187296995432941}
   - component: {fileID: 999862028510581495}
-  - component: {fileID: 2348527761814827568}
+  - component: {fileID: 4869968731658083829}
   - component: {fileID: 4539855907949535768}
   m_Layer: 0
   m_Name: 5958
@@ -7357,7 +7358,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2348527761814827568
+--- !u!114 &4869968731658083829
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7366,14 +7367,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7818068509572880388}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54af90b3eaa484543ba312d1adea510f, type: 3}
+  m_Script: {fileID: 11500000, guid: 6ade50265c76e4981819f5f4b76070c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _room: {fileID: 6991864379998363290}
-  _animator: {fileID: 999862028510581495}
-  _magicBallPrefab: {fileID: 3328958359171429209, guid: c8bce1f77f6c74ae1981fbe142fa5560, type: 3}
-  _castSpellDelay: 1.5
-  _castSpellInterval: 3
+  _parent: {fileID: 6991864379998363290}
+  _avatarVelocity: {x: 0, y: 0}
+  _autoFire: 1
+  _boltPrefab: {fileID: 3328958359171429209, guid: c8bce1f77f6c74ae1981fbe142fa5560, type: 3}
+  _attackPreset: 1.5
+  _attackInterval: 3
 --- !u!114 &4539855907949535768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8281,7 +8283,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &365863596916850067
 Transform:
   m_ObjectHideFlags: 0

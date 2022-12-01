@@ -16,7 +16,7 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         [SerializeField] private HoloKitAppRealityVideoType _videoType;
 
-        [SerializeField] private int _realityPreviewVideoIndex = 0;
+        [SerializeField] private int _videoIndex = 0;
 
         [SerializeField] private TMP_Text _text; 
 
@@ -36,35 +36,42 @@ namespace Holoi.Library.HoloKitApp.UI
             VideoClip videoClip = null;
             if (_videoType == HoloKitAppRealityVideoType.PreviewVideo)
             {
-                if (currentReality.PreviewVideos.Count <= _realityPreviewVideoIndex)
+                if (currentReality.PreviewVideos.Count <= _videoIndex)
                 {
                     Destroy(gameObject);
                     return;
                 }
                 else
                 {
-                    videoClip = currentReality.PreviewVideos[_realityPreviewVideoIndex];
+                    videoClip = currentReality.PreviewVideos[_videoIndex];
                     if (currentReality.PreviewVideos.Count == 1)
                     {
-                        _text.text = $"Preview Video";
+                        _text.text = "Preview Video";
                     }
                     else
                     {
-                        _text.text = $"Preview Video {_realityPreviewVideoIndex + 1}";
+                        _text.text = $"Preview Video {_videoIndex + 1}";
                     }
                 }
             }
             else if (_videoType == HoloKitAppRealityVideoType.TutorialVideo)
             {
-                if (currentReality.TutorialVideo == null)
+                if (currentReality.TutorialVideos.Count <= _videoIndex)
                 {
                     Destroy(gameObject);
                     return;
                 }
                 else
                 {
-                    videoClip = currentReality.TutorialVideo;
-                    _text.text = "Tutorial Video";
+                    videoClip = currentReality.TutorialVideos[_videoIndex];
+                    if (currentReality.TutorialVideos.Count == 1)
+                    {
+                        _text.text = "Tutorial Video";
+                    }
+                    else
+                    {
+                        _text.text = $"Tutorial Video {_videoIndex + 1}";
+                    }
                 }
             }
 

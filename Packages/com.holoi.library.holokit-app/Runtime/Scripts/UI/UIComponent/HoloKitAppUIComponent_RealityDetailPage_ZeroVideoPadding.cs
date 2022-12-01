@@ -7,7 +7,7 @@ namespace Holoi.Library.HoloKitApp.UI
         private void Start()
         {
             var currentReality = HoloKitApp.Instance.CurrentReality;
-            if (currentReality.PreviewVideos.Count != 0 || currentReality.TutorialVideo != null)
+            if (currentReality.PreviewVideos.Count != 0 || currentReality.TutorialVideos.Count != 0)
             {
                 Destroy(gameObject);
             }
