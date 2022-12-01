@@ -15,15 +15,16 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
     {
         [DllImport("__Internal")]
         private static extern void MofaWatchConnectivity_Initialize(Action<bool> OnSessionReachabilityChanged,
-                                                                    Action OnStartRoundMessageReceived,
+                                                                    Action OnReceivedStartRoundMessage,
                                                                     Action<int> OnWatchStateChanged,
-                                                                    Action OnWatchTriggered);
+                                                                    Action OnWatchTriggered,
+                                                                    Action<float, float> OnReceivedHealthDataMessage);
 
         [DllImport("__Internal")]
         private static extern void MofaWatchConnectivity_TakeControlWCSession();
 
         [DllImport("__Internal")]
-        private static extern void MofaWatchConnectivity_SyncRoundStartToWatch();
+        private static extern void MofaWatchConnectivity_SyncRoundStartToWatch(int magicSchool);
 
         [DllImport("__Internal")]
         private static extern void MofaWatchConnectivity_SyncRoundResultToWatch(int roundResultIndex, int kill, float hitRate, float distance);
@@ -38,9 +39,9 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
         }
 
         [AOT.MonoPInvokeCallback(typeof(Action))]
-        private static void OnStartRoundMessageReceivedDelegate()
+        private static void OnReceivedStartRoundMessageDelegate()
         {
-            OnStartRoundMessageReceived?.Invoke();
+            OnReceivedStartRoundMessage?.Invoke();
         }
 
         [AOT.MonoPInvokeCallback(typeof(Action<int>))]
@@ -55,19 +56,28 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
             OnWatchTriggered?.Invoke();
         }
 
-        public static event Action OnStartRoundMessageReceived;
+        [AOT.MonoPInvokeCallback(typeof(Action<float, float>))]
+        private static void OnReceivedHealthDataMessageDelegate(float distance, float calories)
+        {
+            OnReceivedHealthDataMessage?.Invoke(distance, calories);
+        }
+
+        public static event Action OnReceivedStartRoundMessage;
 
         public static event Action<MofaWatchState> OnWatchStateChanged;
 
         public static event Action OnWatchTriggered;
 
+        public static event Action<float, float> OnReceivedHealthDataMessage;
+
         public static void Initialize()
         {
             if (HoloKit.HoloKitUtils.IsEditor) { return; }
             MofaWatchConnectivity_Initialize(OnSessionReachabilityChangedDelegate,
-                                             OnStartRoundMessageReceivedDelegate,
+                                             OnReceivedStartRoundMessageDelegate,
                                              OnWatchStateChangedDelegate,
-                                             OnWatchTriggeredDelegate);
+                                             OnWatchTriggeredDelegate,
+                                             OnReceivedHealthDataMessageDelegate);
         }
 
         public static void TakeControlWatchConnectivitySession()
@@ -76,10 +86,10 @@ namespace Holoi.Library.MOFABase.WatchConnectivity
             MofaWatchConnectivity_TakeControlWCSession();
         }
 
-        public static void SyncRoundStartToWatch()
+        public static void SyncRoundStartToWatch(int magicSchool)
         {
             if (HoloKit.HoloKitUtils.IsEditor) { return; }
-            MofaWatchConnectivity_SyncRoundStartToWatch();
+            MofaWatchConnectivity_SyncRoundStartToWatch(magicSchool);
         }
 
         public static void SyncRoundResultToWatch(MofaIndividualRoundResult roundResult, int kill, float hitRate, float distance)

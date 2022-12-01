@@ -80,9 +80,10 @@ namespace Holoi.Library.MOFABase
             // We then update the control on Watch side so that MofaWatchConnectivityManager won't miss messages.
             HoloKitAppWatchConnectivityAPI.UpdateCurrentReality(WatchReality.MOFATheTraining);
 
-            MofaWatchConnectivityAPI.OnStartRoundMessageReceived += OnStartRoundMessageReceived;
+            MofaWatchConnectivityAPI.OnReceivedStartRoundMessage += OnReceivedRoundMessage;
             MofaWatchConnectivityAPI.OnWatchStateChanged += OnWatchStateChanged;
             MofaWatchConnectivityAPI.OnWatchTriggered += OnWatchTriggered;
+            MofaWatchConnectivityAPI.OnReceivedHealthDataMessage += OnReceivedHealthDataMessage;
 
             SetupSpells();
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
@@ -95,9 +96,10 @@ namespace Holoi.Library.MOFABase
 
         private void OnDestroy()
         {
-            MofaWatchConnectivityAPI.OnStartRoundMessageReceived -= OnStartRoundMessageReceived;
+            MofaWatchConnectivityAPI.OnReceivedStartRoundMessage -= OnReceivedRoundMessage;
             MofaWatchConnectivityAPI.OnWatchStateChanged -= OnWatchStateChanged;
             MofaWatchConnectivityAPI.OnWatchTriggered -= OnWatchTriggered;
+            MofaWatchConnectivityAPI.OnReceivedHealthDataMessage -= OnReceivedHealthDataMessage;
 
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
             LifeShield.OnBeingDestroyed -= OnLifeShieldDestroyed;
@@ -141,7 +143,7 @@ namespace Holoi.Library.MOFABase
                     break;
                 case MofaPhase.Countdown:
                     Reset();
-                    MofaWatchConnectivityAPI.SyncRoundStartToWatch();
+                    MofaWatchConnectivityAPI.SyncRoundStartToWatch(_mofaBaseRealityManager.GetPlayer().MagicSchoolTokenId.Value);
                     break;
                 case MofaPhase.Fighting:
                     _isActive = true;
@@ -304,7 +306,7 @@ namespace Holoi.Library.MOFABase
         }
 
         #region Apple Watch
-        private void OnStartRoundMessageReceived()
+        private void OnReceivedRoundMessage()
         {
             _mofaBaseRealityManager.TryStartRound();
         }
@@ -327,6 +329,12 @@ namespace Holoi.Library.MOFABase
                     SpawnBasicSpell();
                 }
             }
+        }
+
+        private void OnReceivedHealthDataMessage(float distance, float calories)
+        {
+            var localPlayer = _mofaBaseRealityManager.GetPlayer();
+            localPlayer.UpdateHealthDataServerRpc(distance, calories);
         }
         #endregion
     }

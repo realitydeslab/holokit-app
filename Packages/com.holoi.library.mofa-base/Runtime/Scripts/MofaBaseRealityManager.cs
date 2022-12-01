@@ -56,7 +56,7 @@ namespace Holoi.Library.MOFABase
 
         public float Distance;
 
-        public float Calorie;
+        public float Calories;
     }
 
     public abstract class MofaBaseRealityManager : RealityManager
@@ -370,6 +370,8 @@ namespace Holoi.Library.MOFABase
             stats.HitRate = (float)player.HitCount.Value / player.CastCount.Value;
             // Distance
             stats.Distance = player.Distance.Value;
+            // Calories
+            stats.Calories = player.Calories.Value;
 
             return stats;
         }

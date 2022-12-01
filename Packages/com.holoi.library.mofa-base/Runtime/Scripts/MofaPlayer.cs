@@ -38,6 +38,8 @@ namespace Holoi.Library.MOFABase
         /// </summary>
         [HideInInspector] public NetworkVariable<float> Distance = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+        [HideInInspector] public NetworkVariable<float> Calories = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
         [HideInInspector] public LifeShield LifeShield;
 
         [HideInInspector] public Vector3 LifeShieldOffset = new(0f, -0.4f, 0.5f);
@@ -145,6 +147,14 @@ namespace Holoi.Library.MOFABase
                     Distance.Value = _distance;
                 }
             }
+        }
+
+        [ServerRpc]
+        public void UpdateHealthDataServerRpc(float distance, float calories)
+        {
+            _distance = distance;
+            Distance.Value = distance;
+            Calories.Value = calories;
         }
     }
 }

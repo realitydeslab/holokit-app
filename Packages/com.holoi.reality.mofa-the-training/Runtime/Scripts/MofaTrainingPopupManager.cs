@@ -42,6 +42,7 @@ namespace Holoi.Reality.MOFATheTraining
             summaryBoard.BlueTeamKill = humanPlayerStats.Kill.ToString();
             summaryBoard.BlueTeamHitRate = humanPlayerStats.HitRate.ToString("F2");
             summaryBoard.BlueTeamDistance = humanPlayerStats.Distance.ToString("F2");
+            summaryBoard.BlueTeamCalories = humanPlayerStats.Calories.ToString("F2");
 
             // For the avatar, which is red team
             var aiPlayer = mofaBaseRealityManager.Players[MofaPlayerAI.AIClientId];
@@ -50,6 +51,7 @@ namespace Holoi.Reality.MOFATheTraining
             summaryBoard.RedTeamKill = aiPlayerStats.Kill.ToString();
             summaryBoard.RedTeamHitRate = aiPlayerStats.HitRate.ToString("F2");
             summaryBoard.RedTeamDistance = aiPlayerStats.Distance.ToString("F2");
+            summaryBoard.RedTeamCalories = aiPlayerStats.Calories.ToString("F2");
         }
     }
 }

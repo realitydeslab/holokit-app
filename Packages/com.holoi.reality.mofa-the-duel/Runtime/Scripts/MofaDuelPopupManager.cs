@@ -50,6 +50,7 @@ namespace Holoi.Reality.MOFATheDuel
             summaryBoard.BlueTeamKill = humanPlayerStats.Kill.ToString();
             summaryBoard.BlueTeamHitRate = humanPlayerStats.HitRate.ToString("F2");
             summaryBoard.BlueTeamDistance = humanPlayerStats.Distance.ToString("F2");
+            summaryBoard.BlueTeamCalories = humanPlayerStats.Calories.ToString("F2");
 
             // For the avatar, which is red team
             MofaPlayer secondPlayer = null;
@@ -62,11 +63,12 @@ namespace Holoi.Reality.MOFATheDuel
                     break;
                 }
             }
-            var aiPlayerStats = mofaBaseRealityManager.GetIndividualStats(secondPlayer);
+            var secondPlayerStats = mofaBaseRealityManager.GetIndividualStats(secondPlayer);
             summaryBoard.RedTeamName = "Red";
-            summaryBoard.RedTeamKill = aiPlayerStats.Kill.ToString();
-            summaryBoard.RedTeamHitRate = aiPlayerStats.HitRate.ToString("F2");
-            summaryBoard.RedTeamDistance = aiPlayerStats.Distance.ToString("F2");
+            summaryBoard.RedTeamKill = secondPlayerStats.Kill.ToString();
+            summaryBoard.RedTeamHitRate = secondPlayerStats.HitRate.ToString("F2");
+            summaryBoard.RedTeamDistance = secondPlayerStats.Distance.ToString("F2");
+            summaryBoard.RedTeamCalories = secondPlayerStats.Calories.ToString("F2");
         }
     }
 }
