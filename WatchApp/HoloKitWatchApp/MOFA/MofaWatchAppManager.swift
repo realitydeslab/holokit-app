@@ -6,7 +6,7 @@ import HealthKit
 import simd
 
 enum MofaView: Int {
-    case introView = 0
+    case readyView = 0
     case handednessView = 1
     case fightingView = 2
     case resultView = 3
@@ -18,49 +18,73 @@ enum MofaRoundResult: Int {
     case draw = 2
 }
 
-enum WatchState: Int {
+enum MofaMagicSchool: Int {
+    case mysticArt = 0
+    case thunder = 1
+    case harryPotter = 2
+}
+
+enum MofaWatchState: Int {
     case normal = 0
     case ground = 1
 }
 
 class MofaWatchAppManager: NSObject, ObservableObject {
     
+    // Keep a reference to the watch app main manager
     var holokitWatchAppManager: HoloKitWatchAppManager?
     
-    @Published var currentView: MofaView = .fightingView
+    @Published var currentView: MofaView = .readyView
     
-    @Published var isRightHand: Bool = true
+    @Published var magicSchool: MofaMagicSchool = .mysticArt
     
+    @Published var isRightHanded: Bool = true {
+        didSet {
+            UserDefaults.standard.set(isRightHanded, forKey: "UserHandedness")
+        }
+    }
+    
+//    @Published var isFighting: Bool = false
+    
+    // Round result stats
     @Published var roundResult: MofaRoundResult = .victory
+    @Published var kill: Int = 0
+    @Published var hitRate: Int = 0
     
-    @Published var isFighting: Bool = false
+    var wcSession: WCSession!
     
     let motionManager = CMMotionManager()
     
     let healthStore = HKHealthStore()
-    var wcSession: WCSession!
     var workoutSession: HKWorkoutSession?
     var builder: HKLiveWorkoutBuilder?
     
-    var currentState: WatchState = .normal
+    let deviceMotionUpdateInterval: Double = 0.016
+    var currentState: MofaWatchState = .normal
     let sharedInputCd: Double = 0.5
     var lastInputTime: Double = 0
+    // This vector varies with handedness and digital crown orientation
+    var groundVector = simd_double3(-1, 0, 0)
+    var lastStartRoundTime: Double = 0
     
     override init() {
         super.init()
-        print("[MofaWatchAppManager] init")
+        if (WCSession.isSupported()) {
+            self.wcSession = WCSession.default
+        }
         requestHealthKitAuthorization()
+        self.isRightHanded = UserDefaults.standard.bool(forKey: "UserHandedness")
     }
     
     func takeControlWatchConnectivitySession() {
         if (WCSession.isSupported()) {
-            wcSession = WCSession.default
-            wcSession.delegate = self
+            self.wcSession = WCSession.default
+            self.wcSession.delegate = self
         }
     }
     
     func requestHealthKitAuthorization() {
-        let typesToShare: Set = [HKQuantityType.workoutType()]
+        let typesToShare: Set = [ HKQuantityType.workoutType() ]
         
         let typesToRead: Set = [
             HKQuantityType.quantityType(forIdentifier: .heartRate)!,
@@ -72,32 +96,25 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         // Request authorization for those quantity types.
         healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
             if error != nil {
-                print("Error when requesting HealthKit authorization: \(String(describing: error))")
+                print("Got error when requesting HealthKit authorization: \(String(describing: error))")
                 return
             }
             if success {
-                print("Successfully requested HealthKit authorization")
+                print("HealthKit authorization requested")
             } else {
                 print("Falied to request HealthKit authorization")
             }
         }
     }
     
-    public func startRound() {
-        startCoreMotion()
-        startWorkout()
-    }
-    
-    public func stopRound() {
-        endCoreMotion()
-        endWorkout()
-    }
-    
     public func startWorkout() {
+        resetWorkout()
+        
         let configuration = HKWorkoutConfiguration()
-        configuration.activityType = .running
+        configuration.activityType = .play
         configuration.locationType = .indoor
         
+        // Create the session and obtain the workout builder
         do {
             workoutSession = try HKWorkoutSession(healthStore: healthStore, configuration: configuration)
             builder = workoutSession?.associatedWorkoutBuilder()
@@ -108,36 +125,51 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         
         workoutSession?.delegate = self
         builder?.delegate = self
+        
+        // Set the workout builder's data source
         builder?.dataSource = HKLiveWorkoutDataSource(healthStore: healthStore, workoutConfiguration: configuration)
         
         let startDate = Date()
         workoutSession?.startActivity(with: startDate)
         builder?.beginCollection(withStart: startDate) { (success, error) in
-            if error != nil {
-                print("Error when beginning collect workout data: \(String(describing: error))")
-                return
-            }
-            if success {
-                print("Started to collect workout data")
-            } else {
-                print("Failed to collect workout data")
-            }
+            // The workout has started
         }
     }
     
     public func endWorkout() {
         workoutSession?.end()
+        sendHealthDataMessage()
+        self.currentView = .resultView
     }
     
     public func startCoreMotion() {
-        motionManager.deviceMotionUpdateInterval = 0.016
         if (motionManager.isDeviceMotionAvailable && !motionManager.isDeviceMotionActive) {
+            motionManager.deviceMotionUpdateInterval = self.deviceMotionUpdateInterval
+            if (self.isRightHanded) {
+                if (WKInterfaceDevice.current().crownOrientation == .right) {
+                    self.groundVector = simd_double3(-1, 0, 0)
+                } else {
+                    self.groundVector = simd_double3(1, 0, 0)
+                }
+            }
+            else {
+                if (WKInterfaceDevice.current().crownOrientation == .right) {
+                    self.groundVector = simd_double3(1, 0, 0)
+                } else {
+                    self.groundVector = simd_double3(-1, 0, 0)
+                }
+            }
             motionManager.startDeviceMotionUpdates(using: .xMagneticNorthZVertical, to: OperationQueue.current!) { (data: CMDeviceMotion?, error: Error?) in
                 if error != nil {
                     return
                 }
                 
                 let currentTime = ProcessInfo.processInfo.systemUptime
+                if (currentTime - self.lastStartRoundTime > 120) {
+                    DispatchQueue.main.async {
+                        self.stopRound()
+                    }
+                }
                 
                 guard let acceleration: CMAcceleration = data?.userAcceleration else {
                     return
@@ -148,7 +180,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
                 let gravityVector3 = simd_double3(gravity.x, gravity.y, gravity.z)
                 
                 if (currentTime - self.lastInputTime > self.sharedInputCd) {
-                    if (acceleration.x < -1.6) {
+                    if (abs(acceleration.x) > 1.6) {
                         print("Triggered")
                         self.sendWatchTriggeredMessage()
                         self.lastInputTime = currentTime
@@ -156,7 +188,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
                     }
                 }
                 
-                if (simd_dot(gravityVector3, simd_double3(-1, 0, 0)) > 0.7) {
+                if (simd_dot(gravityVector3, self.groundVector) > 0.7) {
                     if (self.currentState != .ground) {
                         print("Changed to ground")
                         self.currentState = .ground
@@ -181,7 +213,20 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         }
     }
     
+    public func startRound() {
+        self.lastStartRoundTime = ProcessInfo.processInfo.systemUptime
+        startWorkout()
+        startCoreMotion()
+        self.currentView = .fightingView
+    }
+    
+    public func stopRound() {
+        endCoreMotion()
+        endWorkout()
+    }
+    
     func sendStartRoundMessage() {
+        self.wcSession = WCSession.default
         let message = ["StartRound": 0];
         self.wcSession.sendMessage(message, replyHandler: nil)
         print("Start round message sent")
@@ -192,8 +237,15 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         self.wcSession.sendMessage(message, replyHandler: nil)
     }
     
-    func sendWatchStateChangedMessage(watchState: WatchState) {
+    func sendWatchStateChangedMessage(watchState: MofaWatchState) {
         let message = ["WatchState" : watchState.rawValue]
+        self.wcSession.sendMessage(message, replyHandler: nil)
+    }
+    
+    func sendHealthDataMessage() {
+        let dist = Float(self.distance)
+        let calories = Float(self.activeEnergy)
+        let message = [ "Distance" : dist, "Calories" : calories ]
         self.wcSession.sendMessage(message, replyHandler: nil)
     }
     
@@ -216,7 +268,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
             case HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned):
                 let energyUnit = HKUnit.kilocalorie()
                 self.activeEnergy = statistics.sumQuantity()?.doubleValue(for: energyUnit) ?? 0
-            case HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning):
+            case HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning), HKQuantityType.quantityType(forIdentifier: .distanceCycling):
                 let meterUnit = HKUnit.meter()
                 self.distance = statistics.sumQuantity()?.doubleValue(for: meterUnit) ?? 0
             default:
@@ -248,47 +300,43 @@ extension MofaWatchAppManager: WCSessionDelegate {
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
         if let isFighting = applicationContext["IsFighting"] as? Bool {
-            if (isFighting != self.isFighting) {
+            if (isFighting == true) {
+                print("MOFA round started")
                 DispatchQueue.main.async {
-                    self.isFighting = isFighting
-                }
-                if (isFighting == true) {
-                    print("Is fighting changed to true")
-                    DispatchQueue.main.async {
-                        self.currentView = .fightingView
-                        self.startRound()
-                    }
-                } else if (isFighting == false) {
-                    // Round ended
-                    print("Is fighting changed to false")
-                    DispatchQueue.main.async {
-                        self.currentView = .resultView
-                        self.stopRound()
-                    }
-                    
-                    if let roundResultIndex = applicationContext["RoundResult"] as? Int {
-                        if let roundResult = MofaRoundResult(rawValue: roundResultIndex) {
-                            print("Round result: \(roundResult)")
+                    if let magicSchoolIndex = applicationContext["MagicSchool"] as? Int {
+                        if let magicSchool = MofaMagicSchool(rawValue: magicSchoolIndex) {
+                            self.magicSchool = magicSchool
                         }
                     }
-                    
-                    if let kill = applicationContext["Kill"] as? Int {
-                        print("Kill: \(kill)")
-                    }
-                    
-                    if let hitRate = applicationContext["HitRate"] as? Float {
-                        print("Hit rate: \(hitRate)")
-                    }
-                    
-                    if let distance = applicationContext["Distance"] as? Float {
-                        print("Distance: \(distance)")
+                    self.startRound()
+                }
+            } else {
+                // Round ended
+                print("MOFA round ended")
+                if let roundResultIndex = applicationContext["RoundResult"] as? Int {
+                    if let roundResult = MofaRoundResult(rawValue: roundResultIndex) {
+                        DispatchQueue.main.async {
+                            self.roundResult = roundResult
+                        }
                     }
                 }
+                if let kill = applicationContext["Kill"] as? Int {
+                    DispatchQueue.main.async {
+                        self.kill = kill
+                    }
+                }
+                if let hitRate = applicationContext["HitRate"] as? Double {
+                    DispatchQueue.main.async {
+                        self.hitRate = Int(hitRate * 100)
+                    }
+                }
+                
+                DispatchQueue.main.async {
+                    self.stopRound()
+                }
             }
-        } else if applicationContext["CurrentReality"] is Int {
+        } else if applicationContext["CurrentPanel"] is Int {
             DispatchQueue.main.async {
-                self.isFighting = false
-                self.currentView = .fightingView
                 self.stopRound()
             }
             self.holokitWatchAppManager?.session(session, didReceiveApplicationContext: applicationContext)
@@ -346,6 +394,7 @@ extension MofaWatchAppManager: HKLiveWorkoutBuilderDelegate {
             }
             
             let statistics = workoutBuilder.statistics(for: quantityType)
+            
             // Update the published values.
             updateForStatistics(statistics)
         }

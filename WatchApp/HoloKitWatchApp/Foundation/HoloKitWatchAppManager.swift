@@ -3,20 +3,19 @@ import WatchKit
 import WatchConnectivity
 import HealthKit
 
-enum HoloKitController: Int {
-    case nothing = 0
+enum HoloKitWatchAppPanel: Int {
+    case none = 0
     case mofa = 1
 }
 
 class HoloKitWatchAppManager: NSObject, ObservableObject {
     
-    @Published var currentController: HoloKitController = .nothing
+    @Published var currentPanel: HoloKitWatchAppPanel = .none
     
     private var wcSession: WCSession!
     
     override init() {
         super.init()
-        print("[HoloKitWatchAppManager] init")
         if (WCSession.isSupported()) {
             wcSession = WCSession.default
             wcSession.delegate = self
@@ -24,12 +23,12 @@ class HoloKitWatchAppManager: NSObject, ObservableObject {
         }
     }
     
+    // Register the delegate of the WCSession
     func takeControlWatchConnectivitySession() {
         if (WCSession.isSupported()) {
-            wcSession = WCSession.default
             wcSession.delegate = self
         }
-        self.currentController = .nothing
+        self.currentPanel = .none
     }
 }
 
@@ -40,23 +39,22 @@ extension HoloKitWatchAppManager: WCSessionDelegate {
         if (activationState == .activated) {
             print("[HoloKitWatchAppManager] WCSession activated");
         } else {
-            print("[HoloKitWatchAppManager] WCSession activation failed");
+            print("[HoloKitWatchAppManager] Failed to activate WCSession");
         }
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        print("[HoloKitWatchAppManager] didReceiveApplicationContext")
-        if let realityIndex = applicationContext["CurrentReality"] as? Int {
-            if let reality = HoloKitController(rawValue: realityIndex) {
-                print("Switched to reality: \(String(describing: reality))")
+        if let panelIndex = applicationContext["CurrentPanel"] as? Int {
+            if let panel = HoloKitWatchAppPanel(rawValue: panelIndex) {
+                print("Switched to panel: \(String(describing: panel))")
                 DispatchQueue.main.async {
-                    self.currentController = reality
+                    self.currentPanel = panel
                 }
             }
         }
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        print("[HoloKitWatchAppManager] didReceiveMessage")
+
     }
 }

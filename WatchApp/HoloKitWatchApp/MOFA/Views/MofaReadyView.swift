@@ -1,14 +1,17 @@
 import SwiftUI
 
-struct MofaIntroView: View {
+struct MofaReadyView: View {
     
     @EnvironmentObject var mofaWatchAppManager: MofaWatchAppManager
     
     var body: some View {
         VStack {
             HStack {
+                Spacer()
+                    .frame(width: 10)
+                
                 Button {
-                    mofaWatchAppManager.holokitWatchAppManager?.currentController = .nothing
+                    mofaWatchAppManager.holokitWatchAppManager?.currentPanel = .none
                 } label: {
                     Image("back")
                         .resizable()
@@ -17,10 +20,23 @@ struct MofaIntroView: View {
                 }
                 .buttonStyle(.plain)
                 Spacer()
+                
+                Button {
+                    mofaWatchAppManager.currentView = .handednessView
+                } label: {
+                    Image(systemName: "gearshape.fill")
+                        .resizable()
+                        .foregroundColor(.white)
+                        .frame(maxWidth: 24, maxHeight: 24)
+                }
+                .buttonStyle(.plain)
+                
+                Spacer()
+                    .frame(width: 10)
             }
             
-
             Spacer()
+                .frame(height: 16)
             Text("Panel #001")
                 .font(Font.custom("ObjectSans-Regular", size: 13))
                 .padding()
@@ -28,11 +44,11 @@ struct MofaIntroView: View {
                 .font(Font.custom("ObjectSans-BoldSlanted", size: 18))
             Spacer()
             
-            startButton
+            readyButton
         }
     }
     
-    var startButton: some View {
+    var readyButton: some View {
         Button {
             self.mofaWatchAppManager.sendStartRoundMessage()
         } label: {
@@ -52,7 +68,7 @@ struct MofaIntroView: View {
 
 struct MofaIntroView_Previews: PreviewProvider {
     static var previews: some View {
-        MofaIntroView()
+        MofaReadyView()
             .environmentObject(MofaWatchAppManager())
     }
 }

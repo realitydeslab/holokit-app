@@ -54,14 +54,14 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
         }
     }
     
-    func updateCurrentReality(_ realityIndex: Int) {
-        let context = ["CurrentReality" : realityIndex,
+    func updateCurrentReality(_ panelIndex: Int) {
+        let context = ["CurrentPanel" : panelIndex,
                        "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
         do {
             try self.wcSession.updateApplicationContext(context)
-            print("Updated current reality")
+            print("Updated current panel")
         } catch {
-            print("Failed to update current reality")
+            print("Failed to update current panel")
         }
     }
     

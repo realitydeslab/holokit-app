@@ -1,4 +1,5 @@
 import SwiftUI
+import Foundation
 
 struct MofaResultView: View {
     
@@ -8,55 +9,62 @@ struct MofaResultView: View {
     
     var body: some View {
         VStack {
-//            if (self.result) {
-//                youWinImage
-//            } else {
-//                youLoseImage
-//            }
+            resultText
             //Spacer()
             dataList
                 .padding(.top)
                 .padding(.bottom)
-            //Spacer()
-            gotItButton
+            Spacer()
+                .frame(height: 10)
+            playAgainButton
         }
     }
     
-    var youWinImage: some View {
-        Image("you-win")
-            .resizable()
-            .frame(maxWidth: 140, maxHeight: 30)
-    }
-    
-    var youLoseImage: some View {
-        Image("you-lose")
-            .resizable()
-            .frame(maxWidth: 140, maxHeight: 30)
+    var resultText: some View {
+        var resultText: Text
+        if (self.mofaWatchAppManager.roundResult == .victory) {
+            resultText = Text("Victory")
+        } else if (self.mofaWatchAppManager.roundResult == .defeat) {
+            resultText = Text("Defeat")
+        } else {
+            resultText = Text("Draw")
+        }
+        return resultText
+            .font(Font.custom("ObjectSans-Bold", size: 24))
     }
     
     var dataList: some View {
-        VStack {
-            Text("Kills: ")
-            Text("Hit Rate: ")
-            Text("Dist: ")
-            Text("Calorie: ")
+        
+        HStack {
+            VStack (alignment: .leading, spacing: 5) {
+                Text("Kills: \(self.mofaWatchAppManager.kill)")
+                Text("Hit Rate: \(self.mofaWatchAppManager.hitRate)%")
+                Text("Dist: \(String(format: "%.2f", self.mofaWatchAppManager.distance)) m")
+                Text("Calorie: \(Int(self.mofaWatchAppManager.activeEnergy)) kcal")
+            }
+            .font(Font.custom("ObjectSans-BoldSlanted", size: 12))
+            
+            Spacer()
+            
+            MofaActivityRingsView(healthStore: self.mofaWatchAppManager.healthStore)
+                .frame(width: 40, height: 40)
         }
-        .font(Font.custom("ObjectSans-BoldSlanted", size: 14))
+        .padding(.horizontal, 14)
     }
     
-    var gotItButton: some View {
+    var playAgainButton: some View {
         Button {
-            self.mofaWatchAppManager.currentView = .fightingView
+            self.mofaWatchAppManager.currentView = .readyView
         } label: {
             HStack {
-                Text("Got it")
+                Text("Play Again")
                     .font(Font.custom("ObjectSans-BoldSlanted", size: 14))
                 Image("arrow-right")
                     .renderingMode(.template)
                     .resizable()
                     .frame(maxWidth: 10, maxHeight: 10)
             }
-                .frame(maxWidth: 120, maxHeight: 30)
+                .frame(maxWidth: 80, maxHeight: 16)
                 .font(.headline)
                 .fontWeight(.semibold)
                 .foregroundColor(.black)

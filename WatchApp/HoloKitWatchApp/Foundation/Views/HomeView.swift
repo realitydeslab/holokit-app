@@ -7,7 +7,7 @@ struct HomeView: View {
     @EnvironmentObject var mofaWatchAppManager: MofaWatchAppManager
     
     var body: some View {
-        if (self.holokitAppWatchManager.currentController == .nothing) {
+        if (self.holokitAppWatchManager.currentPanel == .none) {
             PanelListView()
                 .environmentObject(holokitAppWatchManager)
                 .onAppear {
@@ -15,7 +15,7 @@ struct HomeView: View {
                         holokitAppWatchManager.takeControlWatchConnectivitySession()
                     }
                 }
-        } else if (self.holokitAppWatchManager.currentController == .mofa) {
+        } else if (self.holokitAppWatchManager.currentPanel == .mofa) {
             MofaHomeView()
                 .environmentObject(mofaWatchAppManager)
                 .onAppear {

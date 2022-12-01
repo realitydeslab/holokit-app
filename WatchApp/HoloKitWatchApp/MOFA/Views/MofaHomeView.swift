@@ -5,8 +5,8 @@ struct MofaHomeView: View {
     @EnvironmentObject var mofaWatchAppManager: MofaWatchAppManager
     
     var body: some View {
-        if (self.mofaWatchAppManager.currentView == .introView) {
-            MofaIntroView()
+        if (self.mofaWatchAppManager.currentView == .readyView) {
+            MofaReadyView()
         } else if (self.mofaWatchAppManager.currentView == .handednessView) {
             MofaHandednessView()
         } else if (self.mofaWatchAppManager.currentView == .fightingView) {

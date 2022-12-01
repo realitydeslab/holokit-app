@@ -23,7 +23,7 @@ struct PanelView: View {
                     .font(Font.custom("ObjectSans-Regular", size: 16))
                 
                 Button {
-                    holokitAppWatchManager.currentController = HoloKitController(rawValue: panelIndex) ?? .nothing
+                    holokitAppWatchManager.currentPanel = HoloKitWatchAppPanel(rawValue: panelIndex) ?? .none
                 } label: {
                     ZStack {
                         Rectangle()

@@ -17,6 +17,7 @@ class MockHoloKitAppWatchConnectivityManager: NSObject, ObservableObject {
         if (WCSession.isSupported()) {
             wcSession = WCSession.default
             wcSession.delegate = self
+            wcSession.activate()
         }
     }
     
@@ -44,8 +45,8 @@ class MockHoloKitAppWatchConnectivityManager: NSObject, ObservableObject {
         return self.wcSession.isReachable
     }
     
-    func updateCurrentReality(_ realityIndex: Int) {
-        let context = ["CurrentReality" : realityIndex,
+    func updateCurrentReality(_ panelIndex: Int) {
+        let context = ["CurrentPanel" : panelIndex,
                        "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
         do {
             try self.wcSession.updateApplicationContext(context)

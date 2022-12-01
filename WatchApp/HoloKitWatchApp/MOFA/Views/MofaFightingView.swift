@@ -6,59 +6,59 @@ struct MofaFightingView: View {
     
     var body: some View {
         VStack {
-            HStack {
-                Button {
-                    mofaWatchAppManager.holokitWatchAppManager?.currentController = .nothing
-                } label: {
-                    Image("back")
-                        .resizable()
-                        .foregroundColor(.white)
-                        .frame(maxWidth: 24, maxHeight: 24)
-                }
-                .buttonStyle(.plain)
-                Spacer()
-            }
-            
-            Image("mofa-weapon")
-                .resizable()
-                .frame(maxWidth: 120, maxHeight: 120)
+//            HStack {
+//                Button {
+//                    mofaWatchAppManager.holokitWatchAppManager?.currentPanel = .none
+//                } label: {
+//                    Image("back")
+//                        .resizable()
+//                        .foregroundColor(.white)
+//                        .frame(maxWidth: 24, maxHeight: 24)
+//                }
+//                .buttonStyle(.plain)
+//                Spacer()
+//            }
             
             Spacer()
-            
-            if (self.mofaWatchAppManager.isFighting) {
-                fightingText
-            } else {
-                startButton
-            }
+            spellImage
+            Spacer()
+            fightingText
         }
     }
     
-    var startButton: some View {
-        Button {
-            self.mofaWatchAppManager.sendStartRoundMessage()
-        } label: {
-            ZStack {
-                Rectangle()
-                    .frame(maxWidth: 100, maxHeight: 40)
-                
-                HStack {
-                    Text("Ready")
-                        .font(Font.custom("ObjectSans-BoldSlanted", size: 13))
-                        .foregroundColor(.black)
-                    
-                    Image("arrow-right")
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(maxWidth: 10, maxHeight: 10)
-                        .foregroundColor(.black)
-                }
-            }
-        }
-        .buttonStyle(.plain)
+    var spellImage: some View {
+        Image("mofa-spell-" + String(self.mofaWatchAppManager.magicSchool.rawValue))
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(maxWidth: 100, maxHeight: 100)
     }
+    
+//    var startButton: some View {
+//        Button {
+//            self.mofaWatchAppManager.sendStartRoundMessage()
+//        } label: {
+//            ZStack {
+//                Rectangle()
+//                    .frame(maxWidth: 100, maxHeight: 40)
+//                
+//                HStack {
+//                    Text("Ready")
+//                        .font(Font.custom("ObjectSans-BoldSlanted", size: 13))
+//                        .foregroundColor(.black)
+//                    
+//                    Image("arrow-right")
+//                        .renderingMode(.template)
+//                        .resizable()
+//                        .frame(maxWidth: 10, maxHeight: 10)
+//                        .foregroundColor(.black)
+//                }
+//            }
+//        }
+//        .buttonStyle(.plain)
+//    }
     
     var fightingText: some View {
-        Text("SWING YOUR ARM TO CAST THE SPELL")
+        Text("SWING YOUR ARM TO CAST SPELLS")
             .multilineTextAlignment(.center)
             .font(Font.custom("ObjectSans-BoldSlanted", size: 14))
     }
