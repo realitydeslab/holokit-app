@@ -186,7 +186,6 @@ namespace Holoi.Library.HoloKitApp
         #region Reality Scene Management
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
-            Debug.Log($"[OnSceneLoaded] {scene.name}");
             if (IsRealityScene(scene))
             {
                 InitializeRealityScene();
@@ -200,14 +199,12 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnSceneUnloaded(Scene scene)
         {
-            Debug.Log($"[OnSceneUnloaded] {scene.name}");
             if (IsRealityScene(scene))
             {
                 DeinitializeRealityScene();
             }
             else if (scene.name.Equals("NoLiDAR"))
             {
-                Debug.Log("[HoloKitApp] Before DeinitializeARSession");
                 DeinitializeARSession();
             }
         }
@@ -279,7 +276,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void DeinitializeARSession()
         {
-            StartCoroutine(HoloKitAppUtils.WaitAndDo(0.3f, () =>
+            StartCoroutine(HoloKitAppUtils.WaitAndDo(0.1f, () =>
             {
                 LoaderUtility.Deinitialize();
                 LoaderUtility.Initialize();
@@ -303,8 +300,8 @@ namespace Holoi.Library.HoloKitApp
             // Does the Reality we are going to enter need LiDAR?
             if (_currentReality.IsLiDARRequired())
             {
-                //if (!HoloKitOpticsAPI.IsCurrentDeviceEquippedWithLiDAR())
-                if (true)
+                if (!HoloKitOpticsAPI.IsCurrentDeviceEquippedWithLiDAR())
+                //if (true)
                 {
                     LoadNoLiDARScene();
                     return;
