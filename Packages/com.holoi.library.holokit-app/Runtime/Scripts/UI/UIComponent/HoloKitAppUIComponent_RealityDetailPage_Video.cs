@@ -27,8 +27,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private Image _play;
 
-        [SerializeField] private Image _pause;
-
         private RenderTexture _renderTexture;
 
         private const int VideoWidth = 1170;
@@ -103,7 +101,21 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             yield return null;
             _videoPlayer.Pause();
-            _play.gameObject.SetActive(true);
+        }
+
+        private void Update()
+        {
+            if (_videoType == HoloKitAppRealityVideoType.TutorialVideo)
+            {
+                if (_videoPlayer.isPlaying)
+                {
+                    _play.gameObject.SetActive(false);
+                }
+                else
+                {
+                    _play.gameObject.SetActive(true);
+                }
+            }
         }
 
         private void OnDestroy()
@@ -122,14 +134,10 @@ namespace Holoi.Library.HoloKitApp.UI
                 if (_videoPlayer.isPlaying)
                 {
                     _videoPlayer.Pause();
-                    _play.gameObject.SetActive(true);
-                    _pause.gameObject.SetActive(false);
                 }
                 else
                 {
                     _videoPlayer.Play();
-                    _play.gameObject.SetActive(false);
-                    _pause.gameObject.SetActive(false);
                 }
             }
         }
