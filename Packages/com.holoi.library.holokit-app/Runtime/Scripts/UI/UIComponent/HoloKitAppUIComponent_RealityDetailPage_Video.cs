@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.UI;
@@ -23,6 +24,10 @@ namespace Holoi.Library.HoloKitApp.UI
         [SerializeField] private VideoPlayer _videoPlayer;
 
         [SerializeField] private RawImage _videoRawImage;
+
+        [SerializeField] private Image _play;
+
+        [SerializeField] private Image _pause;
 
         private RenderTexture _renderTexture;
 
@@ -72,6 +77,8 @@ namespace Holoi.Library.HoloKitApp.UI
                     {
                         _text.text = $"Tutorial Video {_videoIndex + 1}";
                     }
+                    _videoPlayer.frame = 0;
+                    StartCoroutine(PauseOnFirstFrame());
                 }
             }
 
@@ -92,12 +99,38 @@ namespace Holoi.Library.HoloKitApp.UI
             _videoRawImage.texture = _renderTexture;
         }
 
+        private IEnumerator PauseOnFirstFrame()
+        {
+            yield return null;
+            _videoPlayer.Pause();
+            _play.gameObject.SetActive(true);
+        }
+
         private void OnDestroy()
         {
             // We release the allocated render texture on destroy
             if (_renderTexture != null)
             {
                 _renderTexture.Release();
+            }
+        }
+
+        public void OnPlayPauseButtonPressed()
+        {
+            if (_videoType == HoloKitAppRealityVideoType.TutorialVideo)
+            {
+                if (_videoPlayer.isPlaying)
+                {
+                    _videoPlayer.Pause();
+                    _play.gameObject.SetActive(true);
+                    _pause.gameObject.SetActive(false);
+                }
+                else
+                {
+                    _videoPlayer.Play();
+                    _play.gameObject.SetActive(false);
+                    _pause.gameObject.SetActive(false);
+                }
             }
         }
     }
