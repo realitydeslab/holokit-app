@@ -186,6 +186,7 @@ namespace Holoi.Library.HoloKitApp
         #region Reality Scene Management
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
+            Debug.Log($"[OnSceneLoaded] {scene.name}");
             if (IsRealityScene(scene))
             {
                 InitializeRealityScene();
@@ -199,12 +200,14 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnSceneUnloaded(Scene scene)
         {
+            Debug.Log($"[OnSceneUnloaded] {scene.name}");
             if (IsRealityScene(scene))
             {
                 DeinitializeRealityScene();
             }
             else if (scene.name.Equals("NoLiDAR"))
             {
+                Debug.Log("[HoloKitApp] Before DeinitializeARSession");
                 DeinitializeARSession();
             }
         }
@@ -276,17 +279,23 @@ namespace Holoi.Library.HoloKitApp
 
         private void DeinitializeARSession()
         {
-            LoaderUtility.Deinitialize();
-            LoaderUtility.Initialize();
-            HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
+            StartCoroutine(HoloKitAppUtils.WaitAndDo(0.3f, () =>
+            {
+                LoaderUtility.Deinitialize();
+                LoaderUtility.Initialize();
+                HoloKitARSessionControllerAPI.InterceptUnityARSessionDelegate();
+            }));
         }
 
         private void ResetWatchConnectivity()
         {
-            // Let HoloKitAppWatchConnectivityManager take control of WCSessionDelegate
-            HoloKitAppWatchConnectivityAPI.TakeControlWatchConnectivitySession();
-            // Make Watch App jump back to the main page
-            HoloKitAppWatchConnectivityAPI.UpdateCurrentReality(WatchReality.Nothing);
+            //if (HoloKitAppWatchConnectivityAPI.IsWatchAppInstalled())
+            //{
+                // Let HoloKitAppWatchConnectivityManager take control of WCSessionDelegate
+                HoloKitAppWatchConnectivityAPI.TakeControlWatchConnectivitySession();
+                // Make Watch App jump back to the main page
+                HoloKitAppWatchConnectivityAPI.UpdateCurrentReality(WatchReality.Nothing);
+            //}
         }
 
         public void EnterRealityAs(HoloKitAppPlayerType playerType)
@@ -294,7 +303,8 @@ namespace Holoi.Library.HoloKitApp
             // Does the Reality we are going to enter need LiDAR?
             if (_currentReality.IsLiDARRequired())
             {
-                if (!HoloKitOpticsAPI.IsCurrentDeviceEquippedWithLiDAR())
+                //if (!HoloKitOpticsAPI.IsCurrentDeviceEquippedWithLiDAR())
+                if (true)
                 {
                     LoadNoLiDARScene();
                     return;
