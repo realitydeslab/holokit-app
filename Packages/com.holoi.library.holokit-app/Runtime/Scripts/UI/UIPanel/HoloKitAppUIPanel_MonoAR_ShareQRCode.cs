@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -27,8 +28,13 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private const float QRCodeWidth = 0.04f;
 
+        public static event Action OnStartedSharingQRCode;
+
+        public static event Action OnStoppedSharingQRCode;
+
         private void Start()
         {
+            OnStartedSharingQRCode?.Invoke();
             HoloKitAppMultiplayerManager.OnConnectedDeviceListUpdated += OnConnectedDeviceListUpdated;
             OnConnectedDeviceListUpdated(HoloKitApp.Instance.MultiplayerManager.ConnectedDevicesList);
             AdjustQRCodeSize();
@@ -45,6 +51,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnDestroy()
         {
+            OnStoppedSharingQRCode?.Invoke();
             HoloKitAppMultiplayerManager.OnConnectedDeviceListUpdated -= OnConnectedDeviceListUpdated;
         }
 

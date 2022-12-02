@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
+using Holoi.Library.HoloKitApp.UI;
 using HoloKit;
 
 namespace Holoi.Library.MOFABase
@@ -74,8 +75,8 @@ namespace Holoi.Library.MOFABase
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
             HoloKitAppRecorder.OnRecordingStarted += OnRecordingStarted;
             HoloKitAppRecorder.OnRecordingStopped += OnRecordingStopped;
-            HoloKitAppMultiplayerManager.OnAdvertisingStarted += OnRecordingStarted;
-            HoloKitAppMultiplayerManager.OnAdvertisingStopped += OnRecordingStopped;
+            HoloKitAppUIPanel_MonoAR_ShareQRCode.OnStartedSharingQRCode += OnRecordingStarted;
+            HoloKitAppUIPanel_MonoAR_ShareQRCode.OnStoppedSharingQRCode += OnRecordingStopped;
             HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
             LifeShield.OnSpawned += OnLifeShieldSpawned;
 
