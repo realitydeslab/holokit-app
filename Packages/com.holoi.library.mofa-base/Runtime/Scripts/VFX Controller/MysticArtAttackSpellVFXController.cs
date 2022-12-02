@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Holoi.Library.MOFABase
 {
-    public class AttackSpellVFXController : MonoBehaviour
+    public class MysticArtAttackSpellVFXController : MonoBehaviour
     {
         [SerializeField] private AttackSpell _attackSpell;
 
