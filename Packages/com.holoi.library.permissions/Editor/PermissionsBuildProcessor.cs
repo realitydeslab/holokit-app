@@ -18,10 +18,10 @@ namespace Holoi.Library.Permissions.Editor
                 plist.ReadFromFile(plistPath);
                 PlistElementDict rootDict = plist.root;
 
-                rootDict.SetString("NSCameraUsageDescription", "For AR");
-                rootDict.SetString("NSMicrophoneUsageDescription", "For recording");
-                rootDict.SetString("NSPhotoLibraryAddUsageDescription", "For saving recorded videos");
-                rootDict.SetString("NSPhotoLibraryUsageDescription", "For saving recorded videos");
+                rootDict.SetString("NSCameraUsageDescription", "The app requires to use the camera to enable an immersive AR experience.");
+                rootDict.SetString("NSMicrophoneUsageDescription", "The app can record audio through the microphone.");
+                rootDict.SetString("NSPhotoLibraryAddUsageDescription", "The app saves recorded videos into Photo Library.");
+                rootDict.SetString("NSPhotoLibraryUsageDescription", "The app saves recorded videos into Photo Library.");
                 rootDict.SetString("NSLocationWhenInUseUsageDescription", "For location based services");
                 //rootDict.SetString("NSLocationAlwaysAndWhenInUseUsageDescription", "For location based services");
 
