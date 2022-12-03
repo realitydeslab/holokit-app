@@ -22,7 +22,8 @@ namespace Holoi.Reality.Typography
             idle,
             needFilled,
             filled,
-            needRelease
+            needRelease,
+            coolingDown
         }
 
         [HideInInspector] public enum MovementState
@@ -55,6 +56,12 @@ namespace Holoi.Reality.Typography
 
         private void Update()
         {
+            if(transform.position.y < -2f)
+            {
+                transform.position = HoloKit.HoloKitCamera.Instance.CenterEyePose.position +
+                    HoloKit.HoloKitCamera.Instance.CenterEyePose.forward;
+            }
+
             if (MagicObject)
             {
                 switch (_movemenrtState)
@@ -122,9 +129,7 @@ namespace Holoi.Reality.Typography
             GetComponent<Rigidbody>().velocity = Vector3.up * 1;
             _intakeState = IntakeState.idle;
             _animator.SetTrigger("Release");
-            //GetComponent<BoxCollider>().size = Vector3.one*0.001f;
 
-            //MagicObject.gameObject.SetActive(true);
             MagicObject.GetChild(0).gameObject.SetActive(true);
             MagicObject.position = transform.position;
             MagicObject.GetComponent<Rigidbody>().velocity = Vector3.up * 1;

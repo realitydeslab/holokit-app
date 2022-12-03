@@ -70,17 +70,17 @@ namespace Holoi.Library.ARUX
         void Start()
         {
             if (_followTarget == null) { return; }
-            if (_movementType != MovementType.NotFollow)
-            {
-                if (_worldSpace)
-                {
-                    transform.position = Vector3.Scale(_followTarget.position, _axisWeight) + Vector3.Scale(_offset, _axisWeight);
-                }
-                else
-                {
-                    transform.position = Vector3.Scale(_followTarget.position, _axisWeight) + Vector3.Scale(_followTarget.TransformVector(_offset), _axisWeight);
-                }
-            }
+            //if (_movementType != MovementType.NotFollow)
+            //{
+            //    if (_worldSpace)
+            //    {
+            //        transform.position = Vector3.Scale(_followTarget.position, _axisWeight) + Vector3.Scale(_offset, _axisWeight);
+            //    }
+            //    else
+            //    {
+            //        transform.position = Vector3.Scale(_followTarget.position, _axisWeight) + Vector3.Scale(_followTarget.TransformVector(_offset), _axisWeight);
+            //    }
+            //}
         }
 
         void FixedUpdate()

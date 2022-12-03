@@ -1,11 +1,13 @@
+using System.Collections;
 using UnityEngine;
 using HoloKit;
 using Holoi.Library.ARUX;
+using Holoi.Library.HoloKitApp;
 
 
 namespace Holoi.Reality.Typography
 {
-    public class TypedRealityTheForceRealityManager : MonoBehaviour
+    public class TypedRealityTheForceRealityManager : RealityManager
     {
         Transform _centereye;
         [SerializeField] Transform _handJoint;
@@ -20,11 +22,12 @@ namespace Holoi.Reality.Typography
         private void Start()
         {
             _centereye = HoloKitCamera.Instance.CenterEyePose;
+            StartCoroutine(WaitAndCreateMagicCube());
         }
 
         void SceneSetup()
         {
-            LayerMask lm = 1 << 6;
+            LayerMask lm = 1 << 7;
             Vector3 dir = new Vector3(Random.Range(-1f,1f), -1 , Random.Range(0f,1f));
             Ray ray = new Ray(_centereye.position, dir);
             RaycastHit hit;
@@ -51,11 +54,11 @@ namespace Holoi.Reality.Typography
 
         private void Update()
         {
-            if (m == 0)
-            {
-                CreateMagicCube();
-                m++;
-            }
+            //if (m == 0)
+            //{
+            //    CreateMagicCube();
+            //    m++;
+            //}
 
             if (n == 0)
             {
@@ -65,6 +68,12 @@ namespace Holoi.Reality.Typography
                     _lastTriggerTime = Time.time;
                 }
             }
+        }
+
+        IEnumerator WaitAndCreateMagicCube()
+        {
+            yield return new WaitForSeconds(4f);
+            CreateMagicCube();
         }
     }
 }

@@ -7,10 +7,44 @@ namespace Holoi.Reality.Typography
     {
         Animator _animator;
 
+        public enum State
+        {
+            idle,
+            intaking,
+            intaked
+        }
+
+        public State state;
+
         private void Start()
         {
             _animator = GetComponent<Animator>();
             FindObjectOfType<MagicCube>().MagicObject = transform;
+        }
+
+        private void Update()
+        {
+            var speed = GetComponent<Rigidbody>().velocity;
+            if (speed.magnitude > 3)
+            {
+                speed = speed.normalized * 3f;
+            }
+
+            if (transform.position.y < -2f)
+            {
+                transform.position = HoloKit.HoloKitCamera.Instance.CenterEyePose.position +
+                    HoloKit.HoloKitCamera.Instance.CenterEyePose.forward;
+            }
+
+            switch (state)
+            {
+                case State.idle:
+                    break;
+                case State.intaking:
+                    break;
+                case State.intaked:
+                    break;
+            }
         }
 
         public void BeIntaken()
@@ -34,15 +68,6 @@ namespace Holoi.Reality.Typography
             _animator.SetTrigger("Release");
             GetComponent<Rigidbody>().useGravity = true;
             GetComponent<Rigidbody>().isKinematic = false;
-        }
-
-        private void Update()
-        {
-            var speed = GetComponent<Rigidbody>().velocity;
-            if (speed.magnitude > 3)
-            {
-                speed = speed.normalized * 3f;
-            }
         }
     }
 }
