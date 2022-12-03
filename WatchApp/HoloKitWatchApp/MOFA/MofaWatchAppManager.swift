@@ -75,7 +75,9 @@ class MofaWatchAppManager: NSObject, ObservableObject {
             self.wcSession = WCSession.default
         }
         requestHealthKitAuthorization()
-        self.isRightHanded = UserDefaults.standard.bool(forKey: "UserHandedness")
+        if UserDefaults.standard.object(forKey: "UserHandedness") != nil  {
+            self.isRightHanded = UserDefaults.standard.bool(forKey: "UserHandedness")
+        }
     }
     
     func takeControlWatchConnectivitySession() {

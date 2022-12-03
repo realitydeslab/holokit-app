@@ -13,7 +13,9 @@ namespace Holoi.Library.HoloKitApp.Editor
 
         private const string WatchAppTargetName = "HoloKitWatchApp";
 
-        private const string HealthUsageDescription = "Please provide your health information";
+        private const string HealthShareUsageDescription = "Your workout data during the gameplay will be displayed after each round.";
+
+        private const string HealthUpdateUsageDescription = "Workouts tracked by HoloKit app on Apple Watch will be saved to HealthKit.";
 
         // https://github.com/Manurocker95/IronRuby-Test/blob/57f8b66e88d7df2e9bd7936e83777a79427f8e13/Assets/VirtualPhenix/Scripts/Editor/AppleWatch/VP_SetupWatchExtension.cs
         [PostProcessBuild]
@@ -128,8 +130,8 @@ namespace Holoi.Library.HoloKitApp.Editor
             project.SetBuildProperty(watchAppTargetGuid, "INFOPLIST_KEY_UISupportedInterfaceOrientations",
                 "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown");
             project.SetBuildProperty(watchAppTargetGuid, "INFOPLIST_KEY_WKCompanionAppBundleIdentifier", packageName);
-            project.SetBuildProperty(watchAppTargetGuid, "INFOPLIST_KEY_NSHealthUpdateUsageDescription", HealthUsageDescription);
-            project.SetBuildProperty(watchAppTargetGuid, "INFOPLIST_KEY_NSHealthShareUsageDescription", HealthUsageDescription);
+            project.SetBuildProperty(watchAppTargetGuid, "INFOPLIST_KEY_NSHealthShareUsageDescription", HealthShareUsageDescription);
+            project.SetBuildProperty(watchAppTargetGuid, "INFOPLIST_KEY_NSHealthUpdateUsageDescription", HealthUpdateUsageDescription);
             project.SetBuildProperty(watchAppTargetGuid, "CODE_SIGN_ENTITLEMENTS", $"{destinationPathPrefix}/HoloKitWatchApp.entitlements");
             project.SetBuildProperty(watchAppTargetGuid, "ASSETCATALOG_COMPILER_APPICON_NAME", "AppIcon");
             project.SetBuildProperty(watchAppTargetGuid, "WATCHOS_DEPLOYMENT_TARGET", "9.0");
