@@ -25,7 +25,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private RawImage _videoRawImage;
 
-        [SerializeField] private Image _play;
+        [SerializeField] private GameObject _playButton;
 
         private RenderTexture _renderTexture;
 
@@ -86,7 +86,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _renderTexture.Create();
             _videoPlayer.renderMode = VideoRenderMode.RenderTexture;
             _videoPlayer.targetTexture = _renderTexture;
-            _videoPlayer.isLooping = true;
+            _videoPlayer.isLooping = _videoType == HoloKitAppRealityVideoType.PreviewVideo;
             _videoPlayer.audioOutputMode = VideoAudioOutputMode.Direct;
             for (ushort i = 0; i < _videoPlayer.audioTrackCount; i++)
             {
@@ -109,11 +109,11 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 if (_videoPlayer.isPlaying)
                 {
-                    _play.gameObject.SetActive(false);
+                    _playButton.SetActive(false);
                 }
                 else
                 {
-                    _play.gameObject.SetActive(true);
+                    _playButton.SetActive(true);
                 }
             }
         }
@@ -127,7 +127,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
         }
 
-        public void OnPlayPauseButtonPressed()
+        public void OnToggleVideoPlay()
         {
             if (_videoType == HoloKitAppRealityVideoType.TutorialVideo)
             {
