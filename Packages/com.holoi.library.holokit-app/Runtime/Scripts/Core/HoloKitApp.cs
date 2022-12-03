@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
@@ -109,6 +110,8 @@ namespace Holoi.Library.HoloKitApp
         private HoloKitAppRecorder _recorder;
 
         private RealityManager _realityManager;
+
+        public static event Action<string> OnEnteredReality; 
 
         #region Mono
         private void Awake()
@@ -310,6 +313,7 @@ namespace Holoi.Library.HoloKitApp
 
             _localPlayerType = playerType;
             SceneManager.LoadScene(_currentReality.Scene.SceneName, LoadSceneMode.Single);
+            OnEnteredReality?.Invoke(_currentReality.BundleId);
         }
 
         private void LoadNoLiDARScene()

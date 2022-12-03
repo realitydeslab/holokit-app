@@ -5,6 +5,7 @@ using UnityEngine;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
 using Unity.Services.CloudSave;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
 {
@@ -34,6 +35,8 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         private const int RetryConnectionInterval = 30;
 
+        private const string StarCountKey = "star-count";
+
         /// <summary>
         /// This event is called when we start to initialize UGS.
         /// </summary>
@@ -58,11 +61,15 @@ namespace Holoi.Library.HoloKitApp
         private void Start()
         {
             HoloKitAppSIWAManager.OnSignedInWithApple += OnSignedInWithApple;
+            HoloKitApp.OnEnteredReality += OnEnteredReality;
+            HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
         }
 
         private void OnDestroy()
         {
             HoloKitAppSIWAManager.OnSignedInWithApple -= OnSignedInWithApple;
+            HoloKitApp.OnEnteredReality -= OnEnteredReality;
+            HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
         }
 
         private void SetupAuthenticationCallbacks()
@@ -245,6 +252,53 @@ namespace Holoi.Library.HoloKitApp
             }
             else {
                 Debug.Log("[UserAccountManager] User info not found on the current device");
+            }
+        }
+
+        private void OnHoloKitRenderModeChanged(HoloKitRenderMode renderMode)
+        {
+            if (renderMode == HoloKitRenderMode.Stereo)
+            {
+                IncreamentCloudCount(StarCountKey);
+            }
+        }
+
+        private void OnEnteredReality(string bundleId)
+        {
+            IncreamentCloudCount(bundleId);
+        }
+
+        private async void IncreamentCloudCount(string key)
+        {
+            if (_authenticated) return;
+
+            try
+            {
+                Dictionary<string, string> savedData = await CloudSaveService.Instance.Data.LoadAsync(new HashSet<string> { key });
+                if (savedData.ContainsKey(key))
+                {
+                    // Increament reality count
+                    int currentCount = int.Parse(savedData[key]) + PlayerPrefs.GetInt(key, 0);
+                    int newCount = currentCount + 1;
+                    var data = new Dictionary<string, object> { { key, newCount.ToString() } };
+                    await CloudSaveService.Instance.Data.ForceSaveAsync(data);
+                    PlayerPrefs.SetInt(key, 0);
+                }
+                else
+                {
+                    // Initialized reality count
+                    int newCount = PlayerPrefs.GetInt(key, 0) + 1;
+                    var data = new Dictionary<string, object> { { key, newCount.ToString() } };
+                    await CloudSaveService.Instance.Data.ForceSaveAsync(data);
+                    PlayerPrefs.SetInt(key, 0);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                int currentCachedCount = PlayerPrefs.GetInt(key, 0);
+                int newCachedCount = currentCachedCount + 1;
+                PlayerPrefs.SetInt(key, newCachedCount);
             }
         }
     }
