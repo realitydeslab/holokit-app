@@ -23,7 +23,7 @@ namespace Holoi.Library.Permissions.Editor
                 rootDict.SetString("NSPhotoLibraryAddUsageDescription", "The app saves recorded videos into Photo Library.");
                 rootDict.SetString("NSPhotoLibraryUsageDescription", "The app saves recorded videos into Photo Library.");
                 rootDict.SetString("NSLocationWhenInUseUsageDescription", "For location based services");
-                //rootDict.SetString("NSLocationAlwaysAndWhenInUseUsageDescription", "For location based services");
+                rootDict.SetString("NSLocationAlwaysAndWhenInUseUsageDescription", "For location based services");
 
                 File.WriteAllText(plistPath, plist.WriteToString());
             }
