@@ -270,7 +270,9 @@ namespace Holoi.Library.HoloKitApp
 
         private async void IncreamentCloudCount(string key)
         {
-            if (_authenticated) return;
+            if (!_authenticated) return;
+
+            key = key.Replace('.', '_');
 
             try
             {
@@ -282,6 +284,7 @@ namespace Holoi.Library.HoloKitApp
                     int newCount = currentCount + 1;
                     var data = new Dictionary<string, object> { { key, newCount.ToString() } };
                     await CloudSaveService.Instance.Data.ForceSaveAsync(data);
+                    Debug.Log($"[UserAccountManager] Increamented cloud count {key}: {newCount}");
                     PlayerPrefs.SetInt(key, 0);
                 }
                 else
@@ -290,6 +293,7 @@ namespace Holoi.Library.HoloKitApp
                     int newCount = PlayerPrefs.GetInt(key, 0) + 1;
                     var data = new Dictionary<string, object> { { key, newCount.ToString() } };
                     await CloudSaveService.Instance.Data.ForceSaveAsync(data);
+                    Debug.Log($"[UserAccountManager] Initialized cloud count {key}: {newCount}");
                     PlayerPrefs.SetInt(key, 0);
                 }
             }
