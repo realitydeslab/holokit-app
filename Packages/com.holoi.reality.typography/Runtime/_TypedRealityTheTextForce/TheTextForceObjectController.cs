@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Holoi.Reality.Typography
 {
-    public class TheForceObjectController : MonoBehaviour
+    public class TheTextForceObjectController : MonoBehaviour
     {
         Animator _animator;
 

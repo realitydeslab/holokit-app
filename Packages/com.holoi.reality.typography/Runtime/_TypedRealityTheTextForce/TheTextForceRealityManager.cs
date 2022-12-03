@@ -6,7 +6,7 @@ using Holoi.Library.ARUX;
 
 namespace Holoi.Reality.Typography
 {
-    public class TheForceRealityManager : MonoBehaviour
+    public class TheTextForceRealityManager : MonoBehaviour
     {
         public event Action OnCastCubeAction;
 
@@ -28,7 +28,7 @@ namespace Holoi.Reality.Typography
 
         [SerializeField] GameObject _prefabForceObject;
 
-        TheForceCubeController _magicCube;
+        TheTextForceCubeController _magicCube;
 
         int _objectMaxCount = 4;
 
@@ -63,9 +63,9 @@ namespace Holoi.Reality.Typography
 
                     if (Physics.Raycast(ray, out hit, 10.0f))
                     {
-                        if (hit.transform.GetComponent<TheForceCubeController>())
+                        if (hit.transform.GetComponent<TheTextForceCubeController>())
                         {
-                            _magicCube = hit.transform.GetComponent<TheForceCubeController>();
+                            _magicCube = hit.transform.GetComponent<TheTextForceCubeController>();
                             Debug.Log("cast on magic cube.");
                             OnCastCubeAction?.Invoke();
 
@@ -92,7 +92,7 @@ namespace Holoi.Reality.Typography
 
                     if (_handGestureManager.CurrentGesture == HandGestureManager.Gesture.Palm)
                     {
-                        _magicCube.GetComponent<TheForceCubeController>().OnBeShoot(raycastDirection);
+                        _magicCube.GetComponent<TheTextForceCubeController>().OnBeShoot(raycastDirection);
                         _state = State.holdEmpty;
                     }
 

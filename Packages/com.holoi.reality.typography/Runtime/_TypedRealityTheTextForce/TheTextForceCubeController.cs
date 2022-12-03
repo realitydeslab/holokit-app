@@ -5,9 +5,9 @@ using Holoi.Library.ARUX;
 
 namespace Holoi.Reality.Typography
 {
-    public class TheForceCubeController : MonoBehaviour
+    public class TheTextForceCubeController : MonoBehaviour
     {
-        TheForceRealityManager _manager;
+        TheTextForceRealityManager _manager;
 
         [SerializeField] FollowMovementManager _followManager;
 
@@ -19,7 +19,7 @@ namespace Holoi.Reality.Typography
 
         [SerializeField] GameObject _releaseVfxPrefab;
 
-        TheForceObjectController _magicObject;
+        TheTextForceObjectController _magicObject;
 
         Animator _animator;
 
@@ -46,7 +46,7 @@ namespace Holoi.Reality.Typography
 
         private void OnEnable()
         {
-            _manager = FindObjectOfType<TheForceRealityManager>();
+            _manager = FindObjectOfType<TheTextForceRealityManager>();
             _manager.OnCastCubeAction += OnCasted;
             _manager.OnNotCastCubeAction += OnNotCasted;
         }
@@ -77,15 +77,15 @@ namespace Holoi.Reality.Typography
             }
             else
             {
-                if (collision.transform.GetComponent<TheForceObjectController>())
+                if (collision.transform.GetComponent<TheTextForceObjectController>())
                 {
-                    _magicObject = collision.transform.GetComponent<TheForceObjectController>();
+                    _magicObject = collision.transform.GetComponent<TheTextForceObjectController>();
                     OnIntake(_magicObject);
                 }
             }
         }
 
-        void OnIntake(TheForceObjectController forceObject)
+        void OnIntake(TheTextForceObjectController forceObject)
         {
             _isFilled = true;
             _intakeState = IntakeState.filled;
@@ -94,7 +94,7 @@ namespace Holoi.Reality.Typography
             forceObject.BeIntaken();
         }
 
-        void OnRelease(TheForceObjectController forceObject)
+        void OnRelease(TheTextForceObjectController forceObject)
         {
             _isFilled = false;
             GetComponent<Rigidbody>().velocity = Vector3.up * 1;
