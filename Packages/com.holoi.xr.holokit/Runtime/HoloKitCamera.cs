@@ -149,6 +149,7 @@ namespace HoloKit
         {
             if (_renderMode == HoloKitRenderMode.Stereo)
             {
+                // Force screen brightness to be 1 in StAR mode
                 var screenBrightness = HoloKitARSessionControllerAPI.GetScreenBrightness();
                 if (screenBrightness < 1f)
                 {
@@ -157,6 +158,14 @@ namespace HoloKit
                     HoloKitARSessionControllerAPI.SetScreenBrightness(newScreenBrightness);
                     HoloKitARSessionControllerAPI.SetScreenBrightness(1f);
                 }
+
+                if (Screen.orientation != ScreenOrientation.LandscapeLeft)
+                    Screen.orientation = ScreenOrientation.LandscapeLeft;
+            }
+            else
+            {
+                if (Screen.orientation != ScreenOrientation.Portrait)
+                    Screen.orientation = ScreenOrientation.Portrait;
             }
         }
 
@@ -190,8 +199,7 @@ namespace HoloKit
             //Debug.Log($"[HoloKitCamera] RenderMode changed to {_renderMode}");
             if (_renderMode == HoloKitRenderMode.Stereo)
             {
-                Screen.orientation = ScreenOrientation.LandscapeLeft;
-                HoloKitARSessionControllerAPI.SetScreenBrightness(1f);
+                //HoloKitARSessionControllerAPI.SetScreenBrightness(1f);
                 _monoCamera.enabled = false;
                 _arCameraBackground.enabled = false;
                 _leftEyeCamera.gameObject.SetActive(true);
@@ -200,7 +208,6 @@ namespace HoloKit
             }
             else
             {
-                Screen.orientation = ScreenOrientation.Portrait;
                 _monoCamera.enabled = true;
                 _arCameraBackground.enabled = true;
                 _leftEyeCamera.gameObject.SetActive(false);
