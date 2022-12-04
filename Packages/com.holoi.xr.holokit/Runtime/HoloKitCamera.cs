@@ -149,14 +149,17 @@ namespace HoloKit
         {
             if (_renderMode == HoloKitRenderMode.Stereo)
             {
-                // Force screen brightness to be 1 in StAR mode
-                var screenBrightness = HoloKitARSessionControllerAPI.GetScreenBrightness();
-                if (screenBrightness < 1f)
+                if (HoloKitUtils.IsRuntime)
                 {
-                    var newScreenBrightness = screenBrightness + ScreenBrightnessIncreaseStep;
-                    if (newScreenBrightness > 1f) newScreenBrightness = 1f;
-                    HoloKitARSessionControllerAPI.SetScreenBrightness(newScreenBrightness);
-                    HoloKitARSessionControllerAPI.SetScreenBrightness(1f);
+                    // Force screen brightness to be 1 in StAR mode
+                    var screenBrightness = HoloKitARSessionControllerAPI.GetScreenBrightness();
+                    if (screenBrightness < 1f)
+                    {
+                        var newScreenBrightness = screenBrightness + ScreenBrightnessIncreaseStep;
+                        if (newScreenBrightness > 1f) newScreenBrightness = 1f;
+                        HoloKitARSessionControllerAPI.SetScreenBrightness(newScreenBrightness);
+                        HoloKitARSessionControllerAPI.SetScreenBrightness(1f);
+                    }
                 }
 
                 if (Screen.orientation != ScreenOrientation.LandscapeLeft)
