@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using Holoi.Library.ARUX;
 
@@ -5,17 +6,22 @@ namespace Holoi.Reality.Typography
 {
     public class MagicCube : MonoBehaviour
     {
+        public Transform MagicObject;
+
         [SerializeField] Player _player;
         [SerializeField] FollowMovementManager _FMM;
-        public Transform MagicObject;
         [SerializeField] MeshRenderer _outlineMeshRenderer;
-        [SerializeField] float _attractDist = 1f;
+        //[SerializeField] float _attractDist = 1f;
 
         [SerializeField] GameObject _burstVfx;
         [SerializeField] GameObject _releaseVfx;
+
+        [SerializeField] AudioSource _castAudio;
+        [SerializeField] AudioSource _clickAudio;
+
         Material _mat;
         Animator _animator;
-        bool _isTriggered = false;
+        //bool _isTriggered = false;
 
         [HideInInspector] public enum IntakeState
         {
@@ -38,14 +44,14 @@ namespace Holoi.Reality.Typography
         private void OnEnable()
         {
             _player = FindObjectOfType<Player>();
-            _player.OnCastSomthingAction += BeCasted;
-            _player.OnCastNothingAction += NotBeCasted;
+            _player.OnCastSomthingAction += OnCasted;
+            _player.OnCastNothingAction += OnNotCasted;
         }
 
         private void OnDisable()
         {
-            _player.OnCastSomthingAction -= BeCasted;
-            _player.OnCastNothingAction -= NotBeCasted;
+            _player.OnCastSomthingAction -= OnCasted;
+            _player.OnCastNothingAction -= OnNotCasted;
         }
 
         private void Start()
@@ -72,32 +78,14 @@ namespace Holoi.Reality.Typography
                             case IntakeState.idle:
                                 break;
                             case IntakeState.needFilled:
-                                var dist = Vector3.Distance(MagicObject.position, transform.position);
-                                if (dist < _attractDist)
-                                {
-                                    if (!_isTriggered)
-                                    {
-                                        _isTriggered = true;
-                                        IntakeObject();
-                                    }
-                                }
-                                else
-                                {
-                                    _isTriggered = false;
-                                }
                                 break;
                             case IntakeState.filled:
                                 break;
                         }
-
                         break;
                     case MovementState.Attracted:
                         break;
                 }
-            }
-            else
-            {
-
             }
         }
 
@@ -106,25 +94,31 @@ namespace Holoi.Reality.Typography
             switch (_intakeState)
             {
                 case IntakeState.needFilled:
-                    break;
-                case IntakeState.filled:
+                    if(collision.transform.gameObject.layer != 7)
+                    OnIntake();
                     break;
                 case IntakeState.needRelease:
-                    ReleaseObject();
+                    OnRelease();
                     break;
             }
         }
 
 
-        public void IntakeObject()
+        public void OnIntake()
         {
             _animator.SetTrigger("Intake");
-            _intakeState = IntakeState.filled;
-
             MagicObject.GetComponent<MagicObject>().BeIntaken();
+            StartCoroutine(WaitAndSetStateToFilled());
+
         }
 
-        public void ReleaseObject()
+        IEnumerator WaitAndSetStateToFilled()
+        {
+            yield return new WaitForSeconds(1f);
+            _intakeState = IntakeState.filled;
+        }
+
+        public void OnRelease()
         {
             GetComponent<Rigidbody>().velocity = Vector3.up * 1;
             _intakeState = IntakeState.idle;
@@ -137,45 +131,48 @@ namespace Holoi.Reality.Typography
             MagicObject.GetComponent<MagicObject>().BeReleased();
         }
 
-        public void BeAttracted()
+        public void OnAttracted()
         {
             if(_intakeState == IntakeState.needFilled)
             {
                 _intakeState = IntakeState.idle; // hand gesture is not 100% accurate so we set idle again to decrease the times trigger un-expect event
             }
-            
-            SetAttractedState();
+            if (_intakeState == IntakeState.needRelease)
+            {
+                _intakeState = IntakeState.filled;
+            }
+
+            SetStateToAttracted();
+
+            _clickAudio.Play();
         }
 
 
-        public void BeShoot(Vector3 direcion)
+        public void OnShooted(Vector3 direcion)
         {
             if(_intakeState == IntakeState.idle)
             {
-                Debug.Log("state to needFilled");
-
                 _intakeState = IntakeState.needFilled;
             }
             
             if (_intakeState == IntakeState.filled)
             {
-                Debug.Log("state to needRelease");
                 _intakeState = IntakeState.needRelease;
             }
 
-            SetFreeState();
+            SetStateToIdle();
             transform.GetComponent<Rigidbody>().velocity = direcion * 3f;
         }
 
-        public void SetAttractedState()
+        public void SetStateToAttracted()
         {
-            NotBeCasted();
+            OnNotCasted();
             transform.GetComponent<Rigidbody>().isKinematic = false;
             transform.GetComponent<Rigidbody>().useGravity = false;
             _movemenrtState = MovementState.Attracted;
             _FMM.enabled = true;
         }
-        public void SetFreeState()
+        public void SetStateToIdle()
         {
             transform.GetComponent<Rigidbody>().isKinematic = false;
             transform.GetComponent<Rigidbody>().useGravity = true;
@@ -183,24 +180,25 @@ namespace Holoi.Reality.Typography
             _FMM.enabled = false;
         }
 
-        public void BeCasted()
+        public void OnCasted()
         {
             _outlineMeshRenderer.material.SetFloat("_Alpha_Multipier", 1);
+            _castAudio.Play();
         }
 
-        public void NotBeCasted()
+        public void OnNotCasted()
         {
             _outlineMeshRenderer.material.SetFloat("_Alpha_Multipier", 0);
         }
 
-        public void IntakeVfxBrust()
+        public void OnIntakeBurst()
         {
             var go = Instantiate(_burstVfx);
             go.transform.position = transform.position;
             go.transform.rotation = transform.rotation;
         }
 
-        public void ReleaseVfxBrust()
+        public void OnReleaseBurst()
         {
             var go = Instantiate(_releaseVfx);
             go.transform.position = transform.position;

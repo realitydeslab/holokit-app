@@ -14,15 +14,23 @@ namespace Holoi.Reality.Typography
 
         public event Action OnCastSomthingAction;
         public event Action OnCastNothingAction;
-        public event Action<State> OnSwitchState;
+        public event Action<PlayerState> OnSwitchState;
 
-        public enum State
+        public enum PlayerState
         {
-            nothing,
-            something
+            empty,
+            filled
         }
 
-         public State _state = State.nothing;
+        enum castState
+        {
+            nothing,
+            magicCube
+        }
+
+        castState _castState = castState.nothing;
+
+        public PlayerState _mcState = PlayerState.empty;
 
         private void OnEnable()
         {
@@ -43,57 +51,59 @@ namespace Holoi.Reality.Typography
             transform.LookAt(transform.position + dir);
             Debug.DrawRay(_centerEye.position, dir * 10f);
 
-            switch (_state)
+            switch (_mcState)
             {
-                case State.nothing:
+                case PlayerState.empty:
                     int layerMaskAttractable = LayerMask.GetMask("TheForceLayer");
                     Ray ray = new Ray(_centerEye.position, dir);
                     RaycastHit hit;
 
-                    if (_HGM.CurrentGesture == HandGestureManager.Gesture.Palm)
-                    {
-
-                    }
                     if (Physics.Raycast(ray, out hit, 10.0f, layerMaskAttractable))
                     {
-                        //Debug.Log("cast on object now");
-                        // cast on object now
-                        OnCastSomthingAction?.Invoke();
+                        // cast on target object now
+                        if(_castState == castState.nothing)
+                        {
+                            OnCastSomthingAction?.Invoke();
+                            _castState = castState.magicCube;
+                        }
+                        
 
                         if (_HGM.CurrentGesture == HandGestureManager.Gesture.Fist)
                         {
                             _magicCube = hit.transform;
-                            _magicCube.GetComponent<MagicCube>().BeAttracted();
-                            _state = State.something;
+                            _magicCube.GetComponent<MagicCube>().OnAttracted();
+                            _mcState = PlayerState.filled;
                         }
                     }
                     else
                     {
-                        //Debug.Log("cast nothing");
-
-                        OnCastNothingAction?.Invoke();
+                        if (_castState == castState.magicCube)
+                        {
+                            OnCastNothingAction?.Invoke();
+                            _castState = castState.nothing;
+                        }
                     }
                     break;
-                case State.something:
+                case PlayerState.filled:
                     if (_HGM.CurrentGesture == HandGestureManager.Gesture.Palm)
                     {
-                        _magicCube.GetComponent<MagicCube>().BeShoot(dir);
-                        _state = State.nothing;
+                        _magicCube.GetComponent<MagicCube>().OnShooted(dir);
+                        _mcState = PlayerState.empty;
                     }
                     break;
             }
         }
 
 
-        void SetIndicator(State state)
+        void SetIndicator(PlayerState state)
         {
             switch (state)
             {
-                case State.nothing:
+                case PlayerState.empty:
                     _indicator.gameObject.SetActive(false);
 
                     break;
-                case State.something:
+                case PlayerState.filled:
                     _indicator.gameObject.SetActive(true);
 
                     break;
