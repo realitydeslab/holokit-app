@@ -46,6 +46,11 @@ namespace Holoi.Reality.Typography
         private void OnTurnOffMeshing()
         {
             _arMeshManager.enabled = false;
+            // Destroy all mesh prefabs
+            foreach (var mesh in _arMeshManager.meshes)
+            {
+                Destroy(mesh.gameObject);
+            }
         }
     }
 }
