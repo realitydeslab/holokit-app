@@ -73,18 +73,26 @@ namespace Holoi.Library.MOFABase
             _canvas = GetComponent<Canvas>();
 
             MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
-            HoloKitAppRecorder.OnRecordingStarted += OnRecordingStarted;
-            HoloKitAppRecorder.OnRecordingStopped += OnRecordingStopped;
-            HoloKitAppUIPanel_MonoAR_ShareQRCode.OnStartedSharingQRCode += OnRecordingStarted;
-            HoloKitAppUIPanel_MonoAR_ShareQRCode.OnStoppedSharingQRCode += OnRecordingStopped;
             HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
             LifeShield.OnSpawned += OnLifeShieldSpawned;
+            HoloKitAppRecorder.OnRecordingStarted += OnDisappear;
+            HoloKitAppRecorder.OnRecordingStopped += OnReappear;
+            HoloKitAppUIPanel_MonoAR_ShareQRCode.OnStartedSharingQRCode += OnDisappear;
+            HoloKitAppUIPanel_MonoAR_ShareQRCode.OnStoppedSharingQRCode += OnReappear;
+            HoloKitAppMultiplayerManager.OnStartedSyncingTimestamp += OnDisappear;
+            HoloKitAppMultiplayerManager.OnAlignmentMarkerChecked += OnReappear;
+            HoloKitAppUIPanel_MonoAR.OnSpectatorViewButtonPressed += OnDisappear;
 
             Scores.gameObject.SetActive(false);
             Time.gameObject.SetActive(false);
             Reticle.gameObject.SetActive(false);
             Status.gameObject.SetActive(false);
             RedScreen.gameObject.SetActive(false);
+
+            if (!HoloKitApp.HoloKitApp.Instance.IsHost)
+            {
+                OnDisappear();
+            }
         }
 
         private void Update()
@@ -101,10 +109,15 @@ namespace Holoi.Library.MOFABase
         private void OnDestroy()
         {
             MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
-            HoloKitAppRecorder.OnRecordingStarted -= OnRecordingStarted;
-            HoloKitAppRecorder.OnRecordingStopped -= OnRecordingStopped;
             HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
             LifeShield.OnSpawned -= OnLifeShieldSpawned;
+            HoloKitAppRecorder.OnRecordingStarted -= OnDisappear;
+            HoloKitAppRecorder.OnRecordingStopped -= OnReappear;
+            HoloKitAppUIPanel_MonoAR_ShareQRCode.OnStartedSharingQRCode -= OnDisappear;
+            HoloKitAppUIPanel_MonoAR_ShareQRCode.OnStoppedSharingQRCode -= OnReappear;
+            HoloKitAppMultiplayerManager.OnStartedSyncingTimestamp -= OnDisappear;
+            HoloKitAppMultiplayerManager.OnAlignmentMarkerChecked -= OnReappear;
+            HoloKitAppUIPanel_MonoAR.OnSpectatorViewButtonPressed -= OnDisappear;
         }
 
         private void OnDeviceOrientationChanged()
@@ -195,12 +208,12 @@ namespace Holoi.Library.MOFABase
             Status.gameObject.SetActive(false);
         }
 
-        private void OnRecordingStarted()
+        private void OnDisappear()
         {
             Rotator.anchoredPosition = new Vector2(0f, 3000f);
         }
 
-        private void OnRecordingStopped()
+        private void OnReappear()
         {
             Rotator.anchoredPosition = Vector2.zero;
         }
