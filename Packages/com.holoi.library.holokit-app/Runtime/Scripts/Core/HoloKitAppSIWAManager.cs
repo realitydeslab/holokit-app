@@ -171,7 +171,7 @@ namespace Holoi.Library.HoloKitApp
                 var fullName = appleIdCredential.FullName;
                 if (fullName != null)
                 {
-                    string displayName = $"{GetRidOfWhiteSpaces(fullName.GivenName)} {GetRidOfWhiteSpaces(fullName.FamilyName)}";
+                    string displayName = fullName.ToLocalizedString();
                     PlayerPrefs.SetString(AppleUserFullNameKey, displayName);
                     Debug.Log($"[SIWA] DisplayName: {displayName}");
                 }
@@ -196,13 +196,6 @@ namespace Holoi.Library.HoloKitApp
 
                 OnSignedInWithApple?.Invoke(identityToken);
             }
-        }
-
-        public static string GetRidOfWhiteSpaces(string str)
-        {
-            return new string(str.ToCharArray()
-                .Where(c => !char.IsWhiteSpace(c))
-                .ToArray());
         }
     }
 }
