@@ -81,7 +81,8 @@ namespace Holoi.Library.MOFABase
             HoloKitAppUIPanel_MonoAR_ShareQRCode.OnStoppedSharingQRCode += OnReappear;
             HoloKitAppMultiplayerManager.OnStartedSyncingTimestamp += OnDisappear;
             HoloKitAppMultiplayerManager.OnAlignmentMarkerChecked += OnReappear;
-            HoloKitAppUIPanel_MonoAR.OnSpectatorViewButtonPressed += OnDisappear;
+            HoloKitAppUIPanel_MonoAR_RescanQRCode.OnRescanQRCode += OnDisappear;
+            HoloKitAppUIPanel_MonoAR_RescanQRCode.OnCancelRescanQRCode += OnReappear;
 
             Scores.gameObject.SetActive(false);
             Time.gameObject.SetActive(false);
@@ -117,7 +118,8 @@ namespace Holoi.Library.MOFABase
             HoloKitAppUIPanel_MonoAR_ShareQRCode.OnStoppedSharingQRCode -= OnReappear;
             HoloKitAppMultiplayerManager.OnStartedSyncingTimestamp -= OnDisappear;
             HoloKitAppMultiplayerManager.OnAlignmentMarkerChecked -= OnReappear;
-            HoloKitAppUIPanel_MonoAR.OnSpectatorViewButtonPressed -= OnDisappear;
+            HoloKitAppUIPanel_MonoAR_RescanQRCode.OnRescanQRCode -= OnDisappear;
+            HoloKitAppUIPanel_MonoAR_RescanQRCode.OnCancelRescanQRCode -= OnReappear;
         }
 
         private void OnDeviceOrientationChanged()

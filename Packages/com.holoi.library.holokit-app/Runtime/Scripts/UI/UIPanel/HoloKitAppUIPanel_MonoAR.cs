@@ -21,8 +21,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private HoloKitAppUIComponent_MonoAR_RecordButton _recordButton;
 
-        public static event Action OnSpectatorViewButtonPressed;
-
         private void Start()
         {
             // If local device is spectator
@@ -50,7 +48,6 @@ namespace Holoi.Library.HoloKitApp.UI
             {
                 HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_RescanQRCode");
             }
-            OnSpectatorViewButtonPressed?.Invoke();
         }
 
         public void OnStarButtonPressed()

@@ -1,3 +1,5 @@
+using System;
+
 namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIPanel_MonoAR_RescanQRCode : HoloKitAppUIPanel
@@ -6,9 +8,19 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
+        public static event Action OnRescanQRCode;
+
+        public static event Action OnCancelRescanQRCode;
+
+        private void Start()
+        {
+            OnRescanQRCode?.Invoke();
+        }
+
         public void OnExitButtonPressed()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+            OnCancelRescanQRCode?.Invoke();
         }
 
         public void OnRescanButtonPressed()
