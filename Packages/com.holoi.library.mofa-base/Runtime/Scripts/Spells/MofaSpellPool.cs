@@ -6,8 +6,10 @@ namespace Holoi.Library.MOFABase
 {
     public class MofaSpellPool : NetworkBehaviour
     {
+        [Tooltip("The number of basic spells pre-spawned for a player.")]
         [SerializeField] private int _basicSpellPrewarmCount = 6;
 
+        [Tooltip("The number of secondary spells pre-spawned for a player.")]
         [SerializeField] private int _secondarySpellPrewarmCount = 2;
 
         private readonly Dictionary<GameObject, Queue<NetworkObject>> _pooledSpells = new();

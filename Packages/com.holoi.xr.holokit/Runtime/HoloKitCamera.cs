@@ -55,7 +55,18 @@ namespace HoloKit
 
         [SerializeField] private float _farClipPlane = 50f;
 
+        /// <summary>
+        /// This value can only be set before the first ARSession frame.
+        /// </summary>
         [SerializeField] private VideoEnhancementMode _videoEnhancementMode = VideoEnhancementMode.None;
+
+        /// <summary>
+        /// If this value is set to true, the screen orientation will be set automatically
+        /// based on the current render mode. The screen orientation will be set to
+        /// Portrait if the current render mode is Mono. The screen orientation will be
+        /// set to LandscapeLeft if the current render mode is Stereo.
+        /// </summary>
+        [SerializeField] private bool _forceScreenOrientation = true;
 
         public Transform CenterEyePose
         {
@@ -98,6 +109,15 @@ namespace HoloKit
         public float AlignmentMarkerOffset => _alignmentMarkerOffset;
 
         public float ARSessionStartTime => _arSessionStartTime;
+
+        public bool ForceScreenOrientation
+        {
+            get => _forceScreenOrientation;
+            set
+            {
+                _forceScreenOrientation = value;
+            }
+        }
 
         private HoloKitRenderMode _renderMode = HoloKitRenderMode.Mono;
 
@@ -162,13 +182,19 @@ namespace HoloKit
                     }
                 }
 
-                if (Screen.orientation != ScreenOrientation.LandscapeLeft)
-                    Screen.orientation = ScreenOrientation.LandscapeLeft;
+                if (_forceScreenOrientation)
+                {
+                    if (Screen.orientation != ScreenOrientation.LandscapeLeft)
+                        Screen.orientation = ScreenOrientation.LandscapeLeft;
+                }
             }
             else
             {
-                if (Screen.orientation != ScreenOrientation.Portrait)
-                    Screen.orientation = ScreenOrientation.Portrait;
+                if (_forceScreenOrientation)
+                {
+                    if (Screen.orientation != ScreenOrientation.Portrait)
+                        Screen.orientation = ScreenOrientation.Portrait;
+                }
             }
         }
 
