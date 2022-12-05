@@ -9,7 +9,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private VisualEffect _explosionVfx;
 
-        [SerializeField] private GameObject _pointLight;
+        //[SerializeField] private GameObject _pointLight;
 
         private const string TagName = "Plane";
 
@@ -21,7 +21,7 @@ namespace Holoi.Reality.MOFATheHunting
                 rigidbody.useGravity = false;
                 rigidbody.velocity = Vector3.zero;
                 _fireBall.SetBool("IsFireBallAlive", false);
-                _pointLight.SetActive(false);
+                //_pointLight.SetActive(false);
                 _explosionVfx.SendEvent("OnExplode");
                 Destroy(gameObject, 2f);
             }

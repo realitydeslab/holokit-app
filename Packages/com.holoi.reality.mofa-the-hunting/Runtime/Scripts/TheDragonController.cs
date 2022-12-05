@@ -76,7 +76,7 @@ namespace Holoi.Reality.MOFATheHunting
                     var mofaBaseRealityManager = (MofaBaseRealityManager)HoloKitApp.Instance.RealityManager;
                     if (mofaBaseRealityManager.Players.ContainsKey(1))
                     {
-                        _aim.AimTarget = mofaBaseRealityManager.Players[1].transform;
+                        _aim.AimTarget = mofaBaseRealityManager.Players[1].LifeShield.transform;
                     }
                     else
                     {
@@ -257,7 +257,7 @@ namespace Holoi.Reality.MOFATheHunting
         }
 
         #region Network Callbacks
-        [ClientRpc]
+        [ClientRpc(Delivery = RpcDelivery.Unreliable)]
         public void Movement_UseCameraInputClientRpc(bool value)
         {
             if (!IsOwner)
@@ -266,7 +266,7 @@ namespace Holoi.Reality.MOFATheHunting
             }
         }
 
-        [ClientRpc]
+        [ClientRpc(Delivery = RpcDelivery.Unreliable)]
         public void Movement_SetUpDownAxisClientRpc(float value)
         {
             if (!IsOwner)
@@ -275,7 +275,7 @@ namespace Holoi.Reality.MOFATheHunting
             }
         }
 
-        [ClientRpc]
+        [ClientRpc(Delivery = RpcDelivery.Unreliable)]
         public void Movement_SetInputAxisClientRpc(Vector2 value)
         {
             if (!IsOwner)

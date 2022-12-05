@@ -57,11 +57,6 @@ namespace Holoi.Reality.MOFATheHunting
                 Destroy(_arPlacementIndicator.gameObject);
                 Destroy(_arPlacementIndicatorVisual);
             }
-
-            if (HoloKitApp.Instance.IsSpectator)
-            {
-                HoloKitApp.Instance.ARSessionManager.SetHumanOcclusionEnabled(true);
-            }
         }
 
         public override void OnDestroy()
