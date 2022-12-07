@@ -48,10 +48,10 @@ namespace Holoi.Library.HoloKitApp
         [SerializeField] private UniversalRenderPipelineAsset _urpAssetForUI;
 
         [Header("Debug")]
-        // Set this to true to load TestRealityList at the beginning
-        [SerializeField] private bool _test;
+        [Tooltip("Set this to true to enable Test Mode. Under test mode, the TestRealityList will be loaded")]
+        [SerializeField] private bool _testMode;
 
-        [Tooltip("Uncheck this when deploying the app to App Store")]
+        [Tooltip("Set this to true to disable all Unity logs")]
         [SerializeField] private bool _logEnabled = true;
 
         [Tooltip("Set this value to true to restrict the fps to 60 in editor mode")]
@@ -87,7 +87,7 @@ namespace Holoi.Library.HoloKitApp
 
         public HoloKitAppPlayerType LocalPlayerType => _localPlayerType;
 
-        public bool Test => _test;
+        public bool Test => _testMode;
 
         public HoloKitAppUserAccountManager UserAccountManager => _userAccountManager;
 
@@ -137,7 +137,7 @@ namespace Holoi.Library.HoloKitApp
             if (!IsRealityScene(SceneManager.GetActiveScene()))
             {
                 // Push initial UI panel
-                if (_test)
+                if (_testMode)
                 {
                     // Load test page
                     UIPanelManager.PushUIPanel("TestRealityList");
