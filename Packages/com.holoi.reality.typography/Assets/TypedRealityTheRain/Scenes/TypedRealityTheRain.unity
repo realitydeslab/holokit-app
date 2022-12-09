@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1.76
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0, g: 0, b: 0, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: ac5b9190137e841e083fcf40b4bf3bb1, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43713397, g: 0.48494184, b: 0.5658115, a: 1}
+  m_IndirectSpecularColor: {r: 0.4897439, g: 0.48810166, b: 0.4889326, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1012,8 +1012,9 @@ GameObject:
   - component: {fileID: 1542238080}
   - component: {fileID: 1542238079}
   - component: {fileID: 1542238078}
+  - component: {fileID: 1542238081}
   m_Layer: 0
-  m_Name: Particle On Mesh
+  m_Name: The Rain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1049,7 +1050,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _followTarget: {fileID: 1589958072}
   _movementType: 1
-  _rotateType: 2
+  _rotateType: 0
   _axisWeight: {x: 1, y: 1, z: 1}
   _worldSpace: 1
   _offset: {x: 0, y: 1.5, z: 0}
@@ -1137,22 +1138,31 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 24587
+      - m_Value: 49152
         m_Name: Index Count
         m_Overridden: 1
-      - m_Value: 0.03
+      - m_Value: 0.04
         m_Name: Particle Size
         m_Overridden: 1
       - m_Value: 12
         m_Name: Index Divider
         m_Overridden: 1
-      - m_Value: 0.15
+      - m_Value: 0.2
         m_Name: Spawn Rate
         m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 0, y: -1, z: 0}
+        m_Name: worldGravity
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0, z: 1}
+        m_Name: worldForward
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0, z: 1}
+        m_Name: CameraPosition
+        m_Overridden: 1
     m_Vector4f:
       m_Array: []
     m_Uint:
@@ -1175,6 +1185,19 @@ VisualEffect:
         m_Overridden: 1
     m_Bool:
       m_Array: []
+--- !u!114 &1542238081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1542238075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd12b33d2d48d4c238a89130af0e844d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rainVfx: {fileID: 1542238080}
 --- !u!1 &1589958068
 GameObject:
   m_ObjectHideFlags: 0
