@@ -51,6 +51,10 @@ namespace Holoi.Library.ARUX
                     {
                         hoverableObject.OnLoaded(Time.fixedDeltaTime);
                     }
+                    else
+                    {
+                        hoverableObject.OnUnloaded(Time.fixedDeltaTime);
+                    }
                 }
                 else
                 {

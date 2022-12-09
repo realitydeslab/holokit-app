@@ -10,6 +10,7 @@ using AppleAuth.Native;
 
 namespace Holoi.Library.HoloKitApp
 {
+    [DisallowMultipleComponent]
     public class HoloKitAppSIWAManager : MonoBehaviour
     {
         private IAppleAuthManager _appleAuthManager;

@@ -10,6 +10,10 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private GameObject _hostButton;
 
+        [SerializeField] private GameObject _hostPuppeteerButton;
+
+        [SerializeField] private GameObject _hostPlayerButton;
+
         [SerializeField] private GameObject _playerButton;
 
         [SerializeField] private GameObject _puppeteerButton;
@@ -20,6 +24,27 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
+            var currentReality = HoloKitApp.Instance.CurrentReality;
+            if (currentReality.IsHostPuppeteerSupported())
+            {
+                _hostButton.SetActive(false);
+                _hostPuppeteerButton.SetActive(true);
+            }
+            else
+            {
+                _hostPuppeteerButton.SetActive(false);
+            }
+
+            if (currentReality.IsHostMultiplayerSupported())
+            {
+                _hostButton.SetActive(false);
+                _hostPlayerButton.SetActive(true);
+            }
+            else
+            {
+                _hostPlayerButton.SetActive(false);
+            }
+
             if (!HoloKitApp.Instance.CurrentReality.IsMultiplayerSupported())
             {
                 _playerButton.SetActive(false);

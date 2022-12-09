@@ -22,6 +22,7 @@ namespace Holoi.Library.HoloKitApp
         Puppeteer = 3
     }
 
+    [DisallowMultipleComponent]
     public class HoloKitApp : MonoBehaviour
     {
         public static HoloKitApp Instance { get { return _instance; } }

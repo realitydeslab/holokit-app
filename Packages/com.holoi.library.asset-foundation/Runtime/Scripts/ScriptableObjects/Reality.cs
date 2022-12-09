@@ -112,6 +112,18 @@ namespace Holoi.AssetFoundation
             return false;
         }
 
+        public bool IsHostMultiplayerSupported()
+        {
+            foreach (var realityTag in RealityTags)
+            {
+                if (realityTag.BundleId.Equals("com.holoi.asset-foundation.host-multiplayer"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool IsSpectatorViewSupported()
         {
             foreach (var realityTag in RealityTags)
@@ -129,6 +141,18 @@ namespace Holoi.AssetFoundation
             foreach (var realityTag in RealityTags)
             {
                 if (realityTag.BundleId.Equals("com.holoi.asset-foundation.puppeteer"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsHostPuppeteerSupported()
+        {
+            foreach (var realityTag in RealityTags)
+            {
+                if (realityTag.BundleId.Equals("com.holoi.asset-foundation.host-puppeteer"))
                 {
                     return true;
                 }

@@ -9,6 +9,7 @@ using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
 {
+    [DisallowMultipleComponent]
     public class HoloKitAppRecorder : MonoBehaviour
     {
         [Header(@"Recording")]

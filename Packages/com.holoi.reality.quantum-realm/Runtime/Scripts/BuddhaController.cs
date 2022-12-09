@@ -22,10 +22,13 @@ namespace Holoi.Reality.QuantumRealm
 
         private bool _vibrationStarted;
 
+        private QuantumRealmRealityManager _realityManager;
+
         private const float FadeAwayDelay = 1f;
 
         private void Start()
         {
+            _realityManager = HoloKitApp.Instance.RealityManager as QuantumRealmRealityManager;
             _hoverableObject = GetComponent<HoverableObject>();
             if (((QuantumRealmRealityManager)HoloKitApp.Instance.RealityManager).CoreHapticsManager.IsValid)
             {
@@ -51,7 +54,7 @@ namespace Holoi.Reality.QuantumRealm
             if (_hoverableObject.IsLoading)
             {
                 _vfx.SetVector3("Hand Position",
-                ((QuantumRealmRealityManager)HoloKitApp.Instance.RealityManager).HostHandPose.transform.position);
+                _realityManager.HostHandPoint.position);
                 _vfx.SetFloat("Process", _hoverableObject.CurrentLoadPercentage);
             }
         }

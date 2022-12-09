@@ -6,6 +6,7 @@ using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
 {
+    [DisallowMultipleComponent]
     public class HoloKitAppARSessionManager : MonoBehaviour
     {
         [Header("Image Tracking")]

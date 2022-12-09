@@ -90,18 +90,19 @@ namespace HoloKit
             if (_instance != null && _instance != this)
             {
                 Destroy(gameObject);
+                return;
             }
             else
             {
                 _instance = this;
             }
+            HoloKitHandTrackingControllerAPI.SetHandTrackingActive(_isActive);
         }
 
         private void Start()
         {
             HoloKitHandTrackingControllerAPI.OnHandPoseUpdated += OnHandPoseUpdated;
             HoloKitHandTrackingControllerAPI.RegisterHandTrackingControllerDelegates();
-            HoloKitHandTrackingControllerAPI.SetHandTrackingActive(_isActive);
             SetupHandJointColors();
             SetHandJointsVisible(_isVisible);
 

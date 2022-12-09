@@ -1,8 +1,10 @@
 using System;
+using UnityEngine;
 using Unity.Netcode;
 
 namespace Holoi.Library.HoloKitApp
 {
+    [DisallowMultipleComponent]
     public partial class HoloKitAppMultiplayerManager : NetworkBehaviour
     {
         public static event Action OnLocalClientConnected;
