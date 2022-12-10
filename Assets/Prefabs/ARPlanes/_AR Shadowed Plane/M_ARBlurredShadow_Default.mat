@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AR_Shader Graphs_TransparentShadowReceiver
-  m_Shader: {fileID: -6465566751694194690, guid: 713bbd48932df364da163e145b086ae9, type: 3}
+  m_Name: M_ARBlurredShadow_Default
+  m_Shader: {fileID: -6465566751694194690, guid: a16d371ba76d2bd4aa4d5d298d580569, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 2
@@ -34,17 +34,21 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Vector1_50A95A7B: 0
+    - BlurRadius: 0.1
+    - FadeTightness: 80
+    - MultiplyStrength: 0.2
+    - _BlurRadius: 0.01
+    - _FadeTightness: 90
     - _IsSTAR: 0
+    - _MultiplyStrength: 1
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Vector1: 0
     m_Colors:
-    - _Color: {r: 0.04, g: 0.04, b: 0.04, a: 0}
+    - _Color: {r: 0.03, g: 0.03, b: 0.03, a: 0}
     - _Color_AR: {r: 0.04, g: 0.04, b: 0.04, a: 0}
-    - _Color_STAR: {r: 0, g: 0.027290702, b: 0.5, a: 0}
+    - _Color_STAR: {r: 0.18857135, g: 0, b: 0.66, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &1799078695435299482
+--- !u!114 &5446842832447174929
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
