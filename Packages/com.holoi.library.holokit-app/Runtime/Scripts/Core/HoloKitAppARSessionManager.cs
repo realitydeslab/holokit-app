@@ -38,7 +38,7 @@ namespace Holoi.Library.HoloKitApp
         private void Start()
         {
             var xrOrigin = HoloKitCamera.Instance.GetComponentInParent<XROrigin>();
-            // Image Tracking
+            // Setup Image Tracking for space anchor sharing
             if (xrOrigin.TryGetComponent(out _arTrackedImageManager))
             {
                 // Host does not need image tracker
@@ -60,6 +60,14 @@ namespace Holoi.Library.HoloKitApp
                     SetupARTrackedImageManager();
                 }
             }
+
+            // Open human occlusion on spectator by default
+            if (HoloKitApp.Instance.IsSpectator)
+            {
+                SetHumanOcclusionEnabled(true);
+            }
+
+            // Register callbacks
             HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
         }
 

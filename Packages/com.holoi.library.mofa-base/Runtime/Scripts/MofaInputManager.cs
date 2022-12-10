@@ -228,7 +228,8 @@ namespace Holoi.Library.MOFABase
             {
                 _mofaBaseRealityManager.SpawnSpellServerRpc(_basicSpell.Id,
                     HoloKitCamera.Instance.CenterEyePose.position,
-                    HoloKitCamera.Instance.CenterEyePose.rotation,
+                    //HoloKitCamera.Instance.CenterEyePose.rotation,
+                    GetCameraGravitationalRotation(),
                     NetworkManager.Singleton.LocalClientId);
                 _basicSpellCharge -= _basicSpell.ChargeTime;
             }
@@ -255,6 +256,12 @@ namespace Holoi.Library.MOFABase
                 NetworkManager.Singleton.LocalClientId);
             _secondarySpellCharge -= _secondarySpell.ChargeTime;
             _secondarySpellUseCount++;
+        }
+
+        private Quaternion GetCameraGravitationalRotation()
+        {
+            Vector3 cameraRotationEuler = HoloKitCamera.Instance.CenterEyePose.rotation.eulerAngles;
+            return Quaternion.Euler(cameraRotationEuler.x, cameraRotationEuler.y, 0f);
         }
 
         private void OnLifeShieldDestroyed(ulong _, ulong ownerClientId)

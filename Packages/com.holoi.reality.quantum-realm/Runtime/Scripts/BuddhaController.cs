@@ -47,14 +47,16 @@ namespace Holoi.Reality.QuantumRealm
         private void OnDisable()
         {
             StopHapticsPlayer();
+            // Reset buddha's VFX
+            _vfx.SetVector3("Hand Position", new Vector3(0f, 99f, 0f));
+            _vfx.SetFloat("Process", 1f);
         }
 
         private void Update()
         {
             if (_hoverableObject.IsLoading)
             {
-                _vfx.SetVector3("Hand Position",
-                _realityManager.HostHandPoint.position);
+                _vfx.SetVector3("Hand Position", _realityManager.HostHandPoint.position);
                 _vfx.SetFloat("Process", _hoverableObject.CurrentLoadPercentage);
             }
         }

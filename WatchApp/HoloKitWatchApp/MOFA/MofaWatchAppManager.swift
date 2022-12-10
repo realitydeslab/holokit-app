@@ -147,8 +147,10 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     }
     
     public func startCoreMotion() {
+        // Check if we can start core motion now
         if (motionManager.isDeviceMotionAvailable && !motionManager.isDeviceMotionActive) {
             motionManager.deviceMotionUpdateInterval = self.deviceMotionUpdateInterval
+            // Check handedness
             if (self.isRightHanded) {
                 if (WKInterfaceDevice.current().crownOrientation == .right) {
                     self.groundVector = simd_double3(-1, 0, 0)
@@ -168,12 +170,14 @@ class MofaWatchAppManager: NSObject, ObservableObject {
                     return
                 }
                 
+                
                 let currentTime = ProcessInfo.processInfo.systemUptime
-                if (currentTime - self.lastStartRoundTime > 120) {
-                    DispatchQueue.main.async {
-                        self.stopRound()
-                    }
-                }
+                // If we should stop the round automatically now
+//                if (currentTime - self.lastStartRoundTime > 120) {
+//                    DispatchQueue.main.async {
+//                        self.stopRound()
+//                    }
+//                }
                 
                 guard let acceleration: CMAcceleration = data?.userAcceleration else {
                     return
