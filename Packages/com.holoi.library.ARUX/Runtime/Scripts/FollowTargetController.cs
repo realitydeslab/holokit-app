@@ -14,7 +14,8 @@ namespace Holoi.Library.ARUX
         None = 0,
         IdenticalToTarget = 1,
         FacingTarget = 2,
-        PerpendicularToTheGround = 3
+        PerpendicularToTheGround = 3,
+        IdentitalToTargetWithGravity = 4
     }
 
     public class FollowTargetController : MonoBehaviour
@@ -123,6 +124,10 @@ namespace Holoi.Library.ARUX
                     break;
                 case RotationType.PerpendicularToTheGround:
                     transform.rotation = Quaternion.Euler(0f, _targetTransform.rotation.eulerAngles.y, 0f);
+                    break;
+                case RotationType.IdentitalToTargetWithGravity:
+                    Vector3 targetRotationEuler = _targetTransform.rotation.eulerAngles;
+                    transform.rotation = Quaternion.Euler(targetRotationEuler.x, targetRotationEuler.y, 0f);
                     break;
             }
         }
