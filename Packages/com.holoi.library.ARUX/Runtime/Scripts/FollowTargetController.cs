@@ -90,6 +90,7 @@ namespace Holoi.Library.ARUX
             }
 
             Vector3 targetPosition = _targetTransform.position + _targetTransform.TransformVector(_offset);
+            //Vector3 targetPosition = _targetTransform.position + _offset;
             if (_heightIdenticalToTarget)
             {
                 targetPosition = new(targetPosition.x, _targetTransform.position.y, targetPosition.z);
