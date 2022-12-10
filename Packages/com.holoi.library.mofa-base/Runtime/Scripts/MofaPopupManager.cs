@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Unity.Netcode;
+using HoloKit;
 
 namespace Holoi.Library.MOFABase
 {
@@ -23,6 +24,8 @@ namespace Holoi.Library.MOFABase
         [SerializeField] private GameObject _summaryBoardPrefab;
 
         private GameObject _currentPopup;
+
+        private const float PopupStarScale = 0.68f;
 
         protected virtual void Start()
         {
@@ -71,7 +74,8 @@ namespace Holoi.Library.MOFABase
             _currentPopup.transform.SetParent(_fightingPanelRoot);
             _currentPopup.transform.localPosition = Vector3.zero;
             _currentPopup.transform.localRotation = Quaternion.identity;
-            _currentPopup.transform.localScale = Vector3.one;
+            float scale = HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono ? 1f : PopupStarScale;
+            _currentPopup.transform.localScale = new Vector3(scale, scale, scale);
 
             yield return new WaitForSeconds(destroyDelay);
             if (_currentPopup != null)
