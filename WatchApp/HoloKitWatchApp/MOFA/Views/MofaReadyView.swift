@@ -11,7 +11,7 @@ struct MofaReadyView: View {
                     .frame(width: 10)
                 
                 Button {
-                    mofaWatchAppManager.holokitWatchAppManager?.currentPanel = .none
+                    mofaWatchAppManager.holokitWatchAppManager?.currentWatchPanel = .none
                 } label: {
                     Image("back")
                         .resizable()

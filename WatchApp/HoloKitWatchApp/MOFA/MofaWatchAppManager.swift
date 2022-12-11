@@ -84,6 +84,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         if (WCSession.isSupported()) {
             self.wcSession = WCSession.default
             self.wcSession.delegate = self
+            self.wcSession.activate()
         }
     }
     
@@ -104,7 +105,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
                 return
             }
             if success {
-                print("HealthKit authorization requested")
+                //print("HealthKit authorization requested")
             } else {
                 print("Falied to request HealthKit authorization")
             }
@@ -142,6 +143,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     
     public func endWorkout() {
         workoutSession?.end()
+        workoutSession = nil
         sendHealthDataMessage()
         self.currentView = .resultView
     }
@@ -300,15 +302,15 @@ class MofaWatchAppManager: NSObject, ObservableObject {
 extension MofaWatchAppManager: WCSessionDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         if (activationState == .activated) {
-            print("[MofaWatchAppManager] WCSession activated");
+            print("[MOFA] Apple Watch's WCSession activated");
         } else {
-            print("[MofaWatchAppManager] WCSession activation failed");
+            print("[MOFA] Apple Watch's WCSession activation failed");
         }
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        if let isFighting = applicationContext["IsFighting"] as? Bool {
-            if (isFighting == true) {
+        if let roundStart = applicationContext["RoundStart"] as? Bool {
+            if (roundStart == true) {
                 print("MOFA round started")
                 DispatchQueue.main.async {
                     if let magicSchoolIndex = applicationContext["MagicSchool"] as? Int {
@@ -318,8 +320,12 @@ extension MofaWatchAppManager: WCSessionDelegate {
                     }
                     self.startRound()
                 }
-            } else {
-                // Round ended
+            }
+            return
+        }
+        
+        if let roundOver = applicationContext["RoundOver"] as? Bool {
+            if (roundOver == true) {
                 print("MOFA round ended")
                 if let roundResultIndex = applicationContext["RoundResult"] as? Int {
                     if let roundResult = MofaRoundResult(rawValue: roundResultIndex) {
@@ -338,16 +344,21 @@ extension MofaWatchAppManager: WCSessionDelegate {
                         self.hitRate = Int(hitRate)
                     }
                 }
-                
                 DispatchQueue.main.async {
                     self.stopRound()
                 }
             }
-        } else if applicationContext["CurrentPanel"] is Int {
-            DispatchQueue.main.async {
-                self.stopRound()
+            return
+        }
+        
+        if let currentWatchPanel = applicationContext["CurrentWatchPanel"] as? Int {
+            if (currentWatchPanel == 0) {
+                DispatchQueue.main.async {
+                    self.stopRound()
+                }
+                self.holokitWatchAppManager?.session(session, didReceiveApplicationContext: applicationContext)
             }
-            self.holokitWatchAppManager?.session(session, didReceiveApplicationContext: applicationContext)
+            return
         }
     }
     

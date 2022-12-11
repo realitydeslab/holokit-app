@@ -25,12 +25,12 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
         if (WCSession.isSupported()) {
             wcSession = WCSession.default
             wcSession.delegate = self
+            print("MofaWatchConnectivityManager took control")
         }
-        print("MofaWatchConnectivityManager took control")
     }
     
     func onRoundStarted() {
-        let context = ["IsFighting" : true, "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
+        let context = ["RoundStart" : true, "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
         do {
             try self.wcSession.updateApplicationContext(context)
             print("Fighting phase synced")
@@ -40,11 +40,10 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
     }
     
     func onRoundEnded(_ roundResult: MofaRoundResult, _ kill: Int, _ hitRate: Float, _ distance: Float) {
-        let context = ["IsFighting" : false,
+        let context = ["RoundOver" : true,
                        "RoundResult" : roundResult.rawValue,
                        "Kill" : kill,
                        "HitRate" : hitRate,
-                       "Distance" : distance,
                        "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
         do {
             try self.wcSession.updateApplicationContext(context)
@@ -54,14 +53,14 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
         }
     }
     
-    func updateCurrentReality(_ panelIndex: Int) {
-        let context = ["CurrentPanel" : panelIndex,
+    func updateCurrentWatchPanel(_ watchPanelIndex: Int) {
+        let context = ["CurrentWatchPanel" : watchPanelIndex,
                        "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
         do {
             try self.wcSession.updateApplicationContext(context)
-            print("Updated current panel")
+            print("Updated current watch panel: \(watchPanelIndex)")
         } catch {
-            print("Failed to update current panel")
+            print("Failed to update current watch panel")
         }
     }
     
@@ -79,9 +78,9 @@ extension MockMofaWatchConnectivityManager: WCSessionDelegate {
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         if (activationState == .activated) {
-            print("WCSession activated");
+            print("iPhone's WCSession activated");
         } else {
-            print("WCSession activation failed")
+            print("iPhone's WCSession activation failed")
         }
     }
     
@@ -94,9 +93,6 @@ extension MockMofaWatchConnectivityManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        if message["StartRound"] is Int {
-            print("Start round message received")
-            self.onRoundStarted()
-        }
+        
     }
 }

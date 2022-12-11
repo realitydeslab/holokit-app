@@ -295,7 +295,7 @@ namespace Holoi.Library.HoloKitApp
                 // Let HoloKitAppWatchConnectivityManager take control of WCSessionDelegate
                 HoloKitAppWatchConnectivityAPI.TakeControlWatchConnectivitySession();
                 // Make Watch App jump back to the main page
-                HoloKitAppWatchConnectivityAPI.UpdateCurrentReality(WatchReality.Nothing);
+                HoloKitAppWatchConnectivityAPI.UpdateCurrentWatchPanel(HoloKitWatchPanel.None);
             //}
         }
 

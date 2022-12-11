@@ -64,7 +64,7 @@ struct MofaResultView: View {
                     .resizable()
                     .frame(maxWidth: 10, maxHeight: 10)
             }
-                .frame(width: 100, height: 16)
+                .frame(width: 100, height: 12)
                 .font(.headline)
                 .fontWeight(.semibold)
                 .foregroundColor(.black)

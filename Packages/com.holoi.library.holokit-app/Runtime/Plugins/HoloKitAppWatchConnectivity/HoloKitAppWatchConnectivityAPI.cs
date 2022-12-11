@@ -5,10 +5,10 @@ using HoloKit;
 namespace Holoi.Library.HoloKitApp.WatchConnectivity
 {
     // You muse make sure this enum is identical to the enum on Watch App.
-    public enum WatchReality
+    public enum HoloKitWatchPanel
     {
-        Nothing = 0,
-        MOFATheTraining = 1
+        None = 0,
+        MOFA = 1
     }
 
     public static class HoloKitAppWatchConnectivityAPI
@@ -29,7 +29,7 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity
         private static extern void HoloKitAppWatchConnectivity_TakeControlWCSession();
 
         [DllImport("__Internal")]
-        private static extern void HoloKitAppWatchConnectivity_UpdateCurrentReality(int realityIndex);
+        private static extern void HoloKitAppWatchConnectivity_UpdateCurrentWatchPanel(int watchPanelIndex);
 
         [AOT.MonoPInvokeCallback(typeof(Action<bool>))]
         public static void OnSessionReachabilityChangedDelegate(bool isReachable)
@@ -85,17 +85,17 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity
 
         public static void TakeControlWatchConnectivitySession()
         {
-            if (HoloKit.HoloKitUtils.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
                 HoloKitAppWatchConnectivity_TakeControlWCSession();
             }
         }
 
-        public static void UpdateCurrentReality(WatchReality watchReality)
+        public static void UpdateCurrentWatchPanel(HoloKitWatchPanel watchPanel)
         {
-            if (HoloKit.HoloKitUtils.IsRuntime)
+            if (HoloKitUtils.IsRuntime)
             {
-                HoloKitAppWatchConnectivity_UpdateCurrentReality((int)watchReality);
+                HoloKitAppWatchConnectivity_UpdateCurrentWatchPanel((int)watchPanel);
             }
         }
     }

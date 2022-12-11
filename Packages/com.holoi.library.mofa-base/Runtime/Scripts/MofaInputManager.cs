@@ -78,7 +78,7 @@ namespace Holoi.Library.MOFABase
             // MofaWatchConnectivityManager should take control first
             MofaWatchConnectivityAPI.TakeControlWatchConnectivitySession();
             // We then update the control on Watch side so that MofaWatchConnectivityManager won't miss messages.
-            HoloKitAppWatchConnectivityAPI.UpdateCurrentReality(WatchReality.MOFATheTraining);
+            HoloKitAppWatchConnectivityAPI.UpdateCurrentWatchPanel(HoloKitWatchPanel.MOFA);
 
             MofaWatchConnectivityAPI.OnReceivedStartRoundMessage += OnReceivedRoundMessage;
             MofaWatchConnectivityAPI.OnWatchStateChanged += OnWatchStateChanged;

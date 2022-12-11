@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HoloKitAppView: View {
     
-    @EnvironmentObject var watchConnectivityManager: MockHoloKitAppWatchConnectivityManager
+    @EnvironmentObject var holokitAppWatchConnectivityManager: MockHoloKitAppWatchConnectivityManager
     
     var body: some View {
         VStack {
@@ -18,30 +18,31 @@ struct HoloKitAppView: View {
             Spacer()
                 .frame(height: 50)
             
-            Button("Activate") {
-                self.watchConnectivityManager.activate()
+            HStack {
+                Button("Is Watch App Installed") {
+                    print("Is watch app installed: \(self.holokitAppWatchConnectivityManager.isWatchAppInstalled())")
+                }
+                
+                Text(": \(self.holokitAppWatchConnectivityManager.isWatchAppInstalledVar)" as String)
             }
             
             Spacer()
                 .frame(height: 50)
             
-            Button("Watch App Installed") {
-                print("Is watch app installed: \(self.watchConnectivityManager.isWatchAppInstalled())")
+            HStack {
+                Button("Is Reachable") {
+                    print("Is reachable: \(self.holokitAppWatchConnectivityManager.isReachable())")
+                }
+                
+                Text(": \(self.holokitAppWatchConnectivityManager.isReachableVar)" as String)
             }
             
             Spacer()
                 .frame(height: 50)
             
-            Button("Is Reachable") {
-                print("Is reachable: \(self.watchConnectivityManager.isReachable())")
-            }
-            
-            Spacer()
-                .frame(height: 50)
-            
-            Button("Go to MOFA") {
-                watchConnectivityManager.currentReality = .mofaTheTraining
-                watchConnectivityManager.updateCurrentReality(watchConnectivityManager.currentReality.rawValue)
+            Button("Play MOFA") {
+                holokitAppWatchConnectivityManager.currentWatchPanel = .mofa
+                holokitAppWatchConnectivityManager.updateCurrentWatchPanel(holokitAppWatchConnectivityManager.currentWatchPanel.rawValue)
             }
         }
         .padding()

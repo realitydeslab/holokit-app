@@ -11,6 +11,8 @@ struct MofaView: View {
     
     @EnvironmentObject var mofaWatchConnectivityManager: MockMofaWatchConnectivityManager
     
+    @EnvironmentObject var holokitAppWatchConnectivityManager: MockHoloKitAppWatchConnectivityManager
+    
     var body: some View {
         VStack {
             Text("MOFA")
@@ -29,25 +31,12 @@ struct MofaView: View {
                 mofaWatchConnectivityManager.onRoundEnded(.victory, 24, 0.43, 72)
             }
             
-//            Spacer()
-//                .frame(height: 50)
-//            
-//            Button("Query Watch State") {
-//                mofaWatchConnectivityManager.queryWatchState()
-//            }
-            
             Spacer()
                 .frame(height: 50)
             
-            Button("Back") {
-                mofaWatchConnectivityManager.updateCurrentReality(0)
-            }
-            
-            Spacer()
-                .frame(height: 50)
-            
-            Button("Re-enter") {
-                mofaWatchConnectivityManager.updateCurrentReality(1)
+            Button("Load Homepage") {
+                mofaWatchConnectivityManager.updateCurrentWatchPanel(0)
+                self.holokitAppWatchConnectivityManager.currentWatchPanel = .none
             }
         }
     }
