@@ -349,9 +349,8 @@ MonoBehaviour:
   _avatarVelocity: {x: 0, y: 0}
   _autoFire: 0
   _boltPrefab: {fileID: 0}
-  _attackInterval: 3
   _attackPreset: 0
-  _boltPrewarmCount: 3
+  _attackInterval: 3
 --- !u!114 &1671990806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2174,7 +2173,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7835604773795487157}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 8c52b5940814440c689b4e9290ba2469, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: 48bbd042148d44e8aa5df85beb30656a, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -2194,6 +2193,9 @@ VisualEffect:
         m_Overridden: 1
       - m_Value: -7
         m_Name: Rotate Velocity
+        m_Overridden: 1
+      - m_Value: 1.24
+        m_Name: HeightMultipier
         m_Overridden: 1
     m_Vector2f:
       m_Array:
@@ -2253,20 +2255,20 @@ VisualEffect:
           - serializedVersion: 3
             time: 0.24583334
             value: 1.0633026
-            inSlope: 0.21000819
-            outSlope: 0.21000819
+            inSlope: 0
+            outSlope: 0
             tangentMode: 0
             weightedMode: 0
             inWeight: 0
             outWeight: 0
           - serializedVersion: 3
             time: 1
-            value: 2.3773744
-            inSlope: 3.7878697
-            outSlope: 3.7878697
+            value: 3.337065
+            inSlope: 7.4893255
+            outSlope: 7.4893255
             tangentMode: 0
             weightedMode: 0
-            inWeight: 0.097385824
+            inWeight: 0.06725838
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
@@ -2298,6 +2300,41 @@ VisualEffect:
           m_PostInfinity: 2
           m_RotationOrder: 4
         m_Name: Color Curve
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: -0.022601837
+            outSlope: -0.022601837
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.1
+            value: 0.9973484
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: -3.5740013
+            outSlope: -3.5740013
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: SizeAnimationCurve
         m_Overridden: 1
     m_Gradient:
       m_Array: []
