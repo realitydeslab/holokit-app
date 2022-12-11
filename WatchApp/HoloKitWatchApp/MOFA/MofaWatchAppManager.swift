@@ -44,7 +44,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         }
     }
     
-//    @Published var isFighting: Bool = false
+    @Published var isFighting: Bool = false
     
     // Round result stats
     @Published var roundResult: MofaRoundResult = .victory
@@ -228,11 +228,13 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         startWorkout()
         startCoreMotion()
         self.currentView = .fightingView
+        self.isFighting = true
     }
     
     public func stopRound() {
         endCoreMotion()
         endWorkout()
+        self.isFighting = false
     }
     
     func sendStartRoundMessage() {
@@ -310,7 +312,7 @@ extension MofaWatchAppManager: WCSessionDelegate {
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
         if let roundStart = applicationContext["RoundStart"] as? Bool {
-            if (roundStart == true) {
+            if (roundStart == true && self.isFighting == false) {
                 print("MOFA round started")
                 DispatchQueue.main.async {
                     if let magicSchoolIndex = applicationContext["MagicSchool"] as? Int {
@@ -325,7 +327,7 @@ extension MofaWatchAppManager: WCSessionDelegate {
         }
         
         if let roundOver = applicationContext["RoundOver"] as? Bool {
-            if (roundOver == true) {
+            if (roundOver == true && self.isFighting == true) {
                 print("MOFA round ended")
                 if let roundResultIndex = applicationContext["RoundResult"] as? Int {
                     if let roundResult = MofaRoundResult(rawValue: roundResultIndex) {

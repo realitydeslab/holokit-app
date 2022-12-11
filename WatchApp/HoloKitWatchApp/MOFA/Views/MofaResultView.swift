@@ -12,10 +12,8 @@ struct MofaResultView: View {
             resultText
             //Spacer()
             dataList
-                .padding(.top)
-                .padding(.bottom)
-            Spacer()
-                .frame(height: 5)
+                .padding(.top, 5)
+                .padding(.bottom, 5)
             playAgainButton
         }
     }
@@ -30,17 +28,16 @@ struct MofaResultView: View {
             resultText = Text("Draw")
         }
         return resultText
-            .font(Font.custom("ObjectSans-Bold", size: 24))
+            .font(Font.custom("ObjectSans-Bold", size: 20))
     }
     
     var dataList: some View {
-        
         HStack {
             VStack (alignment: .leading, spacing: 5) {
                 Text("Kills: \(self.mofaWatchAppManager.kill)")
                 Text("Hit Rate: \(self.mofaWatchAppManager.hitRate)%")
                 Text("Dist: \(Int(self.mofaWatchAppManager.distance * self.mofaWatchAppManager.meterToFeet)) ft")
-                Text("Calorie: \(Int(self.mofaWatchAppManager.activeEnergy)) kcal")
+                Text("Energy: \(Int(self.mofaWatchAppManager.activeEnergy)) kcal")
             }
             .font(Font.custom("ObjectSans-BoldSlanted", size: 12))
             
@@ -49,7 +46,7 @@ struct MofaResultView: View {
             MofaActivityRingsView(healthStore: self.mofaWatchAppManager.healthStore)
                 .frame(width: 40, height: 40)
         }
-        .padding(.horizontal, 14)
+        .padding(.horizontal, 8)
     }
     
     var playAgainButton: some View {
@@ -64,12 +61,11 @@ struct MofaResultView: View {
                     .resizable()
                     .frame(maxWidth: 10, maxHeight: 10)
             }
-                .frame(width: 100, height: 12)
-                .font(.headline)
-                .fontWeight(.semibold)
-                .foregroundColor(.black)
-                .padding()
-                .background(Color.white)
+            .font(.headline)
+            .fontWeight(.semibold)
+            .padding(6)
+            .foregroundColor(.black)
+            .background(Color.white)
         }
         .buttonStyle(.plain)
     }

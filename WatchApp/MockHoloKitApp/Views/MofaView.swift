@@ -21,7 +21,7 @@ struct MofaView: View {
                 .frame(height: 50)
             
             Button("Start Round") {
-                mofaWatchConnectivityManager.onRoundStarted()
+                mofaWatchConnectivityManager.onRoundStarted(magicSchoolIndex: 1)
             }
             
             Spacer()
