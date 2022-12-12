@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MofaReadyView: View {
     
-    @EnvironmentObject var mofaWatchAppManager: MofaWatchAppManager
+    @ObservedObject var mofaWatchAppManager = HoloKitWatchAppManager.shared.mofaWatchAppManager
     
     var body: some View {
         VStack {
@@ -11,7 +11,7 @@ struct MofaReadyView: View {
                     .frame(width: 10)
                 
                 Button {
-                    mofaWatchAppManager.holokitWatchAppManager?.currentWatchPanel = .none
+                    HoloKitWatchAppManager.shared.switchPanel(panel: .none)
                 } label: {
                     Image("back")
                         .resizable()
@@ -22,7 +22,7 @@ struct MofaReadyView: View {
                 Spacer()
                 
                 Button {
-                    mofaWatchAppManager.currentView = .handednessView
+                    mofaWatchAppManager.view = .handednessView
                 } label: {
                     Image(systemName: "gearshape.fill")
                         .resizable()
@@ -50,7 +50,7 @@ struct MofaReadyView: View {
     
     var readyButton: some View {
         Button {
-            self.mofaWatchAppManager.sendStartRoundMessage()
+            mofaWatchAppManager.sendStartRoundMessage()
         } label: {
             ZStack {
                 Rectangle()
@@ -69,6 +69,5 @@ struct MofaReadyView: View {
 struct MofaIntroView_Previews: PreviewProvider {
     static var previews: some View {
         MofaReadyView()
-            .environmentObject(MofaWatchAppManager())
     }
 }

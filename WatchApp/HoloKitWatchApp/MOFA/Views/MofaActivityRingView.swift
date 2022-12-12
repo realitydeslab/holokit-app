@@ -10,6 +10,7 @@ import HealthKit
 import SwiftUI
 
 struct MofaActivityRingsView: WKInterfaceObjectRepresentable {
+    
     let healthStore: HKHealthStore
 
     func makeWKInterfaceObject(context: Context) -> some WKInterfaceObject {

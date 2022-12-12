@@ -15,86 +15,56 @@ enum MofaRoundResult: Int {
 
 class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
     
-    private var wcSession: WCSession!
+    var isFighting = false
     
     override init() {
         super.init()
     }
     
-    func takeControlWatchConnectivitySession() {
-        if (WCSession.isSupported()) {
-            wcSession = WCSession.default
-            wcSession.delegate = self
-            print("MofaWatchConnectivityManager took control")
-        }
-    }
-    
-    func onRoundStarted(magicSchoolIndex: Int) {
-        let context = ["RoundStart" : true,
-                       "MagicSchool" : magicSchoolIndex,
-                       "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
+    func onRoundStarted() {
+        let context = ["MOFA" : true,
+                       "Start" : true,
+                       "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any]
+//        let context = ["MOFA" : true,
+//                       "Start" : true] as [String : Any]
+        
         do {
-            try self.wcSession.updateApplicationContext(context)
+            try MockHoloKitAppWatchConnectivityManager.shared.wcSession.updateApplicationContext(context)
+            self.isFighting = true
             print("Fighting phase synced")
         } catch {
             print("Failed to sync fighting phase")
         }
     }
     
-    func onRoundEnded(_ roundResult: MofaRoundResult, _ kill: Int, _ hitRate: Float, _ distance: Float) {
-        let context = ["RoundOver" : true,
+    func onRoundEnded(roundResult: MofaRoundResult, kill: Int, hitRate: Float) {
+        let context = ["MOFA" : true,
+                       "End" : true,
                        "RoundResult" : roundResult.rawValue,
                        "Kill" : kill,
-                       "HitRate" : hitRate,
-                       "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
+                       "HitRate" : hitRate] as [String : Any]
         do {
-            try self.wcSession.updateApplicationContext(context)
+            try MockHoloKitAppWatchConnectivityManager.shared.wcSession.updateApplicationContext(context)
+            self.isFighting = false
             print("Round result synced")
         } catch {
             print("Failed to sync round result")
         }
     }
     
-    func updateCurrentWatchPanel(_ watchPanelIndex: Int) {
-        let context = ["CurrentWatchPanel" : watchPanelIndex,
-                       "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
-        do {
-            try self.wcSession.updateApplicationContext(context)
-            print("Updated current watch panel: \(watchPanelIndex)")
-        } catch {
-            print("Failed to update current watch panel")
-        }
-    }
-    
     func queryWatchState() {
-        let message = ["QueryWatchState" : 0]
-        self.wcSession.sendMessage(message) { replyMessage in
+        let message = ["MOFA" : true,
+                       "QueryState" : 0] as [String : Any]
+        MockHoloKitAppWatchConnectivityManager.shared.wcSession.sendMessage(message) { replyMessage in
             if let watchStateIndex = replyMessage["WatchState"] as? Int {
                 print("On received query watch state replay: \(watchStateIndex)")
             }
         }
     }
-}
-
-extension MockMofaWatchConnectivityManager: WCSessionDelegate {
     
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        if (activationState == .activated) {
-            print("iPhone's WCSession activated");
-        } else {
-            print("iPhone's WCSession activation failed")
+    func didReceiveMessage(message: [String : Any]) {
+        if message["Start"] is Bool {
+            onRoundStarted()
         }
-    }
-    
-    func sessionDidBecomeInactive(_ session: WCSession) {
-        
-    }
-    
-    func sessionDidDeactivate(_ session: WCSession) {
-        
-    }
-    
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        
     }
 }

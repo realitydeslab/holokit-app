@@ -3,6 +3,7 @@ import WatchKit
 import WatchConnectivity
 import HealthKit
 
+// Make sure this enum is identical to the corresponding C# enum
 enum HoloKitWatchPanel: Int {
     case none = 0
     case mofa = 1
@@ -10,9 +11,17 @@ enum HoloKitWatchPanel: Int {
 
 class HoloKitWatchAppManager: NSObject, ObservableObject {
     
-    @Published var currentWatchPanel: HoloKitWatchPanel = .none
+    // This class is a singleton
+    static let shared = HoloKitWatchAppManager()
     
-    private var wcSession: WCSession!
+    // The current active panel of the Watch App
+    @Published var panel: HoloKitWatchPanel = .none
+    
+    // There is only one default WatchConnectivity session
+    var wcSession: WCSession!
+    
+    // We keep a reference of each watch panel's manager
+    let mofaWatchAppManager: MofaWatchAppManager = MofaWatchAppManager()
     
     override init() {
         super.init()
@@ -23,13 +32,8 @@ class HoloKitWatchAppManager: NSObject, ObservableObject {
         }
     }
     
-    // Register the delegate of the WCSession
-    func takeControlWatchConnectivitySession() {
-        if (WCSession.isSupported()) {
-            wcSession = WCSession.default
-            wcSession.delegate = self
-        }
-        self.currentWatchPanel = .none
+    func switchPanel(panel: HoloKitWatchPanel) {
+        self.panel = panel
     }
 }
 
@@ -44,18 +48,35 @@ extension HoloKitWatchAppManager: WCSessionDelegate {
         }
     }
     
+    func sessionReachabilityDidChange(_ session: WCSession) {
+        print("Apple Watch sessionReachabilityDidChange: \(session.isReachable)")
+    }
+    
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        if let watchPanelIndex = applicationContext["CurrentWatchPanel"] as? Int {
+        // Switch to the corresponding panel after receiving a panel switch message
+        if let watchPanelIndex = applicationContext["Panel"] as? Int {
             if let watchPanel = HoloKitWatchPanel(rawValue: watchPanelIndex) {
-                print("Switched to panel: \(String(describing: watchPanel))")
-                DispatchQueue.main.async {
-                    self.currentWatchPanel = watchPanel
+                if (self.panel != watchPanel) {
+                    print("Switched to panel: \(String(describing: watchPanel))")
+                    DispatchQueue.main.async {
+                        self.panel = watchPanel
+                    }
                 }
             }
+            return
+        }
+        
+        if applicationContext["MOFA"] is Bool {
+            mofaWatchAppManager.didReceiveApplicationContext(applicationContext: applicationContext)
+            return
         }
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-
+        
+    }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+        
     }
 }

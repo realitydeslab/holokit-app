@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HoloKitAppView: View {
     
-    @EnvironmentObject var holokitAppWatchConnectivityManager: MockHoloKitAppWatchConnectivityManager
+    @ObservedObject var holokitAppWatchConnectivityManager = MockHoloKitAppWatchConnectivityManager.shared
     
     var body: some View {
         VStack {
@@ -20,10 +20,10 @@ struct HoloKitAppView: View {
             
             HStack {
                 Button("Is Watch App Installed") {
-                    print("Is watch app installed: \(self.holokitAppWatchConnectivityManager.isWatchAppInstalled())")
+                    print("Is watch app installed: \(holokitAppWatchConnectivityManager.isWatchAppInstalled())")
                 }
                 
-                Text(": \(self.holokitAppWatchConnectivityManager.isWatchAppInstalledVar)" as String)
+                Text(": \(holokitAppWatchConnectivityManager.isWatchAppInstalledVar)" as String)
             }
             
             Spacer()
@@ -31,18 +31,17 @@ struct HoloKitAppView: View {
             
             HStack {
                 Button("Is Reachable") {
-                    print("Is reachable: \(self.holokitAppWatchConnectivityManager.isReachable())")
+                    print("Is reachable: \(holokitAppWatchConnectivityManager.isReachable())")
                 }
                 
-                Text(": \(self.holokitAppWatchConnectivityManager.isReachableVar)" as String)
+                Text(": \(holokitAppWatchConnectivityManager.isReachableVar)" as String)
             }
             
             Spacer()
                 .frame(height: 50)
             
             Button("Play MOFA") {
-                holokitAppWatchConnectivityManager.currentWatchPanel = .mofa
-                holokitAppWatchConnectivityManager.updateCurrentWatchPanel(holokitAppWatchConnectivityManager.currentWatchPanel.rawValue)
+                holokitAppWatchConnectivityManager.updatePanel(panelIndex: 1)
             }
         }
         .padding()
@@ -52,6 +51,5 @@ struct HoloKitAppView: View {
 struct HoloKitAppView_Previews: PreviewProvider {
     static var previews: some View {
         HoloKitAppView()
-            .environmentObject(MockHoloKitAppWatchConnectivityManager())
     }
 }

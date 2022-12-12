@@ -3,7 +3,7 @@ import Foundation
 
 struct MofaResultView: View {
     
-    @EnvironmentObject var mofaWatchAppManager: MofaWatchAppManager
+    @ObservedObject var mofaWatchAppManager = HoloKitWatchAppManager.shared.mofaWatchAppManager
     
     @State var result: Bool = true
     
@@ -36,7 +36,7 @@ struct MofaResultView: View {
             VStack (alignment: .leading, spacing: 5) {
                 Text("Kills: \(self.mofaWatchAppManager.kill)")
                 Text("Hit Rate: \(self.mofaWatchAppManager.hitRate)%")
-                Text("Dist: \(Int(self.mofaWatchAppManager.distance * self.mofaWatchAppManager.meterToFeet)) ft")
+                Text("Dist: \(Int(self.mofaWatchAppManager.distance * self.mofaWatchAppManager.meterToFoot)) ft")
                 Text("Energy: \(Int(self.mofaWatchAppManager.activeEnergy)) kcal")
             }
             .font(Font.custom("ObjectSans-BoldSlanted", size: 12))
@@ -51,7 +51,7 @@ struct MofaResultView: View {
     
     var playAgainButton: some View {
         Button {
-            self.mofaWatchAppManager.currentView = .readyView
+            self.mofaWatchAppManager.view = .readyView
         } label: {
             HStack {
                 Text("Play Again")

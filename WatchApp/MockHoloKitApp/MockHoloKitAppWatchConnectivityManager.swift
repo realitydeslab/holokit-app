@@ -7,26 +7,25 @@ enum HoloKitWatchPanel: Int {
 
 class MockHoloKitAppWatchConnectivityManager: NSObject, ObservableObject {
     
-    @Published var currentWatchPanel: HoloKitWatchPanel = .none
+    // This class is a singleton
+    static let shared = MockHoloKitAppWatchConnectivityManager()
+    
+    @Published var panel: HoloKitWatchPanel = .none
     
     @Published var isWatchAppInstalledVar: Bool = false
     
     @Published var isReachableVar: Bool = false
     
-    private var wcSession: WCSession!
+    var wcSession: WCSession!
+    
+    let mofaWatchConnectivityManager = MockMofaWatchConnectivityManager()
     
     override init() {
         super.init()
-        
-        takeControlWatchConnectivitySession()
-    }
-    
-    func takeControlWatchConnectivitySession() {
         if (WCSession.isSupported()) {
             wcSession = WCSession.default
             wcSession.delegate = self
             wcSession.activate()
-            print("HoloKitAppWatchConnectivityManager took control")
         }
     }
     
@@ -48,14 +47,14 @@ class MockHoloKitAppWatchConnectivityManager: NSObject, ObservableObject {
         return isReachableVar
     }
     
-    func updateCurrentWatchPanel(_ watchPanelIndex: Int) {
-        let context = ["CurrentWatchPanel" : watchPanelIndex,
-                       "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
+    func updatePanel(panelIndex: Int) {
+        self.panel = HoloKitWatchPanel(rawValue: panelIndex)!
+        let context = ["Panel" : panelIndex] as [String : Any];
         do {
             try self.wcSession.updateApplicationContext(context)
-            print("Updated current watch panel: \(watchPanelIndex)")
+            print("Updated panel: \(panelIndex)")
         } catch {
-            print("Failed to update current watch panel")
+            print("Failed to update panel")
         }
     }
 }
@@ -65,6 +64,7 @@ extension MockHoloKitAppWatchConnectivityManager: WCSessionDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         if (activationState == .activated) {
             print("iPhone's WCSession activated");
+            updatePanel(panelIndex: 0)
         } else {
             print("iPhone's WCSession activation failed")
         }
@@ -83,7 +83,13 @@ extension MockHoloKitAppWatchConnectivityManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        
+        if message["MOFA"] is Bool {
+            mofaWatchConnectivityManager.didReceiveMessage(message: message)
+        }
+    }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+
     }
 }
 

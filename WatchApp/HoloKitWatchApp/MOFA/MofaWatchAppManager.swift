@@ -29,29 +29,28 @@ enum MofaWatchState: Int {
     case ground = 1
 }
 
+enum MofaHandedness: Int {
+    case right = 0
+    case left = 1
+}
+
 class MofaWatchAppManager: NSObject, ObservableObject {
     
-    // Keep a reference to the watch app main manager
-    var holokitWatchAppManager: HoloKitWatchAppManager?
-    
-    @Published var currentView: MofaView = .readyView
+    @Published var view: MofaView = .readyView
     
     @Published var magicSchool: MofaMagicSchool = .mysticArt
     
-    @Published var isRightHanded: Bool = true {
+    @Published var handedness: MofaHandedness = .right {
         didSet {
-            UserDefaults.standard.set(isRightHanded, forKey: "UserHandedness")
+            UserDefaults.standard.set(handedness.rawValue, forKey: handednessKey)
         }
     }
-    
-    @Published var isFighting: Bool = false
     
     // Round result stats
     @Published var roundResult: MofaRoundResult = .victory
     @Published var kill: Int = 0
+    // HitRate is between 0 and 100
     @Published var hitRate: Int = 0
-    
-    var wcSession: WCSession!
     
     let motionManager = CMMotionManager()
     
@@ -67,24 +66,14 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     var groundVector = simd_double3(-1, 0, 0)
     var lastStartRoundTime: Double = 0
     
-    let meterToFeet: Double = 3.2808
+    let meterToFoot: Double = 3.2808
+    let handednessKey: String = "UserHandedness"
     
     override init() {
         super.init()
-        if (WCSession.isSupported()) {
-            self.wcSession = WCSession.default
-        }
         requestHealthKitAuthorization()
-        if UserDefaults.standard.object(forKey: "UserHandedness") != nil  {
-            self.isRightHanded = UserDefaults.standard.bool(forKey: "UserHandedness")
-        }
-    }
-    
-    func takeControlWatchConnectivitySession() {
-        if (WCSession.isSupported()) {
-            self.wcSession = WCSession.default
-            self.wcSession.delegate = self
-            self.wcSession.activate()
+        if UserDefaults.standard.object(forKey: handednessKey) != nil  {
+            self.handedness = MofaHandedness(rawValue: UserDefaults.standard.integer(forKey: handednessKey)) ?? .right
         }
     }
     
@@ -112,7 +101,18 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         }
     }
     
+    // This function is called when watch app switched to MOFA panel
+    func onAppear() {
+        
+    }
+    
+    func OnDisappear() {
+        self.view = .readyView
+    }
+    
     public func startWorkout() {
+        if (self.workoutSession?.state == .running) { return }
+        
         resetWorkout()
         
         let configuration = HKWorkoutConfiguration()
@@ -145,7 +145,6 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         workoutSession?.end()
         workoutSession = nil
         sendHealthDataMessage()
-        self.currentView = .resultView
     }
     
     public func startCoreMotion() {
@@ -153,7 +152,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
         if (motionManager.isDeviceMotionAvailable && !motionManager.isDeviceMotionActive) {
             motionManager.deviceMotionUpdateInterval = self.deviceMotionUpdateInterval
             // Check handedness
-            if (self.isRightHanded) {
+            if (self.handedness == .right) {
                 if (WKInterfaceDevice.current().crownOrientation == .right) {
                     self.groundVector = simd_double3(-1, 0, 0)
                 } else {
@@ -172,14 +171,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
                     return
                 }
                 
-                
                 let currentTime = ProcessInfo.processInfo.systemUptime
-                // If we should stop the round automatically now
-//                if (currentTime - self.lastStartRoundTime > 120) {
-//                    DispatchQueue.main.async {
-//                        self.stopRound()
-//                    }
-//                }
                 
                 guard let acceleration: CMAcceleration = data?.userAcceleration else {
                     return
@@ -224,41 +216,43 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     }
     
     public func startRound() {
-        self.lastStartRoundTime = ProcessInfo.processInfo.systemUptime
         startWorkout()
         startCoreMotion()
-        self.currentView = .fightingView
-        self.isFighting = true
+        self.view = .fightingView
     }
     
     public func stopRound() {
         endCoreMotion()
         endWorkout()
-        self.isFighting = false
+        self.view = .resultView
     }
     
     func sendStartRoundMessage() {
-        self.wcSession = WCSession.default
-        let message = ["StartRound": 0];
-        self.wcSession.sendMessage(message, replyHandler: nil)
-        print("Start round message sent")
+        let message = ["MOFA" : true,
+                       "Start": true]
+        HoloKitWatchAppManager.shared.wcSession.sendMessage(message, replyHandler: nil)
+        startWorkout()
     }
     
     func sendWatchTriggeredMessage() {
-        let message = ["WatchTriggered" : 0];
-        self.wcSession.sendMessage(message, replyHandler: nil)
+        let message = ["MOFA" : true,
+                       "Triggered" : true]
+        HoloKitWatchAppManager.shared.wcSession.sendMessage(message, replyHandler: nil)
     }
     
     func sendWatchStateChangedMessage(watchState: MofaWatchState) {
-        let message = ["WatchState" : watchState.rawValue]
-        self.wcSession.sendMessage(message, replyHandler: nil)
+        let message = ["MOFA" : true,
+                       "State" : watchState.rawValue] as [String : Any]
+        HoloKitWatchAppManager.shared.wcSession.sendMessage(message, replyHandler: nil)
     }
     
     func sendHealthDataMessage() {
         let dist = Float(self.distance)
-        let calories = Float(self.activeEnergy)
-        let message = [ "Distance" : dist, "Calories" : calories ]
-        self.wcSession.sendMessage(message, replyHandler: nil)
+        let energy = Float(self.activeEnergy)
+        let message = ["MOFA" : true,
+                       "Dist" : dist,
+                       "Energy" : energy] as [String : Any]
+        HoloKitWatchAppManager.shared.wcSession.sendMessage(message, replyHandler: nil)
     }
     
     // MARK: - Workout Metrics
@@ -300,19 +294,11 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     }
 }
 
-// MARK: - WCSessionDelegate
-extension MofaWatchAppManager: WCSessionDelegate {
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        if (activationState == .activated) {
-            print("[MOFA] Apple Watch's WCSession activated");
-        } else {
-            print("[MOFA] Apple Watch's WCSession activation failed");
-        }
-    }
-    
-    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        if let roundStart = applicationContext["RoundStart"] as? Bool {
-            if (roundStart == true && self.isFighting == false) {
+// MARK: - Mock WCSessionDelegate
+extension MofaWatchAppManager {
+    func didReceiveApplicationContext(applicationContext: [String : Any]) {
+        if applicationContext["Start"] is Bool {
+            if (self.view != .fightingView) {
                 print("MOFA round started")
                 DispatchQueue.main.async {
                     if let magicSchoolIndex = applicationContext["MagicSchool"] as? Int {
@@ -326,8 +312,8 @@ extension MofaWatchAppManager: WCSessionDelegate {
             return
         }
         
-        if let roundOver = applicationContext["RoundOver"] as? Bool {
-            if (roundOver == true && self.isFighting == true) {
+        if applicationContext["End"] is Bool {
+            if (self.view == .fightingView) {
                 print("MOFA round ended")
                 if let roundResultIndex = applicationContext["RoundResult"] as? Int {
                     if let roundResult = MofaRoundResult(rawValue: roundResultIndex) {
@@ -349,16 +335,6 @@ extension MofaWatchAppManager: WCSessionDelegate {
                 DispatchQueue.main.async {
                     self.stopRound()
                 }
-            }
-            return
-        }
-        
-        if let currentWatchPanel = applicationContext["CurrentWatchPanel"] as? Int {
-            if (currentWatchPanel == 0) {
-                DispatchQueue.main.async {
-                    self.stopRound()
-                }
-                self.holokitWatchAppManager?.session(session, didReceiveApplicationContext: applicationContext)
             }
             return
         }

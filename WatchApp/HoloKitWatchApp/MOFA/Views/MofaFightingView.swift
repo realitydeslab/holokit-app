@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MofaFightingView: View {
     
-    @EnvironmentObject var mofaWatchAppManager: MofaWatchAppManager
+    @ObservedObject var mofaWatchAppManager = HoloKitWatchAppManager.shared.mofaWatchAppManager
     
     var body: some View {
         VStack {
@@ -33,30 +33,6 @@ struct MofaFightingView: View {
             .frame(maxWidth: 100, maxHeight: 100)
     }
     
-//    var startButton: some View {
-//        Button {
-//            self.mofaWatchAppManager.sendStartRoundMessage()
-//        } label: {
-//            ZStack {
-//                Rectangle()
-//                    .frame(maxWidth: 100, maxHeight: 40)
-//                
-//                HStack {
-//                    Text("Ready")
-//                        .font(Font.custom("ObjectSans-BoldSlanted", size: 13))
-//                        .foregroundColor(.black)
-//                    
-//                    Image("arrow-right")
-//                        .renderingMode(.template)
-//                        .resizable()
-//                        .frame(maxWidth: 10, maxHeight: 10)
-//                        .foregroundColor(.black)
-//                }
-//            }
-//        }
-//        .buttonStyle(.plain)
-//    }
-    
     var fightingText: some View {
         Text("SWING YOUR ARM TO CAST SPELLS")
             .multilineTextAlignment(.center)
@@ -67,6 +43,5 @@ struct MofaFightingView: View {
 struct MofaFightingView_Previews: PreviewProvider {
     static var previews: some View {
         MofaFightingView()
-            .environmentObject(MofaWatchAppManager())
     }
 }

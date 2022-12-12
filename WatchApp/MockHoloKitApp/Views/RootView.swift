@@ -2,24 +2,19 @@ import SwiftUI
 
 struct RootView: View {
     
-    @EnvironmentObject var holokitAppWatchConnectivityManager: MockHoloKitAppWatchConnectivityManager
-    
-    @EnvironmentObject var mofaWatchConnectivityManager: MockMofaWatchConnectivityManager
+    @ObservedObject var holokitAppWatchConnectivityManager = MockHoloKitAppWatchConnectivityManager.shared
     
     var body: some View {
-        if (holokitAppWatchConnectivityManager.currentWatchPanel == .none) {
-            HoloKitAppView()
-                .environmentObject(self.holokitAppWatchConnectivityManager)
-                .onAppear {
-                    self.holokitAppWatchConnectivityManager.takeControlWatchConnectivitySession()
-                }
-        } else if (holokitAppWatchConnectivityManager.currentWatchPanel == .mofa) {
-            MofaView()
-                .environmentObject(self.mofaWatchConnectivityManager)
-                .environmentObject(self.holokitAppWatchConnectivityManager)
-                .onAppear {
-                    self.mofaWatchConnectivityManager.takeControlWatchConnectivitySession()
-                }
+        ZStack {
+            if (holokitAppWatchConnectivityManager.panel == .none) {
+                HoloKitAppView()
+            } else if (holokitAppWatchConnectivityManager.panel == .mofa) {
+                MofaView()
+            }
+        }
+        .onDisappear {
+            print("RootView onDisappear")
+            holokitAppWatchConnectivityManager.updatePanel(panelIndex: 0)
         }
     }
 }
@@ -27,7 +22,5 @@ struct RootView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         RootView()
-            .environmentObject(MockHoloKitAppWatchConnectivityManager())
-            .environmentObject(MockMofaWatchConnectivityManager())
     }
 }

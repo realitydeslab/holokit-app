@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PanelView: View {
     
-    @EnvironmentObject var holokitAppWatchManager: HoloKitWatchAppManager
+    @ObservedObject var holokitWatchAppManager = HoloKitWatchAppManager.shared
     
     let panelIndex: Int
     
@@ -23,7 +23,7 @@ struct PanelView: View {
                     .font(Font.custom("ObjectSans-Regular", size: 16))
                 
                 Button {
-                    holokitAppWatchManager.currentWatchPanel = HoloKitWatchPanel(rawValue: panelIndex) ?? .none
+                    holokitWatchAppManager.panel = HoloKitWatchPanel(rawValue: panelIndex) ?? .none
                 } label: {
                     ZStack {
                         Rectangle()

@@ -9,9 +9,7 @@ import SwiftUI
 
 struct MofaView: View {
     
-    @EnvironmentObject var mofaWatchConnectivityManager: MockMofaWatchConnectivityManager
-    
-    @EnvironmentObject var holokitAppWatchConnectivityManager: MockHoloKitAppWatchConnectivityManager
+    @ObservedObject var mofaWatchConnectivityManager = MockHoloKitAppWatchConnectivityManager.shared.mofaWatchConnectivityManager
     
     var body: some View {
         VStack {
@@ -21,22 +19,21 @@ struct MofaView: View {
                 .frame(height: 50)
             
             Button("Start Round") {
-                mofaWatchConnectivityManager.onRoundStarted(magicSchoolIndex: 1)
+                mofaWatchConnectivityManager.onRoundStarted()
             }
             
             Spacer()
                 .frame(height: 50)
             
             Button("End Round") {
-                mofaWatchConnectivityManager.onRoundEnded(.victory, 24, 0.43, 72)
+                mofaWatchConnectivityManager.onRoundEnded(roundResult: .victory, kill: 8, hitRate: 24)
             }
             
             Spacer()
                 .frame(height: 50)
             
             Button("Load Homepage") {
-                mofaWatchConnectivityManager.updateCurrentWatchPanel(0)
-                self.holokitAppWatchConnectivityManager.currentWatchPanel = .none
+                MockHoloKitAppWatchConnectivityManager.shared.updatePanel(panelIndex: 0)
             }
         }
     }
@@ -45,6 +42,5 @@ struct MofaView: View {
 struct MofaView_Previews: PreviewProvider {
     static var previews: some View {
         MofaView()
-            .environmentObject(MockMofaWatchConnectivityManager())
     }
 }
