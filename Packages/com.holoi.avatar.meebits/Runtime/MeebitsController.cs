@@ -31,10 +31,6 @@ namespace Holoi.Avatar.Meebits
                     weaponInstance.transform.localEulerAngles = new Vector3(-90, 0, 0);
                     weaponInstance.transform.localScale = Vector3.one * Scale;
                 }
-                else
-                {
-                    Debug.Log("can not hold weapon when Handjoint||WeaponPrefab is null.");
-                }
             }
 
 
@@ -45,15 +41,11 @@ namespace Holoi.Avatar.Meebits
                     var mats = MeshRenderer.materials;
                     foreach (var mat in mats)
                     {
-                        mat.EnableKeyword("_EMISSION");
+                        //mat.EnableKeyword("_EMISSION");
+                        Debug.Log("set emmision");
                         mat.SetColor("_EmissionColor", new Color(Emission, Emission, Emission, 1));
                     }
                 }
-                else
-                {
-                    Debug.Log("Can not adjust emission when meshrenderer is null.");
-                }
-
             }
         }
     }
