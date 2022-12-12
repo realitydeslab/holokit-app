@@ -20,6 +20,9 @@ namespace Holoi.Avatar.Meebits
         public Vector3 Offset= new Vector3(-.025f, 0.05f, 0.01f);
         public float Scale = 0.2f;
 
+
+
+
         void Start()
         {
             if (_holdWeapon)
@@ -41,8 +44,6 @@ namespace Holoi.Avatar.Meebits
                     var mats = MeshRenderer.materials;
                     foreach (var mat in mats)
                     {
-                        //mat.EnableKeyword("_EMISSION");
-                        Debug.Log("set emmision");
                         mat.SetColor("_EmissionColor", new Color(Emission, Emission, Emission, 1));
                     }
                 }
