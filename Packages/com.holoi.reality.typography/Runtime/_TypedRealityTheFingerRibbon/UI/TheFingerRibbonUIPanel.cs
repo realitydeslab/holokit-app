@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Holoi.Library.HoloKitApp.UI;
 using HoloKit;
+using TMPro;
 
 namespace Holoi.Reality.Typography.UI
 {
@@ -12,7 +11,7 @@ namespace Holoi.Reality.Typography.UI
 
         public override bool OverlayPreviousPanel => false;
 
-        [SerializeField] private RectTransform _text;
+        [SerializeField] private TMP_Text _text;
 
         private bool _isFaded = false;
 
@@ -33,8 +32,18 @@ namespace Holoi.Reality.Typography.UI
             if (isValid && !_isFaded)
             {
                 _isFaded = true;
-                LeanTween.alphaText(_text, 0f, FadeDuration);
-            } 
+                Color originalColor = _text.color;
+                LeanTween.value(1f, 0f, FadeDuration)
+                    .setEase(LeanTweenType.easeInOutSine)
+                    .setOnUpdate((float alpha) =>
+                    {
+                        _text.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+                    })
+                    .setOnComplete(() =>
+                    {
+                        _text.gameObject.SetActive(false);
+                    });
+            }
         }
     }
 }

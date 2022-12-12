@@ -18,6 +18,8 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] private float _destroyDelay = 2f;
 
+        public SkinnedMeshRenderer _avatarRenderer;
+
         private bool _isActive;
 
         private void Start()
@@ -60,7 +62,7 @@ namespace Holoi.Library.MOFABase
             _hookVFX.gameObject.SetActive(false);
             _placementVFX.gameObject.SetActive(false);
 
-            _birthVFX.transform.position = _hitPoint.position;
+            _birthVFX.SetSkinnedMeshRenderer("SkinnerMeshRenderer", _avatarRenderer);
             _birthVFX.gameObject.SetActive(true);
             _birthVFX.enabled = true;
 
