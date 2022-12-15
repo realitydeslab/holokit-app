@@ -4,7 +4,7 @@ using Unity.Netcode;
 using HoloKit;
 using Holoi.Library.HoloKitApp.UI;
 using Holoi.Library.HoloKitApp.WatchConnectivity;
-using Holoi.Library.MOFABase.WatchConnectivity;
+using Holoi.Library.HoloKitApp.WatchConnectivity.MOFA;
 
 namespace Holoi.Library.MOFABase
 {
@@ -75,10 +75,8 @@ namespace Holoi.Library.MOFABase
             _centerEyePose = HoloKitCamera.Instance.CenterEyePose;
             // Setup MofaWatchConnectivity
             MofaWatchConnectivityAPI.Initialize();
-            // MofaWatchConnectivityManager should take control first
-            MofaWatchConnectivityAPI.TakeControlWatchConnectivitySession();
             // We then update the control on Watch side so that MofaWatchConnectivityManager won't miss messages.
-            HoloKitAppWatchConnectivityAPI.UpdateCurrentWatchPanel(HoloKitWatchPanel.MOFA);
+            HoloKitAppWatchConnectivityAPI.UpdateWatchPanel(HoloKitWatchPanel.MOFA);
 
             MofaWatchConnectivityAPI.OnReceivedStartRoundMessage += OnReceivedRoundMessage;
             MofaWatchConnectivityAPI.OnWatchStateChanged += OnWatchStateChanged;
@@ -143,7 +141,8 @@ namespace Holoi.Library.MOFABase
                     break;
                 case MofaPhase.Countdown:
                     Reset();
-                    MofaWatchConnectivityAPI.SyncRoundStartToWatch(_mofaBaseRealityManager.GetPlayer().MagicSchoolTokenId.Value);
+                    //_mofaBaseRealityManager.GetPlayer().MagicSchoolTokenId.Value
+                    MofaWatchConnectivityAPI.OnRoundStarted();
                     break;
                 case MofaPhase.Fighting:
                     _isActive = true;
@@ -163,7 +162,7 @@ namespace Holoi.Library.MOFABase
         private void OnRoundResult()
         {
             var localPlayerIndividualStats = _mofaBaseRealityManager.GetIndividualStats();
-            MofaWatchConnectivityAPI.SyncRoundResultToWatch(localPlayerIndividualStats.IndividualRoundResult,
+            MofaWatchConnectivityAPI.OnRoundEnded((int)localPlayerIndividualStats.IndividualRoundResult,
                                                             localPlayerIndividualStats.Kill,
                                                             localPlayerIndividualStats.HitRate);
         }
