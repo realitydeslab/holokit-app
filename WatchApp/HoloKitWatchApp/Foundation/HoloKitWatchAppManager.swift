@@ -54,7 +54,7 @@ extension HoloKitWatchAppManager: WCSessionDelegate {
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
         // Switch to the corresponding panel after receiving a panel switch message
-        if let watchPanelIndex = applicationContext["Panel"] as? Int {
+        if let watchPanelIndex = applicationContext["WatchPanel"] as? Int {
             if let watchPanel = HoloKitWatchPanel(rawValue: watchPanelIndex) {
                 if (self.panel != watchPanel) {
                     print("Switched to panel: \(String(describing: watchPanel))")
@@ -73,7 +73,9 @@ extension HoloKitWatchAppManager: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        
+        if message["MOFA"] is Bool {
+            
+        }
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {

@@ -49,7 +49,8 @@ class MockHoloKitAppWatchConnectivityManager: NSObject, ObservableObject {
     
     func updatePanel(panelIndex: Int) {
         self.panel = HoloKitWatchPanel(rawValue: panelIndex)!
-        let context = ["Panel" : panelIndex] as [String : Any];
+        let context = ["WatchPanel" : panelIndex,
+                       "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any];
         do {
             try self.wcSession.updateApplicationContext(context)
             print("Updated panel: \(panelIndex)")
@@ -71,11 +72,11 @@ extension MockHoloKitAppWatchConnectivityManager: WCSessionDelegate {
     }
     
     func sessionDidBecomeInactive(_ session: WCSession) {
-        
+        print("[iPhone] sessionDidBecomeInactive")
     }
     
     func sessionDidDeactivate(_ session: WCSession) {
-        
+        print("[iPhone] sessionDidDeactivate")
     }
     
     func sessionReachabilityDidChange(_ session: WCSession) {

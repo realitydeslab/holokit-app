@@ -242,7 +242,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     
     func sendWatchStateChangedMessage(watchState: MofaWatchState) {
         let message = ["MOFA" : true,
-                       "State" : watchState.rawValue] as [String : Any]
+                       "WatchState" : watchState.rawValue] as [String : Any]
         HoloKitWatchAppManager.shared.wcSession.sendMessage(message, replyHandler: nil)
     }
     
