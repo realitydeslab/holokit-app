@@ -8,9 +8,9 @@ namespace Holoi.Avatar.Meebits
     {
         [Header("Emission")]
         [Tooltip("if false, do not need to modifiy following variables.")]
-        [SerializeField] bool _emission;
+        [SerializeField] bool _isEmisive;
         public SkinnedMeshRenderer MeshRenderer;
-        public float Emission = 0.1f;
+        public float EmissionIntensity = 1f;
 
         [Header("Weapon")]
         [Tooltip("if false, do not need to modifiy following variables.")]
@@ -24,7 +24,6 @@ namespace Holoi.Avatar.Meebits
         //[SerializeField] bool _isClip = false;
         [Range(0,1)]
         [SerializeField] float _clipProcess = 1;
-        private Vector2 _clipRange = new Vector2(-0.6f, 1.2f);
 
 
 
@@ -56,14 +55,15 @@ namespace Holoi.Avatar.Meebits
             }
 
 
-            if (_emission)
+            if (_isEmisive)
             {
                 if (MeshRenderer)
                 {
                     var mats = MeshRenderer.materials;
                     foreach (var mat in mats)
                     {
-                        mat.SetColor("_EmissionColor", new Color(Emission, Emission, Emission, 1));
+                        //mat.SetColor("_EmissionColor", new Color(Emission, Emission, Emission, 1));
+                        mat.SetFloat("_Brightness", EmissionIntensity);
                     }
                 }
             }
