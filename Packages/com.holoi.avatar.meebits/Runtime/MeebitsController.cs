@@ -20,7 +20,10 @@ namespace Holoi.Avatar.Meebits
         public Vector3 Offset= new Vector3(-.025f, 0.05f, 0.01f);
         public float Scale = 0.2f;
 
-        private float _clipProcess = 0;
+        [Header("Clip")]
+        //[SerializeField] bool _isClip = false;
+        [Range(0,1)]
+        [SerializeField] float _clipProcess = 1;
         private Vector2 _clipRange = new Vector2(-0.6f, 1.2f);
 
 
@@ -28,6 +31,19 @@ namespace Holoi.Avatar.Meebits
 
         void Start()
         {
+            if (true)
+            {
+                if (MeshRenderer)
+                {
+                    var mats = MeshRenderer.materials;
+                    foreach (var mat in mats)
+                    {
+                        mat.SetFloat("_ClipProcess", _clipProcess);
+                        mat.SetVector("_ClipRange", new Vector2(-0.6f, -0.6f + (1.75f* transform.localScale.x)));
+                    }
+                }
+            }
+
             if (_holdWeapon)
             {
                 if (HandJoint != null && WeaponPrefab != null)

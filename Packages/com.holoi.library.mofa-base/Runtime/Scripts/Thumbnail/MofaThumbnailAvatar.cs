@@ -58,16 +58,16 @@ namespace Holoi.Library.MOFABase
 
         IEnumerator WaitAndBegin(float time, float interval)
         {
-            yield return new WaitForSecondsRealtime(time);
+            yield return new WaitForSeconds(time);
             StartCoroutine(WaitAndShoot(interval));
         }
 
         IEnumerator WaitAndShoot(float time)
         {
             _avatarAnimator.SetTrigger("Attack A");
-            yield return new WaitForSecondsRealtime(0.25f);
+            yield return new WaitForSeconds(0.25f);
             ShootBolt();
-            yield return new WaitForSecondsRealtime(time - 0.25f);
+            yield return new WaitForSeconds(time - 0.25f);
             StartCoroutine(WaitAndShoot(_attackInterval));
         }
 
