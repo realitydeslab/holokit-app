@@ -65,20 +65,19 @@ extension HoloKitWatchAppManager: WCSessionDelegate {
             }
             return
         }
-        
-        if applicationContext["MOFA"] is Bool {
-            mofaWatchAppManager.didReceiveApplicationContext(applicationContext: applicationContext)
-            return
-        }
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         if message["MOFA"] is Bool {
-            
+            mofaWatchAppManager.didReceiveMessage(message: message)
+            return
         }
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
-        
+        if message["MOFA"] is Bool {
+            mofaWatchAppManager.didReceiveMessage(message: message, replyHandler: replyHandler)
+            return
+        }
     }
 }

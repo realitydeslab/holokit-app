@@ -236,7 +236,7 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     
     func sendWatchTriggeredMessage() {
         let message = ["MOFA" : true,
-                       "Triggered" : true]
+                       "WatchTriggered" : true]
         HoloKitWatchAppManager.shared.wcSession.sendMessage(message, replyHandler: nil)
     }
     
@@ -296,38 +296,33 @@ class MofaWatchAppManager: NSObject, ObservableObject {
 
 // MARK: - Mock WCSessionDelegate
 extension MofaWatchAppManager {
-    func didReceiveApplicationContext(applicationContext: [String : Any]) {
-        if applicationContext["Start"] is Bool {
+    func didReceiveMessage(message: [String : Any]) {
+        if message["Start"] is Bool {
             if (self.view != .fightingView) {
                 print("MOFA round started")
                 DispatchQueue.main.async {
-                    if let magicSchoolIndex = applicationContext["MagicSchool"] as? Int {
-                        if let magicSchool = MofaMagicSchool(rawValue: magicSchoolIndex) {
-                            self.magicSchool = magicSchool
-                        }
-                    }
                     self.startRound()
                 }
             }
             return
         }
         
-        if applicationContext["End"] is Bool {
+        if message["End"] is Bool {
             if (self.view == .fightingView) {
                 print("MOFA round ended")
-                if let roundResultIndex = applicationContext["RoundResult"] as? Int {
+                if let roundResultIndex = message["Result"] as? Int {
                     if let roundResult = MofaRoundResult(rawValue: roundResultIndex) {
                         DispatchQueue.main.async {
                             self.roundResult = roundResult
                         }
                     }
                 }
-                if let kill = applicationContext["Kill"] as? Int {
+                if let kill = message["Kill"] as? Int {
                     DispatchQueue.main.async {
                         self.kill = kill
                     }
                 }
-                if let hitRate = applicationContext["HitRate"] as? Int {
+                if let hitRate = message["HitRate"] as? Int {
                     DispatchQueue.main.async {
                         self.hitRate = Int(hitRate)
                     }
@@ -340,11 +335,7 @@ extension MofaWatchAppManager {
         }
     }
     
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        
-    }
-    
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+    func didReceiveMessage(message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
         if message["QueryWatchState"] is Int {
             let replyMessage = ["WatchState" : self.currentState.rawValue];
             replyHandler(replyMessage)

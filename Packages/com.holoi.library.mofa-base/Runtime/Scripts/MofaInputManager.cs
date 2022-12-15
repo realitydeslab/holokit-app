@@ -313,7 +313,14 @@ namespace Holoi.Library.MOFABase
         #region Apple Watch
         private void OnReceivedRoundMessage()
         {
-            _mofaBaseRealityManager.TryStartRound();
+            if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting)
+            {
+                MofaWatchConnectivityAPI.OnRoundStarted();
+            }
+            else
+            {
+                _mofaBaseRealityManager.TryStartRound();
+            }
         }
 
         private void OnWatchStateChanged(MofaWatchState watchState)
