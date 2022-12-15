@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Holoi.Library.HoloKitApp
+namespace Holoi.Library.HoloKitApp.WatchConnectivity.MOFA
 {
     public class MofaWatchConnectivityAPI
     {
