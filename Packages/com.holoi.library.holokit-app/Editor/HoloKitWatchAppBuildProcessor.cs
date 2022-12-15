@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Holoi.Library.HoloKitApp.Editor
 {
-    public class WatchAppBuildProcessor
+    public class HoloKitWatchAppBuildProcessor
     {
         private const string WatchAppDisplayName = "HoloKit";
 
@@ -83,13 +83,13 @@ namespace Holoi.Library.HoloKitApp.Editor
                 // Code
                 "HoloKitWatchApp.swift",
                 "Foundation/HoloKitWatchAppManager.swift",
-                "Foundation/Views/HomeView.swift",
+                "Foundation/Views/RootView.swift",
                 "Foundation/Views/PanelView.swift",
                 "Foundation/Views/PanelListView.swift",
 
                 // Mofa
                 "MOFA/MofaWatchAppManager.swift",
-                "MOFA/Views/MofaHomeView.swift",
+                "MOFA/Views/MofaRootView.swift",
                 "MOFA/Views/MofaReadyView.swift",
                 "MOFA/Views/MofaHandednessView.swift",
                 "MOFA/Views/MofaFightingView.swift",

@@ -5,7 +5,7 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using Unity.Netcode;
-using Unity.Netcode.Transports.UNET;
+using Unity.Netcode.Transports.UTP;
 using Netcode.Transports.MultipeerConnectivity;
 using Holoi.AssetFoundation;
 using Holoi.Library.Permissions;
@@ -290,13 +290,8 @@ namespace Holoi.Library.HoloKitApp
 
         private void ResetWatchConnectivity()
         {
-            //if (HoloKitAppWatchConnectivityAPI.IsWatchAppInstalled())
-            //{
-                // Let HoloKitAppWatchConnectivityManager take control of WCSessionDelegate
-                HoloKitAppWatchConnectivityAPI.TakeControlWatchConnectivitySession();
-                // Make Watch App jump back to the main page
-                HoloKitAppWatchConnectivityAPI.UpdateCurrentWatchPanel(HoloKitWatchPanel.None);
-            //}
+            // Make Watch App jump back to the main page
+            HoloKitAppWatchConnectivityAPI.UpdateWatchPanel(HoloKitWatchPanel.None);
         }
 
         public void EnterRealityAs(HoloKitAppPlayerType playerType)
@@ -340,11 +335,11 @@ namespace Holoi.Library.HoloKitApp
             var networkManager = Instantiate(_networkManagerPrefab);
             if (HoloKitUtils.IsEditor)
             {
-                networkManager.NetworkConfig.NetworkTransport = networkManager.GetComponent<UNetTransport>();
+                networkManager.NetworkConfig.NetworkTransport = networkManager.GetComponent<UnityTransport>();
             }
             else
             {
-                Destroy(networkManager.GetComponent<UNetTransport>());
+                Destroy(networkManager.GetComponent<UnityTransport>());
             }
             foreach (var prefab in _realityManager.NetworkPrefabs)
             {

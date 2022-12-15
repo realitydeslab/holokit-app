@@ -26,10 +26,7 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity
         private static extern bool HoloKitAppWatchConnectivity_IsWatchReachable();
 
         [DllImport("__Internal")]
-        private static extern void HoloKitAppWatchConnectivity_TakeControlWCSession();
-
-        [DllImport("__Internal")]
-        private static extern void HoloKitAppWatchConnectivity_UpdateCurrentWatchPanel(int watchPanelIndex);
+        private static extern void HoloKitAppWatchConnectivity_UpdateWatchPanel(int watchPanel);
 
         [AOT.MonoPInvokeCallback(typeof(Action<bool>))]
         public static void OnSessionReachabilityChangedDelegate(bool isReachable)
@@ -83,19 +80,11 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity
             }
         }
 
-        public static void TakeControlWatchConnectivitySession()
+        public static void UpdateWatchPanel(HoloKitWatchPanel watchPanel)
         {
             if (HoloKitUtils.IsRuntime)
             {
-                HoloKitAppWatchConnectivity_TakeControlWCSession();
-            }
-        }
-
-        public static void UpdateCurrentWatchPanel(HoloKitWatchPanel watchPanel)
-        {
-            if (HoloKitUtils.IsRuntime)
-            {
-                HoloKitAppWatchConnectivity_UpdateCurrentWatchPanel((int)watchPanel);
+                HoloKitAppWatchConnectivity_UpdateWatchPanel((int)watchPanel);
             }
         }
     }

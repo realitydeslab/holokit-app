@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.VFX;
 using Unity.Netcode;
-using Holoi.Library.MOFABase.WatchConnectivity;
+using Holoi.Library.HoloKitApp.WatchConnectivity.MOFA;
 
 namespace Holoi.Library.MOFABase
 {
