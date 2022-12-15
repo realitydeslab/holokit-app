@@ -75,6 +75,8 @@ namespace Holoi.Library.MOFABase
             _centerEyePose = HoloKitCamera.Instance.CenterEyePose;
             // Setup MofaWatchConnectivity
             MofaWatchConnectivityAPI.Initialize();
+            // Sync selected magic school to Watch
+            MofaWatchConnectivityAPI.UpdateMagicSchool(int.Parse(HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId));
             // We then update the control on Watch side so that MofaWatchConnectivityManager won't miss messages.
             HoloKitAppWatchConnectivityAPI.UpdateWatchPanel(HoloKitWatchPanel.MOFA);
 

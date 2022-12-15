@@ -19,6 +19,9 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity.MOFA
                                                                     Action<float, float> OnReceivedHealthDataMessage);
 
         [DllImport("__Internal")]
+        private static extern void MofaWatchConnectivity_UpdateMagicSchool(int magicSchool);
+
+        [DllImport("__Internal")]
         private static extern void MofaWatchConnectivity_OnRoundStarted();
 
         [DllImport("__Internal")]
@@ -67,6 +70,11 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity.MOFA
                                              OnWatchStateChangedDelegate,
                                              OnWatchTriggeredDelegate,
                                              OnReceivedHealthDataMessageDelegate);
+        }
+
+        public static void UpdateMagicSchool(int magicSchool)
+        {
+            MofaWatchConnectivity_UpdateMagicSchool(magicSchool);
         }
 
         public static void OnRoundStarted()

@@ -12,6 +12,9 @@ struct RootView: View {
                 .onAppear {
                     holokitWatchAppManager.mofaWatchAppManager.onAppear()
                 }
+                .onDisappear {
+                    holokitWatchAppManager.mofaWatchAppManager.OnDisappear()
+                }
         }
     }
     

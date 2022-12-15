@@ -103,11 +103,11 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     
     // This function is called when watch app switched to MOFA panel
     func onAppear() {
-        
+        self.view = .readyView
     }
     
     func OnDisappear() {
-        self.view = .readyView
+        stopRound()
     }
     
     public func startWorkout() {
@@ -296,6 +296,14 @@ class MofaWatchAppManager: NSObject, ObservableObject {
 
 // MARK: - Mock WCSessionDelegate
 extension MofaWatchAppManager {
+    func didReceiveApplicationContext(applicationContext: [String : Any]) {
+        if let magicSchool = applicationContext["MagicSchool"] as? Int {
+            DispatchQueue.main.async {
+                self.magicSchool = MofaMagicSchool(rawValue: magicSchool)!
+            }
+        }
+    }
+    
     func didReceiveMessage(message: [String : Any]) {
         if message["Start"] is Bool {
             if (self.view != .fightingView) {
