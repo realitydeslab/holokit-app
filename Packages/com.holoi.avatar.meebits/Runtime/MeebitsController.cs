@@ -20,6 +20,9 @@ namespace Holoi.Avatar.Meebits
         public Vector3 Offset= new Vector3(-.025f, 0.05f, 0.01f);
         public float Scale = 0.2f;
 
+        private float _clipProcess = 0;
+        private Vector2 _clipRange = new Vector2(-0.6f, 1.2f);
+
 
 
 

@@ -62,9 +62,9 @@ namespace Holoi.Library.MOFABase
             _hookVFX.gameObject.SetActive(false);
             _placementVFX.gameObject.SetActive(false);
 
-            _birthVFX.SetSkinnedMeshRenderer("SkinnerMeshRenderer", _avatarRenderer);
-            _birthVFX.gameObject.SetActive(true);
-            _birthVFX.enabled = true;
+            //_birthVFX.SetSkinnedMeshRenderer("SkinnerMeshRenderer", _avatarRenderer);
+            //_birthVFX.gameObject.SetActive(true);
+            //_birthVFX.enabled = true;
 
             _animator.SetTrigger("Birth");
             if (destroy)
