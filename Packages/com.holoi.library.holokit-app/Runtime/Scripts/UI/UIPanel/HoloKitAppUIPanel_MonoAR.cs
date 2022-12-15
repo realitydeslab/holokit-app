@@ -26,7 +26,7 @@ namespace Holoi.Library.HoloKitApp.UI
             // If local device is spectator
             if (HoloKitUtils.IsRuntime)
             {
-                if (!HoloKitApp.Instance.IsHost)
+                if (!HoloKitApp.Instance.IsMaster)
                 {
                     HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_WaitingForConnection");
                 }
@@ -40,7 +40,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnSpectatorButtonPressed()
         {
-            if (HoloKitApp.Instance.IsHost)
+            if (HoloKitApp.Instance.IsMaster)
             {
                 HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ShareQRCode");
             }

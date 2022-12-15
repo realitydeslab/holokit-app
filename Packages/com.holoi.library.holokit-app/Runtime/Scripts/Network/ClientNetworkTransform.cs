@@ -1,8 +1,6 @@
-using Unity.Netcode.Components;
-using Unity.Netcode;
 using UnityEngine;
 
-namespace Unity.Multiplayer.Samples.Utilities.ClientAuthority
+namespace Unity.Netcode.Components.ClientAuthority
 {
     // TODO inherit from `NetworkBehaviour` instead of `NetworkTransform` to cut direct relationship between two
     // TODO change to owner netvar instead of RPC based

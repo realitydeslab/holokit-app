@@ -25,7 +25,7 @@ namespace Holoi.Reality.MOFATheHunting.UI
             transform.SetSiblingIndex(transform.GetSiblingIndex() - 1);
 
             _dragonControllerButton.SetActive(false);
-            if (!HoloKitApp.Instance.IsHost && !HoloKitApp.Instance.IsPuppeteer)
+            if (!HoloKitApp.Instance.IsMaster && !HoloKitApp.Instance.IsPuppeteer)
             {
                 _spawnDragonButton.SetActive(false);
             }
@@ -48,7 +48,7 @@ namespace Holoi.Reality.MOFATheHunting.UI
         private void OnDragonSpawned()
         {
             _spawnDragonButton.SetActive(false);
-            if (HoloKitApp.Instance.IsHost || HoloKitApp.Instance.IsPuppeteer)
+            if (HoloKitApp.Instance.IsMaster || HoloKitApp.Instance.IsPuppeteer)
             {
                 _dragonControllerButton.SetActive(true);
             }

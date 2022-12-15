@@ -31,7 +31,7 @@ namespace Holoi.Reality.Dragon
 
         void Start()
         {
-            if (HoloKitApp.Instance.IsHost)
+            if (HoloKitApp.Instance.IsMaster)
             {
 
             }

@@ -132,7 +132,7 @@ namespace Holoi.Library.MOFABase
                 string tokenId = HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId;
                 var magicSchoolTokenId = int.Parse(tokenId);
                 // Currently we only support 1 on 1, so the host is always blue and the other player is always red 
-                SpawnPlayerServerRpc(magicSchoolTokenId, HoloKitApp.HoloKitApp.Instance.IsHost ? MofaTeam.Blue : MofaTeam.Red);
+                SpawnPlayerServerRpc(magicSchoolTokenId, HoloKitApp.HoloKitApp.Instance.IsMaster ? MofaTeam.Blue : MofaTeam.Red);
             }
         }
 
@@ -212,7 +212,7 @@ namespace Holoi.Library.MOFABase
 
         public MofaPlayer GetPlayer(ulong clientId = 0)
         {
-            if (!HoloKitApp.HoloKitApp.Instance.IsHost)
+            if (!HoloKitApp.HoloKitApp.Instance.IsMaster)
             {
                 clientId = NetworkManager.LocalClientId;
             }

@@ -20,7 +20,7 @@ namespace Holoi.Library.MOFABase
 
         private void Start()
         {
-            if (HoloKitApp.HoloKitApp.Instance.IsHost)
+            if (HoloKitApp.HoloKitApp.Instance.IsMaster)
             {
                 _blueTeamMark.SetActive(true);
                 _redTeamMark.SetActive(false);

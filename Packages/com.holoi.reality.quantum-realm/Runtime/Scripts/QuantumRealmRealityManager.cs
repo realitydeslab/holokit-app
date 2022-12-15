@@ -33,7 +33,7 @@ namespace Holoi.Reality.QuantumRealm
 
         private void Start()
         {
-            if (HoloKitApp.Instance.IsHost)
+            if (HoloKitApp.Instance.IsMaster)
             {
                 _arPlaneManager.enabled = true;
                 _arRaycastManager.enabled = true;

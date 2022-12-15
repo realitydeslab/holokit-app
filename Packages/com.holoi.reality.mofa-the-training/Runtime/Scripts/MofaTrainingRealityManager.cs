@@ -27,7 +27,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.Start();
 
-            if (HoloKitApp.Instance.IsHost)
+            if (HoloKitApp.Instance.IsMaster)
             {
                 _arPlaneManager.enabled = true;
                 _arRaycastManager.enabled = true;

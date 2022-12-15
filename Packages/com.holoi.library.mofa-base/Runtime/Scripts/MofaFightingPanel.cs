@@ -79,7 +79,7 @@ namespace Holoi.Library.MOFABase
             HoloKitAppRecorder.OnRecordingStopped += OnReappear;
             HoloKitAppUIPanel_MonoAR_ShareQRCode.OnStartedSharingQRCode += OnDisappear;
             HoloKitAppUIPanel_MonoAR_ShareQRCode.OnStoppedSharingQRCode += OnReappear;
-            HoloKitAppMultiplayerManager.OnStartedSyncingTimestamp += OnDisappear;
+            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated += OnDisappear;
             HoloKitAppMultiplayerManager.OnAlignmentMarkerChecked += OnReappear;
             HoloKitAppUIPanel_MonoAR_RescanQRCode.OnRescanQRCode += OnDisappear;
             HoloKitAppUIPanel_MonoAR_RescanQRCode.OnCancelRescanQRCode += OnReappear;
@@ -90,7 +90,7 @@ namespace Holoi.Library.MOFABase
             Status.gameObject.SetActive(false);
             RedScreen.gameObject.SetActive(false);
 
-            if (!HoloKitApp.HoloKitApp.Instance.IsHost)
+            if (!HoloKitApp.HoloKitApp.Instance.IsMaster)
             {
                 OnDisappear();
             }
@@ -116,7 +116,7 @@ namespace Holoi.Library.MOFABase
             HoloKitAppRecorder.OnRecordingStopped -= OnReappear;
             HoloKitAppUIPanel_MonoAR_ShareQRCode.OnStartedSharingQRCode -= OnDisappear;
             HoloKitAppUIPanel_MonoAR_ShareQRCode.OnStoppedSharingQRCode -= OnReappear;
-            HoloKitAppMultiplayerManager.OnStartedSyncingTimestamp -= OnDisappear;
+            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated -= OnDisappear;
             HoloKitAppMultiplayerManager.OnAlignmentMarkerChecked -= OnReappear;
             HoloKitAppUIPanel_MonoAR_RescanQRCode.OnRescanQRCode -= OnDisappear;
             HoloKitAppUIPanel_MonoAR_RescanQRCode.OnCancelRescanQRCode -= OnReappear;

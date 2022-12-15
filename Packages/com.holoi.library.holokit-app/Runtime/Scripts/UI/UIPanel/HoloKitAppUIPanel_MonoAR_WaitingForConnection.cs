@@ -19,9 +19,7 @@ namespace Holoi.Library.HoloKitApp.UI
             MultipeerConnectivityTransport.OnBrowserFoundPeer += OnBrowserFoundPeer;
             MultipeerConnectivityTransport.OnBrowserLostPeer += OnBrowserLostPeer;
             MultipeerConnectivityTransport.OnConnectingWithPeer += OnConnectingWithPeer;
-            HoloKitAppMultiplayerManager.OnLocalClientConnected += OnLocalClientConnected;
-            HoloKitAppMultiplayerManager.OnStartedSyncingTimestamp += OnStartedSyncingTimestamp;
-            HoloKitAppMultiplayerManager.OnStartedSyncingPose += OnStartedSyncingPose;
+            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated += OnConnectedPlayerListUpdated;
         }
 
         private void OnDestroy()
@@ -29,9 +27,7 @@ namespace Holoi.Library.HoloKitApp.UI
             MultipeerConnectivityTransport.OnBrowserFoundPeer -= OnBrowserFoundPeer;
             MultipeerConnectivityTransport.OnBrowserLostPeer -= OnBrowserLostPeer;
             MultipeerConnectivityTransport.OnConnectingWithPeer -= OnConnectingWithPeer;
-            HoloKitAppMultiplayerManager.OnLocalClientConnected -= OnLocalClientConnected;
-            HoloKitAppMultiplayerManager.OnStartedSyncingTimestamp -= OnStartedSyncingTimestamp;
-            HoloKitAppMultiplayerManager.OnStartedSyncingPose -= OnStartedSyncingPose;
+            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated -= OnConnectedPlayerListUpdated;
         }
 
         private void OnBrowserFoundPeer(string peerName)
@@ -52,20 +48,24 @@ namespace Holoi.Library.HoloKitApp.UI
             _text.text = $"Connecting to nearby\nhost {peerName}...";
         }
 
-        private void OnLocalClientConnected()
+        private void OnConnectedPlayerListUpdated()
         {
-            _text.text = $"Connected to nearby\nhost {_peerName}";
-        }
-
-        private void OnStartedSyncingTimestamp()
-        {
-            _text.text = $"Syncing timestamp with\nnearby host {_peerName}...";
-        }
-
-        private void OnStartedSyncingPose()
-        {
-            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-            HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ScanQRCode");
+            var localPlayer = HoloKitApp.Instance.MultiplayerManager.LocalPlayer;
+            switch (localPlayer.SyncStatus)
+            {
+                case HoloKitAppPlayerSyncStatus.None:
+                    _text.text = $"Connected to nearby\nhost {_peerName}";
+                    break;
+                case HoloKitAppPlayerSyncStatus.SyncingTimestamp:
+                    _text.text = $"Syncing timestamp with\nnearby host {_peerName}...";
+                    break;
+                case HoloKitAppPlayerSyncStatus.SyncingPose:
+                    HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+                    HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ScanQRCode");
+                    break;
+                case HoloKitAppPlayerSyncStatus.Synced:
+                    break;
+            }
         }
 
         public void OnExitButtonPressed()

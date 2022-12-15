@@ -9,7 +9,7 @@ namespace Holoi.Library.ARUX
 
         private void Start()
         {
-            if (HoloKitApp.HoloKitApp.Instance.IsHost)
+            if (HoloKitApp.HoloKitApp.Instance.IsMaster)
             {
                 _parentConstraint.constraintActive = true;
             }

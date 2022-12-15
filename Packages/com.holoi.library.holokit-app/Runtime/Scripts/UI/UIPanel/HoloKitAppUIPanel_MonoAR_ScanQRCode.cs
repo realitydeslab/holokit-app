@@ -10,18 +10,22 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
-            HoloKitAppMultiplayerManager.OnPoseSynced += OnPoseSynced;
+            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated += OnConnectedPlayerListUpdated;
         }
 
         private void OnDestroy()
         {
-            HoloKitAppMultiplayerManager.OnPoseSynced -= OnPoseSynced;
+            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated -= OnConnectedPlayerListUpdated;
         }
 
-        private void OnPoseSynced()
+        private void OnConnectedPlayerListUpdated()
         {
-            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-            HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_CheckAlignmentMark");
+            var localPlayer = HoloKitApp.Instance.MultiplayerManager.LocalPlayer;
+            if (localPlayer.SyncStatus == HoloKitAppPlayerSyncStatus.Synced)
+            {
+                HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+                HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_CheckAlignmentMark");
+            }
         }
 
         public void OnExitButtonPressed()

@@ -76,22 +76,22 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnStartHostButtonPressed()
         {
-            HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Host);
+            HoloKitApp.Instance.EnterRealityAs(true, HoloKitAppPlayerType.Player);
         }
 
         public void OnStartNonHostPlayerButtonPressed()
         {
-            HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.NonHostPlayer);
+            HoloKitApp.Instance.EnterRealityAs(false, HoloKitAppPlayerType.Player);
         }
 
         public void OnStartPuppeteerButtonPressed()
         {
-            HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Puppeteer);
+            HoloKitApp.Instance.EnterRealityAs(false, HoloKitAppPlayerType.Puppeteer);
         }
 
         public void OnStartSpectatorButtonPressed()
         {
-            HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Spectator);
+            HoloKitApp.Instance.EnterRealityAs(false, HoloKitAppPlayerType.Spectator);
         }
     }
 }

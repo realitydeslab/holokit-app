@@ -42,7 +42,7 @@ namespace Holoi.Library.HoloKitApp
             if (xrOrigin.TryGetComponent(out _arTrackedImageManager))
             {
                 // Host does not need image tracker
-                if (HoloKitApp.Instance.IsHost)
+                if (HoloKitApp.Instance.IsMaster)
                 {
                     Destroy(_arTrackedImageManager);
                 }
@@ -54,7 +54,7 @@ namespace Holoi.Library.HoloKitApp
             else
             {
                 // Add ARTrackedImageManager if client does not have one
-                if (!HoloKitApp.Instance.IsHost)
+                if (!HoloKitApp.Instance.IsMaster)
                 {
                     _arTrackedImageManager = xrOrigin.gameObject.AddComponent<ARTrackedImageManager>();
                     SetupARTrackedImageManager();

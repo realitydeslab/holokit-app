@@ -9,14 +9,6 @@ using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
 {
-    public enum ClientSyncPhase
-    {
-        None = 0,
-        SyncingTimestamp = 1,
-        SyncingPose = 2,
-        Synced = 3
-    }
-
     public struct ImagePosePair
     {
         public Vector3 HostImagePosition; // QRCode image pose in host's coordinate system
@@ -26,20 +18,21 @@ namespace Holoi.Library.HoloKitApp
     }
 
     // Rotate client's coordinate system by theta first, then translate
-    public struct ClientCalibrationResult
+    public struct ClientSyncResult
     {
         public float ThetaInDeg; // Client to server
         public Vector3 Translate;
     }
 
     /// <summary>
-    /// Client part of this partial class
+    /// This is the client part of this partial class.
     /// </summary>
     public partial class HoloKitAppMultiplayerManager
     {
+        /// <summary>
+        /// The prefab of the phone alignment marker.
+        /// </summary>
         [SerializeField] private GameObject _phoneAlignmentMarkerPrefab;
-
-        private ClientSyncPhase _currentClientSyncPhase;
 
         /// <summary>
         /// This queue stores a sequence of timestamp offsets from the local 
@@ -67,12 +60,12 @@ namespace Holoi.Library.HoloKitApp
         /// <summary>
         /// The timestamp of the lastest ARSession frame.
         /// </summary>
-        private double _clientLatestFrameTimestamp;
+        private double _latestARSessionFrameTimestamp;
 
         /// <summary>
         /// Stores pairs of host image poses and client image poses.
         /// </summary>
-        private readonly Queue<ImagePosePair> _clientImagePosePairQueue = new();
+        private readonly Queue<ImagePosePair> _imagePosePairQueue = new();
 
         /// <summary>
         /// We need at least this amount of image pairs to start the calculation.
@@ -83,75 +76,53 @@ namespace Holoi.Library.HoloKitApp
         private const float OptimizationPenaltyConstant = 10;
 
         /// <summary>
-        /// Stores a list of calibration result.
+        /// Stores a list of sync result.
         /// </summary>
-        private readonly Queue<ClientCalibrationResult> _clientCalibrationResultQueue = new();
+        private readonly Queue<ClientSyncResult> _syncResultQueue = new();
 
         /// <summary>
         /// Start to compute the standard deviation of the queue when the number of elements
         /// in the queue exceeds this number.
         /// </summary>
-        private const int ClientCalibrationResultQueueStablizationCount = 30;
+        private const int ClientSyncResultQueueStablizationCount = 30;
 
         private const double ThetaStandardDeviationThreshold = 0.1; // In degrees
 
+        /// <summary>
+        /// The reference of the phone alignment marker.
+        /// </summary>
         private GameObject _phoneAlignmentMarker;
-
-        /// <summary>
-        /// This event is called when the client starts to calculte its timestamp
-        /// offset to the host.
-        /// </summary>
-        public static event Action OnStartedSyncingTimestamp;
-
-        /// <summary>
-        /// This event is called when the client starts to sync its pose to the
-        /// host by scanning the QRCode on the host device's screen.
-        /// </summary>
-        public static event Action OnStartedSyncingPose;
-
-        /// <summary>
-        /// This event is called when pose is successfully synced on the client.
-        /// </summary>
-        public static event Action OnPoseSynced;
 
         /// <summary>
         /// This event is called when the client checks the alignment marker.
         /// </summary>
         public static event Action OnAlignmentMarkerChecked;
 
-        private void OnNetworkSpawn_Client()
-        {
-            if (!IsServer)
-            {
-                if (HoloKitUtils.IsRuntime)
-                {
-                    StartClientCalibration();
-                }
-                else
-                {
-                    _currentClientSyncPhase = ClientSyncPhase.Synced;
-                }
-            }
-        }
-
-        private void FixedUpdate_Client()
-        {
-            if (_currentClientSyncPhase == ClientSyncPhase.SyncingTimestamp)
-            {
-                OnRequestTimestampServerRpc(HoloKitARSessionControllerAPI.GetSystemUptime());
-            }
-        }
-
         /// <summary>
         /// In Phase 1, we calculate the local device's timestamp offset to the host. 
         /// </summary>
-        private void StartClientCalibration()
+        private void StartSpatialAnchorSyncProcess()
         {
-            _timestampOffsetQueue.Clear();
-            _clientImagePosePairQueue.Clear();
-            _clientCalibrationResultQueue.Clear();
-            _currentClientSyncPhase = ClientSyncPhase.SyncingTimestamp;
-            OnStartedSyncingTimestamp?.Invoke();
+            if (HoloKitUtils.IsRuntime)
+            {
+                _timestampOffsetQueue.Clear();
+                _imagePosePairQueue.Clear();
+                _syncResultQueue.Clear();
+                _localPlayer.SyncStatus = HoloKitAppPlayerSyncStatus.SyncingTimestamp;
+            }
+            else
+            {
+                _localPlayer.SyncStatus = HoloKitAppPlayerSyncStatus.Synced;
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            // In this phase, client constantly request timestamp from the server.
+            if (_localPlayer != null && _localPlayer.SyncStatus == HoloKitAppPlayerSyncStatus.SyncingTimestamp)
+            {
+                OnRequestTimestampServerRpc(HoloKitARSessionControllerAPI.GetSystemUptime());
+            }
         }
 
         /// <summary>
@@ -163,7 +134,7 @@ namespace Holoi.Library.HoloKitApp
         [ClientRpc]
         private void OnRespondTimestampClientRpc(double hostTimestamp, double oldClientTimestamp, ClientRpcParams clientRpcParams = default)
         {
-            if (_currentClientSyncPhase != ClientSyncPhase.SyncingTimestamp) { return; }
+            if (_localPlayer.SyncStatus != HoloKitAppPlayerSyncStatus.SyncingTimestamp) { return; }
 
             double currentClientTimestamp = HoloKitARSessionControllerAPI.GetSystemUptime();
             double offset = hostTimestamp + (currentClientTimestamp - oldClientTimestamp) / 2 - currentClientTimestamp;
@@ -178,10 +149,9 @@ namespace Holoi.Library.HoloKitApp
                     // The stardard deviation of the current queue is acceptable
                     // Take the avarage value as the timestamp offset
                     _finalTimestampOffset = _timestampOffsetQueue.Average();
-                    Debug.Log($"[MultiplayerManager] Final timestamp offset: {_finalTimestampOffset}");
-                    _currentClientSyncPhase = ClientSyncPhase.SyncingPose;
-                    OnStartedSyncingPose?.Invoke();
-                    StartScanningQRCode();
+                    Debug.Log($"[SpatialAnchorSynchronization] Final timestamp offset: {_finalTimestampOffset}");
+                    _localPlayer.SyncStatus = HoloKitAppPlayerSyncStatus.SyncingPose;
+                    //StartScanningQRCode();
                 }
                 else
                 {
@@ -211,7 +181,7 @@ namespace Holoi.Library.HoloKitApp
                 // https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@5.1/manual/features/image-tracking.html#tracking-state
                 if (image.trackingState == TrackingState.Tracking)
                 {
-                    OnRequestImagePoseServerRpc(_clientLatestFrameTimestamp + _finalTimestampOffset, image.transform.position, image.transform.rotation);
+                    OnRequestImagePoseServerRpc(_latestARSessionFrameTimestamp + _finalTimestampOffset, image.transform.position, image.transform.rotation);
                 }
             }
             else if (args.updated.Count > 1)
@@ -222,15 +192,15 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnARSessionUpdatedFrame_Client(double timestamp, Matrix4x4 _)
         {
-            _clientLatestFrameTimestamp = timestamp;
+            _latestARSessionFrameTimestamp = timestamp;
         }
 
         [ClientRpc]
         private void OnRespondImagePoseClientRpc(Vector3 hostImagePosition, Quaternion hostImageRotation, Vector3 clientImagePosition, Quaternion clientImageRotation, ClientRpcParams clientRpcParams = default)
         {
-            if (_currentClientSyncPhase != ClientSyncPhase.SyncingPose)  return;
+            if (_localPlayer.SyncStatus != HoloKitAppPlayerSyncStatus.SyncingPose)  return;
 
-            _clientImagePosePairQueue.Enqueue(new ImagePosePair()
+            _imagePosePairQueue.Enqueue(new ImagePosePair()
             {
                 HostImagePosition = hostImagePosition,
                 HostImageRotation = hostImageRotation,
@@ -238,25 +208,25 @@ namespace Holoi.Library.HoloKitApp
                 ClientImageRotation = clientImageRotation
             });
             // We wait until the queue reaches the minimal size.
-            if (_clientImagePosePairQueue.Count > ClientImagePosePairQueueStablizationCount)
+            if (_imagePosePairQueue.Count > ClientImagePosePairQueueStablizationCount)
             {
-                var clientCalibrationResult = CalculateClientCalibrationResult();
-                _clientCalibrationResultQueue.Enqueue(clientCalibrationResult);
-                if (_clientCalibrationResultQueue.Count > ClientCalibrationResultQueueStablizationCount)
+                var clientSyncResult = CalculateClientSyncResult();
+                _syncResultQueue.Enqueue(clientSyncResult);
+                if (_syncResultQueue.Count > ClientSyncResultQueueStablizationCount)
                 {
-                    var thetaStandardDeviation = HoloKitAppUtils.CalculateStdDev(_clientCalibrationResultQueue.Select(x => (double)x.ThetaInDeg));
+                    var thetaStandardDeviation = HoloKitAppUtils.CalculateStdDev(_syncResultQueue.Select(x => (double)x.ThetaInDeg));
                     if (thetaStandardDeviation < ThetaStandardDeviationThreshold)
                     {
-                        // Client calibration succeeded
-                        OnClientCalibrationSucceeded();
+                        // Client sync succeeded
+                        OnSynced();
                         return;
                     }
                     else
                     {
-                        _ = _clientCalibrationResultQueue.Dequeue();
+                        _ = _syncResultQueue.Dequeue();
                     }
                 }
-                _ = _clientImagePosePairQueue.Dequeue();
+                _ = _imagePosePairQueue.Dequeue();
             }
         }
 
@@ -264,19 +234,19 @@ namespace Holoi.Library.HoloKitApp
         /// Use the least square method to calculate the result.
         /// </summary>
         /// <returns></returns>
-        private ClientCalibrationResult CalculateClientCalibrationResult()
+        private ClientSyncResult CalculateClientSyncResult()
         {
             var clientImagePositionCenter = new Vector3(
-                _clientImagePosePairQueue.Select(o => o.ClientImagePosition.x).Average(),
-                _clientImagePosePairQueue.Select(o => o.ClientImagePosition.y).Average(),
-                _clientImagePosePairQueue.Select(o => o.ClientImagePosition.z).Average());
+                _imagePosePairQueue.Select(o => o.ClientImagePosition.x).Average(),
+                _imagePosePairQueue.Select(o => o.ClientImagePosition.y).Average(),
+                _imagePosePairQueue.Select(o => o.ClientImagePosition.z).Average());
 
             var hostImagePositionCenter = new Vector3(
-                _clientImagePosePairQueue.Select(o => o.HostImagePosition.x).Average(),
-                _clientImagePosePairQueue.Select(o => o.HostImagePosition.y).Average(),
-                _clientImagePosePairQueue.Select(o => o.HostImagePosition.z).Average());
+                _imagePosePairQueue.Select(o => o.HostImagePosition.x).Average(),
+                _imagePosePairQueue.Select(o => o.HostImagePosition.y).Average(),
+                _imagePosePairQueue.Select(o => o.HostImagePosition.z).Average());
 
-            Vector2 tanThetaAB = _clientImagePosePairQueue.Select(o =>
+            Vector2 tanThetaAB = _imagePosePairQueue.Select(o =>
             {
                 var p = o.HostImagePosition - hostImagePositionCenter;
                 var q = o.ClientImagePosition - clientImagePositionCenter;
@@ -293,27 +263,25 @@ namespace Holoi.Library.HoloKitApp
 
             Vector3 translate = -rotation.MultiplyPoint3x4(hostImagePositionCenter - clientImagePositionCenter);
 
-            return new ClientCalibrationResult()
+            return new ClientSyncResult()
             {
                 ThetaInDeg = thetaInDeg,
                 Translate = translate
             };
         }
 
-        private void OnClientCalibrationSucceeded()
+        private void OnSynced()
         {
-            _currentClientSyncPhase = ClientSyncPhase.Synced;
+            _localPlayer.SyncStatus = HoloKitAppPlayerSyncStatus.Synced;
 
             // We use the last result in the queue to reset ARSession origin
-            var lastCalibrationResult = _clientCalibrationResultQueue.Last();
-            float theta = lastCalibrationResult.ThetaInDeg;
-            Vector3 translate = lastCalibrationResult.Translate;
+            var lastSyncResult = _syncResultQueue.Last();
+            float theta = lastSyncResult.ThetaInDeg;
+            Vector3 translate = lastSyncResult.Translate;
             HoloKitARSessionControllerAPI.ResetOrigin(translate, Quaternion.AngleAxis(theta, Vector3.up));
 
-            OnClientPoseSyncedServerRpc();
             StopScanningQRCode();
             SpawnPhoneAlignmentMarker();
-            OnPoseSynced?.Invoke();
         }
 
         private void StopScanningQRCode()
@@ -329,8 +297,8 @@ namespace Holoi.Library.HoloKitApp
         {
             if (_phoneAlignmentMarker == null)
             {
-                _phoneAlignmentMarker = Instantiate(_phoneAlignmentMarkerPrefab, _hostCameraPose.transform);
-                _phoneAlignmentMarker.transform.localPosition = _hostCameraToScreenCenterOffset.Value;
+                _phoneAlignmentMarker = Instantiate(_phoneAlignmentMarkerPrefab, GetServerPlayer().transform);
+                _phoneAlignmentMarker.transform.localPosition = HostCameraToScreenCenterOffset.Value;
             }
         }
 
@@ -350,9 +318,8 @@ namespace Holoi.Library.HoloKitApp
 
         public void RescanQRCode()
         {
-            OnClientRescanServerRpc();
             DestroyPhoneAlignmentMarker();
-            StartClientCalibration();
+            StartSpatialAnchorSyncProcess();
         }
     }
 }

@@ -74,6 +74,8 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity.MOFA
 
         public static void UpdateMagicSchool(int magicSchool)
         {
+            if (HoloKit.HoloKitUtils.IsEditor) return;
+
             MofaWatchConnectivity_UpdateMagicSchool(magicSchool);
         }
 

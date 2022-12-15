@@ -35,8 +35,8 @@ namespace Holoi.Library.HoloKitApp.UI
         private void Start()
         {
             OnStartedSharingQRCode?.Invoke();
-            HoloKitAppMultiplayerManager.OnConnectedDeviceListUpdated += OnConnectedDeviceListUpdated;
-            OnConnectedDeviceListUpdated(HoloKitApp.Instance.MultiplayerManager.ConnectedDevicesList);
+            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated += OnConnectedDeviceListUpdated;
+            OnConnectedDeviceListUpdated();
             AdjustQRCodeSize();
             if (HoloKitUtils.IsRuntime)
             {
@@ -52,7 +52,7 @@ namespace Holoi.Library.HoloKitApp.UI
         private void OnDestroy()
         {
             OnStoppedSharingQRCode?.Invoke();
-            HoloKitAppMultiplayerManager.OnConnectedDeviceListUpdated -= OnConnectedDeviceListUpdated;
+            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated -= OnConnectedDeviceListUpdated;
         }
 
         private void AdjustQRCodeSize()
@@ -73,10 +73,10 @@ namespace Holoi.Library.HoloKitApp.UI
             Vector3 phoneModelCameraOffset = new(originalPhoneModelCameraOffset.y, -originalPhoneModelCameraOffset.x, originalPhoneModelCameraOffset.z);
 
             Vector3 cameraToQRCodeOffset = leftEdgeCenterToQRCodeOffset + phoneModelCameraOffset;
-            HoloKitApp.Instance.MultiplayerManager.HostCameraToQRCodeOffset = cameraToQRCodeOffset;
+            HoloKitApp.Instance.MultiplayerManager.HostCameraToQRCodeOffset.Value = cameraToQRCodeOffset;
         }
 
-        private void OnConnectedDeviceListUpdated(List<DeviceInfo> deviceInfos)
+        private void OnConnectedDeviceListUpdated()
         {
             // Destroy previous slots
             foreach (Transform child in _deviceListRoot)
@@ -84,11 +84,12 @@ namespace Holoi.Library.HoloKitApp.UI
                 Destroy(child.gameObject);
             }
             int deviceCount = 0;
-            foreach (var deviceInfo in deviceInfos)
+            var deviceList = HoloKitApp.Instance.MultiplayerManager.ConnectedPlayerList;
+            foreach (var deviceInfo in deviceList)
             {
                 var deviceSlot = Instantiate(_deviceSlotPrefab, _deviceListRoot);
                 deviceSlot.transform.localScale = Vector3.one;
-                deviceSlot.GetComponent<TMP_Text>().text = $"{deviceInfo.Name} ({deviceInfo.Status})";
+                deviceSlot.GetComponent<TMP_Text>().text = $"{deviceInfo.Name} ({deviceInfo.SyncStatus})";
                 deviceCount++;
             }
             if (deviceCount == 0)

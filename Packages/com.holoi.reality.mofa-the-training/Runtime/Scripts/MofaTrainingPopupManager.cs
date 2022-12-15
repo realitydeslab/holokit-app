@@ -15,7 +15,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.Start();
 
-            if (HoloKitApp.Instance.IsHost)
+            if (HoloKitApp.Instance.IsMaster)
             {
                 SpawnPopup(_findPlanePrefab);
             }

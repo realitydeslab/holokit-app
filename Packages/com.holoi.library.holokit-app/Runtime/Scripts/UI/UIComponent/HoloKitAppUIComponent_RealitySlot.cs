@@ -26,7 +26,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _hostButton.onClick.AddListener(() =>
             {
                 HoloKitApp.Instance.CurrentReality = reality;
-                HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Host);
+                HoloKitApp.Instance.EnterRealityAs(true, HoloKitAppPlayerType.Player);
             });
 
             if (reality.IsMultiplayerSupported())
@@ -34,7 +34,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 _playerButton.onClick.AddListener(() =>
                 {
                     HoloKitApp.Instance.CurrentReality = reality;
-                    HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.NonHostPlayer);
+                    HoloKitApp.Instance.EnterRealityAs(false, HoloKitAppPlayerType.Player);
                 });
             }
             else
@@ -47,7 +47,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 _puppeteerButton.onClick.AddListener(() =>
                 {
                     HoloKitApp.Instance.CurrentReality = reality;
-                    HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Puppeteer);
+                    HoloKitApp.Instance.EnterRealityAs(true, HoloKitAppPlayerType.Puppeteer);
                 });
             }
             else
@@ -60,7 +60,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 _spectatorButton.onClick.AddListener(() =>
                 {
                     HoloKitApp.Instance.CurrentReality = reality;
-                    HoloKitApp.Instance.EnterRealityAs(HoloKitAppPlayerType.Spectator);
+                    HoloKitApp.Instance.EnterRealityAs(false, HoloKitAppPlayerType.Spectator);
                 });
             }
             else

@@ -14,19 +14,14 @@ using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
 {
-    public enum HoloKitAppPlayerType
-    {
-        Host = 0,
-        Spectator = 1,
-        NonHostPlayer = 2,
-        Puppeteer = 3
-    }
-
     [DisallowMultipleComponent]
     public class HoloKitApp : MonoBehaviour
     {
         public static HoloKitApp Instance { get { return _instance; } }
 
+        /// <summary>
+        /// This class is a singleton.
+        /// </summary>
         private static HoloKitApp _instance;
 
         [Header("References")]
@@ -70,23 +65,15 @@ namespace Holoi.Library.HoloKitApp
         /// <summary>
         /// If the local device is the host
         /// </summary>
-        public bool IsHost => _localPlayerType == HoloKitAppPlayerType.Host;
-
-        /// <summary>
-        /// If the local device is a spectator
-        /// </summary>
-        public bool IsSpectator => _localPlayerType == HoloKitAppPlayerType.Spectator;
-
-        /// <summary>
-        /// If the local player is the host or a non-host-player
-        /// </summary>
-        public bool IsPlayer => _localPlayerType == HoloKitAppPlayerType.Host || _localPlayerType == HoloKitAppPlayerType.NonHostPlayer;
-
-        public bool IsNonHostPlayer => _localPlayerType == HoloKitAppPlayerType.NonHostPlayer;
-
-        public bool IsPuppeteer => _localPlayerType == HoloKitAppPlayerType.Puppeteer;
+        public bool IsMaster => _isMaster;
 
         public HoloKitAppPlayerType LocalPlayerType => _localPlayerType;
+
+        public bool IsPlayer => _localPlayerType == HoloKitAppPlayerType.Player;
+
+        public bool IsSpectator => _localPlayerType == HoloKitAppPlayerType.Spectator;
+
+        public bool IsPuppeteer => _localPlayerType == HoloKitAppPlayerType.Puppeteer;
 
         public bool Test => _testMode;
 
@@ -102,9 +89,13 @@ namespace Holoi.Library.HoloKitApp
 
         private Reality _currentReality;
 
-        private HoloKitAppPlayerType _localPlayerType = HoloKitAppPlayerType.Host;
+        private bool _isMaster = true;
+
+        private HoloKitAppPlayerType _localPlayerType = HoloKitAppPlayerType.Player;
 
         private HoloKitAppMultiplayerManager _multiplayerManager;
+
+        private HoloKitAppMultiplayerManager _spatialAnchorSynchronizer;
 
         private HoloKitAppARSessionManager _arSessionManager;
 
@@ -247,7 +238,7 @@ namespace Holoi.Library.HoloKitApp
             StartCoroutine(HoloKitAppUtils.WaitAndDo(0.5f, () =>
             {
                 MultipeerConnectivityTransport.BundleId = _currentReality.BundleId;
-                if (IsHost)
+                if (IsMaster)
                     StartHost();
                 else
                     StartClient();
@@ -294,7 +285,7 @@ namespace Holoi.Library.HoloKitApp
             HoloKitAppWatchConnectivityAPI.UpdateWatchPanel(HoloKitWatchPanel.None);
         }
 
-        public void EnterRealityAs(HoloKitAppPlayerType playerType)
+        public void EnterRealityAs(bool isMaster, HoloKitAppPlayerType playerType)
         {
             // Does the Reality we are going to enter need LiDAR?
             if (_currentReality.IsLiDARRequired())
@@ -307,6 +298,7 @@ namespace Holoi.Library.HoloKitApp
                 }
             }
 
+            _isMaster = isMaster;
             _localPlayerType = playerType;
             SceneManager.LoadScene(_currentReality.Scene.SceneName, LoadSceneMode.Single);
             OnEnteredReality?.Invoke(_currentReality.BundleId);
