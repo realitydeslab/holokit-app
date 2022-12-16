@@ -21,9 +21,9 @@ public class TransparentScreenshotRecorder : MonoBehaviour
     public string folderBaseName = "Screenshots";
     [Tooltip("How many frames should be captured per second of game time")]
     public int frameRate = 24;
+    public int startFrameToCapture = 24;
     [Tooltip("How many frames should be captured before quitting")]
     public int framesToCapture = 24;
-    public int framesToCapture2 = 24;
     #endregion
     #region private fields
     private string folderName = "";
@@ -44,6 +44,10 @@ public class TransparentScreenshotRecorder : MonoBehaviour
     [SerializeField] private Texture2D textureWhite;
     [SerializeField] private Texture2D textureTransparentBackground;
 
+    //
+    float realStartFrame;
+    float realEndFrame;
+
     #endregion
 
     void Awake()
@@ -53,6 +57,12 @@ public class TransparentScreenshotRecorder : MonoBehaviour
         CreateNewFolderForScreenshots();
         CacheAndInitialiseFields();
         Time.captureFramerate = frameRate;
+    }
+
+    private void Start()
+    {
+        realStartFrame = startFrameToCapture;
+        realEndFrame = realStartFrame + framesToCapture;
     }
 
     void LateUpdate()
@@ -71,9 +81,9 @@ public class TransparentScreenshotRecorder : MonoBehaviour
     IEnumerator CaptureFrame()
     {
         yield return new WaitForEndOfFrame();
-        if (videoFrame < framesToCapture)
+        if (videoFrame < realEndFrame)
         {
-            if(videoFrame == framesToCapture2)
+            if(videoFrame >= realStartFrame)
             {
                 RenderCamToTexture(whiteCam, textureWhite);
                 RenderCamToTexture(blackCam, textureBlack);
