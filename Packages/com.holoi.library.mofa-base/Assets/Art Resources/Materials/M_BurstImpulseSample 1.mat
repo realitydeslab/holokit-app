@@ -7,10 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_Wind Bolt
-  m_Shader: {fileID: -6465566751694194690, guid: 327e6985d05574b43bc210746cea1037, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
+  m_Name: M_BurstImpulseSample 1
+  m_Shader: {fileID: -6465566751694194690, guid: 33876e47006467b4caaeb1d903b144ba, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -19,28 +17,27 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _Animation_Distort:
+        m_Texture: {fileID: 2800000, guid: 3971e67b5bf8447a0af8802291101704, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Animation_Mask:
+        m_Texture: {fileID: 2800000, guid: 4c1d80d9bc444494bb06039b5f59c796, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Distort_Texture:
+        m_Texture: {fileID: 2800000, guid: fe2e15946ebf56c4aaf31d8d9d4b5209, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Final_Mask:
+        m_Texture: {fileID: 2800000, guid: 25c93ba0608e478e85afe660509a0f3c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Main_Texture:
-        m_Texture: {fileID: 2800000, guid: 9ded2cfa60853cb4d986033ea24d1bab, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Noise_Texture:
-        m_Texture: {fileID: 2800000, guid: 6c19daf655d3e794c9c89817cbf19dd9, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Normal_Texture:
-        m_Texture: {fileID: 2800000, guid: e9428b94976f6334ba542cda0feb65ce, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_e157ad8f356542a580405a2c613ac9a5_Texture_1:
-        m_Texture: {fileID: 2800000, guid: 80869f8c62674f99b40beb10656a82dc, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _UVDistortion_665a776951b74681a204592b6d799a8d_DistortTexrture_789052099:
-        m_Texture: {fileID: 2800000, guid: 14db6dfb44924e5b81e422950a209c07, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2a4062b1fce5bb345a317cce23567cdd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -58,26 +55,31 @@ Material:
     m_Ints: []
     m_Floats:
     - _Alpha_Multipier: 1
-    - _Fresnel_Power: 1.5
-    - _Fresnel_Support: 1
-    - _Main_Sat: 1
-    - _Noise_Intensity: 0.04
-    - _Normal_Strength: 0.1
+    - _Brightness: 1
+    - _Chr_MT: 0.1
+    - _Intensity_AD: 1
+    - _Intensity_DT: 0.03
+    - _Process: 0
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Sat_MT: 1
     m_Colors:
-    - _EdgeColor: {r: 0.6732236, g: 0.3032323, b: 2.191544, a: 0}
-    - _InnerColor: {r: 7.036648, g: 11.72775, b: 63.99999, a: 0}
-    - _Main_Adjust: {r: 1, g: 1, b: 1, a: 0.5}
-    - _Main_Speed: {r: 1, g: 0, b: 0, a: 0}
-    - _Main_TO: {r: 1, g: 1, b: 0, a: 0}
-    - _Noise_Adjust: {r: 1, g: 1, b: 1, a: 0.5}
-    - _Noise_Speed: {r: 0, g: 0.1, b: 0, a: 0}
-    - _Noise_TO: {r: 1, g: 1, b: 0, a: 0}
-    - _Normal_Speed: {r: 0, g: 0.1, b: 0, a: 0}
-    - _Normal_TO: {r: 1, g: 1, b: 0, a: 0}
+    - _Adjust_AD: {r: 1, g: 1, b: 1, a: 0.5}
+    - _Adjust_AM: {r: 12, g: 6, b: 1.5, a: 0.5}
+    - _Adjust_DT: {r: 1, g: 1, b: 1, a: 0.5}
+    - _Adjust_FM: {r: 1, g: 2.22, b: 1, a: 0}
+    - _Adjustment_MT: {r: 1, g: 12, b: 1, a: 0.5}
+    - _Color_MT: {r: 1, g: 0, b: 0, a: 0}
+    - _Remap_AD: {r: -1, g: 1, b: 0, a: 0}
+    - _Speed_AD: {r: -1, g: 0, b: 0, a: 0}
+    - _Speed_DT: {r: 0.25, g: 0, b: 0, a: 0}
+    - _Speed_MT: {r: -1, g: 0, b: 0, a: 0}
+    - _TO_AD: {r: 0.5, g: 2, b: 0, a: 0}
+    - _TO_DT: {r: 0.5, g: 1, b: 0, a: 0}
+    - _TO_FM: {r: 1, g: 1, b: 0, a: 0}
+    - _TO_MT: {r: 0.5, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &7888274788765871230
+--- !u!114 &693602618761131364
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,4 +91,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 6
+  version: 5

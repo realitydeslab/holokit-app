@@ -1,18 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2362001707750039292
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 5
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -20,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_SH_BurstImpulse 1
-  m_Shader: {fileID: -6465566751694194690, guid: d49a5ef49b63941e1b263f3b366a98cb, type: 3}
+  m_Name: M_BurstImpulseSample
+  m_Shader: {fileID: -6465566751694194690, guid: 33876e47006467b4caaeb1d903b144ba, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -34,7 +21,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Animation_Distort:
-        m_Texture: {fileID: 2800000, guid: f1acd832be65b4fb1af23dcfc5330c1f, type: 3}
+        m_Texture: {fileID: 2800000, guid: a6b9652bc81861e4c9ea0b20bb07041c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Animation_Mask:
@@ -42,15 +29,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Distort_Texture:
-        m_Texture: {fileID: 2800000, guid: 691097782d7b0e14b8933e33439899ce, type: 3}
+        m_Texture: {fileID: 2800000, guid: fe2e15946ebf56c4aaf31d8d9d4b5209, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Final_Mask:
-        m_Texture: {fileID: 2800000, guid: 153bf3b34d6e1164ba1e8f65c4203d11, type: 3}
+        m_Texture: {fileID: 2800000, guid: 25c93ba0608e478e85afe660509a0f3c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Main_Texture:
-        m_Texture: {fileID: 2800000, guid: e5023ab5c9bd17e41a5fe43fc83e5647, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2e736348f1346704288e956a990421bd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -69,26 +56,39 @@ Material:
     m_Floats:
     - _Alpha_Multipier: 1
     - _Brightness: 1
-    - _Chr_MT: 0
-    - _Intensity_AD: 1.13
+    - _Chr_MT: 0.1
+    - _Intensity_AD: 0.5
     - _Intensity_DT: 0.1
     - _Process: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Sat_MT: 1
+    - _Sat_MT: 0.4
     m_Colors:
     - _Adjust_AD: {r: 1, g: 1, b: 1, a: 0.5}
-    - _Adjust_AM: {r: 12, g: 64, b: 3, a: 0.5}
+    - _Adjust_AM: {r: 1, g: 2, b: 1, a: 0.5}
     - _Adjust_DT: {r: 1, g: 1, b: 1, a: 0.5}
-    - _Adjust_FM: {r: 0.5, g: 3, b: 1, a: 0}
-    - _Adjustment_MT: {r: 12, g: 64, b: 6, a: 0.5}
-    - _Color_MT: {r: 1, g: 0, b: 0, a: 0}
+    - _Adjust_FM: {r: 2, g: 2, b: 1, a: 0}
+    - _Adjustment_MT: {r: 1, g: 1, b: 1, a: 0.5}
+    - _Color_MT: {r: 0, g: 0.55484986, b: 1, a: 0}
     - _Remap_AD: {r: -1, g: 1, b: 0, a: 0}
-    - _Speed_AD: {r: -0.7, g: 0, b: 0, a: 0}
+    - _Speed_AD: {r: -1, g: 0, b: 0, a: 0}
     - _Speed_DT: {r: 0.25, g: 0, b: 0, a: 0}
     - _Speed_MT: {r: -1, g: 0, b: 0, a: 0}
-    - _TO_AD: {r: 0.5, g: 2, b: 0, a: 0}
+    - _TO_AD: {r: 0.25, g: 1, b: 0, a: 0}
     - _TO_DT: {r: 0.5, g: 3, b: 0, a: 0}
     - _TO_FM: {r: 1, g: 1, b: 0, a: 0}
-    - _TO_MT: {r: 1, g: 1, b: 0, a: 0}
+    - _TO_MT: {r: 1, g: 3, b: 0, a: 0}
   m_BuildTextureStacks: []
+--- !u!114 &693602618761131364
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5
