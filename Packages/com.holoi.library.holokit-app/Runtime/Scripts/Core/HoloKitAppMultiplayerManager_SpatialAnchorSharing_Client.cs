@@ -142,7 +142,6 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         private void StartSyncProcess()
         {
-            Debug.Log("[SpatialAnchorSharing] StartSyncProcess");
             if (HoloKitUtils.IsRuntime)
             {
                 // Clear queues

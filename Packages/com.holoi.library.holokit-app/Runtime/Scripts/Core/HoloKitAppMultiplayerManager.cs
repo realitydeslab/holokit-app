@@ -63,11 +63,6 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         public static event Action OnLocalPlayerChecked;
 
-        private void Start()
-        {
-
-        }
-
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();

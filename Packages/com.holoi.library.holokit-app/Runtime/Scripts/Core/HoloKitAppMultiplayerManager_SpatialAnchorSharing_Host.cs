@@ -29,6 +29,8 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         [HideInInspector] public readonly NetworkVariable<Vector3> HostCameraToScreenCenterOffset = new(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+        public bool IsAdvertising => _isAdvertising;
+
         /// <summary>
         /// Whether the master is currently advertising?
         /// </summary>

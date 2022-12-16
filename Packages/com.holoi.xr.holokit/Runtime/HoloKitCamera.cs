@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.InputSystem.XR;
 
 namespace HoloKit
 {
@@ -128,6 +129,17 @@ namespace HoloKit
         private ARCameraBackground _arCameraBackground;
 
         /// <summary>
+        /// The default ARFoundation tracked pose driver. We use this to control
+        /// the camera pose in mono mode.
+        /// </summary>
+        private TrackedPoseDriver _defaultTrackedPoseDriver;
+
+        /// <summary>
+        /// We use this to control the camera pose in star mode.
+        /// </summary>
+        private HoloKitTrackedPoseDriver _holokitTrackedPoseDriver;
+
+        /// <summary>
         /// Increase iOS screen brightness gradually in each frame.
         /// </summary>
         private const float ScreenBrightnessIncreaseStep = 0.005f;
@@ -148,18 +160,22 @@ namespace HoloKit
 
         private void Start()
         {
+            // iOS screen system settings
             if (HoloKitUtils.IsRuntime)
             {
                 UnityEngine.iOS.Device.hideHomeButton = true;
                 Screen.sleepTimeout = SleepTimeout.NeverSleep;
             }
 
+            // Get the reference of tracked pose drivers
+            _defaultTrackedPoseDriver = GetComponent<TrackedPoseDriver>();
+            _holokitTrackedPoseDriver = GetComponent<HoloKitTrackedPoseDriver>();
+
             HoloKitNFCSessionControllerAPI.OnNFCSessionCompleted += OnNFCSessionCompleted;
             HoloKitARSessionControllerAPI.ResetARSessionFirstFrame();
             HoloKitARSessionControllerAPI.SetVideoEnhancementMode(_videoEnhancementMode);
 
             _arCameraBackground = GetComponent<ARCameraBackground>();
-            RenderMode = HoloKitRenderMode.Mono;
             OnRenderModeChanged();
   
             _arSessionStartTime = Time.time;
@@ -225,24 +241,33 @@ namespace HoloKit
 
         private void OnRenderModeChanged()
         {
-            //Debug.Log($"[HoloKitCamera] RenderMode changed to {_renderMode}");
             if (_renderMode == HoloKitRenderMode.Stereo)
             {
-                //HoloKitARSessionControllerAPI.SetScreenBrightness(1f);
-                _monoCamera.enabled = false;
+                // Switch ARBackground
                 _arCameraBackground.enabled = false;
+                // Switch cameras
+                _monoCamera.enabled = false;
                 _leftEyeCamera.gameObject.SetActive(true);
                 _rightEyeCamera.gameObject.SetActive(true);
                 _blackCamera.gameObject.SetActive(true);
+                // Switch tracked pose driver
+                _defaultTrackedPoseDriver.enabled = false;
+                _holokitTrackedPoseDriver.IsActive = true;
             }
             else
             {
-                _monoCamera.enabled = true;
+                // Switch ARBackground
                 _arCameraBackground.enabled = true;
+                // Switch cameras
+                _monoCamera.enabled = true;
                 _leftEyeCamera.gameObject.SetActive(false);
                 _rightEyeCamera.gameObject.SetActive(false);
                 _blackCamera.gameObject.SetActive(false);
+                // Reset center eye pose offset
                 _centerEyePose.localPosition = Vector3.zero;
+                // Switch tracked pose driver
+                _defaultTrackedPoseDriver.enabled = true;
+                _holokitTrackedPoseDriver.IsActive = false;
             }
         }
 
