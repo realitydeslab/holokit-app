@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Unity.Netcode;
 using Netcode.Transports.MultipeerConnectivity;
@@ -22,13 +21,18 @@ namespace Holoi.Library.HoloKitApp
         /// <summary>
         /// The offset from the host's camera to its QRCode center on the screen.
         /// </summary>
-        public readonly NetworkVariable<Vector3> HostCameraToQRCodeOffset = new(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        [HideInInspector] public readonly NetworkVariable<Vector3> HostCameraToQRCodeOffset = new(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         /// <summary>
         /// The offset from the host's camera to its screen center. This is used by the client to
         /// correctly render the alignmenr marker.
         /// </summary>
-        public readonly NetworkVariable<Vector3> HostCameraToScreenCenterOffset = new(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        [HideInInspector] public readonly NetworkVariable<Vector3> HostCameraToScreenCenterOffset = new(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+        /// <summary>
+        /// Whether the master is currently advertising?
+        /// </summary>
+        private bool _isAdvertising = false;
 
         /// <summary>
         /// Stores a queue of camera poses with timestamp on the host.
@@ -47,20 +51,21 @@ namespace Holoi.Library.HoloKitApp
 
         public void StartAdvertising()
         {
-            if (HoloKitUtils.IsEditor) return;
-
             SetHostCameraToScreenCenterOffset();
             HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnARSessionUpdatedFrame_Host;
             MultipeerConnectivityTransport.StartAdvertising();
+            _isAdvertising = true;
         }
 
         public void StopAdvertising()
         {
-            if (HoloKitUtils.IsEditor) return;
-
-            HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnARSessionUpdatedFrame_Host;
-            MultipeerConnectivityTransport.StopAdvertising();
-            _hostTimedCameraPoseQueue.Clear();
+            if (_isAdvertising)
+            {
+                HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnARSessionUpdatedFrame_Host;
+                MultipeerConnectivityTransport.StopAdvertising();
+                _hostTimedCameraPoseQueue.Clear();
+                _isAdvertising = false;
+            }
         }
 
         /// <summary>
@@ -69,6 +74,8 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         private void SetHostCameraToScreenCenterOffset()
         {
+            if (HoloKitUtils.IsEditor) return;
+
             Vector3 phoneModelCameraOffset = HoloKitOpticsAPI.GetPhoneModelCameraOffset(HoloKitType.HoloKitX);
             Vector3 portraitCameraOffset = new(phoneModelCameraOffset.y, -phoneModelCameraOffset.x, phoneModelCameraOffset.z);
             float halfScreenWidthInMeter = HoloKitUtils.PixelToMeter(Screen.width / 2f);

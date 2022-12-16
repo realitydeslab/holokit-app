@@ -1,5 +1,3 @@
-using HoloKit;
-
 namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIPanel_MonoAR_ScanQRCode : HoloKitAppUIPanel
@@ -10,22 +8,18 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
-            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated += OnConnectedPlayerListUpdated;
+            HoloKitAppMultiplayerManager.OnLocalPlayerSynced += OnLocalPlayerSynced;
         }
 
         private void OnDestroy()
         {
-            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated -= OnConnectedPlayerListUpdated;
+            HoloKitAppMultiplayerManager.OnLocalPlayerSynced -= OnLocalPlayerSynced;
         }
 
-        private void OnConnectedPlayerListUpdated()
+        private void OnLocalPlayerSynced()
         {
-            var localPlayer = HoloKitApp.Instance.MultiplayerManager.LocalPlayer;
-            if (localPlayer.SyncStatus == HoloKitAppPlayerSyncStatus.Synced)
-            {
-                HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-                HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_CheckAlignmentMark");
-            }
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_CheckAlignmentMark");
         }
 
         public void OnExitButtonPressed()

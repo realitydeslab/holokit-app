@@ -9,10 +9,6 @@ namespace Holoi.Library.HoloKitApp.UI
         public static Action<HoloKitRenderMode> OnRenderModeChanged;
 
         public static Action OnExitReality;
-
-        public static Action OnAlignmentMarkChecked;
-
-        public static Action OnRescanQRCode;
         #endregion
 
         #region Reality Settings Panel

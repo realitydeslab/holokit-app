@@ -16,30 +16,56 @@ namespace Holoi.Library.HoloKitApp
 
         public ICollection<HoloKitAppPlayer> ConnectedPlayerList => _connectedPlayers.Values;
 
-        public HoloKitAppPlayer LocalPlayer => _localPlayer;
-
         /// <summary>
         /// The dictionary keeps the refernces of all currently connected players.
         /// </summary>
         private readonly Dictionary<ulong, HoloKitAppPlayer> _connectedPlayers = new();
 
         /// <summary>
-        /// Keep a reference of the local player.
+        /// This event is only called on the server side, which indicates one of the
+        /// connected players update its status.
         /// </summary>
-        private HoloKitAppPlayer _localPlayer;
-
         public static event Action OnConnectedPlayerListUpdated;
 
-        private void Awake()
-        {
-            
-        }
+        /// <summary>
+        /// This event is only called on the client side, which indicates the local
+        /// player has connected to the network.
+        /// </summary>
+        public static event Action OnLocalPlayerConnected;
+
+        /// <summary>
+        /// This event is only called on the client side, which indicates the local
+        /// player has disconnected from the network.
+        /// </summary>
+        public static event Action OnLocalPlayerDisconnected;
+
+        /// <summary>
+        /// This event is only called on the client side, which indicates the local
+        /// player starts to sync timestamp.
+        /// </summary>
+        public static event Action OnLocalPlayerSyncingTimestamp;
+
+        /// <summary>
+        /// This event is only called on the client side, which indicates the local
+        /// player starts to sync pose (via scanning QRCode).
+        /// </summary>
+        public static event Action OnLocalPlayerSyncingPose;
+
+        /// <summary>
+        /// This event is only called on the client side, which indicates the local
+        /// player has successfully synced.
+        /// </summary>
+        public static event Action OnLocalPlayerSynced;
+
+        /// <summary>
+        /// This event is only called on the client side, which indicates the local
+        /// player has checked the alignment marker.
+        /// </summary>
+        public static event Action OnLocalPlayerChecked;
 
         private void Start()
         {
-            HoloKitAppPlayer.OnPlayerSpawned += OnPlayerDataUpdated;
-            HoloKitAppPlayer.OnPlayerDespawned += OnPlayerDataUpdated;
-            HoloKitAppPlayer.OnPlayerSyncStatusUpdated += OnPlayerDataUpdated;
+
         }
 
         public override void OnNetworkSpawn()
@@ -48,9 +74,7 @@ namespace Holoi.Library.HoloKitApp
             // Set the reference
             HoloKitApp.Instance.SetMultiplayerManager(this);
             // Spawn the local player
-            string userAssignedDeviceName = SystemInfo.deviceName;
-            var type = HoloKitApp.Instance.LocalPlayerType;
-            SpawnPlayerServerRpc(userAssignedDeviceName, type);
+            SpawnPlayerServerRpc();
         }
 
         public override void OnNetworkDespawn()
@@ -61,29 +85,19 @@ namespace Holoi.Library.HoloKitApp
         public override void OnDestroy()
         {
             base.OnDestroy();
-            HoloKitAppPlayer.OnPlayerSpawned -= OnPlayerDataUpdated;
-            HoloKitAppPlayer.OnPlayerDespawned -= OnPlayerDataUpdated;
-            HoloKitAppPlayer.OnPlayerSyncStatusUpdated -= OnPlayerDataUpdated;
         }
 
-        [ServerRpc]
-        private void SpawnPlayerServerRpc(string name, HoloKitAppPlayerType type, ServerRpcParams serverRpcParams = default)
+        [ServerRpc(RequireOwnership = false)]
+        private void SpawnPlayerServerRpc(ServerRpcParams serverRpcParams = default)
         {
             ulong senderClientId = serverRpcParams.Receive.SenderClientId;
-            bool isMaster = senderClientId == NetworkManager.ServerClientId;
             // Spawn the player
             var playerInstance = Instantiate(_holokitAppPlayerPrefab);
-            playerInstance.Name = name;
-            playerInstance.IsMaster = senderClientId == NetworkManager.ServerClientId;
-            playerInstance.Type = type;
-            playerInstance.SyncStatus = isMaster ? HoloKitAppPlayerSyncStatus.Synced : HoloKitAppPlayerSyncStatus.None;
-            // Only the host device syncs its pose at the beginning
-            playerInstance.SyncPose = isMaster;
             playerInstance.GetComponent<NetworkObject>().SpawnWithOwnership(senderClientId);
         }
 
         /// <summary>
-        /// This function is called when a new player joins.
+        /// This function is called when a new player joins the network.
         /// </summary>
         /// <param name="player">The newly joined player</param>
         public void SetPlayer(HoloKitAppPlayer player)
@@ -99,42 +113,68 @@ namespace Holoi.Library.HoloKitApp
             }
             player.transform.SetParent(this.transform);
 
-            // This is the local player
-            if (playerClientId == OwnerClientId)
+            // Call the spawn event
+            if (HoloKitApp.Instance.IsMaster)
             {
-                _localPlayer = player;
-                if (!IsServer)
+                OnConnectedPlayerListUpdated?.Invoke();
+                if (playerClientId == NetworkManager.LocalClientId)
                 {
-                    StartSpatialAnchorSyncProcess();
+                    player.SyncPose = true;
+                }
+            }
+            else
+            {
+                if (playerClientId == NetworkManager.LocalClientId)
+                {
+                    OnLocalPlayerConnected?.Invoke();
+                    // Immediately start sync process when connected
+                    StartSyncProcess();
                 }
             }
         }
 
-        public HoloKitAppPlayer GetServerPlayer()
-        {
-            return _connectedPlayers[NetworkManager.ServerClientId];
-        }
-
         /// <summary>
-        /// This function is called when a joined player leaves.
+        /// This function is called when a player leaves the network.
         /// </summary>
-        /// <param name="ownerClientId">The clientId of the left player</param>
-        public void RemovePlayer(ulong ownerClientId)
+        /// <param name="player"></param>
+        public void RemovePlayer(HoloKitAppPlayer player)
         {
-            if (_connectedPlayers.ContainsKey(ownerClientId))
+            ulong playerClientId = player.OwnerClientId;
+            if (_connectedPlayers.ContainsKey(playerClientId))
             {
-                _connectedPlayers.Remove(ownerClientId);
+                _connectedPlayers.Remove(playerClientId);
+            }
+
+            // Call the despawn event
+            if (HoloKitApp.Instance.IsMaster)
+            {
+                OnConnectedPlayerListUpdated?.Invoke();
+            }
+            else
+            {
+                if (playerClientId == NetworkManager.LocalClientId)
+                {
+                    OnLocalPlayerDisconnected?.Invoke();
+                }
             }
         }
 
-        /// <summary>
-        /// This delegate function is called either when a player is spawned, despawned
-        /// or sync status updated.
-        /// </summary>
-        /// <param name="playerClientId"></param>
-        private void OnPlayerDataUpdated(ulong playerClientId)
+        public HoloKitAppPlayer GetLocalPlayer()
         {
-            OnConnectedPlayerListUpdated?.Invoke();
+            var localPlayerClientId = NetworkManager.LocalClientId;
+            if (_connectedPlayers.ContainsKey(localPlayerClientId))
+                return _connectedPlayers[localPlayerClientId];
+            else
+                return null;
+        }
+
+        public HoloKitAppPlayer GetMasterPlayer()
+        {
+            var masterPlayerClientId = NetworkManager.ServerClientId;
+            if (_connectedPlayers.ContainsKey(masterPlayerClientId))
+                return _connectedPlayers[masterPlayerClientId];
+            else
+                return null;
         }
     }
 }

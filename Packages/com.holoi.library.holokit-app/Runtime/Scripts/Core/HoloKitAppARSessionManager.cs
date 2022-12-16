@@ -64,7 +64,7 @@ namespace Holoi.Library.HoloKitApp
             // Open human occlusion on spectator by default
             if (HoloKitApp.Instance.IsSpectator)
             {
-                SetHumanOcclusionEnabled(true);
+                //SetHumanOcclusionEnabled(true);
             }
 
             // Register callbacks
@@ -171,7 +171,7 @@ namespace Holoi.Library.HoloKitApp
             _arOcclusionManager.environmentDepthTemporalSmoothingRequested = false;
             _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Disabled;
             _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Disabled;
-            _arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.NoOcclusion;
+            _arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.PreferEnvironmentOcclusion;
         }
 
         public bool GetHumanOcclusionEnabled()
@@ -186,7 +186,7 @@ namespace Holoi.Library.HoloKitApp
             }
             if (_arOcclusionManager.requestedHumanDepthMode != HumanSegmentationDepthMode.Disabled
                 && _arOcclusionManager.requestedHumanStencilMode != HumanSegmentationStencilMode.Disabled
-                && _arOcclusionManager.requestedOcclusionPreferenceMode == OcclusionPreferenceMode.PreferHumanOcclusion)
+                && _arOcclusionManager.requestedOcclusionPreferenceMode != OcclusionPreferenceMode.NoOcclusion)
             {
                 return true;
             }
@@ -213,15 +213,16 @@ namespace Holoi.Library.HoloKitApp
                 {
                     _arOcclusionManager.enabled = true;
                 }
+                Debug.Log("Before list of nonsenses");
                 _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Fastest;
                 _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Fastest;
-                _arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.PreferHumanOcclusion;
+                //_arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.PreferHumanOcclusion;
             }
             else
             {
                 _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Disabled;
                 _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Disabled;
-                _arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.NoOcclusion;
+                //_arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.NoOcclusion;
             }
         }
 

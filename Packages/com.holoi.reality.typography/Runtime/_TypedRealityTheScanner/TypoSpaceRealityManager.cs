@@ -13,7 +13,7 @@ namespace Holoi.Reality.Typography
         {
             if (HoloKitApp.Instance.IsSpectator)
             {
-                HoloKitAppMultiplayerManager.OnAlignmentMarkerChecked += OnTurnOnMeshing;
+                HoloKitAppMultiplayerManager.OnLocalPlayerChecked += OnTurnOnMeshing;
                 HoloKitAppUIPanel_MonoAR_RescanQRCode.OnRescanQRCode += OnTurnOffMeshing;
                 HoloKitAppUIPanel_MonoAR_RescanQRCode.OnCancelRescanQRCode += OnTurnOnMeshing;
             }
@@ -32,7 +32,7 @@ namespace Holoi.Reality.Typography
             base.OnDestroy();
             if (HoloKitApp.Instance.IsSpectator)
             {
-                HoloKitAppMultiplayerManager.OnAlignmentMarkerChecked -= OnTurnOnMeshing;
+                HoloKitAppMultiplayerManager.OnLocalPlayerChecked -= OnTurnOnMeshing;
                 HoloKitAppUIPanel_MonoAR_RescanQRCode.OnRescanQRCode -= OnTurnOffMeshing;
                 HoloKitAppUIPanel_MonoAR_RescanQRCode.OnCancelRescanQRCode -= OnTurnOnMeshing;
             }

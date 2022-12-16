@@ -32,7 +32,40 @@ namespace Holoi.Library.HoloKitApp
         /// <summary>
         /// The prefab of the phone alignment marker.
         /// </summary>
-        [SerializeField] private GameObject _phoneAlignmentMarkerPrefab;
+        [SerializeField] private GameObject _alignmentMarkerPrefab;
+
+        public HoloKitAppPlayerStatus LocalPlayerStatus
+        {
+            get => _localPlayerStatus;
+            set
+            {
+                _localPlayerStatus = value;
+                switch (_localPlayerStatus)
+                {
+                    case HoloKitAppPlayerStatus.None:
+                        break;
+                    case HoloKitAppPlayerStatus.SyncingTimestamp:
+                        OnLocalPlayerSyncingTimestamp?.Invoke();
+                        break;
+                    case HoloKitAppPlayerStatus.SyncingPose:
+                        OnLocalPlayerSyncingPose?.Invoke();
+                        break;
+                    case HoloKitAppPlayerStatus.Synced:
+                        OnLocalPlayerSynced?.Invoke();
+                        break;
+                    case HoloKitAppPlayerStatus.Checked:
+                        OnLocalPlayerChecked?.Invoke();
+                        break;
+                }
+                OnLocalPlayerStatusUpdatedServerRpc(_localPlayerStatus);
+            }
+        }
+
+        /// <summary>
+        /// The current local status. We need this variable because the
+        /// network one requires time to respond.
+        /// </summary>
+        private HoloKitAppPlayerStatus _localPlayerStatus = HoloKitAppPlayerStatus.None;
 
         /// <summary>
         /// This queue stores a sequence of timestamp offsets from the local 
@@ -91,35 +124,43 @@ namespace Holoi.Library.HoloKitApp
         /// <summary>
         /// The reference of the phone alignment marker.
         /// </summary>
-        private GameObject _phoneAlignmentMarker;
+        private GameObject _alignmentMarker;
 
-        /// <summary>
-        /// This event is called when the client checks the alignment marker.
-        /// </summary>
-        public static event Action OnAlignmentMarkerChecked;
+        [ServerRpc(RequireOwnership = false)]
+        private void OnLocalPlayerStatusUpdatedServerRpc(HoloKitAppPlayerStatus newStatus, ServerRpcParams serverRpcParams = default)
+        {
+            var playerClientId = serverRpcParams.Receive.SenderClientId;
+            if (_connectedPlayers.ContainsKey(playerClientId))
+            {
+                _connectedPlayers[playerClientId].Status = newStatus;
+            }
+            OnConnectedPlayerListUpdated?.Invoke();
+        }
 
         /// <summary>
         /// In Phase 1, we calculate the local device's timestamp offset to the host. 
         /// </summary>
-        private void StartSpatialAnchorSyncProcess()
+        private void StartSyncProcess()
         {
+            Debug.Log("[SpatialAnchorSharing] StartSyncProcess");
             if (HoloKitUtils.IsRuntime)
             {
+                // Clear queues
                 _timestampOffsetQueue.Clear();
                 _imagePosePairQueue.Clear();
                 _syncResultQueue.Clear();
-                _localPlayer.SyncStatus = HoloKitAppPlayerSyncStatus.SyncingTimestamp;
+                LocalPlayerStatus = HoloKitAppPlayerStatus.SyncingTimestamp;
             }
             else
             {
-                _localPlayer.SyncStatus = HoloKitAppPlayerSyncStatus.Synced;
+                LocalPlayerStatus = HoloKitAppPlayerStatus.Checked;
             }
         }
 
         private void FixedUpdate()
         {
             // In this phase, client constantly request timestamp from the server.
-            if (_localPlayer != null && _localPlayer.SyncStatus == HoloKitAppPlayerSyncStatus.SyncingTimestamp)
+            if (LocalPlayerStatus == HoloKitAppPlayerStatus.SyncingTimestamp)
             {
                 OnRequestTimestampServerRpc(HoloKitARSessionControllerAPI.GetSystemUptime());
             }
@@ -134,7 +175,7 @@ namespace Holoi.Library.HoloKitApp
         [ClientRpc]
         private void OnRespondTimestampClientRpc(double hostTimestamp, double oldClientTimestamp, ClientRpcParams clientRpcParams = default)
         {
-            if (_localPlayer.SyncStatus != HoloKitAppPlayerSyncStatus.SyncingTimestamp) { return; }
+            if (LocalPlayerStatus != HoloKitAppPlayerStatus.SyncingTimestamp) return;
 
             double currentClientTimestamp = HoloKitARSessionControllerAPI.GetSystemUptime();
             double offset = hostTimestamp + (currentClientTimestamp - oldClientTimestamp) / 2 - currentClientTimestamp;
@@ -149,13 +190,12 @@ namespace Holoi.Library.HoloKitApp
                     // The stardard deviation of the current queue is acceptable
                     // Take the avarage value as the timestamp offset
                     _finalTimestampOffset = _timestampOffsetQueue.Average();
-                    Debug.Log($"[SpatialAnchorSynchronization] Final timestamp offset: {_finalTimestampOffset}");
-                    _localPlayer.SyncStatus = HoloKitAppPlayerSyncStatus.SyncingPose;
-                    //StartScanningQRCode();
+                    Debug.Log($"[SpatialAnchorSharing] Final timestamp offset: {_finalTimestampOffset}");
+                    StartScanningQRCode();
                 }
                 else
                 {
-                    Debug.Log($"[MultiplayerManager] The current standard deivation {standardDeviation} is too large, try again...");
+                    //Debug.Log($"[MultiplayerManager] The current standard deivation {standardDeviation} is too large, try again...");
                 }
                 _timestampOffsetQueue.Dequeue();
             }
@@ -166,10 +206,19 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         private void StartScanningQRCode()
         {
+            LocalPlayerStatus = HoloKitAppPlayerStatus.SyncingPose;
             var arSessionManager = HoloKitApp.Instance.ARSessionManager;
             arSessionManager.ARTrackedImageManager.trackedImagesChanged += OnTrackedImagesChanged;
             HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnARSessionUpdatedFrame_Client;
             arSessionManager.SetARTrackedImageManagerEnabled(true);
+        }
+
+        private void StopScanningQRCode()
+        {
+            var arSessionManager = HoloKitApp.Instance.ARSessionManager;
+            arSessionManager.ARTrackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
+            HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnARSessionUpdatedFrame_Client;
+            arSessionManager.SetARTrackedImageManagerEnabled(false);
         }
 
         private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args)
@@ -198,7 +247,7 @@ namespace Holoi.Library.HoloKitApp
         [ClientRpc]
         private void OnRespondImagePoseClientRpc(Vector3 hostImagePosition, Quaternion hostImageRotation, Vector3 clientImagePosition, Quaternion clientImageRotation, ClientRpcParams clientRpcParams = default)
         {
-            if (_localPlayer.SyncStatus != HoloKitAppPlayerSyncStatus.SyncingPose)  return;
+            if (LocalPlayerStatus != HoloKitAppPlayerStatus.SyncingPose) return;
 
             _imagePosePairQueue.Enqueue(new ImagePosePair()
             {
@@ -270,9 +319,12 @@ namespace Holoi.Library.HoloKitApp
             };
         }
 
+        /// <summary>
+        /// This function is called when the local player successfully synced.
+        /// </summary>
         private void OnSynced()
         {
-            _localPlayer.SyncStatus = HoloKitAppPlayerSyncStatus.Synced;
+            LocalPlayerStatus = HoloKitAppPlayerStatus.Synced;
 
             // We use the last result in the queue to reset ARSession origin
             var lastSyncResult = _syncResultQueue.Last();
@@ -281,45 +333,51 @@ namespace Holoi.Library.HoloKitApp
             HoloKitARSessionControllerAPI.ResetOrigin(translate, Quaternion.AngleAxis(theta, Vector3.up));
 
             StopScanningQRCode();
-            SpawnPhoneAlignmentMarker();
-        }
-
-        private void StopScanningQRCode()
-        {
-            var arSessionManager = HoloKitApp.Instance.ARSessionManager;
-            arSessionManager.ARTrackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
-            HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnARSessionUpdatedFrame_Client;
-            arSessionManager.SetARTrackedImageManagerEnabled(false);
+            SpawnAlignmentMarker();
         }
 
         // We only need to spawn this on client machine locally
-        private void SpawnPhoneAlignmentMarker()
+        private void SpawnAlignmentMarker()
         {
-            if (_phoneAlignmentMarker == null)
+            if (_alignmentMarker == null)
             {
-                _phoneAlignmentMarker = Instantiate(_phoneAlignmentMarkerPrefab, GetServerPlayer().transform);
-                _phoneAlignmentMarker.transform.localPosition = HostCameraToScreenCenterOffset.Value;
+                _alignmentMarker = Instantiate(_alignmentMarkerPrefab, GetMasterPlayer().transform);
+                _alignmentMarker.transform.localPosition = HostCameraToScreenCenterOffset.Value;
             }
         }
 
-        private void DestroyPhoneAlignmentMarker()
+        private void DestroyAlignmentMarker()
         {
-            if (_phoneAlignmentMarker != null)
+            if (_alignmentMarker != null)
             {
-                Destroy(_phoneAlignmentMarker);
+                Destroy(_alignmentMarker);
             }
         }
 
-        public void CheckAlignmentMarker()
+        /// <summary>
+        /// This function is called when the player decices to rescan the QRCode.
+        /// When rescanning, we do not sync the timestamp again. We only rescan the QRCode.
+        /// </summary>
+        public void OnRescanQRCode()
         {
-            DestroyPhoneAlignmentMarker();
-            OnAlignmentMarkerChecked?.Invoke();
+            // Destroy the spawned alignment marker
+            DestroyAlignmentMarker();
+            // Clear used queues for pose sync
+            _imagePosePairQueue.Clear();
+            _syncResultQueue.Clear();
+            // Scan the QRCode again
+            StartScanningQRCode();
         }
 
-        public void RescanQRCode()
+        /// <summary>
+        /// This function is called when the player checks the alignment marker.
+        /// </summary>
+        public void OnCheckAlignmentMarker()
         {
-            DestroyPhoneAlignmentMarker();
-            StartSpatialAnchorSyncProcess();
+            // Destroy the spawned alignment marker
+            DestroyAlignmentMarker();
+            // Conform the local player status
+            LocalPlayerStatus = HoloKitAppPlayerStatus.Checked;
         }
     }
 }

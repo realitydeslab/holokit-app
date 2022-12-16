@@ -9,8 +9,6 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             HoloKitAppUIEventManager.OnRenderModeChanged += OnRenderModeChanged;
             HoloKitAppUIEventManager.OnExitReality += OnExitReality;
-            HoloKitAppUIEventManager.OnAlignmentMarkChecked += OnAlignmentMarkChecked;
-            HoloKitAppUIEventManager.OnRescanQRCode += OnRescanQRCode;
             HoloKitAppUIEventManager.OnExitNoLiDARScene += OnExitNoLiDARScene;
         }
 
@@ -18,8 +16,6 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             HoloKitAppUIEventManager.OnRenderModeChanged -= OnRenderModeChanged;
             HoloKitAppUIEventManager.OnExitReality -= OnExitReality;
-            HoloKitAppUIEventManager.OnAlignmentMarkChecked -= OnAlignmentMarkChecked;
-            HoloKitAppUIEventManager.OnRescanQRCode -= OnRescanQRCode;
             HoloKitAppUIEventManager.OnExitNoLiDARScene -= OnExitNoLiDARScene;
         }
 
@@ -38,16 +34,6 @@ namespace Holoi.Library.HoloKitApp.UI
         private void OnExitReality()
         {
             HoloKitApp.Instance.Shutdown();
-        }
-
-        private void OnAlignmentMarkChecked()
-        {
-            HoloKitApp.Instance.MultiplayerManager.CheckAlignmentMarker();
-        }
-
-        private void OnRescanQRCode()
-        {
-            HoloKitApp.Instance.MultiplayerManager.RescanQRCode();
         }
 
         private void OnExitNoLiDARScene()

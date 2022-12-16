@@ -9,11 +9,27 @@ namespace Netcode.Transports.MultipeerConnectivity
     {
         public override ulong ServerClientId => 0;
 
-        public bool AutomaticAdvertisement = true;
+        /// <summary>
+        /// If this value is set to true, the device will automatically advertise
+        /// after starting host. Otherwise, you need to call StartAdvertising()
+        /// manually to start advertise.
+        /// </summary>
+        public bool AutomaticAdvertising = true;
+
+        /// <summary>
+        /// If this value is set to true, the device will automatically browse
+        /// nearby devices. Otherwise, you need to call StartBrowsing manullay
+        /// to start browsing.
+        /// </summary>
+        public bool AutomaticBrowsing = true;
 
         public static string BundleId = null;
 
         private static MultipeerConnectivityTransport s_instance;
+
+        public static bool IsEditor => Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.WindowsPlayer;
+
+        public static bool IsRuntime => Application.platform == RuntimePlatform.IPhonePlayer;
 
         [DllImport("__Internal")]
         private static extern void MPC_Initialize(Action<string> OnBrowserFoundPeer,
@@ -156,27 +172,44 @@ namespace Netcode.Transports.MultipeerConnectivity
 
         public override bool StartServer()
         {
-            if (AutomaticAdvertisement)
-            {
+            if (AutomaticAdvertising)
                 MPC_StartAdvertising(BundleId);
-            }
             return true;
         }
 
         public override bool StartClient()
         {
-            MPC_StartBrowsing(BundleId);
+            if (AutomaticBrowsing)
+                MPC_StartBrowsing(BundleId);
             return true;
         }
 
         public static void StartAdvertising()
         {
-            MPC_StartAdvertising(BundleId);
+            if (IsRuntime)
+                MPC_StartAdvertising(BundleId);
+            else
+                Debug.Log("[MPCTransport] Cannot advertise on the current platform.");
         }
 
         public static void StopAdvertising()
         {
-            MPC_StopAdvertising();
+            if (IsRuntime)
+                MPC_StopAdvertising();
+        }
+
+        public static void StartBrowsing()
+        {
+            if (IsRuntime)
+                MPC_StartBrowsing(BundleId);
+            else
+                Debug.Log("[MPCTransport] Cannot browse on the current platform.");
+        }
+
+        public static void StopBrowsing()
+        {
+            if (IsRuntime)
+                MPC_StopBrowsing();
         }
 
         public override NetworkEvent PollEvent(out ulong transportId, out ArraySegment<byte> payload, out float receiveTime)

@@ -27,7 +27,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ScanQRCode");
-            HoloKitAppUIEventManager.OnRescanQRCode?.Invoke();
+            HoloKitApp.Instance.MultiplayerManager.OnRescanQRCode();
         }
     }
 }

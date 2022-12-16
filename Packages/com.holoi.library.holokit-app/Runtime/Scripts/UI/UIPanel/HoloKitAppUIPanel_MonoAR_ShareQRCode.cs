@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using HoloKit;
@@ -28,31 +26,24 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private const float QRCodeWidth = 0.04f;
 
-        public static event Action OnStartedSharingQRCode;
-
-        public static event Action OnStoppedSharingQRCode;
-
         private void Start()
         {
-            OnStartedSharingQRCode?.Invoke();
-            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated += OnConnectedDeviceListUpdated;
-            OnConnectedDeviceListUpdated();
-            AdjustQRCodeSize();
             if (HoloKitUtils.IsRuntime)
             {
+                AdjustQRCodeSize();
                 CalculateCameraToQRCodeOffset();
-                //HoloKitApp.Instance.MultiplayerManager.StartAdvertising();
-                StartCoroutine(HoloKitAppUtils.WaitAndDo(1f, () =>
-                {
-                    HoloKitApp.Instance.MultiplayerManager.StartAdvertising();
-                }));
             }
+            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated += OnConnectedPlayerListUpdated;
+            OnConnectedPlayerListUpdated();
+            StartCoroutine(HoloKitAppUtils.WaitAndDo(1f, () =>
+            {
+                HoloKitApp.Instance.MultiplayerManager.StartAdvertising();
+            }));
         }
 
         private void OnDestroy()
         {
-            OnStoppedSharingQRCode?.Invoke();
-            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated -= OnConnectedDeviceListUpdated;
+            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated -= OnConnectedPlayerListUpdated;
         }
 
         private void AdjustQRCodeSize()
@@ -76,30 +67,32 @@ namespace Holoi.Library.HoloKitApp.UI
             HoloKitApp.Instance.MultiplayerManager.HostCameraToQRCodeOffset.Value = cameraToQRCodeOffset;
         }
 
-        private void OnConnectedDeviceListUpdated()
+        private void OnConnectedPlayerListUpdated()
         {
             // Destroy previous slots
             foreach (Transform child in _deviceListRoot)
             {
                 Destroy(child.gameObject);
             }
-            int deviceCount = 0;
-            var deviceList = HoloKitApp.Instance.MultiplayerManager.ConnectedPlayerList;
-            foreach (var deviceInfo in deviceList)
+            int playerCount = 0;
+            var playerList = HoloKitApp.Instance.MultiplayerManager.ConnectedPlayerList;
+            var masterPlayer = HoloKitApp.Instance.MultiplayerManager.GetMasterPlayer();
+            foreach (var player in playerList)
             {
                 var deviceSlot = Instantiate(_deviceSlotPrefab, _deviceListRoot);
                 deviceSlot.transform.localScale = Vector3.one;
-                deviceSlot.GetComponent<TMP_Text>().text = $"{deviceInfo.Name} ({deviceInfo.SyncStatus})";
-                deviceCount++;
+                string statusStr = player.OwnerClientId == masterPlayer.OwnerClientId ? "Host" : player.Status.ToString();
+                deviceSlot.GetComponent<TMP_Text>().text = $"{player.Name} ({statusStr})";
+                playerCount++;
             }
-            if (deviceCount == 0)
+            if (playerCount == 0)
             {
                 _background.sizeDelta = new Vector2(_background.sizeDelta.x, BackgroundDefaultHeight);
             }
             else
             {
                 _background.sizeDelta = new Vector2(_background.sizeDelta.x,
-                    BackgroundDefaultHeight + deviceCount * DeviceSlotHeight + DeviceListBottomPadding);
+                    BackgroundDefaultHeight + playerCount * DeviceSlotHeight + DeviceListBottomPadding);
             }
         }
 

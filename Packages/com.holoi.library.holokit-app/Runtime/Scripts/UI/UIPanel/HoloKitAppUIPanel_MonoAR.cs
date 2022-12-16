@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using HoloKit;
@@ -23,19 +22,19 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
-            // If local device is spectator
-            if (HoloKitUtils.IsRuntime)
+            if (HoloKitApp.Instance.IsMaster)
             {
-                if (!HoloKitApp.Instance.IsMaster)
+                // Disable the spectator button on the host if spectator view is not supported in this reality
+                if (!HoloKitApp.Instance.CurrentReality.IsSpectatorViewSupported())
                 {
-                    HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_WaitingForConnection");
+                    _spectatorButton.GetComponent<Button>().interactable = false;
                 }
             }
-
-            if (!HoloKitApp.Instance.CurrentReality.IsSpectatorViewSupported())
+            else
             {
-                _spectatorButton.GetComponent<Button>().interactable = false;
-            }
+                // If the local player is not master, start browsing and try to establish connection.
+                HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_WaitingForConnection");
+            } 
         }
 
         public void OnSpectatorButtonPressed()
