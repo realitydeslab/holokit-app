@@ -38,7 +38,7 @@ namespace Holoi.Library.MOFABase
         /// </summary>
         [HideInInspector] public NetworkVariable<float> Distance = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        [HideInInspector] public NetworkVariable<float> Calories = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        [HideInInspector] public NetworkVariable<float> Energy = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         [HideInInspector] public LifeShield LifeShield;
 
@@ -57,39 +57,41 @@ namespace Holoi.Library.MOFABase
 
         public static event Action<ulong, bool> OnMofaPlayerReadyStateChanged;
 
-        public static event Action OnScoreChanged;
+        public static event Action OnKillChanged;
 
         public static event Action OnHealthDataUpdated;
 
         protected virtual void Start()
         {
-            MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
         }
 
         public override void OnDestroy()
         {
-            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged -= OnPhaseChanged;
         }
 
         public override void OnNetworkSpawn()
         {
+            base.OnNetworkSpawn();
+            Debug.Log($"[MofaPlayer] MagicSchoolTokenId: {MagicSchoolTokenId.Value} and team: {Team.Value}");
             OnMofaPlayerSpawned?.Invoke(this);
             var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             mofaBaseRealityManager.SetPlayer(OwnerClientId, this);
             mofaBaseRealityManager.SpellPool.OnPlayerJoined(MagicSchoolTokenId.Value);
 
-            Ready.OnValueChanged += OnReadyStateChangedFunc;
-            Kill.OnValueChanged += OnScoreChangedFunc;
-            Distance.OnValueChanged += OnDistanceChangedFunc;
-            Calories.OnValueChanged += OnCaloriesChangedFunc;
+            Ready.OnValueChanged += OnReadyValueChangedFunc;
+            Kill.OnValueChanged += OnKillValueChangedFunc;
+            Distance.OnValueChanged += OnDistanceValueChangedFunc;
+            Energy.OnValueChanged += OnEnergyValueChangedFunc;
         }
 
         public override void OnNetworkDespawn()
         {
-            Ready.OnValueChanged -= OnReadyStateChangedFunc;
-            Kill.OnValueChanged -= OnScoreChangedFunc;
-            Distance.OnValueChanged -= OnDistanceChangedFunc;
-            Calories.OnValueChanged -= OnCaloriesChangedFunc;
+            Ready.OnValueChanged -= OnReadyValueChangedFunc;
+            Kill.OnValueChanged -= OnKillValueChangedFunc;
+            Distance.OnValueChanged -= OnDistanceValueChangedFunc;
+            Energy.OnValueChanged -= OnEnergyValueChangedFunc;
         }
 
         protected virtual void Update()
@@ -106,21 +108,12 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        protected virtual void FixedUpdate()
+        private void OnKillValueChangedFunc(int oldValue, int newValue)
         {
-            // Update ClientNetworkTransform
-            if (IsOwner)
-            {
-                transform.SetPositionAndRotation(HoloKitCamera.Instance.CenterEyePose.position, HoloKitCamera.Instance.CenterEyePose.rotation);
-            }
+            OnKillChanged?.Invoke();
         }
 
-        private void OnScoreChangedFunc(int oldValue, int newValue)
-        {
-            OnScoreChanged?.Invoke();
-        }
-
-        private void OnDistanceChangedFunc(float oldValue, float newValue)
+        private void OnDistanceValueChangedFunc(float oldValue, float newValue)
         {
             if (oldValue != newValue)
             {
@@ -128,7 +121,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnCaloriesChangedFunc(float oldValue, float newValue)
+        private void OnEnergyValueChangedFunc(float oldValue, float newValue)
         {
             if (oldValue != newValue)
             {
@@ -136,7 +129,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnReadyStateChangedFunc(bool oldValue, bool newValue)
+        private void OnReadyValueChangedFunc(bool oldValue, bool newValue)
         {
             // We only react to the situation where the ready state changes
             // from false to true
@@ -157,7 +150,7 @@ namespace Holoi.Library.MOFABase
                     CastCount.Value = 0;
                     HitCount.Value = 0;
                     Distance.Value = 0f;
-                    Calories.Value = 0f;
+                    Energy.Value = 0f;
                     _distance = 0f;
                 }
                 else if (mofaPhase == MofaPhase.Fighting)
@@ -179,7 +172,7 @@ namespace Holoi.Library.MOFABase
         {
             _distance = distance;
             Distance.Value = distance;
-            Calories.Value = calories;
+            Energy.Value = calories;
         }
     }
 }

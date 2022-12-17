@@ -25,8 +25,14 @@ namespace Holoi.Library.HoloKitApp
         private static HoloKitApp _instance;
 
         [Header("References")]
+        /// <summary>
+        /// Reference to the global settings scriptable object
+        /// </summary>
         public HoloKitAppGlobalSettings GlobalSettings;
 
+        /// <summary>
+        /// Reference to the user account manager object
+        /// </summary>
         [SerializeField] private HoloKitAppUserAccountManager _userAccountManager;
 
         [Header("Prefabs")]
@@ -65,7 +71,7 @@ namespace Holoi.Library.HoloKitApp
         /// <summary>
         /// If the local device is the host
         /// </summary>
-        public bool IsMaster => _isMaster;
+        public bool IsHost => _isHost;
 
         public HoloKitAppPlayerType LocalPlayerType => _localPlayerType;
 
@@ -89,13 +95,11 @@ namespace Holoi.Library.HoloKitApp
 
         private Reality _currentReality;
 
-        private bool _isMaster = true;
+        private bool _isHost = true;
 
         private HoloKitAppPlayerType _localPlayerType = HoloKitAppPlayerType.Player;
 
         private HoloKitAppMultiplayerManager _multiplayerManager;
-
-        private HoloKitAppMultiplayerManager _spatialAnchorSynchronizer;
 
         private HoloKitAppARSessionManager _arSessionManager;
 
@@ -103,6 +107,10 @@ namespace Holoi.Library.HoloKitApp
 
         private RealityManager _realityManager;
 
+        /// <summary>
+        /// This event is used by UserAccountManager to record the number of times
+        /// each reality is played.
+        /// </summary>
         public static event Action<string> OnEnteredReality; 
 
         #region Mono
@@ -204,21 +212,27 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
+        /// <summary>
+        /// This function checks whether a given scene is a Reality scene.
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <returns></returns>
         private bool IsRealityScene(Scene scene)
         {
             foreach (var reality in GlobalSettings.GetAllRealities())
             {
-                if (reality.Scene == null) { continue; }
+                if (reality.Scene == null) continue;
 
                 if (reality.Scene.SceneName.Equals(scene.name))
-                {
                     return true;
-                }
             }
             return false;
-            //return !scene.name.Equals("Start");
         }
 
+        /// <summary>
+        /// Since this function is called within OnSceneLoaded(), this is called after
+        /// OnEnable() and before Start().
+        /// </summary>
         private void InitializeRealityScene()
         {
             // Find RealityManager reference
@@ -231,27 +245,32 @@ namespace Holoi.Library.HoloKitApp
             // Setup URP Asset
             _realityManager.SetupURPAsset();
 
+            // Spawn the ARSessionManager
+            _arSessionManager = Instantiate(_arSessioinManagerPrefab);
+            // Spawn the Recorder
+            _recorder = Instantiate(_recorderPrefab);
+            // Spawn the MultiplayerManager
+            _multiplayerManager = Instantiate(_multiplayerManagerPrefab);
+
             // Initialize NetworkManager
             InitializeNetworkManager();
+            // We finally start the network after instantiating all necessary objects
+            MultipeerConnectivityTransport.BundleId = _currentReality.BundleId;
+            if (IsHost)
+                StartHost();
+            else
+                StartClient();
 
-            // Wait and start network
-            StartCoroutine(HoloKitAppUtils.WaitAndDo(0.5f, () =>
-            {
-                MultipeerConnectivityTransport.BundleId = _currentReality.BundleId;
-                if (IsMaster)
-                    StartHost();
-                else
-                    StartClient();
-            }));
-
-            // Push AR UI Panel
+            // Push Mono AR Panel as default
             UIPanelManager.PushUIPanel("MonoAR");
-            // TODO: Add multiple layers of reality UI panels
+            // Push the reality specific UI Panel
+            // TODO: Support more than 1 reality specific UI Panels
             if (_realityManager.UIPanelPrefabs.Count > 0)
             {
                 UIPanelManager.PushUIPanel(_realityManager.UIPanelPrefabs[0]);
             }
 
+            // TODO: Fix this
             // Set VideoEnhancementMode in HoloKitSDK
             if (GlobalSettings.HighResHDREnabled && _localPlayerType == HoloKitAppPlayerType.Spectator)
             {
@@ -298,7 +317,7 @@ namespace Holoi.Library.HoloKitApp
                 }
             }
 
-            _isMaster = isMaster;
+            _isHost = isMaster;
             _localPlayerType = playerType;
             SceneManager.LoadScene(_currentReality.Scene.SceneName, LoadSceneMode.Single);
             OnEnteredReality?.Invoke(_currentReality.BundleId);
@@ -317,42 +336,46 @@ namespace Holoi.Library.HoloKitApp
         #endregion
 
         #region Network Lifecycle
+        /// <summary>
+        /// This function initializes NetworkManager for a network session.
+        /// It main functionality is to setup NetworkManager's NetworkPrefabsList
+        /// and PlayerPrefab.
+        /// </summary>
         private void InitializeNetworkManager()
         {
+            // There can only one NetworkManager in the scene. Destroy it if there already one there.
             if (NetworkManager.Singleton != null)
             {
-                DeinitializeNetworkManager();
+                DestroyNetworkManager();
             }
 
+            // Instantiate the NetworkManager
             var networkManager = Instantiate(_networkManagerPrefab);
+            // We use UnityTransport instead of MPC in eidtor mode for testing
             if (HoloKitUtils.IsEditor)
-            {
                 networkManager.NetworkConfig.NetworkTransport = networkManager.GetComponent<UnityTransport>();
-            }
             else
-            {
                 Destroy(networkManager.GetComponent<UnityTransport>());
-            }
+
+            // Setup reality specific player prefab for NetworkManager
+            if (_realityManager.PlayerPrefab != null)
+                networkManager.NetworkConfig.PlayerPrefab = _realityManager.PlayerPrefab;
+            // Setup reality specific network prefabs for NetworkManager
             foreach (var prefab in _realityManager.NetworkPrefabs)
             {
+                // Make sure all network prefabs contains a NetworkObject component
                 if (prefab.TryGetComponent<NetworkObject>(out var _))
-                {
                     networkManager.AddNetworkPrefab(prefab);
-                }
                 else
-                {
-                    Debug.Log($"[HoloKitApp] NetworkPrefab {prefab.name} does not have a NetworkObject component");
-                }
+                    Debug.LogError($"[HoloKitApp] NetworkPrefab {prefab.name} does not have a NetworkObject component on it");
             }
-            //Debug.Log("[HoloKitApp] NetworkManager initialized");
         }
 
-        private void DeinitializeNetworkManager()
+        private void DestroyNetworkManager()
         {
             if (NetworkManager.Singleton != null)
             {
                 Destroy(NetworkManager.Singleton.gameObject);
-                //Debug.Log("[HoloKitApp] NetworkManager deinitialized");
             }
         }
 
@@ -365,10 +388,8 @@ namespace Holoi.Library.HoloKitApp
 
             if (NetworkManager.Singleton.StartHost())
             {
-                SpawnMultiplayerManager();
-                SpawnARSessionManager();
-                SpawnRecorder();
                 Debug.Log("[HoloKitApp] Host started");
+                //SpawnMultiplayerManager();
             }
             else
             {
@@ -385,35 +406,12 @@ namespace Holoi.Library.HoloKitApp
 
             if (NetworkManager.Singleton.StartClient())
             {
-                SpawnARSessionManager();
-                SpawnRecorder();
                 Debug.Log("[HoloKitApp] Client started");
             }
             else
             {
                 Debug.Log("[HoloKitApp] Failed to start client");
             }
-        }
-
-        private void SpawnMultiplayerManager()
-        {
-            var multiplayerManagerInstance = Instantiate(_multiplayerManagerPrefab);
-            multiplayerManagerInstance.GetComponent<NetworkObject>().Spawn();
-        }
-
-        private void SpawnARSessionManager()
-        {
-            _arSessionManager = Instantiate(_arSessioinManagerPrefab);
-        }
-
-        private void SpawnRecorder()
-        {
-            _recorder = Instantiate(_recorderPrefab);
-        }
-
-        public void SetMultiplayerManager(HoloKitAppMultiplayerManager multiplayerManager)
-        {
-            _multiplayerManager = multiplayerManager;
         }
 
         private void SetUrpAssetForUI()
@@ -427,7 +425,7 @@ namespace Holoi.Library.HoloKitApp
         public void Shutdown()
         {
             NetworkManager.Singleton.Shutdown();
-            DeinitializeNetworkManager();
+            DestroyNetworkManager();
             SceneManager.LoadSceneAsync("Start", LoadSceneMode.Single);
         }
         #endregion

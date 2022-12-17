@@ -12,17 +12,17 @@ namespace Holoi.Library.MOFABase
 
         private void Start()
         {
-            _gameTime.text = Mathf.Ceil(((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).RoundTime) + "s";
+            _gameTime.text = Mathf.Ceil(((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).RoundDuration) + "s";
         }
 
         private void OnEnable()
         {
-            MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
         }
 
         private void OnDisable()
         {
-            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged -= OnPhaseChanged;
         }
 
         private void OnPhaseChanged(MofaPhase mofaPhase)
@@ -30,7 +30,7 @@ namespace Holoi.Library.MOFABase
             if (mofaPhase == MofaPhase.Fighting)
             {
                 _isUpdating = true;
-                _timeCounter = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).RoundTime;
+                _timeCounter = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).RoundDuration;
             }
             else if (mofaPhase == MofaPhase.RoundOver)
             {

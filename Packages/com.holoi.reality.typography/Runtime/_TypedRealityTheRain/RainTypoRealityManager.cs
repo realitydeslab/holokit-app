@@ -33,7 +33,7 @@ namespace Holoi.Reality.Typography
 
         private void Start()
         {
-            if (HoloKitApp.Instance.IsMaster)
+            if (HoloKitApp.Instance.IsHost)
             {
                 _arPlaneManager.enabled = true;
                 _arRaycastManager.enabled = true;

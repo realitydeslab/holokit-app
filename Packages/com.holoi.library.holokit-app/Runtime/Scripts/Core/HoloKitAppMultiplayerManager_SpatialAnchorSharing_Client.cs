@@ -18,7 +18,7 @@ namespace Holoi.Library.HoloKitApp
     }
 
     // Rotate client's coordinate system by theta first, then translate
-    public struct ClientSyncResult
+    public struct SyncResult
     {
         public float ThetaInDeg; // Client to server
         public Vector3 Translate;
@@ -42,8 +42,6 @@ namespace Holoi.Library.HoloKitApp
                 _localPlayerStatus = value;
                 switch (_localPlayerStatus)
                 {
-                    case HoloKitAppPlayerStatus.None:
-                        break;
                     case HoloKitAppPlayerStatus.SyncingTimestamp:
                         OnLocalPlayerSyncingTimestamp?.Invoke();
                         break;
@@ -57,7 +55,12 @@ namespace Holoi.Library.HoloKitApp
                         OnLocalPlayerChecked?.Invoke();
                         break;
                 }
-                OnLocalPlayerStatusUpdatedServerRpc(_localPlayerStatus);
+                // Sync local player status across the network
+                var localPlayer = NetworkManager.LocalClient.PlayerObject;
+                if (localPlayer != null)
+                {
+                    localPlayer.GetComponent<HoloKitAppPlayer>().Status.Value = _localPlayerStatus;
+                }
             }
         }
 
@@ -68,10 +71,35 @@ namespace Holoi.Library.HoloKitApp
         private HoloKitAppPlayerStatus _localPlayerStatus = HoloKitAppPlayerStatus.None;
 
         /// <summary>
+        /// The final result derived from the timestamp sync algorithm.
+        /// </summary>
+        private double _resultTimestampOffset;
+
+        /// <summary>
+        /// The timestamp of the lastest ARSession frame.
+        /// </summary>
+        private double _latestARSessionFrameTimestamp;
+
+        /// <summary>
+        /// The reference of the phone alignment marker.
+        /// </summary>
+        private GameObject _alignmentMarker;
+
+        /// <summary>
         /// This queue stores a sequence of timestamp offsets from the local 
         /// device to the host.
         /// </summary>
         private readonly Queue<double> _timestampOffsetQueue = new();
+
+        /// <summary>
+        /// Stores pairs of host image poses and client image poses.
+        /// </summary>
+        private readonly Queue<ImagePosePair> _imagePosePairQueue = new();
+
+        /// <summary>
+        /// Stores a list of sync result.
+        /// </summary>
+        private readonly Queue<SyncResult> _syncResultQueue = new();
 
         /// <summary>
         /// We start to compute the stardard deviation of the timestamp offset
@@ -86,32 +114,12 @@ namespace Holoi.Library.HoloKitApp
         private const double TimestampOffsetQueueStandardDeviationThreshold = 0.01;
 
         /// <summary>
-        /// The final result derived from the timestamp sync algorithm.
-        /// </summary>
-        private double _finalTimestampOffset;
-
-        /// <summary>
-        /// The timestamp of the lastest ARSession frame.
-        /// </summary>
-        private double _latestARSessionFrameTimestamp;
-
-        /// <summary>
-        /// Stores pairs of host image poses and client image poses.
-        /// </summary>
-        private readonly Queue<ImagePosePair> _imagePosePairQueue = new();
-
-        /// <summary>
         /// We need at least this amount of image pairs to start the calculation.
         /// </summary>
         private const int ClientImagePosePairQueueStablizationCount = 50;
 
         // A constant whose unit from Cos(Angle) to m meter
         private const float OptimizationPenaltyConstant = 10;
-
-        /// <summary>
-        /// Stores a list of sync result.
-        /// </summary>
-        private readonly Queue<ClientSyncResult> _syncResultQueue = new();
 
         /// <summary>
         /// Start to compute the standard deviation of the queue when the number of elements
@@ -122,57 +130,13 @@ namespace Holoi.Library.HoloKitApp
         private const double ThetaStandardDeviationThreshold = 0.1; // In degrees
 
         /// <summary>
-        /// The reference of the phone alignment marker.
-        /// </summary>
-        private GameObject _alignmentMarker;
-
-        [ServerRpc(RequireOwnership = false)]
-        private void OnLocalPlayerStatusUpdatedServerRpc(HoloKitAppPlayerStatus newStatus, ServerRpcParams serverRpcParams = default)
-        {
-            var playerClientId = serverRpcParams.Receive.SenderClientId;
-            if (_connectedPlayers.ContainsKey(playerClientId))
-            {
-                _connectedPlayers[playerClientId].Status = newStatus;
-            }
-            OnConnectedPlayerListUpdated?.Invoke();
-        }
-
-        /// <summary>
-        /// In Phase 1, we calculate the local device's timestamp offset to the host. 
-        /// </summary>
-        private void StartSyncProcess()
-        {
-            if (HoloKitUtils.IsRuntime)
-            {
-                // Clear queues
-                _timestampOffsetQueue.Clear();
-                _imagePosePairQueue.Clear();
-                _syncResultQueue.Clear();
-                LocalPlayerStatus = HoloKitAppPlayerStatus.SyncingTimestamp;
-            }
-            else
-            {
-                LocalPlayerStatus = HoloKitAppPlayerStatus.Checked;
-            }
-        }
-
-        private void FixedUpdate()
-        {
-            // In this phase, client constantly request timestamp from the server.
-            if (LocalPlayerStatus == HoloKitAppPlayerStatus.SyncingTimestamp)
-            {
-                OnRequestTimestampServerRpc(HoloKitARSessionControllerAPI.GetSystemUptime());
-            }
-        }
-
-        /// <summary>
         /// Receives the timestamp from the host.
         /// </summary>
         /// <param name="hostTimestamp"></param>
         /// <param name="oldClientTimestamp"></param>
         /// <param name="clientRpcParams"></param>
         [ClientRpc]
-        private void OnRespondTimestampClientRpc(double hostTimestamp, double oldClientTimestamp, ClientRpcParams clientRpcParams = default)
+        private void OnRespondTimestampClientRpc(double hostTimestamp, double oldClientTimestamp, ClientRpcParams _ = default)
         {
             if (LocalPlayerStatus != HoloKitAppPlayerStatus.SyncingTimestamp) return;
 
@@ -188,13 +152,9 @@ namespace Holoi.Library.HoloKitApp
                 {
                     // The stardard deviation of the current queue is acceptable
                     // Take the avarage value as the timestamp offset
-                    _finalTimestampOffset = _timestampOffsetQueue.Average();
-                    Debug.Log($"[SpatialAnchorSharing] Final timestamp offset: {_finalTimestampOffset}");
+                    _resultTimestampOffset = _timestampOffsetQueue.Average();
+                    Debug.Log($"[SpatialAnchorSharing] Final timestamp offset: {_resultTimestampOffset}");
                     StartScanningQRCode();
-                }
-                else
-                {
-                    //Debug.Log($"[MultiplayerManager] The current standard deivation {standardDeviation} is too large, try again...");
                 }
                 _timestampOffsetQueue.Dequeue();
             }
@@ -229,7 +189,7 @@ namespace Holoi.Library.HoloKitApp
                 // https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@5.1/manual/features/image-tracking.html#tracking-state
                 if (image.trackingState == TrackingState.Tracking)
                 {
-                    OnRequestImagePoseServerRpc(_latestARSessionFrameTimestamp + _finalTimestampOffset, image.transform.position, image.transform.rotation);
+                    OnRequestImagePoseServerRpc(_latestARSessionFrameTimestamp + _resultTimestampOffset, image.transform.position, image.transform.rotation);
                 }
             }
             else if (args.updated.Count > 1)
@@ -282,7 +242,7 @@ namespace Holoi.Library.HoloKitApp
         /// Use the least square method to calculate the result.
         /// </summary>
         /// <returns></returns>
-        private ClientSyncResult CalculateClientSyncResult()
+        private SyncResult CalculateClientSyncResult()
         {
             var clientImagePositionCenter = new Vector3(
                 _imagePosePairQueue.Select(o => o.ClientImagePosition.x).Average(),
@@ -311,7 +271,7 @@ namespace Holoi.Library.HoloKitApp
 
             Vector3 translate = -rotation.MultiplyPoint3x4(hostImagePositionCenter - clientImagePositionCenter);
 
-            return new ClientSyncResult()
+            return new SyncResult()
             {
                 ThetaInDeg = thetaInDeg,
                 Translate = translate
@@ -324,23 +284,24 @@ namespace Holoi.Library.HoloKitApp
         private void OnSynced()
         {
             LocalPlayerStatus = HoloKitAppPlayerStatus.Synced;
-
+            StopScanningQRCode();
             // We use the last result in the queue to reset ARSession origin
             var lastSyncResult = _syncResultQueue.Last();
             float theta = lastSyncResult.ThetaInDeg;
             Vector3 translate = lastSyncResult.Translate;
             HoloKitARSessionControllerAPI.ResetOrigin(translate, Quaternion.AngleAxis(theta, Vector3.up));
-
-            StopScanningQRCode();
+            // Enter check alignment marker phase
             SpawnAlignmentMarker();
         }
 
         // We only need to spawn this on client machine locally
         private void SpawnAlignmentMarker()
         {
+            Debug.Log("[MultiplayerManager] SpawnAlignmentMarker");
             if (_alignmentMarker == null)
             {
-                _alignmentMarker = Instantiate(_alignmentMarkerPrefab, GetMasterPlayer().transform);
+                var hostPlayer = HoloKitApp.Instance.MultiplayerManager.HostPlayer;
+                _alignmentMarker = Instantiate(_alignmentMarkerPrefab, hostPlayer.transform);
                 _alignmentMarker.transform.localPosition = HostCameraToScreenCenterOffset.Value;
             }
         }
@@ -348,9 +309,7 @@ namespace Holoi.Library.HoloKitApp
         private void DestroyAlignmentMarker()
         {
             if (_alignmentMarker != null)
-            {
                 Destroy(_alignmentMarker);
-            }
         }
 
         /// <summary>

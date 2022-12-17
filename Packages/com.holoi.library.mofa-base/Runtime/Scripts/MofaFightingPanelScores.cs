@@ -15,12 +15,12 @@ namespace Holoi.Library.MOFABase
 
         private void OnEnable()
         {
-            MofaPlayer.OnScoreChanged += OnScoreChanged;
+            MofaPlayer.OnKillChanged += OnScoreChanged;
         }
 
         private void Start()
         {
-            if (HoloKitApp.HoloKitApp.Instance.IsMaster)
+            if (HoloKitApp.HoloKitApp.Instance.IsHost)
             {
                 _blueTeamMark.SetActive(true);
                 _redTeamMark.SetActive(false);
@@ -39,7 +39,7 @@ namespace Holoi.Library.MOFABase
 
         private void OnDisable()
         {
-            MofaPlayer.OnScoreChanged -= OnScoreChanged;
+            MofaPlayer.OnKillChanged -= OnScoreChanged;
         }
 
         private void OnScoreChanged()

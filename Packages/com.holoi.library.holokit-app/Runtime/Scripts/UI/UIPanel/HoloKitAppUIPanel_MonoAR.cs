@@ -22,24 +22,23 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
-            if (HoloKitApp.Instance.IsMaster)
+            if (HoloKitApp.Instance.IsHost)
             {
                 // Disable the spectator button on the host if spectator view is not supported in this reality
                 if (!HoloKitApp.Instance.CurrentReality.IsSpectatorViewSupported())
-                {
                     _spectatorButton.GetComponent<Button>().interactable = false;
-                }
             }
             else
             {
                 // If the local player is not master, start browsing and try to establish connection.
-                HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_WaitingForConnection");
+                if (HoloKitUtils.IsRuntime)
+                    HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_WaitingForConnection");
             } 
         }
 
         public void OnSpectatorButtonPressed()
         {
-            if (HoloKitApp.Instance.IsMaster)
+            if (HoloKitApp.Instance.IsHost)
             {
                 HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ShareQRCode");
             }

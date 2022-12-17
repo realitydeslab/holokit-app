@@ -72,7 +72,7 @@ namespace Holoi.Library.MOFABase
         {
             _canvas = GetComponent<Canvas>();
 
-            MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
             HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
             LifeShield.OnSpawned += OnLifeShieldSpawned;
             HoloKitAppRecorder.OnRecordingStarted += OnDisappear;
@@ -87,7 +87,7 @@ namespace Holoi.Library.MOFABase
             Status.gameObject.SetActive(false);
             RedScreen.gameObject.SetActive(false);
 
-            if (!HoloKitApp.HoloKitApp.Instance.IsMaster)
+            if (!HoloKitApp.HoloKitApp.Instance.IsHost)
             {
                 OnDisappear();
             }
@@ -106,7 +106,7 @@ namespace Holoi.Library.MOFABase
 
         private void OnDestroy()
         {
-            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged -= OnPhaseChanged;
             HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
             LifeShield.OnSpawned -= OnLifeShieldSpawned;
             HoloKitAppRecorder.OnRecordingStarted -= OnDisappear;

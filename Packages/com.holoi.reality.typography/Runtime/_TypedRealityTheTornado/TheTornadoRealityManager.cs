@@ -21,7 +21,7 @@ namespace Holoi.Reality.Typography
 
         private void Start()
         {
-            if (HoloKitApp.Instance.IsMaster)
+            if (HoloKitApp.Instance.IsHost)
             {
                 _arRaycastManager.enabled = true;
             }

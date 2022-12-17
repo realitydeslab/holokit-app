@@ -18,7 +18,7 @@ namespace Holoi.Library.HoloKitApp
         private void Start()
         {
             HoloKitHandTracker.OnHandValidityChanged += OnHandValidityChanged;
-            if (HoloKitApp.Instance.IsMaster)
+            if (HoloKitApp.Instance.IsHost)
             {
                 _arOcclusionManager.requestedEnvironmentDepthMode = EnvironmentDepthMode.Fastest;
                 _arOcclusionManager.environmentDepthTemporalSmoothingRequested = false;

@@ -32,7 +32,7 @@ namespace Holoi.Reality.Typography
 
         private void Start()
         {
-            if (HoloKitApp.Instance.IsMaster)
+            if (HoloKitApp.Instance.IsHost)
             {
                 _arOcclusionManager.requestedEnvironmentDepthMode = UnityEngine.XR.ARSubsystems.EnvironmentDepthMode.Fastest;
                 _arRaycastManager.enabled = true;
@@ -71,7 +71,7 @@ namespace Holoi.Reality.Typography
         public override void OnDestroy()
         {
             base.OnDestroy();
-            if (HoloKitApp.Instance.IsMaster)
+            if (HoloKitApp.Instance.IsHost)
             {
                 HoloKitHandTracker.OnHandValidityChanged -= OnHandValidityChanged;
             }

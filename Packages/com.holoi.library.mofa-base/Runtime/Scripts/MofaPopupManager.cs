@@ -29,7 +29,7 @@ namespace Holoi.Library.MOFABase
 
         protected virtual void Start()
         {
-            MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
             MofaBaseRealityManager.OnReceivedRoundResult += OnReceivedRoundResult;
             LifeShield.OnBeingDestroyed += OnLifeShieldBeingDestroyed;
             MofaPlayer.OnHealthDataUpdated += UpdateSummaryBoard;
@@ -37,7 +37,7 @@ namespace Holoi.Library.MOFABase
 
         protected virtual void OnDestroy()
         {
-            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged -= OnPhaseChanged;
             MofaBaseRealityManager.OnReceivedRoundResult -= OnReceivedRoundResult;
             LifeShield.OnBeingDestroyed -= OnLifeShieldBeingDestroyed;
             MofaPlayer.OnHealthDataUpdated -= UpdateSummaryBoard;

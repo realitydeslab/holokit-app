@@ -8,7 +8,7 @@ using Holoi.Library.HoloKitApp;
 namespace Holoi.Library.MOFABase
 {
     /// <summary>
-    /// At any moment of the game, the game is at one of the following state.
+    /// At any given moment, the game is at one of the following state.
     /// </summary>
     public enum MofaPhase
     {
@@ -26,6 +26,9 @@ namespace Holoi.Library.MOFABase
         RoundData = 5
     }
 
+    /// <summary>
+    /// Round result in third person view
+    /// </summary>
     public enum MofaRoundResult
     {
         NotDetermined = 0,
@@ -34,6 +37,9 @@ namespace Holoi.Library.MOFABase
         Draw = 3
     }
 
+    /// <summary>
+    /// Round result in first person view
+    /// </summary>
     public enum MofaIndividualRoundResult
     {
         Victory = 0,
@@ -54,27 +60,40 @@ namespace Holoi.Library.MOFABase
 
         public int HitRate;
 
-        public int Distance;
+        public float Distance;
 
-        public int Calories;
+        public float Energy;
     }
 
     public abstract class MofaBaseRealityManager : RealityManager
     {
-        [Header("MOFA Base")]
+        [Header("References")]
+        /// <summary>
+        /// A reference to the spell list scriptable object
+        /// </summary>
         public SpellList SpellList;
 
+        /// <summary>
+        /// A reference to the life shield list scriptable object
+        /// </summary>
         public LifeShieldList LifeShieldList;
 
+        /// <summary>
+        /// A reference to the spell pool object
+        /// </summary>
         public MofaSpellPool SpellPool;
 
+        /// <summary>
+        /// MofaPlayer prefab
+        /// </summary>
         [SerializeField] private MofaPlayer _mofaPlayerPrefab;
 
         [Header("MOFA Settings")]
-        [SerializeField] private float _countdownTime = 3f;
+        [Tooltip("The duration of the countdown phase")]
+        public float CountdownDuration = 3f;
 
-        [Tooltip("The duration of each round")]
-        [SerializeField] private float _roundTime = 80f;
+        [Tooltip("The duration of a single round")]
+        public float RoundDuration = 80f;
 
         public MofaPhase CurrentPhase
         {
@@ -84,10 +103,6 @@ namespace Holoi.Library.MOFABase
                 _currentPhase.Value = value;
             }
         }
-
-        public float CountdownTime => _countdownTime;
-
-        public float RoundTime => _roundTime;
 
         public int RoundCount => _roundCount.Value;
 
@@ -102,21 +117,38 @@ namespace Holoi.Library.MOFABase
 
         public Dictionary<ulong, MofaPlayer> Players => _players;
 
+        /// <summary>
+        /// The current phase of the game.
+        /// </summary>
         private readonly NetworkVariable<MofaPhase> _currentPhase = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+        /// <summary>
+        /// The current round number of the game.
+        /// </summary>
         private readonly NetworkVariable<int> _roundCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+        /// <summary>
+        /// The result of the last round.
+        /// </summary>
         private readonly NetworkVariable<MofaRoundResult> _roundResult = new(MofaRoundResult.NotDetermined, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+        /// <summary>
+        /// The dictionary stores all the connected MOFA players
+        /// </summary>
         private readonly Dictionary<ulong, MofaPlayer> _players = new();
 
-        public static event Action<MofaPhase> OnPhaseChanged;
+        /// <summary>
+        /// This event is called on all clients if the game phase changes.
+        /// </summary>
+        public static event Action<MofaPhase> OnMofaPhaseChanged;
 
         public static event Action<MofaRoundResult> OnReceivedRoundResult;
 
         protected virtual void Start()
         {
+            // We register this delegate here in order to track player hit count
             LifeShield.OnBeingHit += OnLifeShieldBeingHit;
+            // We register this delegate here in order to track player kill and death
             LifeShield.OnBeingDestroyed += OnLifeShieldBeingDestroyed;
         }
 
@@ -124,7 +156,7 @@ namespace Holoi.Library.MOFABase
         {
             base.OnNetworkSpawn();
 
-            _currentPhase.OnValueChanged += OnPhaseChangedFunc;
+            _currentPhase.OnValueChanged += OnMofaPhaseChangedFunc;
             _roundResult.OnValueChanged += OnRoundResultChangedFunc;
 
             if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
@@ -132,13 +164,13 @@ namespace Holoi.Library.MOFABase
                 string tokenId = HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId;
                 var magicSchoolTokenId = int.Parse(tokenId);
                 // Currently we only support 1 on 1, so the host is always blue and the other player is always red 
-                SpawnPlayerServerRpc(magicSchoolTokenId, HoloKitApp.HoloKitApp.Instance.IsMaster ? MofaTeam.Blue : MofaTeam.Red);
+                SpawnMofaPlayerServerRpc(magicSchoolTokenId, HoloKitApp.HoloKitApp.Instance.IsHost ? MofaTeam.Blue : MofaTeam.Red);
             }
         }
 
         public override void OnNetworkDespawn()
         {
-            _currentPhase.OnValueChanged -= OnPhaseChangedFunc;
+            _currentPhase.OnValueChanged -= OnMofaPhaseChangedFunc;
             _roundResult.OnValueChanged -= OnRoundResultChangedFunc;
         }
 
@@ -149,13 +181,16 @@ namespace Holoi.Library.MOFABase
             LifeShield.OnBeingDestroyed -= OnLifeShieldBeingDestroyed;
         }
 
-        // This delegate method is called on every client.
-        private void OnPhaseChangedFunc(MofaPhase oldValue, MofaPhase newValue)
+        /// <summary>
+        /// This delegate function is called on every client when mofa phase changes.
+        /// </summary>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
+        private void OnMofaPhaseChangedFunc(MofaPhase oldValue, MofaPhase newValue)
         {
-            if (oldValue == newValue) { return; }
+            if (oldValue == newValue) return;
 
-            Debug.Log($"MOFA phase: {newValue}");
-            OnPhaseChanged?.Invoke(newValue);
+            OnMofaPhaseChanged?.Invoke(newValue);
             if (newValue == MofaPhase.RoundData)
             {
                 if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
@@ -173,13 +208,13 @@ namespace Holoi.Library.MOFABase
         }
 
         [ServerRpc(RequireOwnership = false)]
-        protected void SpawnPlayerServerRpc(int magicSchoolTokenId, MofaTeam team, ServerRpcParams serverRpcParams = default)
+        protected void SpawnMofaPlayerServerRpc(int magicSchoolTokenId, MofaTeam team, ServerRpcParams serverRpcParams = default)
         {
-            SpawnPlayer(magicSchoolTokenId, team, serverRpcParams.Receive.SenderClientId);
+            SpawnMofaPlayer(magicSchoolTokenId, team, serverRpcParams.Receive.SenderClientId);
         }
 
         // Host only
-        public void SpawnPlayer(int magicSchoolTokenId, MofaTeam team, ulong ownerClientId)
+        public void SpawnMofaPlayer(int magicSchoolTokenId, MofaTeam team, ulong ownerClientId)
         {
             var player = Instantiate(_mofaPlayerPrefab);
             player.MagicSchoolTokenId.Value = magicSchoolTokenId;
@@ -212,7 +247,7 @@ namespace Holoi.Library.MOFABase
 
         public MofaPlayer GetPlayer(ulong clientId = 0)
         {
-            if (!HoloKitApp.HoloKitApp.Instance.IsMaster)
+            if (!HoloKitApp.HoloKitApp.Instance.IsHost)
             {
                 clientId = NetworkManager.LocalClientId;
             }
@@ -237,9 +272,9 @@ namespace Holoi.Library.MOFABase
             _currentPhase.Value = MofaPhase.Countdown;
             _roundCount.Value++;
             _roundResult.Value = MofaRoundResult.NotDetermined;
-            yield return new WaitForSeconds(_countdownTime);
+            yield return new WaitForSeconds(CountdownDuration);
             _currentPhase.Value = MofaPhase.Fighting;
-            yield return new WaitForSeconds(_roundTime);
+            yield return new WaitForSeconds(RoundDuration);
             _currentPhase.Value = MofaPhase.RoundOver;
             yield return new WaitForSeconds(3f);
             _roundResult.Value = GetRoundResult();
@@ -371,7 +406,7 @@ namespace Holoi.Library.MOFABase
             // Distance
             stats.Distance = Mathf.RoundToInt(player.Distance.Value * MofaUtils.MeterToFoot);
             // Calories
-            stats.Calories = Mathf.RoundToInt(player.Calories.Value);
+            stats.Energy = Mathf.RoundToInt(player.Energy.Value);
 
             return stats;
         }

@@ -44,7 +44,7 @@ namespace Holoi.Reality.Typography
 
         void Update()
         {
-            if (HoloKitApp.Instance.IsMaster)
+            if (HoloKitApp.Instance.IsHost)
             {
                 UpdateServerCenterEye();
                 // UpdateBoidCenter();

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Netcode;
 using TMPro;
 using HoloKit;
 
@@ -12,9 +13,9 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private RectTransform _background;
 
-        [SerializeField] private RectTransform _deviceListRoot;
+        [SerializeField] private RectTransform _playerListRoot;
 
-        [SerializeField] private GameObject _deviceSlotPrefab;
+        [SerializeField] private GameObject _playerSlotPrefab;
 
         [SerializeField] private RectTransform _qrCode;
 
@@ -31,19 +32,13 @@ namespace Holoi.Library.HoloKitApp.UI
             if (HoloKitUtils.IsRuntime)
             {
                 AdjustQRCodeSize();
-                CalculateCameraToQRCodeOffset();
+                HoloKitApp.Instance.MultiplayerManager.StartAdvertising(CalculateCameraToQRCodeOffset());
             }
-            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated += OnConnectedPlayerListUpdated;
-            OnConnectedPlayerListUpdated();
-            StartCoroutine(HoloKitAppUtils.WaitAndDo(1f, () =>
-            {
-                HoloKitApp.Instance.MultiplayerManager.StartAdvertising();
-            }));
         }
 
-        private void OnDestroy()
+        private void Update()
         {
-            HoloKitAppMultiplayerManager.OnConnectedPlayerListUpdated -= OnConnectedPlayerListUpdated;
+            UpdateConnectedPlayerList();
         }
 
         private void AdjustQRCodeSize()
@@ -52,7 +47,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _qrCode.sizeDelta = new Vector2(qrCodeWithInPixel, qrCodeWithInPixel);
         }
 
-        private void CalculateCameraToQRCodeOffset()
+        private Vector3 CalculateCameraToQRCodeOffset()
         {
             // The offset from the left screen center to the QRCode
             Vector3 leftEdgeCenterToQRCodeOffset = Vector3.zero;
@@ -64,42 +59,40 @@ namespace Holoi.Library.HoloKitApp.UI
             Vector3 phoneModelCameraOffset = new(originalPhoneModelCameraOffset.y, -originalPhoneModelCameraOffset.x, originalPhoneModelCameraOffset.z);
 
             Vector3 cameraToQRCodeOffset = leftEdgeCenterToQRCodeOffset + phoneModelCameraOffset;
-            HoloKitApp.Instance.MultiplayerManager.HostCameraToQRCodeOffset.Value = cameraToQRCodeOffset;
+            return cameraToQRCodeOffset;
         }
 
-        private void OnConnectedPlayerListUpdated()
+        // TODO: Optimize this by using pooling
+        private void UpdateConnectedPlayerList()
         {
             // Destroy previous slots
-            foreach (Transform child in _deviceListRoot)
+            foreach (Transform oldPlayer in _playerListRoot)
             {
-                Destroy(child.gameObject);
+                Destroy(oldPlayer.gameObject);
             }
-            int playerCount = 0;
-            var playerList = HoloKitApp.Instance.MultiplayerManager.ConnectedPlayerList;
-            var masterPlayer = HoloKitApp.Instance.MultiplayerManager.GetMasterPlayer();
-            foreach (var player in playerList)
+
+            // Instantiate each player slot
+            foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
             {
-                var deviceSlot = Instantiate(_deviceSlotPrefab, _deviceListRoot);
-                deviceSlot.transform.localScale = Vector3.one;
-                string statusStr = player.OwnerClientId == masterPlayer.OwnerClientId ? "Host" : player.Status.ToString();
-                deviceSlot.GetComponent<TMP_Text>().text = $"{player.Name} ({statusStr})";
-                playerCount++;
+                var playerSlot = Instantiate(_playerSlotPrefab, _playerListRoot);
+                playerSlot.transform.localScale = Vector3.one;
+                HoloKitAppPlayer player = client.PlayerObject.GetComponent<HoloKitAppPlayer>();
+                string playerStatusString = client.ClientId == 0 ? "Host" : player.Status.Value.ToString();
+                playerSlot.GetComponent<TMP_Text>().text = $"{player.Name.Value} ({playerStatusString})";
             }
+
+            // Calculate the height
+            int playerCount = NetworkManager.Singleton.ConnectedClientsList.Count;
             if (playerCount == 0)
-            {
                 _background.sizeDelta = new Vector2(_background.sizeDelta.x, BackgroundDefaultHeight);
-            }
             else
-            {
-                _background.sizeDelta = new Vector2(_background.sizeDelta.x,
-                    BackgroundDefaultHeight + playerCount * DeviceSlotHeight + DeviceListBottomPadding);
-            }
+                _background.sizeDelta = new Vector2(_background.sizeDelta.x, BackgroundDefaultHeight + playerCount * DeviceSlotHeight + DeviceListBottomPadding);
         }
 
         public void OnExitButtonPressed()
         {
-            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitApp.Instance.MultiplayerManager.StopAdvertising();
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
         }
     }
 }

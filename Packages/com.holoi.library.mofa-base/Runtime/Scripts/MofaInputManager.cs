@@ -86,7 +86,7 @@ namespace Holoi.Library.MOFABase
             MofaWatchConnectivityAPI.OnReceivedHealthDataMessage += OnReceivedHealthDataMessage;
 
             SetupSpells();
-            MofaBaseRealityManager.OnPhaseChanged += OnPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
             LifeShield.OnBeingDestroyed += OnLifeShieldDestroyed;
             LifeShield.OnRenovated += OnLifeShieldRenovated;
 
@@ -101,7 +101,7 @@ namespace Holoi.Library.MOFABase
             MofaWatchConnectivityAPI.OnWatchTriggered -= OnWatchTriggered;
             MofaWatchConnectivityAPI.OnReceivedHealthDataMessage -= OnReceivedHealthDataMessage;
 
-            MofaBaseRealityManager.OnPhaseChanged -= OnPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged -= OnPhaseChanged;
             LifeShield.OnBeingDestroyed -= OnLifeShieldDestroyed;
             LifeShield.OnRenovated -= OnLifeShieldRenovated;
 

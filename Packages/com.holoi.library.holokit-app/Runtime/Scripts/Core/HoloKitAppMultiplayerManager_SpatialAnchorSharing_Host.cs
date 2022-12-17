@@ -19,11 +19,6 @@ namespace Holoi.Library.HoloKitApp
     public partial class HoloKitAppMultiplayerManager
     {
         /// <summary>
-        /// The offset from the host's camera to its QRCode center on the screen.
-        /// </summary>
-        [HideInInspector] public readonly NetworkVariable<Vector3> HostCameraToQRCodeOffset = new(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
-        /// <summary>
         /// The offset from the host's camera to its screen center. This is used by the client to
         /// correctly render the alignmenr marker.
         /// </summary>
@@ -36,24 +31,27 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         private bool _isAdvertising = false;
 
+        private Vector3 _cameraToQRCodeOffset;
+
         /// <summary>
         /// Stores a queue of camera poses with timestamp on the host.
         /// </summary>
-        private readonly Queue<TimedCameraPose> _hostTimedCameraPoseQueue = new();
+        private readonly Queue<TimedCameraPose> _timedCameraPoseQueue = new();
 
         /// <summary>
         /// Host does not store poses with timestamp early than this value. TODO: Adjust this value
         /// </summary>
-        private const double HostTimedCameraPoseTimestampThreshold = 0.6;
+        private const double TimedCameraPoseTimestampThreshold = 0.6;
 
         /// <summary>
         /// We only process camera poses with timestamp deviation smaller than this value.
         /// </summary>
         private const double TimestampDeviationThreshold = 0.034; // For 30 FPS
 
-        public void StartAdvertising()
+        public void StartAdvertising(Vector3 cameraToQRCodeOffset)
         {
-            SetHostCameraToScreenCenterOffset();
+            _cameraToQRCodeOffset = cameraToQRCodeOffset;
+            CalculateCameraToScreenCenterOffset();
             HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnARSessionUpdatedFrame_Host;
             MultipeerConnectivityTransport.StartAdvertising();
             _isAdvertising = true;
@@ -65,7 +63,7 @@ namespace Holoi.Library.HoloKitApp
             {
                 HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnARSessionUpdatedFrame_Host;
                 MultipeerConnectivityTransport.StopAdvertising();
-                _hostTimedCameraPoseQueue.Clear();
+                _timedCameraPoseQueue.Clear();
                 _isAdvertising = false;
             }
         }
@@ -74,7 +72,7 @@ namespace Holoi.Library.HoloKitApp
         /// Calculate the offset from the host's camera to its screen center.
         /// This function is host only, make sure you are in portrait mode when calling this method.
         /// </summary>
-        private void SetHostCameraToScreenCenterOffset()
+        private void CalculateCameraToScreenCenterOffset()
         {
             if (HoloKitUtils.IsEditor) return;
 
@@ -93,12 +91,12 @@ namespace Holoi.Library.HoloKitApp
                 Timestamp = timestamp,
                 PoseMatrix = matrix
             };
-            _hostTimedCameraPoseQueue.Enqueue(timedCameraPose);
+            _timedCameraPoseQueue.Enqueue(timedCameraPose);
             double currentTime = HoloKitARSessionControllerAPI.GetSystemUptime();
             // Get rid of early poses
-            while (_hostTimedCameraPoseQueue.Count > 0 && currentTime - _hostTimedCameraPoseQueue.Peek().Timestamp > HostTimedCameraPoseTimestampThreshold)
+            while (_timedCameraPoseQueue.Count > 0 && currentTime - _timedCameraPoseQueue.Peek().Timestamp > TimedCameraPoseTimestampThreshold)
             {
-                _ = _hostTimedCameraPoseQueue.Dequeue();
+                _ = _timedCameraPoseQueue.Dequeue();
             }
         }
 
@@ -125,12 +123,12 @@ namespace Holoi.Library.HoloKitApp
         [ServerRpc(RequireOwnership = false)]
         private void OnRequestImagePoseServerRpc(double requestedTimestamp, Vector3 clientImagePosition, Quaternion clientImageRotation, ServerRpcParams serverRpcParams = default)
         {
-            if (_hostTimedCameraPoseQueue.Count == 0) return;
+            if (_timedCameraPoseQueue.Count == 0) return;
 
             double minTimestampDeviation = 99;
             TimedCameraPose nearestTimedCameraPose = new();
             // TODO: Optimize this enumeration
-            foreach (var timedCameraPose in _hostTimedCameraPoseQueue)
+            foreach (var timedCameraPose in _timedCameraPoseQueue)
             {
                 double timestampDeviation = Math.Abs(timedCameraPose.Timestamp - requestedTimestamp);
                 if (timestampDeviation < minTimestampDeviation)
@@ -145,7 +143,7 @@ namespace Holoi.Library.HoloKitApp
 
             // Calculate the QRCode image position with offset
             Vector3 hostImagePosition = nearestTimedCameraPose.PoseMatrix.GetPosition() +
-                nearestTimedCameraPose.PoseMatrix.rotation * HostCameraToQRCodeOffset.Value;
+                nearestTimedCameraPose.PoseMatrix.rotation * _cameraToQRCodeOffset;
             // Get the correct rotation
             //Quaternion hostImageRotation = nearestTimedCameraPose.PoseMatrix.rotation;
             Quaternion hostImageRotation = nearestTimedCameraPose.PoseMatrix.rotation * Quaternion.Euler(-90f, 0f, 0f);

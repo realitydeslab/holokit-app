@@ -52,7 +52,7 @@ namespace Holoi.Reality.MOFATheDuel
             summaryBoard.BlueTeamKill = humanPlayerStats.Kill.ToString();
             summaryBoard.BlueTeamHitRate = humanPlayerStats.HitRate.ToString();
             summaryBoard.BlueTeamDistance = humanPlayerStats.Distance.ToString();
-            summaryBoard.BlueTeamCalories = humanPlayerStats.Calories.ToString();
+            summaryBoard.BlueTeamCalories = humanPlayerStats.Energy.ToString();
 
             // For the avatar, which is red team
             MofaPlayer secondPlayer = null;
@@ -70,7 +70,7 @@ namespace Holoi.Reality.MOFATheDuel
             summaryBoard.RedTeamKill = secondPlayerStats.Kill.ToString();
             summaryBoard.RedTeamHitRate = secondPlayerStats.HitRate.ToString();
             summaryBoard.RedTeamDistance = secondPlayerStats.Distance.ToString();
-            summaryBoard.RedTeamCalories = secondPlayerStats.Calories.ToString();
+            summaryBoard.RedTeamCalories = secondPlayerStats.Energy.ToString();
         }
     }
 }

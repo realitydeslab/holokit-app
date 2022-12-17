@@ -48,7 +48,7 @@ namespace Holoi.Reality.QuantumRealm
 
         public void ActivateNextBuddha()
         {
-            if (!HoloKitApp.Instance.IsMaster) { return; }
+            if (!HoloKitApp.Instance.IsHost) { return; }
 
             if (_currentBuddhaIndex.Value == _buddhas.Count - 1)
             {

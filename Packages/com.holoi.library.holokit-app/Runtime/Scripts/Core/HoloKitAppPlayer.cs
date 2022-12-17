@@ -28,122 +28,67 @@ namespace Holoi.Library.HoloKitApp
 
     public class HoloKitAppPlayer : NetworkBehaviour
     {
-        public string Name
-        {
-            get => _name.Value.ToString();
-            set
-            {
-                if (IsOwner)
-                {
-                    _name.Value = new FixedString64Bytes(value);
-                }
-                else
-                {
-                    Debug.Log("Only the owner can set network variable: _name");
-                }
-            }
-        }
-
-        public HoloKitAppPlayerType Type
-        {
-            get => _type.Value;
-            set
-            {
-                if (IsOwner)
-                {
-                    _type.Value = value;
-                }
-                else
-                {
-                    Debug.Log("Only the owner can set network variable: _type");
-                }
-            }
-        }
-
-        public HoloKitAppPlayerStatus Status
-        {
-            get => _status.Value;
-            set
-            {
-                if (IsServer)
-                {
-                    _status.Value = value;
-                }
-                else
-                {
-                    Debug.Log("Only the server can set network variable: _status");
-                }
-            }
-        }
-
-        public bool SyncPose
-        {
-            get => _syncPose.Value;
-            set
-            {
-                if (IsServer)
-                {
-                    _syncPose.Value = value;
-                }
-                else
-                {
-                    Debug.Log("Only the server can set network variable: _syncPose");
-                }
-            }
-        }
-
         /// <summary>
-        /// This is the device name of iPhone.
+        /// User-assigned device name of the iOS device.
         /// </summary>
-        private readonly NetworkVariable<FixedString64Bytes> _name = new("Unknown", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<FixedString64Bytes> Name = new("Unknown", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        private readonly NetworkVariable<HoloKitAppPlayerType> _type = new(HoloKitAppPlayerType.Player, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<HoloKitAppPlayerType> Type = new(HoloKitAppPlayerType.Player, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        private readonly NetworkVariable<HoloKitAppPlayerStatus> _status = new(HoloKitAppPlayerStatus.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        public NetworkVariable<HoloKitAppPlayerStatus> Status = new(HoloKitAppPlayerStatus.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         /// <summary>
         /// When this value is true, the pose of this player is synced to all clients in realtime.
         /// </summary>
-        private readonly NetworkVariable<bool> _syncPose = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        public NetworkVariable<bool> SyncPose = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         public override void OnNetworkSpawn()
         {
-            base.OnNetworkSpawn();
-            // Register network variable value change callbacks
-            _syncPose.OnValueChanged += OnPlayerSyncPoseValueChanged;
-            // Initialize name and type
+            SyncPose.OnValueChanged += OnSyncPoseValueChanged;
+            // Initialize name and type by the owner
             if (IsOwner)
             {
-                _name.Value = new FixedString64Bytes(SystemInfo.deviceName);
-                _type.Value = HoloKitApp.Instance.LocalPlayerType;
+                Name.Value = new FixedString64Bytes(SystemInfo.deviceName);
+                Type.Value = HoloKitApp.Instance.LocalPlayerType;
+                if (IsServer)
+                {
+                    // The host syncs its pose by default
+                    SyncPose.Value = true;
+                }
+                else
+                {
+                    if (HoloKitUtils.IsRuntime)
+                    {
+                        // Start syncing the timestamp
+                        Status.Value = HoloKitAppPlayerStatus.SyncingTimestamp;
+                        HoloKitApp.Instance.MultiplayerManager.LocalPlayerStatus = HoloKitAppPlayerStatus.SyncingTimestamp;
+                    }  
+                    else
+                    {
+                        // We do not need to sync in editor mode
+                        Status.Value = HoloKitAppPlayerStatus.Checked;
+                    }  
+                } 
             }
-            // Set the reference
-            HoloKitApp.Instance.MultiplayerManager.SetPlayer(this);
+            HoloKitApp.Instance.MultiplayerManager.OnPlayerJoined(this);
+
+            Debug.Log($"[HoloKitAppPlayer] OnNetworkSpawn with ownership {OwnerClientId}");
         }
 
         public override void OnNetworkDespawn()
         {
-            base.OnNetworkDespawn();
-            // Unregister network variable value change callbacks
-            _syncPose.OnValueChanged -= OnPlayerSyncPoseValueChanged;
-            // Remove the reference
-            HoloKitApp.Instance.MultiplayerManager.RemovePlayer(this);
+            SyncPose.OnValueChanged -= OnSyncPoseValueChanged;
+            HoloKitApp.Instance.MultiplayerManager.OnPlayerLeft(this);
         }
 
-        private void OnPlayerSyncPoseValueChanged(bool oldValue, bool newValue)
+        private void OnSyncPoseValueChanged(bool oldValue, bool newValue)
         {
             if (IsOwner)
             {
-                if (!oldValue && newValue)
-                {
-                    // Turned on
+                if (newValue)
                     SetParentConstraintEnabled(true);
-                }
-                else if (oldValue && !newValue)
-                {
-                    // Turned off
+                else
                     SetParentConstraintEnabled(false);
-                }
             } 
         }
 

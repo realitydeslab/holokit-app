@@ -15,7 +15,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             base.Start();
 
-            if (HoloKitApp.Instance.IsMaster)
+            if (HoloKitApp.Instance.IsHost)
             {
                 SpawnPopup(_findPlanePrefab);
             }
@@ -44,7 +44,7 @@ namespace Holoi.Reality.MOFATheTraining
             summaryBoard.BlueTeamKill = humanPlayerStats.Kill.ToString();
             summaryBoard.BlueTeamHitRate = humanPlayerStats.HitRate.ToString();
             summaryBoard.BlueTeamDistance = humanPlayerStats.Distance.ToString();
-            summaryBoard.BlueTeamCalories = humanPlayerStats.Calories.ToString();
+            summaryBoard.BlueTeamCalories = humanPlayerStats.Energy.ToString();
 
             // For the avatar, which is red team
             var aiPlayer = mofaBaseRealityManager.Players[MofaPlayerAI.AIClientId];
@@ -53,7 +53,7 @@ namespace Holoi.Reality.MOFATheTraining
             summaryBoard.RedTeamKill = aiPlayerStats.Kill.ToString();
             summaryBoard.RedTeamHitRate = aiPlayerStats.HitRate.ToString();
             summaryBoard.RedTeamDistance = aiPlayerStats.Distance.ToString();
-            summaryBoard.RedTeamCalories = aiPlayerStats.Calories.ToString();
+            summaryBoard.RedTeamCalories = aiPlayerStats.Energy.ToString();
         }
     }
 }

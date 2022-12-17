@@ -12,7 +12,7 @@ namespace Holoi.Reality.MOFATheHunting
                 Scores.gameObject.SetActive(true);
                 Time.gameObject.SetActive(true);
             }
-            else if (HoloKitApp.Instance.IsMaster)
+            else if (HoloKitApp.Instance.IsHost)
             {
                 Reticle.gameObject.SetActive(true);
             }

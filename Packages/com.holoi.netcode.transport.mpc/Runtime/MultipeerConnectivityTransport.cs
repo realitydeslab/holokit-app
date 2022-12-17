@@ -231,6 +231,9 @@ namespace Netcode.Transports.MultipeerConnectivity
             return 0;
         }
 
+        /// <summary>
+        /// This function is called when a client tries to disconnect from the server.
+        /// </summary>
         public override void DisconnectLocalClient()
         {
             Debug.Log("[MPCTransport] DisconnectLocalClient");

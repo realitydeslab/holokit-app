@@ -46,7 +46,7 @@ namespace Holoi.Reality.MOFATheHunting
             HoloKitAppUIEventManager.OnTriggered += OnStarUITriggered;
             UI.MofaHuntingUIPanel.OnSpawnDragonButtonPressed += OnStarUITriggered;
 
-            if (HoloKitApp.Instance.IsMaster)
+            if (HoloKitApp.Instance.IsHost)
             {
                 _arPlaneManager.enabled = true;
                 _arRaycastManager.enabled = true;
@@ -68,7 +68,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void OnStarUITriggered()
         {
-            if (HoloKitApp.Instance.IsMaster)
+            if (HoloKitApp.Instance.IsHost)
             {
                 if (CurrentPhase == MofaPhase.Waiting || CurrentPhase == MofaPhase.RoundData)
                 {
@@ -156,7 +156,7 @@ namespace Holoi.Reality.MOFATheHunting
         private IEnumerator StartHuntingFlow()
         {
             CurrentPhase = MofaPhase.Countdown;
-            yield return new WaitForSeconds(CountdownTime);
+            yield return new WaitForSeconds(CountdownDuration);
             CurrentPhase = MofaPhase.Fighting;
         }
 

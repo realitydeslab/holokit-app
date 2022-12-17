@@ -18,7 +18,7 @@ public class DisableOnClient : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!HoloKitApp.Instance.IsMaster)
+        if (!HoloKitApp.Instance.IsHost)
         {
             if (_gameObject)
             {

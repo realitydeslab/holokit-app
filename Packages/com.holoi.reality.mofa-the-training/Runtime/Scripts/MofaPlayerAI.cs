@@ -145,7 +145,7 @@ namespace Holoi.Reality.MOFATheTraining
             }
         }
 
-        protected override void FixedUpdate()
+        private void FixedUpdate()
         {
             // Update NetworkTransform
             if (IsServer)

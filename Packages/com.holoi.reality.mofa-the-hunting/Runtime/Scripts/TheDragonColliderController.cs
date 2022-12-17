@@ -13,7 +13,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void Start()
         {
-            if (!HoloKitApp.Instance.IsMaster)
+            if (!HoloKitApp.Instance.IsHost)
             {
                 GetComponent<Collider>().enabled = false;
             }

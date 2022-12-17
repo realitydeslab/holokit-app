@@ -25,19 +25,19 @@ namespace Holoi.Reality.MOFATheHunting.UI
             transform.SetSiblingIndex(transform.GetSiblingIndex() - 1);
 
             _dragonControllerButton.SetActive(false);
-            if (!HoloKitApp.Instance.IsMaster && !HoloKitApp.Instance.IsPuppeteer)
+            if (!HoloKitApp.Instance.IsHost && !HoloKitApp.Instance.IsPuppeteer)
             {
                 _spawnDragonButton.SetActive(false);
             }
 
             TheDragonController.OnDragonSpawned += OnDragonSpawned;
-            MofaBaseRealityManager.OnPhaseChanged += OnMofaPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged += OnMofaPhaseChanged;
         }
 
         private void OnDestroy()
         {
             TheDragonController.OnDragonSpawned -= OnDragonSpawned;
-            MofaBaseRealityManager.OnPhaseChanged -= OnMofaPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged -= OnMofaPhaseChanged;
         }
 
         public void OnSpawnDragonButtonPressedFunc()
@@ -48,7 +48,7 @@ namespace Holoi.Reality.MOFATheHunting.UI
         private void OnDragonSpawned()
         {
             _spawnDragonButton.SetActive(false);
-            if (HoloKitApp.Instance.IsMaster || HoloKitApp.Instance.IsPuppeteer)
+            if (HoloKitApp.Instance.IsHost || HoloKitApp.Instance.IsPuppeteer)
             {
                 _dragonControllerButton.SetActive(true);
             }
