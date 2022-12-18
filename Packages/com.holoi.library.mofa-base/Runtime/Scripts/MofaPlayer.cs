@@ -1,178 +1,130 @@
 using UnityEngine;
 using Unity.Netcode;
-using HoloKit;
-using System;
+using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Library.MOFABase
 {
     public enum MofaTeam
     {
-        Blue = 0,
-        Red = 1
+        // None for spectators
+        None = 0,
+        Blue = 1,
+        Red = 2
     }
 
-    public class MofaPlayer : NetworkBehaviour
+    public class MofaPlayer : HoloKitAppPlayer
     {
-        [HideInInspector] public NetworkVariable<int> MagicSchoolTokenId = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        /// <summary>
+        /// Each MofaPlayer has a team.
+        /// </summary>
+        public NetworkVariable<MofaTeam> Team = new(MofaTeam.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        [HideInInspector] public NetworkVariable<MofaTeam> Team = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        /// <summary>
+        /// Whether this player is ready to fight?
+        /// </summary>
+        public NetworkVariable<bool> Ready = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        [HideInInspector] public NetworkVariable<bool> Ready = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        /// <summary>
+        /// This is the index of the magic school selected by this player.
+        /// </summary>
+        public NetworkVariable<int> MagicSchool = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        [HideInInspector] public NetworkVariable<int> Kill = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        /// <summary>
+        /// The number of kill this player has made in the current round.
+        /// </summary>
+        public NetworkVariable<int> Kill = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        [HideInInspector] public NetworkVariable<int> Death = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        /// <summary>
+        /// The number of death of the player in the current round.
+        /// </summary>
+        public NetworkVariable<int> Death = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         /// <summary>
         /// How many times does the player cast spells in this round?
         /// </summary>
-        [HideInInspector] public NetworkVariable<int> CastCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        public NetworkVariable<int> CastCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         /// <summary>
         /// How many times does the player hit in this round?
         /// </summary>
-        [HideInInspector] public NetworkVariable<int> HitCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        public NetworkVariable<int> HitCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         /// <summary>
-        /// The distance the player has moved in this round.
+        /// The distance the player has moved in this round. 
         /// </summary>
-        [HideInInspector] public NetworkVariable<float> Distance = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
-        [HideInInspector] public NetworkVariable<float> Energy = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
-        [HideInInspector] public LifeShield LifeShield;
-
-        [HideInInspector] public Vector3 LifeShieldOffset = new(0f, -0.4f, 0.5f);
-
-        private bool _isFighting;
+        public NetworkVariable<float> Dist = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         /// <summary>
-        /// We update this value during the fight to reduce network throughput.
+        /// The calories the player has burned in this round.
         /// </summary>
-        private float _distance;
+        public NetworkVariable<float> Energy = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+        /// <summary>
+        /// The corresponding life shield of the player.
+        /// </summary>
+        public LifeShield LifeShield;
+
+        /// <summary>
+        /// The offset from the center eye point to the center of the life shield.
+        /// </summary>
+        public Vector3 LifeShieldOffset = new(0f, -0.4f, 0.5f);
+
+        public float AltDist => _altDist;
+
+        /// <summary>
+        /// This is the backup when the player doesn't have an Apple Watch to calculate
+        /// the distance. This is calculated by accumulating the difference between two adjacent frames.
+        /// </summary>
+        private float _altDist;
+
+        /// <summary>
+        /// This is used to calculate the total distance.
+        /// </summary>
         private Vector3 _lastFramePosition;
-
-        public static event Action<MofaPlayer> OnMofaPlayerSpawned;
-
-        public static event Action<ulong, bool> OnMofaPlayerReadyStateChanged;
-
-        public static event Action OnKillChanged;
-
-        public static event Action OnHealthDataUpdated;
-
-        protected virtual void Start()
-        {
-            MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
-        }
-
-        public override void OnDestroy()
-        {
-            MofaBaseRealityManager.OnMofaPhaseChanged -= OnPhaseChanged;
-        }
 
         public override void OnNetworkSpawn()
         {
+            if (IsOwner)
+            {
+                // Assign the team
+                // TODO: Support 2v2 and more
+                if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
+                    Team.Value = IsServer ? MofaTeam.Blue : MofaTeam.Red;
+
+                // Assign the MagicSchool
+                MagicSchool.Value = int.Parse(HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId);
+            }
             base.OnNetworkSpawn();
-            Debug.Log($"[MofaPlayer] MagicSchoolTokenId: {MagicSchoolTokenId.Value} and team: {Team.Value}");
-            OnMofaPlayerSpawned?.Invoke(this);
-            var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-            mofaBaseRealityManager.SetPlayer(OwnerClientId, this);
-            mofaBaseRealityManager.SpellPool.OnPlayerJoined(MagicSchoolTokenId.Value);
-
-            Ready.OnValueChanged += OnReadyValueChangedFunc;
-            Kill.OnValueChanged += OnKillValueChangedFunc;
-            Distance.OnValueChanged += OnDistanceValueChangedFunc;
-            Energy.OnValueChanged += OnEnergyValueChangedFunc;
-        }
-
-        public override void OnNetworkDespawn()
-        {
-            Ready.OnValueChanged -= OnReadyValueChangedFunc;
-            Kill.OnValueChanged -= OnKillValueChangedFunc;
-            Distance.OnValueChanged -= OnDistanceValueChangedFunc;
-            Energy.OnValueChanged -= OnEnergyValueChangedFunc;
         }
 
         protected virtual void Update()
         {
-            if (IsServer)
+            if (IsOwner)
             {
-                if (_isFighting)
-                {
-                    // We only compute horizontal distance
-                    Vector3 position = Vector3.ProjectOnPlane(transform.position, Vector3.up);
-                    _distance += Vector3.Distance(_lastFramePosition, position);
-                    _lastFramePosition = position;
-                }
+                // We only compute horizontal distance
+                Vector3 horizontalPosition = Vector3.ProjectOnPlane(transform.position, Vector3.up);
+                _altDist += Vector3.Distance(_lastFramePosition, horizontalPosition);
+                _lastFramePosition = horizontalPosition;
             }
         }
 
-        private void OnKillValueChangedFunc(int oldValue, int newValue)
+        /// <summary>
+        /// Reset the player's stats. This is usually called at the beginning of the round.
+        /// </summary>
+        public void ResetStats()
         {
-            OnKillChanged?.Invoke();
-        }
-
-        private void OnDistanceValueChangedFunc(float oldValue, float newValue)
-        {
-            if (oldValue != newValue)
+            if (!IsServer)
             {
-                OnHealthDataUpdated?.Invoke();
+                Debug.LogError("[MofaPlayer] Player stats can only be set by the server");
+                return;
             }
-        }
-
-        private void OnEnergyValueChangedFunc(float oldValue, float newValue)
-        {
-            if (oldValue != newValue)
-            {
-                OnHealthDataUpdated?.Invoke();
-            }
-        }
-
-        private void OnReadyValueChangedFunc(bool oldValue, bool newValue)
-        {
-            // We only react to the situation where the ready state changes
-            // from false to true
-            if (!oldValue && newValue)
-            {
-                OnMofaPlayerReadyStateChanged?.Invoke(OwnerClientId, newValue);
-            }
-        }
-
-        protected virtual void OnPhaseChanged(MofaPhase mofaPhase)
-        {
-            if (IsServer)
-            {
-                if (mofaPhase == MofaPhase.Countdown)
-                {
-                    Kill.Value = 0;
-                    Death.Value = 0;
-                    CastCount.Value = 0;
-                    HitCount.Value = 0;
-                    Distance.Value = 0f;
-                    Energy.Value = 0f;
-                    _distance = 0f;
-                }
-                else if (mofaPhase == MofaPhase.Fighting)
-                {
-                    _lastFramePosition = transform.position;
-                    _isFighting = true;
-                }
-                else if (mofaPhase == MofaPhase.RoundOver)
-                {
-                    _isFighting = false;
-                    // We only update this network variable once in each round
-                    Distance.Value = Mathf.RoundToInt(_distance);
-                }
-            }
-        }
-
-        [ServerRpc]
-        public void UpdateHealthDataServerRpc(float distance, float calories)
-        {
-            _distance = distance;
-            Distance.Value = distance;
-            Energy.Value = calories;
+            Kill.Value = 0;
+            Death.Value = 0;
+            CastCount.Value = 0;
+            HitCount.Value = 0;
+            Dist.Value = 0f;
+            _altDist = 0f;
+            Energy.Value = 0f;
         }
     }
 }

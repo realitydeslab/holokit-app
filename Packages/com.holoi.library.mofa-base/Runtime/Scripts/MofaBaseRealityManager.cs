@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
@@ -95,47 +94,15 @@ namespace Holoi.Library.MOFABase
         [Tooltip("The duration of a single round")]
         public float RoundDuration = 80f;
 
-        public MofaPhase CurrentPhase
-        {
-            get => _currentPhase.Value;
-            set
-            {
-                _currentPhase.Value = value;
-            }
-        }
-
-        public int RoundCount => _roundCount.Value;
-
-        public MofaRoundResult RoundResult
-        {
-            get => _roundResult.Value;
-            set
-            {
-                _roundResult.Value = value;
-            }
-        }
-
-        public Dictionary<ulong, MofaPlayer> Players => _players;
-
         /// <summary>
         /// The current phase of the game.
         /// </summary>
-        private readonly NetworkVariable<MofaPhase> _currentPhase = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        public NetworkVariable<MofaPhase> CurrentPhase = new(MofaPhase.Waiting, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         /// <summary>
         /// The current round number of the game.
         /// </summary>
-        private readonly NetworkVariable<int> _roundCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
-        /// <summary>
-        /// The result of the last round.
-        /// </summary>
-        private readonly NetworkVariable<MofaRoundResult> _roundResult = new(MofaRoundResult.NotDetermined, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
-        /// <summary>
-        /// The dictionary stores all the connected MOFA players
-        /// </summary>
-        private readonly Dictionary<ulong, MofaPlayer> _players = new();
+        public NetworkVariable<int> RoundCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         /// <summary>
         /// This event is called on all clients if the game phase changes.
@@ -144,54 +111,31 @@ namespace Holoi.Library.MOFABase
 
         public static event Action<MofaRoundResult> OnReceivedRoundResult;
 
-        protected virtual void Start()
-        {
-            // We register this delegate here in order to track player hit count
-            LifeShield.OnBeingHit += OnLifeShieldBeingHit;
-            // We register this delegate here in order to track player kill and death
-            LifeShield.OnBeingDestroyed += OnLifeShieldBeingDestroyed;
-        }
-
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
 
-            _currentPhase.OnValueChanged += OnMofaPhaseChangedFunc;
-            _roundResult.OnValueChanged += OnRoundResultChangedFunc;
-
-            if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
-            {
-                string tokenId = HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId;
-                var magicSchoolTokenId = int.Parse(tokenId);
-                // Currently we only support 1 on 1, so the host is always blue and the other player is always red 
-                SpawnMofaPlayerServerRpc(magicSchoolTokenId, HoloKitApp.HoloKitApp.Instance.IsHost ? MofaTeam.Blue : MofaTeam.Red);
-            }
+            // We register this delegate here in order to track player hit count
+            LifeShield.OnBeingHit += OnLifeShieldBeingHit;
+            // We register this delegate here in order to track player kill and death
+            LifeShield.OnBeingDestroyed += OnLifeShieldBeingDestroyed;
+            CurrentPhase.OnValueChanged += OnMofaPhaseChanged_Server;
+            CurrentPhase.OnValueChanged += OnMofaPhaseChanged_Client;
         }
 
         public override void OnNetworkDespawn()
         {
-            _currentPhase.OnValueChanged -= OnMofaPhaseChangedFunc;
-            _roundResult.OnValueChanged -= OnRoundResultChangedFunc;
-        }
-
-        public override void OnDestroy()
-        {
-            base.OnDestroy();
             LifeShield.OnBeingHit -= OnLifeShieldBeingHit;
             LifeShield.OnBeingDestroyed -= OnLifeShieldBeingDestroyed;
+            CurrentPhase.OnValueChanged -= OnMofaPhaseChanged_Server;
+            CurrentPhase.OnValueChanged -= OnMofaPhaseChanged_Client;
         }
 
-        /// <summary>
-        /// This delegate function is called on every client when mofa phase changes.
-        /// </summary>
-        /// <param name="oldValue"></param>
-        /// <param name="newValue"></param>
-        private void OnMofaPhaseChangedFunc(MofaPhase oldValue, MofaPhase newValue)
+        private void OnMofaPhaseChanged_Server(MofaPhase oldPhase, MofaPhase newPhase)
         {
-            if (oldValue == newValue) return;
+            if (oldPhase == newPhase) return;
 
-            OnMofaPhaseChanged?.Invoke(newValue);
-            if (newValue == MofaPhase.RoundData)
+            if (newPhase == MofaPhase.RoundData)
             {
                 if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
                 {
@@ -200,106 +144,61 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnRoundResultChangedFunc(MofaRoundResult oldValue, MofaRoundResult newValue)
+        private void OnMofaPhaseChanged_Client(MofaPhase oldPhase, MofaPhase newPhase)
         {
-            if (newValue == MofaRoundResult.NotDetermined) return;
-            Debug.Log($"Round result: {newValue}");
-            OnReceivedRoundResult?.Invoke(newValue);
+            if (oldPhase == newPhase) return;
+
+            OnMofaPhaseChanged?.Invoke(newPhase);
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        protected void SpawnMofaPlayerServerRpc(int magicSchoolTokenId, MofaTeam team, ServerRpcParams serverRpcParams = default)
+        public MofaPlayer GetMofaPlayer(ulong clientId)
         {
-            SpawnMofaPlayer(magicSchoolTokenId, team, serverRpcParams.Receive.SenderClientId);
+            var player = HoloKitApp.HoloKitApp.Instance.MultiplayerManager.PlayerDict[clientId];
+            if (player == null) return null;
+            return player.GetComponent<MofaPlayer>();
         }
 
-        // Host only
-        public void SpawnMofaPlayer(int magicSchoolTokenId, MofaTeam team, ulong ownerClientId)
+        protected void SpawnLifeShield(ulong clientId)
         {
-            var player = Instantiate(_mofaPlayerPrefab);
-            player.MagicSchoolTokenId.Value = magicSchoolTokenId;
-            player.Team.Value = team;
-            player.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
-        }
-
-        protected void SpawnLifeShield(ulong ownerClientId)
-        {
-            var lifeShieldPrefab = LifeShieldList.GetLifeShield(_players[ownerClientId].MagicSchoolTokenId.Value);
+            MofaPlayer mofaPlayer = GetMofaPlayer(clientId);
+            var lifeShieldPrefab = LifeShieldList.GetLifeShield(mofaPlayer.MagicSchool.Value);
             var lifeShield = Instantiate(lifeShieldPrefab);
-            lifeShield.GetComponent<NetworkObject>().SpawnWithOwnership(ownerClientId);
-        }
-
-        public void SetPlayer(ulong clientId, MofaPlayer mofaPlayer)
-        {
-            Players[clientId] = mofaPlayer;
+            lifeShield.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
         }
 
         public void SetLifeShield(LifeShield lifeShield)
         {
-            MofaPlayer shieldOwner = Players[lifeShield.OwnerClientId];
-            shieldOwner.LifeShield = lifeShield;
+            MofaPlayer player = GetMofaPlayer(lifeShield.OwnerClientId);
+            player.LifeShield = lifeShield;
 
-            lifeShield.transform.SetParent(shieldOwner.transform);
-            lifeShield.transform.localPosition = shieldOwner.LifeShieldOffset;
+            lifeShield.transform.SetParent(player.transform);
+            lifeShield.transform.localPosition = player.LifeShieldOffset;
             lifeShield.transform.localRotation = Quaternion.identity;
             lifeShield.transform.localScale = Vector3.one;
         }
 
-        public MofaPlayer GetPlayer(ulong clientId = 0)
-        {
-            if (!HoloKitApp.HoloKitApp.Instance.IsHost)
-            {
-                clientId = NetworkManager.LocalClientId;
-            }
-
-            if (Players.ContainsKey(clientId))
-            {
-                return Players[clientId];
-            }
-            else
-            {
-                Debug.Log($"[MofaBaseRealityManager] There is no player with clientId: {clientId}");
-                return null;
-            }
-        }
-
         public abstract void TryStartRound();
 
-        // Host only
-        protected virtual IEnumerator StartRoundFlow()
-        {
-            PutTheArmorOn();
-            _currentPhase.Value = MofaPhase.Countdown;
-            _roundCount.Value++;
-            _roundResult.Value = MofaRoundResult.NotDetermined;
-            yield return new WaitForSeconds(CountdownDuration);
-            _currentPhase.Value = MofaPhase.Fighting;
-            yield return new WaitForSeconds(RoundDuration);
-            _currentPhase.Value = MofaPhase.RoundOver;
-            yield return new WaitForSeconds(3f);
-            _roundResult.Value = GetRoundResult();
-            _currentPhase.Value = MofaPhase.RoundResult;
-            yield return new WaitForSeconds(3f);
-            _currentPhase.Value = MofaPhase.RoundData;
-        }
-
         /// <summary>
-        /// Spawn life shield for every player.
+        /// Call this function to start a single MOFA round. This function can only
+        /// be called by the server.
         /// </summary>
-        private void PutTheArmorOn()
+        protected IEnumerator StartBaseRoundFlow()
         {
-            foreach (var clientId in Players.Keys)
-            {
-                if (Players[clientId].LifeShield == null)
-                {
-                    SpawnLifeShield(clientId);
-                }
-            }
+            CurrentPhase.Value = MofaPhase.Countdown;
+            yield return new WaitForSeconds(CountdownDuration);
+            CurrentPhase.Value = MofaPhase.Fighting;
+            yield return new WaitForSeconds(RoundDuration);
+            CurrentPhase.Value = MofaPhase.RoundOver;
+            yield return new WaitForSeconds(3f);
+            CurrentPhase.Value = MofaPhase.RoundResult;
+            yield return new WaitForSeconds(3f);
+            CurrentPhase.Value = MofaPhase.RoundData;
         }
 
         [ServerRpc(RequireOwnership = false)]
         public void SpawnSpellServerRpc(int spellId, Vector3 clientCenterEyePosition,
-            Quaternion clientCenterEyeRotation, ulong ownerClientId)
+            Quaternion clientCenterEyeRotation, ulong clientId)
         {
             Spell spell = SpellList.GetSpell(spellId);
             var position = clientCenterEyePosition + clientCenterEyeRotation * spell.SpawnOffset;
@@ -309,17 +208,15 @@ namespace Holoi.Library.MOFABase
                 rotation = MofaUtils.GetHorizontalRotation(rotation);
             }
             NetworkObject no = SpellPool.GetSpell(spell.gameObject, position, rotation);
-            no.SpawnWithOwnership(ownerClientId);
+            no.SpawnWithOwnership(clientId);
             // Record this cast event on the server
-            _players[ownerClientId].CastCount.Value++;
+            GetMofaPlayer(clientId).CastCount.Value++;
         }
 
         private void OnLifeShieldBeingHit(ulong attackerClientId, ulong ownerClientId)
         {
             if (IsServer)
-            {
-                _players[attackerClientId].HitCount.Value++;
-            }
+                GetMofaPlayer(attackerClientId).HitCount.Value++;
         }
 
         private void OnLifeShieldBeingDestroyed(ulong attackerClientId, ulong ownerClientId)
@@ -327,8 +224,8 @@ namespace Holoi.Library.MOFABase
             if (IsServer)
             {
                 // Update the score
-                _players[attackerClientId].Kill.Value++;
-                _players[ownerClientId].Death.Value++;;
+                GetMofaPlayer(attackerClientId).Kill.Value++;
+                GetMofaPlayer(ownerClientId).Death.Value++;;
             }
         }
 
@@ -343,7 +240,7 @@ namespace Holoi.Library.MOFABase
 
             int blueTeamScore = 0;
             int redTeamScore = 0;
-            foreach (var mofaPlayer in Players.Values)
+            foreach (var mofaPlayer in PlayerDict.Values)
             {
                 if (mofaPlayer.Team.Value == MofaTeam.Blue)
                 {
@@ -404,7 +301,7 @@ namespace Holoi.Library.MOFABase
             // Hit rate
             stats.HitRate = Mathf.RoundToInt((float)player.HitCount.Value / player.CastCount.Value * 100);
             // Distance
-            stats.Distance = Mathf.RoundToInt(player.Distance.Value * MofaUtils.MeterToFoot);
+            stats.Distance = Mathf.RoundToInt(player.Dist.Value * MofaUtils.MeterToFoot);
             // Calories
             stats.Energy = Mathf.RoundToInt(player.Energy.Value);
 

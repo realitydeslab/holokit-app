@@ -39,10 +39,10 @@ namespace Holoi.Library.MOFABase
             {
                 var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
                 ulong victimClientId = other.GetComponentInParent<NetworkObject>().OwnerClientId;
-                if (mofaRealityManager.Players.ContainsKey(victimClientId))
+                if (mofaRealityManager.PlayerDict.ContainsKey(victimClientId))
                 {
-                    MofaTeam attackerTeam = mofaRealityManager.Players[OwnerClientId].Team.Value;
-                    MofaTeam victimTeam = mofaRealityManager.Players[victimClientId].Team.Value;
+                    MofaTeam attackerTeam = mofaRealityManager.PlayerDict[OwnerClientId].Team.Value;
+                    MofaTeam victimTeam = mofaRealityManager.PlayerDict[victimClientId].Team.Value;
                     if (attackerTeam != victimTeam)
                     {
                         damageable.OnDamaged(OwnerClientId);

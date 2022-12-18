@@ -30,14 +30,18 @@ namespace Holoi.Library.MOFABase
             _pooledSpells.Clear();
         }
 
-        // Initialize the corresponding spells when a new player joins.
-        public void OnPlayerJoined(int magicSchoolTokenId)
+        /// <summary>
+        /// Initialize the corresponding spells when a new player joins. This function
+        /// needs to be called on every client.
+        /// </summary>
+        /// <param name="magicSchool"></param>
+        public void OnPlayerJoined(int magicSchool)
         {
             var mofaBaseRealityManager = (MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager;
             int count = 0;
             foreach (var spell in mofaBaseRealityManager.SpellList.List)
             {
-                if (int.Parse(spell.MagicSchool.TokenId) == magicSchoolTokenId)
+                if (int.Parse(spell.MagicSchool.TokenId) == magicSchool)
                 {
                     count++;
                     RegisterSpell(spell.gameObject, spell.SpellType == SpellType.Basic ? _basicSpellPrewarmCount : _secondarySpellPrewarmCount);

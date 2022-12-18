@@ -47,7 +47,7 @@ namespace Holoi.Library.MOFABase
             int blueTeamScore = 0;
             int redTeamScore = 0;
             var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-            foreach (var mofaPlayer in mofaRealityManager.Players.Values)
+            foreach (var mofaPlayer in mofaRealityManager.PlayerDict.Values)
             {
                 if (mofaPlayer.Team.Value == MofaTeam.Blue)
                 {

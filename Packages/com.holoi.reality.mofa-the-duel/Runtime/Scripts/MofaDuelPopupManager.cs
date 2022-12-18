@@ -46,7 +46,7 @@ namespace Holoi.Reality.MOFATheDuel
 
             var summaryBoard = SpawnSummaryBoard();
             // For the player, which in blue team
-            var humanPlayer = mofaBaseRealityManager.Players[0];
+            var humanPlayer = mofaBaseRealityManager.PlayerDict[0];
             var humanPlayerStats = mofaBaseRealityManager.GetIndividualStats(humanPlayer);
             summaryBoard.BlueTeamName = "Blue";
             summaryBoard.BlueTeamKill = humanPlayerStats.Kill.ToString();
@@ -56,7 +56,7 @@ namespace Holoi.Reality.MOFATheDuel
 
             // For the avatar, which is red team
             MofaPlayer secondPlayer = null;
-            foreach (var player in mofaBaseRealityManager.Players.Values)
+            foreach (var player in mofaBaseRealityManager.PlayerDict.Values)
             {
                 if (player.OwnerClientId == 0) continue;
                 if (player.Team.Value == MofaTeam.Red)

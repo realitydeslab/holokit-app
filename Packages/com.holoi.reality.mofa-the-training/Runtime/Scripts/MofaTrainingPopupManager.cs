@@ -38,7 +38,7 @@ namespace Holoi.Reality.MOFATheTraining
 
             var summaryBoard = SpawnSummaryBoard();
             // For the player, which in blue team
-            var humanPlayer = mofaBaseRealityManager.Players[0];
+            var humanPlayer = mofaBaseRealityManager.PlayerDict[0];
             var humanPlayerStats = mofaBaseRealityManager.GetIndividualStats(humanPlayer);
             summaryBoard.BlueTeamName = "Player";
             summaryBoard.BlueTeamKill = humanPlayerStats.Kill.ToString();
@@ -47,7 +47,7 @@ namespace Holoi.Reality.MOFATheTraining
             summaryBoard.BlueTeamCalories = humanPlayerStats.Energy.ToString();
 
             // For the avatar, which is red team
-            var aiPlayer = mofaBaseRealityManager.Players[MofaPlayerAI.AIClientId];
+            var aiPlayer = mofaBaseRealityManager.PlayerDict[MofaPlayerAI.AIClientId];
             var aiPlayerStats = mofaBaseRealityManager.GetIndividualStats(aiPlayer);
             summaryBoard.RedTeamName = "Avatar";
             summaryBoard.RedTeamKill = aiPlayerStats.Kill.ToString();

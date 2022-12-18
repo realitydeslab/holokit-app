@@ -54,7 +54,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             _mofaPlayerAI = Instantiate(_mofaPlayerAIPrefab);
             // TODO: This is hard-coded
-            _mofaPlayerAI.MagicSchoolTokenId.Value = 0;
+            _mofaPlayerAI.MagicSchool.Value = 0;
             _mofaPlayerAI.Team.Value = MofaTeam.Red;
             _mofaPlayerAI.GetComponent<NetworkObject>().SpawnWithOwnership(MofaPlayerAI.AIClientId);
         }
@@ -81,7 +81,7 @@ namespace Holoi.Reality.MOFATheTraining
                                                             rotation,
                                                             realityPreferences.MetaAvatarCollectionBundleId,
                                                             realityPreferences.MetaAvatarTokenId);
-                    StartCoroutine(StartRoundFlow());
+                    StartCoroutine(StartBaseRoundFlow());
                 }
                 else
                 {
@@ -90,7 +90,7 @@ namespace Holoi.Reality.MOFATheTraining
             }
             else
             {
-                StartCoroutine(StartRoundFlow());
+                StartCoroutine(StartBaseRoundFlow());
             }
         }
     }

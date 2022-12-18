@@ -42,6 +42,8 @@ namespace Holoi.Library.HoloKitApp
                 _localPlayerStatus = value;
                 switch (_localPlayerStatus)
                 {
+                    case HoloKitAppPlayerStatus.None:
+                        break;
                     case HoloKitAppPlayerStatus.SyncingTimestamp:
                         OnLocalPlayerSyncingTimestamp?.Invoke();
                         break;

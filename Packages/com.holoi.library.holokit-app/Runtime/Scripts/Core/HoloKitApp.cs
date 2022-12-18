@@ -345,9 +345,7 @@ namespace Holoi.Library.HoloKitApp
         {
             // There can only one NetworkManager in the scene. Destroy it if there already one there.
             if (NetworkManager.Singleton != null)
-            {
                 DestroyNetworkManager();
-            }
 
             // Instantiate the NetworkManager
             var networkManager = Instantiate(_networkManagerPrefab);
@@ -374,52 +372,35 @@ namespace Holoi.Library.HoloKitApp
         private void DestroyNetworkManager()
         {
             if (NetworkManager.Singleton != null)
-            {
                 Destroy(NetworkManager.Singleton.gameObject);
-            }
         }
 
         private void StartHost()
         {
             if (NetworkManager.Singleton == null)
-            {
                 Debug.Log("[HoloKitApp] Failed to start host because NetworkManager is not initialized");
-            }
 
             if (NetworkManager.Singleton.StartHost())
-            {
                 Debug.Log("[HoloKitApp] Host started");
-                //SpawnMultiplayerManager();
-            }
             else
-            {
                 Debug.Log("[HoloKitApp] Failed to start host");
-            }
         }
 
         private void StartClient()
         {
             if (NetworkManager.Singleton == null)
-            {
                 Debug.Log("[HoloKitApp] Failed to start host because NetworkManager is not initialized");
-            }
 
             if (NetworkManager.Singleton.StartClient())
-            {
                 Debug.Log("[HoloKitApp] Client started");
-            }
             else
-            {
                 Debug.Log("[HoloKitApp] Failed to start client");
-            }
         }
 
         private void SetUrpAssetForUI()
         {
             if (_urpAssetForUI != null)
-            {
                 GraphicsSettings.renderPipelineAsset = _urpAssetForUI;
-            }
         }
 
         public void Shutdown()

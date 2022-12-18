@@ -290,7 +290,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         private bool IsHostAlive()
         {
-            var hostLifeShield = _mofaBaseRealityManager.Players[0].LifeShield;
+            var hostLifeShield = _mofaBaseRealityManager.PlayerDict[0].LifeShield;
             if (hostLifeShield != null && !hostLifeShield.IsDestroyed)
             {
                 return true;
@@ -322,7 +322,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void SpawnSpell(SpellType spellType)
         {
-            var hostLifeShield = _mofaBaseRealityManager.Players[0].LifeShield;
+            var hostLifeShield = _mofaBaseRealityManager.PlayerDict[0].LifeShield;
             Vector3 avatarCenterEyePos = transform.position + transform.rotation * _centerEyeOffset;
             Quaternion rotation = Quaternion.LookRotation(hostLifeShield.transform.position - avatarCenterEyePos);
             // TODO: Random deviation

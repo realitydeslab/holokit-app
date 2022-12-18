@@ -62,13 +62,13 @@ namespace Holoi.Library.HoloKitApp
                         // Start syncing the timestamp
                         Status.Value = HoloKitAppPlayerStatus.SyncingTimestamp;
                         HoloKitApp.Instance.MultiplayerManager.LocalPlayerStatus = HoloKitAppPlayerStatus.SyncingTimestamp;
-                    }  
+                    }
                     else
                     {
                         // We do not need to sync in editor mode
                         Status.Value = HoloKitAppPlayerStatus.Checked;
-                    }  
-                } 
+                    }
+                }
             }
             HoloKitApp.Instance.MultiplayerManager.OnPlayerJoined(this);
 

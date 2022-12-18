@@ -140,11 +140,11 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void SpawnLifeShieldsForNonHostPlayers()
         {
-            foreach (ulong playerClientId in Players.Keys)
+            foreach (ulong playerClientId in PlayerDict.Keys)
             {
                 if (playerClientId == 0) { continue; }
                 
-                var lifeShield = Players[playerClientId].LifeShield;
+                var lifeShield = PlayerDict[playerClientId].LifeShield;
                 if (lifeShield != null)
                 {
                     Destroy(lifeShield.gameObject);

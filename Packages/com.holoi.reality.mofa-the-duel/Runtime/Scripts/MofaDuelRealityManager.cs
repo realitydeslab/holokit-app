@@ -28,16 +28,16 @@ namespace Holoi.Reality.MOFATheDuel
         {
             if (!IsServer) return;
             if (!ready) return;
-            if (Players.Count < 2) return;
+            if (PlayerDict.Count < 2) return;
 
-            foreach (var player in Players.Values)
+            foreach (var player in PlayerDict.Values)
             {
                 if (!player.Ready.Value)
                 {
                     return;
                 }
             }
-            StartCoroutine(StartRoundFlow());
+            StartCoroutine(StartBaseRoundFlow());
         }
     }
 }

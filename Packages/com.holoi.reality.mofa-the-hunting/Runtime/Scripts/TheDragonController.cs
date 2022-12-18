@@ -69,18 +69,18 @@ namespace Holoi.Reality.MOFATheHunting
                 {
                     _aim.AimTarget = null;
                     _aim.UseCamera = true;
-                    _aim.MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).Players[0].transform; 
+                    _aim.MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).PlayerDict[0].transform; 
                 }
                 else
                 {
                     var mofaBaseRealityManager = (MofaBaseRealityManager)HoloKitApp.Instance.RealityManager;
-                    if (mofaBaseRealityManager.Players.ContainsKey(1))
+                    if (mofaBaseRealityManager.PlayerDict.ContainsKey(1))
                     {
-                        _aim.AimTarget = mofaBaseRealityManager.Players[1].LifeShield.transform;
+                        _aim.AimTarget = mofaBaseRealityManager.PlayerDict[1].LifeShield.transform;
                     }
                     else
                     {
-                        _aim.AimTarget = mofaBaseRealityManager.Players[0].transform;
+                        _aim.AimTarget = mofaBaseRealityManager.PlayerDict[0].transform;
                     }
                     _aim.UseCamera = false;
                     //_aim.MainCamera = null;
@@ -95,7 +95,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void Awake()
         {
-            _animal.m_MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).Players[0].transform;
+            _animal.m_MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).PlayerDict[0].transform;
         }
 
         private void Start()
