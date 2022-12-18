@@ -42,9 +42,22 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         public NetworkVariable<bool> SyncPose = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+        public bool ShowPoseVisualizer
+        {
+            set
+            {
+                _poseVisualizer.SetActive(value);
+            }
+        }
+
+        private GameObject _poseVisualizer;
+
         public override void OnNetworkSpawn()
         {
+            _poseVisualizer = GetComponentInChildren<HoloKitAppPlayerPoseVisualizer>(true).gameObject;
+            Status.OnValueChanged += OnStatusValueChanged;
             SyncPose.OnValueChanged += OnSyncPoseValueChanged;
+            HoloKitApp.Instance.MultiplayerManager.OnPlayerJoined(this);
             // Initialize name and type by the owner
             if (IsOwner)
             {
@@ -52,6 +65,8 @@ namespace Holoi.Library.HoloKitApp
                 Type.Value = HoloKitApp.Instance.LocalPlayerType;
                 if (IsServer)
                 {
+                    // Set host's status to checked at start
+                    Status.Value = HoloKitAppPlayerStatus.Checked;
                     // The host syncs its pose by default
                     SyncPose.Value = true;
                 }
@@ -70,15 +85,35 @@ namespace Holoi.Library.HoloKitApp
                     }
                 }
             }
-            HoloKitApp.Instance.MultiplayerManager.OnPlayerJoined(this);
-
-            Debug.Log($"[HoloKitAppPlayer] OnNetworkSpawn with ownership {OwnerClientId}");
         }
 
         public override void OnNetworkDespawn()
         {
+            Status.OnValueChanged -= OnStatusValueChanged;
             SyncPose.OnValueChanged -= OnSyncPoseValueChanged;
             HoloKitApp.Instance.MultiplayerManager.OnPlayerLeft(this);
+        }
+
+        private void OnStatusValueChanged(HoloKitAppPlayerStatus oldStatus, HoloKitAppPlayerStatus newStatus)
+        {
+            if (oldStatus == newStatus) return;
+
+            if (IsServer)
+            {
+                if (newStatus == HoloKitAppPlayerStatus.Checked)
+                {
+                    SyncPose.Value = true;
+                }
+                else
+                {
+                    SyncPose.Value = false;
+                }
+            }
+
+            if (IsOwner)
+            {
+
+            }
         }
 
         private void OnSyncPoseValueChanged(bool oldValue, bool newValue)

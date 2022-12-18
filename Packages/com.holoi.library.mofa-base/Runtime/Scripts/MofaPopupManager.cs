@@ -32,7 +32,6 @@ namespace Holoi.Library.MOFABase
             MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
             MofaBaseRealityManager.OnReceivedRoundResult += OnReceivedRoundResult;
             LifeShield.OnBeingDestroyed += OnLifeShieldBeingDestroyed;
-            MofaPlayer.OnHealthDataUpdated += UpdateSummaryBoard;
         }
 
         protected virtual void OnDestroy()
@@ -40,7 +39,6 @@ namespace Holoi.Library.MOFABase
             MofaBaseRealityManager.OnMofaPhaseChanged -= OnPhaseChanged;
             MofaBaseRealityManager.OnReceivedRoundResult -= OnReceivedRoundResult;
             LifeShield.OnBeingDestroyed -= OnLifeShieldBeingDestroyed;
-            MofaPlayer.OnHealthDataUpdated -= UpdateSummaryBoard;
         }
 
         protected void SpawnPopup(GameObject popupPrefab)
@@ -108,41 +106,41 @@ namespace Holoi.Library.MOFABase
 
         private void OnReceivedRoundResult(MofaRoundResult roundResult)
         {
-            if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
-            {
-                // TODO: Play blue team wins or red team wins on spectator
-                return;
-            }
+            //if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
+            //{
+            //    // TODO: Play blue team wins or red team wins on spectator
+            //    return;
+            //}
 
-            if (roundResult == MofaRoundResult.Draw)
-            {
-                StartCoroutine(SpawnPopupAndDestroy(_drawPrefab, 3f));
-                return;
-            }
+            //if (roundResult == MofaRoundResult.Draw)
+            //{
+            //    StartCoroutine(SpawnPopupAndDestroy(_drawPrefab, 3f));
+            //    return;
+            //}
 
-            MofaTeam team = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).GetPlayer().Team.Value;
-            if (team == MofaTeam.Blue)
-            {
-                if (roundResult == MofaRoundResult.BlueTeamWins)
-                {
-                    StartCoroutine(SpawnPopupAndDestroy(_victoryPrefab, 3f));
-                }
-                else
-                {
-                    StartCoroutine(SpawnPopupAndDestroy(_defeatPrefab, 3f));
-                }
-            }
-            else if (team == MofaTeam.Red)
-            {
-                if (roundResult == MofaRoundResult.RedTeamWins)
-                {
-                    StartCoroutine(SpawnPopupAndDestroy(_victoryPrefab, 3f));
-                }
-                else
-                {
-                    StartCoroutine(SpawnPopupAndDestroy(_defeatPrefab, 3f));
-                }
-            }
+            //MofaTeam team = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).GetPlayer().Team.Value;
+            //if (team == MofaTeam.Blue)
+            //{
+            //    if (roundResult == MofaRoundResult.BlueTeamWins)
+            //    {
+            //        StartCoroutine(SpawnPopupAndDestroy(_victoryPrefab, 3f));
+            //    }
+            //    else
+            //    {
+            //        StartCoroutine(SpawnPopupAndDestroy(_defeatPrefab, 3f));
+            //    }
+            //}
+            //else if (team == MofaTeam.Red)
+            //{
+            //    if (roundResult == MofaRoundResult.RedTeamWins)
+            //    {
+            //        StartCoroutine(SpawnPopupAndDestroy(_victoryPrefab, 3f));
+            //    }
+            //    else
+            //    {
+            //        StartCoroutine(SpawnPopupAndDestroy(_defeatPrefab, 3f));
+            //    }
+            //}
         }
 
         protected SummaryBoard SpawnSummaryBoard()

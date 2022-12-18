@@ -66,9 +66,8 @@ namespace Holoi.Reality.MOFATheTraining
 
         public static event Action<SpellType> OnAISpawnedSpell;
 
-        protected override void Start()
+        private void Start()
         {
-            base.Start();
             LifeShield.OnBeingDestroyed += OnLifeShieldBeingDestroyed;
             LifeShield.OnRenovated += OnLifeShieldRenovated;
         }
@@ -157,20 +156,20 @@ namespace Holoi.Reality.MOFATheTraining
                     transform.rotation = MofaUtils.GetHorizontalLookRotation(forwardVector);
                 }
 
-                if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting && IsAIAlive())
-                {
-                    if (Vector3.Distance(transform.position, _destPosition) < 0.1f)
-                    {
-                        // Find a new destination position
-                        GetNextDestPos();
-                    }
-                    else
-                    {
-                        // Approaching to the destination
-                        transform.position += Speed * Time.fixedDeltaTime * (_destPosition - transform.position).normalized;
-                        UpdateAvatarMovementAnimation();
-                    }
-                }
+                //if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting && IsAIAlive())
+                //{
+                //    if (Vector3.Distance(transform.position, _destPosition) < 0.1f)
+                //    {
+                //        // Find a new destination position
+                //        GetNextDestPos();
+                //    }
+                //    else
+                //    {
+                //        // Approaching to the destination
+                //        transform.position += Speed * Time.fixedDeltaTime * (_destPosition - transform.position).normalized;
+                //        UpdateAvatarMovementAnimation();
+                //    }
+                //}
             }
         }
 
@@ -182,23 +181,23 @@ namespace Holoi.Reality.MOFATheTraining
             _destPosition = _initialPosition + _initialForward * forwardVar + _initialRight * rightVar;
         }
 
-        protected override void OnPhaseChanged(MofaPhase mofaPhase)
-        {
-            base.OnPhaseChanged(mofaPhase);
+        //protected override void OnMofaPhaseChanged(MofaPhase mofaPhase)
+        //{
+        //    base.OnMofaPhaseChanged(mofaPhase);
 
-            if (IsServer)
-            {
-                if (mofaPhase == MofaPhase.Fighting)
-                {
-                    _attackAICoroutine = StartCoroutine(AttackAI());
-                }
-                else if (mofaPhase == MofaPhase.RoundOver)
-                {
-                    StopCoroutine(_attackAICoroutine);
-                    _animationVector.Value = new Vector2(0f, 0f);
-                }
-            }
-        }
+        //    if (IsServer)
+        //    {
+        //        if (mofaPhase == MofaPhase.Fighting)
+        //        {
+        //            _attackAICoroutine = StartCoroutine(AttackAI());
+        //        }
+        //        else if (mofaPhase == MofaPhase.RoundOver)
+        //        {
+        //            StopCoroutine(_attackAICoroutine);
+        //            _animationVector.Value = new Vector2(0f, 0f);
+        //        }
+        //    }
+        //}
 
         private void OnLifeShieldBeingDestroyed(ulong _, ulong ownerClientId)
         {
@@ -290,15 +289,16 @@ namespace Holoi.Reality.MOFATheTraining
 
         private bool IsHostAlive()
         {
-            var hostLifeShield = _mofaBaseRealityManager.PlayerDict[0].LifeShield;
-            if (hostLifeShield != null && !hostLifeShield.IsDestroyed)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return false;
+            //var hostLifeShield = _mofaBaseRealityManager.PlayerDict[0].LifeShield;
+            //if (hostLifeShield != null && !hostLifeShield.IsDestroyed)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
         }
 
         private bool IsAIAlive()
@@ -322,24 +322,24 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void SpawnSpell(SpellType spellType)
         {
-            var hostLifeShield = _mofaBaseRealityManager.PlayerDict[0].LifeShield;
-            Vector3 avatarCenterEyePos = transform.position + transform.rotation * _centerEyeOffset;
-            Quaternion rotation = Quaternion.LookRotation(hostLifeShield.transform.position - avatarCenterEyePos);
-            // TODO: Random deviation
-            if (UnityEngine.Random.Range(0, 1f) > 0.5f)
-            {
-                // Add horizontal deviation
-                rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(-30f, 30f), 0f) * rotation;
-            }
-            else
-            {
-                // Add vertical deviation
-                rotation = Quaternion.Euler(UnityEngine.Random.Range(-30f, 30f), 0f, 0f) * rotation;
-            }
+            //var hostLifeShield = _mofaBaseRealityManager.PlayerDict[0].LifeShield;
+            //Vector3 avatarCenterEyePos = transform.position + transform.rotation * _centerEyeOffset;
+            //Quaternion rotation = Quaternion.LookRotation(hostLifeShield.transform.position - avatarCenterEyePos);
+            //// TODO: Random deviation
+            //if (UnityEngine.Random.Range(0, 1f) > 0.5f)
+            //{
+            //    // Add horizontal deviation
+            //    rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(-30f, 30f), 0f) * rotation;
+            //}
+            //else
+            //{
+            //    // Add vertical deviation
+            //    rotation = Quaternion.Euler(UnityEngine.Random.Range(-30f, 30f), 0f, 0f) * rotation;
+            //}
 
-            _mofaBaseRealityManager.SpawnSpellServerRpc(spellType == SpellType.Basic ? _basicSpell.Id : _secondarySpell.Id,
-                avatarCenterEyePos, rotation, OwnerClientId);
-            _lastAIAttackState = spellType == SpellType.Basic ? AIAttackState.BasicSpell : AIAttackState.SecondarySpell;
+            //_mofaBaseRealityManager.SpawnSpellServerRpc(spellType == SpellType.Basic ? _basicSpell.Id : _secondarySpell.Id,
+            //    avatarCenterEyePos, rotation, OwnerClientId);
+            //_lastAIAttackState = spellType == SpellType.Basic ? AIAttackState.BasicSpell : AIAttackState.SecondarySpell;
         }
 
         private void UpdateAvatarMovementAnimation()

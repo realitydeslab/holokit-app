@@ -113,41 +113,41 @@ namespace Holoi.Library.MOFABase
 
         private void OnReceivedRoundResult(MofaRoundResult roundResult)
         {
-            if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
-            {
-                // TODO: Play blue team wins or red team wins on spectator
-                return;
-            }
+            //if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
+            //{
+            //    // TODO: Play blue team wins or red team wins on spectator
+            //    return;
+            //}
 
-            if (roundResult == MofaRoundResult.Draw)
-            {
-                PlayDrawSound();
-                return;
-            }
+            //if (roundResult == MofaRoundResult.Draw)
+            //{
+            //    PlayDrawSound();
+            //    return;
+            //}
 
-            MofaTeam team = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).GetPlayer().Team.Value;
-            if (team == MofaTeam.Blue)
-            {
-                if (roundResult == MofaRoundResult.BlueTeamWins)
-                {
-                    PlayVictorySound();
-                }
-                else
-                {
-                    PlayDefeatSound();
-                }
-            }
-            else if (team == MofaTeam.Red)
-            {
-                if(roundResult == MofaRoundResult.RedTeamWins)
-                {
-                    PlayVictorySound();
-                }
-                else
-                {
-                    PlayDefeatSound();
-                }
-            }
+            //MofaTeam team = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).GetPlayer().Team.Value;
+            //if (team == MofaTeam.Blue)
+            //{
+            //    if (roundResult == MofaRoundResult.BlueTeamWins)
+            //    {
+            //        PlayVictorySound();
+            //    }
+            //    else
+            //    {
+            //        PlayDefeatSound();
+            //    }
+            //}
+            //else if (team == MofaTeam.Red)
+            //{
+            //    if(roundResult == MofaRoundResult.RedTeamWins)
+            //    {
+            //        PlayVictorySound();
+            //    }
+            //    else
+            //    {
+            //        PlayDefeatSound();
+            //    }
+            //}
         }
     }
 }

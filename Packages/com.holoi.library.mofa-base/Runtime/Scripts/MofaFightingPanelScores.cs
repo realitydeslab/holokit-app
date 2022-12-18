@@ -13,11 +13,6 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] private GameObject _redTeamMark;
 
-        private void OnEnable()
-        {
-            MofaPlayer.OnKillChanged += OnScoreChanged;
-        }
-
         private void Start()
         {
             if (HoloKitApp.HoloKitApp.Instance.IsHost)
@@ -37,45 +32,40 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnDisable()
-        {
-            MofaPlayer.OnKillChanged -= OnScoreChanged;
-        }
-
         private void OnScoreChanged()
         {
-            int blueTeamScore = 0;
-            int redTeamScore = 0;
-            var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-            foreach (var mofaPlayer in mofaRealityManager.PlayerDict.Values)
-            {
-                if (mofaPlayer.Team.Value == MofaTeam.Blue)
-                {
-                    blueTeamScore += mofaPlayer.Kill.Value;
-                }
-                else if (mofaPlayer.Team.Value == MofaTeam.Red)
-                {
-                    redTeamScore += mofaPlayer.Kill.Value;
-                }
-            }
+            //int blueTeamScore = 0;
+            //int redTeamScore = 0;
+            //var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            //foreach (var mofaPlayer in mofaRealityManager.PlayerDict.Values)
+            //{
+            //    if (mofaPlayer.Team.Value == MofaTeam.Blue)
+            //    {
+            //        blueTeamScore += mofaPlayer.Kill.Value;
+            //    }
+            //    else if (mofaPlayer.Team.Value == MofaTeam.Red)
+            //    {
+            //        redTeamScore += mofaPlayer.Kill.Value;
+            //    }
+            //}
 
-            if (blueTeamScore < 10)
-            {
-                _yourScore.text = "0" + blueTeamScore;
-            }
-            else
-            {
-                _yourScore.text = "" + blueTeamScore;
-            }
+            //if (blueTeamScore < 10)
+            //{
+            //    _yourScore.text = "0" + blueTeamScore;
+            //}
+            //else
+            //{
+            //    _yourScore.text = "" + blueTeamScore;
+            //}
 
-            if (redTeamScore < 10)
-            {
-                _enemyScore.text = "0" + redTeamScore;
-            }
-            else
-            {
-                _enemyScore.text = "" + redTeamScore;
-            }
+            //if (redTeamScore < 10)
+            //{
+            //    _enemyScore.text = "0" + redTeamScore;
+            //}
+            //else
+            //{
+            //    _enemyScore.text = "" + redTeamScore;
+            //}
         }
     }
 }

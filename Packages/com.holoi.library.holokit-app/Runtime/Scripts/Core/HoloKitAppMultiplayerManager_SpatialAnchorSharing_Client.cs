@@ -58,11 +58,7 @@ namespace Holoi.Library.HoloKitApp
                         break;
                 }
                 // Sync local player status across the network
-                var localPlayer = NetworkManager.LocalClient.PlayerObject;
-                if (localPlayer != null)
-                {
-                    localPlayer.GetComponent<HoloKitAppPlayer>().Status.Value = _localPlayerStatus;
-                }
+                LocalPlayer.Status.Value = _localPlayerStatus;
             }
         }
 

@@ -35,27 +35,27 @@ namespace Holoi.Library.MOFABase
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent<IDamageable>(out var damageable))
-            {
-                var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-                ulong victimClientId = other.GetComponentInParent<NetworkObject>().OwnerClientId;
-                if (mofaRealityManager.PlayerDict.ContainsKey(victimClientId))
-                {
-                    MofaTeam attackerTeam = mofaRealityManager.PlayerDict[OwnerClientId].Team.Value;
-                    MofaTeam victimTeam = mofaRealityManager.PlayerDict[victimClientId].Team.Value;
-                    if (attackerTeam != victimTeam)
-                    {
-                        damageable.OnDamaged(OwnerClientId);
-                        OnHitFunc();
-                    }
-                }
-                else
-                {
-                    // The victim is not a player
-                    damageable.OnDamaged(OwnerClientId);
-                    OnHitFunc();
-                }
-            }
+            //if (other.TryGetComponent<IDamageable>(out var damageable))
+            //{
+            //    var mofaRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            //    ulong victimClientId = other.GetComponentInParent<NetworkObject>().OwnerClientId;
+            //    if (mofaRealityManager.PlayerDict.ContainsKey(victimClientId))
+            //    {
+            //        MofaTeam attackerTeam = mofaRealityManager.PlayerDict[OwnerClientId].Team.Value;
+            //        MofaTeam victimTeam = mofaRealityManager.PlayerDict[victimClientId].Team.Value;
+            //        if (attackerTeam != victimTeam)
+            //        {
+            //            damageable.OnDamaged(OwnerClientId);
+            //            OnHitFunc();
+            //        }
+            //    }
+            //    else
+            //    {
+            //        // The victim is not a player
+            //        damageable.OnDamaged(OwnerClientId);
+            //        OnHitFunc();
+            //    }
+            //}
         }
 
         // Host only

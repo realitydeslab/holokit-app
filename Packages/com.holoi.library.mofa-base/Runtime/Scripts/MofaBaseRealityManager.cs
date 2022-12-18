@@ -232,85 +232,86 @@ namespace Holoi.Library.MOFABase
         // Host only
         private MofaRoundResult GetRoundResult()
         {
-            if (!IsServer)
-            {
-                Debug.LogError("[MofaBaseRealityManager] Only the host can compute the round result");
-                return MofaRoundResult.Draw;
-            }
+            return MofaRoundResult.NotDetermined;
+            //if (!IsServer)
+            //{
+            //    Debug.LogError("[MofaBaseRealityManager] Only the host can compute the round result");
+            //    return MofaRoundResult.Draw;
+            //}
 
-            int blueTeamScore = 0;
-            int redTeamScore = 0;
-            foreach (var mofaPlayer in PlayerDict.Values)
-            {
-                if (mofaPlayer.Team.Value == MofaTeam.Blue)
-                {
-                    blueTeamScore += mofaPlayer.Kill.Value;
-                }
-                else
-                {
-                    redTeamScore += mofaPlayer.Kill.Value;
-                }
-            }
+            //int blueTeamScore = 0;
+            //int redTeamScore = 0;
+            //foreach (var mofaPlayer in PlayerDict.Values)
+            //{
+            //    if (mofaPlayer.Team.Value == MofaTeam.Blue)
+            //    {
+            //        blueTeamScore += mofaPlayer.Kill.Value;
+            //    }
+            //    else
+            //    {
+            //        redTeamScore += mofaPlayer.Kill.Value;
+            //    }
+            //}
 
-            if (blueTeamScore > redTeamScore)
-            {
-                return MofaRoundResult.BlueTeamWins;
-            }
-            else if (redTeamScore > blueTeamScore)
-            {
-                return MofaRoundResult.RedTeamWins;
-            }
-            else
-            {
-                return MofaRoundResult.Draw;
-            }
+            //if (blueTeamScore > redTeamScore)
+            //{
+            //    return MofaRoundResult.BlueTeamWins;
+            //}
+            //else if (redTeamScore > blueTeamScore)
+            //{
+            //    return MofaRoundResult.RedTeamWins;
+            //}
+            //else
+            //{
+            //    return MofaRoundResult.Draw;
+            //}
         }
 
-        public MofaIndividualStats GetIndividualStats(MofaPlayer player = null)
-        {
-            if (player == null)
-            {
-                player = GetPlayer();
-            }
+        //public MofaIndividualStats GetIndividualStats(MofaPlayer player = null)
+        //{
+        //    if (player == null)
+        //    {
+        //        player = GetPlayer();
+        //    }
 
-            MofaIndividualStats stats = new();
-            // Inividual round result
-            var roundResult = _roundResult.Value;
-            if (roundResult == MofaRoundResult.Draw)
-            {
-                stats.IndividualRoundResult = MofaIndividualRoundResult.Draw;
-            }
-            else
-            {
-                if (player.Team.Value == MofaTeam.Blue)
-                {
+        //    MofaIndividualStats stats = new();
+        //    // Inividual round result
+        //    var roundResult = _roundResult.Value;
+        //    if (roundResult == MofaRoundResult.Draw)
+        //    {
+        //        stats.IndividualRoundResult = MofaIndividualRoundResult.Draw;
+        //    }
+        //    else
+        //    {
+        //        if (player.Team.Value == MofaTeam.Blue)
+        //        {
 
-                    stats.IndividualRoundResult = roundResult == MofaRoundResult.BlueTeamWins ?
-                        MofaIndividualRoundResult.Victory : MofaIndividualRoundResult.Defeat;
-                }
-                else
-                {
-                    stats.IndividualRoundResult = roundResult == MofaRoundResult.RedTeamWins ?
-                        MofaIndividualRoundResult.Victory : MofaIndividualRoundResult.Defeat;
-                }
-            }
-            // Kill
-            stats.Kill = player.Kill.Value;
-            // Death
-            stats.Death = player.Death.Value;
-            // Hit rate
-            stats.HitRate = Mathf.RoundToInt((float)player.HitCount.Value / player.CastCount.Value * 100);
-            // Distance
-            stats.Distance = Mathf.RoundToInt(player.Dist.Value * MofaUtils.MeterToFoot);
-            // Calories
-            stats.Energy = Mathf.RoundToInt(player.Energy.Value);
+        //            stats.IndividualRoundResult = roundResult == MofaRoundResult.BlueTeamWins ?
+        //                MofaIndividualRoundResult.Victory : MofaIndividualRoundResult.Defeat;
+        //        }
+        //        else
+        //        {
+        //            stats.IndividualRoundResult = roundResult == MofaRoundResult.RedTeamWins ?
+        //                MofaIndividualRoundResult.Victory : MofaIndividualRoundResult.Defeat;
+        //        }
+        //    }
+        //    // Kill
+        //    stats.Kill = player.Kill.Value;
+        //    // Death
+        //    stats.Death = player.Death.Value;
+        //    // Hit rate
+        //    stats.HitRate = Mathf.RoundToInt((float)player.HitCount.Value / player.CastCount.Value * 100);
+        //    // Distance
+        //    stats.Distance = Mathf.RoundToInt(player.Dist.Value * MofaUtils.MeterToFoot);
+        //    // Calories
+        //    stats.Energy = Mathf.RoundToInt(player.Energy.Value);
 
-            return stats;
-        }
+        //    return stats;
+        //}
 
         private void ResetLocalPlayerReadyState()
         {
-            GetPlayer().Ready.Value = false;
+            //GetPlayer().Ready.Value = false;
         }
     }
 }

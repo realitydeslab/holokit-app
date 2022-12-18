@@ -64,28 +64,28 @@ namespace Holoi.Reality.MOFATheHunting
             get => _aimMode;
             set
             {
-                _aimMode = value;
-                if (value == AimMode.Camera)
-                {
-                    _aim.AimTarget = null;
-                    _aim.UseCamera = true;
-                    _aim.MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).PlayerDict[0].transform; 
-                }
-                else
-                {
-                    var mofaBaseRealityManager = (MofaBaseRealityManager)HoloKitApp.Instance.RealityManager;
-                    if (mofaBaseRealityManager.PlayerDict.ContainsKey(1))
-                    {
-                        _aim.AimTarget = mofaBaseRealityManager.PlayerDict[1].LifeShield.transform;
-                    }
-                    else
-                    {
-                        _aim.AimTarget = mofaBaseRealityManager.PlayerDict[0].transform;
-                    }
-                    _aim.UseCamera = false;
-                    //_aim.MainCamera = null;
-                }
-                Debug.Log($"[TheDragonController] AimMode changed to {_aimMode}");
+                //_aimMode = value;
+                //if (value == AimMode.Camera)
+                //{
+                //    _aim.AimTarget = null;
+                //    _aim.UseCamera = true;
+                //    _aim.MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).PlayerDict[0].transform; 
+                //}
+                //else
+                //{
+                //    var mofaBaseRealityManager = (MofaBaseRealityManager)HoloKitApp.Instance.RealityManager;
+                //    if (mofaBaseRealityManager.PlayerDict.ContainsKey(1))
+                //    {
+                //        _aim.AimTarget = mofaBaseRealityManager.PlayerDict[1].LifeShield.transform;
+                //    }
+                //    else
+                //    {
+                //        _aim.AimTarget = mofaBaseRealityManager.PlayerDict[0].transform;
+                //    }
+                //    _aim.UseCamera = false;
+                //    //_aim.MainCamera = null;
+                //}
+                //Debug.Log($"[TheDragonController] AimMode changed to {_aimMode}");
             }
         }
 
@@ -95,7 +95,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void Awake()
         {
-            _animal.m_MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).PlayerDict[0].transform;
+            //_animal.m_MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).PlayerDict[0].transform;
         }
 
         private void Start()

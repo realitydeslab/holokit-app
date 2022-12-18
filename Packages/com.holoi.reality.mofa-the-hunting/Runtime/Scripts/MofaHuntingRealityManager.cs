@@ -40,9 +40,8 @@ namespace Holoi.Reality.MOFATheHunting
 
         private TheDragonController _theDragonController;
 
-        protected override void Start()
+        private void Start()
         {
-            base.Start();
             HoloKitAppUIEventManager.OnTriggered += OnStarUITriggered;
             UI.MofaHuntingUIPanel.OnSpawnDragonButtonPressed += OnStarUITriggered;
 
@@ -70,7 +69,7 @@ namespace Holoi.Reality.MOFATheHunting
         {
             if (HoloKitApp.Instance.IsHost)
             {
-                if (CurrentPhase == MofaPhase.Waiting || CurrentPhase == MofaPhase.RoundData)
+                if (CurrentPhase.Value == MofaPhase.Waiting || CurrentPhase.Value == MofaPhase.RoundData)
                 {
                     TryStartRound();
                     return;
@@ -140,24 +139,25 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void SpawnLifeShieldsForNonHostPlayers()
         {
-            foreach (ulong playerClientId in PlayerDict.Keys)
-            {
-                if (playerClientId == 0) { continue; }
+            //foreach (ulong playerClientId in PlayerDict.Keys)
+            //{
+            //    if (playerClientId == 0) { continue; }
                 
-                var lifeShield = PlayerDict[playerClientId].LifeShield;
-                if (lifeShield != null)
-                {
-                    Destroy(lifeShield.gameObject);
-                }
-                SpawnLifeShield(playerClientId);
-            }
+            //    var lifeShield = PlayerDict[playerClientId].LifeShield;
+            //    if (lifeShield != null)
+            //    {
+            //        Destroy(lifeShield.gameObject);
+            //    }
+            //    SpawnLifeShield(playerClientId);
+            //}
         }
 
         private IEnumerator StartHuntingFlow()
         {
-            CurrentPhase = MofaPhase.Countdown;
-            yield return new WaitForSeconds(CountdownDuration);
-            CurrentPhase = MofaPhase.Fighting;
+            yield return null;
+            //CurrentPhase = MofaPhase.Countdown;
+            //yield return new WaitForSeconds(CountdownDuration);
+            //CurrentPhase = MofaPhase.Fighting;
         }
 
         public void OnDragonDead()
@@ -167,16 +167,17 @@ namespace Holoi.Reality.MOFATheHunting
 
         private IEnumerator OnDragonDeadCoroutine()
         {
-            CurrentPhase = MofaPhase.RoundOver;
-            yield return new WaitForSeconds(3f);
-            RoundResult = MofaRoundResult.RedTeamWins;
-            CurrentPhase = MofaPhase.RoundResult;
-            yield return new WaitForSeconds(3f);
-            CurrentPhase = MofaPhase.RoundData;
-            // Let the host to spawn a new dragon
-            _arPlaneManager.enabled = true;
-            _arRaycastManager.enabled = true;
-            _arPlacementIndicator.OnRestartFunc();
+            yield return null;
+            //CurrentPhase = MofaPhase.RoundOver;
+            //yield return new WaitForSeconds(3f);
+            //RoundResult = MofaRoundResult.RedTeamWins;
+            //CurrentPhase = MofaPhase.RoundResult;
+            //yield return new WaitForSeconds(3f);
+            //CurrentPhase = MofaPhase.RoundData;
+            //// Let the host to spawn a new dragon
+            //_arPlaneManager.enabled = true;
+            //_arRaycastManager.enabled = true;
+            //_arPlacementIndicator.OnRestartFunc();
         }
     }
 }

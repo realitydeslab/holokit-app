@@ -15,6 +15,20 @@ namespace Holoi.Library.HoloKitApp
 
         public HoloKitAppPlayer LocalPlayer => _playerDict[NetworkManager.LocalClientId];
 
+        public bool ShowPoseVisualizers
+        {
+            get => _showPoseVisualizers;
+            set
+            {
+                _showPoseVisualizers = value;
+            }
+        }
+
+        /// <summary>
+        /// If this value is set to true, the pose visualizers of all player with checked status will be shown.
+        /// </summary>
+        private bool _showPoseVisualizers = true;
+
         /// <summary>
         /// The dictionary which contains all connected player's PlayerObject.
         /// We need this dict because Netcode's default ConnectedClients is not
@@ -58,17 +72,6 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         public static event Action OnLocalPlayerChecked;
 
-        /// <summary>
-        /// This event is called when a player joined the network. This event is
-        /// called on every client.
-        /// </summary>
-        public static event Action<HoloKitAppPlayer> OnPlayerJoined;
-
-        /// <summary>
-        /// This event is called when a player left the network. This event is called on every client.
-        /// </summary>
-        public static event Action<HoloKitAppPlayer> OnPlayerLeft;
-
         public override void OnNetworkSpawn()
         {
             OnLocalPlayerConnected?.Invoke();
@@ -77,6 +80,19 @@ namespace Holoi.Library.HoloKitApp
         public override void OnNetworkDespawn()
         {
             OnLocalPlayerDisconnected?.Invoke();
+        }
+
+        private void Update()
+        {
+            foreach (var player in PlayerList)
+            {
+                if (player.IsLocalPlayer) continue;
+
+                if (player.Status.Value == HoloKitAppPlayerStatus.Checked)
+                    player.ShowPoseVisualizer = _showPoseVisualizers;
+                else
+                    player.ShowPoseVisualizer = false;
+            }
         }
 
         private void FixedUpdate()
@@ -90,20 +106,18 @@ namespace Holoi.Library.HoloKitApp
         /// This function is called when a player joins the network.
         /// </summary>
         /// <param name="player"></param>
-        public void AddPlayer(HoloKitAppPlayer player)
+        public void OnPlayerJoined(HoloKitAppPlayer player)
         {
             _playerDict.Add(player.OwnerClientId, player);
-            OnPlayerJoined(player);
         }
 
         /// <summary>
         /// This function is called when a player leaves the network.
         /// </summary>
         /// <param name="player"></param>
-        public void RemovePlayer(HoloKitAppPlayer player)
+        public void OnPlayerLeft(HoloKitAppPlayer player)
         {
             _playerDict.Remove(player.OwnerClientId);
-            OnPlayerLeft(player);
         }
     }
 }

@@ -23,10 +23,8 @@ namespace Holoi.Reality.MOFATheTraining
 
         private MofaPlayerAI _mofaPlayerAI;
 
-        protected override void Start()
+        private void Start()
         {
-            base.Start();
-
             if (HoloKitApp.Instance.IsHost)
             {
                 _arPlaneManager.enabled = true;
@@ -61,37 +59,37 @@ namespace Holoi.Reality.MOFATheTraining
 
         public override void TryStartRound()
         {
-            if (CurrentPhase != MofaPhase.Waiting && CurrentPhase != MofaPhase.RoundData)
-            {
-                Debug.Log($"[MofaTrainingRealityManager] You cannot start round at the current phase: {CurrentPhase}");
-                return;
-            }
+            //if (CurrentPhase != MofaPhase.Waiting && CurrentPhase != MofaPhase.RoundData)
+            //{
+            //    Debug.Log($"[MofaTrainingRealityManager] You cannot start round at the current phase: {CurrentPhase}");
+            //    return;
+            //}
 
-            if (RoundCount == 0)
-            {
-                if (_arPlacementIndicator != null && _arPlacementIndicator.IsActive && _arPlacementIndicator.IsValid)
-                {
-                    Vector3 position = _arPlacementIndicator.HitPoint.position;
-                    Quaternion rotation = _arPlacementIndicator.HitPoint.rotation;
-                    _arPlaneManager.enabled = false;
-                    _arRaycastManager.enabled = false;
-                    _arPlacementIndicator.OnPlacedFunc();
-                    var realityPreferences = HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId];
-                    _mofaPlayerAI.InitializeAvatarClientRpc(position,
-                                                            rotation,
-                                                            realityPreferences.MetaAvatarCollectionBundleId,
-                                                            realityPreferences.MetaAvatarTokenId);
-                    StartCoroutine(StartBaseRoundFlow());
-                }
-                else
-                {
-                    Debug.Log("[MOFATheTraining] Failed to start round");
-                }
-            }
-            else
-            {
-                StartCoroutine(StartBaseRoundFlow());
-            }
+            //if (RoundCount == 0)
+            //{
+            //    if (_arPlacementIndicator != null && _arPlacementIndicator.IsActive && _arPlacementIndicator.IsValid)
+            //    {
+            //        Vector3 position = _arPlacementIndicator.HitPoint.position;
+            //        Quaternion rotation = _arPlacementIndicator.HitPoint.rotation;
+            //        _arPlaneManager.enabled = false;
+            //        _arRaycastManager.enabled = false;
+            //        _arPlacementIndicator.OnPlacedFunc();
+            //        var realityPreferences = HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId];
+            //        _mofaPlayerAI.InitializeAvatarClientRpc(position,
+            //                                                rotation,
+            //                                                realityPreferences.MetaAvatarCollectionBundleId,
+            //                                                realityPreferences.MetaAvatarTokenId);
+            //        StartCoroutine(StartBaseRoundFlow());
+            //    }
+            //    else
+            //    {
+            //        Debug.Log("[MOFATheTraining] Failed to start round");
+            //    }
+            //}
+            //else
+            //{
+            //    StartCoroutine(StartBaseRoundFlow());
+            //}
         }
     }
 }

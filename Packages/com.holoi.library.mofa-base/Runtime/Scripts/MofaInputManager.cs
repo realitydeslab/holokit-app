@@ -163,10 +163,10 @@ namespace Holoi.Library.MOFABase
 
         private void OnRoundResult()
         {
-            var localPlayerIndividualStats = _mofaBaseRealityManager.GetIndividualStats();
-            MofaWatchConnectivityAPI.OnRoundEnded((int)localPlayerIndividualStats.IndividualRoundResult,
-                                                            localPlayerIndividualStats.Kill,
-                                                            localPlayerIndividualStats.HitRate);
+            //var localPlayerIndividualStats = _mofaBaseRealityManager.GetIndividualStats();
+            //MofaWatchConnectivityAPI.OnRoundEnded((int)localPlayerIndividualStats.IndividualRoundResult,
+            //                                                localPlayerIndividualStats.Kill,
+            //                                                localPlayerIndividualStats.HitRate);
         }
 
         private void FixedUpdate()
@@ -277,7 +277,7 @@ namespace Holoi.Library.MOFABase
         {
             if (ownerClientId == NetworkManager.Singleton.LocalClientId)
             {
-                if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting)
+                if (_mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.Fighting)
                 {
                     _isActive = true;
                     MofaWatchConnectivityAPI.QueryWatchState();
@@ -287,7 +287,7 @@ namespace Holoi.Library.MOFABase
 
         private void OnTriggered()
         {
-            if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting)
+            if (_mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.Fighting)
             {
                 if (IsActive)
                 {
@@ -298,7 +298,7 @@ namespace Holoi.Library.MOFABase
                     Debug.Log("[MofaInputManager] You cannot cast spells when you are dead :(");
                 }
             }
-            else if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Waiting || _mofaBaseRealityManager.CurrentPhase == MofaPhase.RoundData)
+            else if (_mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.Waiting || _mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.RoundData)
             {
                 _mofaBaseRealityManager.TryStartRound();
             }
@@ -315,7 +315,7 @@ namespace Holoi.Library.MOFABase
         #region Apple Watch
         private void OnReceivedRoundMessage()
         {
-            if (_mofaBaseRealityManager.CurrentPhase == MofaPhase.Fighting)
+            if (_mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.Fighting)
             {
                 MofaWatchConnectivityAPI.OnRoundStarted();
             }
@@ -347,8 +347,8 @@ namespace Holoi.Library.MOFABase
 
         private void OnReceivedHealthDataMessage(float distance, float calories)
         {
-            var localPlayer = _mofaBaseRealityManager.GetPlayer();
-            localPlayer.UpdateHealthDataServerRpc(distance, calories);
+            //var localPlayer = _mofaBaseRealityManager.GetPlayer();
+            //localPlayer.UpdateHealthDataServerRpc(distance, calories);
         }
         #endregion
     }
