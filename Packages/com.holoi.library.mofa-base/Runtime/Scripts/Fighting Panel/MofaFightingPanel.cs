@@ -72,46 +72,35 @@ namespace Holoi.Library.MOFABase
         {
             _canvas = GetComponent<Canvas>();
 
-            MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged += OnMofaPhaseChanged;
             HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
-            HoloKitAppRecorder.OnRecordingStarted += OnDisappear;
-            HoloKitAppRecorder.OnRecordingStopped += OnReappear;
-            //HoloKitAppMultiplayerManager.OnLocalPlayerChecked += OnReappear;
-            HoloKitAppUIPanel_MonoAR_RescanQRCode.OnRescanQRCode += OnDisappear;
-            HoloKitAppUIPanel_MonoAR_RescanQRCode.OnCancelRescanQRCode += OnReappear;
 
             Scores.gameObject.SetActive(false);
             Time.gameObject.SetActive(false);
             Reticle.gameObject.SetActive(false);
             Status.gameObject.SetActive(false);
             RedScreen.gameObject.SetActive(false);
-
-            if (!HoloKitApp.HoloKitApp.Instance.IsHost)
-            {
-                OnDisappear();
-            }
-        }
-
-        private void Update()
-        {
-            if (!_autoRotate || Screen.orientation == ScreenOrientation.LandscapeLeft) return;
-
-            if (Input.deviceOrientation != _deviceOrientation)
-            {
-                _deviceOrientation = Input.deviceOrientation;
-                OnDeviceOrientationChanged();
-            }
         }
 
         private void OnDestroy()
         {
-            MofaBaseRealityManager.OnMofaPhaseChanged -= OnPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged -= OnMofaPhaseChanged;
             HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
-            HoloKitAppRecorder.OnRecordingStarted -= OnDisappear;
-            HoloKitAppRecorder.OnRecordingStopped -= OnReappear;
-            //HoloKitAppMultiplayerManager.OnLocalPlayerChecked -= OnReappear;
-            HoloKitAppUIPanel_MonoAR_RescanQRCode.OnRescanQRCode -= OnDisappear;
-            HoloKitAppUIPanel_MonoAR_RescanQRCode.OnCancelRescanQRCode -= OnReappear;
+        }
+
+        private void Update()
+        {
+            // Auto screen orientation check
+            if (_autoRotate && Screen.orientation == ScreenOrientation.Portrait)
+            {
+                if (Input.deviceOrientation != _deviceOrientation)
+                {
+                    _deviceOrientation = Input.deviceOrientation;
+                    OnDeviceOrientationChanged();
+                }
+            }
+
+            CheckAppearance();
         }
 
         private void OnDeviceOrientationChanged()
@@ -126,6 +115,46 @@ namespace Holoi.Library.MOFABase
                 Rotator.localRotation = Quaternion.Euler(0f, 0f, -90f);
                 UpdateMofaFightingPanelParams(_monoLandscapeParams);
             }
+        }
+
+        private void CheckAppearance()
+        {
+            var holokitApp = HoloKitApp.HoloKitApp.Instance;
+            if (holokitApp.Recorder.IsRecording)
+            {
+                OnDisappear();
+                return;
+            }
+
+            if (holokitApp.IsHost)
+            {
+                if (holokitApp.MultiplayerManager.IsAdvertising)
+                {
+                    OnDisappear();
+                    return;
+                }
+            }
+            else
+            {
+                var localPlayer = holokitApp.MultiplayerManager.LocalPlayer;
+                if (localPlayer != null && localPlayer.Status.Value != HoloKitAppPlayerStatus.Checked)
+                {
+                    OnDisappear();
+                    return;
+                }
+            }
+
+            OnAppear();
+        }
+
+        private void OnDisappear()
+        {
+            Rotator.anchoredPosition = new Vector2(0f, 3000f);
+        }
+
+        private void OnAppear()
+        {
+            Rotator.anchoredPosition = Vector2.zero;
         }
 
         private void OnHoloKitRenderModeChanged(HoloKitRenderMode renderMode)
@@ -156,7 +185,7 @@ namespace Holoi.Library.MOFABase
             Status.localScale = new(fightingPanelParams.StatusScale, fightingPanelParams.StatusScale, fightingPanelParams.StatusScale);
         }
 
-        private void OnPhaseChanged(MofaPhase mofaPhase)
+        private void OnMofaPhaseChanged(MofaPhase mofaPhase)
         {
             switch (mofaPhase)
             {
@@ -198,16 +227,6 @@ namespace Holoi.Library.MOFABase
             Time.gameObject.SetActive(false);
             Reticle.gameObject.SetActive(false);
             Status.gameObject.SetActive(false);
-        }
-
-        private void OnDisappear()
-        {
-            Rotator.anchoredPosition = new Vector2(0f, 3000f);
-        }
-
-        private void OnReappear()
-        {
-            Rotator.anchoredPosition = Vector2.zero;
         }
     }
 }

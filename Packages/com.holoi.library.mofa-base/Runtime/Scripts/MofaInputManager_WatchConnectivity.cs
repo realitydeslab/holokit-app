@@ -72,6 +72,12 @@ namespace Holoi.Library.MOFABase
             //    return;
             //}
 
+            if (newPhase == MofaPhase.RoundOver)
+            {
+                var localMofaPlayer = _mofaBaseRealityManager.LocalMofaPlayer;
+                localMofaPlayer.Distance.Value = localMofaPlayer.AltDistance;
+            }
+
             if (newPhase == MofaPhase.RoundResult)
             {
                 var localPlayer = _mofaBaseRealityManager.LocalMofaPlayer;

@@ -116,6 +116,12 @@ namespace Holoi.Library.HoloKitApp
 
         public void StartRecording()
         {
+            if (HoloKitUtils.IsEditor)
+            {
+                Debug.Log("[HoloKitAppRecorder] Cannot record in editor mode");
+                return;
+            }
+
             StartRecordingInternal();
         }
 
@@ -191,6 +197,12 @@ namespace Holoi.Library.HoloKitApp
 
         public async void StopRecording()
         {
+            if (HoloKitUtils.IsEditor)
+            {
+                Debug.Log("[HoloKitAppRecorder] Cannot record in editor mode");
+                return;
+            }
+
             _watermarkInput?.Dispose();
             _cameraInput?.Dispose();
             if (_recordMicrophone)

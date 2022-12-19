@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Unity.Netcode;
+using Holoi.Library.HoloKitApp;
 using HoloKit;
 
 namespace Holoi.Library.MOFABase
@@ -29,43 +30,38 @@ namespace Holoi.Library.MOFABase
 
         protected virtual void Start()
         {
-            MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged += OnMofaPhaseChanged;
             LifeShield.OnBeingDestroyed += OnLifeShieldBeingDestroyed;
         }
 
         protected virtual void OnDestroy()
         {
-            MofaBaseRealityManager.OnMofaPhaseChanged -= OnPhaseChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged -= OnMofaPhaseChanged;
             LifeShield.OnBeingDestroyed -= OnLifeShieldBeingDestroyed;
         }
 
         protected void SpawnPopup(GameObject popupPrefab)
         {
             if (popupPrefab == null)
-            {
                 return;
-            }
             if (_currentPopup != null)
-            {
                 Destroy(_currentPopup);
-            }
+
             _currentPopup = Instantiate(popupPrefab);
             _currentPopup.transform.SetParent(_fightingPanelRoot);
             _currentPopup.transform.localPosition = Vector3.zero;
             _currentPopup.transform.localRotation = Quaternion.identity;
-            _currentPopup.transform.localScale = Vector3.one;
+            float scale = HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono ? 1f : PopupStarScale;
+            _currentPopup.transform.localScale = new Vector3(scale, scale, scale);
         }
 
         protected IEnumerator SpawnPopupAndDestroy(GameObject popupPrefab, float destroyDelay)
         {
             if (popupPrefab == null)
-            {
                 yield return null;
-            }
             if (_currentPopup != null)
-            {
                 Destroy(_currentPopup);
-            }
+
             _currentPopup = Instantiate(popupPrefab);
             _currentPopup.transform.SetParent(_fightingPanelRoot);
             _currentPopup.transform.localPosition = Vector3.zero;
@@ -75,17 +71,15 @@ namespace Holoi.Library.MOFABase
 
             yield return new WaitForSeconds(destroyDelay);
             if (_currentPopup != null)
-            {
                 Destroy(_currentPopup);
-            }
         }
 
-        protected virtual void OnPhaseChanged(MofaPhase mofaPhase)
+        protected virtual void OnMofaPhaseChanged(MofaPhase mofaPhase)
         {
             switch (mofaPhase)
             {
                 case MofaPhase.Waiting:
-                    UpdateSummaryBoard();
+                    SpawnPopup(_summaryBoardPrefab);
                     break;
                 case MofaPhase.Countdown:
                     StartCoroutine(SpawnPopupAndDestroy(_countdownPrefab, 4f));
@@ -96,58 +90,29 @@ namespace Holoi.Library.MOFABase
                     StartCoroutine(SpawnPopupAndDestroy(_roundOverPrefab, 4f));
                     break;
                 case MofaPhase.RoundResult:
+                    OnRoundResult();
                     break;
             }
         }
 
-        private void OnReceivedRoundResult(MofaGeneralRoundResult roundResult)
+        private void OnRoundResult()
         {
-            //if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
-            //{
-            //    // TODO: Play blue team wins or red team wins on spectator
-            //    return;
-            //}
-
-            //if (roundResult == MofaRoundResult.Draw)
-            //{
-            //    StartCoroutine(SpawnPopupAndDestroy(_drawPrefab, 3f));
-            //    return;
-            //}
-
-            //MofaTeam team = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).GetPlayer().Team.Value;
-            //if (team == MofaTeam.Blue)
-            //{
-            //    if (roundResult == MofaRoundResult.BlueTeamWins)
-            //    {
-            //        StartCoroutine(SpawnPopupAndDestroy(_victoryPrefab, 3f));
-            //    }
-            //    else
-            //    {
-            //        StartCoroutine(SpawnPopupAndDestroy(_defeatPrefab, 3f));
-            //    }
-            //}
-            //else if (team == MofaTeam.Red)
-            //{
-            //    if (roundResult == MofaRoundResult.RedTeamWins)
-            //    {
-            //        StartCoroutine(SpawnPopupAndDestroy(_victoryPrefab, 3f));
-            //    }
-            //    else
-            //    {
-            //        StartCoroutine(SpawnPopupAndDestroy(_defeatPrefab, 3f));
-            //    }
-            //}
-        }
-
-        protected SummaryBoard SpawnSummaryBoard()
-        {
-            SpawnPopup(_summaryBoardPrefab);
-            return _currentPopup.GetComponent<SummaryBoard>();
-        }
-
-        protected virtual void UpdateSummaryBoard()
-        {
-            
+            var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            var localMofaPlayer = mofaBaseRealityManager.LocalMofaPlayer;
+            // Get the personal round result for the local player
+            var personalRoundResult = mofaBaseRealityManager.GetPersonalRoundResult(localMofaPlayer);
+            switch (personalRoundResult)
+            {
+                case MofaPersonalRoundResult.Victory:
+                    StartCoroutine(SpawnPopupAndDestroy(_victoryPrefab, 3f));
+                    break;
+                case MofaPersonalRoundResult.Defeat:
+                    StartCoroutine(SpawnPopupAndDestroy(_defeatPrefab, 3f));
+                    break;
+                case MofaPersonalRoundResult.Draw:
+                    StartCoroutine(SpawnPopupAndDestroy(_drawPrefab, 3f));
+                    break;
+            }
         }
 
         private void OnLifeShieldBeingDestroyed(ulong _, ulong ownerClientId)

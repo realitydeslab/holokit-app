@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using TMPro;
 
@@ -14,7 +15,7 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] private TMP_Text _blueTeamDistanceText;
 
-        [SerializeField] private TMP_Text _blueTeamCaloriesText;
+        [SerializeField] private TMP_Text _blueTeamEnergyText;
 
         [Header("Red Team")]
         [SerializeField] private TMP_Text _redTeamNameText;
@@ -25,7 +26,7 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] private TMP_Text _redTeamDistanceText;
 
-        [SerializeField] private TMP_Text _redTeamCaloriesText;
+        [SerializeField] private TMP_Text _redTeamEnergyText;
 
         public string BlueTeamName
         {
@@ -59,11 +60,11 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        public string BlueTeamCalories
+        public string BlueTeamEnergy
         {
             set
             {
-                _blueTeamCaloriesText.text = value + "kcal";
+                _blueTeamEnergyText.text = value + "kcal";
             }
         }
 
@@ -99,12 +100,33 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        public string RedTeamCalories
+        public string RedTeamEnergy
         {
             set
             {
-                _redTeamCaloriesText.text = value + "kcal";
+                _redTeamEnergyText.text = value + "kcal";
             }
+        }
+
+        // TODO: Upgrade this to support more than 2 players
+        private void Update()
+        {
+            var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            var mofaPlayerList = mofaBaseRealityManager.MofaPlayerList;
+
+            var blueTeamPlayer = mofaPlayerList.FirstOrDefault(t => t.Team.Value == MofaTeam.Blue);
+            var blueTeamPlayerStats = mofaBaseRealityManager.GetPlayerStats(blueTeamPlayer);
+            BlueTeamKill = blueTeamPlayerStats.Kill.ToString();
+            BlueTeamHitRate = Mathf.RoundToInt(blueTeamPlayerStats.HitRate * 100).ToString();
+            BlueTeamDistance = Mathf.RoundToInt(blueTeamPlayerStats.Distance).ToString();
+            BlueTeamEnergy = Mathf.RoundToInt(blueTeamPlayerStats.Energy).ToString();
+    
+            var redTeamPlayer = mofaPlayerList.FirstOrDefault(t => t.Team.Value == MofaTeam.Red);
+            var redTeamPlayerStats = mofaBaseRealityManager.GetPlayerStats(redTeamPlayer);
+            RedTeamKill = redTeamPlayerStats.Kill.ToString();
+            RedTeamHitRate = Mathf.RoundToInt(redTeamPlayerStats.HitRate * 100).ToString();
+            RedTeamDistance = Mathf.RoundToInt(redTeamPlayerStats.Distance).ToString();
+            RedTeamEnergy = Mathf.RoundToInt(redTeamPlayerStats.Energy).ToString();
         }
     }
 }

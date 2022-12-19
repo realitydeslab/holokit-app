@@ -30,30 +30,5 @@ namespace Holoi.Reality.MOFATheTraining
         {
             SpawnPopup(_findPlanePrefab);
         }
-
-        protected override void UpdateSummaryBoard()
-        {
-            //var mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-            //if (mofaBaseRealityManager.CurrentPhase != MofaPhase.RoundData) return;
-
-            //var summaryBoard = SpawnSummaryBoard();
-            //// For the player, which in blue team
-            //var humanPlayer = mofaBaseRealityManager.PlayerDict[0];
-            //var humanPlayerStats = mofaBaseRealityManager.GetIndividualStats(humanPlayer);
-            //summaryBoard.BlueTeamName = "Player";
-            //summaryBoard.BlueTeamKill = humanPlayerStats.Kill.ToString();
-            //summaryBoard.BlueTeamHitRate = humanPlayerStats.HitRate.ToString();
-            //summaryBoard.BlueTeamDistance = humanPlayerStats.Distance.ToString();
-            //summaryBoard.BlueTeamCalories = humanPlayerStats.Energy.ToString();
-
-            //// For the avatar, which is red team
-            //var aiPlayer = mofaBaseRealityManager.PlayerDict[MofaPlayerAI.AIClientId];
-            //var aiPlayerStats = mofaBaseRealityManager.GetIndividualStats(aiPlayer);
-            //summaryBoard.RedTeamName = "Avatar";
-            //summaryBoard.RedTeamKill = aiPlayerStats.Kill.ToString();
-            //summaryBoard.RedTeamHitRate = aiPlayerStats.HitRate.ToString();
-            //summaryBoard.RedTeamDistance = aiPlayerStats.Distance.ToString();
-            //summaryBoard.RedTeamCalories = aiPlayerStats.Energy.ToString();
-        }
     }
 }

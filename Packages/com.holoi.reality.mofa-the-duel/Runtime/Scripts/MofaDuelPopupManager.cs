@@ -1,5 +1,5 @@
+using System.Linq;
 using UnityEngine;
-using Unity.Netcode;
 using Holoi.Library.MOFABase;
 using Holoi.Library.HoloKitApp;
 
@@ -18,7 +18,7 @@ namespace Holoi.Reality.MOFATheDuel
             if (HoloKitApp.Instance.IsPlayer)
             {
                 SpawnPopup(_getReadyPrefab);
-                //MofaPlayer.OnMofaPlayerReadyStateChanged += OnMofaPlayerReadyStateChanged;
+                MofaPlayer.OnMofaPlayerReadyChanged += OnMofaPlayerReadyChanged;
             }
         }
 
@@ -27,50 +27,19 @@ namespace Holoi.Reality.MOFATheDuel
             base.OnDestroy();
             if (HoloKitApp.Instance.IsPlayer)
             {
-                //MofaPlayer.OnMofaPlayerReadyStateChanged -= OnMofaPlayerReadyStateChanged;
+                MofaPlayer.OnMofaPlayerReadyChanged -= OnMofaPlayerReadyChanged;
             }
         }
 
-        private void OnMofaPlayerReadyStateChanged(ulong ownerClientId, bool ready)
+        private void OnMofaPlayerReadyChanged(MofaPlayer mofaPlayer)
         {
-            if (ownerClientId == NetworkManager.Singleton.LocalClientId)
+            if (mofaPlayer.IsLocalPlayer)
             {
-                SpawnPopup(_waitingOthersPrefab);
-            }
-        }
-
-        protected override void UpdateSummaryBoard()
-        {
-            //var mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-            //if (mofaBaseRealityManager.CurrentPhase != MofaPhase.RoundData) return;
-
-            //var summaryBoard = SpawnSummaryBoard();
-            //// For the player, which in blue team
-            //var humanPlayer = mofaBaseRealityManager.PlayerDict[0];
-            //var humanPlayerStats = mofaBaseRealityManager.GetIndividualStats(humanPlayer);
-            //summaryBoard.BlueTeamName = "Blue";
-            //summaryBoard.BlueTeamKill = humanPlayerStats.Kill.ToString();
-            //summaryBoard.BlueTeamHitRate = humanPlayerStats.HitRate.ToString();
-            //summaryBoard.BlueTeamDistance = humanPlayerStats.Distance.ToString();
-            //summaryBoard.BlueTeamCalories = humanPlayerStats.Energy.ToString();
-
-            //// For the avatar, which is red team
-            //MofaPlayer secondPlayer = null;
-            //foreach (var player in mofaBaseRealityManager.PlayerDict.Values)
-            //{
-            //    if (player.OwnerClientId == 0) continue;
-            //    if (player.Team.Value == MofaTeam.Red)
-            //    {
-            //        secondPlayer = player;
-            //        break;
-            //    }
-            //}
-            //var secondPlayerStats = mofaBaseRealityManager.GetIndividualStats(secondPlayer);
-            //summaryBoard.RedTeamName = "Red";
-            //summaryBoard.RedTeamKill = secondPlayerStats.Kill.ToString();
-            //summaryBoard.RedTeamHitRate = secondPlayerStats.HitRate.ToString();
-            //summaryBoard.RedTeamDistance = secondPlayerStats.Distance.ToString();
-            //summaryBoard.RedTeamCalories = secondPlayerStats.Energy.ToString();
+                var mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+                var mofaPlayerList = mofaBaseRealityManager.MofaPlayerList;
+                if (mofaPlayerList.Any(t => t.Ready.Value == false))
+                    SpawnPopup(_waitingOthersPrefab);
+            }  
         }
     }
 }
