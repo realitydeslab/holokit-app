@@ -24,7 +24,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            HoloKitAppUIEventManager.OnTriggered?.Invoke();
+            HoloKitAppUIEventManager.OnStarUITriggered?.Invoke();
             _untriggered.SetActive(false);
             _triggered.SetActive(true);
             _starARPanel.OnTriggerButtonPressed();

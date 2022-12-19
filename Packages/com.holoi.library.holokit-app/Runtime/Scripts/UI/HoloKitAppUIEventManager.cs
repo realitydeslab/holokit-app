@@ -7,8 +7,6 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         #region Mono AR Panel
         public static Action<HoloKitRenderMode> OnRenderModeChanged;
-
-        public static Action OnExitReality;
         #endregion
 
         #region Reality Settings Panel
@@ -16,13 +14,9 @@ namespace Holoi.Library.HoloKitApp.UI
         #endregion
 
         #region Star AR Panel
-        public static Action OnTriggered;
+        public static Action OnStarUITriggered;
 
-        public static Action OnBoosted;
-        #endregion
-
-        #region Others
-        public static Action OnExitNoLiDARScene;
+        public static Action OnStarUIBoosted;
         #endregion
     }
 }

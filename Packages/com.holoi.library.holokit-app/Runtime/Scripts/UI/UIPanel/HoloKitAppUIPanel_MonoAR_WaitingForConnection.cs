@@ -80,7 +80,7 @@ namespace Holoi.Library.HoloKitApp.UI
         public void OnExitButtonPressed()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-            HoloKitAppUIEventManager.OnExitReality?.Invoke();
+            HoloKitApp.Instance.Shutdown();
         }
     }
 }

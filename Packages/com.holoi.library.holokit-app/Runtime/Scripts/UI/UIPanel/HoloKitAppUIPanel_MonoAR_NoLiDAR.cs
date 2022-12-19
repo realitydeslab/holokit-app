@@ -8,7 +8,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public void OnExitButtonPressed()
         {
-            HoloKitAppUIEventManager.OnExitNoLiDARScene?.Invoke();
+            HoloKitApp.Instance.ExitNoLiDARScene();
         }
     }
 }

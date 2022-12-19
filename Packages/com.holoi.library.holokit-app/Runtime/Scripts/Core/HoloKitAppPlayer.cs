@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Animations;
 using Unity.Netcode;
+using Unity.Netcode.Components.ClientAuthority;
 using Unity.Collections;
 using HoloKit;
 
@@ -29,6 +30,9 @@ namespace Holoi.Library.HoloKitApp
         Disconnected = 5
     }
 
+    [RequireComponent(typeof(NetworkObject))]
+    [RequireComponent(typeof(ClientNetworkTransform))]
+    [RequireComponent(typeof(ParentConstraint))]
     public class HoloKitAppPlayer : NetworkBehaviour
     {
         /// <summary>
@@ -39,8 +43,6 @@ namespace Holoi.Library.HoloKitApp
         public NetworkVariable<HoloKitAppPlayerType> Type = new(HoloKitAppPlayerType.Player, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         public NetworkVariable<HoloKitAppPlayerStatus> Status = new(HoloKitAppPlayerStatus.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
-        [SerializeField] private HoloKitAppPlayerPoseVisualizer _poseVisualizerPrefab; 
 
         public bool ShowPoseVisualizer
         {
@@ -125,7 +127,8 @@ namespace Holoi.Library.HoloKitApp
         {
             if (_poseVisualizer == null)
             {
-                _poseVisualizer = Instantiate(_poseVisualizerPrefab);
+                var poseVisualizerPrefab = HoloKitApp.Instance.MultiplayerManager.PoseVisualizerPrefab;
+                _poseVisualizer = Instantiate(poseVisualizerPrefab);
                 _poseVisualizer.Player = this;
             }
         }

@@ -9,6 +9,7 @@ namespace Holoi.Library.HoloKitApp
     [DisallowMultipleComponent]
     public abstract class RealityManager : NetworkBehaviour
     {
+        [Header("Basics")]
         public GameObject PlayerPrefab;
 
         public List<GameObject> NetworkPrefabs;

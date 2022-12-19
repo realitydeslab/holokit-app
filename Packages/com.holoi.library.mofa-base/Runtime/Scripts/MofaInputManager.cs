@@ -2,21 +2,20 @@ using System;
 using UnityEngine;
 using Unity.Netcode;
 using HoloKit;
-using Holoi.Library.HoloKitApp.UI;
-using Holoi.Library.HoloKitApp.WatchConnectivity;
 using Holoi.Library.HoloKitApp.WatchConnectivity.MOFA;
 
 namespace Holoi.Library.MOFABase
 {
-    public class MofaInputManager : MonoBehaviour
+    public partial class MofaInputManager : MonoBehaviour
     {
-        public bool IsActive => _isActive;
-
         public float BasicSpellChargePercentage
         {
             get
             {
-                return _basicSpellCharge / (_basicSpell.ChargeTime * _basicSpell.MaxChargeCount);
+                if (_basicSpell == null)
+                    return 0f;
+                else
+                    return _basicSpellCharge / (_basicSpell.ChargeTime * _basicSpell.MaxChargeCount);
             }
         }
 
@@ -24,22 +23,34 @@ namespace Holoi.Library.MOFABase
         {
             get
             {
-                if (_secondarySpell != null)
-                {
-                    return _secondarySpellCharge / _secondarySpell.ChargeTime;
-                }
-                else
-                {
+                if (_secondarySpell == null)
                     return 0f;
-                }
+                else
+                    return _secondarySpellCharge / _secondarySpell.ChargeTime;
             }
         }
 
-        public int SecondarySpellMaxUseCount => _secondarySpell.MaxUseCount;
+        public int SecondarySpellMaxUseCount
+        {
+            get
+            {
+                if (_secondarySpell == null)
+                    return 0;
+                else
+                    return _secondarySpell.MaxUseCount;
+            }
+        }
 
-        public int SecondarySpellUseCount => _secondarySpellUseCount;
-
-        public MofaWatchState CurrentWatchState => _currentWatchState;
+        public int SecondarySpellUseCount
+        {
+            get
+            {
+                if (_secondarySpell == null)
+                    return 0;
+                else
+                    return _secondarySpellUseCount;
+            }
+        }
 
         private bool _isActive;
 
@@ -53,60 +64,24 @@ namespace Holoi.Library.MOFABase
 
         private int _secondarySpellUseCount;
 
-        private MofaWatchState _currentWatchState;
-
         private MofaBaseRealityManager _mofaBaseRealityManager;
 
-        private Transform _centerEyePose;
+        public static event Action OnBasicSpellNotCharged;
 
-        public static event Action<SpellType> OnSpawnSpellFailed;
+        public static event Action OnSecondarySpellExceededMaxUseCount;
 
         private void Start()
         {
-            // Only players need inputs
-            if (!HoloKitApp.HoloKitApp.Instance.IsPlayer)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            // Find necessary references
             _mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-            _centerEyePose = HoloKitCamera.Instance.CenterEyePose;
-            // Setup MofaWatchConnectivity
-            MofaWatchConnectivityAPI.Initialize();
-            // Sync selected magic school to Watch
-            MofaWatchConnectivityAPI.UpdateMagicSchool(int.Parse(HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId));
-            // We then update the control on Watch side so that MofaWatchConnectivityManager won't miss messages.
-            HoloKitAppWatchConnectivityAPI.UpdateWatchPanel(HoloKitWatchPanel.MOFA);
-
-            MofaWatchConnectivityAPI.OnReceivedStartRoundMessage += OnReceivedRoundMessage;
-            MofaWatchConnectivityAPI.OnWatchStateChanged += OnWatchStateChanged;
-            MofaWatchConnectivityAPI.OnWatchTriggered += OnWatchTriggered;
-            MofaWatchConnectivityAPI.OnReceivedHealthDataMessage += OnReceivedHealthDataMessage;
-
+            InitializeWatchConnectivity();
+            InitializeStarUI();
             SetupSpells();
-            MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
-            LifeShield.OnBeingDestroyed += OnLifeShieldDestroyed;
-            LifeShield.OnRenovated += OnLifeShieldRenovated;
-
-            HoloKitAppUIEventManager.OnTriggered += OnTriggered;
-            HoloKitAppUIEventManager.OnBoosted += OnBoosted;
         }
 
         private void OnDestroy()
         {
-            MofaWatchConnectivityAPI.OnReceivedStartRoundMessage -= OnReceivedRoundMessage;
-            MofaWatchConnectivityAPI.OnWatchStateChanged -= OnWatchStateChanged;
-            MofaWatchConnectivityAPI.OnWatchTriggered -= OnWatchTriggered;
-            MofaWatchConnectivityAPI.OnReceivedHealthDataMessage -= OnReceivedHealthDataMessage;
-
-            MofaBaseRealityManager.OnMofaPhaseChanged -= OnPhaseChanged;
-            LifeShield.OnBeingDestroyed -= OnLifeShieldDestroyed;
-            LifeShield.OnRenovated -= OnLifeShieldRenovated;
-
-            HoloKitAppUIEventManager.OnTriggered -= OnTriggered;
-            HoloKitAppUIEventManager.OnBoosted -= OnBoosted;
+            DeinitializeWatchConnectivity();
+            DeinitializeStarUI();
         }
 
         private void SetupSpells()
@@ -130,49 +105,43 @@ namespace Holoi.Library.MOFABase
                 }
                 if (count == 2)
                 {
-                    return;
+                    break;
                 }
             }
+            // Error check
+            if (_basicSpell == null)
+                Debug.LogError("[MofaInputManager] Failed to setup basic spell");
+            if (_secondarySpell == null)
+                Debug.LogError("[MofaInputManager] Failed to setup secondary spell");
         }
 
-        private void OnPhaseChanged(MofaPhase newPhase)
+        /// <summary>
+        /// This function is used to check whether the input manager is active
+        /// at the current moment.
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckIsActive()
         {
-            switch (newPhase)
-            {
-                case MofaPhase.Waiting:
-                    break;
-                case MofaPhase.Countdown:
-                    Reset();
-                    // _mofaBaseRealityManager.GetPlayer().MagicSchoolTokenId.Value
-                    MofaWatchConnectivityAPI.OnRoundStarted();
-                    break;
-                case MofaPhase.Fighting:
-                    _isActive = true;
-                    MofaWatchConnectivityAPI.QueryWatchState();
-                    break;
-                case MofaPhase.RoundOver:
-                    _isActive = false;
-                    break;
-                case MofaPhase.RoundResult:
-                    OnRoundResult();
-                    break;
-            }
-        }
+            if (_mofaBaseRealityManager.CurrentPhase.Value != MofaPhase.Fighting)
+                return false;
 
-        private void OnRoundResult()
-        {
-            //var localPlayerIndividualStats = _mofaBaseRealityManager.GetIndividualStats();
-            //MofaWatchConnectivityAPI.OnRoundEnded((int)localPlayerIndividualStats.IndividualRoundResult,
-            //                                                localPlayerIndividualStats.Kill,
-            //                                                localPlayerIndividualStats.HitRate);
+            var localMofaPlayer = _mofaBaseRealityManager.LocalMofaPlayer;
+            if (localMofaPlayer == null)
+                return false;
+
+            if (localMofaPlayer.LifeShield == null)
+                return false;
+
+            if (localMofaPlayer.LifeShield.IsDestroyed)
+                return false;
+
+            return true;
         }
 
         private void FixedUpdate()
         {
-            if (!IsActive)
-            {
+            if (_isActive = CheckIsActive() == false)
                 return;
-            }
 
             if (_basicSpellCharge < _basicSpell.ChargeTime * _basicSpell.MaxChargeCount)
             {
@@ -183,7 +152,7 @@ namespace Holoi.Library.MOFABase
                 }
             }
 
-            if (_currentWatchState == MofaWatchState.Ground)
+            if (CurrentWatchState == MofaWatchState.Ground)
             {
                 if (_secondarySpellCharge < _secondarySpell.ChargeTime)
                 {
@@ -210,50 +179,66 @@ namespace Holoi.Library.MOFABase
             _secondarySpellUseCount = 0;
         }
 
-        private void SpawnBasicSpell()
+        private void TryCastSpell()
         {
-            if (!IsActive)
+            if (_secondarySpellCharge >= _secondarySpell.ChargeTime)
+                TryCastSecondarySpell();
+            else
+                TryCastBasicSpell();
+        }
+
+        private void TryCastBasicSpell()
+        {
+            if (!_isActive)
             {
-                Debug.Log("[MofaInputManager] Not active");
+                Debug.Log("[MofaInputManager] Cannot cast spell when inactive");
                 return;
             }
 
             if (_basicSpellCharge < _basicSpell.ChargeTime)
             {
                 Debug.Log("[MofaInputManager] Basic spell not charged");
-                OnSpawnSpellFailed?.Invoke(SpellType.Basic);
-            }
-            else
-            {
-                _mofaBaseRealityManager.SpawnSpellServerRpc(_basicSpell.Id,
-                    HoloKitCamera.Instance.CenterEyePose.position,
-                    //HoloKitCamera.Instance.CenterEyePose.rotation,
-                    GetCameraGravitationalRotation(),
-                    NetworkManager.Singleton.LocalClientId);
-                _basicSpellCharge -= _basicSpell.ChargeTime;
-            }
-        }
-
-        private void SpawnSecondarySpell()
-        {
-            if (!IsActive)
-            {
-                Debug.Log("[MofaInputManager] Not active");
+                OnBasicSpellNotCharged?.Invoke();
                 return;
             }
+
+            CastBasicSpell();
+        }
+
+        private void CastBasicSpell()
+        {
+            _mofaBaseRealityManager.SpawnSpellServerRpc(_basicSpell.Id,
+                HoloKitCamera.Instance.CenterEyePose.position,
+                GetCameraGravitationalRotation(),
+                NetworkManager.Singleton.LocalClientId);
+            _basicSpellCharge -= _basicSpell.ChargeTime;
+        }
+
+        private void TryCastSecondarySpell()
+        {
+            if (!_isActive)
+            {
+                Debug.Log("[MofaInputManager] Cannot cast spell when inactive");
+                return;
+            } 
 
             if (_secondarySpellUseCount > _secondarySpell.MaxUseCount)
             {
-                Debug.Log("[MofaInputManager] Exceed secondary spell use count");
-                OnSpawnSpellFailed?.Invoke(SpellType.Secondary);
+                Debug.Log("[MofaInputManager] Secondary spell exceeded max use count");
+                OnSecondarySpellExceededMaxUseCount?.Invoke();
                 return;
             }
 
+            CastSecondarySpell();
+        }
+
+        private void CastSecondarySpell()
+        {
             _mofaBaseRealityManager.SpawnSpellServerRpc(_secondarySpell.Id,
                 HoloKitCamera.Instance.CenterEyePose.position,
-                HoloKitCamera.Instance.CenterEyePose.rotation,
+                GetCameraGravitationalRotation(),
                 NetworkManager.Singleton.LocalClientId);
-            _secondarySpellCharge -= _secondarySpell.ChargeTime;
+            _secondarySpellCharge = 0f;
             _secondarySpellUseCount++;
         }
 
@@ -262,92 +247,5 @@ namespace Holoi.Library.MOFABase
             Vector3 cameraRotationEuler = HoloKitCamera.Instance.CenterEyePose.rotation.eulerAngles;
             return Quaternion.Euler(cameraRotationEuler.x, cameraRotationEuler.y, 0f);
         }
-
-        private void OnLifeShieldDestroyed(ulong _, ulong ownerClientId)
-        {
-            if (ownerClientId == NetworkManager.Singleton.LocalClientId)
-            {
-                _isActive = false;
-            }
-        }
-
-        private void OnLifeShieldRenovated(ulong ownerClientId)
-        {
-            if (ownerClientId == NetworkManager.Singleton.LocalClientId)
-            {
-                if (_mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.Fighting)
-                {
-                    _isActive = true;
-                    MofaWatchConnectivityAPI.QueryWatchState();
-                }
-            }
-        }
-
-        private void OnTriggered()
-        {
-            if (_mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.Fighting)
-            {
-                if (IsActive)
-                {
-                    SpawnBasicSpell();
-                }
-                else
-                {
-                    Debug.Log("[MofaInputManager] You cannot cast spells when you are dead :(");
-                }
-            }
-            else if (_mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.Waiting)
-            {
-                _mofaBaseRealityManager.StartRound();
-            }
-        }
-
-        private void OnBoosted()
-        {
-            if (IsActive)
-            {
-                SpawnSecondarySpell();
-            }
-        }
-
-        #region Apple Watch
-        private void OnReceivedRoundMessage()
-        {
-            if (_mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.Fighting)
-            {
-                MofaWatchConnectivityAPI.OnRoundStarted();
-            }
-            else
-            {
-                _mofaBaseRealityManager.StartRound();
-            }
-        }
-
-        private void OnWatchStateChanged(MofaWatchState watchState)
-        {
-            _currentWatchState = watchState;
-        }
-
-        private void OnWatchTriggered()
-        {
-            if (IsActive)
-            {
-                if (_secondarySpellCharge >= _secondarySpell.ChargeTime)
-                {
-                    SpawnSecondarySpell();
-                }
-                else
-                {
-                    SpawnBasicSpell();
-                }
-            }
-        }
-
-        private void OnReceivedHealthDataMessage(float distance, float calories)
-        {
-            //var localPlayer = _mofaBaseRealityManager.GetPlayer();
-            //localPlayer.UpdateHealthDataServerRpc(distance, calories);
-        }
-        #endregion
     }
 }

@@ -42,7 +42,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void Start()
         {
-            HoloKitAppUIEventManager.OnTriggered += OnStarUITriggered;
+            HoloKitAppUIEventManager.OnStarUITriggered += OnStarUITriggered;
             UI.MofaHuntingUIPanel.OnSpawnDragonButtonPressed += OnStarUITriggered;
 
             if (HoloKitApp.Instance.IsHost)
@@ -61,7 +61,7 @@ namespace Holoi.Reality.MOFATheHunting
         public override void OnDestroy()
         {
             base.OnDestroy();
-            HoloKitAppUIEventManager.OnTriggered -= OnStarUITriggered;
+            HoloKitAppUIEventManager.OnStarUITriggered -= OnStarUITriggered;
             UI.MofaHuntingUIPanel.OnSpawnDragonButtonPressed -= OnStarUITriggered;
         }
 
@@ -75,6 +75,11 @@ namespace Holoi.Reality.MOFATheHunting
                     return;
                 }
             }
+        }
+
+        public override void TryGetReady()
+        {
+            throw new System.NotImplementedException();
         }
 
         // Host only

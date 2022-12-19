@@ -26,7 +26,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             base.OnTriggerred();
 
-            HoloKitAppUIEventManager.OnBoosted?.Invoke();
+            HoloKitAppUIEventManager.OnStarUIBoosted?.Invoke();
         }
     }
 }

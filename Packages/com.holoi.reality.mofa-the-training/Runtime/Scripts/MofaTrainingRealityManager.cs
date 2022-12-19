@@ -57,6 +57,11 @@ namespace Holoi.Reality.MOFATheTraining
             _mofaPlayerAI.GetComponent<NetworkObject>().SpawnWithOwnership(MofaPlayerAI.AIClientId);
         }
 
+        public override void TryGetReady()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override void StartRound()
         {
             //if (CurrentPhase != MofaPhase.Waiting && CurrentPhase != MofaPhase.RoundData)

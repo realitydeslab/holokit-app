@@ -28,7 +28,7 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity.MOFA
         private static extern void MofaWatchConnectivity_QueryWatchState();
 
         [DllImport("__Internal")]
-        private static extern void MofaWatchConnectivity_OnRoundEnded(int result, int kill, int hitRate);
+        private static extern void MofaWatchConnectivity_OnRoundEnded(int result, int kill, float hitRate);
 
         [AOT.MonoPInvokeCallback(typeof(Action))]
         private static void OnReceivedStartRoundMessageDelegate()
@@ -93,7 +93,7 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity.MOFA
             MofaWatchConnectivity_QueryWatchState();
         }
 
-        public static void OnRoundEnded(int result, int kill, int hitRate)
+        public static void OnRoundEnded(int result, int kill, float hitRate)
         {
             if (HoloKit.HoloKitUtils.IsEditor) return;
 

@@ -15,6 +15,11 @@ namespace Holoi.Reality.MOFATheDuel
             
         }
 
+        public override void TryGetReady()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override void StartRound()
         {
             //if (CurrentPhase == MofaPhase.Waiting || CurrentPhase == MofaPhase.RoundData)

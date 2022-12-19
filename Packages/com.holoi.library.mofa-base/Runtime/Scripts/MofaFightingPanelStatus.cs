@@ -49,11 +49,8 @@ namespace Holoi.Library.MOFABase
 
         private void Update()
         {
-            if (_inputManager.IsActive)
-            {
-                _attackBar.SetFloat("Loading Process", _inputManager.BasicSpellChargePercentage);
-                _ultimateBar.SetFloat("Loading Process", _inputManager.SecondarySpellChargePercentage);
-            }
+            _attackBar.SetFloat("Loading Process", _inputManager.BasicSpellChargePercentage);
+            _ultimateBar.SetFloat("Loading Process", _inputManager.SecondarySpellChargePercentage);
         }
 
         public void SetLifeShield(LifeShield lifeShield)

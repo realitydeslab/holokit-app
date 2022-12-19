@@ -86,13 +86,14 @@ namespace Holoi.Library.MOFABase
         /// </summary>
         [SerializeField] private MofaPlayer _mofaPlayerPrefab;
 
-        [Header("MOFA Settings")]
+        [Header("Settings")]
         [Tooltip("The duration of the countdown phase")]
         public float CountdownDuration = 3f;
 
         [Tooltip("The duration of a single round")]
         public float RoundDuration = 80f;
 
+        [Header("Network Variables")]
         /// <summary>
         /// The current phase of the game.
         /// </summary>
@@ -103,7 +104,7 @@ namespace Holoi.Library.MOFABase
         /// </summary>
         public NetworkVariable<int> RoundCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        public MofaPlayer MofaHostPlayer
+        public MofaPlayer HostMofaPlayer
         {
             get
             {
@@ -112,7 +113,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        public MofaPlayer MofaLocalPlayer
+        public MofaPlayer LocalMofaPlayer
         {
             get
             {
@@ -211,6 +212,11 @@ namespace Holoi.Library.MOFABase
             }
         }
 
+        /// <summary>
+        /// This function is called when the local player tries to get ready.
+        /// </summary>
+        public abstract void TryGetReady();
+
         private void OnMofaPlayerReadyChanged(MofaPlayer mofaPlayer)
         {
             if (!IsServer) return;
@@ -218,12 +224,16 @@ namespace Holoi.Library.MOFABase
             if (mofaPlayer.Ready.Value)
             {
                 var mofaPlayerList = MofaPlayerList;
-                int readyPlayerCount = mofaPlayerList.Count(t => t.Ready.Value);
-                if (readyPlayerCount == mofaPlayerList.Count)
+                // We need at least one player in each team to start
+                if (mofaPlayerList.Any(t => t.Team.Value == MofaTeam.Blue) && mofaPlayerList.Any(t => t.Team.Value == MofaTeam.Red))
                 {
-                    // If all players are ready, we start the next round.
-                    SetupRound();
-                    StartRound();
+                    // If all players are ready
+                    int readyPlayerCount = mofaPlayerList.Count(t => t.Ready.Value);
+                    if (readyPlayerCount == mofaPlayerList.Count)
+                    {
+                        SetupRound();
+                        StartRound();
+                    }
                 }
             }
         }
@@ -358,14 +368,14 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        public MofaPlayerStats GetIndividualStats(MofaPlayer mofaPlayer)
+        public MofaPlayerStats GetPlayerStats(MofaPlayer mofaPlayer)
         {
             MofaPlayerStats stats = new();
             stats.PersonalRoundResult = GetPersonalRoundResult(mofaPlayer);
             stats.Kill = mofaPlayer.Kill.Value;
             stats.Death = mofaPlayer.Death.Value;
             stats.HitRate = (float)mofaPlayer.HitCount.Value / mofaPlayer.CastCount.Value;
-            stats.Distance = mofaPlayer.Dist.Value * MofaUtils.MeterToFoot;
+            stats.Distance = mofaPlayer.Distance.Value * MofaUtils.MeterToFoot;
             stats.Energy = mofaPlayer.Energy.Value;
 
             return stats;

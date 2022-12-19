@@ -53,7 +53,7 @@ namespace Holoi.Library.MOFABase
         /// <summary>
         /// The distance the player has moved in this round. 
         /// </summary>
-        public NetworkVariable<float> Dist = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<float> Distance = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         /// <summary>
         /// The calories the player has burned in this round.
@@ -70,13 +70,13 @@ namespace Holoi.Library.MOFABase
         /// </summary>
         public Vector3 LifeShieldOffset = new(0f, -0.4f, 0.5f);
 
-        public float AltDist => _altDist;
+        public float AltDistance => _altDistance;
 
         /// <summary>
         /// This is the backup when the player doesn't have an Apple Watch to calculate
         /// the distance. This is calculated by accumulating the difference between two adjacent frames.
         /// </summary>
-        private float _altDist;
+        private float _altDistance;
 
         /// <summary>
         /// This is used to calculate the total distance.
@@ -112,7 +112,7 @@ namespace Holoi.Library.MOFABase
             {
                 // We only compute horizontal distance
                 Vector3 horizontalPosition = Vector3.ProjectOnPlane(transform.position, Vector3.up);
-                _altDist += Vector3.Distance(_lastFramePosition, horizontalPosition);
+                _altDistance += Vector3.Distance(_lastFramePosition, horizontalPosition);
                 _lastFramePosition = horizontalPosition;
             }
         }
@@ -138,8 +138,8 @@ namespace Holoi.Library.MOFABase
             Death.Value = 0;
             CastCount.Value = 0;
             HitCount.Value = 0;
-            Dist.Value = 0f;
-            _altDist = 0f;
+            Distance.Value = 0f;
+            _altDistance = 0f;
             Energy.Value = 0f;
         }
     }

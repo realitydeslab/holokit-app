@@ -20,7 +20,7 @@ namespace Holoi.Library.MOFABase.UI
 
         public void OnTriggerButtonPressed()
         {
-            HoloKitAppUIEventManager.OnTriggered?.Invoke();
+            HoloKitAppUIEventManager.OnStarUITriggered?.Invoke();
         }
     }
 }

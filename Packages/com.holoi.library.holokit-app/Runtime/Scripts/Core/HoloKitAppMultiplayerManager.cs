@@ -8,6 +8,8 @@ namespace Holoi.Library.HoloKitApp
 {
     public partial class HoloKitAppMultiplayerManager : NetworkBehaviour
     {
+        public HoloKitAppPlayerPoseVisualizer PoseVisualizerPrefab;
+
         public Dictionary<ulong, HoloKitAppPlayer> PlayerDict => _playerDict;
 
         public ICollection<HoloKitAppPlayer> PlayerList => _playerDict.Values;
