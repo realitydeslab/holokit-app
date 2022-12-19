@@ -12,17 +12,17 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] private AudioClip _beingHitSound;
 
-        public bool IsDestroyed => _centerDestroyed.Value;
+        public bool IsDestroyed => CenterDestroyed.Value;
 
-        private readonly NetworkVariable<bool> _centerDestroyed = new(false, NetworkVariableReadPermission.Everyone);
+        public NetworkVariable<bool> CenterDestroyed = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        private readonly NetworkVariable<bool> _topDestroyed = new(false, NetworkVariableReadPermission.Everyone);
+        public NetworkVariable<bool> TopDestroyed = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        private readonly NetworkVariable<bool> _leftDestroyed = new(false, NetworkVariableReadPermission.Everyone);
+        public NetworkVariable<bool> LeftDestroyed = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        private readonly NetworkVariable<bool> _rightDestroyed = new(false, NetworkVariableReadPermission.Everyone);
+        public NetworkVariable<bool> RightDestroyed = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        private readonly NetworkVariable<byte> _lastAttackerClientId = new(0, NetworkVariableReadPermission.Everyone);
+        private readonly NetworkVariable<byte> _lastAttackerClientId = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         private readonly Dictionary<LifeShieldArea, LifeShieldFragment> _fragments = new();
 
@@ -84,10 +84,10 @@ namespace Holoi.Library.MOFABase
                 _fragments[LifeShieldArea.Right].transform.GetChild(0).gameObject.SetActive(false);
             }
            
-            _centerDestroyed.OnValueChanged += OnCenterDestroyedFunc;
-            _topDestroyed.OnValueChanged += OnTopDestroyedFunc;
-            _leftDestroyed.OnValueChanged += OnLeftDestroyedFunc;
-            _rightDestroyed.OnValueChanged += OnRightDestroyedFunc;
+            CenterDestroyed.OnValueChanged += OnCenterDestroyedFunc;
+            TopDestroyed.OnValueChanged += OnTopDestroyedFunc;
+            LeftDestroyed.OnValueChanged += OnLeftDestroyedFunc;
+            RightDestroyed.OnValueChanged += OnRightDestroyedFunc;
 
             // TODO: Destroy fragments that have already been destroyed for late joined spectator.
 
@@ -96,10 +96,10 @@ namespace Holoi.Library.MOFABase
 
         public override void OnNetworkDespawn()
         {
-            _centerDestroyed.OnValueChanged -= OnCenterDestroyedFunc;
-            _topDestroyed.OnValueChanged -= OnTopDestroyedFunc;
-            _leftDestroyed.OnValueChanged -= OnLeftDestroyedFunc;
-            _rightDestroyed.OnValueChanged -= OnRightDestroyedFunc;
+            CenterDestroyed.OnValueChanged -= OnCenterDestroyedFunc;
+            TopDestroyed.OnValueChanged -= OnTopDestroyedFunc;
+            LeftDestroyed.OnValueChanged -= OnLeftDestroyedFunc;
+            RightDestroyed.OnValueChanged -= OnRightDestroyedFunc;
         }
 
         public override void OnNetworkObjectParentChanged(NetworkObject parentNetworkObject)
@@ -121,19 +121,19 @@ namespace Holoi.Library.MOFABase
             switch (area)
             {
                 case LifeShieldArea.Center:
-                    _centerDestroyed.Value = true;
-                    _topDestroyed.Value = true;
-                    _leftDestroyed.Value = true;
-                    _rightDestroyed.Value = true;
+                    CenterDestroyed.Value = true;
+                    TopDestroyed.Value = true;
+                    LeftDestroyed.Value = true;
+                    RightDestroyed.Value = true;
                     break;
                 case LifeShieldArea.Top:
-                    _topDestroyed.Value = true;
+                    TopDestroyed.Value = true;
                     break;
                 case LifeShieldArea.Left:
-                    _leftDestroyed.Value = true;
+                    LeftDestroyed.Value = true;
                     break;
                 case LifeShieldArea.Right:
-                    _rightDestroyed.Value = true;
+                    RightDestroyed.Value = true;
                     break;
             }
         }
@@ -167,10 +167,10 @@ namespace Holoi.Library.MOFABase
             yield return new WaitForSeconds(RenovateTime);
             if (IsServer)
             {
-                _centerDestroyed.Value = false;
-                _topDestroyed.Value = false;
-                _leftDestroyed.Value = false;
-                _rightDestroyed.Value = false;
+                CenterDestroyed.Value = false;
+                TopDestroyed.Value = false;
+                LeftDestroyed.Value = false;
+                RightDestroyed.Value = false;
             }
             _fragments[LifeShieldArea.Center].gameObject.SetActive(true);
             _fragments[LifeShieldArea.Top].gameObject.SetActive(true);

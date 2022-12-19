@@ -81,11 +81,6 @@ namespace Holoi.Library.MOFABase
         /// </summary>
         public MofaSpellPool SpellPool;
 
-        /// <summary>
-        /// MofaPlayer prefab
-        /// </summary>
-        [SerializeField] private MofaPlayer _mofaPlayerPrefab;
-
         [Header("Settings")]
         [Tooltip("The duration of the countdown phase")]
         public float CountdownDuration = 3f;
@@ -113,7 +108,12 @@ namespace Holoi.Library.MOFABase
             get
             {
                 var hostPlayer = HoloKitApp.HoloKitApp.Instance.MultiplayerManager.HostPlayer;
-                return hostPlayer == null ? null : hostPlayer as MofaPlayer;
+                if (hostPlayer == null)
+                    return null;
+                var hostMofaPlayer = hostPlayer as MofaPlayer;
+                if (hostMofaPlayer.Team.Value == MofaTeam.None)
+                    return null;
+                return hostMofaPlayer;
             }
         }
 
@@ -122,7 +122,12 @@ namespace Holoi.Library.MOFABase
             get
             {
                 var localPlayer = HoloKitApp.HoloKitApp.Instance.MultiplayerManager.LocalPlayer;
-                return localPlayer == null ? null : localPlayer as MofaPlayer;
+                if (localPlayer == null)
+                    return null;
+                var localMofaPlayer = localPlayer as MofaPlayer;
+                if (localMofaPlayer.Team.Value == MofaTeam.None)
+                    return null;
+                return localMofaPlayer;
             }
         }
 
@@ -131,9 +136,13 @@ namespace Holoi.Library.MOFABase
         /// This computation is a bit expensive. Please reference this value when you use it.
         /// </summary>
         public ICollection<MofaPlayer> MofaPlayerList => HoloKitApp.HoloKitApp.Instance.MultiplayerManager.PlayerList
+                                                            .Where(t => t.Type.Value == HoloKitAppPlayerType.Player)
                                                             .Select(t => t as MofaPlayer)
-                                                            .Where(t => t.Team.Value != MofaTeam.None)
                                                             .ToList();
+
+        public Dictionary<ulong, MofaPlayer> MofaPlayerDict => HoloKitApp.HoloKitApp.Instance.MultiplayerManager.PlayerDict
+                                                            .Where(t => t.Value.Type.Value == HoloKitAppPlayerType.Player)
+                                                            .ToDictionary(t => t.Key, t => t.Value as MofaPlayer);
 
         /// <summary>
         /// This event is called on all clients if the game phase changes.
@@ -357,7 +366,7 @@ namespace Holoi.Library.MOFABase
             {
                 // Update the score
                 GetMofaPlayer(attackerClientId).Kill.Value++;
-                GetMofaPlayer(ownerClientId).Death.Value++;;
+                GetMofaPlayer(ownerClientId).Death.Value++;
             }
         }
 

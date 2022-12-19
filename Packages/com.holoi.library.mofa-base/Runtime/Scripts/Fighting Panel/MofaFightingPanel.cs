@@ -74,7 +74,6 @@ namespace Holoi.Library.MOFABase
 
             MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
             HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
-            LifeShield.OnSpawned += OnLifeShieldSpawned;
             HoloKitAppRecorder.OnRecordingStarted += OnDisappear;
             HoloKitAppRecorder.OnRecordingStopped += OnReappear;
             //HoloKitAppMultiplayerManager.OnLocalPlayerChecked += OnReappear;
@@ -108,7 +107,6 @@ namespace Holoi.Library.MOFABase
         {
             MofaBaseRealityManager.OnMofaPhaseChanged -= OnPhaseChanged;
             HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
-            LifeShield.OnSpawned -= OnLifeShieldSpawned;
             HoloKitAppRecorder.OnRecordingStarted -= OnDisappear;
             HoloKitAppRecorder.OnRecordingStopped -= OnReappear;
             //HoloKitAppMultiplayerManager.OnLocalPlayerChecked -= OnReappear;
@@ -210,14 +208,6 @@ namespace Holoi.Library.MOFABase
         private void OnReappear()
         {
             Rotator.anchoredPosition = Vector2.zero;
-        }
-
-        private void OnLifeShieldSpawned(LifeShield lifeShield)
-        {
-            if (lifeShield.OwnerClientId == NetworkManager.Singleton.LocalClientId)
-            {
-                Status.GetComponent<MofaFightingPanelStatus>().SetLifeShield(lifeShield);
-            }
         }
     }
 }
