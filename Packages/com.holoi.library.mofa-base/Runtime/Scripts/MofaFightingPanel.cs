@@ -163,6 +163,7 @@ namespace Holoi.Library.MOFABase
             switch (mofaPhase)
             {
                 case MofaPhase.Waiting:
+                    OnRoundData();
                     break;
                 case MofaPhase.Countdown:
                     OnCountdown();
@@ -172,9 +173,6 @@ namespace Holoi.Library.MOFABase
                 case MofaPhase.RoundOver:
                     break;
                 case MofaPhase.RoundResult:
-                    break;
-                case MofaPhase.RoundData:
-                    OnRoundData();
                     break;
             }
         }

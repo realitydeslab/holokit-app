@@ -16,13 +16,11 @@ namespace Holoi.Library.MOFABase
         private void Awake()
         {
             MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
-            MofaBaseRealityManager.OnReceivedRoundResult += OnReceivedRoundResult;
         }
 
         private void OnDestroy()
         {
             MofaBaseRealityManager.OnMofaPhaseChanged -= OnPhaseChanged;
-            MofaBaseRealityManager.OnReceivedRoundResult -= OnReceivedRoundResult;
         }
 
         private void OnPhaseChanged(MofaPhase mofaPhase)
@@ -42,8 +40,6 @@ namespace Holoi.Library.MOFABase
                     PlayRoundOverSound();
                     break;
                 case MofaPhase.RoundResult:
-                    break;
-                case MofaPhase.RoundData:
                     break;
             }
         }
@@ -111,7 +107,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnReceivedRoundResult(MofaRoundResult roundResult)
+        private void OnReceivedRoundResult(MofaGeneralRoundResult roundResult)
         {
             //if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
             //{

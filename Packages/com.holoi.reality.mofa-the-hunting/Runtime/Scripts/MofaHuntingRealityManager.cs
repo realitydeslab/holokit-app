@@ -69,16 +69,16 @@ namespace Holoi.Reality.MOFATheHunting
         {
             if (HoloKitApp.Instance.IsHost)
             {
-                if (CurrentPhase.Value == MofaPhase.Waiting || CurrentPhase.Value == MofaPhase.RoundData)
+                if (CurrentPhase.Value == MofaPhase.Waiting)
                 {
-                    TryStartRound();
+                    StartRound();
                     return;
                 }
             }
         }
 
         // Host only
-        public override void TryStartRound()
+        public override void StartRound()
         {
             if (_arPlacementIndicator != null && _arPlacementIndicator.IsActive && _arPlacementIndicator.IsValid)
             {

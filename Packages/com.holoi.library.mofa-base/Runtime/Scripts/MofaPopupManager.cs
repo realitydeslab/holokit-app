@@ -30,14 +30,12 @@ namespace Holoi.Library.MOFABase
         protected virtual void Start()
         {
             MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
-            MofaBaseRealityManager.OnReceivedRoundResult += OnReceivedRoundResult;
             LifeShield.OnBeingDestroyed += OnLifeShieldBeingDestroyed;
         }
 
         protected virtual void OnDestroy()
         {
             MofaBaseRealityManager.OnMofaPhaseChanged -= OnPhaseChanged;
-            MofaBaseRealityManager.OnReceivedRoundResult -= OnReceivedRoundResult;
             LifeShield.OnBeingDestroyed -= OnLifeShieldBeingDestroyed;
         }
 
@@ -87,6 +85,7 @@ namespace Holoi.Library.MOFABase
             switch (mofaPhase)
             {
                 case MofaPhase.Waiting:
+                    UpdateSummaryBoard();
                     break;
                 case MofaPhase.Countdown:
                     StartCoroutine(SpawnPopupAndDestroy(_countdownPrefab, 4f));
@@ -98,13 +97,10 @@ namespace Holoi.Library.MOFABase
                     break;
                 case MofaPhase.RoundResult:
                     break;
-                case MofaPhase.RoundData:
-                    UpdateSummaryBoard();
-                    break;
             }
         }
 
-        private void OnReceivedRoundResult(MofaRoundResult roundResult)
+        private void OnReceivedRoundResult(MofaGeneralRoundResult roundResult)
         {
             //if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
             //{

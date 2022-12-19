@@ -156,8 +156,6 @@ namespace Holoi.Library.MOFABase
                 case MofaPhase.RoundResult:
                     OnRoundResult();
                     break;
-                case MofaPhase.RoundData:
-                    break;
             }
         }
 
@@ -298,9 +296,9 @@ namespace Holoi.Library.MOFABase
                     Debug.Log("[MofaInputManager] You cannot cast spells when you are dead :(");
                 }
             }
-            else if (_mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.Waiting || _mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.RoundData)
+            else if (_mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.Waiting)
             {
-                _mofaBaseRealityManager.TryStartRound();
+                _mofaBaseRealityManager.StartRound();
             }
         }
 
@@ -321,7 +319,7 @@ namespace Holoi.Library.MOFABase
             }
             else
             {
-                _mofaBaseRealityManager.TryStartRound();
+                _mofaBaseRealityManager.StartRound();
             }
         }
 

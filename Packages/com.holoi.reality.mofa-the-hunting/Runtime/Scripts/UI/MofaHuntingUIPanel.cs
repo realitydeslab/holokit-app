@@ -62,7 +62,7 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         private void OnMofaPhaseChanged(MofaPhase mofaPhase)
         {
-            if (mofaPhase == MofaPhase.RoundData)
+            if (mofaPhase == MofaPhase.Waiting)
             {
                 _dragonControllerButton.SetActive(false);
                 _spawnDragonButton.SetActive(true);

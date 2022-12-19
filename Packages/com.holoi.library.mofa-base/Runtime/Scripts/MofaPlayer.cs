@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
@@ -82,8 +83,11 @@ namespace Holoi.Library.MOFABase
         /// </summary>
         private Vector3 _lastFramePosition;
 
+        public static event Action<MofaPlayer> OnMofaPlayerReadyChanged;
+
         public override void OnNetworkSpawn()
         {
+            Ready.OnValueChanged += OnReadyValueChanged;
             if (IsOwner)
             {
                 // Assign the team
@@ -97,6 +101,11 @@ namespace Holoi.Library.MOFABase
             base.OnNetworkSpawn();
         }
 
+        public override void OnNetworkDespawn()
+        {
+            Ready.OnValueChanged -= OnReadyValueChanged;
+        }
+
         protected virtual void Update()
         {
             if (IsOwner)
@@ -106,6 +115,13 @@ namespace Holoi.Library.MOFABase
                 _altDist += Vector3.Distance(_lastFramePosition, horizontalPosition);
                 _lastFramePosition = horizontalPosition;
             }
+        }
+
+        private void OnReadyValueChanged(bool oldValue, bool newValue)
+        {
+            if (oldValue == newValue) return;
+
+            OnMofaPlayerReadyChanged?.Invoke(this);
         }
 
         /// <summary>

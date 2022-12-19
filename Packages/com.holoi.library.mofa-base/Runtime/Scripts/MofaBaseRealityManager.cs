@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
@@ -20,26 +22,23 @@ namespace Holoi.Library.MOFABase
         // When the round over UI merges
         RoundOver = 3,
         // When the round result is shown
-        RoundResult = 4,
-        // When the summary board merges
-        RoundData = 5
+        RoundResult = 4
     }
 
     /// <summary>
     /// Round result in third person view
     /// </summary>
-    public enum MofaRoundResult
+    public enum MofaGeneralRoundResult
     {
-        NotDetermined = 0,
-        BlueTeamWins = 1,
-        RedTeamWins = 2,
-        Draw = 3
+        BlueTeamWins = 0,
+        RedTeamWins = 1,
+        Draw = 2
     }
 
     /// <summary>
     /// Round result in first person view
     /// </summary>
-    public enum MofaIndividualRoundResult
+    public enum MofaPersonalRoundResult
     {
         Victory = 0,
         Defeat = 1,
@@ -49,15 +48,15 @@ namespace Holoi.Library.MOFABase
     /// <summary>
     /// Stats which will be shown on the summary board after each round.
     /// </summary>
-    public struct MofaIndividualStats
+    public struct MofaPlayerStats
     {
-        public MofaIndividualRoundResult IndividualRoundResult;
+        public MofaPersonalRoundResult PersonalRoundResult;
 
         public int Kill;
 
         public int Death;
 
-        public int HitRate;
+        public float HitRate;
 
         public float Distance;
 
@@ -104,21 +103,45 @@ namespace Holoi.Library.MOFABase
         /// </summary>
         public NetworkVariable<int> RoundCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+        public MofaPlayer MofaHostPlayer
+        {
+            get
+            {
+                var hostPlayer = HoloKitApp.HoloKitApp.Instance.MultiplayerManager.HostPlayer;
+                return hostPlayer == null ? null : hostPlayer as MofaPlayer;
+            }
+        }
+
+        public MofaPlayer MofaLocalPlayer
+        {
+            get
+            {
+                var localPlayer = HoloKitApp.HoloKitApp.Instance.MultiplayerManager.LocalPlayer;
+                return localPlayer == null ? null : localPlayer as MofaPlayer;
+            }
+        }
+
+        /// <summary>
+        /// The collection of all non-spectator MofaPlayers.
+        /// This computation is a bit expensive. Please reference this value when you use it.
+        /// </summary>
+        public ICollection<MofaPlayer> MofaPlayerList => HoloKitApp.HoloKitApp.Instance.MultiplayerManager.PlayerList
+                                                            .Select(t => t as MofaPlayer)
+                                                            .Where(t => t.Team.Value != MofaTeam.None)
+                                                            .ToList();
+
         /// <summary>
         /// This event is called on all clients if the game phase changes.
         /// </summary>
         public static event Action<MofaPhase> OnMofaPhaseChanged;
 
-        public static event Action<MofaRoundResult> OnReceivedRoundResult;
-
         public override void OnNetworkSpawn()
         {
-            base.OnNetworkSpawn();
-
             // We register this delegate here in order to track player hit count
             LifeShield.OnBeingHit += OnLifeShieldBeingHit;
             // We register this delegate here in order to track player kill and death
             LifeShield.OnBeingDestroyed += OnLifeShieldBeingDestroyed;
+            MofaPlayer.OnMofaPlayerReadyChanged += OnMofaPlayerReadyChanged;
             CurrentPhase.OnValueChanged += OnMofaPhaseChanged_Server;
             CurrentPhase.OnValueChanged += OnMofaPhaseChanged_Client;
         }
@@ -127,20 +150,29 @@ namespace Holoi.Library.MOFABase
         {
             LifeShield.OnBeingHit -= OnLifeShieldBeingHit;
             LifeShield.OnBeingDestroyed -= OnLifeShieldBeingDestroyed;
+            MofaPlayer.OnMofaPlayerReadyChanged -= OnMofaPlayerReadyChanged;
             CurrentPhase.OnValueChanged -= OnMofaPhaseChanged_Server;
             CurrentPhase.OnValueChanged -= OnMofaPhaseChanged_Client;
         }
 
         private void OnMofaPhaseChanged_Server(MofaPhase oldPhase, MofaPhase newPhase)
         {
+            if (!IsServer) return;
+
             if (oldPhase == newPhase) return;
 
-            if (newPhase == MofaPhase.RoundData)
+            switch (newPhase)
             {
-                if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
-                {
-                    ResetLocalPlayerReadyState();
-                }
+                case MofaPhase.Waiting:
+                    break;
+                case MofaPhase.Countdown:
+                    break;
+                case MofaPhase.Fighting:
+                    break;
+                case MofaPhase.RoundOver:
+                    break;
+                case MofaPhase.RoundResult:
+                    break;
             }
         }
 
@@ -148,14 +180,83 @@ namespace Holoi.Library.MOFABase
         {
             if (oldPhase == newPhase) return;
 
+            switch (newPhase)
+            {
+                case MofaPhase.Waiting:
+                    break;
+                case MofaPhase.Countdown:
+                    break;
+                case MofaPhase.Fighting:
+                    break;
+                case MofaPhase.RoundOver:
+                    break;
+                case MofaPhase.RoundResult:
+                    break;
+            }
+
             OnMofaPhaseChanged?.Invoke(newPhase);
         }
 
         public MofaPlayer GetMofaPlayer(ulong clientId)
         {
-            var player = HoloKitApp.HoloKitApp.Instance.MultiplayerManager.PlayerDict[clientId];
-            if (player == null) return null;
-            return player.GetComponent<MofaPlayer>();
+            var playerDict = HoloKitApp.HoloKitApp.Instance.MultiplayerManager.PlayerDict;
+            if (playerDict.ContainsKey(clientId))
+            {
+                var player = HoloKitApp.HoloKitApp.Instance.MultiplayerManager.PlayerDict[clientId];
+                return player.GetComponent<MofaPlayer>();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private void OnMofaPlayerReadyChanged(MofaPlayer mofaPlayer)
+        {
+            if (!IsServer) return;
+
+            if (mofaPlayer.Ready.Value)
+            {
+                var mofaPlayerList = MofaPlayerList;
+                int readyPlayerCount = mofaPlayerList.Count(t => t.Ready.Value);
+                if (readyPlayerCount == mofaPlayerList.Count)
+                {
+                    // If all players are ready, we start the next round.
+                    SetupRound();
+                    StartRound();
+                }
+            }
+        }
+
+        /// <summary>
+        /// This function is called right before round start.
+        /// </summary>
+        protected void SetupRound()
+        {
+            if (!IsServer)
+                Debug.LogError("[MofaBaseRealityManager] Method 'SetupRound()' can only be called by the server");
+
+            // Spawn life shield for every mofa player
+            SetupLifeShields();
+
+            // Reset stats for all players
+            var mofaPlayerList = MofaPlayerList;
+            foreach (var mofaPlayer in mofaPlayerList)
+            {
+                mofaPlayer.ResetStats();
+            }
+        }
+
+        protected void SetupLifeShields()
+        {
+            var mofaPlayerList = MofaPlayerList;
+            foreach (var mofaPlayer in mofaPlayerList)
+            {
+                if (mofaPlayer.LifeShield != null)
+                    continue;
+
+                SpawnLifeShield(mofaPlayer.OwnerClientId);
+            }
         }
 
         protected void SpawnLifeShield(ulong clientId)
@@ -171,13 +272,16 @@ namespace Holoi.Library.MOFABase
             MofaPlayer player = GetMofaPlayer(lifeShield.OwnerClientId);
             player.LifeShield = lifeShield;
 
-            lifeShield.transform.SetParent(player.transform);
-            lifeShield.transform.localPosition = player.LifeShieldOffset;
-            lifeShield.transform.localRotation = Quaternion.identity;
-            lifeShield.transform.localScale = Vector3.one;
+            if (IsServer)
+            {
+                lifeShield.transform.SetParent(player.transform);
+                lifeShield.transform.localPosition = player.LifeShieldOffset;
+                lifeShield.transform.localRotation = Quaternion.identity;
+                lifeShield.transform.localScale = Vector3.one;
+            }
         }
 
-        public abstract void TryStartRound();
+        public abstract void StartRound();
 
         /// <summary>
         /// Call this function to start a single MOFA round. This function can only
@@ -193,7 +297,7 @@ namespace Holoi.Library.MOFABase
             yield return new WaitForSeconds(3f);
             CurrentPhase.Value = MofaPhase.RoundResult;
             yield return new WaitForSeconds(3f);
-            CurrentPhase.Value = MofaPhase.RoundData;
+            CurrentPhase.Value = MofaPhase.Waiting;
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -229,89 +333,42 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        // Host only
-        private MofaRoundResult GetRoundResult()
+        public MofaGeneralRoundResult GetGeneralRoundResult()
         {
-            return MofaRoundResult.NotDetermined;
-            //if (!IsServer)
-            //{
-            //    Debug.LogError("[MofaBaseRealityManager] Only the host can compute the round result");
-            //    return MofaRoundResult.Draw;
-            //}
-
-            //int blueTeamScore = 0;
-            //int redTeamScore = 0;
-            //foreach (var mofaPlayer in PlayerDict.Values)
-            //{
-            //    if (mofaPlayer.Team.Value == MofaTeam.Blue)
-            //    {
-            //        blueTeamScore += mofaPlayer.Kill.Value;
-            //    }
-            //    else
-            //    {
-            //        redTeamScore += mofaPlayer.Kill.Value;
-            //    }
-            //}
-
-            //if (blueTeamScore > redTeamScore)
-            //{
-            //    return MofaRoundResult.BlueTeamWins;
-            //}
-            //else if (redTeamScore > blueTeamScore)
-            //{
-            //    return MofaRoundResult.RedTeamWins;
-            //}
-            //else
-            //{
-            //    return MofaRoundResult.Draw;
-            //}
+            var mofaPlayerList = MofaPlayerList;
+            // Calculate scores
+            int blueTeamScore = mofaPlayerList.Where(t => t.Team.Value == MofaTeam.Blue).Sum(t => t.Kill.Value);
+            int redTeamScore = mofaPlayerList.Where(t => t.Team.Value == MofaTeam.Red).Sum(t => t.Kill.Value);
+            if (blueTeamScore == redTeamScore)
+                return MofaGeneralRoundResult.Draw;
+            return blueTeamScore > redTeamScore ? MofaGeneralRoundResult.BlueTeamWins : MofaGeneralRoundResult.RedTeamWins;
         }
 
-        //public MofaIndividualStats GetIndividualStats(MofaPlayer player = null)
-        //{
-        //    if (player == null)
-        //    {
-        //        player = GetPlayer();
-        //    }
-
-        //    MofaIndividualStats stats = new();
-        //    // Inividual round result
-        //    var roundResult = _roundResult.Value;
-        //    if (roundResult == MofaRoundResult.Draw)
-        //    {
-        //        stats.IndividualRoundResult = MofaIndividualRoundResult.Draw;
-        //    }
-        //    else
-        //    {
-        //        if (player.Team.Value == MofaTeam.Blue)
-        //        {
-
-        //            stats.IndividualRoundResult = roundResult == MofaRoundResult.BlueTeamWins ?
-        //                MofaIndividualRoundResult.Victory : MofaIndividualRoundResult.Defeat;
-        //        }
-        //        else
-        //        {
-        //            stats.IndividualRoundResult = roundResult == MofaRoundResult.RedTeamWins ?
-        //                MofaIndividualRoundResult.Victory : MofaIndividualRoundResult.Defeat;
-        //        }
-        //    }
-        //    // Kill
-        //    stats.Kill = player.Kill.Value;
-        //    // Death
-        //    stats.Death = player.Death.Value;
-        //    // Hit rate
-        //    stats.HitRate = Mathf.RoundToInt((float)player.HitCount.Value / player.CastCount.Value * 100);
-        //    // Distance
-        //    stats.Distance = Mathf.RoundToInt(player.Dist.Value * MofaUtils.MeterToFoot);
-        //    // Calories
-        //    stats.Energy = Mathf.RoundToInt(player.Energy.Value);
-
-        //    return stats;
-        //}
-
-        private void ResetLocalPlayerReadyState()
+        public MofaPersonalRoundResult GetPersonalRoundResult(MofaPlayer mofaPlayer)
         {
-            //GetPlayer().Ready.Value = false;
+            var generalRoundResult = GetGeneralRoundResult();
+            switch (generalRoundResult)
+            {
+                case MofaGeneralRoundResult.BlueTeamWins:
+                    return mofaPlayer.Team.Value == MofaTeam.Blue ? MofaPersonalRoundResult.Victory : MofaPersonalRoundResult.Defeat;
+                case MofaGeneralRoundResult.RedTeamWins:
+                    return mofaPlayer.Team.Value == MofaTeam.Red ? MofaPersonalRoundResult.Victory : MofaPersonalRoundResult.Defeat;
+                default:
+                    return MofaPersonalRoundResult.Draw;
+            }
+        }
+
+        public MofaPlayerStats GetIndividualStats(MofaPlayer mofaPlayer)
+        {
+            MofaPlayerStats stats = new();
+            stats.PersonalRoundResult = GetPersonalRoundResult(mofaPlayer);
+            stats.Kill = mofaPlayer.Kill.Value;
+            stats.Death = mofaPlayer.Death.Value;
+            stats.HitRate = (float)mofaPlayer.HitCount.Value / mofaPlayer.CastCount.Value;
+            stats.Distance = mofaPlayer.Dist.Value * MofaUtils.MeterToFoot;
+            stats.Energy = mofaPlayer.Energy.Value;
+
+            return stats;
         }
     }
 }
