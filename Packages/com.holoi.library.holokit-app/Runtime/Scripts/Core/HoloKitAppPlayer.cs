@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Animations;
 using Unity.Netcode;
@@ -23,7 +24,9 @@ namespace Holoi.Library.HoloKitApp
         // When the player synced to a nearby master
         Synced = 3,
         // When the player conformed the sync result
-        Checked = 4
+        Checked = 4,
+        // When player disconnected from the network
+        Disconnected = 5
     }
 
     public class HoloKitAppPlayer : NetworkBehaviour
@@ -37,97 +40,70 @@ namespace Holoi.Library.HoloKitApp
 
         public NetworkVariable<HoloKitAppPlayerStatus> Status = new(HoloKitAppPlayerStatus.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        /// <summary>
-        /// When this value is true, the pose of this player is synced to all clients in realtime.
-        /// </summary>
-        public NetworkVariable<bool> SyncPose = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        [SerializeField] private HoloKitAppPlayerPoseVisualizer _poseVisualizerPrefab; 
 
         public bool ShowPoseVisualizer
         {
             set
             {
-                _poseVisualizer.SetActive(value);
+                if (value)
+                    SpawnPoseVisualizer();
+                else
+                    DestroyPoseVisualizer();
             }
         }
 
-        private GameObject _poseVisualizer;
+        private HoloKitAppPlayerPoseVisualizer _poseVisualizer;
+
+        public static event Action<HoloKitAppPlayer> OnPlayerConnected; 
+
+        public static event Action<HoloKitAppPlayer> OnPlayerStatusChanged;
+
+        public static event Action<HoloKitAppPlayer> OnPlayerDisconnected;
 
         public override void OnNetworkSpawn()
         {
-            _poseVisualizer = GetComponentInChildren<HoloKitAppPlayerPoseVisualizer>(true).gameObject;
             Status.OnValueChanged += OnStatusValueChanged;
-            SyncPose.OnValueChanged += OnSyncPoseValueChanged;
             HoloKitApp.Instance.MultiplayerManager.OnPlayerJoined(this);
             // Initialize name and type by the owner
             if (IsOwner)
             {
                 Name.Value = new FixedString64Bytes(SystemInfo.deviceName);
                 Type.Value = HoloKitApp.Instance.LocalPlayerType;
+                // Setup initial status
                 if (IsServer)
                 {
                     // Set host's status to checked at start
                     Status.Value = HoloKitAppPlayerStatus.Checked;
-                    // The host syncs its pose by default
-                    SyncPose.Value = true;
                 }
                 else
                 {
                     if (HoloKitUtils.IsRuntime)
-                    {
-                        // Start syncing the timestamp
                         Status.Value = HoloKitAppPlayerStatus.SyncingTimestamp;
-                        HoloKitApp.Instance.MultiplayerManager.LocalPlayerStatus = HoloKitAppPlayerStatus.SyncingTimestamp;
-                    }
                     else
-                    {
-                        // We do not need to sync in editor mode
                         Status.Value = HoloKitAppPlayerStatus.Checked;
-                    }
                 }
+                // Setup ParentConstraint
+                SetupParentConstraint();
             }
+            OnPlayerConnected?.Invoke(this);
         }
 
         public override void OnNetworkDespawn()
         {
             Status.OnValueChanged -= OnStatusValueChanged;
-            SyncPose.OnValueChanged -= OnSyncPoseValueChanged;
             HoloKitApp.Instance.MultiplayerManager.OnPlayerLeft(this);
+            OnPlayerDisconnected?.Invoke(this);
         }
 
         private void OnStatusValueChanged(HoloKitAppPlayerStatus oldStatus, HoloKitAppPlayerStatus newStatus)
         {
             if (oldStatus == newStatus) return;
 
-            if (IsServer)
-            {
-                if (newStatus == HoloKitAppPlayerStatus.Checked)
-                {
-                    SyncPose.Value = true;
-                }
-                else
-                {
-                    SyncPose.Value = false;
-                }
-            }
-
-            if (IsOwner)
-            {
-
-            }
+            OnPlayerStatusChanged?.Invoke(this);
         }
 
-        private void OnSyncPoseValueChanged(bool oldValue, bool newValue)
-        {
-            if (IsOwner)
-            {
-                if (newValue)
-                    SetParentConstraintEnabled(true);
-                else
-                    SetParentConstraintEnabled(false);
-            } 
-        }
-
-        private void SetParentConstraintEnabled(bool enabled)
+        private void SetupParentConstraint()
         {
             var parentConstraint = GetComponent<ParentConstraint>();
             if (enabled)
@@ -145,13 +121,30 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
+        private void SpawnPoseVisualizer()
+        {
+            if (_poseVisualizer == null)
+            {
+                _poseVisualizer = Instantiate(_poseVisualizerPrefab);
+                _poseVisualizer.Player = this;
+            }
+        }
+
+        private void DestroyPoseVisualizer()
+        {
+            if (_poseVisualizer != null)
+            {
+                Destroy(_poseVisualizer);
+            }
+        }
+
         /// <summary>
         /// Get the distance of this player to the local device.
         /// </summary>
         /// <returns>Distance in meters</returns>
         public float GetDist()
         {
-            return 0f;
+            return Vector3.Distance(HoloKitCamera.Instance.CenterEyePose.position, transform.position);
         }
     }
 }

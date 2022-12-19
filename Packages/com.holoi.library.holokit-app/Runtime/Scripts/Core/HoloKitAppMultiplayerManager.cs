@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using Unity.Netcode;
 using HoloKit;
 
@@ -11,23 +12,9 @@ namespace Holoi.Library.HoloKitApp
 
         public ICollection<HoloKitAppPlayer> PlayerList => _playerDict.Values;
 
-        public HoloKitAppPlayer HostPlayer => _playerDict[0];
+        public HoloKitAppPlayer HostPlayer => _playerDict.ContainsKey(0) ? _playerDict[0] : null;
 
-        public HoloKitAppPlayer LocalPlayer => _playerDict[NetworkManager.LocalClientId];
-
-        public bool ShowPoseVisualizers
-        {
-            get => _showPoseVisualizers;
-            set
-            {
-                _showPoseVisualizers = value;
-            }
-        }
-
-        /// <summary>
-        /// If this value is set to true, the pose visualizers of all player with checked status will be shown.
-        /// </summary>
-        private bool _showPoseVisualizers = true;
+        public HoloKitAppPlayer LocalPlayer => _playerDict.ContainsKey(NetworkManager.LocalClientId) ? _playerDict[NetworkManager.LocalClientId] : null;
 
         /// <summary>
         /// The dictionary which contains all connected player's PlayerObject.
@@ -36,69 +23,12 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         private readonly Dictionary<ulong, HoloKitAppPlayer> _playerDict = new();
 
-        /// <summary>
-        /// This event is only called on the client side, which indicates the local
-        /// player has connected to the network.
-        /// </summary>
-        public static event Action OnLocalPlayerConnected;
-
-        /// <summary>
-        /// This event is only called on the client side, which indicates the local
-        /// player has disconnected from the network.
-        /// </summary>
-        public static event Action OnLocalPlayerDisconnected;
-
-        /// <summary>
-        /// This event is only called on the client side, which indicates the local
-        /// player starts to sync timestamp.
-        /// </summary>
-        public static event Action OnLocalPlayerSyncingTimestamp;
-
-        /// <summary>
-        /// This event is only called on the client side, which indicates the local
-        /// player starts to sync pose (via scanning QRCode).
-        /// </summary>
-        public static event Action OnLocalPlayerSyncingPose;
-
-        /// <summary>
-        /// This event is only called on the client side, which indicates the local
-        /// player has successfully synced.
-        /// </summary>
-        public static event Action OnLocalPlayerSynced;
-
-        /// <summary>
-        /// This event is only called on the client side, which indicates the local
-        /// player has checked the alignment marker.
-        /// </summary>
-        public static event Action OnLocalPlayerChecked;
-
-        public override void OnNetworkSpawn()
-        {
-            OnLocalPlayerConnected?.Invoke();
-        }
-
-        public override void OnNetworkDespawn()
-        {
-            OnLocalPlayerDisconnected?.Invoke();
-        }
-
-        private void Update()
-        {
-            foreach (var player in PlayerList)
-            {
-                if (player.IsLocalPlayer) continue;
-
-                if (player.Status.Value == HoloKitAppPlayerStatus.Checked)
-                    player.ShowPoseVisualizer = _showPoseVisualizers;
-                else
-                    player.ShowPoseVisualizer = false;
-            }
-        }
-
         private void FixedUpdate()
         {
-            // In this phase, client constantly request timestamp from the server.
-            if (HoloKitUtils.IsRuntime && IsSpawned && LocalPlayerStatus == HoloKitAppPlayerStatus.SyncingTimestamp)
+            if (!IsSpawned) return;
+            var localPlayer = LocalPlayer;
+            if (localPlayer == null) return;
+            if (localPlayer.Status.Value == HoloKitAppPlayerStatus.SyncingTimestamp)
                 OnRequestTimestampServerRpc(HoloKitARSessionControllerAPI.GetSystemUptime());
         }
 

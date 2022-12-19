@@ -77,7 +77,7 @@ namespace Holoi.Library.MOFABase
             LifeShield.OnSpawned += OnLifeShieldSpawned;
             HoloKitAppRecorder.OnRecordingStarted += OnDisappear;
             HoloKitAppRecorder.OnRecordingStopped += OnReappear;
-            HoloKitAppMultiplayerManager.OnLocalPlayerChecked += OnReappear;
+            //HoloKitAppMultiplayerManager.OnLocalPlayerChecked += OnReappear;
             HoloKitAppUIPanel_MonoAR_RescanQRCode.OnRescanQRCode += OnDisappear;
             HoloKitAppUIPanel_MonoAR_RescanQRCode.OnCancelRescanQRCode += OnReappear;
 
@@ -111,7 +111,7 @@ namespace Holoi.Library.MOFABase
             LifeShield.OnSpawned -= OnLifeShieldSpawned;
             HoloKitAppRecorder.OnRecordingStarted -= OnDisappear;
             HoloKitAppRecorder.OnRecordingStopped -= OnReappear;
-            HoloKitAppMultiplayerManager.OnLocalPlayerChecked -= OnReappear;
+            //HoloKitAppMultiplayerManager.OnLocalPlayerChecked -= OnReappear;
             HoloKitAppUIPanel_MonoAR_RescanQRCode.OnRescanQRCode -= OnDisappear;
             HoloKitAppUIPanel_MonoAR_RescanQRCode.OnCancelRescanQRCode -= OnReappear;
         }

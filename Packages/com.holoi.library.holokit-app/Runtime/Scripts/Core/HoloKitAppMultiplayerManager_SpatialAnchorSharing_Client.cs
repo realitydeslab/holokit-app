@@ -34,40 +34,6 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         [SerializeField] private GameObject _alignmentMarkerPrefab;
 
-        public HoloKitAppPlayerStatus LocalPlayerStatus
-        {
-            get => _localPlayerStatus;
-            set
-            {
-                _localPlayerStatus = value;
-                switch (_localPlayerStatus)
-                {
-                    case HoloKitAppPlayerStatus.None:
-                        break;
-                    case HoloKitAppPlayerStatus.SyncingTimestamp:
-                        OnLocalPlayerSyncingTimestamp?.Invoke();
-                        break;
-                    case HoloKitAppPlayerStatus.SyncingPose:
-                        OnLocalPlayerSyncingPose?.Invoke();
-                        break;
-                    case HoloKitAppPlayerStatus.Synced:
-                        OnLocalPlayerSynced?.Invoke();
-                        break;
-                    case HoloKitAppPlayerStatus.Checked:
-                        OnLocalPlayerChecked?.Invoke();
-                        break;
-                }
-                // Sync local player status across the network
-                LocalPlayer.Status.Value = _localPlayerStatus;
-            }
-        }
-
-        /// <summary>
-        /// The current local status. We need this variable because the
-        /// network one requires time to respond.
-        /// </summary>
-        private HoloKitAppPlayerStatus _localPlayerStatus = HoloKitAppPlayerStatus.None;
-
         /// <summary>
         /// The final result derived from the timestamp sync algorithm.
         /// </summary>
@@ -136,7 +102,7 @@ namespace Holoi.Library.HoloKitApp
         [ClientRpc]
         private void OnRespondTimestampClientRpc(double hostTimestamp, double oldClientTimestamp, ClientRpcParams _ = default)
         {
-            if (LocalPlayerStatus != HoloKitAppPlayerStatus.SyncingTimestamp) return;
+            if (LocalPlayer.Status.Value != HoloKitAppPlayerStatus.SyncingTimestamp) return;
 
             double currentClientTimestamp = HoloKitARSessionControllerAPI.GetSystemUptime();
             double offset = hostTimestamp + (currentClientTimestamp - oldClientTimestamp) / 2 - currentClientTimestamp;
@@ -163,7 +129,7 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         private void StartScanningQRCode()
         {
-            LocalPlayerStatus = HoloKitAppPlayerStatus.SyncingPose;
+            LocalPlayer.Status.Value = HoloKitAppPlayerStatus.SyncingPose;
             var arSessionManager = HoloKitApp.Instance.ARSessionManager;
             arSessionManager.ARTrackedImageManager.trackedImagesChanged += OnTrackedImagesChanged;
             HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnARSessionUpdatedFrame_Client;
@@ -204,7 +170,7 @@ namespace Holoi.Library.HoloKitApp
         [ClientRpc]
         private void OnRespondImagePoseClientRpc(Vector3 hostImagePosition, Quaternion hostImageRotation, Vector3 clientImagePosition, Quaternion clientImageRotation, ClientRpcParams clientRpcParams = default)
         {
-            if (LocalPlayerStatus != HoloKitAppPlayerStatus.SyncingPose) return;
+            if (LocalPlayer.Status.Value != HoloKitAppPlayerStatus.SyncingPose) return;
 
             _imagePosePairQueue.Enqueue(new ImagePosePair()
             {
@@ -281,7 +247,7 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         private void OnSynced()
         {
-            LocalPlayerStatus = HoloKitAppPlayerStatus.Synced;
+            LocalPlayer.Status.Value = HoloKitAppPlayerStatus.Synced;
             StopScanningQRCode();
             // We use the last result in the queue to reset ARSession origin
             var lastSyncResult = _syncResultQueue.Last();
@@ -333,7 +299,7 @@ namespace Holoi.Library.HoloKitApp
             // Destroy the spawned alignment marker
             DestroyAlignmentMarker();
             // Conform the local player status
-            LocalPlayerStatus = HoloKitAppPlayerStatus.Checked;
+            LocalPlayer.Status.Value = HoloKitAppPlayerStatus.Checked;
         }
     }
 }
