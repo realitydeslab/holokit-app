@@ -66,8 +66,16 @@ namespace Holoi.Library.MOFABase
 
         private MofaBaseRealityManager _mofaBaseRealityManager;
 
+        /// <summary>
+        /// This event is called when the player tries to cast the basic spell
+        /// but it is not charged.
+        /// </summary>
         public static event Action OnBasicSpellNotCharged;
 
+        /// <summary>
+        /// This event is called when the player tries to cast the secondary spell
+        /// but it has exceeded its max usage count.
+        /// </summary>
         public static event Action OnSecondarySpellExceededMaxUseCount;
 
         private void Start()
@@ -120,27 +128,41 @@ namespace Holoi.Library.MOFABase
         /// at the current moment.
         /// </summary>
         /// <returns></returns>
-        private bool CheckIsActive()
+        private void CheckIsActive()
         {
             if (_mofaBaseRealityManager.CurrentPhase.Value != MofaPhase.Fighting)
-                return false;
+            {
+                _isActive = false;
+                return;
+            }
 
             var localMofaPlayer = _mofaBaseRealityManager.LocalMofaPlayer;
             if (localMofaPlayer == null)
-                return false;
+            {
+                _isActive = false;
+                return;
+            }
 
             if (localMofaPlayer.LifeShield == null)
-                return false;
+            {
+                _isActive = false;
+                return;
+            }
 
             if (localMofaPlayer.LifeShield.IsDestroyed)
-                return false;
+            {
+                _isActive = false;
+                return;
+            }
 
-            return true;
+            _isActive = true;
+            return;
         }
 
         private void FixedUpdate()
         {
-            if (_isActive = CheckIsActive() == false)
+            CheckIsActive();
+            if (!_isActive)
                 return;
 
             if (_basicSpellCharge < _basicSpell.ChargeTime * _basicSpell.MaxChargeCount)

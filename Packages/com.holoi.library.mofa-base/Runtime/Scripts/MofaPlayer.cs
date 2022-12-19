@@ -21,14 +21,14 @@ namespace Holoi.Library.MOFABase
         public NetworkVariable<MofaTeam> Team = new(MofaTeam.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         /// <summary>
+        /// This is the index of the magic school selected by this player.
+        /// </summary>
+        public NetworkVariable<int> MagicSchoolIndex = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+        /// <summary>
         /// Whether this player is ready to fight?
         /// </summary>
         public NetworkVariable<bool> Ready = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
-        /// <summary>
-        /// This is the index of the magic school selected by this player.
-        /// </summary>
-        public NetworkVariable<int> MagicSchool = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         /// <summary>
         /// The number of kill this player has made in the current round.
@@ -96,7 +96,7 @@ namespace Holoi.Library.MOFABase
                     Team.Value = IsServer ? MofaTeam.Blue : MofaTeam.Red;
 
                 // Assign the MagicSchool
-                MagicSchool.Value = int.Parse(HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId);
+                MagicSchoolIndex.Value = int.Parse(HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId);
             }
             base.OnNetworkSpawn();
         }

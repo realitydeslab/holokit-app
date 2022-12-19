@@ -93,6 +93,10 @@ namespace Holoi.Library.MOFABase
         [Tooltip("The duration of a single round")]
         public float RoundDuration = 80f;
 
+        public float RoundOverDuration = 3f;
+
+        public float RoundResultDuration = 3f;
+
         [Header("Network Variables")]
         /// <summary>
         /// The current phase of the game.
@@ -102,7 +106,7 @@ namespace Holoi.Library.MOFABase
         /// <summary>
         /// The current round number of the game.
         /// </summary>
-        public NetworkVariable<int> RoundCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        public NetworkVariable<int> RoundCount = new(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         public MofaPlayer HostMofaPlayer
         {
@@ -165,6 +169,7 @@ namespace Holoi.Library.MOFABase
             switch (newPhase)
             {
                 case MofaPhase.Waiting:
+                    RoundCount.Value++;
                     break;
                 case MofaPhase.Countdown:
                     break;
@@ -184,8 +189,11 @@ namespace Holoi.Library.MOFABase
             switch (newPhase)
             {
                 case MofaPhase.Waiting:
+                    LocalMofaPlayer.Ready.Value = false;
                     break;
                 case MofaPhase.Countdown:
+                    if (RoundCount.Value == 1)
+                        InitializeSpellPool();
                     break;
                 case MofaPhase.Fighting:
                     break;
@@ -196,6 +204,15 @@ namespace Holoi.Library.MOFABase
             }
 
             OnMofaPhaseChanged?.Invoke(newPhase);
+        }
+
+        private void InitializeSpellPool()
+        {
+            var mofaPlayerList = MofaPlayerList;
+            foreach (var mofaPlayer in mofaPlayerList)
+            {
+                SpellPool.RegisterSpellsForPlayerWithMagicSchoolIndex(mofaPlayer.MagicSchoolIndex.Value);
+            }
         }
 
         public MofaPlayer GetMofaPlayer(ulong clientId)
@@ -215,7 +232,10 @@ namespace Holoi.Library.MOFABase
         /// <summary>
         /// This function is called when the local player tries to get ready.
         /// </summary>
-        public abstract void TryGetReady();
+        public virtual void TryGetReady()
+        {
+            LocalMofaPlayer.Ready.Value = true;
+        }
 
         private void OnMofaPlayerReadyChanged(MofaPlayer mofaPlayer)
         {
@@ -225,7 +245,7 @@ namespace Holoi.Library.MOFABase
             {
                 var mofaPlayerList = MofaPlayerList;
                 // We need at least one player in each team to start
-                if (mofaPlayerList.Any(t => t.Team.Value == MofaTeam.Blue) && mofaPlayerList.Any(t => t.Team.Value == MofaTeam.Red))
+                if ((mofaPlayerList.Any(t => t.Team.Value == MofaTeam.Blue) && mofaPlayerList.Any(t => t.Team.Value == MofaTeam.Red)) || HoloKit.HoloKitUtils.IsEditor)
                 {
                     // If all players are ready
                     int readyPlayerCount = mofaPlayerList.Count(t => t.Ready.Value);
@@ -272,7 +292,7 @@ namespace Holoi.Library.MOFABase
         protected void SpawnLifeShield(ulong clientId)
         {
             MofaPlayer mofaPlayer = GetMofaPlayer(clientId);
-            var lifeShieldPrefab = LifeShieldList.GetLifeShield(mofaPlayer.MagicSchool.Value);
+            var lifeShieldPrefab = LifeShieldList.GetLifeShield(mofaPlayer.MagicSchoolIndex.Value);
             var lifeShield = Instantiate(lifeShieldPrefab);
             lifeShield.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
         }
@@ -283,15 +303,13 @@ namespace Holoi.Library.MOFABase
             player.LifeShield = lifeShield;
 
             if (IsServer)
-            {
-                lifeShield.transform.SetParent(player.transform);
-                lifeShield.transform.localPosition = player.LifeShieldOffset;
-                lifeShield.transform.localRotation = Quaternion.identity;
-                lifeShield.transform.localScale = Vector3.one;
-            }
+                lifeShield.GetComponent<NetworkObject>().TrySetParent(player.transform, false);
         }
 
-        public abstract void StartRound();
+        public virtual void StartRound()
+        {
+            StartCoroutine(StartBaseRoundFlow());
+        }
 
         /// <summary>
         /// Call this function to start a single MOFA round. This function can only
@@ -304,9 +322,9 @@ namespace Holoi.Library.MOFABase
             CurrentPhase.Value = MofaPhase.Fighting;
             yield return new WaitForSeconds(RoundDuration);
             CurrentPhase.Value = MofaPhase.RoundOver;
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(RoundOverDuration);
             CurrentPhase.Value = MofaPhase.RoundResult;
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(RoundResultDuration);
             CurrentPhase.Value = MofaPhase.Waiting;
         }
 

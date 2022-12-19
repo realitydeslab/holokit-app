@@ -102,6 +102,17 @@ namespace Holoi.Library.MOFABase
             _rightDestroyed.OnValueChanged -= OnRightDestroyedFunc;
         }
 
+        public override void OnNetworkObjectParentChanged(NetworkObject parentNetworkObject)
+        {
+            base.OnNetworkObjectParentChanged(parentNetworkObject);
+            if (parentNetworkObject != null && parentNetworkObject.TryGetComponent<MofaPlayer>(out var mofaPlayer))
+            {
+                transform.localPosition = mofaPlayer.LifeShieldOffset;
+                transform.localRotation = Quaternion.identity;
+                transform.localScale = Vector3.one;
+            }    
+        }
+
         // Host only
         public void OnDamaged(LifeShieldArea area, ulong attackerClientId)
         {

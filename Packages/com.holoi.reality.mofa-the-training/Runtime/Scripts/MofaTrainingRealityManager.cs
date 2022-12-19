@@ -52,7 +52,7 @@ namespace Holoi.Reality.MOFATheTraining
         {
             _mofaPlayerAI = Instantiate(_mofaPlayerAIPrefab);
             // TODO: This is hard-coded
-            _mofaPlayerAI.MagicSchool.Value = 0;
+            _mofaPlayerAI.MagicSchoolIndex.Value = 0;
             _mofaPlayerAI.Team.Value = MofaTeam.Red;
             _mofaPlayerAI.GetComponent<NetworkObject>().SpawnWithOwnership(MofaPlayerAI.AIClientId);
         }
