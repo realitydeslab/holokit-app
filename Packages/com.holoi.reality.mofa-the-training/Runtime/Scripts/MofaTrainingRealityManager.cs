@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using Unity.Netcode;
@@ -10,18 +11,23 @@ namespace Holoi.Reality.MOFATheTraining
     public class MofaTrainingRealityManager : MofaBaseRealityManager
     {
         [Header("MOFA The Training")]
-        [SerializeField] private MofaPlayerAI _mofaPlayerAIPrefab;
+        [SerializeField] private MofaAIPlayer _mofaPlayerAIPrefab;
 
         [Header("AR")]
         [SerializeField] private ARPlaneManager _arPlaneManager;
 
         [SerializeField] private ARRaycastManager _arRaycastManager;
 
-        [SerializeField] private ARPlacementIndicator _arPlacementIndicator;
+        [SerializeField] private ARPlacementManager _arPlacementManager;
 
-        [SerializeField] private MofaARPlacementIndicatorVfxController _arPlacementIndicatorVfxController;
+        [SerializeField] private MofaARPlacementIndicator _arPlacementIndicator;
 
-        private MofaPlayerAI _mofaPlayerAI;
+        private MofaAIPlayer _mofaPlayerAI;
+
+        /// <summary>
+        /// This event is called when the player tries to start the game in an invalid position.
+        /// </summary>
+        public static event Action OnFailedToStartAtCurrentPosition;
 
         private void Start()
         {
@@ -29,12 +35,12 @@ namespace Holoi.Reality.MOFATheTraining
             {
                 _arPlaneManager.enabled = true;
                 _arRaycastManager.enabled = true;
-                _arPlacementIndicator.IsActive = true;
+                _arPlacementManager.IsActive = true;
             }
             else
             {
+                Destroy(_arPlacementManager.gameObject);
                 Destroy(_arPlacementIndicator.gameObject);
-                Destroy(_arPlacementIndicatorVfxController.gameObject);
             }
         }
 
@@ -44,25 +50,37 @@ namespace Holoi.Reality.MOFATheTraining
 
             if (IsServer)
             {
-                SpawnMofaPlayerAI();
+                //SpawnMofaPlayerAI();
             }
         }
 
         private void SpawnMofaPlayerAI()
         {
             _mofaPlayerAI = Instantiate(_mofaPlayerAIPrefab);
-            // TODO: This is hard-coded
+            _mofaPlayerAI.GetComponent<NetworkObject>().SpawnWithOwnership(MofaAIPlayer.AIPlayerClientId);
             _mofaPlayerAI.MagicSchoolIndex.Value = 0;
             _mofaPlayerAI.Team.Value = MofaTeam.Red;
-            _mofaPlayerAI.GetComponent<NetworkObject>().SpawnWithOwnership(MofaPlayerAI.AIClientId);
         }
 
         public override void TryGetReady()
         {
-            throw new System.NotImplementedException();
+            // We only need to select a proper spawn point in the first round
+            if (RoundCount.Value == 1)
+            {
+                if (_arPlacementManager.IsValid)
+                    GetReady();
+                else
+                    OnFailedToStartAtCurrentPosition?.Invoke();
+            }
         }
 
-        public override void StartRound()
+        protected override void SetupRound()
+        {
+            base.SetupRound();
+
+        }
+
+        protected override void StartRound()
         {
             //if (CurrentPhase != MofaPhase.Waiting && CurrentPhase != MofaPhase.RoundData)
             //{

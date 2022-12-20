@@ -243,7 +243,18 @@ namespace Holoi.Library.MOFABase
         /// </summary>
         public virtual void TryGetReady()
         {
-            LocalMofaPlayer.Ready.Value = true;
+            GetReady();
+        }
+
+        /// <summary>
+        /// Get ready for local player.
+        /// </summary>
+        protected void GetReady()
+        {
+            if (CurrentPhase.Value == MofaPhase.Waiting)
+                LocalMofaPlayer.Ready.Value = true;
+            else
+                Debug.Log($"[MofaBaseRealityManager] You should not call 'TryGetReady()' in the current MOFA phase {CurrentPhase.Value}");
         }
 
         private void OnMofaPlayerReadyChanged(MofaPlayer mofaPlayer)
@@ -270,11 +281,8 @@ namespace Holoi.Library.MOFABase
         /// <summary>
         /// This function is called right before round start.
         /// </summary>
-        protected void SetupRound()
+        protected virtual void SetupRound()
         {
-            if (!IsServer)
-                Debug.LogError("[MofaBaseRealityManager] Method 'SetupRound()' can only be called by the server");
-
             // Spawn life shield for every mofa player
             SetupLifeShields();
 
@@ -315,7 +323,7 @@ namespace Holoi.Library.MOFABase
                 lifeShield.GetComponent<NetworkObject>().TrySetParent(player.transform, false);
         }
 
-        public virtual void StartRound()
+        protected virtual void StartRound()
         {
             StartCoroutine(StartBaseRoundFlow());
         }

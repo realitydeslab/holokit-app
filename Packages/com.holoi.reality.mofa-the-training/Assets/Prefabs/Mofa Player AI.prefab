@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5605601951325644500}
   - component: {fileID: 5605601951325644501}
-  - component: {fileID: 5605601951325644503}
-  - component: {fileID: 5605601951325644502}
+  - component: {fileID: 1554181369868630519}
+  - component: {fileID: 2076845300811182909}
+  - component: {fileID: 3548719697881645330}
   m_Layer: 0
   m_Name: Mofa Player AI
   m_TagString: Untagged
@@ -50,7 +51,7 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &5605601951325644503
+--- !u!114 &1554181369868630519
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -62,22 +63,103 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0130bba435ba4eb596b1ed3184cc3c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MagicSchoolTokenId:
+  Name:
+    m_InternalValue:
+      utf8LengthInBytes: 7
+      bytes:
+        offset0000:
+          byte0000: 85
+          byte0001: 110
+          byte0002: 107
+          byte0003: 110
+          byte0004: 111
+          byte0005: 119
+          byte0006: 110
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0016:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0032:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        byte0048: 0
+        byte0049: 0
+        byte0050: 0
+        byte0051: 0
+        byte0052: 0
+        byte0053: 0
+        byte0054: 0
+        byte0055: 0
+        byte0056: 0
+        byte0057: 0
+        byte0058: 0
+        byte0059: 0
+        byte0060: 0
+        byte0061: 0
+  Type:
+    m_InternalValue: 0
+  Status:
     m_InternalValue: 0
   Team:
     m_InternalValue: 0
+  MagicSchoolIndex:
+    m_InternalValue: 0
   Ready:
     m_InternalValue: 0
-  KillCount:
+  Kill:
     m_InternalValue: 0
-  DeathCount:
+  Death:
+    m_InternalValue: 0
+  CastCount:
+    m_InternalValue: 0
+  HitCount:
+    m_InternalValue: 0
+  Distance:
+    m_InternalValue: 0
+  Energy:
     m_InternalValue: 0
   LifeShield: {fileID: 0}
   LifeShieldOffset: {x: 0, y: -0.4, z: 0.5}
   _mofaAvatarCollectionParamsList: {fileID: 11400000, guid: 6dfba70e61d794376b450c99e9eb91aa, type: 2}
   _mofaAvatarRuntimeAnimatorController: {fileID: 9100000, guid: b0119a0fd66a549739d35b5d7961ebcc, type: 2}
-  _magicSchool: {fileID: 11400000, guid: 8ea158d3f8aa4402a813138f8011a530, type: 2}
---- !u!114 &5605601951325644502
+  _magicSchool: {fileID: 0}
+--- !u!114 &2076845300811182909
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -86,7 +168,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5605601951325644458}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: cc4ee6212483c4ab8bad0fae81f38df0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SyncPositionX: 1
@@ -95,11 +177,33 @@ MonoBehaviour:
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
-  SyncScaleX: 0
-  SyncScaleY: 0
-  SyncScaleZ: 0
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
+--- !u!1773428102 &3548719697881645330
+ParentConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5605601951325644458}
+  m_Enabled: 1
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_TranslationOffsets: []
+  m_RotationOffsets: []
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_AffectRotationX: 1
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_IsContraintActive: 0
+  m_IsLocked: 0
+  m_Sources: []

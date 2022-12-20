@@ -4,7 +4,7 @@ using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Library.MOFABase
 {
-    public class MofaARPlacementIndicatorVfxController : MonoBehaviour
+    public class MofaARPlacementIndicator : MonoBehaviour
     {
         [SerializeField] private Transform _hitPoint;
 

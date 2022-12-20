@@ -39,7 +39,7 @@ namespace Holoi.Library.MOFABase
             // Update life shield petals
             if (_localPlayerLifeShield)
             {
-                _lifeCircles.SetBool("Center", !_localPlayerLifeShield.TopDestroyed.Value);
+                _lifeCircles.SetBool("Center", !_localPlayerLifeShield.CenterDestroyed.Value);
                 _lifeCircles.SetBool("Up", !_localPlayerLifeShield.TopDestroyed.Value);
                 _lifeCircles.SetBool("Left", !_localPlayerLifeShield.LeftDestroyed.Value);
                 _lifeCircles.SetBool("Right", !_localPlayerLifeShield.RightDestroyed.Value);

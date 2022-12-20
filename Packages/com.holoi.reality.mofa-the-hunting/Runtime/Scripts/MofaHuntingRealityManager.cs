@@ -16,7 +16,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private ARRaycastManager _arRaycastManager;
 
-        [SerializeField] private ARPlacementIndicator _arPlacementIndicator;
+        [SerializeField] private ARPlacementManager _arPlacementIndicator;
 
         [SerializeField] private GameObject _arPlacementIndicatorVisual;
 
@@ -83,7 +83,7 @@ namespace Holoi.Reality.MOFATheHunting
         }
 
         // Host only
-        public override void StartRound()
+        protected override void StartRound()
         {
             if (_arPlacementIndicator != null && _arPlacementIndicator.IsActive && _arPlacementIndicator.IsValid)
             {

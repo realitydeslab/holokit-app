@@ -11,9 +11,9 @@ namespace Holoi.Reality.MOFATheTraining
         public float Scale;
 
         // From avatar center to life shield center
-        public Vector3 LifeShiledOffset;
+        public Vector3 CenterEyeToLifeShiledOffset;
 
-        // From avatar center to avatar's center eye
-        public Vector3 CenterEyeOffset;
+        // From avatar origin to avatar's center eye
+        public Vector3 AvatarOriginToCenterEyeOffset;
     }
 }

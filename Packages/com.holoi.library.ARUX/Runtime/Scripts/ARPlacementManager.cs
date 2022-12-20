@@ -8,7 +8,7 @@ using HoloKit;
 
 namespace Holoi.Library.ARUX
 {
-    public class ARPlacementIndicator : MonoBehaviour
+    public class ARPlacementManager : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private ARRaycastManager _arRaycastManager;

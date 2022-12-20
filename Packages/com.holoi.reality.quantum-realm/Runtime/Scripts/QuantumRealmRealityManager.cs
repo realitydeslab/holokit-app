@@ -16,7 +16,7 @@ namespace Holoi.Reality.QuantumRealm
 
         [SerializeField] private ARRaycastManager _arRaycastManager;
 
-        [SerializeField] private ARPlacementIndicator _arPlacementIndicator;
+        [SerializeField] private ARPlacementManager _arPlacementIndicator;
 
         [SerializeField] private HoverableStartButton _hoverableStartButton;
 

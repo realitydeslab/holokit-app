@@ -107,7 +107,7 @@ namespace Holoi.Library.MOFABase
             base.OnNetworkObjectParentChanged(parentNetworkObject);
             if (parentNetworkObject != null && parentNetworkObject.TryGetComponent<MofaPlayer>(out var mofaPlayer))
             {
-                transform.localPosition = mofaPlayer.LifeShieldOffset;
+                transform.localPosition = mofaPlayer.CenterEyeToLifeShieldOffset;
                 transform.localRotation = Quaternion.identity;
                 transform.localScale = Vector3.one;
             }    

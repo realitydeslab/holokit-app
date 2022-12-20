@@ -68,7 +68,7 @@ namespace Holoi.Library.MOFABase
         /// <summary>
         /// The offset from the center eye point to the center of the life shield.
         /// </summary>
-        public Vector3 LifeShieldOffset = new(0f, -0.4f, 0.5f);
+        public Vector3 CenterEyeToLifeShieldOffset = new(0f, -0.4f, 0.5f);
 
         public float AltDistance => _altDistance;
 
@@ -87,6 +87,7 @@ namespace Holoi.Library.MOFABase
 
         public override void OnNetworkSpawn()
         {
+            base.OnNetworkSpawn();
             Ready.OnValueChanged += OnReadyValueChanged;
             if (IsOwner)
             {
@@ -98,11 +99,11 @@ namespace Holoi.Library.MOFABase
                 // Assign the MagicSchool
                 MagicSchoolIndex.Value = int.Parse(HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId);
             }
-            base.OnNetworkSpawn();
         }
 
         public override void OnNetworkDespawn()
         {
+            base.OnNetworkDespawn();
             Ready.OnValueChanged -= OnReadyValueChanged;
         }
 

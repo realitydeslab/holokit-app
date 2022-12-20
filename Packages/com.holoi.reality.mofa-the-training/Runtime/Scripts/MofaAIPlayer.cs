@@ -15,19 +15,9 @@ namespace Holoi.Reality.MOFATheTraining
         SecondarySpell = 2
     }
 
-    public class MofaPlayerAI : MofaPlayer
+    public partial class MofaAIPlayer : MofaPlayer
     {
-        [SerializeField] private MofaAvatarCollectionParamsList _mofaAvatarCollectionParamsList;
-
-        [SerializeField] private RuntimeAnimatorController _mofaAvatarRuntimeAnimatorController;
-
-        [SerializeField] private MagicSchool _magicSchool;
-
         private readonly NetworkVariable<Vector2> _animationVector = new(Vector2.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
-        private Animator _animator;
-
-        private GameObject _avatar;
 
         // From avatar origin to avatar's center eye
         private Vector3 _centerEyeOffset;
@@ -56,11 +46,11 @@ namespace Holoi.Reality.MOFATheTraining
 
         private Vector3 _lastFrameRight;
 
-        private Vector3 _lastFramePosition;
+        private Vector3 _avatrLastFramePosition;
 
         private const float Speed = 0.3f;
 
-        public const ulong AIClientId = 99;
+        public const ulong AIPlayerClientId = 99;
 
         private readonly Vector4 VelocityRemap = new(-.02f, .02f, -1f, 1f);
 
@@ -68,29 +58,25 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void Start()
         {
-            LifeShield.OnBeingDestroyed += OnLifeShieldBeingDestroyed;
-            LifeShield.OnRenovated += OnLifeShieldRenovated;
+
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
-            LifeShield.OnBeingDestroyed -= OnLifeShieldBeingDestroyed;
-            LifeShield.OnRenovated -= OnLifeShieldRenovated;
+
         }
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-            _mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+ 
             SetupSpellsForAI();
-            _animationVector.OnValueChanged += OnAnimationVectorChanged;
         }
 
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
-            _animationVector.OnValueChanged -= OnAnimationVectorChanged;
         }
 
         protected override void Update()
@@ -121,27 +107,6 @@ namespace Holoi.Reality.MOFATheTraining
                 Destroy(go);
             }
             SpawnAvatar(avatarCollectionBundleId, avatarTokenId);
-        }
-
-        private void SpawnAvatar(string avatarCollectionBundleId, string avatarTokenId)
-        {
-            if (_avatar == null)
-            {
-                var preferencedAvatarCollection = HoloKitApp.Instance.GlobalSettings.AvatarCollectionList.GetMetaAvatarCollection(avatarCollectionBundleId);
-                var preferencedAvatar = preferencedAvatarCollection.GetMetaAvatar(avatarTokenId);
-                var avatarCollectionParams = _mofaAvatarCollectionParamsList.GetAvatarCollectionParams(preferencedAvatarCollection);
-                _centerEyeOffset = avatarCollectionParams.CenterEyeOffset;
-                LifeShieldOffset = avatarCollectionParams.LifeShiledOffset;
-                _avatar = Instantiate(preferencedAvatar.Prefab,
-                            transform.position, Quaternion.identity);
-                // Setup avatar's components
-                _avatar.transform.SetParent(transform);
-                _avatar.transform.localPosition = Vector3.zero;
-                _avatar.transform.localRotation = Quaternion.identity;
-                _avatar.transform.localScale = new Vector3(avatarCollectionParams.Scale, avatarCollectionParams.Scale, avatarCollectionParams.Scale);
-                _animator = _avatar.GetComponent<Animator>();
-                _animator.runtimeAnimatorController = _mofaAvatarRuntimeAnimatorController;
-            }
         }
 
         private void FixedUpdate()
@@ -199,76 +164,60 @@ namespace Holoi.Reality.MOFATheTraining
         //    }
         //}
 
-        private void OnLifeShieldBeingDestroyed(ulong _, ulong ownerClientId)
-        {
-            if (ownerClientId == OwnerClientId)
-            {
-                _animationVector.Value = Vector2.zero;
-            }
-        }
-
-        private void OnLifeShieldRenovated(ulong ownerClientId)
-        {
-            if (ownerClientId == OwnerClientId)
-            {
-                GetNextDestPos();
-            }
-        }
-
         private void SetupSpellsForAI()
         {
-            foreach (var spell in _mofaBaseRealityManager.SpellList.List)
-            {
-                if (spell.MagicSchool.TokenId.Equals(_magicSchool.TokenId))
-                {
-                    if (spell.SpellType == SpellType.Basic)
-                    {
-                        _basicSpell = spell;
-                    }
-                    else
-                    {
-                        _secondarySpell = spell;
-                    }
-                }
-            }
+            //foreach (var spell in _mofaBaseRealityManager.SpellList.List)
+            //{
+            //    if (spell.MagicSchool.TokenId.Equals(_magicSchool.TokenId))
+            //    {
+            //        if (spell.SpellType == SpellType.Basic)
+            //        {
+            //            _basicSpell = spell;
+            //        }
+            //        else
+            //        {
+            //            _secondarySpell = spell;
+            //        }
+            //    }
+            //}
         }
 
-        private IEnumerator AttackAI()
-        {
-            yield return new WaitForSeconds(UnityEngine.Random.Range(1f, 5f));
+        //private IEnumerator AttackAI()
+        //{
+        //    //yield return new WaitForSeconds(UnityEngine.Random.Range(1f, 5f));
 
-            while (true)
-            {
-                float random = UnityEngine.Random.Range(0f, 1f);
-                if (random < 0.2f) // Do nothing
-                {
-                    if (_lastAIAttackState == AIAttackState.None)
-                    {
-                        StartCoroutine(SpawnSpellWithDelay(SpellType.Basic));
-                    }
-                    else
-                    {
-                        _lastAIAttackState = AIAttackState.None;
-                    }
-                }
-                else if (random > 0.9) // Secondary spell
-                {
-                    if (_lastAIAttackState == AIAttackState.SecondarySpell)
-                    {
-                        _lastAIAttackState = AIAttackState.None;
-                    }
-                    else
-                    {
-                        StartCoroutine(SpawnSpellWithDelay(SpellType.Secondary));
-                    }
-                }
-                else // Basic spell
-                {
-                    StartCoroutine(SpawnSpellWithDelay(SpellType.Basic));
-                }
-                yield return new WaitForSeconds(2.5f);
-            }
-        }
+        //    //while (true)
+        //    //{
+        //    //    float random = UnityEngine.Random.Range(0f, 1f);
+        //    //    if (random < 0.2f) // Do nothing
+        //    //    {
+        //    //        if (_lastAIAttackState == AIAttackState.None)
+        //    //        {
+        //    //            StartCoroutine(SpawnSpellWithDelay(SpellType.Basic));
+        //    //        }
+        //    //        else
+        //    //        {
+        //    //            _lastAIAttackState = AIAttackState.None;
+        //    //        }
+        //    //    }
+        //    //    else if (random > 0.9) // Secondary spell
+        //    //    {
+        //    //        if (_lastAIAttackState == AIAttackState.SecondarySpell)
+        //    //        {
+        //    //            _lastAIAttackState = AIAttackState.None;
+        //    //        }
+        //    //        else
+        //    //        {
+        //    //            StartCoroutine(SpawnSpellWithDelay(SpellType.Secondary));
+        //    //        }
+        //    //    }
+        //    //    else // Basic spell
+        //    //    {
+        //    //        StartCoroutine(SpawnSpellWithDelay(SpellType.Basic));
+        //    //    }
+        //    //    yield return new WaitForSeconds(2.5f);
+        //    //}
+        //}
 
         private IEnumerator SpawnSpellWithDelay(SpellType spellType)
         {
@@ -317,7 +266,7 @@ namespace Holoi.Reality.MOFATheTraining
         private void OnAISpawnedSpellClientRpc(SpellType spellType)
         {
             OnAISpawnedSpell?.Invoke(spellType);
-            PlayAvatarCastSpellAnimation(spellType);
+            //PlayAvatarCastSpellAnimation(spellType);
         }
 
         private void SpawnSpell(SpellType spellType)
@@ -344,59 +293,59 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void UpdateAvatarMovementAnimation()
         {
-            if (_animator == null)
-            {
-                return;
-            }
+            //if (_animator == null)
+            //{
+            //    return;
+            //}
 
-            if (_notFirstAnimationFrame)
-            {
-                // Calculate the relative z and x velocity
-                Vector3 distFromLastFrame = transform.position - _lastFramePosition;
-                if (distFromLastFrame != Vector3.zero)
-                {
-                    float z = Vector3.Dot(distFromLastFrame, _lastFrameForward);
-                    float x = Vector3.Dot(distFromLastFrame, _lastFrameRight);
+            //if (_notFirstAnimationFrame)
+            //{
+            //    // Calculate the relative z and x velocity
+            //    Vector3 distFromLastFrame = transform.position - _avatrLastFramePosition;
+            //    if (distFromLastFrame != Vector3.zero)
+            //    {
+            //        float z = Vector3.Dot(distFromLastFrame, _lastFrameForward);
+            //        float x = Vector3.Dot(distFromLastFrame, _lastFrameRight);
 
-                    var staticThreshold = 0.001667f; // if velocity < 0.1m/s, we regard it static.
-                    z = MofaTrainingUtils.InverseClamp(z, -1 * staticThreshold, 1 * staticThreshold);
-                    x = MofaTrainingUtils.InverseClamp(x, -1 * staticThreshold, 1 * staticThreshold);
+            //        var staticThreshold = 0.001667f; // if velocity < 0.1m/s, we regard it static.
+            //        z = MofaTrainingUtils.InverseClamp(z, -1 * staticThreshold, 1 * staticThreshold);
+            //        x = MofaTrainingUtils.InverseClamp(x, -1 * staticThreshold, 1 * staticThreshold);
 
-                    z = MofaTrainingUtils.Remap(z, VelocityRemap.x, VelocityRemap.y, VelocityRemap.z, VelocityRemap.w, true);
-                    x = MofaTrainingUtils.Remap(x, VelocityRemap.x, VelocityRemap.y, VelocityRemap.z, VelocityRemap.w, true);
+            //        z = MofaTrainingUtils.Remap(z, VelocityRemap.x, VelocityRemap.y, VelocityRemap.z, VelocityRemap.w, true);
+            //        x = MofaTrainingUtils.Remap(x, VelocityRemap.x, VelocityRemap.y, VelocityRemap.z, VelocityRemap.w, true);
 
-                    _animationVector.Value = new Vector2(x, z);
-                    //_animator.SetFloat("Velocity Z", z);
-                    //_animator.SetFloat("Velocity X", x);
-                }
-            }
-            else
-            {
-                _notFirstAnimationFrame = true;
-            }
+            //        _animationVector.Value = new Vector2(x, z);
+            //        //_animator.SetFloat("Velocity Z", z);
+            //        //_animator.SetFloat("Velocity X", x);
+            //    }
+            //}
+            //else
+            //{
+            //    _notFirstAnimationFrame = true;
+            //}
 
-            // Save data for next frame calculation
-            _lastFrameForward = transform.forward;
-            _lastFrameRight = transform.right;
-            _lastFramePosition = transform.position;
+            //// Save data for next frame calculation
+            //_lastFrameForward = transform.forward;
+            //_lastFrameRight = transform.right;
+            //_avatrLastFramePosition = transform.position;
         }
 
-        private void OnAnimationVectorChanged(Vector2 oldValue, Vector2 newValue)
-        {
-            _animator.SetFloat("Velocity Z", newValue.x);
-            _animator.SetFloat("Velocity X", newValue.y);
-        }
+        //private void OnAnimationVectorChanged(Vector2 oldValue, Vector2 newValue)
+        //{
+        //    _animator.SetFloat("Velocity Z", newValue.x);
+        //    _animator.SetFloat("Velocity X", newValue.y);
+        //}
 
-        private void PlayAvatarCastSpellAnimation(SpellType spellType)
-        {
-            if (spellType == SpellType.Basic)
-            {
-                _animator.SetTrigger("Attack A");
-            }
-            else
-            {
-                _animator.SetTrigger("Attack B");
-            }
-        }
+        //private void PlayAvatarCastSpellAnimation(SpellType spellType)
+        //{
+        //    if (spellType == SpellType.Basic)
+        //    {
+        //        _animator.SetTrigger("Attack A");
+        //    }
+        //    else
+        //    {
+        //        _animator.SetTrigger("Attack B");
+        //    }
+        //}
     }
 }

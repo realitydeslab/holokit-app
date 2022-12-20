@@ -268,7 +268,7 @@ GameObject:
   - component: {fileID: 223140493}
   - component: {fileID: 223140494}
   m_Layer: 0
-  m_Name: AR Placement Indicator
+  m_Name: AR Placement Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1389,6 +1389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59256fc500bba4b53be81d558760c8cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentWatchState: 0
 --- !u!1001 &1777860268
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1626,7 +1627,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6856670901743964931, guid: 71298fbcffddd47ebaab0c815b9529d9, type: 3}
       propertyPath: m_Name
-      value: Avatar Placement Indicator Vfx Controller
+      value: Mofa AR Placement Indicator
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 71298fbcffddd47ebaab0c815b9529d9, type: 3}
@@ -1770,22 +1771,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerPrefab: {fileID: 7073433850997623658, guid: 5180be57b37b4499b813f534629c92ee, type: 3}
   NetworkPrefabs:
-  - {fileID: 7073433850997623658, guid: 5180be57b37b4499b813f534629c92ee, type: 3}
-  - {fileID: 5605601951325644458, guid: 20edfea54ed5a4954b363c02944ef2a2, type: 3}
   - {fileID: 2433373705755214503, guid: b963589a796cb4428bd0f490ba00b4f5, type: 3}
   - {fileID: 7001980647101120611, guid: d6f5ccdb974d849ccbffc5ccc2886a9d, type: 3}
   - {fileID: 8051939751654401173, guid: 92aefb5208d5b428487d81c4995848ac, type: 3}
   - {fileID: 8051939751654401173, guid: 28812405df7fc426ba65ec191811d717, type: 3}
   - {fileID: 8051939751654401173, guid: d2675e81d0b154d908492c44a33b8933, type: 3}
   - {fileID: 8051939751654401173, guid: 91ac9eb7792894413bdf3e1376a818c6, type: 3}
-  - {fileID: 8514985724899720381, guid: 89b92195abae04521b03821996206962, type: 3}
-  - {fileID: 7001980647101120611, guid: 0ea636bee7ac248fc9bb6c008bec1217, type: 3}
-  - {fileID: 782201434889079867, guid: 3e875ebcd22164f2c9d7c1e65ff9f023, type: 3}
-  - {fileID: 8159889777712506721, guid: fd0173b88d782433c9956479254111c3, type: 3}
   - {fileID: 7460444132525488055, guid: c5986edab3a93488eae52784d78fcc85, type: 3}
   - {fileID: 7460444132525488055, guid: 2685ff49be8ba4dd2b6a88c33e39b21e, type: 3}
   - {fileID: 7460444132525488055, guid: 1ef047936f218493c8e2383fc9ec4396, type: 3}
   - {fileID: 4253559872470446980, guid: ee08f329fcb824823a3589be3fab8963, type: 3}
+  - {fileID: 5605601951325644458, guid: 20edfea54ed5a4954b363c02944ef2a2, type: 3}
   UIPanelPrefabs:
   - {fileID: 6114804334400054014, guid: f05688d6fac784e78b3a51ae3f457489, type: 3}
   UIRealitySettingTabs: []
@@ -1793,18 +1789,19 @@ MonoBehaviour:
   SpellList: {fileID: 11400000, guid: b4e94e5ffa1d74c20813c68747a2d3cc, type: 2}
   LifeShieldList: {fileID: 11400000, guid: 6232ecefe87994ff798dbb39acb2abd6, type: 2}
   SpellPool: {fileID: 1571912766}
-  _mofaPlayerPrefab: {fileID: 5531124449187713469, guid: 5180be57b37b4499b813f534629c92ee, type: 3}
   CountdownDuration: 3
   RoundDuration: 80
+  RoundOverDuration: 3
+  RoundResultDuration: 3
   CurrentPhase:
     m_InternalValue: 0
   RoundCount:
-    m_InternalValue: 0
+    m_InternalValue: 1
   _mofaPlayerAIPrefab: {fileID: 5605601951325644503, guid: 20edfea54ed5a4954b363c02944ef2a2, type: 3}
   _arPlaneManager: {fileID: 2068233603}
   _arRaycastManager: {fileID: 2068233602}
-  _arPlacementIndicator: {fileID: 223140494}
-  _arPlacementIndicatorVfxController: {fileID: 1959132499}
+  _arPlacementManager: {fileID: 223140494}
+  _arPlacementIndicator: {fileID: 1959132499}
 --- !u!114 &5912776338877718956
 MonoBehaviour:
   m_ObjectHideFlags: 0
