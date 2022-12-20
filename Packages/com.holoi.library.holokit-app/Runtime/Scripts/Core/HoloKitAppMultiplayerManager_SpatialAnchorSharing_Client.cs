@@ -102,7 +102,7 @@ namespace Holoi.Library.HoloKitApp
         [ClientRpc]
         private void OnRespondTimestampClientRpc(double hostTimestamp, double oldClientTimestamp, ClientRpcParams _ = default)
         {
-            if (LocalPlayer.Status.Value != HoloKitAppPlayerStatus.SyncingTimestamp) return;
+            if (LocalPlayer.PlayerStatus.Value != HoloKitAppPlayerStatus.SyncingTimestamp) return;
 
             double currentClientTimestamp = HoloKitARSessionControllerAPI.GetSystemUptime();
             double offset = hostTimestamp + (currentClientTimestamp - oldClientTimestamp) / 2 - currentClientTimestamp;
@@ -129,7 +129,7 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         private void StartScanningQRCode()
         {
-            LocalPlayer.Status.Value = HoloKitAppPlayerStatus.SyncingPose;
+            LocalPlayer.PlayerStatus.Value = HoloKitAppPlayerStatus.SyncingPose;
             var arSessionManager = HoloKitApp.Instance.ARSessionManager;
             arSessionManager.ARTrackedImageManager.trackedImagesChanged += OnTrackedImagesChanged;
             HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnARSessionUpdatedFrame_Client;
@@ -170,7 +170,7 @@ namespace Holoi.Library.HoloKitApp
         [ClientRpc]
         private void OnRespondImagePoseClientRpc(Vector3 hostImagePosition, Quaternion hostImageRotation, Vector3 clientImagePosition, Quaternion clientImageRotation, ClientRpcParams clientRpcParams = default)
         {
-            if (LocalPlayer.Status.Value != HoloKitAppPlayerStatus.SyncingPose) return;
+            if (LocalPlayer.PlayerStatus.Value != HoloKitAppPlayerStatus.SyncingPose) return;
 
             _imagePosePairQueue.Enqueue(new ImagePosePair()
             {
@@ -247,7 +247,7 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         private void OnSynced()
         {
-            LocalPlayer.Status.Value = HoloKitAppPlayerStatus.Synced;
+            LocalPlayer.PlayerStatus.Value = HoloKitAppPlayerStatus.Synced;
             StopScanningQRCode();
             // We use the last result in the queue to reset ARSession origin
             var lastSyncResult = _syncResultQueue.Last();
@@ -299,7 +299,7 @@ namespace Holoi.Library.HoloKitApp
             // Destroy the spawned alignment marker
             DestroyAlignmentMarker();
             // Conform the local player status
-            LocalPlayer.Status.Value = HoloKitAppPlayerStatus.Checked;
+            LocalPlayer.PlayerStatus.Value = HoloKitAppPlayerStatus.Checked;
         }
     }
 }

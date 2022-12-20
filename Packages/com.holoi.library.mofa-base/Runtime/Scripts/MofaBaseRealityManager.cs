@@ -136,12 +136,12 @@ namespace Holoi.Library.MOFABase
         /// This computation is a bit expensive. Please reference this value when you use it.
         /// </summary>
         public ICollection<MofaPlayer> MofaPlayerList => HoloKitApp.HoloKitApp.Instance.MultiplayerManager.PlayerList
-                                                            .Where(t => t.Type.Value == HoloKitAppPlayerType.Player)
+                                                            .Where(t => t.PlayerType.Value == HoloKitAppPlayerType.Player)
                                                             .Select(t => t as MofaPlayer)
                                                             .ToList();
 
         public Dictionary<ulong, MofaPlayer> MofaPlayerDict => HoloKitApp.HoloKitApp.Instance.MultiplayerManager.PlayerDict
-                                                            .Where(t => t.Value.Type.Value == HoloKitAppPlayerType.Player)
+                                                            .Where(t => t.Value.PlayerType.Value == HoloKitAppPlayerType.Player)
                                                             .ToDictionary(t => t.Key, t => t.Value as MofaPlayer);
 
         /// <summary>

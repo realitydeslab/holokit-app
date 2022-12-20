@@ -18,7 +18,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnPlayerStatusChanged(HoloKitAppPlayer player)
         {
-            if (player.IsLocalPlayer && player.Status.Value == HoloKitAppPlayerStatus.Synced)
+            if (player.IsLocalPlayer && player.PlayerStatus.Value == HoloKitAppPlayerStatus.Synced)
             {
                 HoloKitApp.Instance.UIPanelManager.PopUIPanel();
                 HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_CheckAlignmentMark");

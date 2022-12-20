@@ -77,8 +77,8 @@ namespace Holoi.Library.HoloKitApp.UI
                 var playerSlot = Instantiate(_playerSlotPrefab, _playerListRoot);
                 playerSlot.transform.localScale = Vector3.one;
                 HoloKitAppPlayer player = client.PlayerObject.GetComponent<HoloKitAppPlayer>();
-                string playerStatusString = client.ClientId == 0 ? "Host" : player.Status.Value.ToString();
-                playerSlot.GetComponent<TMP_Text>().text = $"{player.Name.Value} ({playerStatusString})";
+                string playerStatusString = client.ClientId == 0 ? "Host" : player.PlayerStatus.Value.ToString();
+                playerSlot.GetComponent<TMP_Text>().text = $"{player.PlayerName.Value} ({playerStatusString})";
             }
 
             // Calculate the height

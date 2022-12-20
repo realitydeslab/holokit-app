@@ -30,19 +30,16 @@ namespace Holoi.Library.HoloKitApp
         Disconnected = 5
     }
 
-    [RequireComponent(typeof(NetworkObject))]
-    [RequireComponent(typeof(ClientNetworkTransform))]
-    [RequireComponent(typeof(ParentConstraint))]
     public class HoloKitAppPlayer : NetworkBehaviour
     {
         /// <summary>
         /// User-assigned device name of the iOS device.
         /// </summary>
-        public NetworkVariable<FixedString64Bytes> Name = new("Unknown", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<FixedString64Bytes> PlayerName = new("Unknown", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        public NetworkVariable<HoloKitAppPlayerType> Type = new(HoloKitAppPlayerType.Player, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<HoloKitAppPlayerType> PlayerType = new(HoloKitAppPlayerType.Player, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        public NetworkVariable<HoloKitAppPlayerStatus> Status = new(HoloKitAppPlayerStatus.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<HoloKitAppPlayerStatus> PlayerStatus = new(HoloKitAppPlayerStatus.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         public bool ShowPoseVisualizer
         {
@@ -65,25 +62,25 @@ namespace Holoi.Library.HoloKitApp
 
         public override void OnNetworkSpawn()
         {
-            Status.OnValueChanged += OnStatusValueChanged;
+            PlayerStatus.OnValueChanged += OnStatusValueChanged;
             HoloKitApp.Instance.MultiplayerManager.OnPlayerJoined(this);
             // Initialize name and type by the owner
             if (IsOwner)
             {
-                Name.Value = new FixedString64Bytes(SystemInfo.deviceName);
-                Type.Value = HoloKitApp.Instance.LocalPlayerType;
+                PlayerName.Value = new FixedString64Bytes(SystemInfo.deviceName);
+                PlayerType.Value = HoloKitApp.Instance.LocalPlayerType;
                 // Setup initial status
                 if (IsServer)
                 {
                     // Set host's status to checked at start
-                    Status.Value = HoloKitAppPlayerStatus.Checked;
+                    PlayerStatus.Value = HoloKitAppPlayerStatus.Checked;
                 }
                 else
                 {
                     if (HoloKitUtils.IsRuntime)
-                        Status.Value = HoloKitAppPlayerStatus.SyncingTimestamp;
+                        PlayerStatus.Value = HoloKitAppPlayerStatus.SyncingTimestamp;
                     else
-                        Status.Value = HoloKitAppPlayerStatus.Checked;
+                        PlayerStatus.Value = HoloKitAppPlayerStatus.Checked;
                 }
                 // Setup ParentConstraint
                 SetupParentConstraint();
@@ -93,7 +90,7 @@ namespace Holoi.Library.HoloKitApp
 
         public override void OnNetworkDespawn()
         {
-            Status.OnValueChanged -= OnStatusValueChanged;
+            PlayerStatus.OnValueChanged -= OnStatusValueChanged;
             HoloKitApp.Instance.MultiplayerManager.OnPlayerLeft(this);
             OnPlayerDisconnected?.Invoke(this);
         }

@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using Unity.Netcode;
+using Unity.Collections;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.MOFABase;
 using Holoi.Library.ARUX;
@@ -11,7 +12,7 @@ namespace Holoi.Reality.MOFATheTraining
     public class MofaTrainingRealityManager : MofaBaseRealityManager
     {
         [Header("MOFA The Training")]
-        [SerializeField] private MofaAIPlayer _mofaPlayerAIPrefab;
+        [SerializeField] private MofaAIPlayer _mofaAIPlayerPrefab;
 
         [Header("AR")]
         [SerializeField] private ARPlaneManager _arPlaneManager;
@@ -22,7 +23,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         [SerializeField] private MofaARPlacementIndicator _arPlacementIndicator;
 
-        private MofaAIPlayer _mofaPlayerAI;
+        private MofaAIPlayer _mofaAIPlayer;
 
         /// <summary>
         /// This event is called when the player tries to start the game in an invalid position.
@@ -49,17 +50,22 @@ namespace Holoi.Reality.MOFATheTraining
             base.OnNetworkSpawn();
 
             if (IsServer)
-            {
-                //SpawnMofaPlayerAI();
-            }
+                SpawnMofaAIPlayer();
         }
 
-        private void SpawnMofaPlayerAI()
+        private void SpawnMofaAIPlayer()
         {
-            _mofaPlayerAI = Instantiate(_mofaPlayerAIPrefab);
-            _mofaPlayerAI.GetComponent<NetworkObject>().SpawnWithOwnership(MofaAIPlayer.AIPlayerClientId);
-            _mofaPlayerAI.MagicSchoolIndex.Value = 0;
-            _mofaPlayerAI.Team.Value = MofaTeam.Red;
+            _mofaAIPlayer = Instantiate(_mofaAIPlayerPrefab);
+            // TODO: This way of initialization is only temporary
+            //Initialize NetworkVariables for HoloKitAppPlayer
+            _mofaAIPlayer.PlayerName.Value = "AI";
+            _mofaAIPlayer.PlayerType.Value = HoloKitAppPlayerType.Player;
+            _mofaAIPlayer.PlayerStatus.Value = HoloKitAppPlayerStatus.Checked;
+            // Initialize NetworkVariables for MofaPlayer
+            _mofaAIPlayer.Team.Value = MofaTeam.Red;
+            _mofaAIPlayer.MagicSchoolIndex.Value = 0;
+            _mofaAIPlayer.Ready.Value = true;
+            _mofaAIPlayer.GetComponent<NetworkObject>().SpawnWithOwnership(MofaAIPlayer.AIClientId);
         }
 
         public override void TryGetReady()
@@ -76,43 +82,18 @@ namespace Holoi.Reality.MOFATheTraining
 
         protected override void SetupRound()
         {
+            // Spawn the avatar
+            Vector3 position = _arPlacementManager.HitPoint.position;
+            Quaternion rotation = _arPlacementManager.HitPoint.rotation;
+            var realityBundleId = HoloKitApp.Instance.CurrentReality.BundleId;
+            var realityPreferences = HoloKitApp.Instance.GlobalSettings.RealityPreferences[realityBundleId];
+            _mofaAIPlayer.SpawnAvatarClientRpc(realityPreferences.MetaAvatarCollectionBundleId, realityPreferences.MetaAvatarTokenId, position, rotation);
+            // Turn off ARPlacementManager, ARPlaneManager and ARRaycastManager
+            _arPlacementManager.OnPlacedFunc();
+            _arPlacementManager.enabled = false;
+            _arRaycastManager.enabled = false;
+
             base.SetupRound();
-
-        }
-
-        protected override void StartRound()
-        {
-            //if (CurrentPhase != MofaPhase.Waiting && CurrentPhase != MofaPhase.RoundData)
-            //{
-            //    Debug.Log($"[MofaTrainingRealityManager] You cannot start round at the current phase: {CurrentPhase}");
-            //    return;
-            //}
-
-            //if (RoundCount == 0)
-            //{
-            //    if (_arPlacementIndicator != null && _arPlacementIndicator.IsActive && _arPlacementIndicator.IsValid)
-            //    {
-            //        Vector3 position = _arPlacementIndicator.HitPoint.position;
-            //        Quaternion rotation = _arPlacementIndicator.HitPoint.rotation;
-            //        _arPlaneManager.enabled = false;
-            //        _arRaycastManager.enabled = false;
-            //        _arPlacementIndicator.OnPlacedFunc();
-            //        var realityPreferences = HoloKitApp.Instance.GlobalSettings.RealityPreferences[HoloKitApp.Instance.CurrentReality.BundleId];
-            //        _mofaPlayerAI.InitializeAvatarClientRpc(position,
-            //                                                rotation,
-            //                                                realityPreferences.MetaAvatarCollectionBundleId,
-            //                                                realityPreferences.MetaAvatarTokenId);
-            //        StartCoroutine(StartBaseRoundFlow());
-            //    }
-            //    else
-            //    {
-            //        Debug.Log("[MOFATheTraining] Failed to start round");
-            //    }
-            //}
-            //else
-            //{
-            //    StartCoroutine(StartBaseRoundFlow());
-            //}
         }
     }
 }

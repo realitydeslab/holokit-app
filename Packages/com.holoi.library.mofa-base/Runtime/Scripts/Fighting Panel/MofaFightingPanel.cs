@@ -137,7 +137,7 @@ namespace Holoi.Library.MOFABase
             else
             {
                 var localPlayer = holokitApp.MultiplayerManager.LocalPlayer;
-                if (localPlayer != null && localPlayer.Status.Value != HoloKitAppPlayerStatus.Checked)
+                if (localPlayer != null && localPlayer.PlayerStatus.Value != HoloKitAppPlayerStatus.Checked)
                 {
                     OnDisappear();
                     return;

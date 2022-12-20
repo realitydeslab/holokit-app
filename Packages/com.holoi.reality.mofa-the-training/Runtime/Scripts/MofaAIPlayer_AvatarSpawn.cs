@@ -7,7 +7,7 @@ using Holoi.Library.HoloKitApp;
 namespace Holoi.Reality.MOFATheTraining
 {
     /// <summary>
-    /// This partial class is responsible for controlling AI player's avatar.
+    /// This partial class is responsible for avatar spawning.
     /// </summary>
     public partial class MofaAIPlayer
     {
@@ -47,7 +47,11 @@ namespace Holoi.Reality.MOFATheTraining
         public void SpawnAvatarClientRpc(string avatarCollectionBundleId, string avatarTokenId, Vector3 position, Quaternion rotation)
         {
             if (IsServer)
+            {
+                InitialPosition = position;
+                InitialForward = rotation * Vector3.forward;
                 transform.SetPositionAndRotation(position, rotation);
+            }
             SpawnAvatar(avatarCollectionBundleId, avatarTokenId);
         }
 
@@ -75,6 +79,9 @@ namespace Holoi.Reality.MOFATheTraining
             _avatarAnimator = _avatar.GetComponent<Animator>();
             _avatarAnimator.runtimeAnimatorController = _mofaAvatarAnimatorController;
             _avatarAnimator.applyRootMotion = false;
+            _avatarAnimator.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
+            _avatar.AddComponent<MofaAvatarAnimationEventHandler>();
+
         }
     }
 }

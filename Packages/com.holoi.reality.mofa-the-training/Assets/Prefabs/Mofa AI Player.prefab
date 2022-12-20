@@ -11,10 +11,9 @@ GameObject:
   - component: {fileID: 5605601951325644500}
   - component: {fileID: 5605601951325644501}
   - component: {fileID: 1554181369868630519}
-  - component: {fileID: 2076845300811182909}
-  - component: {fileID: 3548719697881645330}
+  - component: {fileID: 3884687313120931604}
   m_Layer: 0
-  m_Name: Mofa Player AI
+  m_Name: Mofa AI Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +62,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0130bba435ba4eb596b1ed3184cc3c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name:
+  PlayerName:
     m_InternalValue:
       utf8LengthInBytes: 7
       bytes:
@@ -132,9 +131,9 @@ MonoBehaviour:
         byte0059: 0
         byte0060: 0
         byte0061: 0
-  Type:
+  PlayerType:
     m_InternalValue: 0
-  Status:
+  PlayerStatus:
     m_InternalValue: 0
   Team:
     m_InternalValue: 0
@@ -155,11 +154,12 @@ MonoBehaviour:
   Energy:
     m_InternalValue: 0
   LifeShield: {fileID: 0}
-  LifeShieldOffset: {x: 0, y: -0.4, z: 0.5}
+  CenterEyeToLifeShieldOffset: {x: 0, y: -0.4, z: 0.5}
   _mofaAvatarCollectionParamsList: {fileID: 11400000, guid: 6dfba70e61d794376b450c99e9eb91aa, type: 2}
-  _mofaAvatarRuntimeAnimatorController: {fileID: 9100000, guid: b0119a0fd66a549739d35b5d7961ebcc, type: 2}
-  _magicSchool: {fileID: 0}
---- !u!114 &2076845300811182909
+  _mofaAvatarAnimatorController: {fileID: 9100000, guid: dfa5c848466a142ce9813f0c588cd5b1, type: 2}
+  InitialPosition: {x: 0, y: 0, z: 0}
+  InitialForward: {x: 0, y: 0, z: 0}
+--- !u!114 &3884687313120931604
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -168,7 +168,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5605601951325644458}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc4ee6212483c4ab8bad0fae81f38df0, type: 3}
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SyncPositionX: 1
@@ -177,33 +177,11 @@ MonoBehaviour:
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
---- !u!1773428102 &3548719697881645330
-ParentConstraint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5605601951325644458}
-  m_Enabled: 1
-  m_Weight: 1
-  m_TranslationAtRest: {x: 0, y: 0, z: 0}
-  m_RotationAtRest: {x: 0, y: 0, z: 0}
-  m_TranslationOffsets: []
-  m_RotationOffsets: []
-  m_AffectTranslationX: 1
-  m_AffectTranslationY: 1
-  m_AffectTranslationZ: 1
-  m_AffectRotationX: 1
-  m_AffectRotationY: 1
-  m_AffectRotationZ: 1
-  m_IsContraintActive: 0
-  m_IsLocked: 0
-  m_Sources: []

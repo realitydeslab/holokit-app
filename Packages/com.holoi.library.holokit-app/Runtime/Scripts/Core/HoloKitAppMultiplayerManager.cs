@@ -30,7 +30,7 @@ namespace Holoi.Library.HoloKitApp
             if (!IsSpawned) return;
             var localPlayer = LocalPlayer;
             if (localPlayer == null) return;
-            if (localPlayer.Status.Value == HoloKitAppPlayerStatus.SyncingTimestamp)
+            if (localPlayer.PlayerStatus.Value == HoloKitAppPlayerStatus.SyncingTimestamp)
                 OnRequestTimestampServerRpc(HoloKitARSessionControllerAPI.GetSystemUptime());
         }
 

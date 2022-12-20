@@ -54,7 +54,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             if (player.IsLocalPlayer)
             {
-                switch (player.Status.Value)
+                switch (player.PlayerStatus.Value)
                 {
                     case HoloKitAppPlayerStatus.None:
                         _text.text = $"Connected with nearby\nhost {_hostName}";
