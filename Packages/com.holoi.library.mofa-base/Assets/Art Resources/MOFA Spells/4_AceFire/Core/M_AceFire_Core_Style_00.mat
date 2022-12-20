@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7932271866477824742
+--- !u!114 &-7610259841695950637
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_BurstImpulse
-  m_Shader: {fileID: -6465566751694194690, guid: 33876e47006467b4caaeb1d903b144ba, type: 3}
+  m_Name: M_AceFire_Core_Style_00
+  m_Shader: {fileID: -6465566751694194690, guid: b998472cf6dc24155924ffcd06a6ecc0, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -33,24 +33,28 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _Animation_Distort:
-        m_Texture: {fileID: 2800000, guid: a6b9652bc81861e4c9ea0b20bb07041c, type: 3}
+    - _FogTexture:
+        m_Texture: {fileID: 2800000, guid: 6f319736b0e0a4c8cbbdc6e41809dd18, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Animation_Mask:
-        m_Texture: {fileID: 2800000, guid: 4c1d80d9bc444494bb06039b5f59c796, type: 3}
+    - _Mask:
+        m_Texture: {fileID: 2800000, guid: c3b551fca1bc9ba458608f01a344bca1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Distort_Texture:
-        m_Texture: {fileID: 2800000, guid: fe2e15946ebf56c4aaf31d8d9d4b5209, type: 3}
+    - _NoiseTexture:
+        m_Texture: {fileID: 2800000, guid: 82025bb3c898f42049022f8ea82f74f6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Final_Mask:
-        m_Texture: {fileID: 2800000, guid: 2946b478854a03a46ab080daa7eeb5cc, type: 3}
+    - _SampleTexture2D_4c2be00f448f4b5390fcf759e3eea37e_Texture_1:
+        m_Texture: {fileID: 2800000, guid: f230b98a5ec9ef34b99c4bc75131e137, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Main_Texture:
-        m_Texture: {fileID: 2800000, guid: 2e736348f1346704288e956a990421bd, type: 3}
+    - _SampleTexture2D_f0c82562b149487597c756fc95a009e5_Texture_1:
+        m_Texture: {fileID: 2800000, guid: f230b98a5ec9ef34b99c4bc75131e137, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _UVDistortion_86085836cf2d405488a64d84ebc5aaf6_DistortTexrture_789052099:
+        m_Texture: {fileID: 2800000, guid: 6c19daf655d3e794c9c89817cbf19dd9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -67,28 +71,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha_Multipier: 1
-    - _Brightness: 1
-    - _Chr_MT: 0
-    - _Intensity_AD: 0.5
-    - _Intensity_DT: 0.1
-    - _Process: 0
+    - _NoiseIntensity: 0.1
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Sat_MT: 0.4
     m_Colors:
-    - _Adjust_AD: {r: 1, g: 1, b: 1, a: 0.5}
-    - _Adjust_AM: {r: 12, g: 12, b: 3, a: 0.5}
-    - _Adjust_DT: {r: 1, g: 1, b: 1, a: 0.5}
-    - _Adjust_FM: {r: 2, g: 2, b: 1, a: 0}
-    - _Adjustment_MT: {r: 1, g: 1, b: 1, a: 0.5}
-    - _Color_MT: {r: 1, g: 0.8561678, b: 0, a: 0}
-    - _Remap_AD: {r: -1, g: 1, b: 0, a: 0}
-    - _Speed_AD: {r: -1, g: 0, b: 0, a: 0}
-    - _Speed_DT: {r: 0.25, g: 0, b: 0, a: 0}
-    - _Speed_MT: {r: -1, g: 0, b: 0, a: 0}
-    - _TO_AD: {r: 0.25, g: 1, b: 0, a: 0}
-    - _TO_DT: {r: 0.5, g: 3, b: 0, a: 0}
-    - _TO_FM: {r: 1, g: 1, b: 0, a: 0}
-    - _TO_MT: {r: 1, g: 3, b: 0, a: 0}
+    - _Circle_Refine: {r: 1, g: 2, b: 1, a: 0.5}
+    - _Fog_Color: {r: 0.3254717, g: 0.351924, b: 1, a: 0}
+    - _NoiseRefine: {r: 1, g: 1, b: 1, a: 0.5}
+    - _NoiseTiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
