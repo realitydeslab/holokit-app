@@ -17,12 +17,6 @@ namespace Holoi.Reality.MOFATheTraining
 
     public partial class MofaAIPlayer : MofaPlayer
     {
-        private Spell _basicSpell;
-
-        private Spell _secondarySpell;
-
-        private const float Speed = 0.3f;
-
         public const ulong AIClientId = 101;
 
         public static event Action<SpellType> OnAISpawnedSpell;
@@ -69,28 +63,6 @@ namespace Holoi.Reality.MOFATheTraining
                 return;
             Quaternion rotation = Quaternion.LookRotation(horizontalLookForward);
             transform.rotation = rotation;
-        }
-
-        private void SpawnSpell(SpellType spellType)
-        {
-            //var hostLifeShield = _mofaBaseRealityManager.PlayerDict[0].LifeShield;
-            //Vector3 avatarCenterEyePos = transform.position + transform.rotation * _centerEyeOffset;
-            //Quaternion rotation = Quaternion.LookRotation(hostLifeShield.transform.position - avatarCenterEyePos);
-            //// TODO: Random deviation
-            //if (UnityEngine.Random.Range(0, 1f) > 0.5f)
-            //{
-            //    // Add horizontal deviation
-            //    rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(-30f, 30f), 0f) * rotation;
-            //}
-            //else
-            //{
-            //    // Add vertical deviation
-            //    rotation = Quaternion.Euler(UnityEngine.Random.Range(-30f, 30f), 0f, 0f) * rotation;
-            //}
-
-            //_mofaBaseRealityManager.SpawnSpellServerRpc(spellType == SpellType.Basic ? _basicSpell.Id : _secondarySpell.Id,
-            //    avatarCenterEyePos, rotation, OwnerClientId);
-            //_lastAIAttackState = spellType == SpellType.Basic ? AIAttackState.BasicSpell : AIAttackState.SecondarySpell;
         }
     }
 }

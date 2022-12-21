@@ -22,7 +22,7 @@ namespace Holoi.Reality.MOFATheTraining
         /// <summary>
         /// 0.8 for basic spell and 0.2 for secondary spell.
         /// </summary>
-        private const float BasicSpellProbability = 0.8f;
+        private const float BasicSpellProbability = 0.68f;
 
         public override void OnEnter(MofaAIPlayer player)
         {
@@ -31,6 +31,7 @@ namespace Holoi.Reality.MOFATheTraining
             AttackType attackType;
             if (isBasicSpell)
             {
+                player.NextSpellType = Library.MOFABase.SpellType.Basic;
                 float prob = Random.Range(0f, 1f);
                 if (prob < 0.8f)
                 {
@@ -45,6 +46,7 @@ namespace Holoi.Reality.MOFATheTraining
             }
             else
             {
+                player.NextSpellType = Library.MOFABase.SpellType.Secondary;
                 float prob = Random.Range(0f, 1f);
                 if (prob < 0.3f)
                 {

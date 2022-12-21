@@ -30,16 +30,23 @@ namespace Holoi.Reality.MOFATheTraining
         /// </summary>
         public Vector3 InitialForward;
 
+        public SpellType NextSpellType { get; set; }
+
         /// <summary>
         /// The current state the avatar is in.
         /// </summary>
         private MofaAIPlayerState _currentState;
+
+        private Spell _basicSpell;
+
+        private Spell _secondarySpell;
 
         /// <summary>
         /// We only need to init state machine on the host.
         /// </summary>
         private void InitStateMachine()
         {
+            SetupSpells();
             _currentState = IdleState;
             _currentState.OnEnter(this);
             MofaBaseRealityManager.OnMofaPhaseChanged += OnMofaPhaseChanged;
@@ -122,6 +129,64 @@ namespace Holoi.Reality.MOFATheTraining
                     }
                 }
             }
+        }
+
+        private void SetupSpells()
+        {
+            var mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            int count = 0;
+            foreach (var spell in mofaBaseRealityManager.SpellList.List)
+            {
+                int spellMagicSchoolIndex = int.Parse(spell.MagicSchool.TokenId);
+                if (spellMagicSchoolIndex == MagicSchoolIndex.Value)
+                {
+                    if (spell.SpellType == SpellType.Basic)
+                    {
+                        _basicSpell = spell;
+                        count++;
+                    }
+                    else if (spell.SpellType == SpellType.Secondary)
+                    {
+                        _secondarySpell = spell;
+                        count++;
+                    }
+                }
+
+                if (count == 2)
+                    break;
+            }
+            // Error check
+            if (_basicSpell == null)
+                Debug.LogError("[MofaAIPlayer] Failed to setup basic spell");
+            if (_secondarySpell == null)
+                Debug.LogError("[MofaAIPlayer] Failed to setup secondary spell");
+        }
+
+        private void CastSpell()
+        {
+            var mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            var hostLifeShield = mofaBaseRealityManager.HostMofaPlayer.LifeShield;
+            Vector3 avatarCenterEyePosition = transform.position + transform.rotation * _avatarOriginToCenterEyeOffset;
+            Quaternion spellRotation = Quaternion.LookRotation(hostLifeShield.transform.position - avatarCenterEyePosition);
+
+            // Add random deviations
+            if (NextSpellType == SpellType.Basic)
+            {
+                // Rotate around Y axis
+                Quaternion horizontalDeviation = Quaternion.Euler(0f, Random.Range(-10f, 10f), 0f);
+                // Rotate around X axis
+                Quaternion verticalDeviation = Quaternion.Euler(Random.Range(-10f, 10f), 0f, 0f);
+                spellRotation = horizontalDeviation * verticalDeviation * spellRotation;
+            }
+            else if (NextSpellType == SpellType.Secondary)
+            {
+                // Rotate around Y axis
+                Quaternion horizontalDeviation = Quaternion.Euler(0f, Random.Range(-6f, 6f), 0f);
+                spellRotation = horizontalDeviation * spellRotation;
+            }
+
+            mofaBaseRealityManager.SpawnSpellServerRpc(NextSpellType == SpellType.Basic ? _basicSpell.Id : _secondarySpell.Id,
+                avatarCenterEyePosition, spellRotation, AIClientId);
         }
     }
 }

@@ -111,10 +111,9 @@ namespace Holoi.Library.MOFABase
                         count++;
                     }
                 }
+
                 if (count == 2)
-                {
                     break;
-                }
             }
             // Error check
             if (_basicSpell == null)

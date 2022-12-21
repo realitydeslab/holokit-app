@@ -78,20 +78,27 @@ namespace Holoi.Reality.MOFATheTraining
                 else
                     OnFailedToStartAtCurrentPosition?.Invoke();
             }
+            else
+            {
+                GetReady();
+            }
         }
 
         protected override void SetupRound()
         {
-            // Spawn the avatar
-            Vector3 position = _arPlacementManager.HitPoint.position;
-            Quaternion rotation = _arPlacementManager.HitPoint.rotation;
-            var realityBundleId = HoloKitApp.Instance.CurrentReality.BundleId;
-            var realityPreferences = HoloKitApp.Instance.GlobalSettings.RealityPreferences[realityBundleId];
-            _mofaAIPlayer.SpawnAvatarClientRpc(realityPreferences.MetaAvatarCollectionBundleId, realityPreferences.MetaAvatarTokenId, position, rotation);
-            // Turn off ARPlacementManager, ARPlaneManager and ARRaycastManager
-            _arPlacementManager.OnPlacedFunc();
-            _arPlacementManager.enabled = false;
-            _arRaycastManager.enabled = false;
+            if (RoundCount.Value == 1)
+            {
+                // Spawn the avatar
+                Vector3 position = _arPlacementManager.HitPoint.position;
+                Quaternion rotation = _arPlacementManager.HitPoint.rotation;
+                var realityBundleId = HoloKitApp.Instance.CurrentReality.BundleId;
+                var realityPreferences = HoloKitApp.Instance.GlobalSettings.RealityPreferences[realityBundleId];
+                _mofaAIPlayer.SpawnAvatarClientRpc(realityPreferences.MetaAvatarCollectionBundleId, realityPreferences.MetaAvatarTokenId, position, rotation);
+                // Turn off ARPlacementManager, ARPlaneManager and ARRaycastManager
+                _arPlacementManager.OnPlacedFunc();
+                _arPlacementManager.enabled = false;
+                _arRaycastManager.enabled = false;
+            }
 
             base.SetupRound();
         }

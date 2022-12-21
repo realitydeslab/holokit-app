@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using Holoi.Library.MOFABase;
 
 namespace Holoi.Reality.MOFATheTraining
 {
@@ -87,22 +86,23 @@ namespace Holoi.Reality.MOFATheTraining
         #region Animation Event Receivers
         public void AnimationEventReceiver_FootL()
         {
-
+            // TODO: Footstep sound
         }
 
         public void AnimationEventReceiver_FootR()
         {
-
+            // TODO: Footstep sound
         }
 
         public void AnimationEventReceiver_Land()
         {
-
+            // TODO: Dash landing sound
         }
 
         public void AnimationEventReceiver_Hit()
         {
-
+            if (IsServer)
+                CastSpell();
         }
 
         public void AnimationEventReceiver_Shoot()
