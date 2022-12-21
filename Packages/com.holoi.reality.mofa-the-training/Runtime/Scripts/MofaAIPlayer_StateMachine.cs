@@ -42,11 +42,13 @@ namespace Holoi.Reality.MOFATheTraining
             _currentState = IdleState;
             _currentState.OnEnter(this);
             MofaBaseRealityManager.OnMofaPhaseChanged += OnMofaPhaseChanged;
+            LifeShield.OnBeingHit += OnBeingHit;
         }
 
         private void DeinitStateMachine()
         {
             MofaBaseRealityManager.OnMofaPhaseChanged -= OnMofaPhaseChanged;
+            LifeShield.OnBeingHit -= OnBeingHit;
         }
 
         private void OnMofaPhaseChanged(MofaPhase phase)
@@ -74,6 +76,12 @@ namespace Holoi.Reality.MOFATheTraining
         private void UpdateStateMachine()
         {
             _currentState.OnUpdate(this);
+        }
+
+        private void OnBeingHit(ulong _, ulong clientId)
+        {
+            if (clientId == AIClientId)
+                SwitchState(DamageState);
         }
     }
 }

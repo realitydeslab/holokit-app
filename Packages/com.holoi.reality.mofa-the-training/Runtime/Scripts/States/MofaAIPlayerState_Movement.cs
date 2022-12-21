@@ -6,20 +6,48 @@ namespace Holoi.Reality.MOFATheTraining
 {
     public class MofaAIPlayerState_Movement : MofaAIPlayerState
     {
+        /// <summary>
+        /// The current movement speed of the avatar.
+        /// </summary>
         private float _speed = 0.5f;
 
+        /// <summary>
+        /// The current target position the avatar is trying to reach.
+        /// </summary>
         private Vector3 _targetPosition;
 
+        /// <summary>
+        /// The movement area of the avatar is a rectangle of which the avatar's
+        /// spawn position is the center. This Vector2 represents the horizontal
+        /// magnitude of the rectangle.
+        /// </summary>
         private readonly Vector2 HorizontalMovementRange = new(-2.4f, 2.4f);
 
+        /// <summary>
+        /// This Vector2 represents the vertical magnitude of the rectangle.
+        /// </summary>
         private readonly Vector2 VerticalMovementRange = new(-1.8f, 1.2f);
 
+        /// <summary>
+        /// When the distance between the avatar and the target position if less
+        /// than this threshold, we think the avatar has already reached the target
+        /// position.
+        /// </summary>
         private const float DistanceThreshold = 0.1f;
 
-        private const float MinSpeed = 0.3f;
+        /// <summary>
+        /// The min movement speed of the avatar.
+        /// </summary>
+        private const float MinSpeed = 0.2f;
 
-        private const float MaxSpeed = 0.8f;
+        /// <summary>
+        /// The max movement speed of the avatar.
+        /// </summary>
+        private const float MaxSpeed = 0.1f;
 
+        /// <summary>
+        /// The max absolute value for a single axis of the movement animation blend tree.
+        /// </summary>
         private const float BlendTreeMagnitude = 4f;
 
         public override void OnEnter(MofaAIPlayer player)
@@ -47,7 +75,7 @@ namespace Holoi.Reality.MOFATheTraining
 
         public override void OnExit(MofaAIPlayer player)
         {
-            
+            player.Velocity.Value = Vector2.zero;
         }
 
         /// <summary>

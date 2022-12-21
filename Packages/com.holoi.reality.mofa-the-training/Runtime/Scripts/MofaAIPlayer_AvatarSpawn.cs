@@ -21,6 +21,8 @@ namespace Holoi.Reality.MOFATheTraining
         /// </summary>
         [SerializeField] private RuntimeAnimatorController _mofaAvatarAnimatorController;
 
+        public Animator AvatarAnimator => _avatarAnimator;
+
         /// <summary>
         /// The reference to the AI player's avatar
         /// </summary>

@@ -15,8 +15,23 @@ namespace Holoi.Reality.MOFATheTraining
         /// </summary>
         public NetworkVariable<Vector2> Velocity = new(Vector2.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+        private int VelocityXHash;
+
+        private int VelocityZHash;
+
+        public int ActionHash;
+
+        public int TriggerNumberHash;
+
+        public int TriggerHash;
+
         private void InitAnimationControl()
         {
+            VelocityXHash = Animator.StringToHash("VelocityX");
+            VelocityZHash = Animator.StringToHash("VelocityZ");
+            ActionHash = Animator.StringToHash("Action");
+            TriggerNumberHash = Animator.StringToHash("TriggerNumber");
+            TriggerHash = Animator.StringToHash("Trigger");
             Velocity.OnValueChanged += OnVelocityValueChanged;
         }
 
@@ -27,8 +42,15 @@ namespace Holoi.Reality.MOFATheTraining
 
         private void OnVelocityValueChanged(Vector2 oldValue, Vector2 newValue)
         {
-            _avatarAnimator.SetFloat("VelocityX", newValue.x);
-            _avatarAnimator.SetFloat("VelocityZ", newValue.y);
+            _avatarAnimator.SetFloat(VelocityXHash, newValue.x);
+            _avatarAnimator.SetFloat(VelocityZHash, newValue.y);
+        }
+
+        [ClientRpc]
+        public void PlayDamageClientRpc()
+        {
+            _avatarAnimator.SetInteger(ActionHash, 2);
+            _avatarAnimator.SetTrigger(TriggerHash);
         }
 
         #region Animation Event Receivers
