@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using Holoi.Library.HoloKitApp;
 using Holoi.Library.MOFABase;
 using HoloKit;
 
@@ -12,12 +13,12 @@ namespace Holoi.Reality.MOFATheTraining
     /// </summary>
     public partial class MofaAIPlayer
     {
-        public MofaAIPlayerState IdleState = new MofaAIPlayerState_Idle();
-        public MofaAIPlayerState MovementState = new MofaAIPlayerState_Movement();
-        public MofaAIPlayerState AttackState = new MofaAIPlayerState_Attack();
-        public MofaAIPlayerState DashState = new MofaAIPlayerState_Dash();
-        public MofaAIPlayerState DamageState = new MofaAIPlayerState_Damage();
-        public MofaAIPlayerState RevivingState = new MofaAIPlayerState_Reviving();
+        public MofaAIPlayerState_Idle IdleState = new();
+        public MofaAIPlayerState_Movement MovementState = new();
+        public MofaAIPlayerState_Attack AttackState = new();
+        public MofaAIPlayerState_Dash DashState = new();
+        public MofaAIPlayerState_Damage DamageState = new();
+        public MofaAIPlayerState_Revive ReviveState = new();
 
         /// <summary>
         /// The avatar's spawn position.
@@ -43,12 +44,31 @@ namespace Holoi.Reality.MOFATheTraining
             _currentState.OnEnter(this);
             MofaBaseRealityManager.OnMofaPhaseChanged += OnMofaPhaseChanged;
             LifeShield.OnBeingHit += OnBeingHit;
+            LifeShield.OnBeingDestroyed += OnKnockedOut;
+            LifeShield.OnRenovated += OnRevived;
         }
 
         private void DeinitStateMachine()
         {
             MofaBaseRealityManager.OnMofaPhaseChanged -= OnMofaPhaseChanged;
             LifeShield.OnBeingHit -= OnBeingHit;
+            LifeShield.OnBeingDestroyed -= OnKnockedOut;
+            LifeShield.OnRenovated -= OnRevived;
+        }
+
+        public void SwitchState(MofaAIPlayerState state)
+        {
+            if (_currentState == state)
+                return;
+
+            _currentState.OnExit(this);
+            _currentState = state;
+            _currentState.OnEnter(this);
+        }
+
+        private void UpdateStateMachine()
+        {
+            _currentState.OnUpdate(this);
         }
 
         private void OnMofaPhaseChanged(MofaPhase phase)
@@ -66,22 +86,42 @@ namespace Holoi.Reality.MOFATheTraining
             }
         }
 
-        public void SwitchState(MofaAIPlayerState state)
-        {
-            _currentState.OnExit(this);
-            _currentState = state;
-            _currentState.OnEnter(this);
-        }
-
-        private void UpdateStateMachine()
-        {
-            _currentState.OnUpdate(this);
-        }
-
         private void OnBeingHit(ulong _, ulong clientId)
         {
             if (clientId == AIClientId)
                 SwitchState(DamageState);
+        }
+
+        private void OnKnockedOut(ulong _, ulong clientId)
+        {
+            if (clientId == AIClientId)
+                SwitchState(IdleState);
+        }
+
+        private void OnRevived(ulong clientId)
+        {
+            if (clientId == AIClientId)
+            {
+                var mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+                if (mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.Fighting)
+                {
+                    SwitchState(MovementState);
+                }
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent<AttackSpell>(out var attackSpell) && attackSpell.OwnerClientId != AIClientId)
+            {
+                if (_currentState == MovementState)
+                {
+                    if (DashState.ShouldDash())
+                    {
+                        SwitchState(DashState);
+                    }
+                }
+            }
         }
     }
 }

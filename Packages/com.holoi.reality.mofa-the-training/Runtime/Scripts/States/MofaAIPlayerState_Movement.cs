@@ -16,6 +16,10 @@ namespace Holoi.Reality.MOFATheTraining
         /// </summary>
         private Vector3 _targetPosition;
 
+        private float _attackChargeTime;
+
+        private float _attackChargeThreshold;
+
         /// <summary>
         /// The movement area of the avatar is a rectangle of which the avatar's
         /// spawn position is the center. This Vector2 represents the horizontal
@@ -50,13 +54,19 @@ namespace Holoi.Reality.MOFATheTraining
         /// </summary>
         private const float BlendTreeMagnitude = 4f;
 
+        private const float MinAttackChargeThreshold = 2f;
+
+        private const float MaxAttackChargeThreshold = 8f;
+
         public override void OnEnter(MofaAIPlayer player)
         {
             GetNewTargetPosition(player);
+            UpdateAttackChargeThreshold();
         }
 
         public override void OnUpdate(MofaAIPlayer player)
         {
+            // Update movement
             Vector3 movingDirWithLength = _targetPosition - player.transform.position;
             if (movingDirWithLength.magnitude > DistanceThreshold)
             {
@@ -70,6 +80,15 @@ namespace Holoi.Reality.MOFATheTraining
             else
             {
                 GetNewTargetPosition(player);
+            }
+
+            // Update attack charge
+            _attackChargeTime += Time.deltaTime;
+            if (_attackChargeTime > _attackChargeThreshold)
+            {
+                player.SwitchState(player.AttackState);
+                _attackChargeTime = 0f;
+                UpdateAttackChargeThreshold();
             }
         }
 
@@ -89,6 +108,11 @@ namespace Holoi.Reality.MOFATheTraining
 
             Vector3 _initialRight = Quaternion.Euler(0f, 90f, 0f) * player.InitialForward;
             _targetPosition = player.InitialPosition + horizontalVar * _initialRight + verticalVar * player.InitialForward;
+        }
+
+        private void UpdateAttackChargeThreshold()
+        {
+            _attackChargeThreshold = Random.Range(MinAttackChargeThreshold, MaxAttackChargeThreshold);
         }
     }
 }

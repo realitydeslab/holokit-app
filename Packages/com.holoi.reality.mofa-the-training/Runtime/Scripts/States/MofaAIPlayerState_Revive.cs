@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Holoi.Reality.MOFATheTraining
 {
-    public class MofaAIPlayerState_Reviving : MofaAIPlayerState
+    public class MofaAIPlayerState_Revive : MofaAIPlayerState
     {
         public override void OnEnter(MofaAIPlayer player)
         {

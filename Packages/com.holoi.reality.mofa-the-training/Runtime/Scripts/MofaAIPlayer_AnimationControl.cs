@@ -47,9 +47,40 @@ namespace Holoi.Reality.MOFATheTraining
         }
 
         [ClientRpc]
-        public void PlayDamageClientRpc()
+        public void PlayDamageAnimationClientRpc()
         {
             _avatarAnimator.SetInteger(ActionHash, 2);
+            _avatarAnimator.SetTrigger(TriggerHash);
+        }
+
+        /// <summary>
+        /// 0 for dash forward
+        /// 1 for dash backward
+        /// 2 for dash left
+        /// 3 for dash right
+        /// </summary>
+        /// <param name="index"></param>
+        [ClientRpc]
+        public void PlayDashAnimationClientRpc(int index)
+        {
+            _avatarAnimator.SetInteger(ActionHash, 1);
+            _avatarAnimator.SetInteger(TriggerNumberHash, index);
+            _avatarAnimator.SetTrigger(TriggerHash);
+        }
+
+        /// <summary>
+        /// 0 for single basic attack
+        /// 1 for basic attack in a row (3)
+        /// 2 for special attack 1
+        /// 3 for special attack 2
+        /// 4 for move attack
+        /// </summary>
+        /// <param name="index"></param>
+        [ClientRpc]
+        public void PlayAttackAnimationClientRpc(int index)
+        {
+            _avatarAnimator.SetInteger(ActionHash, 0);
+            _avatarAnimator.SetInteger(TriggerNumberHash, index);
             _avatarAnimator.SetTrigger(TriggerHash);
         }
 

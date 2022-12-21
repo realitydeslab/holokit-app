@@ -11,13 +11,13 @@ namespace Holoi.Reality.MOFATheTraining
         public override void OnEnter(MofaAIPlayer player)
         {
             _hasEnteredState = false;
-            player.PlayDamageClientRpc();
+            player.PlayDamageAnimationClientRpc();
         }
 
         public override void OnUpdate(MofaAIPlayer player)
         {
             var currentAnimatorStateInfo = player.AvatarAnimator.GetCurrentAnimatorStateInfo(0);
-            if (currentAnimatorStateInfo.IsName("LightHit"))
+            if (currentAnimatorStateInfo.IsTag("Damage"))
             {
                 _hasEnteredState = true;
                 if (currentAnimatorStateInfo.normalizedTime < 0.6f)
