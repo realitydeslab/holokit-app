@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.MOFABase;
-using HoloKit;
 
 namespace Holoi.Reality.MOFATheTraining
 {

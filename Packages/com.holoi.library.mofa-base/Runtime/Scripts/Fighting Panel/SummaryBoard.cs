@@ -118,14 +118,14 @@ namespace Holoi.Library.MOFABase
             var blueTeamPlayerStats = mofaBaseRealityManager.GetPlayerStats(blueTeamPlayer);
             BlueTeamKill = blueTeamPlayerStats.Kill.ToString();
             BlueTeamHitRate = Mathf.RoundToInt(blueTeamPlayerStats.HitRate * 100).ToString();
-            BlueTeamDistance = Mathf.RoundToInt(blueTeamPlayerStats.Distance).ToString();
+            BlueTeamDistance = Mathf.RoundToInt(blueTeamPlayerStats.Distance * MofaUtils.MeterToFoot).ToString();
             BlueTeamEnergy = Mathf.RoundToInt(blueTeamPlayerStats.Energy).ToString();
     
             var redTeamPlayer = mofaPlayerList.FirstOrDefault(t => t.Team.Value == MofaTeam.Red);
             var redTeamPlayerStats = mofaBaseRealityManager.GetPlayerStats(redTeamPlayer);
             RedTeamKill = redTeamPlayerStats.Kill.ToString();
             RedTeamHitRate = Mathf.RoundToInt(redTeamPlayerStats.HitRate * 100).ToString();
-            RedTeamDistance = Mathf.RoundToInt(redTeamPlayerStats.Distance).ToString();
+            RedTeamDistance = Mathf.RoundToInt(redTeamPlayerStats.Distance * MofaUtils.MeterToFoot).ToString();
             RedTeamEnergy = Mathf.RoundToInt(redTeamPlayerStats.Energy).ToString();
         }
     }

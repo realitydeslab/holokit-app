@@ -6,6 +6,9 @@ namespace Holoi.Library.MOFABase
     {
         public const float MeterToFoot = 3.2808f;
 
+        // TODO: Find a professional value
+        public const float MeterToKcal = 0.1f;
+
         public static Vector3 GetHorizontalForward(Transform transform)
         {
             return new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;

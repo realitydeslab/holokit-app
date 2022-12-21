@@ -185,6 +185,7 @@ namespace Holoi.Library.MOFABase
                 case MofaPhase.Fighting:
                     break;
                 case MofaPhase.RoundOver:
+                    UpdateEstimatedHealthData();
                     break;
                 case MofaPhase.RoundResult:
                     break;
@@ -224,6 +225,11 @@ namespace Holoi.Library.MOFABase
             }
         }
 
+        /// <summary>
+        /// Get a MofaPlayer by a Netcode client id.
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns></returns>
         public MofaPlayer GetMofaPlayer(ulong clientId)
         {
             var playerDict = HoloKitApp.HoloKitApp.Instance.MultiplayerManager.PlayerDict;
@@ -299,10 +305,10 @@ namespace Holoi.Library.MOFABase
             var mofaPlayerList = MofaPlayerList;
             foreach (var mofaPlayer in mofaPlayerList)
             {
-                if (mofaPlayer.LifeShield != null)
-                    continue;
-
-                SpawnLifeShield(mofaPlayer.OwnerClientId);
+                if (mofaPlayer.LifeShield == null)
+                    SpawnLifeShield(mofaPlayer.OwnerClientId);
+                else
+                    mofaPlayer.LifeShield.Renovate();
             }
         }
 
@@ -346,8 +352,7 @@ namespace Holoi.Library.MOFABase
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void SpawnSpellServerRpc(int spellId, Vector3 clientCenterEyePosition,
-            Quaternion clientCenterEyeRotation, ulong clientId)
+        public void SpawnSpellServerRpc(int spellId, Vector3 clientCenterEyePosition, Quaternion clientCenterEyeRotation, ulong clientId)
         {
             Spell spell = SpellList.GetSpell(spellId);
             var position = clientCenterEyePosition + clientCenterEyeRotation * spell.SpawnOffset;
@@ -414,6 +419,21 @@ namespace Holoi.Library.MOFABase
             stats.Energy = mofaPlayer.Energy.Value;
 
             return stats;
+        }
+
+        /// <summary>
+        /// Calculate the estimated distance and energy for each players. These estimated
+        /// values will be overridden when the actual HealthKit data is received from the
+        /// Apple Watch.
+        /// </summary>
+        public void UpdateEstimatedHealthData()
+        {
+            var mofaPlayerList = MofaPlayerList;
+            foreach (var mofaPlayer in mofaPlayerList)
+            {
+                mofaPlayer.Distance.Value = mofaPlayer.AltDistance;
+                mofaPlayer.Energy.Value = mofaPlayer.AltDistance * MofaUtils.MeterToKcal;
+            }
         }
     }
 }

@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using Unity.Netcode;
-using Unity.Collections;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.MOFABase;
 using Holoi.Library.ARUX;

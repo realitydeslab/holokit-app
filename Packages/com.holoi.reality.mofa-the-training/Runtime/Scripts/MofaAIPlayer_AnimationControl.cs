@@ -1,6 +1,5 @@
 using UnityEngine;
 using Unity.Netcode;
-using Holoi.Library.MOFABase;
 
 namespace Holoi.Reality.MOFATheTraining
 {

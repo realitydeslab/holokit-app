@@ -154,7 +154,14 @@ namespace Holoi.Library.MOFABase
 
                 // The entire shield has been destroyed at this point
                 OnBeingDestroyed?.Invoke((ulong)_lastAttackerClientId.Value, OwnerClientId);
-                StartCoroutine(OnDestroyedInternal());
+
+                if (IsServer)
+                    StartCoroutine(OnDestroyedInternal());
+            }
+            else if (oldValue && !newValue)
+            {
+                _fragments[LifeShieldArea.Center].gameObject.SetActive(true);
+                OnRenovated?.Invoke(OwnerClientId);
             }
         }
 
@@ -165,18 +172,18 @@ namespace Holoi.Library.MOFABase
         private IEnumerator OnDestroyedInternal()
         {
             yield return new WaitForSeconds(RenovateTime);
-            if (IsServer)
-            {
-                CenterDestroyed.Value = false;
-                TopDestroyed.Value = false;
-                LeftDestroyed.Value = false;
-                RightDestroyed.Value = false;
-            }
-            _fragments[LifeShieldArea.Center].gameObject.SetActive(true);
-            _fragments[LifeShieldArea.Top].gameObject.SetActive(true);
-            _fragments[LifeShieldArea.Left].gameObject.SetActive(true);
-            _fragments[LifeShieldArea.Right].gameObject.SetActive(true);
-            OnRenovated?.Invoke(OwnerClientId);
+            Renovate();
+        }
+
+        /// <summary>
+        /// Refresh the life shield. This function can only be called by the host.
+        /// </summary>
+        public void Renovate()
+        {
+            CenterDestroyed.Value = false;
+            TopDestroyed.Value = false;
+            LeftDestroyed.Value = false;
+            RightDestroyed.Value = false;
         }
 
         private void OnTopDestroyedFunc(bool oldValue, bool newValue)
@@ -186,6 +193,10 @@ namespace Holoi.Library.MOFABase
                 OnTopDestroyed?.Invoke();
                 PlayHitSound();
                 _fragments[LifeShieldArea.Top].gameObject.SetActive(false);
+            }
+            else if (oldValue && !newValue)
+            {
+                _fragments[LifeShieldArea.Top].gameObject.SetActive(true);
             }
         }
 
@@ -197,6 +208,10 @@ namespace Holoi.Library.MOFABase
                 PlayHitSound();
                 _fragments[LifeShieldArea.Left].gameObject.SetActive(false);
             }
+            else if (oldValue && !newValue)
+            {
+                _fragments[LifeShieldArea.Left].gameObject.SetActive(true);
+            }
         }
 
         private void OnRightDestroyedFunc(bool oldValue, bool newValue)
@@ -206,6 +221,10 @@ namespace Holoi.Library.MOFABase
                 OnRightDestroyed?.Invoke();
                 PlayHitSound();
                 _fragments[LifeShieldArea.Right].gameObject.SetActive(false);
+            }
+            else if (oldValue && !newValue)
+            {
+                _fragments[LifeShieldArea.Right].gameObject.SetActive(true);
             }
         }
 

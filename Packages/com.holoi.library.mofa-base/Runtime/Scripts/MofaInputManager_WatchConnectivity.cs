@@ -54,8 +54,7 @@ namespace Holoi.Library.MOFABase
         private void OnReceivedHealthDataMessage(float distance, float energy)
         {
             var localMofaPlayer = _mofaBaseRealityManager.LocalMofaPlayer;
-            localMofaPlayer.Distance.Value = distance;
-            localMofaPlayer.Energy.Value = energy;
+            localMofaPlayer.UpdateHealthDataServerRpc(distance, energy);
         }
 
         private void OnMofaPhaseChanged(MofaPhase newPhase)
@@ -71,12 +70,6 @@ namespace Holoi.Library.MOFABase
             //    MofaWatchConnectivityAPI.QueryWatchState();
             //    return;
             //}
-
-            if (newPhase == MofaPhase.RoundOver)
-            {
-                var localMofaPlayer = _mofaBaseRealityManager.LocalMofaPlayer;
-                localMofaPlayer.Distance.Value = localMofaPlayer.AltDistance;
-            }
 
             if (newPhase == MofaPhase.RoundResult)
             {

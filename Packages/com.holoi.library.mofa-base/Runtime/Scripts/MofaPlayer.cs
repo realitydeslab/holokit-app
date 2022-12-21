@@ -53,12 +53,12 @@ namespace Holoi.Library.MOFABase
         /// <summary>
         /// The distance the player has moved in this round. 
         /// </summary>
-        public NetworkVariable<float> Distance = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<float> Distance = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         /// <summary>
         /// The calories the player has burned in this round.
         /// </summary>
-        public NetworkVariable<float> Energy = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<float> Energy = new(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         /// <summary>
         /// The corresponding life shield of the player.
@@ -109,7 +109,7 @@ namespace Holoi.Library.MOFABase
 
         protected virtual void Update()
         {
-            if (IsOwner)
+            if (IsServer)
             {
                 // We only compute horizontal distance
                 Vector3 horizontalPosition = Vector3.ProjectOnPlane(transform.position, Vector3.up);
@@ -142,6 +142,13 @@ namespace Holoi.Library.MOFABase
             Distance.Value = 0f;
             _altDistance = 0f;
             Energy.Value = 0f;
+        }
+
+        [ServerRpc]
+        public void UpdateHealthDataServerRpc(float distance, float energy)
+        {
+            Distance.Value = distance;
+            Energy.Value = energy;
         }
     }
 }
