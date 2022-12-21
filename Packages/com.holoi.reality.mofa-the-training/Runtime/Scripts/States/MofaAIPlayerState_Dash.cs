@@ -12,6 +12,8 @@ namespace Holoi.Reality.MOFATheTraining
             Right = 3
         }
 
+        public Vector3 AttackPosition { get; set; }
+
         private float _lastDashTime;
 
         private bool _hasEnteredState;
@@ -31,7 +33,10 @@ namespace Holoi.Reality.MOFATheTraining
         {
             _lastDashTime = Time.time;
             _hasEnteredState = false;
-            _dashDirection = Random.Range(0f, 1f) > 0.5f ? DashDirection.Left : DashDirection.Right;
+            // Calculate dash direction based on the attack position
+            Vector3 attackLocalPosition = player.transform.InverseTransformPoint(AttackPosition);
+            // Dash to the opposite direction
+            _dashDirection = attackLocalPosition.x > 0f ? DashDirection.Left : DashDirection.Right;
             player.PlayDashAnimationClientRpc((int)_dashDirection);
         }
 

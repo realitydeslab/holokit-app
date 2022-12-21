@@ -121,6 +121,7 @@ namespace Holoi.Reality.MOFATheTraining
                 {
                     if (DashState.ShouldDash())
                     {
+                        DashState.AttackPosition = other.transform.position;
                         SwitchState(DashState);
                     }
                 }
