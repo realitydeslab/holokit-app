@@ -59,6 +59,9 @@ namespace Holoi.Library.MOFABase
 
         private void OnMofaPhaseChanged(MofaPhase newPhase)
         {
+            if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
+                return;
+
             if (newPhase == MofaPhase.Countdown)
             {
                 MofaWatchConnectivityAPI.OnRoundStarted();

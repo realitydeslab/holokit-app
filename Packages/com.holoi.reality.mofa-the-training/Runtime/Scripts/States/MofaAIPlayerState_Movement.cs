@@ -59,7 +59,7 @@ namespace Holoi.Reality.MOFATheTraining
         public override void OnEnter(MofaAIPlayer player)
         {
             GetNewTargetPosition(player);
-            UpdateAttackChargeThreshold();
+            RandomizeNextAttack();
         }
 
         public override void OnUpdate(MofaAIPlayer player)
@@ -85,8 +85,7 @@ namespace Holoi.Reality.MOFATheTraining
             if (_attackChargeTime > _attackChargeThreshold)
             {
                 player.SwitchState(player.AttackState);
-                _attackChargeTime = 0f;
-                UpdateAttackChargeThreshold();
+                RandomizeNextAttack();
             }
         }
 
@@ -108,8 +107,9 @@ namespace Holoi.Reality.MOFATheTraining
             _targetPosition = player.InitialPosition + horizontalVar * _initialRight + verticalVar * player.InitialForward;
         }
 
-        private void UpdateAttackChargeThreshold()
+        private void RandomizeNextAttack()
         {
+            _attackChargeTime = 0f;
             _attackChargeThreshold = Random.Range(MinAttackChargeThreshold, MaxAttackChargeThreshold);
         }
     }

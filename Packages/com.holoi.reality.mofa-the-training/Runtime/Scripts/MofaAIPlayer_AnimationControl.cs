@@ -17,11 +17,11 @@ namespace Holoi.Reality.MOFATheTraining
 
         private int VelocityZHash;
 
-        public int ActionHash;
+        [HideInInspector] public int ActionHash;
 
-        public int TriggerNumberHash;
+        [HideInInspector] public int TriggerNumberHash;
 
-        public int TriggerHash;
+        [HideInInspector] public int TriggerHash;
 
         private void InitAnimationControl()
         {

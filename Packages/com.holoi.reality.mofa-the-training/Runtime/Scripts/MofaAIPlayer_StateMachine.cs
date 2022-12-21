@@ -19,12 +19,12 @@ namespace Holoi.Reality.MOFATheTraining
         /// <summary>
         /// The avatar's spawn position.
         /// </summary>
-        public Vector3 InitialPosition;
+        [HideInInspector] public Vector3 InitialPosition;
 
         /// <summary>
         /// The initial forward when the avatar is spawned.
         /// </summary>
-        public Vector3 InitialForward;
+        [HideInInspector] public Vector3 InitialForward;
 
         public SpellType NextSpellType { get; set; }
 

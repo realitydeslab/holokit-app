@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Library.MOFABase
 {
@@ -40,6 +37,7 @@ namespace Holoi.Library.MOFABase
                     PlayRoundOverSound();
                     break;
                 case MofaPhase.RoundResult:
+                    OnRoundResult();
                     break;
             }
         }
@@ -107,43 +105,26 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnReceivedRoundResult(MofaGeneralRoundResult roundResult)
+        private void OnRoundResult()
         {
-            //if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
-            //{
-            //    // TODO: Play blue team wins or red team wins on spectator
-            //    return;
-            //}
+            if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
+                return;
 
-            //if (roundResult == MofaRoundResult.Draw)
-            //{
-            //    PlayDrawSound();
-            //    return;
-            //}
-
-            //MofaTeam team = ((MofaBaseRealityManager)HoloKitApp.HoloKitApp.Instance.RealityManager).GetPlayer().Team.Value;
-            //if (team == MofaTeam.Blue)
-            //{
-            //    if (roundResult == MofaRoundResult.BlueTeamWins)
-            //    {
-            //        PlayVictorySound();
-            //    }
-            //    else
-            //    {
-            //        PlayDefeatSound();
-            //    }
-            //}
-            //else if (team == MofaTeam.Red)
-            //{
-            //    if(roundResult == MofaRoundResult.RedTeamWins)
-            //    {
-            //        PlayVictorySound();
-            //    }
-            //    else
-            //    {
-            //        PlayDefeatSound();
-            //    }
-            //}
+            var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+            var localMofaPlayer = mofaBaseRealityManager.LocalMofaPlayer;
+            var personalRoundResult = mofaBaseRealityManager.GetPersonalRoundResult(localMofaPlayer);
+            switch (personalRoundResult)
+            {
+                case MofaPersonalRoundResult.Victory:
+                    PlayVictorySound();
+                    break;
+                case MofaPersonalRoundResult.Defeat:
+                    PlayDefeatSound();
+                    break;
+                default:
+                    PlayDrawSound();
+                    break;
+            }
         }
     }
 }

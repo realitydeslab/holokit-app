@@ -1,10 +1,6 @@
-using System;
-using System.Collections;
 using UnityEngine;
-using Unity.Netcode;
 using HoloKit;
 using Holoi.Library.MOFABase;
-using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Reality.MOFATheTraining
 {
@@ -19,16 +15,14 @@ namespace Holoi.Reality.MOFATheTraining
     {
         public const ulong AIClientId = 101;
 
-        public static event Action<SpellType> OnAISpawnedSpell;
-
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
             if (IsServer)
             {
                 InitStateMachine();
-                InitAnimationControl();
             }
+            InitAnimationControl();
         }
 
         public override void OnNetworkDespawn()
@@ -37,8 +31,8 @@ namespace Holoi.Reality.MOFATheTraining
             if (IsServer)
             {
                 DeinitStateMachine();
-                DeinitAnimationControl();
             }
+            DeinitAnimationControl();
         }
 
         protected override void Update()

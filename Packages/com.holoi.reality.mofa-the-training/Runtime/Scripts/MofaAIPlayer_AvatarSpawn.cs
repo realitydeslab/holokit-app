@@ -83,7 +83,6 @@ namespace Holoi.Reality.MOFATheTraining
             _avatarAnimator.applyRootMotion = false;
             _avatarAnimator.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
             _avatar.AddComponent<MofaAvatarAnimationEventHandler>();
-
         }
     }
 }

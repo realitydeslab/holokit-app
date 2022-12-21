@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using Unity.Netcode;
-using Holoi.Library.HoloKitApp;
 using HoloKit;
 
 namespace Holoi.Library.MOFABase
@@ -97,6 +96,9 @@ namespace Holoi.Library.MOFABase
 
         private void OnRoundResult()
         {
+            if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
+                return;
+
             var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
             var localMofaPlayer = mofaBaseRealityManager.LocalMofaPlayer;
             // Get the personal round result for the local player

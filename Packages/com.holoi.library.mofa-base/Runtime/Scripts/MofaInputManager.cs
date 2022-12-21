@@ -160,6 +160,9 @@ namespace Holoi.Library.MOFABase
 
         private void FixedUpdate()
         {
+            if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
+                return;
+
             CheckIsActive();
             if (!_isActive)
                 return;

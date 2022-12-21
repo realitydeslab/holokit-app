@@ -199,7 +199,8 @@ namespace Holoi.Library.MOFABase
             switch (newPhase)
             {
                 case MofaPhase.Waiting:
-                    LocalMofaPlayer.Ready.Value = false;
+                    if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
+                        LocalMofaPlayer.Ready.Value = false;
                     break;
                 case MofaPhase.Countdown:
                     if (RoundCount.Value == 1)
