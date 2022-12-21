@@ -25,9 +25,6 @@ namespace Holoi.Avatar.Meebits
         [Range(0,1)]
         [SerializeField] float _clipProcess = 1;
 
-
-
-
         void Start()
         {
             if (true)

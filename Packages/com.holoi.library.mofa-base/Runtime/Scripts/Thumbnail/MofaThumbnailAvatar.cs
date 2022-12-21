@@ -7,68 +7,40 @@ namespace Holoi.Library.MOFABase
     [RequireComponent(typeof(Animator))]
     public class MofaThumbnailAvatar : MonoBehaviour
     {
-        [SerializeField] Transform _parent;
+        [SerializeField] private Transform _parent;
 
-        [SerializeField] Vector2 _avatarVelocity;
+        [SerializeField] private Vector2 _avatarVelocity;
 
-        [SerializeField] bool _autoFire = true;
+        [SerializeField] private GameObject _boltPrefab;
 
-        [SerializeField] GameObject _boltPrefab;
+        [SerializeField] private float _attackDelay = 0f;
 
-        [SerializeField] float _attackPreset = 0f;
+        [SerializeField] private float _attackChargeTime = 3f;
 
-        [SerializeField] float _attackInterval = 3f;
+        private Animator _avatarAnimator;
 
-        Animator _avatarAnimator;
+        private float _attackCurrentCharge;
 
         private readonly Queue<GameObject> _pool = new();
 
-        void Start()
+        private void Start()
         {
-            if (_avatarAnimator == null)
-            {
-                _avatarAnimator = GetComponent<Animator>();
-            }
-            else
-            {
-                Debug.Log("No Animator Assign to this Avatar");
-            }
+            _avatarAnimator = GetComponent<Animator>();
 
-            if (_autoFire)
-            {
-                if (_boltPrefab)
-                {
-                    StartCoroutine(WaitAndBegin(_attackPreset, _attackInterval));
-                }
-                else
-                {
-                    Debug.Log("missing fire bolt prefab.");
-                }
-            }
+            _avatarAnimator.SetFloat("VelocityZ", _avatarVelocity.x);
+            _avatarAnimator.SetFloat("VelocityX", _avatarVelocity.y);
 
-            _avatarAnimator.SetFloat("Velocity Z", _avatarVelocity.x);
-            _avatarAnimator.SetFloat("Velocity X", _avatarVelocity.y);
+            _attackCurrentCharge = _attackChargeTime  - _attackDelay;
         }
 
-        //void Update()
-        //{
-        //    _avatarAnimator.SetFloat("Velocity Z", _avatarVelocity.x);
-        //    _avatarAnimator.SetFloat("Velocity X", _avatarVelocity.y);
-        //}
-
-        IEnumerator WaitAndBegin(float time, float interval)
+        private void Update()
         {
-            yield return new WaitForSeconds(time);
-            StartCoroutine(WaitAndShoot(interval));
-        }
-
-        IEnumerator WaitAndShoot(float time)
-        {
-            _avatarAnimator.SetTrigger("Attack A");
-            yield return new WaitForSeconds(0.25f);
-            ShootBolt();
-            yield return new WaitForSeconds(time - 0.25f);
-            StartCoroutine(WaitAndShoot(_attackInterval));
+            _attackCurrentCharge += Time.deltaTime;
+            if (_attackCurrentCharge >= _attackChargeTime)
+            {
+                _avatarAnimator.SetTrigger("Attack");
+                _attackCurrentCharge = 0f;
+            }
         }
 
         private void AddObjectToQueue(int count)
@@ -88,7 +60,7 @@ namespace Holoi.Library.MOFABase
             _pool.Enqueue(go);
         }
 
-        void ShootBolt()
+        private void ShootBolt()
         {
             if (_pool.Count == 0)
             {
@@ -103,5 +75,13 @@ namespace Holoi.Library.MOFABase
             // Add velocity
             bolt.GetComponent<Rigidbody>().velocity = transform.forward * 3f;
         }
+
+        #region Animation Event Receivers
+        public void FootL() { }
+
+        public void FootR() { }
+
+        public void Hit() => ShootBolt();
+        #endregion
     }
 }
