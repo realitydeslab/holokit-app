@@ -55,6 +55,7 @@ namespace Holoi.Library.HoloKitApp
             HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnARSessionUpdatedFrame_Host;
             MultipeerConnectivityTransport.StartAdvertising();
             _isAdvertising = true;
+            OnStartedAdvertising?.Invoke();
         }
 
         public void StopAdvertising()
@@ -65,6 +66,7 @@ namespace Holoi.Library.HoloKitApp
                 MultipeerConnectivityTransport.StopAdvertising();
                 _timedCameraPoseQueue.Clear();
                 _isAdvertising = false;
+                OnStoppedAdvertising?.Invoke();
             }
         }
 

@@ -62,7 +62,7 @@ namespace Holoi.Library.HoloKitApp
             if (IsOwner)
             {
                 InitPlayerInfoServerRpc(SystemInfo.deviceName, HoloKitApp.Instance.LocalPlayerType);
-                SetupParentConstraint(true);
+                SetupParentConstraint(false);
             }
             
             HoloKitApp.Instance.MultiplayerManager.OnPlayerJoined(this);
@@ -114,18 +114,28 @@ namespace Holoi.Library.HoloKitApp
         }
 
         [ServerRpc]
-        public void UpdateStatusServerRpc(HoloKitAppPlayerStatus newStatus)
+        public void UpdatePlayerStatusServerRpc(HoloKitAppPlayerStatus newStatus)
         {
             PlayerStatus.Value = newStatus;
+        }
+
+        [ServerRpc]
+        public void SetSyncingPoseServerRpc(bool syncing)
+        {
+            SyncingPose.Value = syncing;
         }
 
         public void SpawnPoseVisualizer()
         {
             if (_poseVisualizer == null)
             {
-                var poseVisualizerPrefab = HoloKitApp.Instance.MultiplayerManager.PoseVisualizerPrefab;
-                _poseVisualizer = Instantiate(poseVisualizerPrefab);
-                _poseVisualizer.Player = this;
+                // We don't spawn pose visualizer for the local player
+                if (!IsLocalPlayer)
+                {
+                    var poseVisualizerPrefab = HoloKitApp.Instance.MultiplayerManager.PoseVisualizerPrefab;
+                    _poseVisualizer = Instantiate(poseVisualizerPrefab);
+                    _poseVisualizer.Player = this;
+                }
             }
         }
 
@@ -133,7 +143,7 @@ namespace Holoi.Library.HoloKitApp
         {
             if (_poseVisualizer != null)
             {
-                Destroy(_poseVisualizer);
+                Destroy(_poseVisualizer.gameObject);
             }
         }
 

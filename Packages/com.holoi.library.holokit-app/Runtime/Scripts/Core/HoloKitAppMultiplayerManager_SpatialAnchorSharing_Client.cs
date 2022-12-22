@@ -42,7 +42,7 @@ namespace Holoi.Library.HoloKitApp
                 if (_currentStatus != value)
                 {
                     _currentStatus = value;
-                    LocalPlayer.UpdateStatusServerRpc(_currentStatus);
+                    LocalPlayer.UpdatePlayerStatusServerRpc(_currentStatus);
                 }
             }
         }
@@ -271,6 +271,7 @@ namespace Holoi.Library.HoloKitApp
             HoloKitARSessionControllerAPI.ResetOrigin(translate, Quaternion.AngleAxis(theta, Vector3.up));
             // Enter check alignment marker phase
             SpawnAlignmentMarker();
+            OnLocalPlayerSynced?.Invoke();
         }
 
         // We only need to spawn this on client machine locally
@@ -292,6 +293,18 @@ namespace Holoi.Library.HoloKitApp
         }
 
         /// <summary>
+        /// This function is called when the player checks the alignment marker.
+        /// </summary>
+        public void OnCheckAlignmentMarker()
+        {
+            // Destroy the spawned alignment marker
+            DestroyAlignmentMarker();
+            // Conform the local player status
+            CurrentStatus = HoloKitAppPlayerStatus.Checked;
+            OnLocalPlayerChecked?.Invoke();
+        }
+
+        /// <summary>
         /// This function is called when the player decices to rescan the QRCode.
         /// When rescanning, we do not sync the timestamp again. We only rescan the QRCode.
         /// </summary>
@@ -304,17 +317,7 @@ namespace Holoi.Library.HoloKitApp
             _syncResultQueue.Clear();
             // Scan the QRCode again
             StartScanningQRCode();
-        }
-
-        /// <summary>
-        /// This function is called when the player checks the alignment marker.
-        /// </summary>
-        public void OnCheckAlignmentMarker()
-        {
-            // Destroy the spawned alignment marker
-            DestroyAlignmentMarker();
-            // Conform the local player status
-            CurrentStatus = HoloKitAppPlayerStatus.Checked;
+            OnLocalPlayerRescan?.Invoke();
         }
     }
 }
