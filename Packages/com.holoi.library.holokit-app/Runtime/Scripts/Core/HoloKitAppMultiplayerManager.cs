@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Unity.Netcode;
 using HoloKit;
 
@@ -19,19 +17,34 @@ namespace Holoi.Library.HoloKitApp
         public HoloKitAppPlayer LocalPlayer => _playerDict.ContainsKey(NetworkManager.LocalClientId) ? _playerDict[NetworkManager.LocalClientId] : null;
 
         /// <summary>
+        /// This is a local property which controls the visibility of pose visualizers of players.
+        /// </summary>
+        public bool ShowPoseVisualizers { get; set; }
+
+        /// <summary>
         /// The dictionary which contains all connected player's PlayerObject.
         /// We need this dict because Netcode's default ConnectedClients is not
         /// available on client.
         /// </summary>
         private readonly Dictionary<ulong, HoloKitAppPlayer> _playerDict = new();
 
-        private void FixedUpdate()
+        private void Update()
         {
-            if (!IsSpawned) return;
-            var localPlayer = LocalPlayer;
-            if (localPlayer == null) return;
-            if (localPlayer.PlayerStatus.Value == HoloKitAppPlayerStatus.SyncingTimestamp)
+            if (CurrentStatus == HoloKitAppPlayerStatus.SyncingTimestamp)
                 OnRequestTimestampServerRpc(HoloKitARSessionControllerAPI.GetSystemUptime());
+
+            // Update pose visualizers' visibility
+            foreach (var player in PlayerList)
+            {
+                if (player.SyncingPose.Value && player.PlayerStatus.Value == HoloKitAppPlayerStatus.Checked)
+                {
+                    player.ShowPoseVisualizer = ShowPoseVisualizers;
+                }
+                else
+                {
+                    player.ShowPoseVisualizer = false;
+                }
+            }
         }
 
         /// <summary>
@@ -41,6 +54,12 @@ namespace Holoi.Library.HoloKitApp
         public void OnPlayerJoined(HoloKitAppPlayer player)
         {
             _playerDict.Add(player.OwnerClientId, player);
+
+            // Start spatial anchor synchronization
+            if (!IsServer && player.IsLocalPlayer)
+            {
+                CurrentStatus = HoloKitAppPlayerStatus.SyncingTimestamp;
+            }
         }
 
         /// <summary>
