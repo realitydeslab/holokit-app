@@ -21,7 +21,6 @@ namespace Holoi.Library.MOFABase
 
             HoloKitAppWatchConnectivityAPI.UpdateWatchPanel(HoloKitWatchPanel.MOFA);
             MofaWatchConnectivityAPI.Initialize();
-            MofaWatchConnectivityAPI.UpdateMagicSchool(int.Parse(HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId));
         }
 
         private void DeinitializeWatchConnectivity()
@@ -38,7 +37,7 @@ namespace Holoi.Library.MOFABase
             if (_mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.Waiting)
                 _mofaBaseRealityManager.TryGetReady();
             else if (_mofaBaseRealityManager.CurrentPhase.Value == MofaPhase.Fighting)
-                MofaWatchConnectivityAPI.OnRoundStarted();
+                MofaWatchConnectivityAPI.OnRoundStarted(int.Parse(HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId));
         }
 
         private void OnWatchStateChanged(MofaWatchState watchState)
@@ -64,7 +63,7 @@ namespace Holoi.Library.MOFABase
 
             if (newPhase == MofaPhase.Countdown)
             {
-                MofaWatchConnectivityAPI.OnRoundStarted();
+                MofaWatchConnectivityAPI.OnRoundStarted(int.Parse(HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId));
                 return;
             }
 

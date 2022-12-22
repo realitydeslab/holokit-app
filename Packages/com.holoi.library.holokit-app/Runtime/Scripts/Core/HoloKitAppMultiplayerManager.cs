@@ -55,10 +55,20 @@ namespace Holoi.Library.HoloKitApp
         {
             _playerDict.Add(player.OwnerClientId, player);
 
-            // Start spatial anchor synchronization
-            if (!IsServer && player.IsLocalPlayer)
+            if (HoloKitApp.Instance.IsHost)
             {
-                CurrentStatus = HoloKitAppPlayerStatus.SyncingTimestamp;
+                if (player.IsLocalPlayer)
+                    CurrentStatus = HoloKitAppPlayerStatus.Checked;
+            }
+            else
+            {
+                if (player.IsLocalPlayer)
+                {
+                    if (HoloKitUtils.IsRuntime)
+                        CurrentStatus = HoloKitAppPlayerStatus.SyncingTimestamp;
+                    else
+                        CurrentStatus = HoloKitAppPlayerStatus.Checked;
+                }
             }
         }
 

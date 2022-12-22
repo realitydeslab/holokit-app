@@ -58,23 +58,11 @@ namespace Holoi.Library.HoloKitApp
         public override void OnNetworkSpawn()
         {
             SyncingPose.OnValueChanged += OnSyncingPoseValueChanged;
+
             if (IsOwner)
             {
                 InitPlayerInfoServerRpc(SystemInfo.deviceName, HoloKitApp.Instance.LocalPlayerType);
                 SetupParentConstraint(true);
-            }
-            
-            if (IsServer)
-            {
-                if (IsLocalPlayer)
-                {
-                    PlayerStatus.Value = HoloKitAppPlayerStatus.Checked;
-                }
-                else
-                {
-                    if (HoloKitUtils.IsEditor)
-                        PlayerStatus.Value = HoloKitAppPlayerStatus.Checked;
-                }
             }
             
             HoloKitApp.Instance.MultiplayerManager.OnPlayerJoined(this);
@@ -83,6 +71,7 @@ namespace Holoi.Library.HoloKitApp
         public override void OnNetworkDespawn()
         {
             SyncingPose.OnValueChanged -= OnSyncingPoseValueChanged;
+
             HoloKitApp.Instance.MultiplayerManager.OnPlayerLeft(this);
         }
 

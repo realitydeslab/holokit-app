@@ -221,7 +221,7 @@ namespace Holoi.Library.MOFABase
 
             if (_basicSpellCharge < _basicSpell.ChargeTime)
             {
-                Debug.Log("[MofaInputManager] Basic spell not charged");
+                //Debug.Log("[MofaInputManager] Basic spell not charged");
                 OnBasicSpellNotCharged?.Invoke();
                 return;
             }

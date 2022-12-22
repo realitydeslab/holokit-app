@@ -302,10 +302,8 @@ extension MofaWatchAppManager {
                 self.magicSchool = MofaMagicSchool(rawValue: magicSchool)!
             }
         }
-    }
-    
-    func didReceiveMessage(message: [String : Any]) {
-        if message["Start"] is Bool {
+        
+        if applicationContext["Start"] is Bool {
             if (self.view != .fightingView) {
                 print("MOFA round started")
                 DispatchQueue.main.async {
@@ -315,22 +313,22 @@ extension MofaWatchAppManager {
             return
         }
         
-        if message["End"] is Bool {
+        if applicationContext["End"] is Bool {
             if (self.view == .fightingView) {
                 print("MOFA round ended")
-                if let roundResultIndex = message["Result"] as? Int {
+                if let roundResultIndex = applicationContext["Result"] as? Int {
                     if let roundResult = MofaRoundResult(rawValue: roundResultIndex) {
                         DispatchQueue.main.async {
                             self.roundResult = roundResult
                         }
                     }
                 }
-                if let kill = message["Kill"] as? Int {
+                if let kill = applicationContext["Kill"] as? Int {
                     DispatchQueue.main.async {
                         self.kill = kill
                     }
                 }
-                if let hitRate = message["HitRate"] as? Int {
+                if let hitRate = applicationContext["HitRate"] as? Int {
                     DispatchQueue.main.async {
                         self.hitRate = Int(hitRate)
                     }
@@ -341,6 +339,10 @@ extension MofaWatchAppManager {
             }
             return
         }
+    }
+    
+    func didReceiveMessage(message: [String : Any]) {
+        
     }
     
     func didReceiveMessage(message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {

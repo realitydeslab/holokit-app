@@ -19,10 +19,7 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity.MOFA
                                                                     Action<float, float> OnReceivedHealthDataMessage);
 
         [DllImport("__Internal")]
-        private static extern void MofaWatchConnectivity_UpdateMagicSchool(int magicSchool);
-
-        [DllImport("__Internal")]
-        private static extern void MofaWatchConnectivity_OnRoundStarted();
+        private static extern void MofaWatchConnectivity_OnRoundStarted(int magicSchoolIndex);
 
         [DllImport("__Internal")]
         private static extern void MofaWatchConnectivity_QueryWatchState();
@@ -64,40 +61,29 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity.MOFA
 
         public static void Initialize()
         {
-            if (HoloKit.HoloKitUtils.IsEditor) return;
-
-            MofaWatchConnectivity_Initialize(OnReceivedStartRoundMessageDelegate,
+            if (HoloKit.HoloKitUtils.IsRuntime)
+                MofaWatchConnectivity_Initialize(OnReceivedStartRoundMessageDelegate,
                                              OnWatchStateChangedDelegate,
                                              OnWatchTriggeredDelegate,
                                              OnReceivedHealthDataMessageDelegate);
         }
 
-        public static void UpdateMagicSchool(int magicSchool)
+        public static void OnRoundStarted(int magicSchoolIndex)
         {
-            if (HoloKit.HoloKitUtils.IsEditor) return;
-
-            MofaWatchConnectivity_UpdateMagicSchool(magicSchool);
-        }
-
-        public static void OnRoundStarted()
-        {
-            if (HoloKit.HoloKitUtils.IsEditor) return;
-
-            MofaWatchConnectivity_OnRoundStarted();
+            if (HoloKit.HoloKitUtils.IsRuntime)
+                MofaWatchConnectivity_OnRoundStarted(magicSchoolIndex);
         }
 
         public static void QueryWatchState()
         {
-            if (HoloKit.HoloKitUtils.IsEditor) return;
-
-            MofaWatchConnectivity_QueryWatchState();
+            if (HoloKit.HoloKitUtils.IsRuntime)
+                MofaWatchConnectivity_QueryWatchState();
         }
 
         public static void OnRoundEnded(int result, int kill, float hitRate)
         {
-            if (HoloKit.HoloKitUtils.IsEditor) return;
-
-            MofaWatchConnectivity_OnRoundEnded(result, kill, hitRate);
+            if (HoloKit.HoloKitUtils.IsEditor)
+                MofaWatchConnectivity_OnRoundEnded(result, kill, hitRate);
         }
     }
 }

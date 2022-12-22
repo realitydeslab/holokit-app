@@ -47,7 +47,7 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
-        private HoloKitAppPlayerStatus _currentStatus;
+        private HoloKitAppPlayerStatus _currentStatus = HoloKitAppPlayerStatus.None;
 
         /// <summary>
         /// The final result derived from the timestamp sync algorithm.

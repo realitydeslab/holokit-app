@@ -18,17 +18,17 @@ namespace Holoi.Library.MOFABase
         /// <summary>
         /// Each MofaPlayer has a team.
         /// </summary>
-        public NetworkVariable<MofaTeam> Team = new(MofaTeam.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<MofaTeam> Team = new(MofaTeam.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         /// <summary>
         /// This is the index of the magic school selected by this player.
         /// </summary>
-        public NetworkVariable<int> MagicSchoolIndex = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> MagicSchoolIndex = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         /// <summary>
         /// Whether this player is ready to fight?
         /// </summary>
-        public NetworkVariable<bool> Ready = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> Ready = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         /// <summary>
         /// The number of kill this player has made in the current round.
@@ -89,16 +89,24 @@ namespace Holoi.Library.MOFABase
         {
             base.OnNetworkSpawn();
             Ready.OnValueChanged += OnReadyValueChanged;
-            if (IsOwner)
-            {
-                // Assign the team
-                // TODO: Support 2v2 and more
-                if (HoloKitApp.HoloKitApp.Instance.IsPlayer)
-                    Team.Value = IsServer ? MofaTeam.Blue : MofaTeam.Red;
 
-                // Assign the MagicSchool
-                MagicSchoolIndex.Value = int.Parse(HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId);
+            // The server allocates the team for each player
+            if (IsServer)
+            {
+                if (IsLocalPlayer)
+                    Team.Value = MofaTeam.Blue;
+                else
+                    Team.Value = MofaTeam.Red;
             }
+
+            if (IsOwner)
+                InitMofaPlayerInfoServerRpc(int.Parse(HoloKitApp.HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId));
+        }
+
+        [ServerRpc]
+        private void InitMofaPlayerInfoServerRpc(int magicSchoolIndex)
+        {
+            MagicSchoolIndex.Value = magicSchoolIndex;
         }
 
         public override void OnNetworkDespawn()
@@ -116,6 +124,12 @@ namespace Holoi.Library.MOFABase
                 _altDistance += Vector3.Distance(_lastFramePosition, horizontalPosition);
                 _lastFramePosition = horizontalPosition;
             }
+        }
+
+        [ServerRpc]
+        public void GetReadyServerRpc()
+        {
+            Ready.Value = true;
         }
 
         private void OnReadyValueChanged(bool oldValue, bool newValue)
