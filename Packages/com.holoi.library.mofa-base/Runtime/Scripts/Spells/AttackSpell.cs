@@ -37,6 +37,14 @@ namespace Holoi.Library.MOFABase
         {
             if (other.TryGetComponent<IDamageable>(out var damageable))
             {
+                // For MOFA spell test scene
+                if (HoloKitApp.HoloKitApp.Instance == null)
+                {
+                    damageable.OnDamaged(OwnerClientId);
+                    OnHitFunc();
+                    return;
+                }
+
                 var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
                 ulong victimClientId = other.GetComponentInParent<NetworkObject>().OwnerClientId;
                 var mofaPlayerDict = mofaBaseRealityManager.MofaPlayerDict;

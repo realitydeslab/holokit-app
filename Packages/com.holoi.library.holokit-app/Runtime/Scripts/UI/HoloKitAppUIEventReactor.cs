@@ -5,16 +5,6 @@ namespace Holoi.Library.HoloKitApp.UI
 {
     public class HoloKitAppUIEventReactor : MonoBehaviour
     {
-        private void Awake()
-        {
-            HoloKitAppUIEventManager.OnRenderModeChanged += OnRenderModeChanged;
-        }
-
-        private void OnDestroy()
-        {
-            HoloKitAppUIEventManager.OnRenderModeChanged -= OnRenderModeChanged;
-        }
-
         private void OnRenderModeChanged(HoloKitRenderMode renderMode)
         {
             if (renderMode == HoloKitRenderMode.Stereo)

@@ -65,7 +65,7 @@ namespace Holoi.Library.HoloKitApp.UI
             else
             {
                 HoloKitApp.Instance.UIPanelManager.PushUIPanel("StarAR", HoloKitAppUICanvasType.StAR);
-                HoloKitAppUIEventManager.OnRenderModeChanged?.Invoke(HoloKit.HoloKitRenderMode.Stereo);
+                HoloKitCamera.Instance.OpenStereoWithoutNFC("SomethingForNothing");
             }
         }
 

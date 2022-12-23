@@ -1,4 +1,5 @@
 using UnityEngine;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -44,7 +45,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitApp.Instance.UIPanelManager.PushUIPanel("StarAR", HoloKitAppUICanvasType.StAR);
-            HoloKitAppUIEventManager.OnRenderModeChanged?.Invoke(HoloKit.HoloKitRenderMode.Stereo);
+            HoloKitCamera.Instance.OpenStereoWithoutNFC("SomethingForNothing");
         }
     }
 }

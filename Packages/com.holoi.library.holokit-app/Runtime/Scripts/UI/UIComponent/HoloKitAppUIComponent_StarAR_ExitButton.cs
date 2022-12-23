@@ -1,4 +1,5 @@
 using UnityEngine;
+using HoloKit;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -23,8 +24,8 @@ namespace Holoi.Library.HoloKitApp.UI
         protected override void OnTriggerred()
         {
             base.OnTriggerred();
-            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-            HoloKitAppUIEventManager.OnRenderModeChanged?.Invoke(HoloKit.HoloKitRenderMode.Mono);
+            HoloKitApp.Instance?.UIPanelManager.PopUIPanel();
+            HoloKitCamera.Instance.RenderMode = HoloKitRenderMode.Mono;
         }
     }
 }
