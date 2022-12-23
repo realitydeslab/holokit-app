@@ -12,118 +12,82 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private Button _siwaButton;
 
-        [SerializeField] private TMP_Text _processText;
+        [SerializeField] private TMP_Text _userPromptText;
 
         private void Start()
         {
-            HoloKitAppUserAccountManager.OnInitializingUGS += OnInitializingUGS;
-            HoloKitAppUserAccountManager.OnInitializingUGSFailed += OnInitializingUGSFailed;
-            HoloKitAppUserAccountManager.OnSigningInWithCachedUser += OnSigningInWithCachedUser;
-            HoloKitAppSIWAManager.OnAttemptingQuickLogin += OnAttemptingQuickLogin;
-            HoloKitAppSIWAManager.OnAttemptingQuickLoginFailed += OnAttemptingQuickLoginFailed;
-            HoloKitAppSIWAManager.OnSigningInWithApple += OnSigningInWithApple;
-            HoloKitAppSIWAManager.OnSigningInWithAppleFailed += OnSigningInWithAppleFailed;
-            HoloKitAppUserAccountManager.OnAuthenticatingAppleId += OnAuthenticatingAppleId;
-            HoloKitAppUserAccountManager.OnAuthenticatingAppleIdSucceeded += OnAuthenticatingAppleIdSucceeded;
-            HoloKitAppUserAccountManager.OnAuthenticatingAppleIdFailed += OnAuthenticatingAppleIdFailed;
+            HoloKitAppUserAccountManager.SIWA_OnQuickLogin += SIWA_OnQuickLogin;
+            HoloKitAppUserAccountManager.SIWA_OnSignInWithApple += SIWA_OnSignInWithApple;
+            HoloKitAppUserAccountManager.SIWA_OnSignInFailed += SIWA_OnSignInFailed;
+            HoloKitAppUserAccountManager.Authentication_OnSignInWithCachedUser += Authentication_OnSignInWithCachedUser;
+            HoloKitAppUserAccountManager.Authentication_OnSignInWithApple += Authentication_OnSignInWithApple;
+            HoloKitAppUserAccountManager.Authentication_OnSignedIn += Authentication_OnSignedIn;
+            HoloKitAppUserAccountManager.Authentication_OnSignInFailed += Authentication_OnSignInFailed;
 
             if (HoloKit.HoloKitUtils.IsRuntime)
-            {
-                HoloKitApp.Instance.UserAccountManager.StartProcess();
-            }
+                HoloKitApp.Instance.UserAccountManager.Authentication_AttemptAutoLogin();
             else
-            {
-                OnAttemptingQuickLoginFailed();
-            }  
+                SIWA_OnSignInFailed();
         }
 
         private void OnDestroy()
         {
-            HoloKitAppUserAccountManager.OnInitializingUGS += OnInitializingUGS;
-            HoloKitAppUserAccountManager.OnInitializingUGSFailed += OnInitializingUGSFailed;
-            HoloKitAppUserAccountManager.OnSigningInWithCachedUser += OnSigningInWithCachedUser;
-            HoloKitAppSIWAManager.OnAttemptingQuickLogin += OnAttemptingQuickLogin;
-            HoloKitAppSIWAManager.OnAttemptingQuickLoginFailed += OnAttemptingQuickLoginFailed;
-            HoloKitAppSIWAManager.OnSigningInWithApple += OnSigningInWithApple;
-            HoloKitAppSIWAManager.OnSigningInWithAppleFailed += OnSigningInWithAppleFailed;
-            HoloKitAppUserAccountManager.OnAuthenticatingAppleId += OnAuthenticatingAppleId;
-            HoloKitAppUserAccountManager.OnAuthenticatingAppleIdSucceeded += OnAuthenticatingAppleIdSucceeded;
-            HoloKitAppUserAccountManager.OnAuthenticatingAppleIdFailed += OnAuthenticatingAppleIdFailed;
+            HoloKitAppUserAccountManager.SIWA_OnQuickLogin -= SIWA_OnQuickLogin;
+            HoloKitAppUserAccountManager.SIWA_OnSignInWithApple -= SIWA_OnSignInWithApple;
+            HoloKitAppUserAccountManager.SIWA_OnSignInFailed -= SIWA_OnSignInFailed;
+            HoloKitAppUserAccountManager.Authentication_OnSignInWithCachedUser -= Authentication_OnSignInWithCachedUser;
+            HoloKitAppUserAccountManager.Authentication_OnSignInWithApple -= Authentication_OnSignInWithApple;
+            HoloKitAppUserAccountManager.Authentication_OnSignedIn -= Authentication_OnSignedIn;
+            HoloKitAppUserAccountManager.Authentication_OnSignInFailed -= Authentication_OnSignInFailed;
         }
 
         public void OnSIWAButtonPressed()
         {
             if (HoloKit.HoloKitUtils.IsRuntime)
-            {
-                HoloKitApp.Instance.UserAccountManager.SIWAManager.SignInWithApple();
-            }
+                HoloKitApp.Instance.UserAccountManager.SIWA_SignInWithApple();
             else
-            {
-                OnAuthenticatingAppleIdSucceeded();
-            }
+                Authentication_OnSignedIn();
         }
 
-        private void OnInitializingUGS()
+        private void SIWA_OnQuickLogin()
         {
+            _userPromptText.text = "Attempting Apple Quick Login...";
             _siwaButton.interactable = false;
-            _processText.text = "Initializing Unity Game Services...";
         }
 
-        private void OnInitializingUGSFailed()
+        private void SIWA_OnSignInWithApple()
         {
+            _userPromptText.text = "Signing in with Apple...";
             _siwaButton.interactable = false;
-            _processText.text = "Failed to initialize Unity Gaming Services";
         }
 
-        private void OnSigningInWithCachedUser()
+        private void SIWA_OnSignInFailed()
         {
-            _siwaButton.interactable = false;
-            _processText.text = "Signing in with cached user...";
-        }
-
-        private void OnAttemptingQuickLogin()
-        {
-            _siwaButton.interactable = false;
-            _processText.text = "Attempting Apple Quick Login...";
-        }
-
-        private void OnAttemptingQuickLoginFailed()
-        {
+            _userPromptText.text = "";
             _siwaButton.interactable = true;
-            _processText.text = "";
         }
 
-        private void OnSigningInWithApple()
+        private void Authentication_OnSignInWithCachedUser()
         {
+            _userPromptText.text = "Authenticating cached user...";
             _siwaButton.interactable = false;
-            _processText.text = "Signing in with Apple...";
         }
 
-        private void OnSigningInWithAppleFailed()
+        private void Authentication_OnSignInWithApple()
         {
-            _siwaButton.interactable = true;
-            _processText.text = "";
-        }
-
-        private void OnAuthenticatingAppleId()
-        {
+            _userPromptText.text = "Authenticating Apple identity token...";
             _siwaButton.interactable = false;
-            _processText.text = "Authenticating Apple ID...";
         }
 
-        private void OnAuthenticatingAppleIdSucceeded()
+        private void Authentication_OnSignedIn()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityListPage");
         }
 
-        private void OnAuthenticatingAppleIdFailed()
+        private void Authentication_OnSignInFailed()
         {
-            //_siwaButton.interactable = false;
-            //_processText.text = "Authentication failed";
-
-            // Enter as offline mode
-            OnAuthenticatingAppleIdSucceeded();
+            Authentication_OnSignedIn();
         }
     }
 }

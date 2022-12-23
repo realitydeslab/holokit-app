@@ -297,13 +297,13 @@ class MofaWatchAppManager: NSObject, ObservableObject {
 // MARK: - Mock WCSessionDelegate
 extension MofaWatchAppManager {
     func didReceiveApplicationContext(applicationContext: [String : Any]) {
-        if let magicSchool = applicationContext["MagicSchool"] as? Int {
-            DispatchQueue.main.async {
-                self.magicSchool = MofaMagicSchool(rawValue: magicSchool)!
-            }
-        }
-        
         if applicationContext["Start"] is Bool {
+            if let magicSchool = applicationContext["MagicSchool"] as? Int {
+                DispatchQueue.main.async {
+                    self.magicSchool = MofaMagicSchool(rawValue: magicSchool)!
+                }
+            }
+            
             if (self.view != .fightingView) {
                 print("MOFA round started")
                 DispatchQueue.main.async {

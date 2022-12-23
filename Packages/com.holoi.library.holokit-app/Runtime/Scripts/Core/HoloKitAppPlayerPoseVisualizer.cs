@@ -19,17 +19,18 @@ namespace Holoi.Library.HoloKitApp
 
         private void LateUpdate()
         {
+            // The pose visualizer should always look at the local camera.
+            transform.LookAt(HoloKit.HoloKitCamera.Instance.CenterEyePose);
             if (Player != null)
             {
                 transform.position = Player.transform.position + Offset;
+                UpdateDistance();
             }
-            // The pose visualizer should always look at the local camera.
-            transform.LookAt(HoloKit.HoloKitCamera.Instance.CenterEyePose);
         }
 
-        public void SetDistance(float distance)
+        public void UpdateDistance()
         {
-            _distanceText.text = Mathf.RoundToInt(distance).ToString();
+            _distanceText.text = Player.GetDistanceToLocalPlayer().ToString("F1") + "M";
         }
     }
 }

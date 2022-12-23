@@ -127,9 +127,9 @@ namespace Holoi.Library.MOFABase
         }
 
         [ServerRpc]
-        public void GetReadyServerRpc()
+        public void SetReadyServerRpc(bool ready)
         {
-            Ready.Value = true;
+            Ready.Value = ready;
         }
 
         private void OnReadyValueChanged(bool oldValue, bool newValue)

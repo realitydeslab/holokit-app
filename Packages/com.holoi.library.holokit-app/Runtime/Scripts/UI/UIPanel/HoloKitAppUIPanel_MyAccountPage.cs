@@ -37,7 +37,7 @@ namespace Holoi.Library.HoloKitApp.UI
         private async void FetchAppleUserEmail()
         {
             // We can only fetch from cloud if the user has already signed in
-            if (!HoloKitApp.Instance.UserAccountManager.Authenticated)
+            if (!HoloKitApp.Instance.UserAccountManager.IsSignedIn)
             {
                 _appleIdEmailText.text = "Not signed in";
                 return;

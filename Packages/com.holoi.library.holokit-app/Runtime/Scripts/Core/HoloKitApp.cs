@@ -108,10 +108,14 @@ namespace Holoi.Library.HoloKitApp
         private RealityManager _realityManager;
 
         /// <summary>
-        /// This event is used by UserAccountManager to record the number of times
-        /// each reality is played.
+        /// Sent by the host player when a reality ends.
+        /// The first parameter is the reality bundle Id.
+        /// The second parameter is the session duration.
+        /// The third parameter is whether the player is the host.
+        /// The fourth parameter is the player type.
+        /// The fifth parameter is the player count.
         /// </summary>
-        public static event Action<string> OnEnteredReality; 
+        public static event Action<RealitySessionData> OnDreamOver;
 
         #region Mono
         private void Awake()
@@ -320,7 +324,6 @@ namespace Holoi.Library.HoloKitApp
             _isHost = isMaster;
             _localPlayerType = playerType;
             SceneManager.LoadScene(_currentReality.Scene.SceneName, LoadSceneMode.Single);
-            OnEnteredReality?.Invoke(_currentReality.BundleId);
         }
 
         private void LoadNoLiDARScene()
@@ -405,6 +408,8 @@ namespace Holoi.Library.HoloKitApp
 
         public void Shutdown()
         {
+            OnDreamOver?.Invoke(_realityManager.GetRealitySessionData());
+
             NetworkManager.Singleton.Shutdown();
             DestroyNetworkManager();
             SceneManager.LoadSceneAsync("Start", LoadSceneMode.Single);

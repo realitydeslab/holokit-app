@@ -55,15 +55,6 @@ namespace Holoi.Reality.MOFATheTraining
         private void SpawnMofaAIPlayer()
         {
             _mofaAIPlayer = Instantiate(_mofaAIPlayerPrefab);
-            // TODO: This way of initialization is only temporary
-            //Initialize NetworkVariables for HoloKitAppPlayer
-            _mofaAIPlayer.PlayerName.Value = "AI";
-            _mofaAIPlayer.PlayerType.Value = HoloKitAppPlayerType.Player;
-            _mofaAIPlayer.PlayerStatus.Value = HoloKitAppPlayerStatus.Checked;
-            // Initialize NetworkVariables for MofaPlayer
-            _mofaAIPlayer.Team.Value = MofaTeam.Red;
-            _mofaAIPlayer.MagicSchoolIndex.Value = 0;
-            _mofaAIPlayer.Ready.Value = true;
             _mofaAIPlayer.GetComponent<NetworkObject>().SpawnWithOwnership(MofaAIPlayer.AIClientId);
         }
 
@@ -73,9 +64,13 @@ namespace Holoi.Reality.MOFATheTraining
             if (RoundCount.Value == 1)
             {
                 if (_arPlacementManager.IsValid)
+                {
                     GetReady();
+                }
                 else
+                {
                     OnFailedToStartAtCurrentPosition?.Invoke();
+                }
             }
             else
             {

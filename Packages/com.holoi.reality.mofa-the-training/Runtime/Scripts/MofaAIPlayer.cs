@@ -1,5 +1,6 @@
 using UnityEngine;
 using HoloKit;
+using Holoi.Library.HoloKitApp;
 using Holoi.Library.MOFABase;
 
 namespace Holoi.Reality.MOFATheTraining
@@ -20,9 +21,22 @@ namespace Holoi.Reality.MOFATheTraining
             base.OnNetworkSpawn();
             if (IsServer)
             {
+                InitMofaAIPlayerInfo();
                 InitStateMachine();
             }
             InitAnimationControl();
+        }
+
+        private void InitMofaAIPlayerInfo()
+        {
+            //Initialize NetworkVariables for HoloKitAppPlayer
+            PlayerName.Value = "AI";
+            PlayerType.Value = HoloKitAppPlayerType.Player;
+            PlayerStatus.Value = HoloKitAppPlayerStatus.Checked;
+            // Initialize NetworkVariables for MofaPlayer
+            Team.Value = MofaTeam.Red;
+            MagicSchoolIndex.Value = 0;
+            Ready.Value = true;
         }
 
         public override void OnNetworkDespawn()

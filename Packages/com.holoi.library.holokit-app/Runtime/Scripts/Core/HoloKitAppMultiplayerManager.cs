@@ -23,6 +23,11 @@ namespace Holoi.Library.HoloKitApp
         public bool ShowPoseVisualizers { get; set; }
 
         /// <summary>
+        /// The number of players who participated in this reality.
+        /// </summary>
+        public int PlayerCount { get; set; }
+
+        /// <summary>
         /// The dictionary which contains all connected player's PlayerObject.
         /// We need this dict because Netcode's default ConnectedClients is not
         /// available on client.
@@ -80,6 +85,7 @@ namespace Holoi.Library.HoloKitApp
         public void OnPlayerJoined(HoloKitAppPlayer player)
         {
             _playerDict.Add(player.OwnerClientId, player);
+            PlayerCount++;
 
             if (player.IsLocalPlayer)
             {
