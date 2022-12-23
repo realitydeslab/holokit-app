@@ -69,6 +69,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
                     if (localPlayer.PlayerStatus.Value == HoloKitAppPlayerStatus.SyncingPose)
                     {
+                        Debug.Log("666666");
                         HoloKitApp.Instance.UIPanelManager.PopUIPanel();
                         HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ScanQRCode");
                         return;

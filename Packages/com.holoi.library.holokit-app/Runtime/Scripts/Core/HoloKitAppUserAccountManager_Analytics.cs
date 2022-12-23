@@ -1,7 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEngine;
 using Unity.Services.Analytics;
 using HoloKit;
 
@@ -56,6 +53,7 @@ namespace Holoi.Library.HoloKitApp
             };
 
             AnalyticsService.Instance.CustomData("dreamOver", parameters);
+            AnalyticsService.Instance.Flush();
         }
 
         private void OnOverheated(HoloKitAppOverheatData overheatData)
@@ -70,11 +68,17 @@ namespace Holoi.Library.HoloKitApp
             };
 
             AnalyticsService.Instance.CustomData("overheat", parameters);
+            AnalyticsService.Instance.Flush();
         }
 
         private void OnHoloKitRenderModeChanged(HoloKitRenderMode renderMode)
         {
-            AnalyticsService.Instance.CustomData("enterStarMode", null);
+            if (renderMode == HoloKitRenderMode.Stereo)
+            {
+                Dictionary<string, object> parameters = new();
+                AnalyticsService.Instance.CustomData("enterStarMode", parameters);
+                AnalyticsService.Instance.Flush();
+            }
         }
     }
 }

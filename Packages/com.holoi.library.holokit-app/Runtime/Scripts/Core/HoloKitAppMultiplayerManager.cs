@@ -61,9 +61,6 @@ namespace Holoi.Library.HoloKitApp
 
         private void Update()
         {
-            if (CurrentStatus == HoloKitAppPlayerStatus.SyncingTimestamp)
-                OnRequestTimestampServerRpc(HoloKitARSessionControllerAPI.GetSystemUptime());
-
             // Update pose visualizers' visibility
             foreach (var player in PlayerList)
             {

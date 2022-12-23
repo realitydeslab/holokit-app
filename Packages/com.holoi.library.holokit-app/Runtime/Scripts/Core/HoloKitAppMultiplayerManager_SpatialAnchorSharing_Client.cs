@@ -108,6 +108,12 @@ namespace Holoi.Library.HoloKitApp
 
         private const double ThetaStandardDeviationThreshold = 0.1; // In degrees
 
+        private void FixedUpdate()
+        {
+            if (CurrentStatus == HoloKitAppPlayerStatus.SyncingTimestamp)
+                OnRequestTimestampServerRpc(HoloKitARSessionControllerAPI.GetSystemUptime());
+        }
+
         /// <summary>
         /// Receives the timestamp from the host.
         /// </summary>

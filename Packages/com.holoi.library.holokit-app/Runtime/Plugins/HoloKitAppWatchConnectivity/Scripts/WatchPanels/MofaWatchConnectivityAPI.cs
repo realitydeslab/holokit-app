@@ -82,7 +82,7 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity.MOFA
 
         public static void OnRoundEnded(int result, int kill, float hitRate)
         {
-            if (HoloKit.HoloKitUtils.IsEditor)
+            if (HoloKit.HoloKitUtils.IsRuntime)
                 MofaWatchConnectivity_OnRoundEnded(result, kill, hitRate);
         }
     }

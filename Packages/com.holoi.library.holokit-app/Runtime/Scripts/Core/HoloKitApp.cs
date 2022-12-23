@@ -185,6 +185,9 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnApplicationQuit()
         {
+            if (_realityManager != null && _isHost)
+                OnDreamOver?.Invoke(_realityManager.GetRealitySessionData());
+
             ResetWatchConnectivity();
             GlobalSettings.Save();
         }
@@ -408,7 +411,8 @@ namespace Holoi.Library.HoloKitApp
 
         public void Shutdown()
         {
-            OnDreamOver?.Invoke(_realityManager.GetRealitySessionData());
+            if (_isHost)
+                OnDreamOver?.Invoke(_realityManager.GetRealitySessionData());
 
             NetworkManager.Singleton.Shutdown();
             DestroyNetworkManager();

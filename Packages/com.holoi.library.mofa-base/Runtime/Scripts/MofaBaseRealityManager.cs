@@ -259,7 +259,7 @@ namespace Holoi.Library.MOFABase
         protected void GetReady()
         {
             if (CurrentPhase.Value == MofaPhase.Waiting)
-                LocalMofaPlayer.SetReadyServerRpc(true);
+                LocalMofaPlayer?.SetReadyServerRpc(true);
             else
                 Debug.Log($"[MofaBaseRealityManager] You should not call 'TryGetReady()' in the current MOFA phase {CurrentPhase.Value}");
         }

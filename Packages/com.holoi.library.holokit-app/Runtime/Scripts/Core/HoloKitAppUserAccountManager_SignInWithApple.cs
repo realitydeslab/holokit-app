@@ -37,9 +37,12 @@ namespace Holoi.Library.HoloKitApp
 
         private void SIWA_Init()
         {
+            if (HoloKit.HoloKitUtils.IsEditor)
+                return;
+
             if (!AppleAuthManager.IsCurrentPlatformSupported)
             {
-                Debug.LogError("[SIWA] Current platform does not support SIWA");
+                Debug.Log("[SIWA] Current platform does not support SIWA");
                 return;
             }
 
