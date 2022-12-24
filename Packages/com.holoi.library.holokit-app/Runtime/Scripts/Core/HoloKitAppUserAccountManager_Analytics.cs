@@ -31,15 +31,15 @@ namespace Holoi.Library.HoloKitApp
                 
             }
 
-            HoloKitApp.OnDreamOver += OnDreamOver;
-            HoloKitAppThermalMonitor.OnOverheated += OnOverheated;
+            HoloKitAppAnalyticsEventManager.OnDreamOver += OnDreamOver;
+            HoloKitAppAnalyticsEventManager.OnOverheated += OnOverheated;
             HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
         }
 
         private void Analytics_Deinit()
         {
-            HoloKitApp.OnDreamOver -= OnDreamOver;
-            HoloKitAppThermalMonitor.OnOverheated -= OnOverheated;
+            HoloKitAppAnalyticsEventManager.OnDreamOver -= OnDreamOver;
+            HoloKitAppAnalyticsEventManager.OnOverheated -= OnOverheated;
             HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
         }
 

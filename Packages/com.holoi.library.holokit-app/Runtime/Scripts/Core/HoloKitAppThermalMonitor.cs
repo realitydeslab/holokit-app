@@ -19,8 +19,6 @@ namespace Holoi.Library.HoloKitApp
 
         private ThermalState _currentThermalState;
 
-        public static event Action<HoloKitAppOverheatData> OnOverheated;
-
         private void Awake()
         {
             _currentThermalState = HoloKitARSessionControllerAPI.GetThermalState();
@@ -44,10 +42,9 @@ namespace Holoi.Library.HoloKitApp
                         IsHost = HoloKitApp.Instance.IsHost,
                         PlayerType = HoloKitApp.Instance.MultiplayerManager.LocalPlayer.PlayerType.Value
                     };
-                    OnOverheated?.Invoke(overheatData);
+                    HoloKitAppAnalyticsEventManager.FireEvent_OnOverheated(overheatData);
                 }
             }
-
             _currentThermalState = thermalState;
         }
     }

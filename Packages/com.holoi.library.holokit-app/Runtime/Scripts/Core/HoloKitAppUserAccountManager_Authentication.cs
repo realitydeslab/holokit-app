@@ -44,6 +44,7 @@ namespace Holoi.Library.HoloKitApp
 
             AuthenticationService.Instance.SignedIn += () =>
             {
+                Debug.Log($"Unity Player ID: {AuthenticationService.Instance.PlayerInfo.Id}");
                 Authentication_OnSignedIn?.Invoke();
                 CloudSave_UploadAppleUserData();
             };

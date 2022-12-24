@@ -107,16 +107,6 @@ namespace Holoi.Library.HoloKitApp
 
         private RealityManager _realityManager;
 
-        /// <summary>
-        /// Sent by the host player when a reality ends.
-        /// The first parameter is the reality bundle Id.
-        /// The second parameter is the session duration.
-        /// The third parameter is whether the player is the host.
-        /// The fourth parameter is the player type.
-        /// The fifth parameter is the player count.
-        /// </summary>
-        public static event Action<RealitySessionData> OnDreamOver;
-
         #region Mono
         private void Awake()
         {
@@ -186,7 +176,7 @@ namespace Holoi.Library.HoloKitApp
         private void OnApplicationQuit()
         {
             if (_realityManager != null && _isHost)
-                OnDreamOver?.Invoke(_realityManager.GetRealitySessionData());
+                HoloKitAppAnalyticsEventManager.FireEvent_OnDreamOver(_realityManager.GetRealitySessionData());
 
             ResetWatchConnectivity();
             GlobalSettings.Save();
@@ -412,7 +402,7 @@ namespace Holoi.Library.HoloKitApp
         public void Shutdown()
         {
             if (_isHost)
-                OnDreamOver?.Invoke(_realityManager.GetRealitySessionData());
+                HoloKitAppAnalyticsEventManager.FireEvent_OnDreamOver(_realityManager.GetRealitySessionData());
 
             NetworkManager.Singleton.Shutdown();
             DestroyNetworkManager();
