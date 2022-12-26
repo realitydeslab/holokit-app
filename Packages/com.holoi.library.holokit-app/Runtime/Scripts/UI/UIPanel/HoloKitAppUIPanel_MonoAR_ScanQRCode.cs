@@ -6,18 +6,34 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
-        private void Update()
+        private void Awake()
         {
-            var localPlayer = HoloKitApp.Instance.MultiplayerManager.LocalPlayer;
-            if (localPlayer != null)
-            {
-                if (localPlayer.PlayerStatus.Value == HoloKitAppPlayerStatus.Synced)
-                {
-                    HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-                    HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_CheckAlignmentMark");
-                }
-            }
+            HoloKitAppMultiplayerManager.OnLocalPlayerSynced += OnLocalPlayerSynced;
         }
+
+        private void OnDestroy()
+        {
+            HoloKitAppMultiplayerManager.OnLocalPlayerSynced -= OnLocalPlayerSynced;
+        }
+
+        private void OnLocalPlayerSynced()
+        {
+            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+            HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_CheckAlignmentMark");
+        }
+
+        //private void Update()
+        //{
+        //    var localPlayer = HoloKitApp.Instance.MultiplayerManager.LocalPlayer;
+        //    if (localPlayer != null)
+        //    {
+        //        if (localPlayer.PlayerStatus.Value == HoloKitAppPlayerStatus.Synced)
+        //        {
+        //            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+        //            HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_CheckAlignmentMark");
+        //        }
+        //    }
+        //}
 
         public void OnExitButtonPressed()
         {

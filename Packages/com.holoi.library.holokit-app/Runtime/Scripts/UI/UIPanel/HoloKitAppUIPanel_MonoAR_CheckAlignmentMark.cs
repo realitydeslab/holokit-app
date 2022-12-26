@@ -9,6 +9,7 @@ namespace Holoi.Library.HoloKitApp.UI
         public void OnCheckedButtonPressed()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
+
             HoloKitApp.Instance.MultiplayerManager.OnCheckAlignmentMarker();
         }
 
@@ -16,6 +17,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_ScanQRCode");
+
             HoloKitApp.Instance.MultiplayerManager.OnRescanQRCode();
         }
     }

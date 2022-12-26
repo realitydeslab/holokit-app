@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- For ScanQRCode UI panel, changed back to use static event instead of checking in every `Update()` to update state [yuchen]
+
 ### Removed
 
 - Removed `HoloKitAppUIEventReactor` class, which was responsible for reacting UI events. Now all actions related to UI events are handled by the corresponding UI panel scripts [yuchen]
@@ -26,3 +28,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed Chibi Apes from MOFA avatar collection [yuchen]
 
 ### Fixed
+
+- Fixed Rescan UI panel popping up again after pressing 'Rescan' button bug [yuchen]

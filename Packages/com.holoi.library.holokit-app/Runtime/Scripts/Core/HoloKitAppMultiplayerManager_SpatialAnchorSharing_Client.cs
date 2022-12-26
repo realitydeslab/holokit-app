@@ -108,6 +108,21 @@ namespace Holoi.Library.HoloKitApp
 
         private const double ThetaStandardDeviationThreshold = 0.1; // In degrees
 
+        /// <summary>
+        /// This event is called when the local client synced.
+        /// </summary>
+        public static event Action OnLocalPlayerSynced;
+
+        /// <summary>
+        /// This event is called when the local client checked the alignment marker.
+        /// </summary>
+        public static event Action OnLocalPlayerChecked;
+
+        /// <summary>
+        /// This event si called when the local client began to rescan.
+        /// </summary>
+        public static event Action OnLocalPlayerRescan;
+
         private void FixedUpdate()
         {
             if (CurrentStatus == HoloKitAppPlayerStatus.SyncingTimestamp)
@@ -283,7 +298,6 @@ namespace Holoi.Library.HoloKitApp
         // We only need to spawn this on client machine locally
         private void SpawnAlignmentMarker()
         {
-            Debug.Log("[MultiplayerManager] SpawnAlignmentMarker");
             if (_alignmentMarker == null)
             {
                 var hostPlayer = HoloKitApp.Instance.MultiplayerManager.HostPlayer;
@@ -318,6 +332,7 @@ namespace Holoi.Library.HoloKitApp
         {
             // Destroy the spawned alignment marker
             DestroyAlignmentMarker();
+
             // Clear used queues for pose sync
             _imagePosePairQueue.Clear();
             _syncResultQueue.Clear();

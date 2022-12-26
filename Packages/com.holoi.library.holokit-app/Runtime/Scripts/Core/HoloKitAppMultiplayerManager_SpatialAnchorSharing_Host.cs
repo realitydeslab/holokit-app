@@ -48,6 +48,16 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         private const double TimestampDeviationThreshold = 0.034; // For 30 FPS
 
+        /// <summary>
+        /// This event is called when the local host started advertising.
+        /// </summary>
+        public static event Action OnStartedAdvertising;
+
+        /// <summary>
+        /// This event is called when the local host stopped advertising.
+        /// </summary>
+        public static event Action OnStoppedAdvertising;
+
         public void StartAdvertising(Vector3 cameraToQRCodeOffset)
         {
             _cameraToQRCodeOffset = cameraToQRCodeOffset;
