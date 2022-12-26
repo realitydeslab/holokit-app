@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added death circle display for enemy players [sizheng]
 
+- Added two preview videos for "Quantum Realm" and "Typed Reality: Tornado"
+
+- Added `Assets/NMLBuildCache` and `Assets/StreamingAssets` to .gitignore file, which are build files for NatCorder and UGS respectively [yuchen]
+
 ### Changed
 
 - For ScanQRCode UI panel, changed back to use static event instead of checking in every `Update()` to update state [yuchen]
