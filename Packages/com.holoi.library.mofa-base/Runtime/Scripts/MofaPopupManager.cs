@@ -21,6 +21,8 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] private GameObject _deathPrefab;
 
+        [SerializeField] private GameObject _deathCircleEnemyPrefab;
+
         [SerializeField] private GameObject _summaryBoardPrefab;
 
         private GameObject _currentPopup;
@@ -122,6 +124,14 @@ namespace Holoi.Library.MOFABase
             if (ownerClientId == NetworkManager.Singleton.LocalClientId)
             {
                 StartCoroutine(SpawnPopupAndDestroy(_deathPrefab, 3f));
+            }
+            else
+            {
+                var deathCircleEnemyInstance = Instantiate(_deathCircleEnemyPrefab);
+
+                var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+                Vector3 position = mofaBaseRealityManager.MofaPlayerDict[ownerClientId].LifeShield.transform.position;
+                deathCircleEnemyInstance.transform.position = position;
             }
         }
     }

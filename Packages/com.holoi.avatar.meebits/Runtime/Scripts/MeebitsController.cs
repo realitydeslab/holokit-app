@@ -20,9 +20,7 @@ namespace Holoi.Avatar.Meebits
         public float Scale = 0.2f;
 
         [Header("Clip")]
-        //[SerializeField] bool _isClip = false;
-        [Range(0,1)]
-        [SerializeField] float _clipProcess = 1;
+        [SerializeField] private bool _playFadeInAnimation = true;
 
         private int _clipProcessID;
 
@@ -45,29 +43,36 @@ namespace Holoi.Avatar.Meebits
             // Set brightness
             if (_isEmisive)
             {
-                if (_meshRenderer)
+                var mats = _meshRenderer.materials;
+                foreach (var mat in mats)
                 {
-                    var mats = _meshRenderer.materials;
-                    foreach (var mat in mats)
-                    {
-                        //mat.SetColor("_EmissionColor", new Color(Emission, Emission, Emission, 1));
-                        mat.SetFloat("_Brightness", EmissionIntensity);
-                    }
+                    //mat.SetColor("_EmissionColor", new Color(Emission, Emission, Emission, 1));
+                    mat.SetFloat("_Brightness", EmissionIntensity);
                 }
             }
 
             // Play fade in animation (clip)
             _clipProcessID = Shader.PropertyToID("_ClipProcess");
-            FadeInAnimation();
+            if (_playFadeInAnimation)
+            {
+                FadeInAnimation();
+            }
+            else
+            {
+                foreach (var mat in _meshRenderer.materials)
+                {
+                    mat.SetFloat(_clipProcessID, 1f);
+                    mat.SetVector("_ClipRange", new Vector2(-0.6f, -0.6f + (1.8f * transform.localScale.x)));
+                }
+            }
         }
 
         private void FadeInAnimation()
         {
-            var mats = _meshRenderer.materials;
             // Set initial clip value
-            foreach (var mat in mats)
+            foreach (var mat in _meshRenderer.materials)
             {
-                mat.SetFloat("_ClipProcess", 0f);
+                mat.SetFloat(_clipProcessID, 0f);
                 mat.SetVector("_ClipRange", new Vector2(-0.6f, -0.6f + (1.8f * transform.localScale.x)));
             }
 

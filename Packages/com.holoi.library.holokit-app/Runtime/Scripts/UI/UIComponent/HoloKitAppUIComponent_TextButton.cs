@@ -12,6 +12,11 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private Color _pressedColor;
 
+        private void Start()
+        {
+            _text.color = _normalColor;
+        }
+
         public virtual void OnPointerDown(PointerEventData eventData)
         {
             _text.color = _pressedColor;
