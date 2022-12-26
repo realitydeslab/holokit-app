@@ -9,12 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added 
 
-- Added Dutch translation
+- Added Meebits fade in animation when spawned [sizheng]
+
+- Added `EditorBuildSettings.asset` in .gitignore file [yuchen]
+
+- Added `playerRegistered` analytical event when a new player signed in with their Apple Id for the first time [yuchen]
 
 ### Changed
 
 ### Removed
 
-### Fixed
+- Removed `HoloKitAppUIEventReactor` class, which was responsible for reacting UI events. Now all actions related to UI events are handled by the corresponding UI panel scripts [yuchen]
 
-- Fixed foldouts in Dutch translation
+### Fixed

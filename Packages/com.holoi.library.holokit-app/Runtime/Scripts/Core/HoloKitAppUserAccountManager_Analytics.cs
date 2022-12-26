@@ -19,6 +19,10 @@ namespace Holoi.Library.HoloKitApp
 
         private const string PlayerTypeKey = "playerType";
 
+        private const string UserEmailKey = "userEmail";
+
+        private const string UserNameKey = "userName";
+
         // We cannot initialize Analytics when there is no network connection
         private async void Analytics_Init()
         {
@@ -31,6 +35,7 @@ namespace Holoi.Library.HoloKitApp
                 
             }
 
+            HoloKitAppAnalyticsEventManager.OnPlayerRegistered += OnPlayerRegistered;
             HoloKitAppAnalyticsEventManager.OnDreamOver += OnDreamOver;
             HoloKitAppAnalyticsEventManager.OnOverheated += OnOverheated;
             HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
@@ -38,6 +43,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void Analytics_Deinit()
         {
+            HoloKitAppAnalyticsEventManager.OnPlayerRegistered -= OnPlayerRegistered;
             HoloKitAppAnalyticsEventManager.OnDreamOver -= OnDreamOver;
             HoloKitAppAnalyticsEventManager.OnOverheated -= OnOverheated;
             HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
@@ -79,6 +85,18 @@ namespace Holoi.Library.HoloKitApp
                 AnalyticsService.Instance.CustomData("enterStarMode", parameters);
                 AnalyticsService.Instance.Flush();
             }
+        }
+
+        private void OnPlayerRegistered(string userEmail, string userName)
+        {
+            Dictionary<string, object> parameters = new()
+            {
+                { UserEmailKey, userEmail },
+                { UserNameKey, userName }
+            };
+
+            AnalyticsService.Instance.CustomData("playerRegistered", parameters);
+            AnalyticsService.Instance.Flush();
         }
     }
 }

@@ -8,6 +8,12 @@ namespace Holoi.Library.HoloKitApp
     public static class HoloKitAppAnalyticsEventManager
     {
         /// <summary>
+        /// Sent when a player successfully signed in with their Apple ID for the first time.
+        /// The first parameter is the user email and the second parameter is the user name.
+        /// </summary>
+        public static event Action<string, string> OnPlayerRegistered;
+
+        /// <summary>
         /// Sent by the host player when a reality ends.
         /// </summary>
         public static event Action<RealitySessionData> OnDreamOver;
@@ -16,6 +22,11 @@ namespace Holoi.Library.HoloKitApp
         /// Sent when a player's device gets overheated.
         /// </summary>
         public static event Action<HoloKitAppOverheatData> OnOverheated;
+
+        public static void FireEvent_OnPlayerRegistered(string userEmail, string userName)
+        {
+            OnPlayerRegistered?.Invoke(userEmail, userName);
+        }
 
         public static void FireEvent_OnDreamOver(RealitySessionData realitySessionData)
         {

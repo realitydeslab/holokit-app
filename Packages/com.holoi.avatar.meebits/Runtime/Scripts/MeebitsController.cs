@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +8,7 @@ namespace Holoi.Avatar.Meebits
         [Header("Emission")]
         [Tooltip("if false, do not need to modifiy following variables.")]
         [SerializeField] bool _isEmisive;
-        public SkinnedMeshRenderer MeshRenderer;
+        private SkinnedMeshRenderer _meshRenderer;
         public float EmissionIntensity = 1f;
 
         [Header("Weapon")]
@@ -25,21 +24,13 @@ namespace Holoi.Avatar.Meebits
         [Range(0,1)]
         [SerializeField] float _clipProcess = 1;
 
-        void Start()
-        {
-            if (true)
-            {
-                if (MeshRenderer)
-                {
-                    var mats = MeshRenderer.materials;
-                    foreach (var mat in mats)
-                    {
-                        mat.SetFloat("_ClipProcess", _clipProcess);
-                        mat.SetVector("_ClipRange", new Vector2(-0.6f, -0.6f + (1.8f* transform.localScale.x)));
-                    }
-                }
-            }
+        private int _clipProcessID;
 
+        private void Start()
+        {
+            _meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+
+            // Add weapon to Meebits
             if (_holdWeapon)
             {
                 if (HandJoint != null && WeaponPrefab != null)
@@ -51,12 +42,12 @@ namespace Holoi.Avatar.Meebits
                 }
             }
 
-
+            // Set brightness
             if (_isEmisive)
             {
-                if (MeshRenderer)
+                if (_meshRenderer)
                 {
-                    var mats = MeshRenderer.materials;
+                    var mats = _meshRenderer.materials;
                     foreach (var mat in mats)
                     {
                         //mat.SetColor("_EmissionColor", new Color(Emission, Emission, Emission, 1));
@@ -64,8 +55,30 @@ namespace Holoi.Avatar.Meebits
                     }
                 }
             }
+
+            // Play fade in animation (clip)
+            _clipProcessID = Shader.PropertyToID("_ClipProcess");
+            FadeInAnimation();
+        }
+
+        private void FadeInAnimation()
+        {
+            var mats = _meshRenderer.materials;
+            // Set initial clip value
+            foreach (var mat in mats)
+            {
+                mat.SetFloat("_ClipProcess", 0f);
+                mat.SetVector("_ClipRange", new Vector2(-0.6f, -0.6f + (1.8f * transform.localScale.x)));
+            }
+
+            LeanTween.value(0f, 1f, 1f)
+                .setOnUpdate((float t) =>
+                {
+                    foreach (var mat in _meshRenderer.materials)
+                    {
+                        mat.SetFloat(_clipProcessID, t);
+                    }
+                });
         }
     }
-
 }
-

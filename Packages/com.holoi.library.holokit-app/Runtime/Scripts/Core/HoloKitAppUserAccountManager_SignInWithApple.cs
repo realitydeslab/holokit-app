@@ -133,6 +133,10 @@ namespace Holoi.Library.HoloKitApp
                 if (appleUserName != null)
                     PlayerPrefs.SetString(AppleUserNameKey, appleUserName);
 
+                // Send OnPlayerRegistered event to Unity Analytics
+                if (appleUserEmail != null)
+                    HoloKitAppAnalyticsEventManager.FireEvent_OnPlayerRegistered(appleUserEmail, appleUserName);
+
                 // Sign in with Unity Authentication using Apple identity token
                 Authentication_SignInWithApple(identityToken);
 
