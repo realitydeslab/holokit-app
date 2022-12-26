@@ -25,14 +25,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1080247788}
-  m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7306436120410497795}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!2083052967 &1080247791
 VisualEffect:
   m_ObjectHideFlags: 0
@@ -186,7 +186,7 @@ VisualEffect:
       - m_Value: {fileID: 2800000, guid: 4c1d80d9bc444494bb06039b5f59c796, type: 3}
         m_Name: Mask
         m_Overridden: 1
-      - m_Value: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+      - m_Value: {fileID: 70948873267775455, guid: 65588ce964fcf45aca098c8d81bd4661, type: 3}
         m_Name: Mesh
         m_Overridden: 1
       - m_Value: {fileID: 2800000, guid: 522c2bd8036be4afcaf9e8b807adb452, type: 3}
@@ -621,11 +621,14 @@ VisualEffect:
       - m_Value: 0
         m_Name: Burst Delay
         m_Overridden: 1
-      - m_Value: 48
+      - m_Value: 32
         m_Name: Burst Amount
         m_Overridden: 1
       - m_Value: 0.1
         m_Name: CA Intensity
+        m_Overridden: 1
+      - m_Value: 6
+        m_Name: Brightness
         m_Overridden: 1
     m_Vector2f:
       m_Array:
@@ -643,6 +646,9 @@ VisualEffect:
         m_Overridden: 1
       - m_Value: {x: 0.1, y: 1}
         m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: {x: 2, y: 6}
+        m_Name: Burst Speed Range
         m_Overridden: 1
     m_Vector3f:
       m_Array:
@@ -1271,12 +1277,15 @@ VisualEffect:
       - m_Value: 0.01
         m_Name: CA Intensity
         m_Overridden: 1
+      - m_Value: 12
+        m_Name: Brightness
+        m_Overridden: 1
     m_Vector2f:
       m_Array:
       - m_Value: {x: 5, y: 9}
         m_Name: Initial Speed Range
         m_Overridden: 1
-      - m_Value: {x: 0.03, y: 0.1}
+      - m_Value: {x: 0.01, y: 0.03}
         m_Name: Random Size Multipier
         m_Overridden: 1
       - m_Value: {x: -1, y: 4}
@@ -1460,7 +1469,7 @@ VisualEffect:
           m_Curve:
           - serializedVersion: 3
             time: 0
-            value: 0
+            value: 2.0008855
             inSlope: 4.437736
             outSlope: 4.437736
             tangentMode: 0
@@ -1469,7 +1478,7 @@ VisualEffect:
             outWeight: 0.104166664
           - serializedVersion: 3
             time: 1
-            value: 2.009434
+            value: 4.0103197
             inSlope: 0.17688678
             outSlope: 0.17688678
             tangentMode: 0
@@ -1516,7 +1525,7 @@ VisualEffect:
         m_Overridden: 1
     m_NamedObject:
       m_Array:
-      - m_Value: {fileID: 2800000, guid: af75ccbea278d04448301f80fa6cebf2, type: 3}
+      - m_Value: {fileID: 2800000, guid: e5fe5690ab827df4e9b30a2afa0c049e, type: 3}
         m_Name: Texture
         m_Overridden: 1
     m_Bool:
@@ -1799,7 +1808,7 @@ GameObject:
   - component: {fileID: 1670870397443101631}
   - component: {fileID: 648550104243303683}
   m_Layer: 0
-  m_Name: hp-trail
+  m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2083,7 +2092,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5884391925764504634}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: d76cf4fcbfc1511418f9b710bcf33fd4, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: 0ba87f92696d5264da0b85d44f1a58d8, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -2143,21 +2152,24 @@ VisualEffect:
       - m_Value: 0.01
         m_Name: CA Intensity
         m_Overridden: 1
+      - m_Value: 2
+        m_Name: Brightness
+        m_Overridden: 1
     m_Vector2f:
       m_Array:
       - m_Value: {x: 2, y: 3}
         m_Name: Initial Speed Range
         m_Overridden: 1
-      - m_Value: {x: 0.01, y: 0.04}
+      - m_Value: {x: 0.01, y: 0.02}
         m_Name: Random Size Multipier
         m_Overridden: 1
-      - m_Value: {x: -0.5, y: 2}
+      - m_Value: {x: 1, y: 2}
         m_Name: Gravity and Drag
         m_Overridden: 1
       - m_Value: {x: 1, y: 1.5}
         m_Name: Random LifeTime
         m_Overridden: 1
-      - m_Value: {x: 0.35, y: 0.65}
+      - m_Value: {x: 0.35, y: 0.8}
         m_Name: LifeTime
         m_Overridden: 1
     m_Vector3f:
@@ -2167,7 +2179,7 @@ VisualEffect:
         m_Overridden: 1
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 0.5, y: 3, z: 0.5, w: 0}
+      - m_Value: {x: 3, y: 3, z: 0.5, w: 0}
         m_Name: Turbulence
         m_Overridden: 1
     m_Uint:
@@ -2285,8 +2297,17 @@ VisualEffect:
             inWeight: 0
             outWeight: 0
           - serializedVersion: 3
-            time: 1
+            time: 0.85632837
             value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
             inSlope: 0
             outSlope: 0
             tangentMode: 0
@@ -2349,6 +2370,32 @@ VisualEffect:
           m_PostInfinity: 2
           m_RotationOrder: 4
         m_Name: Add Scale Y by Speed
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1.0027295
+            inSlope: 2.9972706
+            outSlope: 2.9972706
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 4
+            inSlope: 2.9972706
+            outSlope: 2.9972706
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Set ScaleY by Speed
         m_Overridden: 1
     m_Gradient:
       m_Array:
@@ -2488,7 +2535,7 @@ GameObject:
   - component: {fileID: 4657160670792019475}
   - component: {fileID: 1403063103611136090}
   m_Layer: 0
-  m_Name: hp-attack-a
+  m_Name: Header
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3109,7 +3156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96a8e88bcbb6407490fbf329b443eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 8
+  _speed: 6
 --- !u!114 &8051939751654401163
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -71,6 +71,9 @@ VisualEffect:
       - m_Value: 0.001
         m_Name: Ca Intensity
         m_Overridden: 1
+      - m_Value: 2
+        m_Name: Multiply Size
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -285,7 +288,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2640351868553098946}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: d76cf4fcbfc1511418f9b710bcf33fd4, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: 7169ac025803b424d8b4e3949ec73c8c, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -300,7 +303,7 @@ VisualEffect:
       - m_Value: 0.1
         m_Name: Position Random Inside Sphere
         m_Overridden: 1
-      - m_Value: 48
+      - m_Value: 32
         m_Name: Spawn Rate
         m_Overridden: 1
       - m_Value: 0.1
@@ -339,7 +342,7 @@ VisualEffect:
       - m_Value: 0
         m_Name: Burst Delay
         m_Overridden: 1
-      - m_Value: 32
+      - m_Value: 16
         m_Name: Burst Amount
         m_Overridden: 1
       - m_Value: 0.1
@@ -354,6 +357,9 @@ VisualEffect:
       - m_Value: 1
         m_Name: Alpha Multipier
         m_Overridden: 1
+      - m_Value: 12
+        m_Name: Brightness
+        m_Overridden: 1
     m_Vector2f:
       m_Array:
       - m_Value: {x: 0.45, y: 0.75}
@@ -362,14 +368,17 @@ VisualEffect:
       - m_Value: {x: 0.01, y: 0.02}
         m_Name: Random Size Multipier
         m_Overridden: 1
-      - m_Value: {x: -0.5, y: 2}
+      - m_Value: {x: 1, y: 2}
         m_Name: Gravity and Drag
         m_Overridden: 1
       - m_Value: {x: 1, y: 1.5}
         m_Name: Random LifeTime
         m_Overridden: 1
-      - m_Value: {x: 0.1, y: 0.5}
+      - m_Value: {x: 0.2, y: 1}
         m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: {x: 22, y: 32}
+        m_Name: Burst Speed Range
         m_Overridden: 1
     m_Vector3f:
       m_Array:
@@ -593,6 +602,37 @@ VisualEffect:
           m_NumColorKeys: 2
           m_NumAlphaKeys: 2
         m_Name: Color Over Life
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 0.009528293, g: 0.13852684, b: 0.9528302, a: 1}
+          key1: {r: 0.068297, g: 0.034754362, b: 0.6698113, a: 1}
+          key2: {r: 0, g: 0, b: 0, a: 0}
+          key3: {r: 0, g: 0, b: 0, a: 0}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 65535
+          ctime2: 0
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 65535
+          atime2: 0
+          atime3: 0
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_NumColorKeys: 2
+          m_NumAlphaKeys: 2
+        m_Name: Color Gradient
         m_Overridden: 1
     m_NamedObject:
       m_Array:
@@ -3030,14 +3070,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4924432375739763500}
-  m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.09}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4453406326023155893}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!2083052967 &5629364108873308560
 VisualEffect:
   m_ObjectHideFlags: 0
@@ -3058,7 +3098,7 @@ VisualEffect:
       - m_Value: 0.55
         m_Name: Lifetime
         m_Overridden: 1
-      - m_Value: 1
+      - m_Value: 1.2
         m_Name: Size
         m_Overridden: 1
       - m_Value: 0
@@ -3191,7 +3231,7 @@ VisualEffect:
       - m_Value: {fileID: 2800000, guid: 4c1d80d9bc444494bb06039b5f59c796, type: 3}
         m_Name: Mask
         m_Overridden: 1
-      - m_Value: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+      - m_Value: {fileID: 70948873267775455, guid: 65588ce964fcf45aca098c8d81bd4661, type: 3}
         m_Name: Mesh
         m_Overridden: 1
       - m_Value: {fileID: 2800000, guid: f1b5a72caa4ce430c99a5a3a4150aaee, type: 3}
@@ -3292,7 +3332,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5842620104356731895}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: d76cf4fcbfc1511418f9b710bcf33fd4, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: 0ba87f92696d5264da0b85d44f1a58d8, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -3352,12 +3392,18 @@ VisualEffect:
       - m_Value: 0.01
         m_Name: CA Intensity
         m_Overridden: 1
+      - m_Value: 12
+        m_Name: Brightness
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Alpha Multipier
+        m_Overridden: 1
     m_Vector2f:
       m_Array:
       - m_Value: {x: 2, y: 3}
         m_Name: Initial Speed Range
         m_Overridden: 1
-      - m_Value: {x: 0.01, y: 0.04}
+      - m_Value: {x: 0.01, y: 0.02}
         m_Name: Random Size Multipier
         m_Overridden: 1
       - m_Value: {x: -0.5, y: 2}
@@ -3368,6 +3414,9 @@ VisualEffect:
         m_Overridden: 1
       - m_Value: {x: 0.35, y: 0.65}
         m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 3}
+        m_Name: Burst Speed Range
         m_Overridden: 1
     m_Vector3f:
       m_Array:
@@ -4064,7 +4113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96a8e88bcbb6407490fbf329b443eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 8
+  _speed: 6
 --- !u!114 &8051939751654401163
 MonoBehaviour:
   m_ObjectHideFlags: 0
