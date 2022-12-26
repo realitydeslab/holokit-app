@@ -8,7 +8,7 @@ namespace Holoi.Library.MOFABase
     {
         [SerializeField] private Transform _hitPoint;
 
-        [SerializeField] private Animator _animator;
+        [SerializeField] private Animator _indicatorAnimator;
 
         [SerializeField] private VisualEffect _hookVFX;
 
@@ -18,8 +18,6 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] private float _destroyDelay = 2f;
 
-        public SkinnedMeshRenderer _avatarRenderer;
-
         private bool _isActive;
 
         private void Start()
@@ -27,7 +25,7 @@ namespace Holoi.Library.MOFABase
             _isActive = true;
             _hookVFX.enabled = true;
             _placementVFX.enabled = true;
-            _birthVFX.enabled = false;
+            //_birthVFX.enabled = true;
         }
 
         private void Update()
@@ -47,7 +45,6 @@ namespace Holoi.Library.MOFABase
                 _hookVFX.transform.LookAt(pos + direction);
                 _hookVFX.SetVector3("Hit Position", _hitPoint.position);
                 _placementVFX.transform.localPosition = _hitPoint.position;
-                _birthVFX.transform.localPosition = _hitPoint.position;
             }
             else
             {
@@ -59,14 +56,12 @@ namespace Holoi.Library.MOFABase
         public void OnPlaced(bool destroy)
         {
             _isActive = false;
-            _hookVFX.gameObject.SetActive(false);
-            _placementVFX.gameObject.SetActive(false);
+            //_hookVFX.gameObject.SetActive(false);
+            //_placementVFX.gameObject.SetActive(false);
 
-            //_birthVFX.SetSkinnedMeshRenderer("SkinnerMeshRenderer", _avatarRenderer);
-            //_birthVFX.gameObject.SetActive(true);
-            //_birthVFX.enabled = true;
+            _birthVFX.gameObject.SetActive(true);
 
-            _animator.SetTrigger("Birth");
+            _indicatorAnimator.SetTrigger("Fade");
             if (destroy)
             {
                 Destroy(gameObject, _destroyDelay);

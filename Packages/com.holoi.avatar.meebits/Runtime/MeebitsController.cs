@@ -35,7 +35,7 @@ namespace Holoi.Avatar.Meebits
                     foreach (var mat in mats)
                     {
                         mat.SetFloat("_ClipProcess", _clipProcess);
-                        mat.SetVector("_ClipRange", new Vector2(-0.6f, -0.6f + (1.75f* transform.localScale.x)));
+                        mat.SetVector("_ClipRange", new Vector2(-0.6f, -0.6f + (1.8f* transform.localScale.x)));
                     }
                 }
             }
