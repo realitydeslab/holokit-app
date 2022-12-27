@@ -11,15 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added Audios for Spells do not have one [sizheng]
 
-- Added `RealityConfiguration` script, which is a dependent class of `RealityManager`. Now all `PlayerPrefab`, `NetworkPrefab`s and URP Setting files are stored in the corresponding `RealityConfiguration`. 
+- Added `RealityConfiguration` script, which is a dependent class of `RealityManager`. Now all `PlayerPrefab`, `NetworkPrefab`s and URP Setting file are stored in the corresponding `RealityConfiguration` [yuchen]
 
 ### Changed
 
-- Changed the audio of AceFire Basic Spell: Spawn. [sizheng]
+- Changed the audio of AceFire Basic Spell: Spawn [sizheng]
 
 - Updated visual of Spells for a better looking [sizheng]
 
-- Updated visual of Death Circle(enemy) [sizheng]
+- Updated visual of Death Circle (enemy) [sizheng]
 
 ### Removed
 
