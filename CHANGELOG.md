@@ -31,9 +31,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `Assets/NMLBuildCache` and `Assets/StreamingAssets` to .gitignore file, which are build files for NatCorder and UGS respectively [yuchen]
 
+- Added Audios for Spells do not have one [sizheng]
+
+
 ### Changed
 
 - For ScanQRCode UI panel, changed back to use static event instead of checking in every `Update()` to update state [yuchen]
+
+- Updated visual of Spells for a better looking [sizheng]
+
+- Updated visual of Death Circle(enemy) [sizheng] 
 
 ### Removed
 
