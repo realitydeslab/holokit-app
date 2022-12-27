@@ -42,6 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated visual of Death Circle(enemy) [sizheng] 
 
+- Changed the audio of AceFire Basic Spell: Spawn. [sizheng]
+
 ### Removed
 
 - Removed `HoloKitAppUIEventReactor` class, which was responsible for reacting UI events. Now all actions related to UI events are handled by the corresponding UI panel scripts [yuchen]
