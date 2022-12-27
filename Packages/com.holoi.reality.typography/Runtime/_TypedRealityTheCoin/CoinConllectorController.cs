@@ -26,12 +26,14 @@ namespace Holoi.Reality.Typography
         {
             Debug.Log("trigger enter");
             // kill the coin
-            Destroy(other.gameObject);
+            //Destroy(other.gameObject);
+            other.transform.parent.gameObject.SetActive(false);
             AddScore();
         }
 
         void AddScore()
         {
+            FindObjectOfType<CoinPathTypedRealityManager>().Score += 1;
             var go = Instantiate(SucceeePrefab);
             go.transform.position = CoinCollector.position;
         }
