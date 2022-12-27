@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `RealityConfiguration` script, which is a dependent class of `RealityManager`. Now all `PlayerPrefab`, `NetworkPrefab`s and URP Setting file are stored in the corresponding `RealityConfiguration` [yuchen]
 
+- Added version number tracking and display the current version number in menu page [yuchen]
+
 ### Changed
 
 - Changed the audio of AceFire Basic Spell: Spawn [sizheng]

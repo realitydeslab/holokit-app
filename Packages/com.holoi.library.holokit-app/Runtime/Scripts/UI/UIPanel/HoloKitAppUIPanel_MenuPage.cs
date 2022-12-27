@@ -1,5 +1,6 @@
 using UnityEngine;
 using Holoi.Library.HoloKitApp.IOSNative;
+using TMPro;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -9,6 +10,13 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
+        [SerializeField] private TMP_Text _currentVersionNumber;
+
+        private void Start()
+        {
+            _currentVersionNumber.text = HoloKitApp.Instance.CurrentVersionNumber;
+        }
+
         private void OnEnable()
         {
             Camera.main.backgroundColor = new Color(0f, 0f, 0f, 0f);
@@ -17,9 +25,7 @@ namespace Holoi.Library.HoloKitApp.UI
         private void OnDisable()
         {
             if (Camera.main != null)
-            {
                 Camera.main.backgroundColor = new Color(1f, 1f, 1f, 0f);
-            }
         }
 
         public void OnBackButtonPressed()

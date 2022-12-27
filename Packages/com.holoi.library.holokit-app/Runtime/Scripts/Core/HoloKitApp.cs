@@ -49,6 +49,9 @@ namespace Holoi.Library.HoloKitApp
 
         [SerializeField] private UniversalRenderPipelineAsset _urpAssetForUI;
 
+        [Header("Version")]
+        [SerializeField] private string _currentVersionNumber;
+
         [Header("Debug")]
         [Tooltip("Set this to true to enable Test Mode. Under test mode, the TestRealityList will be loaded")]
         [SerializeField] private bool _testMode;
@@ -80,6 +83,8 @@ namespace Holoi.Library.HoloKitApp
         public bool IsSpectator => _localPlayerType == HoloKitAppPlayerType.Spectator;
 
         public bool IsPuppeteer => _localPlayerType == HoloKitAppPlayerType.Puppeteer;
+
+        public string CurrentVersionNumber => _currentVersionNumber;
 
         public bool Test => _testMode;
 
