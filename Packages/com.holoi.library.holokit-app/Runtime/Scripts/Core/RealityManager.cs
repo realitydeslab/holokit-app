@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
@@ -20,22 +18,24 @@ namespace Holoi.Library.HoloKitApp
     [RequireComponent(typeof(RealityConfiguration))]
     public abstract class RealityManager : NetworkBehaviour
     {
-        [Header("Basics")]
-        public GameObject PlayerPrefab;
+        public RealityConfiguration Config => _config;
 
-        public List<GameObject> NetworkPrefabs;
+        private RealityConfiguration _config;
 
-        public List<UI.HoloKitAppUIPanel> UIPanelPrefabs;
-
-        public List<UI.HoloKitAppUIRealitySettingTab> UIRealitySettingTabs;
-
-        [SerializeField] private UniversalRenderPipelineAsset _urpAsset;
+        /// <summary>
+        /// This function should be called at the very beginning of a reality session
+        /// by the system.
+        /// </summary>
+        public void FindConfig()
+        {
+            _config = GetComponent<RealityConfiguration>();
+        }
 
         public void SetupURPAsset()
         {
-            if (_urpAsset != null)
+            if (_config.UrpAsset != null)
             {
-                GraphicsSettings.renderPipelineAsset = _urpAsset;
+                GraphicsSettings.renderPipelineAsset = _config.UrpAsset;
             }
         }
 

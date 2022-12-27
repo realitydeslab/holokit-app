@@ -30,7 +30,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _tabSelectors = new();
             List<HoloKitAppUIRealitySettingTab> tabList = new(_defaultUIRealitySettingTabs);
             var realityManager = HoloKitApp.Instance.RealityManager;
-            tabList.AddRange(realityManager.UIRealitySettingTabs);
+            tabList.AddRange(realityManager.Config.UIRealitySettingTabPrefabs);
             tabList = tabList.Distinct().ToList();
             foreach (var tab in tabList)
             {

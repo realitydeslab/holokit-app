@@ -22,19 +22,6 @@ namespace Holoi.Library.HoloKitApp.UI
             HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_CheckAlignmentMark");
         }
 
-        //private void Update()
-        //{
-        //    var localPlayer = HoloKitApp.Instance.MultiplayerManager.LocalPlayer;
-        //    if (localPlayer != null)
-        //    {
-        //        if (localPlayer.PlayerStatus.Value == HoloKitAppPlayerStatus.Synced)
-        //        {
-        //            HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-        //            HoloKitApp.Instance.UIPanelManager.PushUIPanel("MonoAR_CheckAlignmentMark");
-        //        }
-        //    }
-        //}
-
         public void OnExitButtonPressed()
         {
             HoloKitApp.Instance.Shutdown();

@@ -239,6 +239,7 @@ namespace Holoi.Library.HoloKitApp
                 Debug.LogError("[HoloKitApp] There is no RealityManager in the scene");
                 return;
             }
+            _realityManager.FindConfig();
             // Setup URP Asset
             _realityManager.SetupURPAsset();
 
@@ -262,9 +263,9 @@ namespace Holoi.Library.HoloKitApp
             UIPanelManager.PushUIPanel("MonoAR");
             // Push the reality specific UI Panel
             // TODO: Support more than 1 reality specific UI Panels
-            if (_realityManager.UIPanelPrefabs.Count > 0)
+            if (_realityManager.Config.UIPanelPrefabs.Count > 0)
             {
-                UIPanelManager.PushUIPanel(_realityManager.UIPanelPrefabs[0]);
+                UIPanelManager.PushUIPanel(_realityManager.Config.UIPanelPrefabs[0]);
             }
 
             // TODO: Fix this
@@ -352,10 +353,10 @@ namespace Holoi.Library.HoloKitApp
                 Destroy(networkManager.GetComponent<UnityTransport>());
 
             // Setup reality specific player prefab for NetworkManager
-            if (_realityManager.PlayerPrefab != null)
-                networkManager.NetworkConfig.PlayerPrefab = _realityManager.PlayerPrefab;
+            if (_realityManager.Config.PlayerPrefab != null)
+                networkManager.NetworkConfig.PlayerPrefab = _realityManager.Config.PlayerPrefab;
             // Setup reality specific network prefabs for NetworkManager
-            foreach (var prefab in _realityManager.NetworkPrefabs)
+            foreach (var prefab in _realityManager.Config.NetworkPrefabs)
             {
                 // Make sure all network prefabs contains a NetworkObject component
                 if (prefab.TryGetComponent<NetworkObject>(out var _))
