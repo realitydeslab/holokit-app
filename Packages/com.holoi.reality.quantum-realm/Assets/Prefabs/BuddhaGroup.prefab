@@ -457,6 +457,8 @@ GameObject:
   - component: {fileID: 761007609637866001}
   - component: {fileID: 6723141259187575638}
   - component: {fileID: 1212296176192426847}
+  - component: {fileID: 1863364429}
+  - component: {fileID: 1863364428}
   m_Layer: 0
   m_Name: Wiper
   m_TagString: Untagged
@@ -527,6 +529,9 @@ VisualEffect:
       - m_Value: 1
         m_Name: Alpha
         m_Overridden: 1
+      - m_Value: 2.4
+        m_Name: Brightness
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -534,7 +539,7 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: Base Transform_position
         m_Overridden: 1
-      - m_Value: {x: 0, y: 0.5, z: 2}
+      - m_Value: {x: -1.26, y: 1.144, z: 1.59}
         m_Name: Hand Position
         m_Overridden: 1
     m_Vector4f:
@@ -863,6 +868,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _phaseSource: {fileID: 761007609637866001}
   _unityAudioSource: {fileID: 6723141259187575638}
+--- !u!114 &1863364429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822777569741842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExecuteInEditor: 1
+  m_Bindings:
+  - {fileID: 1863364428}
+  m_VisualEffect: {fileID: 2504822777569741846}
+--- !u!114 &1863364428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822777569741842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Hand Position
+  Target: {fileID: 0}
 --- !u!1 &2504822777584899132
 GameObject:
   m_ObjectHideFlags: 0
@@ -880,6 +916,8 @@ GameObject:
   - component: {fileID: 5656102699149616237}
   - component: {fileID: 6052500621805990228}
   - component: {fileID: 380866438440075457}
+  - component: {fileID: 685837214}
+  - component: {fileID: 685837213}
   m_Layer: 0
   m_Name: Scanner
   m_TagString: Untagged
@@ -953,11 +991,17 @@ VisualEffect:
       - m_Value: 0.752
         m_Name: Hue
         m_Overridden: 1
+      - m_Value: 2
+        m_Name: Brightness
+        m_Overridden: 1
+      - m_Value: 0.5
+        m_Name: Interaction Radius
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: -1.193, y: -0.349, z: -0.51}
+      - m_Value: {x: -1.881, y: 1.144, z: 0.701}
         m_Name: Hand Position
         m_Overridden: 1
     m_Vector4f:
@@ -1018,7 +1062,10 @@ VisualEffect:
         m_Name: ColorMap
         m_Overridden: 1
     m_Bool:
-      m_Array: []
+      m_Array:
+      - m_Value: 0
+        m_Name: Interactable
+        m_Overridden: 1
 --- !u!73398921 &2504822777584899123
 VFXRenderer:
   serializedVersion: 1
@@ -1283,6 +1330,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _phaseSource: {fileID: 5656102699149616237}
   _unityAudioSource: {fileID: 6052500621805990228}
+--- !u!114 &685837214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822777584899132}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExecuteInEditor: 1
+  m_Bindings:
+  - {fileID: 685837213}
+  m_VisualEffect: {fileID: 2504822777584899120}
+--- !u!114 &685837213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822777584899132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Hand Position
+  Target: {fileID: 0}
 --- !u!1 &2504822777892974083
 GameObject:
   m_ObjectHideFlags: 0
@@ -1300,6 +1378,8 @@ GameObject:
   - component: {fileID: 6493999087074620157}
   - component: {fileID: 7537009172266971305}
   - component: {fileID: 6109207932411767549}
+  - component: {fileID: 478707649}
+  - component: {fileID: 478707648}
   m_Layer: 0
   m_Name: Rain
   m_TagString: Untagged
@@ -1370,6 +1450,12 @@ VisualEffect:
       - m_Value: 1
         m_Name: Alpha
         m_Overridden: 1
+      - m_Value: 0.4
+        m_Name: InteractableRadius
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Brightness
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -1377,7 +1463,7 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: Base Transform_position
         m_Overridden: 1
-      - m_Value: {x: -1.193, y: -0.349, z: -0.51}
+      - m_Value: {x: -1.18, y: 1.032, z: -1.675}
         m_Name: Hand Position
         m_Overridden: 1
     m_Vector4f:
@@ -1438,7 +1524,10 @@ VisualEffect:
         m_Name: ColorMap
         m_Overridden: 1
     m_Bool:
-      m_Array: []
+      m_Array:
+      - m_Value: 0
+        m_Name: Interactable
+        m_Overridden: 1
 --- !u!73398921 &2504822777892974086
 VFXRenderer:
   serializedVersion: 1
@@ -1703,6 +1792,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _phaseSource: {fileID: 6493999087074620157}
   _unityAudioSource: {fileID: 7537009172266971305}
+--- !u!114 &478707649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822777892974083}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExecuteInEditor: 1
+  m_Bindings:
+  - {fileID: 478707648}
+  m_VisualEffect: {fileID: 2504822777892974087}
+--- !u!114 &478707648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822777892974083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Hand Position
+  Target: {fileID: 0}
 --- !u!1 &2504822777920884504
 GameObject:
   m_ObjectHideFlags: 0
@@ -1720,6 +1840,8 @@ GameObject:
   - component: {fileID: 2546643577779409629}
   - component: {fileID: 5839368472046964081}
   - component: {fileID: 6505024377902765620}
+  - component: {fileID: 1863364425}
+  - component: {fileID: 1863364424}
   m_Layer: 0
   m_Name: Hologram
   m_TagString: Untagged
@@ -1800,7 +1922,7 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: Base Transform_position
         m_Overridden: 1
-      - m_Value: {x: -1.193, y: -0.349, z: -0.51}
+      - m_Value: {x: 1.9, y: 1.259, z: -0.831}
         m_Name: Hand Position
         m_Overridden: 1
     m_Vector4f:
@@ -1861,7 +1983,10 @@ VisualEffect:
         m_Name: ColorMap
         m_Overridden: 1
     m_Bool:
-      m_Array: []
+      m_Array:
+      - m_Value: 0
+        m_Name: Interactable
+        m_Overridden: 1
 --- !u!73398921 &2504822777920884511
 VFXRenderer:
   serializedVersion: 1
@@ -2126,6 +2251,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _phaseSource: {fileID: 2546643577779409629}
   _unityAudioSource: {fileID: 5839368472046964081}
+--- !u!114 &1863364425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822777920884504}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExecuteInEditor: 1
+  m_Bindings:
+  - {fileID: 1863364424}
+  m_VisualEffect: {fileID: 2504822777920884508}
+--- !u!114 &1863364424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822777920884504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Hand Position
+  Target: {fileID: 0}
 --- !u!1 &2504822777987072288
 GameObject:
   m_ObjectHideFlags: 0
@@ -2143,6 +2299,8 @@ GameObject:
   - component: {fileID: 4916129577002244374}
   - component: {fileID: 8501083983021662780}
   - component: {fileID: 9060309058879485477}
+  - component: {fileID: 1632457249}
+  - component: {fileID: 1632457248}
   m_Layer: 0
   m_Name: AkParticles
   m_TagString: Untagged
@@ -2213,6 +2371,9 @@ VisualEffect:
       - m_Value: 1
         m_Name: Alpha
         m_Overridden: 1
+      - m_Value: 0.65
+        m_Name: Interaction Radius
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -2220,7 +2381,7 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: Base Transform_position
         m_Overridden: 1
-      - m_Value: {x: -1.193, y: -0.349, z: -0.51}
+      - m_Value: {x: -1.537, y: 1.139, z: -0.646}
         m_Name: Hand Position
         m_Overridden: 1
     m_Vector4f:
@@ -2281,7 +2442,10 @@ VisualEffect:
         m_Name: ColorMap
         m_Overridden: 1
     m_Bool:
-      m_Array: []
+      m_Array:
+      - m_Value: 0
+        m_Name: Interactable
+        m_Overridden: 1
 --- !u!73398921 &2504822777987072295
 VFXRenderer:
   serializedVersion: 1
@@ -2546,6 +2710,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _phaseSource: {fileID: 4916129577002244374}
   _unityAudioSource: {fileID: 8501083983021662780}
+--- !u!114 &1632457249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822777987072288}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExecuteInEditor: 1
+  m_Bindings:
+  - {fileID: 1632457248}
+  m_VisualEffect: {fileID: 2504822777987072292}
+--- !u!114 &1632457248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822777987072288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Hand Position
+  Target: {fileID: 0}
 --- !u!1 &2504822778172217890
 GameObject:
   m_ObjectHideFlags: 0
@@ -2563,6 +2758,8 @@ GameObject:
   - component: {fileID: 5300882508094584577}
   - component: {fileID: 5077691224971957122}
   - component: {fileID: 6585201856803547486}
+  - component: {fileID: 1430591988}
+  - component: {fileID: 1430591987}
   m_Layer: 0
   m_Name: Particles
   m_TagString: Untagged
@@ -2633,8 +2830,11 @@ VisualEffect:
       - m_Value: 1
         m_Name: Alpha
         m_Overridden: 1
-      - m_Value: 1
+      - m_Value: 0.25
         m_Name: Brightness
+        m_Overridden: 1
+      - m_Value: 0.4
+        m_Name: InteractableRadius
         m_Overridden: 1
     m_Vector2f:
       m_Array: []
@@ -2643,7 +2843,7 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: Base Transform_position
         m_Overridden: 1
-      - m_Value: {x: 0, y: 0, z: 0}
+      - m_Value: {x: 1.159, y: 1.089, z: -1.626}
         m_Name: Hand Position
         m_Overridden: 1
     m_Vector4f:
@@ -2704,7 +2904,10 @@ VisualEffect:
         m_Name: ColorMap
         m_Overridden: 1
     m_Bool:
-      m_Array: []
+      m_Array:
+      - m_Value: 0
+        m_Name: Interactable
+        m_Overridden: 1
 --- !u!73398921 &2504822778172217889
 VFXRenderer:
   serializedVersion: 1
@@ -2758,7 +2961,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 48953666b50a64459bff01efacedb13c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -2969,6 +3172,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _phaseSource: {fileID: 5300882508094584577}
   _unityAudioSource: {fileID: 5077691224971957122}
+--- !u!114 &1430591988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822778172217890}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExecuteInEditor: 1
+  m_Bindings:
+  - {fileID: 1430591987}
+  m_VisualEffect: {fileID: 2504822778172217894}
+--- !u!114 &1430591987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822778172217890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Hand Position
+  Target: {fileID: 0}
 --- !u!1 &2504822778629111960
 GameObject:
   m_ObjectHideFlags: 0
@@ -2986,8 +3220,10 @@ GameObject:
   - component: {fileID: 5772583178148373233}
   - component: {fileID: 2922124842580367521}
   - component: {fileID: 5343791530665244256}
+  - component: {fileID: 919377241}
+  - component: {fileID: 919377240}
   m_Layer: 0
-  m_Name: Filament
+  m_Name: Particle 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3017,7 +3253,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2504822778629111960}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 04d7e58232a2e49eeb62d73f83cb7c53, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: 4f9c7fa8b3bd84d5eb0e346312847cfb, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -3056,14 +3292,23 @@ VisualEffect:
       - m_Value: 1
         m_Name: Alpha
         m_Overridden: 1
-      - m_Value: 2
+      - m_Value: 1.6
         m_Name: Brightness
+        m_Overridden: 1
+      - m_Value: 0.5
+        m_Name: Interaction Radius
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Throttle
+        m_Overridden: 1
+      - m_Value: 0.75
+        m_Name: Amplitude
         m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: 0, y: 0, z: 0}
+      - m_Value: {x: -1.2, y: 1.08, z: 1.57}
         m_Name: Hand Position
         m_Overridden: 1
     m_Vector4f:
@@ -3124,7 +3369,10 @@ VisualEffect:
         m_Name: ColorMap
         m_Overridden: 1
     m_Bool:
-      m_Array: []
+      m_Array:
+      - m_Value: 0
+        m_Name: Interactable
+        m_Overridden: 1
 --- !u!73398921 &2504822778629111967
 VFXRenderer:
   serializedVersion: 1
@@ -3389,6 +3637,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _phaseSource: {fileID: 5772583178148373233}
   _unityAudioSource: {fileID: 2922124842580367521}
+--- !u!114 &919377241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822778629111960}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExecuteInEditor: 1
+  m_Bindings:
+  - {fileID: 919377240}
+  m_VisualEffect: {fileID: 2504822778629111964}
+--- !u!114 &919377240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822778629111960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Hand Position
+  Target: {fileID: 0}
 --- !u!1 &2504822779058154466
 GameObject:
   m_ObjectHideFlags: 0
@@ -3406,6 +3685,8 @@ GameObject:
   - component: {fileID: 5190196455795761921}
   - component: {fileID: 1787438800907448078}
   - component: {fileID: 7087762928380443086}
+  - component: {fileID: 1863364417}
+  - component: {fileID: 1863364416}
   m_Layer: 0
   m_Name: Triangles
   m_TagString: Untagged
@@ -3479,11 +3760,14 @@ VisualEffect:
       - m_Value: 0
         m_Name: Process
         m_Overridden: 1
+      - m_Value: -1
+        m_Name: Brightness
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: 0, y: 0.5, z: 1}
+      - m_Value: {x: 1.683, y: 0.93, z: 2.038}
         m_Name: Hand Position
         m_Overridden: 1
     m_Vector4f:
@@ -3812,6 +4096,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _phaseSource: {fileID: 5190196455795761921}
   _unityAudioSource: {fileID: 1787438800907448078}
+--- !u!114 &1863364417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822779058154466}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExecuteInEditor: 1
+  m_Bindings:
+  - {fileID: 1863364416}
+  m_VisualEffect: {fileID: 2504822779058154471}
+--- !u!114 &1863364416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822779058154466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Hand Position
+  Target: {fileID: 0}
 --- !u!1 &2504822779094136008
 GameObject:
   m_ObjectHideFlags: 0
@@ -3829,6 +4144,8 @@ GameObject:
   - component: {fileID: 2417762609453910139}
   - component: {fileID: 5275922027874715705}
   - component: {fileID: 8194658135574507521}
+  - component: {fileID: 1863364427}
+  - component: {fileID: 1863364426}
   m_Layer: 0
   m_Name: Squares
   m_TagString: Untagged
@@ -3903,7 +4220,7 @@ VisualEffect:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: -1.193, y: -0.349, z: -0.51}
+      - m_Value: {x: 1.9, y: 1.099, z: 0.585}
         m_Name: Hand Position
         m_Overridden: 1
     m_Vector4f:
@@ -3924,17 +4241,17 @@ VisualEffect:
       - m_Value:
           serializedVersion: 2
           key0: {r: 0, g: 0, b: 0, a: 1}
-          key1: {r: 1, g: 0.005032359, b: 0.07303355, a: 1}
-          key2: {r: 1, g: 1, b: 1, a: 0}
-          key3: {r: 0, g: 0, b: 0, a: 0}
+          key1: {r: 0.20869237, g: 0.001050215, b: 0.015241545, a: 1}
+          key2: {r: 1, g: 0.005032359, b: 0.07303355, a: 0}
+          key3: {r: 1, g: 1, b: 1, a: 0}
           key4: {r: 0, g: 0, b: 0, a: 0}
           key5: {r: 0, g: 0, b: 0, a: 0}
           key6: {r: 0, g: 0, b: 0, a: 0}
           key7: {r: 0, g: 0, b: 0, a: 0}
-          ctime0: 0
-          ctime1: 47031
-          ctime2: 65535
-          ctime3: 0
+          ctime0: 7903
+          ctime1: 27563
+          ctime2: 51079
+          ctime3: 65535
           ctime4: 0
           ctime5: 0
           ctime6: 0
@@ -3948,7 +4265,7 @@ VisualEffect:
           atime6: 0
           atime7: 0
           m_Mode: 0
-          m_NumColorKeys: 3
+          m_NumColorKeys: 4
           m_NumAlphaKeys: 2
         m_Name: Base Gradient
         m_Overridden: 1
@@ -3964,7 +4281,10 @@ VisualEffect:
         m_Name: ColorMap
         m_Overridden: 1
     m_Bool:
-      m_Array: []
+      m_Array:
+      - m_Value: 0
+        m_Name: Interactable
+        m_Overridden: 1
 --- !u!73398921 &2504822779094136015
 VFXRenderer:
   serializedVersion: 1
@@ -4229,6 +4549,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _phaseSource: {fileID: 2417762609453910139}
   _unityAudioSource: {fileID: 5275922027874715705}
+--- !u!114 &1863364427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822779094136008}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExecuteInEditor: 1
+  m_Bindings:
+  - {fileID: 1863364426}
+  m_VisualEffect: {fileID: 2504822779094136012}
+--- !u!114 &1863364426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822779094136008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Hand Position
+  Target: {fileID: 0}
 --- !u!1 &2504822779118632810
 GameObject:
   m_ObjectHideFlags: 0
@@ -4246,6 +4597,8 @@ GameObject:
   - component: {fileID: 5302166162855790119}
   - component: {fileID: 539366183111461086}
   - component: {fileID: 1397176818188618081}
+  - component: {fileID: 716887003}
+  - component: {fileID: 716887002}
   m_Layer: 0
   m_Name: Cubes
   m_TagString: Untagged
@@ -4289,7 +4642,7 @@ VisualEffect:
       - m_Value: 1
         m_Name: Depth
         m_Overridden: 1
-      - m_Value: 5366
+      - m_Value: 10000
         m_Name: Spawn Rate
         m_Overridden: 1
       - m_Value: 1.34
@@ -4316,6 +4669,12 @@ VisualEffect:
       - m_Value: 1
         m_Name: Alpha
         m_Overridden: 1
+      - m_Value: 0.6
+        m_Name: InteractableRadius
+        m_Overridden: 1
+      - m_Value: 2.6
+        m_Name: Brightness
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -4323,7 +4682,7 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: Base Transform_position
         m_Overridden: 1
-      - m_Value: {x: 0, y: -0.255, z: -1.85}
+      - m_Value: {x: -0.067, y: 1.04, z: -2.1}
         m_Name: Hand Position
         m_Overridden: 1
     m_Vector4f:
@@ -4384,7 +4743,10 @@ VisualEffect:
         m_Name: ColorMap
         m_Overridden: 1
     m_Bool:
-      m_Array: []
+      m_Array:
+      - m_Value: 0
+        m_Name: Interactable
+        m_Overridden: 1
 --- !u!73398921 &2504822779118632809
 VFXRenderer:
   serializedVersion: 1
@@ -4649,6 +5011,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _phaseSource: {fileID: 5302166162855790119}
   _unityAudioSource: {fileID: 539366183111461086}
+--- !u!114 &716887003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822779118632810}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExecuteInEditor: 1
+  m_Bindings:
+  - {fileID: 716887002}
+  m_VisualEffect: {fileID: 2504822779118632814}
+--- !u!114 &716887002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504822779118632810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Hand Position
+  Target: {fileID: 0}
 --- !u!1 &2504822779368527981
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,8 +8,6 @@ namespace Holoi.Reality.MOFATheHunting
     {
         [SerializeField] Animator _animator;
 
-        //[SerializeField] private GameObject _pointLight;
-
         private const string TagName = "Plane";
 
         private void OnTriggerEnter(Collider other)
