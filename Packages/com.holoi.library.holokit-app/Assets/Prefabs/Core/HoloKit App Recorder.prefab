@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9186413053739398045}
+  - component: {fileID: 8829347493115152264}
   - component: {fileID: 9186413053739398034}
   m_Layer: 0
   m_Name: HoloKit App Recorder
@@ -32,6 +33,62 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8829347493115152264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9186413053739398035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0fffa95ffc0b4c7a87ce2d4c7fd1873, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  format: 1
+  destination: 2
+  videoMode: 1
+  audioMode: 2
+  resolution: 9
+  orientation: 2
+  aspect: 1
+  cameras: []
+  texture: {fileID: 0}
+  cameraManager: {fileID: 0}
+  OnRecordingCompleted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9186413053739398034}
+        m_TargetAssemblyTypeName: Holoi.Library.HoloKitApp.HoloKitAppRecorder, Holoi.Library.HoloKitApp
+        m_MethodName: OnRecordingCompletedInternal
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnRecordingFailed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9186413053739398034}
+        m_TargetAssemblyTypeName: Holoi.Library.HoloKitApp.HoloKitAppRecorder, Holoi.Library.HoloKitApp
+        m_MethodName: OnRecordingFailedInternal
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  destinationPathPrefix: VideoKit
+  videoBitRate: 10000000
+  videoKeyframeInterval: 2
+  audioBitRate: 64000
 --- !u!114 &9186413053739398034
 MonoBehaviour:
   m_ObjectHideFlags: 0

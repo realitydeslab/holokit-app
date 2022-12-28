@@ -49,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- For ScanQRCode UI panel, changed back to use static event instead of checking in every `Update()` to update state [yuchen]1
+- For ScanQRCode UI panel, changed back to use static event instead of checking in every `Update()` to update state [yuchen]
 
 
 ### Removed
