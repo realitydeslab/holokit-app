@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added version number tracking and display the current version number in menu page [yuchen]
 
+- Added New Typed Reality: Coin Path [sizheng]
+
 ### Changed
 
 - Changed the audio of AceFire Basic Spell: Spawn [sizheng]
@@ -22,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated visual of Spells for a better looking [sizheng]
 
 - Updated visual of Death Circle (enemy) [sizheng]
+
+- Updated visual of Dragon Powers [sizheng]
 
 ### Removed
 
