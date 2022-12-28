@@ -9,57 +9,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added Audios for Spells do not have one [sizheng]
+- Added Audios for Spells do not have one [@sizheng]
 
-- Added `RealityConfiguration` script, which is a dependent class of `RealityManager`. Now all `PlayerPrefab`, `NetworkPrefab`s and URP Setting file are stored in the corresponding `RealityConfiguration` [yuchen]
+- Added `RealityConfiguration` script, which is a dependent class of `RealityManager`. Now all `PlayerPrefab`, `NetworkPrefab`s and URP Setting file are stored in the corresponding `RealityConfiguration` [@yuchen]
 
-- Added version number tracking and display the current version number in menu page [yuchen]
+- Added version number tracking and display the current version number in menu page [@yuchen]
 
-- Added New Typed Reality: Coin Path [sizheng]
+- Added New Typed Reality: Coin Path [@sizheng]
 
 ### Changed
 
-- Changed the audio of AceFire Basic Spell: Spawn [sizheng]
+- Changed the audio of AceFire Basic Spell: Spawn [@sizheng]
 
-- Updated visual of Spells for a better looking [sizheng]
+- Updated visual of Spells for a better looking [@sizheng]
 
-- Updated visual of Death Circle (enemy) [sizheng]
+- Updated visual of Death Circle (enemy) [@sizheng]
 
-- Updated visual of Dragon Powers [sizheng]
+- Updated visual of Dragon Powers [@sizheng]
 
-- Use VideoKit instead of my own implementation of NatCorder for video recording [yuchen]
+- Use VideoKit instead of my own implementation of NatCorder for video recording [@yuchen]
+
+- Updated new tutorial videos for "Getting Started Page", "MOFA: The Training" and "MOFA: The Duel" [@yuchen]
 
 ### Removed
 
 ### Fixed
+
 
 ## [1.0.0] - 2022-12-27
 
 ### Added 
 
-- Added Meebits fade in animation when spawned [sizheng]
+- Added Meebits fade in animation when spawned [@sizheng]
 
-- Added `EditorBuildSettings.asset` in .gitignore file [yuchen]
+- Added `EditorBuildSettings.asset` in .gitignore file [@yuchen]
 
-- Added `playerRegistered` analytical event when a new player signed in with their Apple Id for the first time [yuchen]
+- Added `playerRegistered` analytical event when a new player signed in with their Apple Id for the first time [@yuchen]
 
-- Added death circle display for enemy players [sizheng]
+- Added death circle display for enemy players [@sizheng]
 
-- Added two preview videos for "Quantum Realm" and "Typed Reality: Tornado"
+- Added two preview videos for "Quantum Realm" and "Typed Reality: Tornado" [@yuchen]
 
-- Added `Assets/NMLBuildCache` and `Assets/StreamingAssets` to .gitignore file, which are build files for NatCorder and UGS respectively [yuchen]
+- Added `Assets/NMLBuildCache` and `Assets/StreamingAssets` to .gitignore file, which are build files for NatCorder and UGS respectively [@yuchen]
 
 ### Changed
 
-- For ScanQRCode UI panel, changed back to use static event instead of checking in every `Update()` to update state [yuchen]
+- For ScanQRCode UI panel, changed back to use static event instead of checking in every `Update()` to update state [@yuchen]
 
 
 ### Removed
 
-- Removed `HoloKitAppUIEventReactor` class, which was responsible for reacting UI events. Now all actions related to UI events are handled by the corresponding UI panel scripts [yuchen]
+- Removed `HoloKitAppUIEventReactor` class, which was responsible for reacting UI events. Now all actions related to UI events are handled by the corresponding UI panel scripts [@yuchen]
 
-- Removed Chibi Apes from MOFA avatar collection [yuchen]
+- Removed Chibi Apes from MOFA avatar collection [@yuchen]
 
 ### Fixed
 
-- Fixed Rescan UI panel popping up again after pressing 'Rescan' button bug [yuchen]
+- Fixed Rescan UI panel popping up again after pressing 'Rescan' button bug [@yuchen]
