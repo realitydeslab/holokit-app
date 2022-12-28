@@ -33,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refactored "MOFA: The Hunting" [@yuchen]
 
+- Updated visual of Buddhas in QuantumRealm Reality [@sizheng]
+
 ### Removed
 
 ### Fixed
