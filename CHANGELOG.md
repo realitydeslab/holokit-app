@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated visual of Dragon Powers [sizheng]
 
+- Use VideoKit instead of my own implementation of NatCorder for video recording [yuchen]
+
 ### Removed
 
 ### Fixed
