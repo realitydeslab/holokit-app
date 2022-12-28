@@ -16,7 +16,7 @@ namespace Holoi.Reality.MOFATheHunting
         Target = 1
     }
 
-    public class TheDragonController : NetworkBehaviour
+    public class DragonController : NetworkBehaviour
     {
         [Header("Reference")]
         [SerializeField] private MAnimal _animal;

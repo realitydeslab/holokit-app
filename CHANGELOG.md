@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated new tutorial videos for "Getting Started Page", "MOFA: The Training" and "MOFA: The Duel" [@yuchen]
 
+- Refactored "MOFA: The Hunting" [@yuchen]
+
 ### Removed
 
 ### Fixed

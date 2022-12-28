@@ -5,7 +5,7 @@ using Holoi.Library.MOFABase;
 
 namespace Holoi.Reality.MOFATheHunting
 {
-    public class TheDragonAttackTriggerController : MonoBehaviour
+    public class DragonAttackTriggerController : MonoBehaviour
     {
         private void OnTriggerEnter(Collider other)
         {

@@ -30,13 +30,13 @@ namespace Holoi.Reality.MOFATheHunting.UI
                 _spawnDragonButton.SetActive(false);
             }
 
-            TheDragonController.OnDragonSpawned += OnDragonSpawned;
+            DragonController.OnDragonSpawned += OnDragonSpawned;
             MofaBaseRealityManager.OnMofaPhaseChanged += OnMofaPhaseChanged;
         }
 
         private void OnDestroy()
         {
-            TheDragonController.OnDragonSpawned -= OnDragonSpawned;
+            DragonController.OnDragonSpawned -= OnDragonSpawned;
             MofaBaseRealityManager.OnMofaPhaseChanged -= OnMofaPhaseChanged;
         }
 

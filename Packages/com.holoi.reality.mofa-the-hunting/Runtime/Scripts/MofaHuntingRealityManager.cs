@@ -24,7 +24,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private GameObject _portalPrefab;
 
-        [SerializeField] private GameObject _theDragonPrefab;
+        [SerializeField] private GameObject _dragonPrefab;
 
         [SerializeField] private float _portalSpawnOffsetY;
 
@@ -32,13 +32,13 @@ namespace Holoi.Reality.MOFATheHunting
 
         public PortalController PortalController => _portalController;
 
-        public TheDragonController TheDragonController => _theDragonController;
+        public DragonController DragonController => _dragonController;
 
         private GameObject _invisibleFloor;
 
         private PortalController _portalController;
 
-        private TheDragonController _theDragonController;
+        private DragonController _dragonController;
 
         private void Start()
         {
@@ -118,12 +118,12 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void SpawnTheDragon(Vector3 position, Quaternion rotation)
         {
-            if (_theDragonController != null) { return; }
+            if (_dragonController != null) { return; }
             // Spawn portal
             var portal = Instantiate(_portalPrefab, position + new Vector3(0f, _portalSpawnOffsetY, 0f), rotation);
             portal.GetComponent<NetworkObject>().Spawn();
             // Spawn dragon
-            var theDragon = Instantiate(_theDragonPrefab, position + new Vector3(0f, _dragonSpawnOffsetY, 0f) - 2f * (rotation * Vector3.forward), rotation);
+            var theDragon = Instantiate(_dragonPrefab, position + new Vector3(0f, _dragonSpawnOffsetY, 0f) - 2f * (rotation * Vector3.forward), rotation);
             theDragon.GetComponent<NetworkObject>().Spawn();
         }
 
@@ -137,9 +137,9 @@ namespace Holoi.Reality.MOFATheHunting
             _portalController = portalController;
         }
 
-        public void SetTheDragonController(TheDragonController theDragonController)
+        public void SetTheDragonController(DragonController theDragonController)
         {
-            _theDragonController = theDragonController;
+            _dragonController = theDragonController;
         }
 
         private void SpawnLifeShieldsForNonHostPlayers()

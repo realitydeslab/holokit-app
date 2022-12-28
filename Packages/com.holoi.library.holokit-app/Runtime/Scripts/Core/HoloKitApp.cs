@@ -245,6 +245,11 @@ namespace Holoi.Library.HoloKitApp
                 return;
             }
             _realityManager.FindConfig();
+            if (_realityManager.Config == null)
+            {
+                Debug.LogError("[HoloKitApp] There is no RealityConfiguration script on the RealityManager");
+                return;
+            }
             // Setup URP Asset
             _realityManager.SetupURPAsset();
 

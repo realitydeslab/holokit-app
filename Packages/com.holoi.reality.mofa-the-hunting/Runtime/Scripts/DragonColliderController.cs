@@ -5,9 +5,9 @@ using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Reality.MOFATheHunting
 {
-    public class TheDragonColliderController : MonoBehaviour, IDamageable
+    public class DragonColliderController : MonoBehaviour, IDamageable
     {
-        [SerializeField] private TheDragonController _theDragonController;
+        [SerializeField] private DragonController _theDragonController;
 
         [SerializeField] private int _multiplier = 1;
 
