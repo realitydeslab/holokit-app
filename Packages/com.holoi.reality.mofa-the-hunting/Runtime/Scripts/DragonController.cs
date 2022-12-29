@@ -177,11 +177,9 @@ namespace Holoi.Reality.MOFATheHunting
             {
                 LeanTween.move(gameObject, transform.position + transform.forward * flyDistance, flyDuration);
             }
-            Debug.Log("body isclip: " + _bodyMaterial.GetInt("_IsClip"));
             _bodyMaterial.SetInt("_IsClip", 1);
             _wingMaterial.SetInt("_IsClip", 1);
             _eyeMaterial.SetInt("_IsClip", 1);
-            Debug.Log("body isclip: " + _bodyMaterial.GetInt("_IsClip"));
             _dragonParticleVfx.SetBool("IsClip", true);
             var mofaHuntingRealityManager = (MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager;
             LeanTween.value(0f, 1f, flyDuration)

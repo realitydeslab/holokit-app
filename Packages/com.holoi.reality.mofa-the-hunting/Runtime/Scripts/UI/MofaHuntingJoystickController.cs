@@ -13,6 +13,7 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         private void Update()
         {
+            // If the joystick input is empty
             if (_joystick.Horizontal == 0f && _joystick.Vertical == 0f)
             {
                 if (!_isEmptyInput)

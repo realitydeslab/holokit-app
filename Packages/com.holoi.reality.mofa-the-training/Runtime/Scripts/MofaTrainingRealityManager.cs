@@ -90,7 +90,7 @@ namespace Holoi.Reality.MOFATheTraining
                 _mofaAIPlayer.SpawnAvatarClientRpc(realityPreferences.MetaAvatarCollectionBundleId, realityPreferences.MetaAvatarTokenId, position, rotation);
                 // Turn off ARPlacementManager, ARPlaneManager and ARRaycastManager
                 _arPlacementManager.OnPlacedFunc();
-                _arPlacementManager.enabled = false;
+                _arPlaneManager.enabled = false;
                 _arRaycastManager.enabled = false;
             }
 

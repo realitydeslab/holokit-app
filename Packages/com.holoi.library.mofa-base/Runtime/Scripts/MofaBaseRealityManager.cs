@@ -294,11 +294,7 @@ namespace Holoi.Library.MOFABase
             SetupLifeShields();
 
             // Reset stats for all players
-            var mofaPlayerList = MofaPlayerList;
-            foreach (var mofaPlayer in mofaPlayerList)
-            {
-                mofaPlayer.ResetStats();
-            }
+            ResetPlayerStats();
         }
 
         protected void SetupLifeShields()
@@ -328,6 +324,15 @@ namespace Holoi.Library.MOFABase
 
             if (IsServer)
                 lifeShield.GetComponent<NetworkObject>().TrySetParent(player.transform, false);
+        }
+
+        protected void ResetPlayerStats()
+        {
+            var mofaPlayerList = MofaPlayerList;
+            foreach (var mofaPlayer in mofaPlayerList)
+            {
+                mofaPlayer.ResetStats();
+            }
         }
 
         protected virtual void StartRound()

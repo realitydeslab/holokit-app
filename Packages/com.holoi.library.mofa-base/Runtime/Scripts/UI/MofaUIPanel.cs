@@ -9,21 +9,21 @@ namespace Holoi.Library.MOFABase.UI
 
         public override bool OverlayPreviousPanel => false;
 
-        [SerializeField] private RectTransform _triggerButton;
+        [SerializeField] protected RectTransform TriggerButton;
 
         private const float RotationSpeed = 20f;
 
-        private void Start()
+        protected virtual void Start()
         {
             // Disable the trigger button on spectators
             if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
-                _triggerButton.gameObject.SetActive(false);
+                TriggerButton.gameObject.SetActive(false);
         }
 
-        private void Update()
+        protected virtual void Update()
         {
-            if (_triggerButton.gameObject.activeSelf)
-                _triggerButton.Rotate(new Vector3(0f, 0f, 1f), -RotationSpeed * Time.deltaTime);
+            if (TriggerButton.gameObject.activeSelf)
+                TriggerButton.Rotate(new Vector3(0f, 0f, 1f), -RotationSpeed * Time.deltaTime);
         }
 
         public void OnTriggerButtonPressed()

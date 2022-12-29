@@ -39,6 +39,9 @@ namespace Holoi.Library.HoloKitApp.UI
         private void Update()
         {
             UpdateConnectedPlayerList();
+
+            if (Screen.orientation != ScreenOrientation.Portrait)
+                Screen.orientation = ScreenOrientation.Portrait;
         }
 
         private void AdjustQRCodeSize()

@@ -1,9 +1,9 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
-using Holoi.Library.HoloKitApp.UI;
 using Holoi.Library.MOFABase;
 using Holoi.Library.ARUX;
 
@@ -16,9 +16,9 @@ namespace Holoi.Reality.MOFATheHunting
 
         [SerializeField] private ARRaycastManager _arRaycastManager;
 
-        [SerializeField] private ARPlacementManager _arPlacementIndicator;
+        [SerializeField] private ARPlacementManager _arPlacementManager;
 
-        [SerializeField] private GameObject _arPlacementIndicatorVisual;
+        [SerializeField] private GameObject _arPlacementIndicator;
 
         [SerializeField] private GameObject _invisibleFloorPrefab;
 
@@ -40,72 +40,77 @@ namespace Holoi.Reality.MOFATheHunting
 
         private DragonController _dragonController;
 
+        public static event Action OnFailedToSpawnDragonAtCurrentPosition;
+
+        /// <summary>
+        /// Sent when the dragon is spawned.
+        /// </summary>
+        public static event Action OnDragonSpawned;
+
+        /// <summary>
+        /// Sent when the dragon is slayed.
+        /// </summary>
+        public static event Action OnDragonDied;
+
         private void Start()
         {
-            HoloKitAppUIEventManager.OnStarUITriggered += OnStarUITriggered;
-            UI.MofaHuntingUIPanel.OnSpawnDragonButtonPressed += OnStarUITriggered;
+            UI.MofaHuntingDragonControllerUIPanel.OnSpawnDragonButtonPressed += OnSpawnDragonButtonPressed;
 
             if (HoloKitApp.Instance.IsHost)
             {
                 _arPlaneManager.enabled = true;
                 _arRaycastManager.enabled = true;
-                _arPlacementIndicator.IsActive = true;
+                _arPlacementManager.IsActive = true;
             }
             else
             {
-                Destroy(_arPlacementIndicator.gameObject);
-                Destroy(_arPlacementIndicatorVisual);
+                Destroy(_arPlacementManager.gameObject);
+                Destroy(_arPlacementIndicator);
             }
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
-            HoloKitAppUIEventManager.OnStarUITriggered -= OnStarUITriggered;
-            UI.MofaHuntingUIPanel.OnSpawnDragonButtonPressed -= OnStarUITriggered;
+            UI.MofaHuntingDragonControllerUIPanel.OnSpawnDragonButtonPressed -= OnSpawnDragonButtonPressed;
         }
 
-        private void OnStarUITriggered()
+        private void OnSpawnDragonButtonPressed()
         {
-            if (HoloKitApp.Instance.IsHost)
-            {
-                if (CurrentPhase.Value == MofaPhase.Waiting)
-                {
-                    StartRound();
-                    return;
-                }
-            }
+            TryGetReady();
         }
 
         public override void TryGetReady()
         {
-            throw new System.NotImplementedException();
+            if (_arPlacementManager.IsValid)
+            {
+                GetReady();
+            }
+            else
+            {
+                OnFailedToSpawnDragonAtCurrentPosition?.Invoke();
+            }
+        }
+
+        protected override void SetupRound()
+        {
+            SetupLifeShieldsForDragonSlayers();
+            ResetPlayerStats();
+
+            // Spawn the dragon
+            Vector3 position = _arPlacementManager.HitPoint.position;
+            Quaternion rotation = _arPlacementManager.HitPoint.rotation;
+            _arPlacementManager.OnDisabledFunc();
+            _arPlaneManager.enabled = false;
+            _arRaycastManager.enabled = false;
+
+            SpawnInvisibleFloor(position.y);
+            SpawnDragon(position, rotation);
         }
 
         // Host only
         protected override void StartRound()
         {
-            if (_arPlacementIndicator != null && _arPlacementIndicator.IsActive && _arPlacementIndicator.IsValid)
-            {
-                Vector3 position = _arPlacementIndicator.HitPoint.position;
-                Quaternion rotation = _arPlacementIndicator.HitPoint.rotation;
-                _arPlaneManager.enabled = false;
-                _arRaycastManager.enabled = false;
-                _arPlacementIndicator.OnDisabledFunc();
-                StartRound(position, rotation);
-            }
-            else
-            {
-                Debug.Log("[MofaHuntingRealityManager] Failed to start round");
-            }
-        }
-
-        // Host only
-        private void StartRound(Vector3 position, Quaternion rotation)
-        {
-            SpawnInvisibleFloor(position.y);
-            SpawnTheDragon(position, rotation);
-            SpawnLifeShieldsForNonHostPlayers();
             StartCoroutine(StartHuntingFlow());
         }
 
@@ -116,7 +121,7 @@ namespace Holoi.Reality.MOFATheHunting
             _invisibleFloor.GetComponent<NetworkObject>().Spawn();
         }
 
-        private void SpawnTheDragon(Vector3 position, Quaternion rotation)
+        private void SpawnDragon(Vector3 position, Quaternion rotation)
         {
             if (_dragonController != null) { return; }
             // Spawn portal
@@ -125,6 +130,8 @@ namespace Holoi.Reality.MOFATheHunting
             // Spawn dragon
             var theDragon = Instantiate(_dragonPrefab, position + new Vector3(0f, _dragonSpawnOffsetY, 0f) - 2f * (rotation * Vector3.forward), rotation);
             theDragon.GetComponent<NetworkObject>().Spawn();
+
+            OnDragonSpawned?.Invoke();
         }
 
         public void SetInvisibleFloor(GameObject floor)
@@ -142,27 +149,30 @@ namespace Holoi.Reality.MOFATheHunting
             _dragonController = theDragonController;
         }
 
-        private void SpawnLifeShieldsForNonHostPlayers()
+        /// <summary>
+        /// We do not spawn life shield for the host, who is the dragon controller.
+        /// </summary>
+        private void SetupLifeShieldsForDragonSlayers()
         {
-            //foreach (ulong playerClientId in PlayerDict.Keys)
-            //{
-            //    if (playerClientId == 0) { continue; }
-                
-            //    var lifeShield = PlayerDict[playerClientId].LifeShield;
-            //    if (lifeShield != null)
-            //    {
-            //        Destroy(lifeShield.gameObject);
-            //    }
-            //    SpawnLifeShield(playerClientId);
-            //}
+            var mofaPlayerList = MofaPlayerList;
+            foreach (var mofaPlayer in mofaPlayerList)
+            {
+                if (mofaPlayer.OwnerClientId == 0)
+                    continue;
+
+                if (mofaPlayer.LifeShield == null)
+                    SpawnLifeShield(mofaPlayer.OwnerClientId);
+                else
+                    mofaPlayer.LifeShield.Renovate();
+            }
         }
 
         private IEnumerator StartHuntingFlow()
         {
             yield return null;
-            //CurrentPhase = MofaPhase.Countdown;
-            //yield return new WaitForSeconds(CountdownDuration);
-            //CurrentPhase = MofaPhase.Fighting;
+            CurrentPhase.Value = MofaPhase.Countdown;
+            yield return new WaitForSeconds(CountdownDuration);
+            CurrentPhase.Value = MofaPhase.Fighting;
         }
 
         public void OnDragonDead()
@@ -173,16 +183,15 @@ namespace Holoi.Reality.MOFATheHunting
         private IEnumerator OnDragonDeadCoroutine()
         {
             yield return null;
-            //CurrentPhase = MofaPhase.RoundOver;
-            //yield return new WaitForSeconds(3f);
-            //RoundResult = MofaRoundResult.RedTeamWins;
-            //CurrentPhase = MofaPhase.RoundResult;
-            //yield return new WaitForSeconds(3f);
-            //CurrentPhase = MofaPhase.RoundData;
-            //// Let the host to spawn a new dragon
-            //_arPlaneManager.enabled = true;
-            //_arRaycastManager.enabled = true;
-            //_arPlacementIndicator.OnRestartFunc();
+            CurrentPhase.Value = MofaPhase.RoundOver;
+            yield return new WaitForSeconds(3f);
+            CurrentPhase.Value = MofaPhase.RoundResult;
+            yield return new WaitForSeconds(3f);
+            CurrentPhase.Value = MofaPhase.Waiting;
+            // Let the host to spawn a new dragon
+            _arPlaneManager.enabled = true;
+            _arRaycastManager.enabled = true;
+            _arPlacementManager.OnRestartFunc();
         }
     }
 }

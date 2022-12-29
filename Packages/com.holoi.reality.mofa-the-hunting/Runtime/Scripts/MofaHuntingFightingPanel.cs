@@ -14,12 +14,10 @@ namespace Holoi.Reality.MOFATheHunting
             }
             else if (HoloKitApp.Instance.IsHost)
             {
-                Reticle.gameObject.SetActive(true);
+
             }
             else
             {
-                //Scores.SetActive(true);
-                //Time.SetActive(true);
                 Reticle.gameObject.SetActive(true);
                 Status.gameObject.SetActive(true);
                 RedScreen.gameObject.SetActive(true);

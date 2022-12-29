@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 227734707}
   - component: {fileID: 227734706}
   m_Layer: 0
-  m_Name: AR Placement Indicator
+  m_Name: AR Placement Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -440,6 +440,10 @@ PrefabInstance:
       propertyPath: _debugCenterEyePrefab
       value: 
       objectReference: {fileID: 181014278347430293, guid: 467e0db054cab4d4091b6f651dc581b6, type: 3}
+    - target: {fileID: 5626992625800642041, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
+      propertyPath: _forceScreenOrientation
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5626992625800642046, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -549,6 +553,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _basicSpellPrewarmCount: 6
   _secondarySpellPrewarmCount: 2
+--- !u!1 &538944780 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3019219737344401699, guid: a52ee14d8ad774911906000298a66025, type: 3}
+  m_PrefabInstance: {fileID: 1251423669}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &603510188 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8793353450489827932, guid: a52ee14d8ad774911906000298a66025, type: 3}
@@ -660,8 +669,8 @@ MonoBehaviour:
     m_InternalValue: 1
   _arPlaneManager: {fileID: 2068233603}
   _arRaycastManager: {fileID: 2068233602}
-  _arPlacementIndicator: {fileID: 227734706}
-  _arPlacementIndicatorVisual: {fileID: 6856670902137361112}
+  _arPlacementManager: {fileID: 227734706}
+  _arPlacementIndicator: {fileID: 6856670902137361112}
   _invisibleFloorPrefab: {fileID: 8796103087112688372, guid: df625dc5b7f0a4899b53097027f89b62, type: 3}
   _portalPrefab: {fileID: 6964064994324406459, guid: c0e6011b8280e407a9750a394db76b2f, type: 3}
   _dragonPrefab: {fileID: 5729086837905743168, guid: 8d91bc81995664d33b69c9c5bf4a28f7, type: 3}
@@ -695,6 +704,11 @@ MonoBehaviour:
   - {fileID: 8996725770308426372, guid: 4ae98302857e74c8db355452437a3cf6, type: 3}
   UIRealitySettingTabPrefabs: []
   UrpAsset: {fileID: 11400000, guid: a1c918d2d40bf4459a1e45fd5f39d4c0, type: 2}
+--- !u!224 &782705273 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8183066238556490552, guid: a52ee14d8ad774911906000298a66025, type: 3}
+  m_PrefabInstance: {fileID: 1251423669}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &849723728
 GameObject:
   m_ObjectHideFlags: 0
@@ -777,6 +791,11 @@ MonoBehaviour:
   _effectAudioSource: {fileID: 1289184989}
   _huntingBGM: {fileID: 8300000, guid: f190575cc5f0c482b960b58bec95123f, type: 3}
   _playBGM: 1
+--- !u!224 &919105481 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7254070172706848978, guid: a52ee14d8ad774911906000298a66025, type: 3}
+  m_PrefabInstance: {fileID: 1251423669}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &933475193
 GameObject:
   m_ObjectHideFlags: 0
@@ -947,11 +966,36 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3019219737344401700, guid: a52ee14d8ad774911906000298a66025, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a52ee14d8ad774911906000298a66025, type: 3}
 --- !u!224 &1251423670 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3019219737344401727, guid: a52ee14d8ad774911906000298a66025, type: 3}
+  m_PrefabInstance: {fileID: 1251423669}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1251423675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 538944780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74571fe94353c4a2e86cbe08d983d0df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Rotator: {fileID: 603510188}
+  Scores: {fileID: 919105481}
+  Time: {fileID: 782705273}
+  Reticle: {fileID: 1366600931}
+  Status: {fileID: 1253891670}
+  RedScreen: {fileID: 2009361725}
+  _autoRotate: 1
+--- !u!224 &1253891670 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6520216935479991587, guid: a52ee14d8ad774911906000298a66025, type: 3}
   m_PrefabInstance: {fileID: 1251423669}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1289184988
@@ -1082,6 +1126,11 @@ Transform:
   m_Father: {fileID: 918776769}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!224 &1366600931 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 476466993471633493, guid: a52ee14d8ad774911906000298a66025, type: 3}
+  m_PrefabInstance: {fileID: 1251423669}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1443686303 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5626992625800642033, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
@@ -1705,6 +1754,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!224 &2009361725 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6009963366604902101, guid: a52ee14d8ad774911906000298a66025, type: 3}
+  m_PrefabInstance: {fileID: 1251423669}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2068233599
 GameObject:
   m_ObjectHideFlags: 0
@@ -2115,7 +2169,7 @@ GameObject:
   - component: {fileID: 6856670902137361110}
   - component: {fileID: 6059966207339402325}
   m_Layer: 0
-  m_Name: AR Placement Indicator Vfx
+  m_Name: Mofa AR Placement Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

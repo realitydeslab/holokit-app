@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added New Typed Reality: Coin Path [@sizheng]
 
+- Added new `MofaHuntingDragonControllerUIPanel` for "MOFA: The Hunting" [@yuchen]
+
 ### Changed
 
 - Changed the audio of AceFire Basic Spell: Spawn [@sizheng]
@@ -31,13 +33,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated new tutorial videos for "Getting Started Page", "MOFA: The Training" and "MOFA: The Duel" [@yuchen]
 
-- Refactored "MOFA: The Hunting" [@yuchen]
+- Refactored `MofaHuntingRealityManager` for "MOFA: The Hunting" [@yuchen]
 
 - Updated visual of Buddhas in QuantumRealm Reality [@sizheng]
 
 ### Removed
 
 ### Fixed
+
+- Disable `ARPlaneManager` after spawning the avatar in "MOFA: The Training" [@yuchen]
 
 
 ## [1.0.0] - 2022-12-27
@@ -59,7 +63,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - For ScanQRCode UI panel, changed back to use static event instead of checking in every `Update()` to update state [@yuchen]
-
 
 ### Removed
 
