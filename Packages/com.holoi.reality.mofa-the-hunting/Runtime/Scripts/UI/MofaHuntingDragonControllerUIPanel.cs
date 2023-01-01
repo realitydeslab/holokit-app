@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using Holoi.Library.HoloKitApp.UI;
 
 namespace Holoi.Reality.MOFATheHunting.UI
@@ -18,6 +19,8 @@ namespace Holoi.Reality.MOFATheHunting.UI
         [SerializeField] private RectTransform _dragonControlPanel;
 
         [SerializeField] private RectTransform _cancelButton;
+
+        [SerializeField] private Slider _flyingSlider;
 
         private const float SpawnDragonButtonRotationSpeed = 20f;
 
@@ -110,6 +113,11 @@ namespace Holoi.Reality.MOFATheHunting.UI
             _dragonControlPanel.gameObject.SetActive(true);
             _monoPanel.gameObject.SetActive(true);
             _cancelButton.gameObject.SetActive(false);
+        }
+
+        public void OnFlyingSliderValueChanged(float value)
+        {
+            Debug.Log($"Flying value: {value}");
         }
     }
 }

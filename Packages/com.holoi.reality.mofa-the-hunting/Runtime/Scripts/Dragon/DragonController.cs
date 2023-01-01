@@ -10,8 +10,10 @@ using Holoi.Library.MOFABase;
 
 namespace Holoi.Reality.MOFATheHunting
 {
-    public class DragonController : NetworkBehaviour
+    public partial class DragonController : NetworkBehaviour
     {
+        public bool IsFlying => _animal.activeState.ID == _fly;
+
         [Header("Reference")]
         [SerializeField] private MAnimal _animal;
 
@@ -52,6 +54,8 @@ namespace Holoi.Reality.MOFATheHunting
         [SerializeField] private bool _isDead;
 
         private NetworkVariable<int> _currentHealth = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+        private bool _readyForControl = false;
 
         //public AimMode AimMode
         //{
@@ -108,6 +112,15 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void Update()
         {
+            if (!_readyForControl)
+            {
+                if (_animal.activeState.ID == _idle)
+                {
+                    _readyForControl = true;
+                    Debug.Log("Dragon now is ready for control");
+                }  
+            }
+
             if (_isDead)
             {
                 _isDead = false;
