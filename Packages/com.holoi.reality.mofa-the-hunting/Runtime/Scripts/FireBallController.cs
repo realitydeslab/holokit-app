@@ -10,6 +10,11 @@ namespace Holoi.Reality.MOFATheHunting
 
         private const string TagName = "Plane";
 
+        private void Start()
+        {
+            StartCoroutine(WaitAndDestory(6f));
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag(TagName))
@@ -18,14 +23,13 @@ namespace Holoi.Reality.MOFATheHunting
                 rigidbody.useGravity = false;
                 rigidbody.velocity = Vector3.zero;
                 _animator.SetTrigger("Explode");
-                StartCoroutine(WaitAndDestory());
-                
+                StartCoroutine(WaitAndDestory(1f));
             }
         }
 
-        IEnumerator WaitAndDestory()
+        IEnumerator WaitAndDestory(float time)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(time);
             _animator.SetTrigger("Die");
             Destroy(gameObject, 1f);
         }

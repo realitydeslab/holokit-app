@@ -45,6 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Disable `ARPlaneManager` after spawning the avatar in "MOFA: The Training" [@yuchen]
 
+- Fixed Dragon Ball Animation Bug [@sizheng]
+
 
 ## [1.0.0] - 2022-12-27
 
