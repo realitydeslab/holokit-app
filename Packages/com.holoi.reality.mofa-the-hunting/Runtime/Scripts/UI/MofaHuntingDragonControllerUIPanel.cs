@@ -1,8 +1,6 @@
 using System;
 using UnityEngine;
-using Holoi.Library.HoloKitApp;
 using Holoi.Library.HoloKitApp.UI;
-using HoloKit;
 
 namespace Holoi.Reality.MOFATheHunting.UI
 {
@@ -19,6 +17,8 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         [SerializeField] private RectTransform _dragonControlPanel;
 
+        [SerializeField] private RectTransform _cancelButton;
+
         private const float SpawnDragonButtonRotationSpeed = 20f;
 
         public static event Action OnSpawnDragonButtonPressed;
@@ -29,20 +29,25 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         public static event Action OnDragonLockButtonPressed;
 
+        public static event Action OnDragonCancelLockButtonPressed;
+
         private void Start()
         {
             MofaHuntingRealityManager.OnDragonSpawned += OnDragonSpawned;
             MofaHuntingRealityManager.OnDragonDied += OnDragonDied;
+            MofaHuntingRealityManager.OnTargetLocked += OnLockTargetSessionEnded;
 
             _spawnDragonButton.gameObject.SetActive(true);
             _monoPanel.gameObject.SetActive(true);
             _dragonControlPanel.gameObject.SetActive(false);
+            _cancelButton.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
         {
             MofaHuntingRealityManager.OnDragonSpawned -= OnDragonSpawned;
             MofaHuntingRealityManager.OnDragonDied -= OnDragonDied;
+            MofaHuntingRealityManager.OnTargetLocked -= OnLockTargetSessionEnded;
         }
 
         private void Update()
@@ -86,7 +91,25 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         public void OnDragonLockButtonPressedFunc()
         {
+            _dragonControlPanel.gameObject.SetActive(false);
+            _monoPanel.gameObject.SetActive(false);
+            _cancelButton.gameObject.SetActive(true);
+
             OnDragonLockButtonPressed?.Invoke();
+        }
+
+        public void OnDragonCancelLockButtonPressedFunc()
+        {
+            OnLockTargetSessionEnded();
+
+            OnDragonCancelLockButtonPressed?.Invoke();
+        }
+
+        private void OnLockTargetSessionEnded()
+        {
+            _dragonControlPanel.gameObject.SetActive(true);
+            _monoPanel.gameObject.SetActive(true);
+            _cancelButton.gameObject.SetActive(false);
         }
     }
 }

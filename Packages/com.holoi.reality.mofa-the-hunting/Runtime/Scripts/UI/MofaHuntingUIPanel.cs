@@ -2,6 +2,7 @@ using UnityEngine;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.HoloKitApp.UI;
 using Holoi.Library.MOFABase.UI;
+using HoloKit;
 
 namespace Holoi.Reality.MOFATheHunting.UI
 {
@@ -15,28 +16,12 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         protected override void Start()
         {
+            HoloKitCamera.Instance.ForceScreenOrientation = !HoloKitApp.Instance.IsHost;
+
             if (HoloKitApp.Instance.IsHost)
                 HoloKitApp.Instance.UIPanelManager.PushUIPanel(_dragonControllerUIPanel, HoloKitAppUICanvasType.Landscape);
             else if (HoloKitApp.Instance.IsSpectator)
                 TriggerButton.gameObject.SetActive(false);
         }
-
-        //private void OnDragonSpawned()
-        //{
-        //    _spawnDragonButton.SetActive(false);
-        //    if (HoloKitApp.Instance.IsHost || HoloKitApp.Instance.IsPuppeteer)
-        //    {
-        //        _dragonControllerButton.SetActive(true);
-        //    }
-        //}
-
-        //private void OnMofaPhaseChanged(MofaPhase mofaPhase)
-        //{
-        //    if (mofaPhase == MofaPhase.Waiting)
-        //    {
-        //        _dragonControllerButton.SetActive(false);
-        //        _spawnDragonButton.SetActive(true);
-        //    }
-        //}
     }
 }

@@ -9,7 +9,7 @@ using Holoi.Library.ARUX;
 
 namespace Holoi.Reality.MOFATheHunting
 {
-    public class MofaHuntingRealityManager : MofaBaseRealityManager
+    public partial class MofaHuntingRealityManager : MofaBaseRealityManager
     {
         [Header("MOFA The Hunting")]
         [SerializeField] private ARPlaneManager _arPlaneManager;
@@ -55,6 +55,7 @@ namespace Holoi.Reality.MOFATheHunting
         private void Start()
         {
             UI.MofaHuntingDragonControllerUIPanel.OnSpawnDragonButtonPressed += OnSpawnDragonButtonPressed;
+            LockTargetSystem_Init();
 
             if (HoloKitApp.Instance.IsHost)
             {
@@ -73,6 +74,12 @@ namespace Holoi.Reality.MOFATheHunting
         {
             base.OnDestroy();
             UI.MofaHuntingDragonControllerUIPanel.OnSpawnDragonButtonPressed -= OnSpawnDragonButtonPressed;
+            LockTargetSystem_Deinit();
+        }
+
+        private void Update()
+        {
+            LockTargetSystem_Update();
         }
 
         private void OnSpawnDragonButtonPressed()
@@ -82,9 +89,16 @@ namespace Holoi.Reality.MOFATheHunting
 
         public override void TryGetReady()
         {
+            // Only the host can get ready in Hunting
+            if (!IsServer)
+                return;
+
             if (_arPlacementManager.IsValid)
             {
-                GetReady();
+                foreach (var mofaPlayer in MofaPlayerList)
+                {
+                    mofaPlayer.Ready.Value = true;
+                }
             }
             else
             {

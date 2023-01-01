@@ -10,12 +10,6 @@ using Holoi.Library.MOFABase;
 
 namespace Holoi.Reality.MOFATheHunting
 {
-    public enum AimMode
-    {
-        Camera = 0,
-        Target = 1
-    }
-
     public class DragonController : NetworkBehaviour
     {
         [Header("Reference")]
@@ -59,49 +53,43 @@ namespace Holoi.Reality.MOFATheHunting
 
         private NetworkVariable<int> _currentHealth = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-        public AimMode AimMode
-        {
-            get => _aimMode;
-            set
-            {
-                //_aimMode = value;
-                //if (value == AimMode.Camera)
-                //{
-                //    _aim.AimTarget = null;
-                //    _aim.UseCamera = true;
-                //    _aim.MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).PlayerDict[0].transform; 
-                //}
-                //else
-                //{
-                //    var mofaBaseRealityManager = (MofaBaseRealityManager)HoloKitApp.Instance.RealityManager;
-                //    if (mofaBaseRealityManager.PlayerDict.ContainsKey(1))
-                //    {
-                //        _aim.AimTarget = mofaBaseRealityManager.PlayerDict[1].LifeShield.transform;
-                //    }
-                //    else
-                //    {
-                //        _aim.AimTarget = mofaBaseRealityManager.PlayerDict[0].transform;
-                //    }
-                //    _aim.UseCamera = false;
-                //    //_aim.MainCamera = null;
-                //}
-                //Debug.Log($"[TheDragonController] AimMode changed to {_aimMode}");
-            }
-        }
-
-        private AimMode _aimMode = AimMode.Camera;
+        //public AimMode AimMode
+        //{
+        //    get => _aimMode;
+        //    set
+        //    {
+        //        _aimMode = value;
+        //        if (value == AimMode.Camera)
+        //        {
+        //            _aim.AimTarget = null;
+        //            _aim.UseCamera = true;
+        //            _aim.MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).PlayerDict[0].transform;
+        //        }
+        //        else
+        //        {
+        //            var mofaBaseRealityManager = (MofaBaseRealityManager)HoloKitApp.Instance.RealityManager;
+        //            if (mofaBaseRealityManager.PlayerDict.ContainsKey(1))
+        //            {
+        //                _aim.AimTarget = mofaBaseRealityManager.PlayerDict[1].LifeShield.transform;
+        //            }
+        //            else
+        //            {
+        //                _aim.AimTarget = mofaBaseRealityManager.PlayerDict[0].transform;
+        //            }
+        //            _aim.UseCamera = false;
+        //            //_aim.MainCamera = null;
+        //        }
+        //        Debug.Log($"[TheDragonController] AimMode changed to {_aimMode}");
+        //    }
+        //}
 
         public static event Action OnDragonSpawned;
 
-        private void Awake()
-        {
-            //_animal.m_MainCamera = ((MofaBaseRealityManager)HoloKitApp.Instance.RealityManager).PlayerDict[0].transform;
-        }
-
         private void Start()
         {
-            AimMode = AimMode.Camera;
-            LockTargetButton.OnLockTargetButtonPressed += OnLockTargetButtonPressedClientRpc;
+            //AimMode = AimMode.Camera;
+
+            //_aim.UseCamera = false;
         }
 
         public override void OnNetworkSpawn()
@@ -136,7 +124,6 @@ namespace Holoi.Reality.MOFATheHunting
         public override void OnDestroy()
         {
             base.OnDestroy();
-            LockTargetButton.OnLockTargetButtonPressed -= OnLockTargetButtonPressedClientRpc;
         }
 
         public void OnDamaged(int damage, ulong attackerClientId)
@@ -154,6 +141,11 @@ namespace Holoi.Reality.MOFATheHunting
                     DeathAnimation();
                 }
             }
+        }
+
+        public void SetTarget(Transform targetTransform)
+        {
+            _aim.AimTarget = targetTransform;
         }
 
         private void SwitchToFly()
@@ -236,19 +228,6 @@ namespace Holoi.Reality.MOFATheHunting
                         Destroy(gameObject, 3f);
                     }
                 });
-        }
-
-        [ClientRpc]
-        private void OnLockTargetButtonPressedClientRpc(bool value)
-        {
-            if (value)
-            {
-                AimMode = AimMode.Target;
-            }
-            else
-            {
-                AimMode = AimMode.Camera;
-            }
         }
 
         [ClientRpc]

@@ -15,5 +15,8 @@ namespace Holoi.Library.HoloKitApp
         public List<UI.HoloKitAppUIRealitySettingTab> UIRealitySettingTabPrefabs;
 
         public UniversalRenderPipelineAsset UrpAsset;
+
+        [Tooltip("Whether the players' poses are synced across the network by default")]
+        public bool SyncPlayerPoseByDefault = false;
     }
 }

@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added new `MofaHuntingDragonControllerUIPanel` for "MOFA: The Hunting" [@yuchen]
 
+- Added Dragon lock target system [@yuchen]
+
 ### Changed
 
 - Changed the audio of AceFire Basic Spell: Spawn [@sizheng]
