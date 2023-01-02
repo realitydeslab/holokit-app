@@ -53,6 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed Dragon Ball Animation Bug [@sizheng]
 
+- Fixed DragonHealthBar Shader Error [@sizheng]
+
 
 ## [1.0.0] - 2022-12-27
 
