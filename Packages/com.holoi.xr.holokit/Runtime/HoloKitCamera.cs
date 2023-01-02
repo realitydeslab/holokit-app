@@ -198,11 +198,8 @@ namespace HoloKit
                     }
                 }
 
-                if (_forceScreenOrientation)
-                {
-                    if (Screen.orientation != ScreenOrientation.LandscapeLeft)
-                        Screen.orientation = ScreenOrientation.LandscapeLeft;
-                }
+                if (Screen.orientation != ScreenOrientation.LandscapeLeft)
+                    Screen.orientation = ScreenOrientation.LandscapeLeft;
             }
             else
             {

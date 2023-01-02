@@ -9,13 +9,14 @@ namespace Holoi.Reality.MOFATheHunting
     {
         private void OnTriggerEnter(Collider other)
         {
-            if (!HoloKitApp.Instance.IsHost) { return; }
-
-            if (other.TryGetComponent<IDamageable>(out var damageable))
+            if (HoloKitApp.Instance.IsHost)
             {
-                if (other.GetComponentInParent<NetworkObject>().OwnerClientId != 0)
+                if (other.TryGetComponent<IDamageable>(out var damageable))
                 {
-                    damageable.OnDamaged(0);
+                    if (other.GetComponentInParent<NetworkObject>().OwnerClientId != 0)
+                    {
+                        damageable.OnDamaged(0);
+                    }
                 }
             }
         }

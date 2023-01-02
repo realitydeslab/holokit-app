@@ -1,7 +1,9 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Holoi.Library.HoloKitApp;
 using Holoi.Library.HoloKitApp.UI;
+using MalbersAnimations.Events;
 
 namespace Holoi.Reality.MOFATheHunting.UI
 {
@@ -21,6 +23,11 @@ namespace Holoi.Reality.MOFATheHunting.UI
         [SerializeField] private RectTransform _cancelButton;
 
         [SerializeField] private Slider _flyingSlider;
+
+        [Header("MEvents")]
+        [SerializeField] private MEvent _setFly;
+
+        [SerializeField] private MEvent _setMovementMobile;
 
         private const float SpawnDragonButtonRotationSpeed = 20f;
 
@@ -117,7 +124,47 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         public void OnFlyingSliderValueChanged(float value)
         {
-            Debug.Log($"Flying value: {value}");
+            if (LeanTween.isTweening())
+                return;
+
+            if (value > 0.5f)
+            {
+                // Starts to fly up
+                var mofaHuntingRealityManager = HoloKitApp.Instance.RealityManager as MofaHuntingRealityManager;
+                var dragonController = mofaHuntingRealityManager.DragonController;
+                if (!dragonController.IsFlying)
+                {
+                    _setFly.Invoke(true);
+                }
+                _setMovementMobile.Invoke(1f);
+                return;
+            }
+
+            if (value < 0.5f)
+            {
+                // Starts to fly down
+                _setMovementMobile.Invoke(-1f);
+                return;
+            }
+        }
+
+        public void OnFlyingSliderPointerDown()
+        {
+            LeanTween.cancelAll();
+        }
+
+        public void OnFlyingSliderPointerUp()
+        {
+            _setMovementMobile.Invoke(0f);
+            if (_flyingSlider.value != 0.5f)
+            {
+                LeanTween.value(_flyingSlider.value, 0.5f, 0.3f)
+                    .setDelay(0.1f)
+                    .setOnUpdate((float t) =>
+                    {
+                        _flyingSlider.value = t;
+                    });
+            }
         }
     }
 }

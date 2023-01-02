@@ -264,7 +264,7 @@ namespace Holoi.Library.MOFABase
                 Debug.Log($"[MofaBaseRealityManager] You should not call 'TryGetReady()' in the current MOFA phase {CurrentPhase.Value}");
         }
 
-        private void OnMofaPlayerReadyChanged(MofaPlayer mofaPlayer)
+        protected virtual void OnMofaPlayerReadyChanged(MofaPlayer mofaPlayer)
         {
             if (!IsServer) return;
 

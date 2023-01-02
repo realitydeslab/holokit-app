@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using Unity.Netcode;
@@ -103,6 +104,24 @@ namespace Holoi.Reality.MOFATheHunting
             else
             {
                 OnFailedToSpawnDragonAtCurrentPosition?.Invoke();
+            }
+        }
+
+        protected override void OnMofaPlayerReadyChanged(MofaPlayer mofaPlayer)
+        {
+            if (!IsServer) return;
+
+            if (mofaPlayer.Ready.Value)
+            {
+                var mofaPlayerList = MofaPlayerList;
+                // We do not need at least one player in each team to start
+                // If all players are ready
+                int readyPlayerCount = mofaPlayerList.Count(t => t.Ready.Value);
+                if (readyPlayerCount == mofaPlayerList.Count)
+                {
+                    SetupRound();
+                    StartRound();
+                }
             }
         }
 

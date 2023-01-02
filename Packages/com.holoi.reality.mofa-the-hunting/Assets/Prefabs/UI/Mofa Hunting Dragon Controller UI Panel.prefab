@@ -95,7 +95,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8033120052443195190
 RectTransform:
   m_ObjectHideFlags: 0
@@ -912,6 +912,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7446040208884896808}
   - component: {fileID: 8784756174976962233}
+  - component: {fileID: 3090355317250927785}
   m_Layer: 0
   m_Name: Flying Slider
   m_TagString: Untagged
@@ -1006,6 +1007,53 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3090355317250927785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2561273656362749098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4537341297820031474}
+          m_TargetAssemblyTypeName: Holoi.Reality.MOFATheHunting.UI.MofaHuntingDragonControllerUIPanel,
+            Holoi.Reality.MOFATheHunting
+          m_MethodName: OnFlyingSliderPointerUp
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4537341297820031474}
+          m_TargetAssemblyTypeName: Holoi.Reality.MOFATheHunting.UI.MofaHuntingDragonControllerUIPanel,
+            Holoi.Reality.MOFATheHunting
+          m_MethodName: OnFlyingSliderPointerDown
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &2691349398849223695
 GameObject:
   m_ObjectHideFlags: 0
@@ -2261,6 +2309,9 @@ MonoBehaviour:
   _monoPanel: {fileID: 6654300859655211465}
   _dragonControlPanel: {fileID: 4778611571818875272}
   _cancelButton: {fileID: 6593193975793238442}
+  _flyingSlider: {fileID: 8784756174976962233}
+  _setFly: {fileID: 11400000, guid: 810769ac0f1fc8f42b65f6955ca3c52e, type: 2}
+  _setMovementMobile: {fileID: 11400000, guid: b4b7277127c05314d9370d7e22050a8b, type: 2}
 --- !u!1 &4991373823926914520
 GameObject:
   m_ObjectHideFlags: 0

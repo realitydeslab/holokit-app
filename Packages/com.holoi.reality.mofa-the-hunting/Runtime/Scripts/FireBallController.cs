@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.VFX;
 using System.Collections;
 
 namespace Holoi.Reality.MOFATheHunting
@@ -19,11 +18,7 @@ namespace Holoi.Reality.MOFATheHunting
         {
             if (other.CompareTag(TagName))
             {
-                var rigidbody = GetComponent<Rigidbody>();
-                rigidbody.useGravity = false;
-                rigidbody.velocity = Vector3.zero;
-                _animator.SetTrigger("Explode");
-                StartCoroutine(WaitAndDestory(1f));
+                OnHit();
             }
         }
 
@@ -32,6 +27,15 @@ namespace Holoi.Reality.MOFATheHunting
             yield return new WaitForSeconds(time);
             _animator.SetTrigger("Die");
             Destroy(gameObject, 1f);
+        }
+
+        public void OnHit()
+        {
+            var rigidbody = GetComponent<Rigidbody>();
+            rigidbody.useGravity = false;
+            rigidbody.velocity = Vector3.zero;
+            _animator.SetTrigger("Explode");
+            StartCoroutine(WaitAndDestory(1f));
         }
     }
 }

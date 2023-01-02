@@ -5,6 +5,7 @@ using Unity.Netcode;
 using MalbersAnimations;
 using MalbersAnimations.Controller;
 using MalbersAnimations.Utilities;
+using MalbersAnimations.Events;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.MOFABase;
 
