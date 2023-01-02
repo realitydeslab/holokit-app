@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp;
@@ -14,6 +15,13 @@ namespace Holoi.Library.MOFABase
         public float StatusPosX;
         public float StatusPosY;
         public float StatusScale;
+    }
+
+    public enum MofaFightingPanelMode
+    {
+        MonoPortrait = 0,
+        MonoLandscape = 1,
+        Star = 2
     }
 
     public class MofaFightingPanel : MonoBehaviour
@@ -68,7 +76,7 @@ namespace Holoi.Library.MOFABase
             StatusScale = 3000f
         };
 
-        private void Start()
+        protected virtual void Start()
         {
             _canvas = GetComponent<Canvas>();
 
@@ -82,7 +90,7 @@ namespace Holoi.Library.MOFABase
             RedScreen.gameObject.SetActive(false);
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             MofaBaseRealityManager.OnMofaPhaseChanged -= OnMofaPhaseChanged;
             HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
@@ -109,11 +117,13 @@ namespace Holoi.Library.MOFABase
             {
                 Rotator.localRotation = Quaternion.identity;
                 UpdateMofaFightingPanelParams(_monoPortraitParams);
+                OnMofaFightingPanelModeChanged(MofaFightingPanelMode.MonoPortrait);
             }
             else if (_deviceOrientation == DeviceOrientation.LandscapeLeft)
             {
                 Rotator.localRotation = Quaternion.Euler(0f, 0f, -90f);
                 UpdateMofaFightingPanelParams(_monoLandscapeParams);
+                OnMofaFightingPanelModeChanged(MofaFightingPanelMode.MonoLandscape);
             }
         }
 
@@ -164,6 +174,7 @@ namespace Holoi.Library.MOFABase
                 _canvas.renderMode = RenderMode.WorldSpace;
                 Rotator.localRotation = Quaternion.identity;
                 UpdateMofaFightingPanelParams(_starParams);
+                OnMofaFightingPanelModeChanged(MofaFightingPanelMode.Star);
             }
             else if (renderMode == HoloKitRenderMode.Mono)
             {
@@ -227,6 +238,11 @@ namespace Holoi.Library.MOFABase
             Time.gameObject.SetActive(false);
             Reticle.gameObject.SetActive(false);
             Status.gameObject.SetActive(false);
+        }
+
+        protected virtual void OnMofaFightingPanelModeChanged(MofaFightingPanelMode mode)
+        {
+
         }
     }
 }

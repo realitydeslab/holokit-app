@@ -15,6 +15,8 @@ namespace Holoi.Reality.MOFATheHunting
     {
         public bool IsFlying => _animal.activeState.ID == _fly;
 
+        public float CurrentHealthPercent => (float)_currentHealth.Value / _maxHealth;
+
         [Header("Reference")]
         [SerializeField] private MAnimal _animal;
 
