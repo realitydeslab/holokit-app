@@ -21,7 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added Dragon lock target system [@yuchen]
 
-- Added Dragon Health Bar UI Shader And Material [@sizheng]
+- Added Dragon health bar UI shader and material [@sizheng]
+
+- Added new Dragon flying control UI [@yuchen]
 
 ### Changed
 
