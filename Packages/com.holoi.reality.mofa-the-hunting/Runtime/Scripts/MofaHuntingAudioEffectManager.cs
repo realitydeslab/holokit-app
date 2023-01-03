@@ -1,5 +1,6 @@
 using UnityEngine;
 using Holoi.Library.MOFABase;
+using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Reality.MOFATheHunting
 {
@@ -16,6 +17,18 @@ namespace Holoi.Reality.MOFATheHunting
                 _bgmAudioSource.clip = _huntingBGM;
                 _bgmAudioSource.loop = true;
                 _bgmAudioSource.Play();
+            }
+        }
+
+        protected override void OnRoundResult()
+        {
+            if (HoloKitApp.Instance.IsHost)
+            {
+                PlayDefeatSound();
+            }
+            else if (HoloKitApp.Instance.IsPlayer)
+            {
+                PlayVictorySound();
             }
         }
     }

@@ -180,7 +180,7 @@ namespace Holoi.Library.MOFABase
             {
                 _canvas.renderMode = RenderMode.ScreenSpaceCamera;
                 _canvas.worldCamera = HoloKitCamera.Instance.GetComponent<Camera>();
-                _deviceOrientation = Input.deviceOrientation;
+                _deviceOrientation = HoloKitUtils.IsRuntime ?  Input.deviceOrientation : DeviceOrientation.Portrait;
                 OnDeviceOrientationChanged();
             }
         }

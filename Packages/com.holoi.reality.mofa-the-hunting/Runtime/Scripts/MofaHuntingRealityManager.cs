@@ -43,16 +43,6 @@ namespace Holoi.Reality.MOFATheHunting
 
         public static event Action OnFailedToSpawnDragonAtCurrentPosition;
 
-        /// <summary>
-        /// Sent when the dragon is spawned.
-        /// </summary>
-        public static event Action OnDragonSpawned;
-
-        /// <summary>
-        /// Sent when the dragon is slayed.
-        /// </summary>
-        public static event Action OnDragonDied;
-
         private void Start()
         {
             UI.MofaHuntingDragonControllerUIPanel.OnSpawnDragonButtonPressed += OnSpawnDragonButtonPressed;
@@ -163,8 +153,6 @@ namespace Holoi.Reality.MOFATheHunting
             // Spawn dragon
             var theDragon = Instantiate(_dragonPrefab, position + new Vector3(0f, _dragonSpawnOffsetY, 0f) - 2f * (rotation * Vector3.forward), rotation);
             theDragon.GetComponent<NetworkObject>().Spawn();
-
-            OnDragonSpawned?.Invoke();
         }
 
         public void SetInvisibleFloor(GameObject floor)
@@ -177,7 +165,7 @@ namespace Holoi.Reality.MOFATheHunting
             _portalController = portalController;
         }
 
-        public void SetTheDragonController(DragonController theDragonController)
+        public void SetDragonController(DragonController theDragonController)
         {
             _dragonController = theDragonController;
         }

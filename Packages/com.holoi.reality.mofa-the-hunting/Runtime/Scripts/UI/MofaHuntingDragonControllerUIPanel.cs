@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Holoi.Library.HoloKitApp;
 using Holoi.Library.HoloKitApp.UI;
+using Holoi.Library.MOFABase;
 using MalbersAnimations.Events;
 
 namespace Holoi.Reality.MOFATheHunting.UI
@@ -14,6 +15,8 @@ namespace Holoi.Reality.MOFATheHunting.UI
         public override bool OverlayPreviousPanel => true;
 
         [Header("MOFA: The Hunting")]
+        [SerializeField] private RectTransform _floatingJoystick;
+
         [SerializeField] private RectTransform _spawnDragonButton;
 
         [SerializeField] private RectTransform _monoPanel;
@@ -29,6 +32,8 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         [SerializeField] private MEvent _setMovementMobile;
 
+        private bool _canControlDragon;
+
         private const float SpawnDragonButtonRotationSpeed = 20f;
 
         public static event Action OnSpawnDragonButtonPressed;
@@ -43,10 +48,13 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         private void Start()
         {
-            MofaHuntingRealityManager.OnDragonSpawned += OnDragonSpawned;
-            MofaHuntingRealityManager.OnDragonDied += OnDragonDied;
+            DragonController.OnDragonSpawned += OnDragonSpawned;
+            DragonController.OnDragonDied += OnDragonDied;
+            DragonController.OnDragonControlStateChanged += OnDragonControlStateChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged += OnMofaPhaseChanged;
             MofaHuntingRealityManager.OnTargetLocked += OnLockTargetSessionEnded;
 
+            _floatingJoystick.gameObject.SetActive(false);
             _spawnDragonButton.gameObject.SetActive(true);
             _monoPanel.gameObject.SetActive(true);
             _dragonControlPanel.gameObject.SetActive(false);
@@ -55,8 +63,10 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         private void OnDestroy()
         {
-            MofaHuntingRealityManager.OnDragonSpawned -= OnDragonSpawned;
-            MofaHuntingRealityManager.OnDragonDied -= OnDragonDied;
+            DragonController.OnDragonSpawned -= OnDragonSpawned;
+            DragonController.OnDragonDied -= OnDragonDied;
+            DragonController.OnDragonControlStateChanged -= OnDragonControlStateChanged;
+            MofaBaseRealityManager.OnMofaPhaseChanged -= OnMofaPhaseChanged;
             MofaHuntingRealityManager.OnTargetLocked -= OnLockTargetSessionEnded;
         }
 
@@ -85,22 +95,52 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         private void OnDragonDied()
         {
-            _spawnDragonButton.gameObject.SetActive(true);
+            //_spawnDragonButton.gameObject.SetActive(true);
             _dragonControlPanel.gameObject.SetActive(false);
+        }
+
+        private void OnMofaPhaseChanged(MofaPhase phase)
+        {
+            if (phase == MofaPhase.Waiting)
+            {
+                _spawnDragonButton.gameObject.SetActive(true);
+            }
+        }
+
+        private void OnDragonControlStateChanged(bool canControlDragon)
+        {
+            _canControlDragon = canControlDragon;
+            if (canControlDragon)
+            {
+                _floatingJoystick.gameObject.SetActive(true);
+            }
+            else
+            {
+                _floatingJoystick.gameObject.SetActive(false);
+            }
         }
 
         public void OnDragonPrimaryAttackButtonPressedFunc()
         {
+            if (!_canControlDragon)
+                return;
+
             OnDragonPrimaryAttackButtonPressed?.Invoke();
         }
 
         public void OnDragonSecondaryAttackButtonPressedFunc()
         {
+            if (!_canControlDragon)
+                return;
+
             OnDragonSecondaryAttackButtonPressed?.Invoke();
         }
 
         public void OnDragonLockButtonPressedFunc()
         {
+            if (!_canControlDragon)
+                return;
+
             _dragonControlPanel.gameObject.SetActive(false);
             _monoPanel.gameObject.SetActive(false);
             _cancelButton.gameObject.SetActive(true);
@@ -124,6 +164,9 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         public void OnFlyingSliderValueChanged(float value)
         {
+            if (!_canControlDragon)
+                return;
+
             if (LeanTween.isTweening())
                 return;
 
@@ -150,11 +193,17 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         public void OnFlyingSliderPointerDown()
         {
+            if (!_canControlDragon)
+                return;
+
             LeanTween.cancelAll();
         }
 
         public void OnFlyingSliderPointerUp()
         {
+            if (!_canControlDragon)
+                return;
+
             _setMovementMobile.Invoke(0f);
             if (_flyingSlider.value != 0.5f)
             {

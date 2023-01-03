@@ -15,6 +15,8 @@ namespace Holoi.Reality.MOFATheHunting
     {
         public bool IsFlying => _animal.activeState.ID == _fly;
 
+        public bool ReadyForControl => _readyForControl;
+
         public float CurrentHealthPercent => (float)_currentHealth.Value / _maxHealth;
 
         [Header("Reference")]
@@ -90,7 +92,17 @@ namespace Holoi.Reality.MOFATheHunting
         //    }
         //}
 
+        /// <summary>
+        /// Invoked when the dragon is spawned.
+        /// </summary>
         public static event Action OnDragonSpawned;
+
+        /// <summary>
+        /// Invoked when the dragon dies.
+        /// </summary>
+        public static event Action OnDragonDied;
+
+        public static event Action<bool> OnDragonControlStateChanged;
 
         private void Start()
         {
@@ -102,7 +114,7 @@ namespace Holoi.Reality.MOFATheHunting
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-            ((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).SetTheDragonController(this);
+            ((MofaHuntingRealityManager)HoloKitApp.Instance.RealityManager).SetDragonController(this);
             OnDragonSpawned?.Invoke();
             if (IsServer)
             {
@@ -111,6 +123,8 @@ namespace Holoi.Reality.MOFATheHunting
             _currentHealth.OnValueChanged += OnCurrentHealthValueChanged;
 
             EntranceAnimation();
+
+            OnDragonSpawned?.Invoke();
         }
 
         private void Update()
@@ -121,6 +135,8 @@ namespace Holoi.Reality.MOFATheHunting
                 {
                     _readyForControl = true;
                     Debug.Log("Dragon now is ready for control");
+
+                    OnDragonControlStateChanged?.Invoke(true);
                 }  
             }
 
@@ -155,6 +171,9 @@ namespace Holoi.Reality.MOFATheHunting
                 if (newValue <= 0)
                 {
                     DeathAnimation();
+
+                    OnDragonControlStateChanged?.Invoke(false);
+                    OnDragonDied?.Invoke();
                 }
             }
         }

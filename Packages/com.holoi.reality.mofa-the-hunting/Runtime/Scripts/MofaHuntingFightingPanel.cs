@@ -32,15 +32,15 @@ namespace Holoi.Reality.MOFATheHunting
         private readonly DragonHealthBarParams _starDragonHealthBarParams = new()
         {
             PosY = 800f,
-            Width = 2400f,
-            Height = 320f
+            Width = 1800f,
+            Height = 240f
         };
 
         protected override void Start()
         {
             base.Start();
-            MofaHuntingRealityManager.OnDragonSpawned += OnDragonSpawned;
-            MofaHuntingRealityManager.OnDragonDied += OnDragonDied;
+            DragonController.OnDragonSpawned += OnDragonSpawned;
+            DragonController.OnDragonDied += OnDragonDied;
 
             _dragonHealthBar.gameObject.SetActive(false);
         }
@@ -48,8 +48,8 @@ namespace Holoi.Reality.MOFATheHunting
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            MofaHuntingRealityManager.OnDragonSpawned -= OnDragonSpawned;
-            MofaHuntingRealityManager.OnDragonDied -= OnDragonDied;
+            DragonController.OnDragonSpawned -= OnDragonSpawned;
+            DragonController.OnDragonDied -= OnDragonDied;
         }
 
         protected override void OnCountdown()
@@ -73,6 +73,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         protected override void OnMofaFightingPanelModeChanged(MofaFightingPanelMode mode)
         {
+            Debug.Log($"OnMofaFightingPanelModeChanged: {mode}");
             switch (mode)
             {
                 case MofaFightingPanelMode.MonoPortrait:

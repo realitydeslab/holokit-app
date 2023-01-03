@@ -80,7 +80,7 @@ namespace Holoi.Library.MOFABase
             switch (mofaPhase)
             {
                 case MofaPhase.Waiting:
-                    SpawnPopup(_summaryBoardPrefab);
+                    OnSummaryBoard();
                     break;
                 case MofaPhase.Countdown:
                     StartCoroutine(SpawnPopupAndDestroy(_countdownPrefab, 4f));
@@ -96,7 +96,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnRoundResult()
+        protected virtual void OnRoundResult()
         {
             if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
                 return;
@@ -108,15 +108,35 @@ namespace Holoi.Library.MOFABase
             switch (personalRoundResult)
             {
                 case MofaPersonalRoundResult.Victory:
-                    StartCoroutine(SpawnPopupAndDestroy(_victoryPrefab, 3f));
+                    SpawnVictoryPopup();
                     break;
                 case MofaPersonalRoundResult.Defeat:
-                    StartCoroutine(SpawnPopupAndDestroy(_defeatPrefab, 3f));
+                    SpawnDefeatPopup();
                     break;
                 case MofaPersonalRoundResult.Draw:
-                    StartCoroutine(SpawnPopupAndDestroy(_drawPrefab, 3f));
+                    SpawnDrawPopup();
                     break;
             }
+        }
+
+        protected void SpawnVictoryPopup()
+        {
+            StartCoroutine(SpawnPopupAndDestroy(_victoryPrefab, 3f));
+        }
+
+        protected void SpawnDefeatPopup()
+        {
+            StartCoroutine(SpawnPopupAndDestroy(_defeatPrefab, 3f));
+        }
+
+        protected void SpawnDrawPopup()
+        {
+            StartCoroutine(SpawnPopupAndDestroy(_drawPrefab, 3f));
+        }
+
+        protected virtual void OnSummaryBoard()
+        {
+            SpawnPopup(_summaryBoardPrefab);
         }
 
         private void OnLifeShieldBeingDestroyed(ulong _, ulong ownerClientId)

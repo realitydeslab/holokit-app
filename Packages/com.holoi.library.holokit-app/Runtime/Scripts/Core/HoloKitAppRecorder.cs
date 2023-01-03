@@ -49,7 +49,7 @@ namespace Holoi.Library.HoloKitApp
             _videokitRecorder = GetComponent<VideoKitRecorder>();
 
             // Setup the recording camera. We will only use the mono camera for recording.
-            Camera monoCamera = HoloKitCamera.Instance.GetComponent<Camera>();
+            _monoCamera = HoloKitCamera.Instance.GetComponent<Camera>();
             _videokitRecorder.cameras = new Camera[] { HoloKitCamera.Instance.GetComponent<Camera>() };
 
             // Microphone settings

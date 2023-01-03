@@ -78,7 +78,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void PlayVictorySound()
+        protected void PlayVictorySound()
         {
             if (_mofaAudioEffectList.VictorySound != null)
             {
@@ -87,7 +87,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void PlayDefeatSound()
+        protected void PlayDefeatSound()
         {
             if (_mofaAudioEffectList.DefeatSound != null)
             {
@@ -96,7 +96,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void PlayDrawSound()
+        protected void PlayDrawSound()
         {
             if (_mofaAudioEffectList.DrawSound != null)
             {
@@ -105,7 +105,7 @@ namespace Holoi.Library.MOFABase
             }
         }
 
-        private void OnRoundResult()
+        protected virtual void OnRoundResult()
         {
             if (HoloKitApp.HoloKitApp.Instance.IsSpectator)
                 return;
