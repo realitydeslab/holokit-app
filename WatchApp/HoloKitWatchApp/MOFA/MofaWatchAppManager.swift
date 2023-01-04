@@ -49,8 +49,8 @@ class MofaWatchAppManager: NSObject, ObservableObject {
     // Round result stats
     @Published var roundResult: MofaRoundResult = .victory
     @Published var kill: Int = 0
-    // HitRate is between 0 and 100
-    @Published var hitRate: Int = 0
+    // 0.1 means 10% hit rate
+    @Published var hitRate: Float = 0
     
     let motionManager = CMMotionManager()
     
@@ -328,9 +328,9 @@ extension MofaWatchAppManager {
                         self.kill = kill
                     }
                 }
-                if let hitRate = applicationContext["HitRate"] as? Int {
+                if let hitRate = applicationContext["HitRate"] as? Float {
                     DispatchQueue.main.async {
-                        self.hitRate = Int(hitRate)
+                        self.hitRate = hitRate
                     }
                 }
                 DispatchQueue.main.async {
