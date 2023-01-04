@@ -52,6 +52,7 @@ namespace Holoi.Library.MOFABase
 
         private void OnReceivedHealthDataMessage(float distance, float energy)
         {
+            Debug.Log($"[WatchConnectivity] Received health data from watch, distance: {distance} and energy: {energy}");
             var localMofaPlayer = _mofaBaseRealityManager.LocalMofaPlayer;
             localMofaPlayer.UpdateHealthDataServerRpc(distance, energy);
         }

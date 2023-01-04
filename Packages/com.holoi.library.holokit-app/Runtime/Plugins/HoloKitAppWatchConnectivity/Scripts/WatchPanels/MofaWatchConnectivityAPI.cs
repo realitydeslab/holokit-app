@@ -48,6 +48,7 @@ namespace Holoi.Library.HoloKitApp.WatchConnectivity.MOFA
         [AOT.MonoPInvokeCallback(typeof(Action<float, float>))]
         private static void OnReceivedHealthDataMessageDelegate(float dist, float energy)
         {
+            UnityEngine.Debug.Log($"[MofaWatchConnectivityAPI] OnReceivedHealthDataMessageDelegate dist: {dist} and energy: {energy}");
             OnReceivedHealthDataMessage?.Invoke(dist, energy);
         }
 

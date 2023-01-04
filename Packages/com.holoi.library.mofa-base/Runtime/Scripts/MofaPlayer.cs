@@ -161,6 +161,7 @@ namespace Holoi.Library.MOFABase
         [ServerRpc]
         public void UpdateHealthDataServerRpc(float distance, float energy)
         {
+            Debug.Log($"UpdateHealthDataServerRpc dist: {distance} and energy: {energy}");
             Distance.Value = distance;
             Energy.Value = energy;
         }

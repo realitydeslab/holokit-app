@@ -421,7 +421,7 @@ namespace Holoi.Library.MOFABase
             stats.Kill = mofaPlayer.Kill.Value;
             stats.Death = mofaPlayer.Death.Value;
             stats.HitRate = (float)mofaPlayer.HitCount.Value / mofaPlayer.CastCount.Value;
-            stats.Distance = mofaPlayer.Distance.Value * MofaUtils.MeterToFoot;
+            stats.Distance = mofaPlayer.Distance.Value;
             stats.Energy = mofaPlayer.Energy.Value;
 
             return stats;
