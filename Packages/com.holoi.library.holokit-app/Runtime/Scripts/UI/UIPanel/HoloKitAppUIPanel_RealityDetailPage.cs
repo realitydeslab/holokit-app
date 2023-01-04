@@ -98,6 +98,9 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Update()
         {
+            if (Screen.orientation != ScreenOrientation.Portrait)
+                Screen.orientation = ScreenOrientation.Portrait;
+
             Camera.main.transform.LookAt(TargetPosition);
             if (Input.touchCount > 0)
             {
