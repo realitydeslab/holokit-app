@@ -1,9 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Holoi.Library.HoloKitApp;
 using HoloKit;
+using Unity.Netcode;
+using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Reality.MOFATheHunting
 {
@@ -83,14 +83,36 @@ namespace Holoi.Reality.MOFATheHunting
                                 Debug.Log("Target locked");
                                 var playerIndicator = hit.transform.GetComponentInParent<LockTargetPlayerIndicator>();
                                 var targetPlayer = playerIndicator.MofaPlayer;
-                                var targetLifeShield = targetPlayer.LifeShield;
-                                _dragonController.SetTarget(targetLifeShield.transform);
+                                OnTargetSelectedClientRpc(targetPlayer.OwnerClientId);
                                 OnLockTargetSessionEnded();
                                 OnTargetLocked?.Invoke();
                             }
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// When a new target is selected by the host, this selection operation should be
+        /// replicated across the network.
+        /// </summary>
+        /// <param name="clientId">The client id of the target player</param>
+        [ClientRpc]
+        private void OnTargetSelectedClientRpc(ulong clientId)
+        {
+            var mofaHuntingRealityManager = HoloKitApp.Instance.RealityManager as MofaHuntingRealityManager;
+            var mofaPlayerDict = mofaHuntingRealityManager.MofaPlayerDict;
+            if (mofaHuntingRealityManager.MofaPlayerDict.ContainsKey(clientId))
+            {
+                var targetPlayer = mofaHuntingRealityManager.MofaPlayerDict[clientId];
+
+                var targetLifeShield = targetPlayer.LifeShield;
+                _dragonController.SetTarget(targetLifeShield.transform);
+            }
+            else
+            {
+                Debug.Log($"[LockTargetSystem] The new target player {clientId} is not found on the local device");
             }
         }
     }
