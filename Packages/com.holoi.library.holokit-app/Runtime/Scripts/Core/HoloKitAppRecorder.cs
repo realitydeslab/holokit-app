@@ -1,7 +1,11 @@
 using System;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
-using NatML.VideoKit;
+using NatML.Recorders;
+using NatML.Recorders.Clocks;
+using NatML.Recorders.Inputs;
+using NatML.Devices;
+using NatML.Sharing;
 using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
@@ -9,18 +13,41 @@ namespace Holoi.Library.HoloKitApp
     [DisallowMultipleComponent]
     public class HoloKitAppRecorder : MonoBehaviour
     {
+        [Header(@"Recording")]
+        [SerializeField] private int _frameRate = 30;
+
         [SerializeField] private Texture _watermarkImage;
 
-        public bool IsRecording => _isRecording;
+        public bool IsRecording => _cameraInput != null;
 
-        private VideoKitRecorder _videokitRecorder;
+        private bool _recordMicrophone;
 
-        private Camera _monoCamera;
+        private bool _watermarkEnabled;
 
-        /// <summary>
-        /// Whether a recording is currently in progress.
-        /// </summary>
-        private bool _isRecording;
+        // To be adjusted
+        private int _videoWidth = 1170;
+
+        // To be adjusted
+        private int _videoHeight = 2532;
+
+        // The screen AR camera
+        private Camera _recordCamera;
+
+        // Or MP4?
+        private HEVCRecorder _recorder;
+
+        // Camera input
+        private CameraInput _cameraInput;
+
+        // Watermark input
+        //private WatermarkTextureInput _watermarkInput;
+
+        // Audio input
+        private AudioInput _audioInput;
+
+        private AudioDevice _audioDevice;
+
+        private AudioListener _cameraAudioListener;
 
         private const float WatermarkPortraitPosXRatio = 0.0615f;
 
@@ -40,33 +67,52 @@ namespace Holoi.Library.HoloKitApp
 
         public static event Action OnRecordingStarted;
 
-        public static event Action OnRecordingCompleted;
-
-        public static event Action OnRecordingFailed;
+        public static event Action OnRecordingStopped;
 
         private void Start()
         {
-            _videokitRecorder = GetComponent<VideoKitRecorder>();
+            if (HoloKitUtils.IsRuntime)
+            {
+                _recordCamera = HoloKitCamera.Instance.GetComponent<Camera>();
 
-            // Setup the recording camera. We will only use the mono camera for recording.
-            _monoCamera = HoloKitCamera.Instance.GetComponent<Camera>();
-            _videokitRecorder.cameras = new Camera[] { HoloKitCamera.Instance.GetComponent<Camera>() };
+                if (HoloKitApp.Instance.GlobalSettings.RecordMicrophone)
+                {
+                    _recordMicrophone = true;
+                    // Initialize NatDevice
+                    var query = new MediaDeviceQuery(MediaDeviceCriteria.AudioDevice);
+                    _audioDevice = query.current as AudioDevice;
+                }
+                else
+                {
+                    _recordMicrophone = false;
+                    _cameraAudioListener = HoloKitCamera.Instance.GetComponent<AudioListener>();
+                }
 
-            // Microphone settings
-            if (HoloKitApp.Instance.GlobalSettings.RecordMicrophone)
-                _videokitRecorder.audioMode = VideoKitRecorder.AudioMode.AudioDevice;
-            else
-                _videokitRecorder.audioMode = VideoKitRecorder.AudioMode.AudioListener;
-
-            // Watermark settings
-
-
+                _watermarkEnabled = HoloKitApp.Instance.GlobalSettings.WatermarkEnabled;
+            }
             HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
+        }
+
+        private void Update()
+        {
+            // TODO: Dynamically adjust watermark based on device orientation
         }
 
         private void OnDestroy()
         {
             HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
+        }
+
+        public void ToggleRecording()
+        {
+            if (IsRecording)
+            {
+                StopRecording();
+            }
+            else
+            {
+                StartRecording();
+            }
         }
 
         public void StartRecording()
@@ -80,21 +126,81 @@ namespace Holoi.Library.HoloKitApp
             StartRecordingInternal();
         }
 
+        private void CalculateVideoResolution()
+        {
+            // Set video width and height, notice that they can only be even numbers
+            _videoWidth = Screen.width;
+            _videoHeight = Screen.height;
+            if (_videoWidth % 2 != 0)
+            {
+                _videoWidth--;
+            }
+            if (_videoHeight % 2 != 0)
+            {
+                _videoHeight--;
+            }
+        }
+
         private void StartRecordingInternal()
         {
+            CalculateVideoResolution();
+            // Open the screen AR camera if it is not already open
             if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Stereo)
             {
-                _monoCamera.GetComponent<ARCameraBackground>().enabled = true;
-                _monoCamera.enabled = true;
+                _recordCamera.GetComponent<ARCameraBackground>().enabled = true;
+                _recordCamera.enabled = true;
             }
 
-            _videokitRecorder.StartRecording();
-            _isRecording = true;
+            // Start recording
+            var sampleRate = _recordMicrophone ? _audioDevice.sampleRate : 24000;
+            var channelCount = _recordMicrophone ? _audioDevice.channelCount : 2;
+            var clock = new RealtimeClock();
+            _recorder = new HEVCRecorder(_videoWidth, _videoHeight, _frameRate, sampleRate, channelCount);
+            //if (_watermarkEnabled)
+            //{
+            //    _watermarkInput = new WatermarkTextureInput(_recorder);
+            //    _watermarkInput.watermark = _watermarkImage;
+            //    if (Screen.orientation == ScreenOrientation.Portrait)
+            //    {
+            //        _watermarkInput.rect = new(Mathf.RoundToInt(_videoWidth * WatermarkPortraitPosXRatio),
+            //                                   Mathf.RoundToInt(_videoHeight * WatermarkPortraitPosYRatio),
+            //                                   Mathf.RoundToInt(_videoWidth * WatermarkPortraitWidthRatio),
+            //                                   Mathf.RoundToInt(_videoHeight * WatermarkPortraitHeightRatio));
+            //    }
+            //    else if (Screen.orientation == ScreenOrientation.LandscapeLeft)
+            //    {
+            //        _watermarkInput.rect = new(Mathf.RoundToInt(_videoWidth * WatermarkLandscapePosXRatio),
+            //                                   Mathf.RoundToInt(_videoHeight * WatermarkLandscapePosYRatio),
+            //                                   Mathf.RoundToInt(_videoWidth * WatermarkLandscapeWidthRatio),
+            //                                   Mathf.RoundToInt(_videoHeight * WatermarkLandscapeHeightRatio));
+            //    }
+            //    _cameraInput = new(_watermarkInput, clock, _recordCamera);
+            //}
+            //else
+            //{
+            //    _watermarkInput = null;
+            //    _cameraInput = new(_recorder, clock, _recordCamera);
+            //}
 
+            // This line is the temporary replacement for the above commented section since watermark is now not supported
+            _cameraInput = new(_recorder, clock, _recordCamera);
+
+            _cameraInput.HDR = true;
+            if (_recordMicrophone)
+            {
+                _audioDevice.StartRunning(audioBuffer =>
+                {
+                    _recorder.CommitSamples(audioBuffer.sampleBuffer, clock.timestamp);
+                });
+            }
+            else
+            {
+                _audioInput = new AudioInput(_recorder, clock, _cameraAudioListener);
+            }
             OnRecordingStarted?.Invoke();
         }
 
-        public void StopRecording()
+        public async void StopRecording()
         {
             if (HoloKitUtils.IsEditor)
             {
@@ -102,37 +208,44 @@ namespace Holoi.Library.HoloKitApp
                 return;
             }
 
-            _videokitRecorder.StopRecording();
-        }
+            //_watermarkInput?.Dispose();
+            _cameraInput?.Dispose();
+            if (_recordMicrophone)
+            {
+                _audioDevice.StopRunning();
+            }
+            else
+            {
+                _audioInput?.Dispose();
+            }
+            var path = await _recorder.FinishWriting();
 
-        public void OnRecordingCompletedInternal(string dest)
-        {
-            OnRecordingStoppedInternal();
-            OnRecordingCompleted?.Invoke();
-        }
+            // Save to Photo Library
+            var payload = new SavePayload();
+            payload.AddMedia(path);
+            await payload.Save();
 
-        public void OnRecordingFailedInternal(Exception e)
-        {
-            OnRecordingStoppedInternal();
-            OnRecordingFailed?.Invoke();
-        }
-
-        private void OnRecordingStoppedInternal()
-        {
-            _isRecording = false;
+            // Close the screen AR camera if necessary
             if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Stereo)
             {
-                _monoCamera.GetComponent<ARCameraBackground>().enabled = false;
-                _monoCamera.enabled = false;
+                _recordCamera.GetComponent<ARCameraBackground>().enabled = false;
+                _recordCamera.enabled = false;
             }
+
+            // Release inputs
+            //_watermarkInput = null;
+            _cameraInput = null;
+            _audioInput = null;
+
+            OnRecordingStopped?.Invoke();
         }
 
         private void OnHoloKitRenderModeChanged(HoloKitRenderMode renderMode)
         {
-            if (_isRecording)
+            if (IsRecording)
             {
                 StopRecording();
-                Debug.Log("[Recorder] Recording interrupted due to a render mode change event");
+                Debug.Log("[Recorder] Recording interrupted due to a render mode change");
             }
         }
     }
