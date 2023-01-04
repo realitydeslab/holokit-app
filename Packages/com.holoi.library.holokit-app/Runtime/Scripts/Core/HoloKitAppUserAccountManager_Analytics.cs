@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Services.Analytics;
 using HoloKit;
@@ -58,8 +59,14 @@ namespace Holoi.Library.HoloKitApp
                 { PlayerCountKey, realitySessionData.PlayerCount }
             };
 
-            AnalyticsService.Instance.CustomData("dreamOver", parameters);
-            AnalyticsService.Instance.Flush();
+            try
+            {
+                AnalyticsService.Instance.CustomData("dreamOver", parameters);
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         private void OnOverheated(HoloKitAppOverheatData overheatData)
@@ -73,8 +80,14 @@ namespace Holoi.Library.HoloKitApp
                 { PlayerTypeKey, overheatData.PlayerType }
             };
 
-            AnalyticsService.Instance.CustomData("overheat", parameters);
-            AnalyticsService.Instance.Flush();
+            try
+            {
+                AnalyticsService.Instance.CustomData("overheat", parameters);
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         private void OnHoloKitRenderModeChanged(HoloKitRenderMode renderMode)
@@ -82,8 +95,15 @@ namespace Holoi.Library.HoloKitApp
             if (renderMode == HoloKitRenderMode.Stereo)
             {
                 Dictionary<string, object> parameters = new();
-                AnalyticsService.Instance.CustomData("enterStarMode", parameters);
-                AnalyticsService.Instance.Flush();
+
+                try
+                {
+                    AnalyticsService.Instance.CustomData("enterStarMode", parameters);
+                }
+                catch (Exception)
+                {
+
+                }
             }
         }
 
@@ -95,8 +115,14 @@ namespace Holoi.Library.HoloKitApp
                 { UserNameKey, userName }
             };
 
-            AnalyticsService.Instance.CustomData("playerRegistered", parameters);
-            AnalyticsService.Instance.Flush();
+            try
+            {
+                AnalyticsService.Instance.CustomData("playerRegistered", parameters);
+            }
+            catch (Exception)
+            {
+
+            }
         }
     }
 }
