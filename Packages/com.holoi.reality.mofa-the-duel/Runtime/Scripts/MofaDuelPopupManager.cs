@@ -33,7 +33,7 @@ namespace Holoi.Reality.MOFATheDuel
 
         private void OnMofaPlayerReadyChanged(MofaPlayer mofaPlayer)
         {
-            if (mofaPlayer.IsLocalPlayer)
+            if (mofaPlayer.IsLocalPlayer && mofaPlayer.Ready.Value)
             {
                 var mofaBaseRealityManager = HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
                 var mofaPlayerList = mofaBaseRealityManager.MofaPlayerList;
