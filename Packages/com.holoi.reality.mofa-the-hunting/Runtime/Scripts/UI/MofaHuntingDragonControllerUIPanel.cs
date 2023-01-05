@@ -215,5 +215,15 @@ namespace Holoi.Reality.MOFATheHunting.UI
                     });
             }
         }
+
+        public void DragonBasicAttackSetup()
+        {
+            FireBallController.IsNextFireBallSecondaryAttack = false;
+        }
+
+        public void DragonSecondaryAttackSetup()
+        {
+            FireBallController.IsNextFireBallSecondaryAttack = true;
+        }
     }
 }
