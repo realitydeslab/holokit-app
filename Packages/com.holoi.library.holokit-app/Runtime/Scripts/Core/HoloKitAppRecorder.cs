@@ -5,7 +5,7 @@ using NatML.Recorders;
 using NatML.Recorders.Clocks;
 using NatML.Recorders.Inputs;
 using NatML.Devices;
-using NatML.Sharing;
+using NatSuite.Sharing;
 using HoloKit;
 
 namespace Holoi.Library.HoloKitApp
@@ -106,13 +106,9 @@ namespace Holoi.Library.HoloKitApp
         public void ToggleRecording()
         {
             if (IsRecording)
-            {
                 StopRecording();
-            }
             else
-            {
                 StartRecording();
-            }
         }
 
         public void StartRecording()
@@ -132,13 +128,9 @@ namespace Holoi.Library.HoloKitApp
             _videoWidth = Screen.width;
             _videoHeight = Screen.height;
             if (_videoWidth % 2 != 0)
-            {
                 _videoWidth--;
-            }
             if (_videoHeight % 2 != 0)
-            {
                 _videoHeight--;
-            }
         }
 
         private void StartRecordingInternal()
@@ -156,6 +148,7 @@ namespace Holoi.Library.HoloKitApp
             var channelCount = _recordMicrophone ? _audioDevice.channelCount : 2;
             var clock = new RealtimeClock();
             _recorder = new HEVCRecorder(_videoWidth, _videoHeight, _frameRate, sampleRate, channelCount);
+
             //if (_watermarkEnabled)
             //{
             //    _watermarkInput = new WatermarkTextureInput(_recorder);
@@ -223,7 +216,8 @@ namespace Holoi.Library.HoloKitApp
             // Save to Photo Library
             var payload = new SavePayload();
             payload.AddMedia(path);
-            await payload.Save();
+            //await payload.Save();
+            await payload.Commit();
 
             // Close the screen AR camera if necessary
             if (HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Stereo)
