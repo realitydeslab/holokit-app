@@ -1,6 +1,6 @@
 ﻿// カーネル関数を指定
-#pragma kernel ForceCS      // 操舵力を計算
-#pragma kernel IntegrateCS  // 速度, 位置を計算
+#pragma kernel ForceCS      // 操舵力を計算 
+#pragma kernel IntegrateCS  // 速度, 位置を計算 
 
 // スレッドグループのスレッドのサイズ
 #define SIMULATION_BLOCK_SIZE 128
@@ -50,7 +50,7 @@ float3 limit(float3 vec, float max)
     return (length > max && length > 0) ? vec.xyz * (max / length) : vec.xyz;
 }
 
-// 壁に当たった時に逆向きの力を返す
+// 壁に当たった時に逆向きの力を返す 
 float3 avoidWall(float3 position)
 {
     float3 wc = _WallCenter.xyz;
