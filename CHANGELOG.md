@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a reality for factory testing [@sizheng]
 
+- Added Duck Test Reality [@sizheng]
+
 ### Changed
 
 - Changed the audio of AceFire Basic Spell: Spawn [@sizheng]

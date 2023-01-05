@@ -8,7 +8,7 @@ namespace Holoi.Reality.Typography
 {
     public class DotSequenceUIController : HoloKitAppUIPanel
     {
-        public override string UIPanelName => "FactoryText";
+        public override string UIPanelName => "TheFactoryTestUIPanel";
 
         public override bool OverlayPreviousPanel => false;
 
@@ -34,23 +34,39 @@ namespace Holoi.Reality.Typography
 
         public void SpacingValueChanged()
         {
-            if(Spacing.text !=null)
-            _vfx.SetFloat("Spacing", float.Parse(Spacing.text));
-            Debug.Log("SpacingValueChanged");
+            var result = 0f;
+            if (float.TryParse(Spacing.text, out result))
+            {
+                _vfx.SetFloat("Spacing", result);
+            }
+            else
+            {
+                // Not a number, do something else with it.
+            }
+            //    _vfx.SetFloat("Spacing", string.IsNullOrEmpty(Distance.text) ? 0.1f:float.Parse(Spacing.text));
+            //Debug.Log("SpacingValueChanged");
         }
 
         public void ParticleSizeValueChanged()
         {
-            if (Spacing.text != null)
-                _vfx.SetFloat("Size", float.Parse(ParticleSize.text));
-            Debug.Log("ParticleSizeValueChanged");
+            var result = 0f;
+            if (float.TryParse(ParticleSize.text, out result))
+            {
+                _vfx.SetFloat("Size", result);
+            }
+            //    _vfx.SetFloat("Size", string.IsNullOrEmpty(Distance.text) ? 0.01f:float.Parse(ParticleSize.text));
+            //Debug.Log("ParticleSizeValueChanged");
         }
 
         public void DistanceValueChanged()
         {
-            if (Spacing.text != null)
-                _vfx.transform.position = new Vector3(0,0, float.Parse(Distance.text));
-            Debug.Log("DistanceValueChanged");
+            var result = 0f;
+            if (float.TryParse(Distance.text, out result))
+            {
+                _vfx.transform.position = new Vector3(0, 0, result);
+            }
+            //    _vfx.transform.position = string.IsNullOrEmpty(Distance.text) ? new Vector3(0,0,1) : new Vector3(0, 0, float.Parse(Distance.text));
+            //Debug.Log("DistanceValueChanged");
         }
     }
 }
