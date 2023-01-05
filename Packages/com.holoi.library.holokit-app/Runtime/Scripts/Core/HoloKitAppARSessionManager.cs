@@ -38,6 +38,7 @@ namespace Holoi.Library.HoloKitApp
         private void Start()
         {
             var xrOrigin = HoloKitCamera.Instance.GetComponentInParent<XROrigin>();
+
             // Setup Image Tracking for space anchor sharing
             if (xrOrigin.TryGetComponent(out _arTrackedImageManager))
             {
@@ -61,10 +62,10 @@ namespace Holoi.Library.HoloKitApp
                 }
             }
 
-            // Open human occlusion on spectator by default
+            // Open default human occlusion on spectators
             if (HoloKitApp.Instance.IsSpectator)
             {
-                //SetHumanOcclusionEnabled(true);
+                SetHumanOcclusionEnabled(true);
             }
 
             // Register callbacks
@@ -213,7 +214,6 @@ namespace Holoi.Library.HoloKitApp
                 {
                     _arOcclusionManager.enabled = true;
                 }
-                Debug.Log("Before list of nonsenses");
                 _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Fastest;
                 _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Fastest;
                 //_arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.PreferHumanOcclusion;
@@ -224,6 +224,12 @@ namespace Holoi.Library.HoloKitApp
                 _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Disabled;
                 //_arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.NoOcclusion;
             }
+        }
+
+        private void Update()
+        {
+            if (_arOcclusionManager)
+                Debug.Log($"Occlusion status: {_arOcclusionManager.enabled} {_arOcclusionManager.requestedEnvironmentDepthMode} {_arOcclusionManager.requestedHumanStencilMode}");
         }
 
         private void OnHoloKitRenderModeChanged(HoloKitRenderMode renderMode)
