@@ -266,6 +266,12 @@ namespace Holoi.Reality.MOFATheHunting
         }
 
         [ClientRpc]
+        public void DragonSecondaryAttackSetupClientRpc()
+        {
+            FireBallController.IsNextFireBallSecondaryAttack = true;
+        }
+
+        [ClientRpc]
         public void OnDragonBeingHitClientRpc(Vector3 hitPosition)
         {
             _dragonExplodeVfx.SetVector3("HitPosition", hitPosition);

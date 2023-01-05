@@ -218,12 +218,13 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         public void DragonBasicAttackSetup()
         {
-            FireBallController.IsNextFireBallSecondaryAttack = false;
+
         }
 
         public void DragonSecondaryAttackSetup()
         {
-            FireBallController.IsNextFireBallSecondaryAttack = true;
+            var mofaHuntingRealityManager = HoloKitApp.Instance.RealityManager as MofaHuntingRealityManager;
+            mofaHuntingRealityManager.DragonController.DragonSecondaryAttackSetupClientRpc();
         }
     }
 }

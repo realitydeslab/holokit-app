@@ -33,7 +33,12 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void Start()
         {
-            _isSecondaryAttack = IsNextFireBallSecondaryAttack;
+            if (IsNextFireBallSecondaryAttack)
+            {
+                _isSecondaryAttack = IsNextFireBallSecondaryAttack;
+                IsNextFireBallSecondaryAttack = false;
+            }
+            
             _rigidbody = GetComponent<Rigidbody>();
 
             StartCoroutine(WaitAndDestory(6f));
