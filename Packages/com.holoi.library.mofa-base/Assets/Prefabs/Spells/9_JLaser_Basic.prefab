@@ -59,15 +59,15 @@ VisualEffect:
       - m_Value: 0.125
         m_Name: Birth Sphere Radius
         m_Overridden: 1
-      - m_Value: 64
+      - m_Value: 24
         m_Name: Spawn Rate
         m_Overridden: 1
     m_Vector2f:
       m_Array:
-      - m_Value: {x: 0.01, y: 0.03}
+      - m_Value: {x: 0.005, y: 0.01}
         m_Name: Random Size Multipier
         m_Overridden: 1
-      - m_Value: {x: 0.5, y: 1}
+      - m_Value: {x: 0.1, y: 0.5}
         m_Name: Gravity and Drag
         m_Overridden: 1
     m_Vector3f:
@@ -238,7 +238,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 782201434889079867}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -552,15 +552,18 @@ VisualEffect:
       - m_Value: 0.01
         m_Name: CA Intensity
         m_Overridden: 1
+      - m_Value: 9
+        m_Name: Brightness
+        m_Overridden: 1
     m_Vector2f:
       m_Array:
       - m_Value: {x: 2, y: 3}
         m_Name: Initial Speed Range
         m_Overridden: 1
-      - m_Value: {x: 0.01, y: 0.04}
+      - m_Value: {x: 0.005, y: 0.015}
         m_Name: Random Size Multipier
         m_Overridden: 1
-      - m_Value: {x: -0.5, y: 2}
+      - m_Value: {x: -1, y: 1}
         m_Name: Gravity and Drag
         m_Overridden: 1
       - m_Value: {x: 1, y: 1.5}
@@ -1237,6 +1240,32 @@ VisualEffect:
           m_RotationOrder: 4
         m_Name: Add Scale Y by Speed
         m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0.67809606
+            inSlope: 4.019673
+            outSlope: 4.019673
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.10414044
+          - serializedVersion: 3
+            time: 1
+            value: 1.9385881
+            inSlope: -0.096448615
+            outSlope: -0.096448615
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.12980342
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Set ScaleY by Speed
+        m_Overridden: 1
     m_Gradient:
       m_Array:
       - m_Value:
@@ -1399,6 +1428,12 @@ VisualEffect:
         m_Overridden: 1
       - m_Value: 0.001
         m_Name: Ca Intensity
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Brightness
+        m_Overridden: 1
+      - m_Value: 1.2
+        m_Name: Multiply Size
         m_Overridden: 1
     m_Vector2f:
       m_Array: []
@@ -1615,7 +1650,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6388745237024733189}
   m_Enabled: 1
-  m_Asset: {fileID: 0}
+  m_Asset: {fileID: 8926484042661614526, guid: a08e80dec7bc74bd1b2be83f4ea48081, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -1624,191 +1659,71 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 0.048
-        m_Name: Process(not in use)
-        m_Overridden: 1
-      - m_Value: 0.564
-        m_Name: Process
-        m_Overridden: 1
-      - m_Value: 0.05
-        m_Name: Intensity_UNM_MT
-        m_Overridden: 1
-      - m_Value: 0.1
-        m_Name: Intensity_UVNM_AM
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Life
-        m_Overridden: 1
       - m_Value: 0.5
-        m_Name: Main Tex Saturation
+        m_Name: Lifetime
         m_Overridden: 1
-      - m_Value: 0.05
-        m_Name: Intensity_MainTexture Noise
-        m_Overridden: 1
-      - m_Value: 0.97
-        m_Name: Intensity_Animation Texture Noise
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Main Texture Lerp
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Final Alpha
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Debug Delay
-        m_Overridden: 1
-      - m_Value: 2
+      - m_Value: 0.67
         m_Name: Size
         m_Overridden: 1
-      - m_Value: 1
-        m_Name: Final Brightness
+      - m_Value: 0
+        m_Name: Constant Rate
         m_Overridden: 1
       - m_Value: 0
-        m_Name: Scene Distort Lerp
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Periodic Burst Delay
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Burst Delay
-        m_Overridden: 1
-      - m_Value: 0.55
-        m_Name: LifeTime
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: ConstantBurstRate
-        m_Overridden: 1
-      - m_Value: 90
-        m_Name: Mask Rotation
+        m_Name: Constant Rate [debug]
         m_Overridden: 1
       - m_Value: 0.05
-        m_Name: Intensity_DT
+        m_Name: Delay
         m_Overridden: 1
       - m_Value: 0
-        m_Name: Chr_MT
+        m_Name: IntensityNoise
         m_Overridden: 1
-      - m_Value: 0.98
-        m_Name: Intensity_AMDT
+      - m_Value: 0.1
+        m_Name: IntensityAnimationNoise
         m_Overridden: 1
-      - m_Value: 0.4
-        m_Name: Sat_MT
-        m_Overridden: 1
-      - m_Value: 8
-        m_Name: Brightness
+      - m_Value: 90
+        m_Name: Rotation
         m_Overridden: 1
     m_Vector2f:
       m_Array:
-      - m_Value: {x: 0.5, y: -1}
-        m_Name: Remap
+      - m_Value: {x: 1, y: 1}
+        m_Name: Animation Noise Tiling
         m_Overridden: 1
-      - m_Value: {x: 0, y: 0.5}
-        m_Name: Speed_AM
+      - m_Value: {x: 1, y: 2}
+        m_Name: TilingAnimationNoise
         m_Overridden: 1
-      - m_Value: {x: -0.5, y: 0}
-        m_Name: Speed_UVNM_AM
+      - m_Value: {x: 0.5, y: 1}
+        m_Name: TilingMain
         m_Overridden: 1
-      - m_Value: {x: -2, y: -0.2}
-        m_Name: Speed_MT
+      - m_Value: {x: 1, y: 1}
+        m_Name: TilingAnimationMask
         m_Overridden: 1
-      - m_Value: {x: 0.5, y: 0}
-        m_Name: Speed_UNM_MT
+      - m_Value: {x: 1, y: 1}
+        m_Name: TilingNoise
         m_Overridden: 1
-      - m_Value: {x: -0.5, y: 0.1}
-        m_Name: Speed_Animation Texture Noise
-        m_Overridden: 1
-      - m_Value: {x: 0, y: 1}
-        m_Name: Speed_Main Texture 1
-        m_Overridden: 1
-      - m_Value: {x: 0, y: 0}
-        m_Name: Speed_Animation Texture
-        m_Overridden: 1
-      - m_Value: {x: 0, y: 0}
-        m_Name: Speed_Final Texture
-        m_Overridden: 1
-      - m_Value: {x: -1, y: -0.1}
-        m_Name: Speed_MainTexture Noise
-        m_Overridden: 1
-      - m_Value: {x: -2, y: -0.1}
-        m_Name: Speed_Main Texture
-        m_Overridden: 1
-      - m_Value: {x: -1, y: -0.1}
-        m_Name: Speed_DT
-        m_Overridden: 1
-      - m_Value: {x: -1, y: 0.2}
-        m_Name: Speed_AMDT
+      - m_Value: {x: -1, y: 0}
+        m_Name: SpeedAnimationMask
         m_Overridden: 1
     m_Vector3f:
-      m_Array:
-      - m_Value: {x: 0, y: 0, z: 0}
-        m_Name: Target_position
-        m_Overridden: 1
+      m_Array: []
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 3, y: 2, z: 2, w: 0.5}
-        m_Name: Power | mA | mB | Lerp_AM
-        m_Overridden: 1
-      - m_Value: {x: 1, y: 4, z: 0, w: 0}
-        m_Name: Tilling and Offset_MT
-        m_Overridden: 1
-      - m_Value: {x: 0.1, y: 33, z: 1, w: 0}
-        m_Name: Main Texure Adjustment
-        m_Overridden: 1
-      - m_Value: {x: 3, y: 1, z: 3, w: 0.5}
-        m_Name: Animation Texture Adjustment
+      - m_Value: {x: 6.0614133, y: 1.3501006, z: 9.869699, w: 0}
+        m_Name: Color
         m_Overridden: 1
       - m_Value: {x: 1, y: 1, z: 1, w: 0.5}
-        m_Name: Final Texture Adjustment
+        m_Name: Animation Noise Refine
         m_Overridden: 1
-      - m_Value: {x: 0.3, y: 2, z: 0, w: 0}
-        m_Name: TO_Animation Texture Noise
+      - m_Value: {x: 6, y: 16, z: 3, w: 0.5}
+        m_Name: AnimationMaskRefine
         m_Overridden: 1
-      - m_Value: {x: 0.27450982, y: 0.39607844, z: 0.7490196, w: 0}
-        m_Name: Inner Color
+      - m_Value: {x: 2, y: 2, z: 1, w: 0.5}
+        m_Name: RefineAnimationMask
         m_Overridden: 1
-      - m_Value: {x: 0.38364774, y: 0.5377358, z: 1, w: 0}
-        m_Name: Outer Color
+      - m_Value: {x: 1, y: 1, z: 1, w: 0.5}
+        m_Name: RefineAnimationNoise
         m_Overridden: 1
-      - m_Value: {x: 1, y: 3, z: 0, w: 0}
-        m_Name: TO_Main Texture
-        m_Overridden: 1
-      - m_Value: {x: 2, y: 1, z: 1, w: 0.5}
-        m_Name: FinalMask Adjustment
-        m_Overridden: 1
-      - m_Value: {x: 3, y: 6, z: 6, w: 0.4}
-        m_Name: AnimationMask Adjustment
-        m_Overridden: 1
-      - m_Value: {x: 1, y: 1, z: 1, w: 1}
-        m_Name: MainTexture Noise Adjustment
-        m_Overridden: 1
-      - m_Value: {x: 1, y: 1, z: 0, w: 0}
-        m_Name: TO_MainTexture Noise
-        m_Overridden: 1
-      - m_Value: {x: 1, y: 13, z: 0, w: 0}
-        m_Name: TO_Animation Texture
-        m_Overridden: 1
-      - m_Value: {x: 3, y: 1, z: 1, w: 0.5}
-        m_Name: Adjustment_DistortMap_AM
-        m_Overridden: 1
-      - m_Value: {x: 0.823, y: 0.8677963, z: 1, w: 0}
-        m_Name: Main Texture Refine Color
-        m_Overridden: 1
-      - m_Value: {x: 1, y: 3, z: 0, w: 0}
-        m_Name: TO_MT
-        m_Overridden: 1
-      - m_Value: {x: 0.5, y: 0.5, z: 1, w: 0.5}
-        m_Name: Adjust_MT
-        m_Overridden: 1
-      - m_Value: {x: 3, y: 1, z: 1, w: 0.5}
-        m_Name: Adjust_AMDT
-        m_Overridden: 1
-      - m_Value: {x: 2, y: 1, z: 1, w: 0.5}
-        m_Name: Adjust_FM
-        m_Overridden: 1
-      - m_Value: {x: 0.3, y: 2, z: 0, w: 0}
-        m_Name: TO_AMDT
-        m_Overridden: 1
-      - m_Value: {x: 10.019069, y: 10.019069, z: 10.019069, w: 0}
-        m_Name: Color_MT
+      - m_Value: {x: 2, y: 3, z: 2, w: 0.5}
+        m_Name: ReineMain
         m_Overridden: 1
     m_Uint:
       m_Array: []
@@ -1823,122 +1738,80 @@ VisualEffect:
           m_Curve:
           - serializedVersion: 3
             time: 0
-            value: 0
-            inSlope: 4.1075177
-            outSlope: 4.1075177
+            value: 1.9619471
+            inSlope: -3.0133164
+            outSlope: -3.0133164
             tangentMode: 0
             weightedMode: 0
             inWeight: 0
-            outWeight: 0.042915523
+            outWeight: 0.1378228
           - serializedVersion: 3
-            time: 0.49810278
-            value: 1
-            inSlope: 0.14218356
-            outSlope: 0.14218356
+            time: 1
+            value: -5.0223937
+            inSlope: -9.673318
+            outSlope: -9.673318
             tangentMode: 0
             weightedMode: 0
-            inWeight: 0.08293843
+            inWeight: 0.095313966
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-        m_Name: Process Over Life
+        m_Name: Brightness
         m_Overridden: 1
       - m_Value:
           serializedVersion: 2
           m_Curve:
           - serializedVersion: 3
-            time: 0
-            value: 1.0002289
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
+            time: 0.009321272
+            value: -0.7442606
+            inSlope: 1.0524493
+            outSlope: 2.059049
+            tangentMode: 1
             weightedMode: 0
-            inWeight: 0
-            outWeight: 0.33333334
+            inWeight: 0.19890165
+            outWeight: 0.10328677
           - serializedVersion: 3
-            time: 0.50097656
-            value: 0.11795044
-            inSlope: -0.66574264
-            outSlope: -0.66574264
-            tangentMode: 0
+            time: 0.98437977
+            value: -0.0973262
+            inSlope: 0.02343824
+            outSlope: 0.48165026
+            tangentMode: 1
             weightedMode: 0
-            inWeight: 0.1343921
-            outWeight: 0.12720527
-          - serializedVersion: 3
-            time: 1
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
+            inWeight: 0.3426719
+            outWeight: 0.14443815
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-        m_Name: Alpha Over Life
+        m_Name: Process
         m_Overridden: 1
     m_Gradient:
       m_Array: []
     m_NamedObject:
       m_Array:
+      - m_Value: {fileID: 2800000, guid: 4c1d80d9bc444494bb06039b5f59c796, type: 3}
+        m_Name: Mask
+        m_Overridden: 1
       - m_Value: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
         m_Name: Mesh
         m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: cb20116d6a8e74375966132a401ab907, type: 3}
+        m_Name: Animatin Noise
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 2e3b212a3b5e49743b19e2275d5391f2, type: 3}
+        m_Name: Main
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 6c19daf655d3e794c9c89817cbf19dd9, type: 3}
+        m_Name: Noise
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 153bf3b34d6e1164ba1e8f65c4203d11, type: 3}
+        m_Name: Final Mask
+        m_Overridden: 1
       - m_Value: {fileID: 2800000, guid: 4c1d80d9bc444494bb06039b5f59c796, type: 3}
-        m_Name: Animation Texture
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: 2e736348f1346704288e956a990421bd, type: 3}
-        m_Name: Main Texture
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: 6aadfb84b223e1e44b78a00186d30888, type: 3}
-        m_Name: Animation Texture Noise
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: fe2e15946ebf56c4aaf31d8d9d4b5209, type: 3}
-        m_Name: MainTexture Noise
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: 0e2aab565bf1449499c94f5d04006fd8, type: 3}
-        m_Name: Final Texture
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: 6aadfb84b223e1e44b78a00186d30888, type: 3}
-        m_Name: Texture_AMDT
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: 2e736348f1346704288e956a990421bd, type: 3}
-        m_Name: Texture_MT
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: fe2e15946ebf56c4aaf31d8d9d4b5209, type: 3}
-        m_Name: Texture_DT
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: 0e2aab565bf1449499c94f5d04006fd8, type: 3}
-        m_Name: Texture_FM
-        m_Overridden: 1
-      - m_Value: {fileID: 2800000, guid: 97115856c12d00d4ebb4983a668791d3, type: 3}
-        m_Name: Texture_AM
+        m_Name: AnimationMask
         m_Overridden: 1
     m_Bool:
-      m_Array:
-      - m_Value: 0
-        m_Name: Auto Play
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Debug Mode
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Burst at Born
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Periodic Burst
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Constant burst
-        m_Overridden: 1
-      - m_Value: 1
-        m_Name: Mask Clamp
-        m_Overridden: 1
-      - m_Value: 0
-        m_Name: Constant
-        m_Overridden: 1
+      m_Array: []
 --- !u!73398921 &6388745237024733306
 VFXRenderer:
   serializedVersion: 1
@@ -2089,7 +1962,7 @@ VisualEffect:
       - m_Value: 0
         m_Name: Delay
         m_Overridden: 1
-      - m_Value: 22
+      - m_Value: 1
         m_Name: Brightness
         m_Overridden: 1
       - m_Value: 1
@@ -2106,6 +1979,9 @@ VisualEffect:
         m_Overridden: 1
       - m_Value: 0
         m_Name: DeathAnimationDuration
+        m_Overridden: 1
+      - m_Value: 1.2
+        m_Name: Multiply Size
         m_Overridden: 1
     m_Vector2f:
       m_Array:
@@ -2183,20 +2059,20 @@ VisualEffect:
           - serializedVersion: 3
             time: 0
             value: 0
-            inSlope: 11.067399
-            outSlope: 11.067399
+            inSlope: 2.478558
+            outSlope: 2.478558
             tangentMode: 0
             weightedMode: 0
             inWeight: 0
-            outWeight: 0.039738394
+            outWeight: 0.058925144
           - serializedVersion: 3
-            time: 0.24668127
+            time: 1
             value: 1
-            inSlope: 0
-            outSlope: 0
+            inSlope: -0.007040826
+            outSlope: -0.007040826
             tangentMode: 0
             weightedMode: 0
-            inWeight: 0
+            inWeight: 0.13910633
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
@@ -2427,6 +2303,9 @@ VisualEffect:
         m_Overridden: 1
       - m_Value: {x: 0.35, y: 0.65}
         m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 3}
+        m_Name: Burst Speed Range
         m_Overridden: 1
     m_Vector3f:
       m_Array:
@@ -3705,6 +3584,12 @@ VisualEffect:
         m_Overridden: 1
       - m_Value: 0.001
         m_Name: Ca Intensity
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Multiply Size
+        m_Overridden: 1
+      - m_Value: -1
+        m_Name: Brightness
         m_Overridden: 1
     m_Vector2f:
       m_Array: []
