@@ -39,6 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Now two attack spells can collide with each other. This is a testing feature, which might be removed in the future version [@yuchen]
 
+- Added Unity Localization package [@yuchen]
+
 ### Changed
 
 - Changed the audio of AceFire Basic Spell: Spawn [@sizheng]
