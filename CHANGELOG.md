@@ -51,6 +51,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated visual of Buddhas in QuantumRealm Reality [@sizheng]
 
+- Updated MOFA spell images [@yuchen]
+
 ### Removed
 
 - Removed the optional watermark in video recordings, because we are now using VideoKit and it does not support watermark now [@yuchen]
