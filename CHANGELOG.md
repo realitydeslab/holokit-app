@@ -37,6 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added JLaser spells back with 2x speed [@yuchen]
 
+- Now two attack spells can collide with each other. This is a testing feature, which might be removed in the future version [@yuchen]
+
 ### Changed
 
 - Changed the audio of AceFire Basic Spell: Spawn [@sizheng]

@@ -35,6 +35,23 @@ namespace Holoi.Library.MOFABase
 
         private void OnTriggerEnter(Collider other)
         {
+            // TEST: Two attack spells can collide
+            if (other.TryGetComponent<AttackSpell>(out var _))
+            {
+                var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
+                ulong victimClientId = other.GetComponent<NetworkObject>().OwnerClientId;
+                var mofaPlayerDict = mofaBaseRealityManager.MofaPlayerDict;
+                if (mofaPlayerDict.ContainsKey(victimClientId))
+                {
+                    MofaTeam attackerTeam = mofaPlayerDict[OwnerClientId].Team.Value;
+                    MofaTeam victimTeam = mofaPlayerDict[victimClientId].Team.Value;
+                    if (attackerTeam != victimTeam)
+                    {
+                        OnHitFunc();
+                    }
+                }
+            }
+
             if (other.TryGetComponent<IDamageable>(out var damageable))
             {
                 // For MOFA spell test scene
