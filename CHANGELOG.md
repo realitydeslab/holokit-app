@@ -33,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added Dragon secondary attack [@yuchen]
 
+- Now all spell and life shield prefabs will be automatically added to the network prefab list. You no longer have to manually drag all those prefabs into every MOFA scene [@yuchen]
+
 ### Changed
 
 - Changed the audio of AceFire Basic Spell: Spawn [@sizheng]
