@@ -149,6 +149,24 @@ namespace Holoi.Library.MOFABase
         /// </summary>
         public static event Action<MofaPhase> OnMofaPhaseChanged;
 
+        protected virtual void Awake()
+        {
+            var realityConfiguration = GetComponent<RealityConfiguration>();
+            // Add all spell prefabs to the network prefab list
+            foreach (var spell in SpellList.List)
+            {
+                if (!realityConfiguration.NetworkPrefabs.Contains(spell.gameObject))
+                    realityConfiguration.NetworkPrefabs.Add(spell.gameObject);
+            }
+
+            // Add all life shield prefabs to the network prefab list
+            foreach (var lifeShield in LifeShieldList.List)
+            {
+                if (!realityConfiguration.NetworkPrefabs.Contains(lifeShield.gameObject))
+                    realityConfiguration.NetworkPrefabs.Add(lifeShield.gameObject);
+            }
+        }
+
         public override void OnNetworkSpawn()
         {
             // We register this delegate here in order to track player hit count
