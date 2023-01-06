@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Now all spell and life shield prefabs will be automatically added to the network prefab list. You no longer have to manually drag all those prefabs into every MOFA scene [@yuchen]
 
+- Added JLaser spells back with 2x speed [@yuchen]
+
 ### Changed
 
 - Changed the audio of AceFire Basic Spell: Spawn [@sizheng]
