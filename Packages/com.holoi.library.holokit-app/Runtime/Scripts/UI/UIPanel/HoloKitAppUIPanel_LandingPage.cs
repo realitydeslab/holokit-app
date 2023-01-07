@@ -43,7 +43,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
             StartCoroutine(HoloKitAppUtils.WaitAndDo(PageDuration, () =>
             {
-                //LoadPermissionPage();
+                LoadPermissionPage();
             }));
         }
 
