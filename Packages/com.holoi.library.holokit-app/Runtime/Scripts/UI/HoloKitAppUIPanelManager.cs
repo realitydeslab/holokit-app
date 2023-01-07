@@ -54,6 +54,10 @@ namespace Holoi.Library.HoloKitApp.UI
             uiPanelInstance.transform.localPosition = Vector3.zero;
             uiPanelInstance.transform.localRotation = Quaternion.identity;
             uiPanelInstance.transform.localScale = Vector3.one;
+            // Ensure the left, right, top and bottom values of the RectTransform are zero
+            var rectTransform = uiPanelInstance.GetComponent<RectTransform>();
+            rectTransform.offsetMin = Vector2.zero;
+            rectTransform.offsetMax = Vector2.zero;
 
             // Deactivate all previous UIPanels
             if (uiPanel.OverlayPreviousPanel)
