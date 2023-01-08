@@ -17,17 +17,6 @@ namespace Holoi.Library.HoloKitApp.UI
             _currentVersionNumber.text = HoloKitApp.Instance.CurrentVersionNumber;
         }
 
-        private void OnEnable()
-        {
-            Camera.main.backgroundColor = new Color(0f, 0f, 0f, 0f);
-        }
-
-        private void OnDisable()
-        {
-            if (Camera.main != null)
-                Camera.main.backgroundColor = new Color(1f, 1f, 1f, 0f);
-        }
-
         public void OnBackButtonPressed()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();

@@ -189,18 +189,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private bool IsInsideInputArea(Vector2 position)
         {
-            if (position.x > (_inputArea.position.x - _inputArea.sizeDelta.x / 2f)
-                && position.x < (_inputArea.position.x + _inputArea.sizeDelta.x / 2f)
-                &&
-                position.y > (_inputArea.position.y - _inputArea.sizeDelta.y / 2f)
-                && position.y < (_inputArea.position.y + _inputArea.sizeDelta.y / 2f))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return position.y > 0.2f * Screen.height && position.y < 0.8f * Screen.height;
         }
 
         private void OnTargetRoomArrived()
