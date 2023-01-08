@@ -19,8 +19,6 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private RectTransform _qrCode;
 
-        private const float BackgroundDefaultHeight = 1162f;
-
         private const float DeviceSlotHeight = 50f;
 
         private const float DeviceListBottomPadding = 40f;
@@ -86,10 +84,8 @@ namespace Holoi.Library.HoloKitApp.UI
 
             // Calculate the height
             int playerCount = NetworkManager.Singleton.ConnectedClientsList.Count;
-            if (playerCount == 0)
-                _background.sizeDelta = new Vector2(_background.sizeDelta.x, BackgroundDefaultHeight);
-            else
-                _background.sizeDelta = new Vector2(_background.sizeDelta.x, BackgroundDefaultHeight + playerCount * DeviceSlotHeight + DeviceListBottomPadding);
+            float top = playerCount == 0 ? 0f : playerCount * DeviceSlotHeight + DeviceListBottomPadding;
+            _background.offsetMax = new(0f, top);
         }
 
         public void OnExitButtonPressed()
