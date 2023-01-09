@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using TMPro;
 
 namespace Holoi.Library.HoloKitApp.UI
@@ -194,8 +195,17 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnTargetRoomArrived()
         {
-            _realityIndexText.text = "Reality #" + HoloKitAppUtils.IntToStringF3(_currentRoomIndex + 1);
-            _realityNameText.text = HoloKitApp.Instance.GlobalSettings.RealityList.List[_currentRoomIndex].DisplayName;
+            switch (LocalizationSettings.SelectedLocale.Identifier.Code)
+            {
+                case "en":
+                    _realityIndexText.text = "Reality #" + HoloKitAppUtils.IntToStringF3(_currentRoomIndex + 1);
+                    _realityNameText.text = HoloKitApp.Instance.GlobalSettings.RealityList.List[_currentRoomIndex].DisplayName;
+                    break;
+                case "zh-Hans":
+                    _realityIndexText.text = "混合现实 #" + HoloKitAppUtils.IntToStringF3(_currentRoomIndex + 1);
+                    _realityNameText.text = HoloKitApp.Instance.GlobalSettings.RealityList.List[_currentRoomIndex].DisplayName_Chinese;
+                    break;
+            }
         }
 
         private void ScrollToNextRoom()

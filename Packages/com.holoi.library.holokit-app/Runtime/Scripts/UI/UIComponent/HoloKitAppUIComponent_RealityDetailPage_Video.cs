@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.UI;
+using UnityEngine.Localization.Settings;
 using TMPro;
 
 namespace Holoi.Library.HoloKitApp.UI
@@ -47,13 +48,23 @@ namespace Holoi.Library.HoloKitApp.UI
                 else
                 {
                     videoClip = currentReality.PreviewVideos[_videoIndex];
+
+                    string previewVideoStr = "Preview Video";
+                    switch (LocalizationSettings.SelectedLocale.Identifier.Code)
+                    {
+                        case "en":
+                            break;
+                        case "zh-Hans":
+                            previewVideoStr = "预览视频";
+                            break;
+                    }
                     if (currentReality.PreviewVideos.Count == 1)
                     {
-                        _text.text = "Preview Video";
+                        _text.text = previewVideoStr;
                     }
                     else
                     {
-                        _text.text = $"Preview Video {_videoIndex + 1}";
+                        _text.text = $"{previewVideoStr} {_videoIndex + 1}";
                     }
                 }
             }
@@ -67,13 +78,23 @@ namespace Holoi.Library.HoloKitApp.UI
                 else
                 {
                     videoClip = currentReality.TutorialVideos[_videoIndex];
+
+                    string tutorialVideoStr = "Tutorial Video";
+                    switch (LocalizationSettings.SelectedLocale.Identifier.Code)
+                    {
+                        case "en":
+                            break;
+                        case "zh-Hans":
+                            tutorialVideoStr = "教学视频";
+                            break;
+                    }
                     if (currentReality.TutorialVideos.Count == 1)
                     {
-                        _text.text = "Tutorial Video";
+                        _text.text = tutorialVideoStr;
                     }
                     else
                     {
-                        _text.text = $"Tutorial Video {_videoIndex + 1}";
+                        _text.text = $"{tutorialVideoStr} {_videoIndex + 1}";
                     }
                     _videoPlayer.frame = 0;
                     StartCoroutine(PauseOnFirstFrame());

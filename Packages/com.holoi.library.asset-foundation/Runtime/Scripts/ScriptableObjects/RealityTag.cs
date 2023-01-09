@@ -8,5 +8,7 @@ namespace Holoi.AssetFoundation
         public string BundleId;
 
         public string DisplayName;
+
+        public string DisplayName_Chinese;
     }
 }

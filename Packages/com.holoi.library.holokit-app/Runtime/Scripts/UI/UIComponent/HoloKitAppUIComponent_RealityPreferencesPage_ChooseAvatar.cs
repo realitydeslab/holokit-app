@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Holoi.AssetFoundation;
+using UnityEngine.Localization.Settings;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -40,7 +41,15 @@ namespace Holoi.Library.HoloKitApp.UI
             var currentReality = HoloKitApp.Instance.CurrentReality;
             if (!currentReality.MetaAvatarDescription.Equals(""))
             {
-                NonFungibleDescription.text = currentReality.MetaAvatarDescription;
+                switch (LocalizationSettings.SelectedLocale.Identifier.Code)
+                {
+                    case "en":
+                        NonFungibleDescription.text = currentReality.MetaAvatarDescription;
+                        break;
+                    case "zh-Hans":
+                        NonFungibleDescription.text = currentReality.MetaAvatarDescription_Chinese;
+                        break;
+                }
             }
         }
     }

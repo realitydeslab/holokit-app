@@ -12,10 +12,17 @@ namespace Holoi.AssetFoundation
 
         public string DisplayName;
 
+        public string DisplayName_Chinese;
+
         [TextArea]
         public string Description;
 
+        [TextArea]
+        public string Description_Chinese;
+
         public string Author;
+
+        public string Author_Chinese;
 
         public string Version;
 
@@ -28,15 +35,24 @@ namespace Holoi.AssetFoundation
         [TextArea]
         public string HardwareRequirement;
 
+        [TextArea]
+        public string HardwareRequirement_Chinese;
+
         public List<RealityTag> RealityTags;
 
         [TextArea, Tooltip("A description on why this reality needs to use meta avatars")]
         public string MetaAvatarDescription;
 
+        [TextArea]
+        public string MetaAvatarDescription_Chinese;
+
         public List<MetaAvatarTag> CompatibleMetaAvatarTags;
 
         [TextArea, Tooltip("A description on why this reality needs to use meta objects")]
         public string MetaObjectDescription;
+
+        [TextArea]
+        public string MetaObjectDescription_Chinese;
 
         public List<MetaObjectTag> CompatibleMetaObjectTags;
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using TMPro;
 
 namespace Holoi.Library.HoloKitApp
@@ -39,8 +40,17 @@ namespace Holoi.Library.HoloKitApp
                 var technologySlot = Instantiate(_technologySlotPrefab);
                 technologySlot.transform.SetParent(currentRow.transform);
                 technologySlot.transform.localScale = Vector3.one;
-                technologySlot.GetComponentInChildren<TMP_Text>().text = "#" + realityTag.DisplayName;
-                //Debug.Log($"name: {realityTag.DisplayName} and length: {realityTag.DisplayName.Length}");
+
+                switch (LocalizationSettings.SelectedLocale.Identifier.Code)
+                {
+                    case "en":
+                        technologySlot.GetComponentInChildren<TMP_Text>().text = "#" + realityTag.DisplayName;
+                        break;
+                    case "zh-Hans":
+                        technologySlot.GetComponentInChildren<TMP_Text>().text = "#" + realityTag.DisplayName_Chinese;
+                        break;
+                }
+
                 float slotWidth = WordCountToSlotWidthList[realityTag.DisplayName.Length];
                 _currentAccumulatedSlotWidth += slotWidth;
                 technologySlot.GetComponent<RectTransform>().sizeDelta = new Vector2(slotWidth, SlotHeight);

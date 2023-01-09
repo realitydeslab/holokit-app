@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using TMPro;
 
 namespace Holoi.Library.HoloKitApp.UI
@@ -15,7 +16,16 @@ namespace Holoi.Library.HoloKitApp.UI
                 Destroy(gameObject);
                 return;
             }
-            _content.text = currentReality.HardwareRequirement;
+
+            switch (LocalizationSettings.SelectedLocale.Identifier.Code)
+            {
+                case "en":
+                    _content.text = currentReality.HardwareRequirement;
+                    break;
+                case "zh-Hans":
+                    _content.text = currentReality.HardwareRequirement_Chinese;
+                    break;
+            }
         }
     }
 }

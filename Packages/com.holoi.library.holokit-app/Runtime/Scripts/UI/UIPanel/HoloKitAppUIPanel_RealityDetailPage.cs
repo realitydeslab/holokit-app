@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Localization.Settings;
 using TMPro;
 
 namespace Holoi.Library.HoloKitApp.UI
@@ -89,11 +90,24 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
-            _realityIndexText.text = "Reality #" +
-                HoloKitAppUtils.IntToStringF3(HoloKitApp.Instance.GlobalSettings.GetRealityIndex(HoloKitApp.Instance.CurrentReality) + 1);
-            _realityNameText.text = HoloKitApp.Instance.CurrentReality.DisplayName;
-            _realityAuthorText.text = HoloKitApp.Instance.CurrentReality.Author;
-            _realityDescriptionText.text = HoloKitApp.Instance.CurrentReality.Description;
+            switch (LocalizationSettings.SelectedLocale.Identifier.Code)
+            {
+                case "en":
+                    _realityIndexText.text = "Reality #" +
+                        HoloKitAppUtils.IntToStringF3(HoloKitApp.Instance.GlobalSettings.GetRealityIndex(HoloKitApp.Instance.CurrentReality) + 1);
+                    _realityNameText.text = HoloKitApp.Instance.CurrentReality.DisplayName;
+                    _realityAuthorText.text = HoloKitApp.Instance.CurrentReality.Author;
+                    _realityDescriptionText.text = HoloKitApp.Instance.CurrentReality.Description;
+                    break;
+                case "zh-Hans":
+                    _realityIndexText.text = "混合现实 #" +
+                        HoloKitAppUtils.IntToStringF3(HoloKitApp.Instance.GlobalSettings.GetRealityIndex(HoloKitApp.Instance.CurrentReality) + 1);
+                    _realityNameText.text = HoloKitApp.Instance.CurrentReality.DisplayName_Chinese;
+                    _realityAuthorText.text = HoloKitApp.Instance.CurrentReality.Author_Chinese;
+                    _realityDescriptionText.text = HoloKitApp.Instance.CurrentReality.Description_Chinese;
+                    break;
+            }
+            
         }
 
         private void Update()
