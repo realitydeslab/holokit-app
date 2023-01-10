@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using UnityEngine.Localization.Settings;
 
 namespace Holoi.Library.HoloKitApp.IOSNative
 {
@@ -21,6 +22,25 @@ namespace Holoi.Library.HoloKitApp.IOSNative
                 "Please go to our discord to give your feedback.",
                 "Go to Discord",
                 "https://discord.gg/nsPPBfAJ2f");
+        }
+
+        public static void ShowUpdateAlert()
+        {
+            switch (LocalizationSettings.SelectedLocale.Identifier.Code)
+            {
+                case "en":
+                    HoloKitAppIOSNative_ShowFeedbackAlert("Update",
+                        "There is a new version of HoloKit app on the app store.",
+                        "Update Now",
+                        "https://apps.apple.com/cn/app/holokit/id6444073276");
+                    break;
+                case "zh-Hans":
+                    HoloKitAppIOSNative_ShowFeedbackAlert("更新",
+                        "新版本已更新到App Store。",
+                        "马上升级",
+                        "https://apps.apple.com/cn/app/holokit/id6444073276");
+                    break;
+            }
         }
     }
 }

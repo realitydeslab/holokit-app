@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added Unity Localization package [@yuchen]
+
+- Added font switch system according to the current locale [@yuchen]
+
+- Updated UI layout to adapt iPad screen resolution [@yuchen]
+
+- Added complete Chinese localization [@yuchen]
+
+### Changed
+
+
+### Removed
+
+
+### Fixed
+
+
+
+## [1.1.0] - 2023-1-7
+
+### Added
+
 - Added Audios for Spells do not have one [@sizheng]
 
 - Added `RealityConfiguration` script, which is a dependent class of `RealityManager`. Now all `PlayerPrefab`, `NetworkPrefab`s and URP Setting file are stored in the corresponding `RealityConfiguration` [@yuchen]
@@ -38,16 +60,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added JLaser spells back with 2x speed [@yuchen]
 
 - Now two attack spells can collide with each other. This is a testing feature which might be removed in the future version [@yuchen]
-
-- Added Unity Localization package [@yuchen]
-
-- Added font switch system according to the current locale [@yuchen]
-
-- Setup Chinese translation system [@yuchen]
-
-- Updated UI layout to adapt iPad screen resolution [@yuchen]
-
-- Added complete Chinese localization [@yuchen]
 
 ### Changed
 
