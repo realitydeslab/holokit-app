@@ -39,15 +39,18 @@ namespace Holoi.Library.MOFABase
             if (other.TryGetComponent<AttackSpell>(out var _))
             {
                 var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-                ulong victimClientId = other.GetComponent<NetworkObject>().OwnerClientId;
-                var mofaPlayerDict = mofaBaseRealityManager.MofaPlayerDict;
-                if (mofaPlayerDict.ContainsKey(victimClientId))
+                if (mofaBaseRealityManager != null)
                 {
-                    MofaTeam attackerTeam = mofaPlayerDict[OwnerClientId].Team.Value;
-                    MofaTeam victimTeam = mofaPlayerDict[victimClientId].Team.Value;
-                    if (attackerTeam != victimTeam)
+                    ulong victimClientId = other.GetComponent<NetworkObject>().OwnerClientId;
+                    var mofaPlayerDict = mofaBaseRealityManager.MofaPlayerDict;
+                    if (mofaPlayerDict.ContainsKey(victimClientId))
                     {
-                        OnHitFunc();
+                        MofaTeam attackerTeam = mofaPlayerDict[OwnerClientId].Team.Value;
+                        MofaTeam victimTeam = mofaPlayerDict[victimClientId].Team.Value;
+                        if (attackerTeam != victimTeam)
+                        {
+                            OnHitFunc();
+                        }
                     }
                 }
             }
@@ -63,21 +66,29 @@ namespace Holoi.Library.MOFABase
                 }
 
                 var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
-                ulong victimClientId = other.GetComponentInParent<NetworkObject>().OwnerClientId;
-                var mofaPlayerDict = mofaBaseRealityManager.MofaPlayerDict;
-                if (mofaPlayerDict.ContainsKey(victimClientId))
+                if (mofaBaseRealityManager != null)
                 {
-                    MofaTeam attackerTeam = mofaPlayerDict[OwnerClientId].Team.Value;
-                    MofaTeam victimTeam = mofaPlayerDict[victimClientId].Team.Value;
-                    if (attackerTeam != victimTeam)
+                    ulong victimClientId = other.GetComponentInParent<NetworkObject>().OwnerClientId;
+                    var mofaPlayerDict = mofaBaseRealityManager.MofaPlayerDict;
+                    if (mofaPlayerDict.ContainsKey(victimClientId))
                     {
+                        MofaTeam attackerTeam = mofaPlayerDict[OwnerClientId].Team.Value;
+                        MofaTeam victimTeam = mofaPlayerDict[victimClientId].Team.Value;
+                        if (attackerTeam != victimTeam)
+                        {
+                            damageable.OnDamaged(OwnerClientId);
+                            OnHitFunc();
+                        }
+                    }
+                    else
+                    {
+                        // The victim is not a player
                         damageable.OnDamaged(OwnerClientId);
                         OnHitFunc();
                     }
                 }
-                else
+                else // MOFA: The Ducks
                 {
-                    // The victim is not a player
                     damageable.OnDamaged(OwnerClientId);
                     OnHitFunc();
                 }
