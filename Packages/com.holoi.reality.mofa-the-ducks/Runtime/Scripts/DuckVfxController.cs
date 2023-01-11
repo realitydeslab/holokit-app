@@ -15,6 +15,7 @@ namespace Holoi.Reality.MOFATheDucks
         /// anything you want.
         /// </summary>
         [SerializeField] private VisualEffect _duckVfx;
+        [SerializeField] private Animator _animator;
 
         private void Start()
         {
@@ -24,12 +25,19 @@ namespace Holoi.Reality.MOFATheDucks
 
         private void OnNaturalDeath()
         {
-            // SIZHENG TODO
+            _animator.SetTrigger("Death");
         }
 
         private void OnBeingHit()
         {
-            // SIZHENG TODO
+            _duckVfx.SendEvent("OnHit");
+            _duckVfx.SetBool("Duck Alive", false);
+        }
+
+        void OnTriggerDeathPaticle()
+        {
+            _duckVfx.SendEvent("OnDeath");
+
         }
     }
 }
