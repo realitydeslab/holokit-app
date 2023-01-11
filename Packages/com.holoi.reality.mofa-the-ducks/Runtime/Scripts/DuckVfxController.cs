@@ -30,6 +30,7 @@ namespace Holoi.Reality.MOFATheDucks
 
         private void OnBeingHit()
         {
+            _animator.SetTrigger("Hit");
             _duckVfx.SendEvent("OnHit");
             _duckVfx.SetBool("Duck Alive", false);
         }
