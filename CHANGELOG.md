@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added complete Chinese localization [@yuchen]
 
+- Added new reality <MOFA: The Ducks> [@yuchen]
+
 ### Changed
 
 
