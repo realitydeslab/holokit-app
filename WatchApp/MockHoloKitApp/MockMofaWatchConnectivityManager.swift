@@ -24,7 +24,7 @@ class MockMofaWatchConnectivityManager: NSObject, ObservableObject {
     func onRoundStarted() {
         let context = ["MOFA" : true,
                        "Start" : true,
-                       "MagicSchool" : 2,
+                       "MagicSchool" : 4,
                        "Timestamp" : ProcessInfo.processInfo.systemUptime] as [String : Any]
         
         do {
