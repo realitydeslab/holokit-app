@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitApp.UI;
+using Holoi.Library.HoloKitApp;
 using HoloKit;
 
 namespace Holoi.Reality.MOFATheDucks
@@ -14,14 +15,22 @@ namespace Holoi.Reality.MOFATheDucks
         /// </summary>
         private readonly Vector3 DuckSpawnOffset = new(0f, 0f, 0.5f);
 
-        private void Awake()
+        private void Start()
         {
-            HoloKitAppUIEventManager.OnStarUITriggered += OnStarUITriggered;
+            if (HoloKitApp.Instance.IsHost)
+            {
+                HoloKitAppUIEventManager.OnStarUITriggered += OnStarUITriggered_Host;
+            }
         }
 
         public override void OnDestroy()
         {
-            HoloKitAppUIEventManager.OnStarUITriggered -= OnStarUITriggered;
+            base.OnDestroy();
+
+            if (HoloKitApp.Instance.IsHost)
+            {
+                HoloKitAppUIEventManager.OnStarUITriggered -= OnStarUITriggered_Host;
+            }
         }
 
         /// <summary>
@@ -35,7 +44,7 @@ namespace Holoi.Reality.MOFATheDucks
             duckInstance.GetComponent<NetworkObject>().Spawn();
         }
 
-        private void OnStarUITriggered()
+        private void OnStarUITriggered_Host()
         {
             Transform centerEyePose = HoloKitCamera.Instance.CenterEyePose;
             Vector3 position = centerEyePose.position + centerEyePose.rotation * DuckSpawnOffset;

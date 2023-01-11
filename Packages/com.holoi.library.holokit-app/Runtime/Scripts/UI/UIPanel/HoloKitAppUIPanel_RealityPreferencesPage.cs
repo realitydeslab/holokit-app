@@ -79,6 +79,11 @@ namespace Holoi.Library.HoloKitApp.UI
             HoloKitApp.Instance.EnterRealityAs(true, HoloKitAppPlayerType.Player);
         }
 
+        public void OnStartHostPuppeteerButtonPressed()
+        {
+            HoloKitApp.Instance.EnterRealityAs(true, HoloKitAppPlayerType.Puppeteer);
+        }
+
         public void OnStartNonHostPlayerButtonPressed()
         {
             HoloKitApp.Instance.EnterRealityAs(false, HoloKitAppPlayerType.Player);
