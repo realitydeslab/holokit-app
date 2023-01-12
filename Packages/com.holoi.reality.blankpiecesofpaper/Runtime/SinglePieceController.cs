@@ -13,7 +13,7 @@ namespace Holoi.Reality.BlankPiecesOfPaper
             //_animator = GetComponent<Animator>();
 
             // Set Up UI Panel
-            var uiPanel = FindObjectOfType<TypedRealityBlankPiecesofPaperUIPanel>();
+            var uiPanel = FindObjectOfType<BlankPiecesOfPaperUIPanel>();
             uiPanel.SetUpUIPanel();
         }
 

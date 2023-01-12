@@ -5,7 +5,7 @@ using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Reality.BlankPiecesOfPaper
 {
-    public class TypedRealityBlankPiecesofPaperManager : RealityManager
+    public class BlankPiecesOfPaperManager : RealityManager
     {
         [SerializeField] NetworkObject SinglePagePrefab;
         NetworkObject _singlePageInstance;
