@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.XR.ARFoundation;
@@ -22,6 +21,8 @@ namespace Holoi.Reality.MOFATheGhost
         [SerializeField] private Ghost _ghostPrefab;
 
         private Ghost _ghost;
+
+        public static event Action OnGhostSpawned;
 
         private void Awake()
         {
@@ -77,6 +78,7 @@ namespace Holoi.Reality.MOFATheGhost
         {
             _ghost = Instantiate(_ghostPrefab, position, rotation);
             _ghost.GetComponent<NetworkObject>().Spawn();
+            OnGhostSpawned?.Invoke();
         }
     }
 }
