@@ -40,7 +40,7 @@ namespace Holoi.Library.HoloKitApp
 
         [SerializeField] private HoloKitAppMultiplayerManager _multiplayerManagerPrefab;
 
-        [SerializeField] private HoloKitAppARSessionManager _arSessioinManagerPrefab;
+        [SerializeField] private HoloKitAppARSessionManager _arSessionManagerPrefab;
 
         [SerializeField] private HoloKitAppRecorder _recorderPrefab;
 
@@ -84,6 +84,8 @@ namespace Holoi.Library.HoloKitApp
 
         public bool IsPuppeteer => _localPlayerType == HoloKitAppPlayerType.Puppeteer;
 
+        public int LocalPlayerTypeSubindex => _localPlayerTypeSubindex;
+
         public string CurrentVersionNumber => _currentVersionNumber;
 
         public bool Test => _testMode;
@@ -103,6 +105,8 @@ namespace Holoi.Library.HoloKitApp
         private bool _isHost = true;
 
         private HoloKitAppPlayerType _localPlayerType = HoloKitAppPlayerType.Player;
+
+        private int _localPlayerTypeSubindex = 0;
 
         private HoloKitAppMultiplayerManager _multiplayerManager;
 
@@ -254,7 +258,7 @@ namespace Holoi.Library.HoloKitApp
             _realityManager.SetupURPAsset();
 
             // Spawn the ARSessionManager
-            _arSessionManager = Instantiate(_arSessioinManagerPrefab);
+            _arSessionManager = Instantiate(_arSessionManagerPrefab);
             // Spawn the Recorder
             _recorder = Instantiate(_recorderPrefab);
             // Spawn the MultiplayerManager
@@ -312,7 +316,7 @@ namespace Holoi.Library.HoloKitApp
             HoloKitAppWatchConnectivityAPI.UpdateWatchPanel(HoloKitWatchPanel.None);
         }
 
-        public void EnterRealityAs(bool isMaster, HoloKitAppPlayerType playerType)
+        public void EnterRealityAs(bool isMaster, HoloKitAppPlayerType playerType, int playerTypeSubindex = 0)
         {
             // Does the Reality we are going to enter need LiDAR?
             if (_currentReality.IsLiDARRequired())

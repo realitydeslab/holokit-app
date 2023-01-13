@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
@@ -39,6 +40,8 @@ namespace Holoi.AssetFoundation
         public string HardwareRequirement_Chinese;
 
         public List<RealityTag> RealityTags;
+
+        public List<RealityEntranceButton> RealityEntranceButtons;
 
         [TextArea, Tooltip("A description on why this reality needs to use meta avatars")]
         public string MetaAvatarDescription;
@@ -223,5 +226,26 @@ namespace Holoi.AssetFoundation
             }
             return false;
         }
+    }
+
+    public enum RealityPlayerType
+    {
+        Player = 0,
+        Puppeteer = 1,
+        Spectator = 2
+    }
+
+    [Serializable]
+    public class RealityEntranceButton
+    {
+        public string Text;
+
+        public string Text_Chinese;
+
+        public bool IsHost;
+
+        public RealityPlayerType PlayerType;
+
+        public int PlayerTypeSubindex;
     }
 }

@@ -9,8 +9,8 @@ namespace Holoi.Library.HoloKitApp
     public enum HoloKitAppPlayerType
     {
         Player = 0,
-        Spectator = 1,
-        Puppeteer = 2
+        Puppeteer = 1,
+        Spectator = 2
     }
 
     public enum HoloKitAppPlayerStatus
@@ -34,6 +34,8 @@ namespace Holoi.Library.HoloKitApp
         public NetworkVariable<FixedString64Bytes> PlayerName = new("Anonymous", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         public NetworkVariable<HoloKitAppPlayerType> PlayerType = new(HoloKitAppPlayerType.Player, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+        public NetworkVariable<int> PlayerTypeSubindex = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         public NetworkVariable<HoloKitAppPlayerStatus> PlayerStatus = new(HoloKitAppPlayerStatus.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
