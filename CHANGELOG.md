@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added version checker [@yuchen]
 
+- Added New Ghost Assets to Reality: The Ghost [@sizheng]
+
 ### Changed
 
 
