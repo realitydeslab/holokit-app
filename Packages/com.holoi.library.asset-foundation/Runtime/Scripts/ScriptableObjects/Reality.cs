@@ -41,7 +41,7 @@ namespace Holoi.AssetFoundation
 
         public List<RealityTag> RealityTags;
 
-        public List<RealityEntranceButton> RealityEntranceButtons;
+        public List<RealityEntranceOption> RealityEntranceOption;
 
         [TextArea, Tooltip("A description on why this reality needs to use meta avatars")]
         public string MetaAvatarDescription;
@@ -236,7 +236,7 @@ namespace Holoi.AssetFoundation
     }
 
     [Serializable]
-    public class RealityEntranceButton
+    public class RealityEntranceOption
     {
         public string Text;
 

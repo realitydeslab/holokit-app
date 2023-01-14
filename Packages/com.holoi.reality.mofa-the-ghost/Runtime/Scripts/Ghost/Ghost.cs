@@ -36,6 +36,9 @@ namespace Holoi.Reality.MOFATheGhost
             Vector3 horizontalForward = Vector3.ProjectOnPlane(centerEyePose.forward, Vector3.up);
             Vector3 horizontalRight = Vector3.ProjectOnPlane(centerEyePose.right, Vector3.up);
 
+            // Make the ghost heading to the movement direction
+            transform.rotation = Quaternion.LookRotation(horizontalForward);
+            // Move the ghost
             _characterController.Move(_movementSpeed * (axis.y * horizontalForward + axis.x * horizontalRight));
         }
     }
