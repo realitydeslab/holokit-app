@@ -41,7 +41,7 @@ namespace Holoi.Reality.MOFATheGhost
             SpawnDetectionWaveServerRpc();
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         private void SpawnDetectionWaveServerRpc(ServerRpcParams serverRpcParams = default)
         {
             Transform centerEyePose = HoloKitCamera.Instance.CenterEyePose;

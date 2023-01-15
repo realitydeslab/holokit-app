@@ -24,20 +24,23 @@ namespace Holoi.Reality.MOFATheGhost
 
         public static event Action OnGhostSpawned;
 
-        private void Awake()
+        private void Start()
         {
-            HoloKitAppUIEventManager.OnStarUITriggered += OnUITriggered;
+            if (HoloKitApp.Instance.IsPuppeteer)
+                HoloKitAppUIEventManager.OnStarUITriggered += OnUITriggered;
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
-            HoloKitAppUIEventManager.OnStarUITriggered -= OnUITriggered;
+
+            if (HoloKitApp.Instance.IsPuppeteer)
+                HoloKitAppUIEventManager.OnStarUITriggered -= OnUITriggered;
         }
 
         public override void OnNetworkSpawn()
         {
-            if (HoloKitApp.Instance.IsHost)
+            if (HoloKitApp.Instance.IsPuppeteer)
             {
                 StartGhostPlacement();
             }

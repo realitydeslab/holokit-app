@@ -24,7 +24,7 @@ namespace Holoi.Reality.MOFATheGhost.UI
                 if (!_isEmptyInput)
                 {
                     _isEmptyInput = true;
-                    OnAxisChanged?.Invoke(_joystick.Direction);
+                    //OnAxisChanged?.Invoke(_joystick.Direction);
                 }
             }
             else // If the input is not empty
@@ -33,7 +33,7 @@ namespace Holoi.Reality.MOFATheGhost.UI
                 {
                     _isEmptyInput = false;
                 }
-                Debug.Log($"[Joystick] {_joystick.Direction}");
+                //Debug.Log($"[Joystick] {_joystick.Direction}");
                 OnAxisChanged?.Invoke(_joystick.Direction);
             }
         }
