@@ -11,61 +11,26 @@ namespace Holoi.Library.HoloKitApp.UI
 
         [SerializeField] private TMP_Text _realityName;
 
-        [SerializeField] private Button _hostButton;
-
-        [SerializeField] private Button _playerButton;
-
-        [SerializeField] private Button _puppeteerButton;
-
-        [SerializeField] private Button _spectatorButton;
+        [SerializeField] private Button[] _entranceButtons;
 
         public void Init(Reality reality, int index)
         {
             _realityId.text = "Reality #" + HoloKitAppUtils.IntToStringF3(index);
             _realityName.text = reality.DisplayName;
-            _hostButton.onClick.AddListener(() =>
-            {
-                HoloKitApp.Instance.CurrentReality = reality;
-                HoloKitApp.Instance.EnterRealityAs(true, HoloKitAppPlayerType.Player);
-            });
 
-            if (reality.IsMultiplayerSupported())
+            for (int i = 0; i < reality.RealityEntranceOptions.Count; i++)
             {
-                _playerButton.onClick.AddListener(() =>
+                var entraceOption = reality.RealityEntranceOptions[i];
+                var button = _entranceButtons[i];
+
+                button.GetComponentInChildren<TMP_Text>().text = entraceOption.Text;
+                button.onClick.AddListener(() =>
                 {
                     HoloKitApp.Instance.CurrentReality = reality;
-                    HoloKitApp.Instance.EnterRealityAs(false, HoloKitAppPlayerType.Player);
+                    HoloKitApp.Instance.EnterRealityAs(entraceOption.IsHost,
+                        (HoloKitAppPlayerType)(int)entraceOption.PlayerType,
+                        entraceOption.PlayerTypeSubindex);
                 });
-            }
-            else
-            {
-                _playerButton.interactable = false;
-            }
-
-            if (reality.IsPuppeteerSupported())
-            {
-                _puppeteerButton.onClick.AddListener(() =>
-                {
-                    HoloKitApp.Instance.CurrentReality = reality;
-                    HoloKitApp.Instance.EnterRealityAs(true, HoloKitAppPlayerType.Puppeteer);
-                });
-            }
-            else
-            {
-                _puppeteerButton.interactable = false;
-            }
-
-            if (reality.IsSpectatorViewSupported())
-            {
-                _spectatorButton.onClick.AddListener(() =>
-                {
-                    HoloKitApp.Instance.CurrentReality = reality;
-                    HoloKitApp.Instance.EnterRealityAs(false, HoloKitAppPlayerType.Spectator);
-                });
-            }
-            else
-            {
-                _spectatorButton.interactable = false;
             }
         }
     }

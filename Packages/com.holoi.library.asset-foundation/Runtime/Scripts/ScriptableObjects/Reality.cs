@@ -41,7 +41,7 @@ namespace Holoi.AssetFoundation
 
         public List<RealityTag> RealityTags;
 
-        public List<RealityEntranceOption> RealityEntranceOption;
+        public List<RealityEntranceOption> RealityEntranceOptions;
 
         [TextArea, Tooltip("A description on why this reality needs to use meta avatars")]
         public string MetaAvatarDescription;

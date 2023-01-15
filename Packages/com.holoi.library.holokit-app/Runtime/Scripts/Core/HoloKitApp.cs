@@ -316,7 +316,7 @@ namespace Holoi.Library.HoloKitApp
             HoloKitAppWatchConnectivityAPI.UpdateWatchPanel(HoloKitWatchPanel.None);
         }
 
-        public void EnterRealityAs(bool isMaster, HoloKitAppPlayerType playerType, int playerTypeSubindex = 0)
+        public void EnterRealityAs(bool isHost, HoloKitAppPlayerType playerType, int playerTypeSubindex = 0)
         {
             // Does the Reality we are going to enter need LiDAR?
             if (_currentReality.IsLiDARRequired())
@@ -329,8 +329,9 @@ namespace Holoi.Library.HoloKitApp
                 }
             }
 
-            _isHost = isMaster;
+            _isHost = isHost;
             _localPlayerType = playerType;
+            _localPlayerTypeSubindex = playerTypeSubindex;
             SceneManager.LoadScene(_currentReality.Scene.SceneName, LoadSceneMode.Single);
         }
 

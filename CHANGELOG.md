@@ -23,8 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added version checker [@yuchen]
 
+- Added new reality <MOFA: The Ghost> [@yuchen]
+
 ### Changed
 
+- Changed reality entrance option logic. Instead of using reality tags, now we should explicitly set the reality entrance options for each reality [@yuchen]
 
 ### Removed
 
