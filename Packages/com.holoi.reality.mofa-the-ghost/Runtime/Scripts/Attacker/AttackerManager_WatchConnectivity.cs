@@ -6,13 +6,9 @@ using Holoi.Library.HoloKitApp;
 using Holoi.Library.MOFABase;
 using HoloKit;
 
-namespace Holoi.Reality.MOFATheDucks
+namespace Holoi.Reality.MOFATheGhost
 {
-    /// <summary>
-    /// This part of the SpellManager class is responsible for the communication
-    /// between iPhone and Apple Watch.
-    /// </summary>
-    public partial class SpellManager
+    public partial class AttackerManager
     {
         /// <summary>
         /// The reference of the basic spell the player chose.
@@ -54,7 +50,7 @@ namespace Holoi.Reality.MOFATheDucks
                 {
                     _basicSpell = spell;
                     return;
-                }       
+                }
             }
         }
 

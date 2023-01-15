@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using HoloKit;
+using Holoi.Library.HoloKitApp;
 
 namespace Holoi.Reality.MOFATheGhost
 {
@@ -48,6 +47,20 @@ namespace Holoi.Reality.MOFATheGhost
         /// </summary>
         [ClientRpc]
         public void OnDetectedClientRpc()
+        {
+            Debug.Log("[Ghost] On detected");
+            if (HoloKitApp.Instance.IsPuppeteer)
+            {
+                // TODO: The puppeteer should know its ghost has been detected
+            }
+            else
+            {
+                // Both the observer and the attacker should see the ghost for a period of time
+                OnBeingRevealed();
+            }
+        }
+
+        private void OnBeingRevealed()
         {
 
         }
