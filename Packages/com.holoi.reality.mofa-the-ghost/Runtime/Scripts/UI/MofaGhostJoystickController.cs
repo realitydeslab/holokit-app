@@ -11,6 +11,10 @@ namespace Holoi.Reality.MOFATheGhost.UI
 
         public static event Action<Vector2> OnAxisChanged;
 
+        public static event Action OnInputStarted;
+
+        public static event Action OnInputStopped;
+
         private void Start()
         {
             _joystick = GetComponent<Joystick>();
@@ -24,6 +28,7 @@ namespace Holoi.Reality.MOFATheGhost.UI
                 if (!_isEmptyInput)
                 {
                     _isEmptyInput = true;
+                    OnInputStopped?.Invoke();
                     //OnAxisChanged?.Invoke(_joystick.Direction);
                 }
             }
@@ -32,6 +37,7 @@ namespace Holoi.Reality.MOFATheGhost.UI
                 if (_isEmptyInput)
                 {
                     _isEmptyInput = false;
+                    OnInputStarted?.Invoke();
                 }
                 //Debug.Log($"[Joystick] {_joystick.Direction}");
                 OnAxisChanged?.Invoke(_joystick.Direction);

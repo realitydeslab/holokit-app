@@ -10,17 +10,28 @@ namespace Holoi.Reality.MOFATheGhost
     {
         [SerializeField] private int _maxHealth = 8;
 
+        [SerializeField] private SkinnedMeshRenderer _ghostRenderer;
+
+        [SerializeField] private SkinnedMeshRenderer _weaponRenderer;
+
         public NetworkVariable<int> CurrentHealth = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         private CharacterController _characterController;
 
+        private Animator _animator;
+
         private float _movementSpeed = 0.005f;
 
-        private void Awake()
+        private void Start()
         {
             UI.MofaGhostJoystickController.OnAxisChanged += OnAxisChanged;
+            UI.MofaGhostJoystickController.OnInputStarted += OnInputStartedClientRpc;
+            UI.MofaGhostJoystickController.OnInputStopped += OnInputStoppedClientRpc;
+            if (HoloKitApp.Instance.IsPuppeteer)
+                UI.GhostPlayerUIPanel.OnTriggered += OnUITriggered;
 
             _characterController = GetComponent<CharacterController>();
+            _animator = GetComponentInChildren<Animator>();
         }
 
         public override void OnNetworkSpawn()
@@ -29,6 +40,10 @@ namespace Holoi.Reality.MOFATheGhost
             {
                 CurrentHealth.Value = _maxHealth;
             }
+            else
+            {
+                ChangeToInvisible();
+            }
         }
 
         public override void OnDestroy()
@@ -36,6 +51,10 @@ namespace Holoi.Reality.MOFATheGhost
             base.OnDestroy();
 
             UI.MofaGhostJoystickController.OnAxisChanged -= OnAxisChanged;
+            UI.MofaGhostJoystickController.OnInputStarted -= OnInputStartedClientRpc;
+            UI.MofaGhostJoystickController.OnInputStopped -= OnInputStoppedClientRpc;
+            if (HoloKitApp.Instance.IsPuppeteer)
+                UI.GhostPlayerUIPanel.OnTriggered -= OnUITriggered;
         }
 
         /// <summary>
@@ -53,6 +72,18 @@ namespace Holoi.Reality.MOFATheGhost
             transform.rotation = Quaternion.LookRotation(motion.normalized);
             // Move the ghost
             _characterController.Move(motion);
+        }
+
+        [ClientRpc]
+        private void OnInputStartedClientRpc()
+        {
+            _animator.SetFloat("Velocity", 1);
+        }
+
+        [ClientRpc]
+        private void OnInputStoppedClientRpc()
+        {
+            _animator.SetFloat("Velocity", 0);
         }
 
         /// <summary>
@@ -75,7 +106,8 @@ namespace Holoi.Reality.MOFATheGhost
 
         private void OnBeingRevealed()
         {
-
+            if (!IsServer)
+                ChangeToVisible();
         }
 
         public void OnDamaged(ulong attackerClientId)
@@ -85,7 +117,7 @@ namespace Holoi.Reality.MOFATheGhost
             CurrentHealth.Value--;
             if (CurrentHealth.Value == 0)
             {
-                Debug.Log("Ghost is dead");
+                OnGhostDeadClientRpc();
             }
         }
 
@@ -97,9 +129,55 @@ namespace Holoi.Reality.MOFATheGhost
             OnBeingHit();
         }
 
+        [ClientRpc]
+        private void OnGhostDeadClientRpc()
+        {
+            Debug.Log("Ghost is dead");
+            _animator.SetTrigger("OnDeath");
+        }
+
         private void OnBeingHit()
         {
+            _animator.SetTrigger("OnHit");
+        }
 
+        private void ChangeToVisible()
+        {
+            var ghostMaterial = _ghostRenderer.material;
+            var weaponMaterial = _weaponRenderer.material;
+            LeanTween.value(0f, 1f, 1f)
+                .setOnUpdate((float t) =>
+                {
+                    ghostMaterial.SetFloat("_Alpha", t);
+                    weaponMaterial.SetFloat("_Alpha", t);
+                })
+                .setOnComplete(() =>
+                {
+                    ChangeToInvisible();
+                });
+        }
+
+        private void ChangeToInvisible()
+        {
+            var ghostMaterial = _ghostRenderer.material;
+            var weaponMaterial = _weaponRenderer.material;
+            LeanTween.value(1f, 0f, 1f)
+                .setOnUpdate((float t) =>
+                {
+                    ghostMaterial.SetFloat("_Alpha", t);
+                    weaponMaterial.SetFloat("_Alpha", t);
+                });
+        }
+
+        private void OnUITriggered()
+        {
+            OnAttackClientRpc();
+        }
+
+        [ClientRpc]
+        private void OnAttackClientRpc()
+        {
+            _animator.SetTrigger("Attack");
         }
     }
 }
