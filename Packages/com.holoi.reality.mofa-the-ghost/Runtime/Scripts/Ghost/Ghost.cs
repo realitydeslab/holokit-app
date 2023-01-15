@@ -2,20 +2,33 @@ using UnityEngine;
 using Unity.Netcode;
 using HoloKit;
 using Holoi.Library.HoloKitApp;
+using Holoi.Library.MOFABase;
 
 namespace Holoi.Reality.MOFATheGhost
 {
-    public class Ghost : NetworkBehaviour
+    public class Ghost : NetworkBehaviour, IDamageable
     {
+        [SerializeField] private int _maxHealth = 8;
+
+        public NetworkVariable<int> CurrentHealth = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
         private CharacterController _characterController;
 
-        private float _movementSpeed = 0.01f;
+        private float _movementSpeed = 0.005f;
 
         private void Awake()
         {
             UI.MofaGhostJoystickController.OnAxisChanged += OnAxisChanged;
 
             _characterController = GetComponent<CharacterController>();
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            if (IsServer)
+            {
+                CurrentHealth.Value = _maxHealth;
+            }
         }
 
         public override void OnDestroy()
@@ -61,6 +74,30 @@ namespace Holoi.Reality.MOFATheGhost
         }
 
         private void OnBeingRevealed()
+        {
+
+        }
+
+        public void OnDamaged(ulong attackerClientId)
+        {
+            OnDamagedClientRpc();
+
+            CurrentHealth.Value--;
+            if (CurrentHealth.Value == 0)
+            {
+                Debug.Log("Ghost is dead");
+            }
+        }
+
+        [ClientRpc]
+        private void OnDamagedClientRpc()
+        {
+            Debug.Log("[Ghost] On damaged");
+            OnBeingRevealed();
+            OnBeingHit();
+        }
+
+        private void OnBeingHit()
         {
 
         }
