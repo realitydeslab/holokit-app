@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
@@ -8,54 +10,31 @@ namespace Holoi.Library.HoloKitApp.UI
 
         public override bool OverlayPreviousPanel => true;
 
-        [SerializeField] private GameObject _hostButton;
-
-        [SerializeField] private GameObject _hostPuppeteerButton;
-
-        [SerializeField] private GameObject _hostPlayerButton;
-
-        [SerializeField] private GameObject _playerButton;
-
-        [SerializeField] private GameObject _puppeteerButton;
-
-        [SerializeField] private GameObject _spectatorButton;
+        [SerializeField] private Button[] _entranceButtons;
 
         [SerializeField] private GameObject _spacer;
 
         private void Start()
         {
             var currentReality = HoloKitApp.Instance.CurrentReality;
-            if (currentReality.IsHostPuppeteerSupported())
-            {
-                _hostButton.SetActive(false);
-                _hostPuppeteerButton.SetActive(true);
-            }
-            else
-            {
-                _hostPuppeteerButton.SetActive(false);
-            }
 
-            if (currentReality.IsHostMultiplayerSupported())
+            for (int i = 0; i < _entranceButtons.Length; i++)
             {
-                _hostButton.SetActive(false);
-                _hostPlayerButton.SetActive(true);
-            }
-            else
-            {
-                _hostPlayerButton.SetActive(false);
-            }
+                if (currentReality.RealityEntranceOptions.Count <= i)
+                {
+                    _entranceButtons[i].gameObject.SetActive(false);
+                    continue;
+                }
 
-            if (!HoloKitApp.Instance.CurrentReality.IsMultiplayerSupported())
-            {
-                _playerButton.SetActive(false);
-            }
-            if (!HoloKitApp.Instance.CurrentReality.IsPuppeteerSupported())
-            {
-                _puppeteerButton.SetActive(false);
-            }
-            if (!HoloKitApp.Instance.CurrentReality.IsSpectatorViewSupported())
-            {
-                _spectatorButton.SetActive(false);
+                var entranceOption = currentReality.RealityEntranceOptions[i];
+                var entranceButton = _entranceButtons[i];
+                entranceButton.GetComponentInChildren<TMP_Text>().text = entranceOption.Text;
+                entranceButton.onClick.AddListener(() =>
+                {
+                    HoloKitApp.Instance.EnterRealityAs(entranceOption.IsHost,
+                        (HoloKitAppPlayerType)entranceOption.PlayerType,
+                        entranceOption.PlayerTypeSubindex);
+                });
             }
 
             if (HoloKitApp.Instance.GlobalSettings.GetCompatibleMetaAvatarCollectionList().Count == 0
@@ -72,31 +51,6 @@ namespace Holoi.Library.HoloKitApp.UI
         public void OnBackButtonPressed()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-        }
-
-        public void OnStartHostButtonPressed()
-        {
-            HoloKitApp.Instance.EnterRealityAs(true, HoloKitAppPlayerType.Player);
-        }
-
-        public void OnStartHostPuppeteerButtonPressed()
-        {
-            HoloKitApp.Instance.EnterRealityAs(true, HoloKitAppPlayerType.Puppeteer);
-        }
-
-        public void OnStartNonHostPlayerButtonPressed()
-        {
-            HoloKitApp.Instance.EnterRealityAs(false, HoloKitAppPlayerType.Player);
-        }
-
-        public void OnStartPuppeteerButtonPressed()
-        {
-            HoloKitApp.Instance.EnterRealityAs(false, HoloKitAppPlayerType.Puppeteer);
-        }
-
-        public void OnStartSpectatorButtonPressed()
-        {
-            HoloKitApp.Instance.EnterRealityAs(false, HoloKitAppPlayerType.Spectator);
         }
     }
 }

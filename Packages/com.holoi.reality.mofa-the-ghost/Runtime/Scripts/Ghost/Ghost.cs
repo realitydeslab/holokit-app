@@ -8,7 +8,7 @@ namespace Holoi.Reality.MOFATheGhost
 {
     public class Ghost : NetworkBehaviour, IDamageable
     {
-        [SerializeField] private int _maxHealth = 8;
+        [SerializeField] private int _maxHealth = 20;
 
         [SerializeField] private SkinnedMeshRenderer _ghostRenderer;
 
@@ -21,6 +21,10 @@ namespace Holoi.Reality.MOFATheGhost
         private Animator _animator;
 
         private float _movementSpeed = 0.005f;
+
+        private float _lastAttackTime;
+
+        private const float AttackCD = 8f;
 
         private void Start()
         {
@@ -171,7 +175,12 @@ namespace Holoi.Reality.MOFATheGhost
 
         private void OnUITriggered()
         {
-            OnAttackClientRpc();
+            if (Time.time - _lastAttackTime > AttackCD)
+            {
+                _lastAttackTime = Time.time;
+                OnAttackClientRpc();
+            }
+            
         }
 
         [ClientRpc]
