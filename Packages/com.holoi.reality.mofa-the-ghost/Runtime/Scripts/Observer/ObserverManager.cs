@@ -38,15 +38,15 @@ namespace Holoi.Reality.MOFATheGhost
 
         private void OnUITriggered()
         {
-            SpawnDetectionWaveServerRpc();
+            Transform centerEyePose = HoloKitCamera.Instance.CenterEyePose;
+            SpawnDetectionWaveServerRpc(centerEyePose.position, centerEyePose.rotation);
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void SpawnDetectionWaveServerRpc(ServerRpcParams serverRpcParams = default)
+        private void SpawnDetectionWaveServerRpc(Vector3 centerEyePosition, Quaternion centerEyeRotation, ServerRpcParams serverRpcParams = default)
         {
-            Transform centerEyePose = HoloKitCamera.Instance.CenterEyePose;
-            Vector3 position = centerEyePose.position + centerEyePose.rotation * _waveSpawnOffset;
-            Quaternion rotation = centerEyePose.rotation;
+            Vector3 position = centerEyePosition + centerEyeRotation * _waveSpawnOffset;
+            Quaternion rotation = centerEyeRotation;
 
             // Spawn the detection wave
             var waveInstance = Instantiate(_detectionWavePrefab, position, rotation);
