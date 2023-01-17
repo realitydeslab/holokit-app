@@ -13,9 +13,9 @@ namespace Holoi.Reality.MOFATheDucks
         /// <summary>
         /// The position offset from the center eye to the spawn position of the newly spawned duck.
         /// </summary>
-        [SerializeField] private Vector3 _duckSpawnPositionOffset = new(0f, 0f, 0.3f);
+        private Vector3 _duckSpawnPositionOffset = new(0f, 0f, 0.3f);
 
-        [SerializeField] private Quaternion _duckSpawnRotationOffset = Quaternion.Euler(-45f, 0f, 0f);
+        private Quaternion _duckSpawnRotationOffset = Quaternion.Euler(-45f, 0f, 0f);
 
         private void Start()
         {
@@ -50,7 +50,7 @@ namespace Holoi.Reality.MOFATheDucks
         {
             Transform centerEyePose = HoloKitCamera.Instance.CenterEyePose;
             Vector3 position = centerEyePose.position + centerEyePose.rotation * _duckSpawnPositionOffset;
-            Quaternion rotation = _duckSpawnRotationOffset * centerEyePose.rotation;
+            Quaternion rotation =  centerEyePose.rotation * _duckSpawnRotationOffset;
 
             SpawnDuck(position, rotation);
         }

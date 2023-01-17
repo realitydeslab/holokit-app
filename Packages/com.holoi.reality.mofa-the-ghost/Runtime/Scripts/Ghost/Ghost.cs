@@ -20,7 +20,7 @@ namespace Holoi.Reality.MOFATheGhost
 
         private Animator _animator;
 
-        private float _movementSpeed = 0.005f;
+        private float _movementSpeed = 3f;
 
         private float _lastAttackTime;
 
@@ -71,7 +71,7 @@ namespace Holoi.Reality.MOFATheGhost
             Vector3 horizontalForward = Vector3.ProjectOnPlane(centerEyePose.forward, Vector3.up);
             Vector3 horizontalRight = Vector3.ProjectOnPlane(centerEyePose.right, Vector3.up);
 
-            Vector3 motion = _movementSpeed * (axis.y * horizontalForward + axis.x * horizontalRight);
+            Vector3 motion = _movementSpeed * Time.deltaTime * (axis.y * horizontalForward + axis.x * horizontalRight);
             // Make the ghost heading to the movement direction
             transform.rotation = Quaternion.LookRotation(motion.normalized);
             // Move the ghost

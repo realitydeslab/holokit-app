@@ -11,6 +11,11 @@ namespace Holoi.Reality.MOFATheGhost.UI
 
         public static event Action OnTriggered;
 
+        private void Start()
+        {
+            transform.SetAsFirstSibling();
+        }
+
         public void OnTriggeredFunc()
         {
             OnTriggered?.Invoke();

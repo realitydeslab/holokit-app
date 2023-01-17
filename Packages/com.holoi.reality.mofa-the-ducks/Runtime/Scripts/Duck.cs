@@ -81,5 +81,16 @@ namespace Holoi.Reality.MOFATheDucks
             GetComponent<Rigidbody>().velocity = Vector3.zero;
             OnBeingHit?.Invoke();
         }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (!IsServer)
+                return;
+
+            if (other.CompareTag("Plane"))
+            {
+                OnDamaged(0);
+            }
+        }
     }
 }
