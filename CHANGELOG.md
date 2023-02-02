@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added new ghost assets to <MOFA: The Ghost> [@sizheng]
 
+- Added MOFA Spell: Bath Toy: 01; Electric: 012; Water: 012; Wind: 012 [@sizheng]
+
 ### Changed
 
 - Changed reality entrance option logic. Instead of using reality tags, now we should explicitly set the reality entrance options for each reality [@yuchen]
