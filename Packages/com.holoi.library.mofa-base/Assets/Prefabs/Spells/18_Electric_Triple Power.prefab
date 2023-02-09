@@ -410,10 +410,10 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: Hand Position_position
         m_Overridden: 1
-      - m_Value: {x: 3.2033, y: -1.1751, z: -0.0066755936}
+      - m_Value: {x: 0.203, y: -0.175, z: 0}
         m_Name: Target Position_position
         m_Overridden: 1
-      - m_Value: {x: 3.00328, y: -0.77505994, z: -0.0066755936}
+      - m_Value: {x: 0.0029799938, y: 0.22504008, z: 0}
         m_Name: Init Position_position
         m_Overridden: 1
     m_Vector4f:
@@ -618,10 +618,10 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: Hand Position_position
         m_Overridden: 1
-      - m_Value: {x: 2.80326, y: -1.1751, z: -0.0066755936}
+      - m_Value: {x: -0.19703984, y: -0.17499995, z: 0}
         m_Name: Target Position_position
         m_Overridden: 1
-      - m_Value: {x: 3.2033, y: -1.1751, z: -0.0066755936}
+      - m_Value: {x: 0.203, y: -0.175, z: 0}
         m_Name: Init Position_position
         m_Overridden: 1
     m_Vector4f:
@@ -946,10 +946,10 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: Hand Position_position
         m_Overridden: 1
-      - m_Value: {x: 3.00328, y: -0.77505994, z: -0.0066755936}
+      - m_Value: {x: 0.0029799938, y: 0.22504008, z: 0}
         m_Name: Target Position_position
         m_Overridden: 1
-      - m_Value: {x: 2.80326, y: -1.1751, z: -0.0066755936}
+      - m_Value: {x: -0.19703984, y: -0.17499995, z: 0}
         m_Name: Init Position_position
         m_Overridden: 1
     m_Vector4f:
@@ -2422,7 +2422,6 @@ GameObject:
   - component: {fileID: 6459936479105407840}
   - component: {fileID: 927356304496176712}
   - component: {fileID: 3353843275706138970}
-  - component: {fileID: 7054405510347517685}
   m_Layer: 0
   m_Name: Center Bolt
   m_TagString: Untagged
@@ -2600,26 +2599,6 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!95 &7054405510347517685
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2434541646627202905}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 11258bb8850d7fe41abc7e72eedda6ce, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2824134370577755055
 GameObject:
   m_ObjectHideFlags: 0
@@ -3739,6 +3718,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3839531706683382967}
   - component: {fileID: 2022346092858944358}
+  - component: {fileID: 237126597774181468}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -3784,6 +3764,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &237126597774181468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4053982222243757118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47545e9eafa4a474e83d23a43c41f7be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attackSpell: {fileID: 5726246592477393662}
+  _lifetimeController: {fileID: 5726246592477393660}
+  _animator: {fileID: 2022346092858944358}
 --- !u!1 &4192590528105582684
 GameObject:
   m_ObjectHideFlags: 0
@@ -4912,7 +4907,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5726246592477393636}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.0003, y: -1.0001, z: -0.0066755936}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5073,15 +5068,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f05662b983eb640a782c0cbf2064a7ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Id: 11
-  Name: Fire Fist
-  MagicSchool: {fileID: 11400000, guid: 168b0681ab0a845018b0ac94d5074859, type: 2}
-  SpellType: 0
+  Id: 18
+  Name: Electric Triple Power
+  MagicSchool: {fileID: 11400000, guid: 8dfeacc1063e74bb4bd43f453ecdbd84, type: 2}
+  SpellType: 1
   SpawnOffset: {x: 0, y: 0, z: 0.5}
-  PerpendicularToGround: 0
-  ChargeTime: 1
-  MaxChargeCount: 5
-  MaxUseCount: 999
+  PerpendicularToGround: 1
+  ChargeTime: 2
+  MaxChargeCount: 1
+  MaxUseCount: 10
 --- !u!114 &5726246592477393660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5094,9 +5089,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d2549ca7cef4e1485712e3c7d1663b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lifetime: 3
-  _spawnSound: {fileID: 8300000, guid: 1f4ad740447aa4138bf75ec64f7096b0, type: 3}
-  _destroyDelay: 1
+  _lifetime: 5
+  _spawnSound: {fileID: 8300000, guid: 964632219dd4040f2a80d0ad08e45174, type: 3}
+  _destroyDelay: 2
 --- !u!114 &5726246592477393661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5109,7 +5104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96a8e88bcbb6407490fbf329b443eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 6
+  _speed: 3
 --- !u!114 &5726246592477393662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5123,7 +5118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hitOnce: 1
-  _hitSound: {fileID: 8300000, guid: 76061ff40855f413b9c853ce9e009863, type: 3}
+  _hitSound: {fileID: 8300000, guid: e89bc22d113464a619100202a4ee21d9, type: 3}
   _destroyDelay: 1
 --- !u!1 &6569354620182358726
 GameObject:
@@ -5172,7 +5167,6 @@ GameObject:
   - component: {fileID: 9021925092960713086}
   - component: {fileID: 1254574416486357806}
   - component: {fileID: 4113257756746069174}
-  - component: {fileID: 6696605898025205773}
   m_Layer: 0
   m_Name: Center Bolt
   m_TagString: Untagged
@@ -5350,26 +5344,6 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!95 &6696605898025205773
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7057860398388802894}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 11258bb8850d7fe41abc7e72eedda6ce, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7375696354521491329
 GameObject:
   m_ObjectHideFlags: 0
@@ -6033,7 +6007,6 @@ GameObject:
   - component: {fileID: 294675790468421376}
   - component: {fileID: 746021906220887556}
   - component: {fileID: 2981933971447781406}
-  - component: {fileID: 4495805988336517884}
   m_Layer: 0
   m_Name: Center Bolt
   m_TagString: Untagged
@@ -6211,23 +6184,3 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!95 &4495805988336517884
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9191985578575722304}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 11258bb8850d7fe41abc7e72eedda6ce, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0

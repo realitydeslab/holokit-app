@@ -308,7 +308,7 @@ VisualEffect:
       m_Array: []
     m_NamedObject:
       m_Array:
-      - m_Value: {fileID: -8670151273213183110, guid: f6b0faacc7c4349ef8f403da495c26f6, type: 3}
+      - m_Value: {fileID: 0}
         m_Name: Init Mesh
         m_Overridden: 1
     m_Bool:
@@ -564,8 +564,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47545e9eafa4a474e83d23a43c41f7be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackController: {fileID: 8514985724899720355}
-  _lifeTimeController: {fileID: 8514985724899720352}
+  _attackSpell: {fileID: 0}
+  _lifetimeController: {fileID: 0}
   _animator: {fileID: 1843505982024268640}
 --- !u!95 &1843505982024268640
 Animator:
@@ -744,7 +744,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8514985724899720381}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -926,7 +926,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d2549ca7cef4e1485712e3c7d1663b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Lifetime: 3
+  _lifetime: 0
   _spawnSound: {fileID: 8300000, guid: 54aae184d290a4636a94f02ff03a9107, type: 3}
   _destroyDelay: 1
 --- !u!114 &8514985724899720353
@@ -941,7 +941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96a8e88bcbb6407490fbf329b443eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 5
+  _speed: 0
 --- !u!114 &8514985724899720355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -954,6 +954,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1349d2545f9e94e3299bcb1643e43413, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HitOnce: 1
+  _hitOnce: 1
   _hitSound: {fileID: 0}
   _destroyDelay: 1

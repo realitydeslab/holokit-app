@@ -2280,7 +2280,7 @@ VisualEffect:
           m_Curve:
           - serializedVersion: 3
             time: 0
-            value: 0.5018465
+            value: 0.019444883
             inSlope: -0.061558098
             outSlope: -0.061558098
             tangentMode: 0
@@ -2416,7 +2416,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6007033091548082418}
-  - component: {fileID: 6007033092506682659}
+  - component: {fileID: 734535962076436139}
+  - component: {fileID: 7281590305194660911}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -2442,7 +2443,7 @@ Transform:
   m_Father: {fileID: 6007033093005065971}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &6007033092506682659
+--- !u!95 &734535962076436139
 Animator:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -2462,6 +2463,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &7281590305194660911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6007033091548082417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47545e9eafa4a474e83d23a43c41f7be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attackSpell: {fileID: 6007033092506682662}
+  _lifetimeController: {fileID: 6007033092506682664}
+  _animator: {fileID: 734535962076436139}
 --- !u!1 &6007033091759513356
 GameObject:
   m_ObjectHideFlags: 0
@@ -2622,7 +2638,7 @@ VisualEffect:
           m_Curve:
           - serializedVersion: 3
             time: 0
-            value: 0.5018465
+            value: 0.08776784
             inSlope: -0.061558098
             outSlope: -0.061558098
             tangentMode: 0
@@ -2766,6 +2782,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6007033093005065971}
+  - component: {fileID: 6007033092506682661}
+  - component: {fileID: 6007033092506682660}
+  - component: {fileID: 6007033092506682659}
+  - component: {fileID: 6007033092506682658}
+  - component: {fileID: 6007033092506682665}
+  - component: {fileID: 6007033092506682664}
+  - component: {fileID: 6007033092506682663}
+  - component: {fileID: 6007033092506682662}
   m_Layer: 0
   m_Name: 20_Water_Dragon
   m_TagString: Untagged
@@ -2781,7 +2805,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6007033093005065970}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.30023, y: -1.0001, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2789,6 +2813,211 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &6007033092506682661
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6007033093005065970}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!135 &6007033092506682660
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6007033093005065970}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.3
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!82 &6007033092506682659
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6007033093005065970}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &6007033092506682658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6007033093005065970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &6007033092506682665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6007033093005065970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f05662b983eb640a782c0cbf2064a7ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Id: 20
+  Name: Water Dragon
+  MagicSchool: {fileID: 11400000, guid: d9addceb63637480cbb801b0233af16e, type: 2}
+  SpellType: 1
+  SpawnOffset: {x: 0, y: 0, z: 0.5}
+  PerpendicularToGround: 1
+  ChargeTime: 2
+  MaxChargeCount: 1
+  MaxUseCount: 10
+--- !u!114 &6007033092506682664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6007033093005065970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77d2549ca7cef4e1485712e3c7d1663b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _lifetime: 5
+  _spawnSound: {fileID: 8300000, guid: 964632219dd4040f2a80d0ad08e45174, type: 3}
+  _destroyDelay: 2
+--- !u!114 &6007033092506682663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6007033093005065970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f96a8e88bcbb6407490fbf329b443eba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 3
+--- !u!114 &6007033092506682662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6007033093005065970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1349d2545f9e94e3299bcb1643e43413, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hitOnce: 0
+  _hitSound: {fileID: 8300000, guid: e89bc22d113464a619100202a4ee21d9, type: 3}
+  _destroyDelay: 1
 --- !u!1 &6889431096926311884
 GameObject:
   m_ObjectHideFlags: 0
