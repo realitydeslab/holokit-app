@@ -360,7 +360,6 @@ GameObject:
   - component: {fileID: 1157224900}
   - component: {fileID: 1157224899}
   - component: {fileID: 1157224898}
-  - component: {fileID: 1157224897}
   m_Layer: 0
   m_Name: Plasma 1
   m_TagString: Untagged
@@ -403,17 +402,23 @@ VisualEffect:
       - m_Value: 0
         m_Name: Alive Rate
         m_Overridden: 1
+      - m_Value: 12
+        m_Name: Spawn Rate
+        m_Overridden: 1
     m_Vector2f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 0.1, y: 1}
+        m_Name: Lifetime
+        m_Overridden: 1
     m_Vector3f:
       m_Array:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: Hand Position_position
         m_Overridden: 1
-      - m_Value: {x: 0.203, y: -0.175, z: 0}
+      - m_Value: {x: 3.2033, y: -1.175, z: 0}
         m_Name: Target Position_position
         m_Overridden: 1
-      - m_Value: {x: 0.0029799938, y: 0.22504008, z: 0}
+      - m_Value: {x: 3.0142407, y: -1.2246276, z: 0}
         m_Name: Init Position_position
         m_Overridden: 1
     m_Vector4f:
@@ -427,11 +432,40 @@ VisualEffect:
     m_Uint:
       m_Array: []
     m_Int:
-      m_Array: []
+      m_Array:
+      - m_Value: 128
+        m_Name: Line Spawn Count
+        m_Overridden: 1
     m_Matrix4x4f:
       m_Array: []
     m_AnimationCurve:
-      m_Array: []
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0.79750454
+            inSlope: 0.019207072
+            outSlope: 0.019207072
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0.31414106
+            inSlope: 0.0040214183
+            outSlope: 0.0040214183
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Size Over Life
+        m_Overridden: 1
     m_Gradient:
       m_Array: []
     m_NamedObject:
@@ -493,7 +527,6 @@ MonoBehaviour:
   m_ExecuteInEditor: 1
   m_Bindings:
   - {fileID: 1157224898}
-  - {fileID: 1157224897}
   m_VisualEffect: {fileID: 1157224901}
 --- !u!114 &1157224898
 MonoBehaviour:
@@ -510,21 +543,6 @@ MonoBehaviour:
   m_Property:
     m_Name: Target Position_position
   Target: {fileID: 158746489927932171}
---- !u!114 &1157224897
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1157224895}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Property:
-    m_Name: Init Position_position
-  Target: {fileID: 2005542776329067073}
 --- !u!1 &1383937839
 GameObject:
   m_ObjectHideFlags: 0
@@ -571,7 +589,6 @@ GameObject:
   - component: {fileID: 1640233509}
   - component: {fileID: 1640233508}
   - component: {fileID: 1640233507}
-  - component: {fileID: 1640233506}
   m_Layer: 0
   m_Name: Plasma 1 (1)
   m_TagString: Untagged
@@ -610,18 +627,24 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 12
+        m_Name: Spawn Rate
+        m_Overridden: 1
     m_Vector2f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 0.1, y: 1}
+        m_Name: Lifetime
+        m_Overridden: 1
     m_Vector3f:
       m_Array:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: Hand Position_position
         m_Overridden: 1
-      - m_Value: {x: -0.19703984, y: -0.17499995, z: 0}
+      - m_Value: {x: 2.80326, y: -1.175, z: 0}
         m_Name: Target Position_position
         m_Overridden: 1
-      - m_Value: {x: 0.203, y: -0.175, z: 0}
+      - m_Value: {x: 2.7847223, y: -0.8407508, z: 0}
         m_Name: Init Position_position
         m_Overridden: 1
     m_Vector4f:
@@ -635,7 +658,10 @@ VisualEffect:
     m_Uint:
       m_Array: []
     m_Int:
-      m_Array: []
+      m_Array:
+      - m_Value: 128
+        m_Name: Line Spawn Count
+        m_Overridden: 1
     m_Matrix4x4f:
       m_Array: []
     m_AnimationCurve:
@@ -701,7 +727,6 @@ MonoBehaviour:
   m_ExecuteInEditor: 1
   m_Bindings:
   - {fileID: 1640233507}
-  - {fileID: 1640233506}
   m_VisualEffect: {fileID: 1640233510}
 --- !u!114 &1640233507
 MonoBehaviour:
@@ -718,21 +743,6 @@ MonoBehaviour:
   m_Property:
     m_Name: Target Position_position
   Target: {fileID: 2989494960233834475}
---- !u!114 &1640233506
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1640233504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Property:
-    m_Name: Init Position_position
-  Target: {fileID: 158746489927932171}
 --- !u!1 &1969260444
 GameObject:
   m_ObjectHideFlags: 0
@@ -899,7 +909,6 @@ GameObject:
   - component: {fileID: 1979517339}
   - component: {fileID: 1979517338}
   - component: {fileID: 1979517337}
-  - component: {fileID: 1979517336}
   m_Layer: 0
   m_Name: Plasma 1 (2)
   m_TagString: Untagged
@@ -938,18 +947,24 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 12
+        m_Name: Spawn Rate
+        m_Overridden: 1
     m_Vector2f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 0.1, y: 1}
+        m_Name: Lifetime
+        m_Overridden: 1
     m_Vector3f:
       m_Array:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: Hand Position_position
         m_Overridden: 1
-      - m_Value: {x: 0.0029799938, y: 0.22504008, z: 0}
+      - m_Value: {x: 3.00328, y: -0.7749599, z: 0}
         m_Name: Target Position_position
         m_Overridden: 1
-      - m_Value: {x: -0.19703984, y: -0.17499995, z: 0}
+      - m_Value: {x: 3.183631, y: -0.8106869, z: 0}
         m_Name: Init Position_position
         m_Overridden: 1
     m_Vector4f:
@@ -963,7 +978,10 @@ VisualEffect:
     m_Uint:
       m_Array: []
     m_Int:
-      m_Array: []
+      m_Array:
+      - m_Value: 128
+        m_Name: Line Spawn Count
+        m_Overridden: 1
     m_Matrix4x4f:
       m_Array: []
     m_AnimationCurve:
@@ -1029,7 +1047,6 @@ MonoBehaviour:
   m_ExecuteInEditor: 1
   m_Bindings:
   - {fileID: 1979517337}
-  - {fileID: 1979517336}
   m_VisualEffect: {fileID: 1979517340}
 --- !u!114 &1979517337
 MonoBehaviour:
@@ -1046,21 +1063,6 @@ MonoBehaviour:
   m_Property:
     m_Name: Target Position_position
   Target: {fileID: 2005542776329067073}
---- !u!114 &1979517336
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1979517334}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Property:
-    m_Name: Init Position_position
-  Target: {fileID: 2989494960233834475}
 --- !u!1 &2034010083
 GameObject:
   m_ObjectHideFlags: 0
@@ -4646,7 +4648,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5512172181276205145}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: -0.09}
+  m_LocalPosition: {x: 0, y: 0, z: 0.12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -4885,7 +4887,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5726246592477393646}
   - component: {fileID: 5726246592477393632}
-  - component: {fileID: 1606398190417295481}
+  - component: {fileID: 7075051537070975644}
   - component: {fileID: 5726246592477393633}
   - component: {fileID: 5726246592477393663}
   - component: {fileID: 5726246592477393659}
@@ -4931,19 +4933,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!135 &1606398190417295481
-SphereCollider:
+--- !u!64 &7075051537070975644
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5726246592477393636}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.3
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 2
+  m_Mesh: {fileID: 233704744751673072, guid: 737dcc23e12d940de87309eead359d36, type: 3}
 --- !u!82 &5726246592477393633
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5090,7 +5093,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lifetime: 5
-  _spawnSound: {fileID: 8300000, guid: 964632219dd4040f2a80d0ad08e45174, type: 3}
+  _spawnSound: {fileID: 8300000, guid: 375cc81982ade4f4eb820f768c5b8287, type: 3}
   _destroyDelay: 2
 --- !u!114 &5726246592477393661
 MonoBehaviour:
@@ -5104,7 +5107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96a8e88bcbb6407490fbf329b443eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 3
+  _speed: 3.67
 --- !u!114 &5726246592477393662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5118,7 +5121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hitOnce: 1
-  _hitSound: {fileID: 8300000, guid: e89bc22d113464a619100202a4ee21d9, type: 3}
+  _hitSound: {fileID: 8300000, guid: 50bf919747c7244cbbd564f5bf392663, type: 3}
   _destroyDelay: 1
 --- !u!1 &6569354620182358726
 GameObject:
@@ -5144,7 +5147,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6569354620182358726}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0029799938, y: 0.22504008, z: 0}
+  m_LocalPosition: {x: 0.002979994, y: 0.22504008, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
