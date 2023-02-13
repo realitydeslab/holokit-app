@@ -27,7 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added new ghost assets to <MOFA: The Ghost> [@sizheng]
 
-- Added MOFA Spell: Bath Toy: 01; Electric: 012; Water: 012; Wind: 012 [@sizheng]
+- Added MOFA Spell: Bath Toy: 01; Electric: 012; Water: 012; Wind: 012 to <MOFA: The Duel> [@sizheng]
+
+- Added MOFA Spell: Time Stone: 012 to <MOFA: The Duel> [@sizheng]
 
 ### Changed
 
