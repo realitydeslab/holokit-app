@@ -71,7 +71,7 @@ namespace Holoi.Library.MOFABase
             var bolt = _pool.Dequeue();
             bolt.SetActive(true);
             // Rotation
-            //bolt.transform.LookAt(transform.forward * 5f);
+            bolt.transform.LookAt(transform.forward * 5f);
             // Position
             bolt.transform.position = transform.position + Vector3.up * 1.5f + transform.forward * 1f;
             // Add velocity
