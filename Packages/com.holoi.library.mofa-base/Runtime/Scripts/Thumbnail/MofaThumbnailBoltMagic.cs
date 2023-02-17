@@ -22,7 +22,9 @@ namespace Holoi.Library.MOFABase
         private void OnTriggerEnter(Collider other)
         {
             _animator.SetTrigger("Hit");
-            StartCoroutine(HoloKitAppUtils.WaitAndDo(0.3f, () =>
+            //GetComponent<Rigidbody>().useGravity = false;
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            StartCoroutine(HoloKitAppUtils.WaitAndDo(1f, () =>
             {
                 // Reset animator
                 _animator.Rebind();

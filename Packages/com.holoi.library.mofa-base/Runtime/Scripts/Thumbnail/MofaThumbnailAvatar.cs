@@ -13,6 +13,8 @@ namespace Holoi.Library.MOFABase
 
         [SerializeField] private GameObject _boltPrefab;
 
+        [SerializeField] private Vector3 _boltMagicVelocity = new(0,0,3);
+
         [SerializeField] private float _attackDelay = 0f;
 
         [SerializeField] private float _attackChargeTime = 3f;
@@ -69,11 +71,12 @@ namespace Holoi.Library.MOFABase
             var bolt = _pool.Dequeue();
             bolt.SetActive(true);
             // Rotation
-            bolt.transform.LookAt(transform.forward * 5f);
+            //bolt.transform.LookAt(transform.forward * 5f);
             // Position
             bolt.transform.position = transform.position + Vector3.up * 1.5f + transform.forward * 1f;
             // Add velocity
-            bolt.GetComponent<Rigidbody>().velocity = transform.forward * 3f;
+            bolt.GetComponent<Rigidbody>().velocity = (transform.forward * _boltMagicVelocity.z)  + (transform.up * _boltMagicVelocity.y)
+                + (transform.right * _boltMagicVelocity.x);
         }
 
         #region Animation Event Receivers
