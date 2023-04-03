@@ -75,6 +75,7 @@ namespace Holoi.Reality.MOFATheHunting
 
         private void OnSpawnDragonButtonPressed()
         {
+            Debug.Log("[MofaHuntingRealityManager] OnSpawnDragonButtonPressed()");
             TryGetReady();
         }
 
