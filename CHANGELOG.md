@@ -44,6 +44,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed MOFA: The Hunting UI bug [@yuchen]
 
+- Fixed Quantum Realm UI bug [@yuchen]
+
 
 ## [1.1.0] - 2023-1-7
 
