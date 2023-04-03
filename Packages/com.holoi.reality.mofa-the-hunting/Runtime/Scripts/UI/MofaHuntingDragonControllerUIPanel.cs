@@ -84,6 +84,7 @@ namespace Holoi.Reality.MOFATheHunting.UI
 
         public void OnSpawnDragonButtonPressedFunc()
         {
+            Debug.Log("[MofaHuntingDragonControllerUIPanel] OnSpawnDragonButtonPressedFunc()");
             OnSpawnDragonButtonPressed?.Invoke();
         }
 
