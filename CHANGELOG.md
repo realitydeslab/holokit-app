@@ -42,6 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed JLaser spell causing Watch App to crash bug [@yuchen]
 
+- Fixed MOFA: The Hunting UI bug [@yuchen]
+
 
 ## [1.1.0] - 2023-1-7
 
