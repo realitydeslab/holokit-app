@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed reality entrance option logic. Instead of using reality tags, now we should explicitly set the reality entrance options for each reality [@yuchen]
 
+- Changed reality description for MOFA: The Ducks and MOFA: The Ghost [@yuchen]
+
 ### Removed
 
 
