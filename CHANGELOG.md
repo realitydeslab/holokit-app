@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added MOFA Spell: Time Stone: 012 to <MOFA: The Duel> [@sizheng]
 
+- Added thumbnail prefabs for MOFA: The Ducks and MOFA: The Ghost [@sizheng]
+
 ### Changed
 
 - Changed reality entrance option logic. Instead of using reality tags, now we should explicitly set the reality entrance options for each reality [@yuchen]
