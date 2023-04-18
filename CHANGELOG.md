@@ -39,6 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed reality description for MOFA: The Ducks and MOFA: The Ghost [@yuchen]
 
+- Changed reality videos for MOFA: The Hunting, MOFA: The Ducks and MOFA: The Ghost [@yuchen]
+
 ### Removed
 
 
