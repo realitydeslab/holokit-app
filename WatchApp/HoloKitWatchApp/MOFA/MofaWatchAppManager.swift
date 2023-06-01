@@ -23,6 +23,12 @@ enum MofaMagicSchool: Int {
     case thunder = 1
     case harryPotter = 2
     case jLaser = 4
+    case aceFire = 5
+    case wind = 6
+    case bathToy = 7
+    case electric = 8
+    case water = 9
+    case timeStone = 10
 }
 
 enum MofaWatchState: Int {
