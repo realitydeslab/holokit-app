@@ -48,7 +48,7 @@ namespace Apple.Core
                 string libraryPath = AppleFrameworkUtility.GetPluginLibraryPathForBuildTarget(libraryName, buildTarget);
                 if (string.IsNullOrEmpty(libraryPath))
                 {
-                    Debug.Log($"Failed to locate path for library: {libraryName}");
+                    Debug.LogError($"Failed to locate path for library: {libraryName}");
                 }
                 else
                 {
