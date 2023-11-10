@@ -17,7 +17,7 @@ namespace Apple.PHASE.Editor
 
         readonly Dictionary<BuildTarget, string> _libraryTable = new Dictionary<BuildTarget, string>
         {
-            {BuildTarget.iOS, "AudioPluginPHASE"},
+            {BuildTarget.iOS, "AudioPluginPHASE.a"},
             {BuildTarget.StandaloneOSX, "AudioPluginPHASE.bundle"}
         };
 

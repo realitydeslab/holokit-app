@@ -81,7 +81,8 @@ namespace Apple.Core
 
                 if (!string.IsNullOrEmpty(minOSVersionString))
                 {
-                    infoPlist.root.SetString("LSMinimumSystemVersion", minOSVersionString);
+                    //Remove LSMinimumSystemVersion for App Store Submission
+                    //infoPlist.root.SetString("LSMinimumSystemVersion", minOSVersionString);
                 }
 
                 // Ensure we update keys with our default plist...

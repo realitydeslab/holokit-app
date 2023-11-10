@@ -83,6 +83,8 @@ namespace Apple.Core
 
             var frameworkName = Path.GetFileName(source);
 
+            var destinationFolder = frameworkName.EndsWith(".a") ? "Libraries" : "Frameworks";
+
             if (pbxProject == null)
             {
                 Debug.Log($"CopyAndEmbed no pbxproject file. Not embedding {frameworkName}");
@@ -108,13 +110,13 @@ namespace Apple.Core
                 string relativeTargetCopyName;
                 if (buildTarget == BuildTarget.iOS || buildTarget == BuildTarget.tvOS)
                 {
-                    relativeTargetCopyName = "Frameworks";
+                    relativeTargetCopyName = destinationFolder;
                 }
                 else if (buildTarget == BuildTarget.StandaloneOSX)
                 {
                     if (AppleBuild.IsXcodeGeneratedMac())
                     {
-                        relativeTargetCopyName = $"{Application.productName}/Frameworks";
+                        relativeTargetCopyName = $"{Application.productName}/{destinationFolder}";
                     }
                     else
                     {
@@ -131,22 +133,18 @@ namespace Apple.Core
                 var copyBinaryPath = $"{pathToBuiltProject}/{relativeTargetCopyName}/{Path.GetFileName(source)}";
                 Debug.Log($"CopyAndEmbed putting source file {source} to destination {copyBinaryPath}");
                 Copy(source, copyBinaryPath);
-                fileGuid = pbxProject.AddFile(Path.GetFullPath(copyBinaryPath), $"Frameworks/{frameworkName}", PBXSourceTree.Source);
+                fileGuid = pbxProject.AddFile(Path.GetFullPath(copyBinaryPath), $"{destinationFolder}/{frameworkName}", PBXSourceTree.Source);
             }
             // If it was copied over, just find the GUID for the existing version
             else
             {
                 var expectedInstallPath = source.Substring(source.LastIndexOf(searchString) + searchString.Length);
                 Debug.Log($"CopyAndEmbed - Expected install path for {frameworkName}: {expectedInstallPath}");
-                fileGuid = pbxProject.FindFileGuidByProjectPath(Path.Combine(frameworkName.EndsWith(".a") ? "Libraries" : "Frameworks", expectedInstallPath));
+                fileGuid = pbxProject.FindFileGuidByProjectPath(Path.Combine(destinationFolder, expectedInstallPath));
                 if (string.IsNullOrEmpty(fileGuid))
                 {
-                    fileGuid = pbxProject.FindFileGuidByProjectPath(Path.Combine("Libraries", expectedInstallPath));
-                    if (string.IsNullOrEmpty(fileGuid))
-                    {
-                        Debug.LogError($"CopyAndEmbed expected to find an existing GUID for {frameworkName} at {expectedInstallPath} but could not be found.");
-                        return;
-                    }
+                    Debug.LogError($"CopyAndEmbed expected to find an existing GUID for {frameworkName} at {expectedInstallPath} but could not be found.");
+                    return;
                 }
             }
 
@@ -155,7 +153,9 @@ namespace Apple.Core
             var projectTargetName = buildTarget == BuildTarget.StandaloneOSX ? Application.productName : "Unity-iPhone";
             var targetGuid = buildTarget == BuildTarget.StandaloneOSX ? pbxProject.TargetGuidByName(projectTargetName) : pbxProject.GetUnityMainTargetGuid();
             Debug.Log($"CopyAndEmbed embedding {frameworkName} into target {projectTargetName}");
-            PBXProjectExtensions.AddFileToEmbedFrameworks(pbxProject, targetGuid, fileGuid);
+            if (destinationFolder == "Frameworks") {
+                PBXProjectExtensions.AddFileToEmbedFrameworks(pbxProject, targetGuid, fileGuid);
+            }
         }
 
         /// <summary>
