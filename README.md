@@ -27,7 +27,9 @@ There are some native plugins for this app.
 
 * [HoloKitAppWatchConnectivityNativePlugin] compiles to `Packages/com.holoi.library.holokit-app/Runtime/Plugins/HoloKitAppWatchConnectivity/iOS/libHoloKitAppWatchConnectivityNativePlugin.a`
 
+* [HoloiLibraryPermissionsNativePlugin] compiles to `Packages/com.holoi.library.permissions/Runtime/iOS/libHoloiLibraryPermissionsNativePlugin.a`
+
 [HoloKitAppIOSNative]: https://github.com/holoi/HoloKitAppIOSNative
 [HoloKitAppWatchConnectivityNativePlugin]: https://github.com/holoi/HoloKitAppWatchConnectivityNativePlugin
-
+[HoloiLibraryPermissionsNativePlugin]: https://github.com/holoi/HoloiLibraryPermissionsNativePlugin
 

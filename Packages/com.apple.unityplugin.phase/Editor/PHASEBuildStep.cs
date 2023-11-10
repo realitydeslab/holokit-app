@@ -34,7 +34,7 @@ namespace Apple.PHASE.Editor
                 }
                 else
                 {
-                    //AppleFrameworkUtility.CopyAndEmbed(libraryPath, buildTarget, pathToBuiltTarget, pbxProject);
+                    AppleFrameworkUtility.CopyAndEmbed(libraryPath, buildTarget, pathToBuiltTarget, pbxProject);
                     if (buildTarget == BuildTarget.iOS)
                     {
                         pbxProject.AddFrameworkToProject(pbxProject.GetUnityFrameworkTargetGuid(), "PHASE.framework", false);
