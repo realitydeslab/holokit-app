@@ -17,6 +17,20 @@ namespace Holoi.Library.HoloKitApp.Editor
 
         private const string HealthUpdateUsageDescription = "Workouts tracked by HoloKit app on Apple Watch will be saved to HealthKit.";
 
+        private static int FindBuildPhaseIndex(PBXProject project, string targetGuid, string buildPhaseName) 
+        {
+            var buildPhaseGuids = project.GetAllBuildPhasesForTarget(targetGuid);
+            //find the index of the build phase
+            for (int i = 0; i < buildPhaseGuids.Length; i++)
+            {
+                if (project.GetBuildPhaseName(buildPhaseGuids[i]) == buildPhaseName) 
+                {
+                    return i;
+                }
+            }
+            return buildPhaseGuids.Length;
+        }
+
         // https://github.com/Manurocker95/IronRuby-Test/blob/57f8b66e88d7df2e9bd7936e83777a79427f8e13/Assets/VirtualPhenix/Scripts/Editor/AppleWatch/VP_SetupWatchExtension.cs
         [PostProcessBuild]
         private static void AppleWatchSetup(BuildTarget target, string buildPath)
@@ -34,7 +48,7 @@ namespace Holoi.Library.HoloKitApp.Editor
 
             if (watchAppTargetGuid != null)
             {
-                Debug.Log(watchAppTargetGuid);
+                Debug.Log("Watch App Target exists. GUID: " + watchAppTargetGuid);
             }
             else
             {
@@ -52,7 +66,8 @@ namespace Holoi.Library.HoloKitApp.Editor
             // Prevent duplication
             if (project.GetCopyFilesBuildPhaseByTarget(mainTargetGuid, "Embed Watch Content", "$(CONTENTS_FOLDER_PATH)/Watch", "16") == null)
             {
-                string sectionGuid = project.AddCopyFilesBuildPhase(mainTargetGuid, "Embed Watch Content", "$(CONTENTS_FOLDER_PATH)/Watch", "16");
+                int insertionIndex = FindBuildPhaseIndex(project, mainTargetGuid, "Unity Process symbols for Unity-iPhone");
+                string sectionGuid = project.InsertCopyFilesBuildPhase(insertionIndex, mainTargetGuid, "Embed Watch Content", "$(CONTENTS_FOLDER_PATH)/Watch", "16");
                 project.AddFileToBuildSection(mainTargetGuid, sectionGuid, project.GetTargetProductFileRef(watchAppTargetGuid));
             }
 
