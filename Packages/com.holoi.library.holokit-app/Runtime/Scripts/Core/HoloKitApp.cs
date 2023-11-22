@@ -267,7 +267,7 @@ namespace Holoi.Library.HoloKitApp
             // Initialize NetworkManager
             InitializeNetworkManager();
             // We finally start the network after instantiating all necessary objects
-            MultipeerConnectivityTransport.BundleId = _currentReality.BundleId;
+            MultipeerConnectivityTransport.Instance.SessionId = _currentReality.BundleId;
             if (IsHost)
                 StartHost();
             else

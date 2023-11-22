@@ -63,7 +63,7 @@ namespace Holoi.Library.HoloKitApp
             _cameraToQRCodeOffset = cameraToQRCodeOffset;
             CalculateCameraToScreenCenterOffset();
             HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnARSessionUpdatedFrame_Host;
-            MultipeerConnectivityTransport.StartAdvertising();
+            MultipeerConnectivityTransport.Instance.StartAdvertising();
             _isAdvertising = true;
             OnStartedAdvertising?.Invoke();
         }
@@ -73,7 +73,7 @@ namespace Holoi.Library.HoloKitApp
             if (_isAdvertising)
             {
                 HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnARSessionUpdatedFrame_Host;
-                MultipeerConnectivityTransport.StopAdvertising();
+                MultipeerConnectivityTransport.Instance.StopAdvertising();
                 _timedCameraPoseQueue.Clear();
                 _isAdvertising = false;
                 OnStoppedAdvertising?.Invoke();

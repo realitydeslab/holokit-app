@@ -16,28 +16,28 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
-            MultipeerConnectivityTransport.OnBrowserFoundPeer += OnBrowserFoundPeer;
-            MultipeerConnectivityTransport.OnBrowserLostPeer += OnBrowserLostPeer;
-            MultipeerConnectivityTransport.OnConnectingWithPeer += OnConnectingWithPeer;
+            MultipeerConnectivityTransport.Instance.OnBrowserFoundPeer += OnBrowserFoundPeer;
+            MultipeerConnectivityTransport.Instance.OnBrowserLostPeer += OnBrowserLostPeer;
+            MultipeerConnectivityTransport.Instance.OnConnectingWithPeer += OnConnectingWithPeer;
 
             // Start browsing manually
-            MultipeerConnectivityTransport.StartBrowsing();
+            MultipeerConnectivityTransport.Instance.StartBrowsing();
         }
 
         private void OnDestroy()
         {
-            MultipeerConnectivityTransport.OnBrowserFoundPeer -= OnBrowserFoundPeer;
-            MultipeerConnectivityTransport.OnBrowserLostPeer -= OnBrowserLostPeer;
-            MultipeerConnectivityTransport.OnConnectingWithPeer -= OnConnectingWithPeer;
+            MultipeerConnectivityTransport.Instance.OnBrowserFoundPeer -= OnBrowserFoundPeer;
+            MultipeerConnectivityTransport.Instance.OnBrowserLostPeer -= OnBrowserLostPeer;
+            MultipeerConnectivityTransport.Instance.OnConnectingWithPeer -= OnConnectingWithPeer;
         }
 
-        private void OnBrowserFoundPeer(string hostName)
+        private void OnBrowserFoundPeer(int hostKey, string hostName)
         {
             _hostName = hostName;
             _text.text = $"Found nearby host\n{hostName}...";
         }
 
-        private void OnBrowserLostPeer(string hostName)
+        private void OnBrowserLostPeer(int hostKey, string hostName)
         {
             _text.text = $"Lost nearby host\n{hostName}";
         }
