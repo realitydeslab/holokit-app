@@ -1,0 +1,197 @@
+#import <AVFoundation/AVFoundation.h>
+#import <Photos/Photos.h>
+#import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
+#import <UserNotifications/UserNotifications.h>
+
+typedef enum {
+    CameraPermissionStatusNotDetermined = 0,
+    CameraPermissionStatusRestricted = 1,
+    CameraPermissionStatusDenied = 2,
+    CameraPermissionStatusGranted = 3,
+} CameraPermissionStatus;
+
+typedef enum {
+    MicrophonePermissionStatusNotDetermined = 0,
+    MicrophonePermissionStatusDenied = 1,
+    MicrophonePermissionStatusGranted = 2
+} MicrophonePermissionStatus;
+
+typedef enum {
+    PhotoLibraryPermissionStatusNotDetermined = 0,
+    PhotoLibraryPermissionStatusRestricted = 1,
+    PhotoLibraryPermissionStatusDenied = 2,
+    PhotoLibraryPermissionStatusGranted = 3,
+    PhotoLibraryPermissionStatusLimited = 4
+} PhotoLibraryPermissionStatus;
+
+typedef enum {
+    LocationPermissionStatusNotDetermined = 0,
+    LocationPermissionStatusRestricted = 1,
+    LocationPermissionStatusDenied = 2,
+    LocationPermissionStatusAuthorizedAlways = 3,
+    LocationPermissionStatusAuthorizedWhenInUse = 4,
+    LocationPermissionStatusAuthorized = 5
+} LocationPermissionStatus;
+
+void (*OnRequestCameraPermissionCompleted)(bool) = NULL;
+void (*OnRequestMicrophonePermissionCompleted)(bool) = NULL;
+void (*OnRequestPhotoLibraryAddPermissionCompleted)(int) = NULL;
+void (*OnLocationPermissionStatusChanged)(int) = NULL;
+
+@interface Permissions : NSObject
+
+@end
+
+@interface Permissions() <CLLocationManagerDelegate>
+
+@property (nonatomic, strong) CLLocationManager *locationManager;
+
+@end
+
+@implementation Permissions
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.locationManager = [[CLLocationManager alloc] init];
+        self.locationManager.delegate = self;
+    }
+    return self;
+}
+
++ (id)sharedInstance {
+    static dispatch_once_t onceToken = 0;
+    static id _sharedObject = nil;
+    dispatch_once(&onceToken, ^{
+        _sharedObject = [[self alloc] init];
+    });
+    return _sharedObject;
+}
+
++ (void)openAppSettings {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
+}
+
++ (CameraPermissionStatus)getCameraPermissionStatus {
+    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    return (CameraPermissionStatus)status;
+}
+
++ (void)requestCameraPermission {
+    [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+        if (OnRequestCameraPermissionCompleted != NULL) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                OnRequestCameraPermissionCompleted(granted);
+            });
+        }
+    }];
+}
+
++ (MicrophonePermissionStatus)getMicrophonePermissionStatus {
+    AVAudioSessionRecordPermission status = [[AVAudioSession sharedInstance] recordPermission];
+    return (MicrophonePermissionStatus)status;
+}
+
++ (void)requestMicrophonePermission {
+    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+        if (OnRequestMicrophonePermissionCompleted != NULL) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                OnRequestMicrophonePermissionCompleted(granted);
+            });
+        }
+    }];
+}
+
++ (PhotoLibraryPermissionStatus)getPhotoLibraryAddPermissionStatus {
+    PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatusForAccessLevel:PHAccessLevelAddOnly];
+    return (PhotoLibraryPermissionStatus)status;
+}
+
++ (void)requestPhotoLibraryAddPermission {
+    [PHPhotoLibrary requestAuthorizationForAccessLevel:PHAccessLevelAddOnly handler:^(PHAuthorizationStatus status) {
+        if (OnRequestPhotoLibraryAddPermissionCompleted != NULL) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                OnRequestPhotoLibraryAddPermissionCompleted((int)status);
+            });
+        }
+    }];
+}
+
+- (LocationPermissionStatus)getLocationPermissionStatus {
+    CLAuthorizationStatus status = [self.locationManager authorizationStatus];
+    return (LocationPermissionStatus)status;
+}
+
+- (void)requestLocationWhenInUsePermission {
+    [self.locationManager requestWhenInUseAuthorization];
+}
+
+- (void)requestLocationAlwaysPermission {
+    [self.locationManager requestAlwaysAuthorization];
+}
+
+#pragma mark - CLLocationManagerDelegate
+
+- (void)locationManagerDidChangeAuthorization:(CLLocationManager *)manager {
+    if (OnLocationPermissionStatusChanged != NULL) {
+        CLAuthorizationStatus status = [self.locationManager authorizationStatus];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            OnLocationPermissionStatusChanged((int)status);
+        });
+    }
+}
+
+#pragma mark - Marshalling
+
+void Permissions_Initialize(void (*OnRequestCameraPermissionCompletedDelegate)(bool),
+                            void (*OnRequestMicrophonePermissionCompletedDelegate)(bool),
+                            void (*OnRequestPhotoLibraryAddPermissionCompletedDelegate)(int),
+                            void (*OnLocationPermissionStatusChangedDelegate)(int)) {
+    OnRequestCameraPermissionCompleted = OnRequestCameraPermissionCompletedDelegate;
+    OnRequestMicrophonePermissionCompleted = OnRequestMicrophonePermissionCompletedDelegate;
+    OnRequestPhotoLibraryAddPermissionCompleted = OnRequestPhotoLibraryAddPermissionCompletedDelegate;
+    OnLocationPermissionStatusChanged = OnLocationPermissionStatusChangedDelegate;
+}
+
+int Permissions_GetCameraPermissionStatus(void) {
+    return (int)[Permissions getCameraPermissionStatus];
+}
+
+void Permissions_RequestCameraPermission(void) {
+    [Permissions requestCameraPermission];
+}
+
+int Permissions_GetMicrophonePermissionStatus(void) {
+    return (int)[Permissions getMicrophonePermissionStatus];
+}
+
+void Permissions_RequestMicrophonePermission(void) {
+    [Permissions requestMicrophonePermission];
+}
+
+int Permissions_GetPhotoLibraryAddPermissionStatus(void) {
+    return (int)[Permissions getPhotoLibraryAddPermissionStatus];
+}
+
+void Permissions_RequestPhotoLibraryAddPermission(void) {
+    [Permissions requestPhotoLibraryAddPermission];
+}
+
+int Permissions_GetLocationPermissionStatus(void) {
+    return (int)[[Permissions sharedInstance] getLocationPermissionStatus];
+}
+
+void Permissions_RequestLocationWhenInUsePermission(void) {
+    [[Permissions sharedInstance] requestLocationWhenInUsePermission];
+}
+
+void Permissions_RequestLocationAlwaysPermission(void) {
+    [[Permissions sharedInstance] requestLocationAlwaysPermission];
+}
+
+void Permissions_OpenAppSettings(void) {
+    [Permissions openAppSettings];
+}
+
+@end

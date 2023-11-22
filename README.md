@@ -25,16 +25,20 @@ Each reality is a package.
 There are some native plugins for this app. 
 
 * [HoloKitAppIOSNative] compiles to
-`Packages/com.holoi.library.holokit-app/Runtime/Plugins/HoloKitAppIOSNative/iOS/libHoloKitAppIOSNative.a`
+`Packages/com.holoi.library.holokit-app/Runtime/Plugins/HoloKitAppIOSNative`
 
 * [HoloKitAppWatchConnectivityNativePlugin] compiles to `Packages/com.holoi.library.holokit-app/Runtime/Plugins/HoloKitAppWatchConnectivity/iOS/libHoloKitAppWatchConnectivityNativePlugin.a`
 
-* [HoloiLibraryPermissionsNativePlugin] compiles to `Packages/com.holoi.library.permissions/Runtime/iOS/libHoloiLibraryPermissionsNativePlugin.a`
+* [HoloiLibraryPermissionsNativePlugin] compiles to `Packages/com.holoi.library.permissions`
+
+* [MultipeerConnectivityTransportForNetcodeForGameObjectsNativePlugin] compiles to `Packages/com.holoi.netcode.transport.mpc`
+
+
 
 [HoloKitAppIOSNative]: https://github.com/holoi/HoloKitAppIOSNative
 [HoloKitAppWatchConnectivityNativePlugin]: https://github.com/holoi/HoloKitAppWatchConnectivityNativePlugin
 [HoloiLibraryPermissionsNativePlugin]: https://github.com/holoi/HoloiLibraryPermissionsNativePlugin
-
+[MultipeerConnectivityTransportForNetcodeForGameObjectsNativePlugin]: https://github.com/holoi/MultipeerConnectivityTransportForNetcodeForGameObjectsNativePlugin/
 ### Apple Plugins
 
 We use [Apple Unity Plugins] for CoreHaptics and PHASE. 
