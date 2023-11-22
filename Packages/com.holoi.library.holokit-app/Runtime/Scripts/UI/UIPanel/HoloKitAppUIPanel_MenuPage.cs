@@ -63,7 +63,7 @@ namespace Holoi.Library.HoloKitApp.UI
         public void OnTwitterButtonPressed()
         {
             //Application.OpenURL("https://twitter.com/holokit_io");
-            HoloKitAppIOSNativeAPI.OpenURL("https://twitter.com/holokit_io");
+            HoloKitAppIOSNativeAPI.OpenURL("https://twitter.com/holokit");
         }
 
         public void OnDiscordButtonPressed()
@@ -87,12 +87,13 @@ namespace Holoi.Library.HoloKitApp.UI
         public void OnYoutubeButtonPressed()
         {
             //Application.OpenURL("https://www.youtube.com/channel/UCNLdtATBRfPlKbdsTb1Y-5Q");
-            HoloKitAppIOSNativeAPI.OpenURL("https://www.youtube.com/channel/UCNLdtATBRfPlKbdsTb1Y-5Q");
+            HoloKitAppIOSNativeAPI.OpenURL("https://www.youtube.com/@holokit_io");
         }
 
-        public void OnMirrorButtonPressed()
+        public void OnGithubButtonPressed()
         {
             //Application.OpenURL("https://holokit.io/x/get_it_now/");
+            HoloKitAppIOSNativeAPI.OpenURL("https://github.com/holoi");
         }
     }
 }
