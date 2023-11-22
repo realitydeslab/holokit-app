@@ -89,18 +89,62 @@ void (*OnLocationPermissionStatusChanged)(int) = NULL;
 }
 
 + (MicrophonePermissionStatus)getMicrophonePermissionStatus {
-    AVAudioSessionRecordPermission status = [[AVAudioSession sharedInstance] recordPermission];
-    return (MicrophonePermissionStatus)status;
+    if (@available(iOS 17.0, *)) {
+        AVAudioApplicationRecordPermission status = [[AVAudioApplication sharedInstance] recordPermission];
+        MicrophonePermissionStatus microphoneStatus = 0;
+        switch (status) {
+            case AVAudioApplicationRecordPermissionUndetermined:
+                microphoneStatus = MicrophonePermissionStatusNotDetermined;
+                break;
+            case AVAudioApplicationRecordPermissionGranted:
+                microphoneStatus = MicrophonePermissionStatusGranted;
+                break;
+            case AVAudioApplicationRecordPermissionDenied:
+                microphoneStatus = MicrophonePermissionStatusDenied;
+                break;
+            default:
+                break;
+        }
+        return (MicrophonePermissionStatus) microphoneStatus;
+    } else {
+        AVAudioSessionRecordPermission status = [[AVAudioSession sharedInstance] recordPermission];
+        NSLog(@"NSLog AVAudioSessionRecordPermission %ld", (long)((MicrophonePermissionStatus)status));
+        MicrophonePermissionStatus microphoneStatus = 0;
+        switch (status) {
+            case AVAudioSessionRecordPermissionUndetermined:
+                microphoneStatus = MicrophonePermissionStatusNotDetermined;
+                break;
+            case AVAudioSessionRecordPermissionGranted:
+                microphoneStatus = MicrophonePermissionStatusGranted;
+                break;
+            case AVAudioSessionRecordPermissionDenied:
+                microphoneStatus = MicrophonePermissionStatusDenied;
+                break;
+            default:
+                break;
+        }
+        return (MicrophonePermissionStatus) microphoneStatus;
+    }
 }
 
 + (void)requestMicrophonePermission {
-    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
-        if (OnRequestMicrophonePermissionCompleted != NULL) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                OnRequestMicrophonePermissionCompleted(granted);
-            });
-        }
-    }];
+    if (@available(iOS 17.0, *)) {
+        [AVAudioApplication requestRecordPermissionWithCompletionHandler: ^(BOOL granted) {
+            if (OnRequestMicrophonePermissionCompleted != NULL) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    OnRequestMicrophonePermissionCompleted(granted);
+                });
+            }
+        }];
+    } else {
+        [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+            if (OnRequestMicrophonePermissionCompleted != NULL) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    OnRequestMicrophonePermissionCompleted(granted);
+                });
+            }
+        }];
+    }
 }
 
 + (PhotoLibraryPermissionStatus)getPhotoLibraryAddPermissionStatus {
