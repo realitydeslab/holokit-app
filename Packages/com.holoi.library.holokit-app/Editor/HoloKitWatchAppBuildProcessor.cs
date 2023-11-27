@@ -35,6 +35,12 @@ namespace Holoi.Library.HoloKitApp.Editor
         [PostProcessBuild]
         private static void AppleWatchSetup(BuildTarget target, string buildPath)
         {
+            if (!Directory.Exists("WatchApp"))
+            {
+                Debug.LogWarning("WatchApp folder not found. Skipping Apple Watch setup.");
+                return;
+            }
+
             string packageName = UnityEngine.Application.identifier;
 
             PBXProject project = new();
@@ -49,6 +55,7 @@ namespace Holoi.Library.HoloKitApp.Editor
             if (watchAppTargetGuid != null)
             {
                 Debug.Log("Watch App Target exists. GUID: " + watchAppTargetGuid);
+                return;
             }
             else
             {
