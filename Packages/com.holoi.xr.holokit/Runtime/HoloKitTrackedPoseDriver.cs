@@ -161,9 +161,9 @@ namespace HoloKit
         //     }
         // }
 
-#if UNITY_IOS
         private void UpdateHeadTrackerPose()
         {
+#if UNITY_IOS && !UNITY_EDITOR
             float[] positionArr = new float[3];
             float[] rotationArr = new float[4];
 
@@ -173,6 +173,7 @@ namespace HoloKit
 
             transform.position = position;
             transform.rotation = rotation;
+#endif
         }
 
         [DllImport("__Internal", EntryPoint = "HoloKit_LowLatencyTracking_init")]
@@ -195,6 +196,5 @@ namespace HoloKit
 
         [DllImport("__Internal", EntryPoint = "HoloKit_LowLatencyTracking_delete")]
         static extern void Delete(IntPtr self);
-#endif
     }
 }
