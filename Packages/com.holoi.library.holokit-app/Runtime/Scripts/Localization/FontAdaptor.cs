@@ -12,11 +12,7 @@ namespace Holoi.Library.HoloKitApp.Localization
     {
         [SerializeField] private TMP_FontAsset _englishFont;
 
-        [SerializeField] private TMP_FontAsset _chineseFont;
-
         private const string EnglishCode = "en";
-
-        private const string ChineseCode = "zh-Hans";
 
         private void Start()
         {
@@ -26,9 +22,6 @@ namespace Holoi.Library.HoloKitApp.Localization
             {
                 case EnglishCode:
                     tmpText.font = _englishFont;
-                    break;
-                case ChineseCode:
-                    tmpText.font = _chineseFont;
                     break;
             }
         }
