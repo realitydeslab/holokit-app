@@ -3,23 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace Holoi.Reality.Typography
+public class AudioVfxController : MonoBehaviour
 {
-    public class AudioVfxController : MonoBehaviour
+    public AudioProcess audioProcess;
+
+    VisualEffect vfx;
+    // Start is called before the first frame update
+    void Start()
     {
-        public AudioProcess audioProcess;
+        vfx = GetComponent<VisualEffect>();
+    }
 
-        VisualEffect vfx;
-        // Start is called before the first frame update
-        void Start()
-        {
-            vfx = GetComponent<VisualEffect>();
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            vfx.SetFloat("Amplitude", audioProcess.DbValue);
-        }
+    // Update is called once per frame
+    void Update()
+    {
+        vfx.SetFloat("Amplitude", audioProcess.DbValue);
     }
 }
