@@ -5,7 +5,7 @@ using Unity.Netcode;
 
 namespace Holoi.Reality.MyFirstReality
 {
-    public class CubeController : NetworkBehaviour
+    public class MovingCubeNetworkController : NetworkBehaviour
     {
         private void Update()
         {
