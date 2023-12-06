@@ -9,9 +9,10 @@ namespace Holoi.Reality.MyFirstReality
     {
         private void Update()
         {
-            if (IsSpawned && !IsServer)
+            if (IsSpawned && IsHost)
             {
-                transform.position += new Vector3(0.001f, 0f, 0f);
+                // Move the cube in sine wave
+                transform.position = new Vector3(Mathf.Sin(Time.time), transform.position.y, transform.position.z);
             }
         }
     }

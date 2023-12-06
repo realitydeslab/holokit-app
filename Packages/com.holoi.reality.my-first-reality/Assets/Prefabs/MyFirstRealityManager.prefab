@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 1072407930396316059}
   - component: {fileID: 1072407930396316058}
   - component: {fileID: -299816657718855068}
+  - component: {fileID: 1088754808135877396}
+  - component: {fileID: 5097832676539783809}
   m_Layer: 0
   m_Name: MyFirstRealityManager
   m_TagString: Untagged
@@ -25,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1072407930396316061}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1072407930396316058
 MonoBehaviour:
@@ -45,8 +47,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
+  GlobalObjectIdHash: 386187906
   AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
 --- !u!114 &-299816657718855068
@@ -61,6 +67,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8526e8f34784e491c8881eaed9bfd481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NetworkPrefabs: []
+--- !u!114 &1088754808135877396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072407930396316061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4ed510440403498f8353bc5bfc1ddd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerPrefab: {fileID: 0}
+  NetworkPrefabs:
+  - {fileID: 1220708651965413441, guid: 070d93705e0c248449188c9d85d9d813, type: 3}
   UIPanelPrefabs: []
-  _urpAsset: {fileID: 0}
+  UIRealitySettingTabPrefabs: []
+  UrpAsset: {fileID: 0}
+  SyncPlayerPoseByDefault: 0
+--- !u!114 &5097832676539783809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072407930396316061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5762bb1147c8c435b8bc8be8cc690884, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
