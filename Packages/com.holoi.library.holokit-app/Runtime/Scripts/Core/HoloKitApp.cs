@@ -195,26 +195,27 @@ namespace Holoi.Library.HoloKitApp
         #region Reality Scene Management
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
-            if (IsRealityScene(scene))
-            {
-                InitializeRealityScene();
-            }
-            else if (scene.name.Equals("Start"))
+            if (scene.name.Equals("Start"))
             {
                 UIPanelManager.OnStartSceneLoaded();
                 SetUrpAssetForUI();
+            } else if (scene.name.Equals("NoLiDAR")) {
+
+            }
+            else {
+                InitializeRealityScene();
             }
         }
 
         private void OnSceneUnloaded(Scene scene)
         {
-            if (IsRealityScene(scene))
-            {
-                DeinitializeRealityScene();
-            }
-            else if (scene.name.Equals("NoLiDAR"))
+            if (scene.name.Equals("NoLiDAR"))
             {
                 DeinitializeARSession();
+            } else if (scene.name.Equals("Start")) {
+
+            } else {        
+                DeinitializeRealityScene(); 
             }
         }
 

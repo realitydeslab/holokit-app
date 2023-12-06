@@ -228,8 +228,9 @@ namespace Holoi.Library.HoloKitApp
 
         private void Update()
         {
-            if (_arOcclusionManager)
-                Debug.Log($"Occlusion status: {_arOcclusionManager.enabled} {_arOcclusionManager.requestedEnvironmentDepthMode} {_arOcclusionManager.requestedHumanStencilMode}");
+            if (_arOcclusionManager) {
+                //Debug.Log($"Occlusion status: {_arOcclusionManager.enabled} {_arOcclusionManager.requestedEnvironmentDepthMode} {_arOcclusionManager.requestedHumanStencilMode}");
+            }
         }
 
         private void OnHoloKitRenderModeChanged(HoloKitRenderMode renderMode)
