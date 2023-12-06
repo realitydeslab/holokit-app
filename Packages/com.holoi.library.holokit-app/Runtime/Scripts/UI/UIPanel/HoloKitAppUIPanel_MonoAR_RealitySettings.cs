@@ -69,7 +69,7 @@ namespace Holoi.Library.HoloKitApp.UI
             _currentTab.transform.SetParent(transform);
             var tabRectTransform = _currentTab.GetComponent<RectTransform>();
             tabRectTransform.anchoredPosition = new(0f, _tabSelectorRoot.sizeDelta.y);
-            GetComponent<RectTransform>().sizeDelta = new(ScreenWidth, _tabSelectorRoot.sizeDelta.y + tabRectTransform.sizeDelta.y);
+            //GetComponent<RectTransform>().sizeDelta = new(ScreenWidth, Mathf.Max(_tabSelectorRoot.sizeDelta.y, tabRectTransform.sizeDelta.y));
         }
 
         private void UnselectAllTabSelectors()
