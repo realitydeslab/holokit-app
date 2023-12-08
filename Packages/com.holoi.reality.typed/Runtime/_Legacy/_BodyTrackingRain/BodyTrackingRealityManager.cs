@@ -10,46 +10,46 @@ using UnityEngine.XR.ARSubsystems;
 
 namespace Holoi.Reality.Typography
 {
-    public class BodyTrackingRealityManager : RealityManager
-    {
-        [Header("AR Base Objects")]
-        [SerializeField] Transform _centerEye;
+    // public class BodyTrackingRealityManager : RealityManager
+    // {
+    //     [Header("AR Base Objects")]
+    //     [SerializeField] Transform _centerEye;
 
-        public bool IsBodyValid = false;
-        bool _isFirstTimeFindBody = false;
+    //     public bool IsBodyValid = false;
+    //     bool _isFirstTimeFindBody = false;
 
-        public override void OnNetworkSpawn()
-        {
-            base.OnNetworkSpawn();
-        }
+    //     public override void OnNetworkSpawn()
+    //     {
+    //         base.OnNetworkSpawn();
+    //     }
 
-        private void Start()
-        {
-            if(_centerEye == null) _centerEye = HoloKitCamera.Instance.CenterEyePose;
-        }
+    //     private void Start()
+    //     {
+    //         if(_centerEye == null) _centerEye = HoloKitCamera.Instance.CenterEyePose;
+    //     }
 
-        private void Update()
-        {
-            if (FindObjectOfType<BoneController>() != null)
-            {
-                if (!_isFirstTimeFindBody)
-                {
-                    IsBodyValid = true;
-                    //_phaseManager.PlayPhaseSource();
-                    _isFirstTimeFindBody = true;
-                }
-                else
-                {
-                    IsBodyValid = true;
-                }
+    //     private void Update()
+    //     {
+    //         if (FindObjectOfType<BoneController>() != null)
+    //         {
+    //             if (!_isFirstTimeFindBody)
+    //             {
+    //                 IsBodyValid = true;
+    //                 //_phaseManager.PlayPhaseSource();
+    //                 _isFirstTimeFindBody = true;
+    //             }
+    //             else
+    //             {
+    //                 IsBodyValid = true;
+    //             }
 
-            }
-            else
-            {
-                Debug.Log("not found a body");
-                IsBodyValid = false;
-                //_phaseManager.StopPhaseSource();
-            }
-        }
-    }
+    //         }
+    //         else
+    //         {
+    //             Debug.Log("not found a body");
+    //             IsBodyValid = false;
+    //             //_phaseManager.StopPhaseSource();
+    //         }
+    //     }
+    // }
 }

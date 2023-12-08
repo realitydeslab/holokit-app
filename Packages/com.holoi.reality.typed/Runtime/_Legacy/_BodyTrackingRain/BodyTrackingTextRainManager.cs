@@ -9,49 +9,49 @@ using Holoi.Library.ARUX;
 
 namespace Holoi.Reality.Typography
 {
-    public class BodyTrackingTextRainManager : MonoBehaviour
-    {
+    // public class BodyTrackingTextRainManager : MonoBehaviour
+    // {
         
-        Transform _head;
-        Transform _rightHand;
-        Transform _leftHand;
+    //     Transform _head;
+    //     Transform _rightHand;
+    //     Transform _leftHand;
 
-        BoneController _bone;
+    //     BoneController _bone;
 
-        VisualEffect _vfxCloud;
+    //     VisualEffect _vfxCloud;
 
-        [Header("vfx rain")]
-        VisualEffect _vfxRain;
+    //     [Header("vfx rain")]
+    //     VisualEffect _vfxRain;
 
-        bool _isValid = false;
+    //     bool _isValid = false;
 
-        void Start()
-        {
-            _vfxCloud = GetComponent<VisualEffect>();
-            _vfxRain = transform.GetChild(0).GetComponent<VisualEffect>();
-        }
+    //     void Start()
+    //     {
+    //         _vfxCloud = GetComponent<VisualEffect>();
+    //         _vfxRain = transform.GetChild(0).GetComponent<VisualEffect>();
+    //     }
 
-        void Update()
-        {
-            if (FindObjectOfType<BodyTrackingRealityManager>().IsBodyValid)
-            {
-                _isValid = true;
-                _bone = FindObjectOfType<BoneController>();
-            }
+    //     void Update()
+    //     {
+    //         if (FindObjectOfType<BodyTrackingRealityManager>().IsBodyValid)
+    //         {
+    //             _isValid = true;
+    //             _bone = FindObjectOfType<BoneController>();
+    //         }
 
-            if (_isValid)
-            {
-                _vfxCloud.enabled = true;
-                _vfxRain.enabled = true;
+    //         if (_isValid)
+    //         {
+    //             _vfxCloud.enabled = true;
+    //             _vfxRain.enabled = true;
 
-                GetComponent<FollowMovementManager>().FollowTarget = _bone.skeletonRoot;
-                GetComponent<FollowMovementManager>().enabled = true;
-                _vfxRain.SetVector3("Head Position_position", _bone.SkeletonNeck1.position);
-                _vfxRain.SetVector3("Chest Position_position", _bone.SkeletonChest.position);
-                _vfxRain.SetVector3("RH Position_position", _bone.SkeletonRightHand.position);
-                _vfxRain.SetVector3("LH Position_position", _bone.SkeletonLeftHand.position);
-                _vfxRain.SetVector3("Plane Position_position", FindObjectOfType<ARRayCastController>().transform.position);
-            }
-        }
-    }
+    //             GetComponent<FollowMovementManager>().FollowTarget = _bone.skeletonRoot;
+    //             GetComponent<FollowMovementManager>().enabled = true;
+    //             _vfxRain.SetVector3("Head Position_position", _bone.SkeletonNeck1.position);
+    //             _vfxRain.SetVector3("Chest Position_position", _bone.SkeletonChest.position);
+    //             _vfxRain.SetVector3("RH Position_position", _bone.SkeletonRightHand.position);
+    //             _vfxRain.SetVector3("LH Position_position", _bone.SkeletonLeftHand.position);
+    //             _vfxRain.SetVector3("Plane Position_position", FindObjectOfType<ARRayCastController>().transform.position);
+    //         }
+    //     }
+    // }
 }

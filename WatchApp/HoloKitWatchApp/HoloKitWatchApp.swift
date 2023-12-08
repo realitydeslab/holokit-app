@@ -1,9 +1,6 @@
-//
-//  HoloKitAppApp.swift
-//  HoloKitApp Watch App
-//
-//  Created by Yuchen Zhang on 2022/10/6.
-//
+// SPDX-FileCopyrightText: Copyright 2023 Holo Interactive <dev@holoi.com>
+// SPDX-FileContributor: Yuchen Zhang <yuchen@holoi.com>
+// SPDX-License-Identifier: MIT
 
 import SwiftUI
 
