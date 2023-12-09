@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
-    public class HoloKitAppUIPanel_TestRealityList : HoloKitAppUIPanel
+    public class HoloKitAppUIPanel_RealityPlainListPage : HoloKitAppUIPanel
     {
-        public override string UIPanelName => "TestRealityList";
+        public override string UIPanelName => "RealityPlainListPage";
 
         public override bool OverlayPreviousPanel => true;
 
@@ -24,7 +24,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
 
             int realityIndex = 0;
-            foreach (var reality in HoloKitApp.Instance.GlobalSettings.TestRealityList.List)
+            foreach (var reality in HoloKitApp.Instance.GlobalSettings.RealityList.List)
             {
                 realityIndex++;
                 var realitySlotInstance = Instantiate(_realitySlotPrefab);

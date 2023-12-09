@@ -25,9 +25,9 @@ namespace Holoi.Library.HoloKitApp
     [CreateAssetMenu(menuName = "ScriptableObjects/HoloKitAppGlobalSettings")]
     public class HoloKitAppGlobalSettings : ScriptableObject
     {
-        public RealityList RealityList;
+        public HoloKitAppConfig AppConfig;
 
-        public RealityList TestRealityList;
+        public RealityList RealityList;
 
         public MetaAvatarCollectionList AvatarCollectionList;
 
@@ -332,7 +332,6 @@ namespace Holoi.Library.HoloKitApp
         public List<Reality> GetAllRealities()
         {
             List<Reality> wholeList = new(RealityList.List);
-            wholeList.AddRange(TestRealityList.List);
             wholeList = wholeList.Distinct().ToList();
             return wholeList;
         }

@@ -114,19 +114,9 @@ namespace Holoi.Library.HoloKitApp.UI
         public void OnStartSceneLoaded()
         {
             // If this is the first time entering the App?
-            if (HoloKitApp.Instance.Test)
+            if (_uiPanelStack.Peek().UIPanelName.Equals("LandingPage"))
             {
-                if (_uiPanelStack.Peek().UIPanelName.Equals("TestRealityList"))
-                {
-                    return;
-                }
-            }
-            else
-            {
-                if (_uiPanelStack.Peek().UIPanelName.Equals("LandingPage"))
-                {
-                    return;
-                }
+                return;
             }
 
             while (!_uiPanelStack.Peek().UIPanelName.Equals("MonoAR") && !_uiPanelStack.Peek().UIPanelName.Equals("MonoAR_NoLiDAR"))
@@ -136,7 +126,7 @@ namespace Holoi.Library.HoloKitApp.UI
             // Pop MonoAR panel or MonoAR_NoLiDAR panel
             PopUIPanel();
 
-            if (!HoloKitApp.Instance.Test)
+            if (HoloKitApp.Instance.GlobalSettings.AppConfig.GalleryViewEnabled)
             {
                 // Pop Reality preferences page panel
                 PopUIPanel();

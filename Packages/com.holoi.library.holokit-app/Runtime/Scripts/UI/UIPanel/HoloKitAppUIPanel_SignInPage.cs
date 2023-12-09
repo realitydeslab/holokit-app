@@ -20,6 +20,12 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
+            if (!HoloKitApp.Instance.GlobalSettings.AppConfig.UserAccountSystemEnabled)
+            {
+                Authentication_OnSignedIn();
+                return;
+            }
+
             HoloKitAppUserAccountManager.SIWA_OnQuickLogin += SIWA_OnQuickLogin;
             HoloKitAppUserAccountManager.SIWA_OnSignInWithApple += SIWA_OnSignInWithApple;
             HoloKitAppUserAccountManager.SIWA_OnSignInFailed += SIWA_OnSignInFailed;
@@ -86,7 +92,10 @@ namespace Holoi.Library.HoloKitApp.UI
         private void Authentication_OnSignedIn()
         {
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
-            HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityListPage");
+            if (HoloKitApp.Instance.GlobalSettings.AppConfig.GalleryViewEnabled)
+                HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityGalleryPage");
+            else
+                HoloKitApp.Instance.UIPanelManager.PushUIPanel("RealityPlainListPage");
         }
 
         private void Authentication_OnSignInFailed()

@@ -56,10 +56,6 @@ namespace Holoi.Library.HoloKitApp
         [Header("Version")]
         [SerializeField] private string _currentVersionNumber;
 
-        [Header("Debug")]
-        [Tooltip("Set this to true to enable Test Mode. Under test mode, the TestRealityList will be loaded")]
-        [SerializeField] private bool _testMode;
-
         [Tooltip("Set this to true to disable all Unity logs")]
         [SerializeField] private bool _logEnabled = true;
 
@@ -91,8 +87,6 @@ namespace Holoi.Library.HoloKitApp
         public int LocalPlayerTypeSubindex => _localPlayerTypeSubindex;
 
         public string CurrentVersionNumber => _currentVersionNumber;
-
-        public bool Test => _testMode;
 
         public HoloKitAppUserAccountManager UserAccountManager => _userAccountManager;
 
@@ -143,18 +137,9 @@ namespace Holoi.Library.HoloKitApp
             // Push the initial UIPanel
             if (!IsRealityScene(SceneManager.GetActiveScene()))
             {
-                // Push initial UI panel
-                if (_testMode)
-                {
-                    // Load test page
-                    UIPanelManager.PushUIPanel("TestRealityList");
-                }
-                else
-                {
-                    // Load landing page
-                    UIPanelManager.PushUIPanel("LandingPage");
-                }
+                UIPanelManager.PushUIPanel("LandingPage");
             }
+
             // Initialize HoloKit SDK
             if (HoloKitUtils.IsRuntime)
             {

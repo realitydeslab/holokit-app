@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Holoi.Library.HoloKitApp.UI
 {
-    public class HoloKitAppUIComponent_RealityListPage_AnimatedArrow : MonoBehaviour
+    public class HoloKitAppUIComponent_RealityGalleryPage_AnimatedArrow : MonoBehaviour
     {
         [SerializeField] private GameObject _arrow;
 

@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: Copyright 2023 Holo Interactive <dev@holoi.com>
 // SPDX-FileContributor: Yuchen Zhang <yuchen@holoi.com>
+// SPDX-FileContributor: Botao Amber Hu <botao@holoi.com>
 // SPDX-License-Identifier: MIT
 
 using UnityEngine;
@@ -31,24 +32,28 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
-            // Logo
-            _logoImage.color = new Color(1f, 1f, 1f, 0f);
-            LeanTween.alpha(_logoImage.rectTransform, 1f, LogoAppearTime)
-                .setEase(LeanTweenType.easeInOutSine);
-
-            // Slogan
-            _sloganImage.color = new Color(1f, 1f, 1f, 0f);
-            LeanTween.alpha(_sloganImage.rectTransform, 1f, SloganAppearTime)
-                .setEase(LeanTweenType.easeInOutSine);
-
-            // Headset
-            LeanTween.moveY(_headsetImage.rectTransform, HeadsetEndPosY, HeadsetMovementDuration)
-                .setEase(LeanTweenType.easeSpring);
-
-            StartCoroutine(HoloKitAppUtils.WaitAndDo(PageDuration, () =>
-            {
+            if (!HoloKitApp.Instance.GlobalSettings.AppConfig.LandingPageEnabled) {
                 LoadPermissionPage();
-            }));
+            } else {
+                // Logo
+                _logoImage.color = new Color(1f, 1f, 1f, 0f);
+                LeanTween.alpha(_logoImage.rectTransform, 1f, LogoAppearTime)
+                    .setEase(LeanTweenType.easeInOutSine);
+
+                // Slogan
+                _sloganImage.color = new Color(1f, 1f, 1f, 0f);
+                LeanTween.alpha(_sloganImage.rectTransform, 1f, SloganAppearTime)
+                    .setEase(LeanTweenType.easeInOutSine);
+
+                // Headset
+                LeanTween.moveY(_headsetImage.rectTransform, HeadsetEndPosY, HeadsetMovementDuration)
+                    .setEase(LeanTweenType.easeSpring);
+
+                StartCoroutine(HoloKitAppUtils.WaitAndDo(PageDuration, () =>
+                {
+                    LoadPermissionPage();
+                }));
+            }
         }
 
         private void LoadPermissionPage()

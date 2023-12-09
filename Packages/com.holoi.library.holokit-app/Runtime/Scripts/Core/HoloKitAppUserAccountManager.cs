@@ -16,23 +16,29 @@ namespace Holoi.Library.HoloKitApp
         /// </summary>
         [SerializeField] private bool _clearSessionToken = false;
 
-        private async void Awake()
+        private async void Start()
         {
-            // UGS can still be initialied when there is no network connection
-            await UnityServices.InitializeAsync();
-            Analytics_Init();
-            SIWA_Init();
-            Authentication_Init();
+            if (HoloKitApp.Instance.GlobalSettings.AppConfig?.UserAccountSystemEnabled == true) {
+                // UGS can still be initialied when there is no network connection
+                await UnityServices.InitializeAsync();
+                Analytics_Init();
+                SIWA_Init();
+                Authentication_Init();
+            }
         }
 
         private void OnDestroy()
         {
-            Analytics_Deinit();
+            if (HoloKitApp.Instance.GlobalSettings.AppConfig?.UserAccountSystemEnabled == true) {
+                Analytics_Deinit();
+            }
         }
 
         private void Update()
         {
-            SIWA_Update();
+            if (HoloKitApp.Instance.GlobalSettings.AppConfig?.UserAccountSystemEnabled == true) {
+                SIWA_Update();
+            }
         }
     }
 }
