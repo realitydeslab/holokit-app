@@ -2,6 +2,7 @@
 // SPDX-FileContributor: Sizheng Hao <sizheng@holoi.com>
 // SPDX-License-Identifier: MIT
 
+#if APPLE_CORE_HAPTICS_ENABLED
 using UnityEngine;
 using Apple.CoreHaptics;
 using HoloKit;
@@ -38,3 +39,4 @@ namespace Holoi.Library.ARUX
         }
     }
 }
+#endif

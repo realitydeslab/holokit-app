@@ -17,6 +17,7 @@ namespace Holoi.Library.HoloKitApp.Editor
             if (target != BuildTarget.iOS)
                 return;
 
+        #if APPLE_SIGNIN_ENABLED && UNITY_IOS
             var projectPath = PBXProject.GetPBXProjectPath(path);
             var project = new PBXProject();
             project.ReadFromFile(projectPath);
@@ -28,6 +29,7 @@ namespace Holoi.Library.HoloKitApp.Editor
             var manager = new ProjectCapabilityManager(projectPath, entitlementFileName, null, project.GetUnityMainTargetGuid());
             manager.AddSignInWithAppleWithCompatibility(project.GetUnityFrameworkTargetGuid());
             manager.WriteToFile();
+        #endif
         }
     }
 }

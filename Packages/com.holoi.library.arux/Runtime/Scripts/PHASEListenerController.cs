@@ -2,6 +2,7 @@
 // SPDX-FileContributor: Sizheng Hao <sizheng@holoi.com>
 // SPDX-License-Identifier: MIT
 
+#if APPLE_PHASE_ENABLED
 using UnityEngine;
 using Apple.PHASE;
 using HoloKit;
@@ -40,3 +41,4 @@ namespace Holoi.Library.ARUX
         }
     }
 }
+#endif
