@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import <UserNotifications/UserNotifications.h>
+#include <Availability.h>
 
 typedef enum {
     CameraPermissionStatusNotDetermined = 0,
@@ -111,7 +112,9 @@ void (*OnLocationPermissionStatusChanged)(int) = NULL;
                 break;
         }
         return (MicrophonePermissionStatus) microphoneStatus;
-    } else {
+    } 
+    #if TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MIN_REQUIRED && __IPHONE_OS_VERSION_MIN_REQUIRED < 170000 || TARGET_OS_OSX && __MAC_OS_X_VERSION_MIN_REQUIRED && __MAC_OS_X_VERSION_MIN_REQUIRED < 140000
+    else {
         AVAudioSessionRecordPermission status = [[AVAudioSession sharedInstance] recordPermission];
         NSLog(@"NSLog AVAudioSessionRecordPermission %ld", (long)((MicrophonePermissionStatus)status));
         MicrophonePermissionStatus microphoneStatus = 0;
@@ -130,6 +133,7 @@ void (*OnLocationPermissionStatusChanged)(int) = NULL;
         }
         return (MicrophonePermissionStatus) microphoneStatus;
     }
+    #endif
 }
 
 + (void)requestMicrophonePermission {
@@ -141,7 +145,9 @@ void (*OnLocationPermissionStatusChanged)(int) = NULL;
                 });
             }
         }];
-    } else {
+    } 
+    #if TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MIN_REQUIRED && __IPHONE_OS_VERSION_MIN_REQUIRED < 170000 || TARGET_OS_OSX && __MAC_OS_X_VERSION_MIN_REQUIRED && __MAC_OS_X_VERSION_MIN_REQUIRED < 140000
+    else {
         [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
             if (OnRequestMicrophonePermissionCompleted != NULL) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -150,6 +156,7 @@ void (*OnLocationPermissionStatusChanged)(int) = NULL;
             }
         }];
     }
+    #endif
 }
 
 + (PhotoLibraryPermissionStatus)getPhotoLibraryAddPermissionStatus {
