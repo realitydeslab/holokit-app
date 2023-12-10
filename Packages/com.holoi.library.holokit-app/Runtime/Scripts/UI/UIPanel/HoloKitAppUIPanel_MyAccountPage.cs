@@ -5,7 +5,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_SERVICES_CORE_ENABLED
 using Unity.Services.CloudSave;
+#endif
 using TMPro;
 
 namespace Holoi.Library.HoloKitApp.UI
@@ -40,6 +42,7 @@ namespace Holoi.Library.HoloKitApp.UI
         // Try fetching the user's email in the cloud
         private async void FetchAppleUserEmail()
         {
+        #if UNITY_SERVICES_CORE_ENABLED
             // We can only fetch from cloud if the user has already signed in
             if (!HoloKitApp.Instance.UserAccountManager.IsSignedIn)
             {
@@ -70,6 +73,7 @@ namespace Holoi.Library.HoloKitApp.UI
                 _appleIdEmailText.text = "Connection failed";
                 return;
             }
+        #endif 
         }
     }
 }

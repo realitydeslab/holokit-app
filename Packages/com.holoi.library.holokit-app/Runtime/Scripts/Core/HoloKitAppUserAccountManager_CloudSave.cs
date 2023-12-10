@@ -2,6 +2,7 @@
 // SPDX-FileContributor: Yuchen Zhang <yuchen@holoi.com>
 // SPDX-License-Identifier: MIT
 
+#if UNITY_SERVICES_CORE_ENABLED
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -65,3 +66,4 @@ namespace Holoi.Library.HoloKitApp
         }
     }
 }
+#endif

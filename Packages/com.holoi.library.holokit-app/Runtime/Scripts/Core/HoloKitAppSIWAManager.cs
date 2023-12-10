@@ -2,6 +2,8 @@
 // SPDX-FileContributor: Yuchen Zhang <yuchen@holoi.com>
 // SPDX-License-Identifier: MIT
 
+#if APPLE_SIGNIN_ENABLED
+
 using System;
 using System.Linq;
 using System.Text;
@@ -204,3 +206,4 @@ namespace Holoi.Library.HoloKitApp
         }
     }
 }
+#endif

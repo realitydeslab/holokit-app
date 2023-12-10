@@ -2,6 +2,8 @@
 // SPDX-FileContributor: Yuchen Zhang <yuchen@holoi.com>
 // SPDX-License-Identifier: MIT
 
+#if APPLE_SIGNIN_ENABLED
+
 using System;
 using System.Text;
 using UnityEngine;
@@ -142,7 +144,9 @@ namespace Holoi.Library.HoloKitApp
                     HoloKitAppAnalyticsEventManager.FireEvent_OnPlayerRegistered(appleUserEmail, appleUserName);
 
                 // Sign in with Unity Authentication using Apple identity token
+                #if UNITY_SERVICES_CORE_ENABLED
                 Authentication_SignInWithApple(identityToken);
+                #endif
 
                 // Deinitialize SIWA since we no longer need it
                 SIWA_Deinit();
@@ -150,3 +154,4 @@ namespace Holoi.Library.HoloKitApp
         }
     }
 }
+#endif

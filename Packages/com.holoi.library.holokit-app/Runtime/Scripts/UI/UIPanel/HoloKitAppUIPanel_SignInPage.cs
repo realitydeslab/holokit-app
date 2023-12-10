@@ -20,42 +20,58 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void Start()
         {
+        #if !APPLE_SIGNIN_ENABLED 
+            Authentication_OnSignedIn();
+            return;
+        #endif
             if (!HoloKitApp.Instance.GlobalSettings.AppConfig.UserAccountSystemEnabled)
             {
                 Authentication_OnSignedIn();
                 return;
             }
 
+        #if APPLE_SIGNIN_ENABLED
             HoloKitAppUserAccountManager.SIWA_OnQuickLogin += SIWA_OnQuickLogin;
             HoloKitAppUserAccountManager.SIWA_OnSignInWithApple += SIWA_OnSignInWithApple;
             HoloKitAppUserAccountManager.SIWA_OnSignInFailed += SIWA_OnSignInFailed;
+        #endif
+        #if UNITY_SERVICES_CORE_ENABLED
             HoloKitAppUserAccountManager.Authentication_OnSignInWithCachedUser += Authentication_OnSignInWithCachedUser;
             HoloKitAppUserAccountManager.Authentication_OnSignInWithApple += Authentication_OnSignInWithApple;
             HoloKitAppUserAccountManager.Authentication_OnSignedIn += Authentication_OnSignedIn;
             HoloKitAppUserAccountManager.Authentication_OnSignInFailed += Authentication_OnSignInFailed;
+        #endif 
 
+        #if APPLE_SIGNIN_ENABLED && UNITY_SERVICES_CORE_ENABLED
             if (HoloKit.HoloKitUtils.IsRuntime)
                 HoloKitApp.Instance.UserAccountManager.Authentication_AttemptAutoLogin();
             else
                 SIWA_OnSignInFailed();
+        #endif
         }
 
         private void OnDestroy()
         {
+        #if APPLE_SIGNIN_ENABLED
             HoloKitAppUserAccountManager.SIWA_OnQuickLogin -= SIWA_OnQuickLogin;
             HoloKitAppUserAccountManager.SIWA_OnSignInWithApple -= SIWA_OnSignInWithApple;
             HoloKitAppUserAccountManager.SIWA_OnSignInFailed -= SIWA_OnSignInFailed;
+        #endif 
+        #if UNITY_SERVICES_CORE_ENABLED
             HoloKitAppUserAccountManager.Authentication_OnSignInWithCachedUser -= Authentication_OnSignInWithCachedUser;
             HoloKitAppUserAccountManager.Authentication_OnSignInWithApple -= Authentication_OnSignInWithApple;
             HoloKitAppUserAccountManager.Authentication_OnSignedIn -= Authentication_OnSignedIn;
             HoloKitAppUserAccountManager.Authentication_OnSignInFailed -= Authentication_OnSignInFailed;
+        #endif
         }
 
         public void OnSIWAButtonPressed()
         {
+        #if APPLE_SIGNIN_ENABLED
             if (HoloKit.HoloKitUtils.IsRuntime)
                 HoloKitApp.Instance.UserAccountManager.SIWA_SignInWithApple();
             else
+        #endif
                 Authentication_OnSignedIn();
         }
 
