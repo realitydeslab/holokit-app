@@ -2,8 +2,6 @@
 // SPDX-FileContributor: Sizheng Hao <sizheng@holoi.com>
 // SPDX-License-Identifier: MIT
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
