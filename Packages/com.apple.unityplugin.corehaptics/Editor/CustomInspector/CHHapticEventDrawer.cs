@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using UnityPickers;
 using System.Linq;
 
 /// <summary>
@@ -98,9 +97,9 @@ public class CHHapticEventDrawer : PropertyDrawer {
                 if (eventType == CHHapticEventType.AudioCustom) {
                     var waveRect = new Rect(pos.x, pos.y + lines * 1.25f * EditorGUIUtility.singleLineHeight, pos.width, pos.height);
 
-                    AssetPicker.PropertyField(waveRect, serializedWave, fieldInfo, new GUIContent(_customAudioLabel), typeof(UnityEngine.Object),
-                        he => he.Path.Contains("StreamingAssets")
-                        && CHHapticAudioCustomEvent.SupportedAudioExtensions.Any(he.Path.EndsWith));
+                    // AssetPicker.PropertyField(waveRect, serializedWave, fieldInfo, new GUIContent(_customAudioLabel), typeof(UnityEngine.Object),
+                    //     he => he.Path.Contains("StreamingAssets")
+                    //     && CHHapticAudioCustomEvent.SupportedAudioExtensions.Any(he.Path.EndsWith));
 
                     if (!(serializedWave.objectReferenceValue is null)) {
                         var wavePath = AssetDatabase.GetAssetPath(serializedWave.objectReferenceValue);
