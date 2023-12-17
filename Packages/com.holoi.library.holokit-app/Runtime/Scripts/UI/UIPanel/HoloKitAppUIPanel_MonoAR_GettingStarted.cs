@@ -49,7 +49,7 @@ namespace Holoi.Library.HoloKitApp.UI
             }
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitApp.Instance.UIPanelManager.PushUIPanel("StarAR", HoloKitAppUICanvasType.StAR);
-            HoloKitCamera.Instance.OpenStereoWithoutNFC("SomethingForNothing");
+            HoloKitCameraManager.Instance.OpenStereoWithoutNFC("SomethingForNothing");
         }
     }
 }

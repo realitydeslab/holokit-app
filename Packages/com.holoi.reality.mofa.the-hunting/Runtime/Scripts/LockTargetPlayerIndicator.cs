@@ -18,7 +18,7 @@ namespace Holoi.Reality.MOFA.TheHunting
         private void LateUpdate()
         {
             // The pose visualizer should always look at the local camera.
-            transform.LookAt(HoloKit.HoloKitCamera.Instance.CenterEyePose);
+            transform.LookAt(HoloKit.HoloKitCameraManager.Instance.CenterEyePose);
             if (MofaPlayer != null)
             {
                 transform.position = MofaPlayer.transform.position + Offset;

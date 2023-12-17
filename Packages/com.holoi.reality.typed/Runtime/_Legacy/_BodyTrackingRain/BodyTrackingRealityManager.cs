@@ -25,7 +25,7 @@ namespace Holoi.Reality.Typography
 
     //     private void Start()
     //     {
-    //         if(_centerEye == null) _centerEye = HoloKitCamera.Instance.CenterEyePose;
+    //         if(_centerEye == null) _centerEye = HoloKitCameraManager.Instance.CenterEyePose;
     //     }
 
     //     private void Update()

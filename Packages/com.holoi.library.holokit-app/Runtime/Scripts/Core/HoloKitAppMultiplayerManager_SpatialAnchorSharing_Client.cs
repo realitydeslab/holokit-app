@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: Copyright 2023 Holo Interactive <dev@holoi.com>
 // SPDX-FileContributor: Yuchen Zhang <yuchen@holoi.com>
+// SPDX-FileContributor: Botao Amber Hu <botao@holoi.com>
 // SPDX-License-Identifier: MIT
 
 using System;
@@ -264,8 +265,8 @@ namespace Holoi.Library.HoloKitApp
                 var q = o.ClientImagePosition - clientImagePositionCenter;
                 var r = Matrix4x4.Rotate(o.HostImageRotation).transpose * Matrix4x4.Rotate(o.ClientImageRotation);
 
-                var a = p.x * q.x + p.z * q.z + OptimizationPenaltyConstant * (r.m00 + r.m22);
-                var b = -p.x * q.z + p.z * q.x + OptimizationPenaltyConstant * (-r.m20 + r.m02);
+                    var a = p.x * q.x + p.z * q.z + OptimizationPenaltyConstant * (r.m00 + r.m22);
+                    var b = -p.x * q.z + p.z * q.x + OptimizationPenaltyConstant * (-r.m20 + r.m02);
                 return new Vector2(a, b);
             }).Aggregate(Vector2.zero, (r, o) => r + o);
 

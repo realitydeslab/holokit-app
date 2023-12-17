@@ -2,7 +2,7 @@
   "name": "com.holoi.xr.holokit",
   "displayName": "HoloKit SDK",
   "version": "1.0.0",
-  "unity": "2021.3",
+  "unity": "2023.2",
   "description": "Provides stereoscopic rendering and several Apple native integrations for development of Unity projects on HoloKit.\n\nIncludes the following features:\n-Stereoscopic Rendering\n-Apple Vision Hand Tracking\n-Lite Hand Tracking using Human Segmentation\n-NFC Authentication\n\nHoloKit SDK is compatible with ARFoundation.",
   "keywords": [
     "holokit",
@@ -16,35 +16,33 @@
   ],
   "author": {
     "name": "Holo Interactive",
-    "email": "yuchen@holoi.com",
+    "email": "dev@holoi.com",
     "url": "https://holoi.com"
   },
   "dependencies": {
-    "com.unity.xr.arfoundation": "5.0.0-pre.13",
-    "com.unity.xr.arkit": "5.0.0-pre.13",
-    "com.unity.xr.management": "4.2.0",
-    "com.unity.render-pipelines.universal": "12.1.7"
+    "com.unity.xr.arfoundation": "5.1.1",
+    "com.unity.xr.arkit": "5.1.1",
+    "com.unity.xr.management": "4.4.0",
+    "com.unity.xr.hands": "1.3.0",
+    "com.unity.ugui": "2.0.0",
+    "com.unity.inputsystem": "1.7.0",
+    "com.unity.xr.interaction.toolkit": "2.5.2"
   },
   "hideInEditor": false,
   "samples": [
     {
       "displayName": "Stereoscopic Rendering",
       "description": "Contains sample code on how to setup stereoscopic rendering",
-      "path": "Samples~/SamplesStAR"
-    },
-    {
-      "displayName": "Hand Tracking",
-      "description": "Contains sample code on how to setup Apple Vision hand tracking (this algorithm is extremyly energy consuming and not recommended for long time usage)",
-      "path": "Samples~/SamplesHandTracking"
-    },
-    {
-      "displayName": "Lite Hand Tracking",
-      "description": "Contains sample code on how to setup an alternative low energy comsuming but less precise hand tracking algorithm",
-      "path": "Samples~/SamplesLiteHandTracking"
+      "path": "Samples~/StereoRendering"
     }
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/holoi/com.holoi.xr.holokit.git"
+    "url": "https://github.com/holokit/holokit-unity-sdk.git"
+  },
+  "_upm": {
+    "supportedPlatforms": [
+      "iOS"
+    ]
   }
 }

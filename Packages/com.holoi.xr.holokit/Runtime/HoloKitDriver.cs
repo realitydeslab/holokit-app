@@ -16,6 +16,7 @@ namespace HoloKit
 
         private void Awake()
         {
+            // Check whether the current device is supported by HoloKit
             DontDestroyOnLoad(gameObject);
             if (HoloKitUtils.IsRuntime)
             {

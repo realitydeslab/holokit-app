@@ -20,9 +20,9 @@ namespace Holoi.Reality.Typed.TheDuck
         {
             duckInstance = Instantiate(DuckPrefab);
             duckInstance.transform.position =
-                HoloKit.HoloKitCamera.Instance.CenterEyePose.position
-                + HoloKit.HoloKitCamera.Instance.CenterEyePose.forward * 1f
-                - HoloKit.HoloKitCamera.Instance.CenterEyePose.up * 0.5f;
+                HoloKit.HoloKitCameraManager.Instance.CenterEyePose.position
+                + HoloKit.HoloKitCameraManager.Instance.CenterEyePose.forward * 1f
+                - HoloKit.HoloKitCameraManager.Instance.CenterEyePose.up * 0.5f;
             duckInstance.GetComponent<Rigidbody>().useGravity = false;
         }
 
@@ -43,7 +43,7 @@ namespace Holoi.Reality.Typed.TheDuck
             var fixedYSpeed = Remap(length, 0, 600, 0, DuckMaxSpeed.y, true);
             var fixedXSpeed = Remap(length, 0, 600, 0, DuckMaxSpeed.x, true);
 
-            duckInstance.GetComponent<Rigidbody>().velocity = -direction * fixedYSpeed + HoloKit.HoloKitCamera.Instance.CenterEyePose.forward * fixedXSpeed;
+            duckInstance.GetComponent<Rigidbody>().velocity = -direction * fixedYSpeed + HoloKit.HoloKitCameraManager.Instance.CenterEyePose.forward * fixedXSpeed;
         }
 
         float Remap(float x, float inMin, float inMax, float outMin, float outMax, bool clamp = false)

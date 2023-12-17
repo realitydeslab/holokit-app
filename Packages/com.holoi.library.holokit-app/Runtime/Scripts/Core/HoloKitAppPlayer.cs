@@ -111,7 +111,7 @@ namespace Holoi.Library.HoloKitApp
             if (_parentConstraint != null)
             {
                 ConstraintSource constraintSource = new();
-                constraintSource.sourceTransform = HoloKitCamera.Instance.CenterEyePose;
+                constraintSource.sourceTransform = HoloKitCameraManager.Instance.CenterEyePose;
                 constraintSource.weight = 1f;
                 _parentConstraint.AddSource(constraintSource);
                 _parentConstraint.weight = 1f;
@@ -159,7 +159,7 @@ namespace Holoi.Library.HoloKitApp
         /// <returns>Distance in meters</returns>
         public float GetDistanceToLocalPlayer()
         {
-            return Vector3.Distance(HoloKitCamera.Instance.CenterEyePose.position, transform.position);
+            return Vector3.Distance(HoloKitCameraManager.Instance.CenterEyePose.position, transform.position);
         }
     }
 }

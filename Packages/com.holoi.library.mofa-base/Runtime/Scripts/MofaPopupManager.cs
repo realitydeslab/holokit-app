@@ -56,7 +56,7 @@ namespace Holoi.Library.MOFABase
             _currentPopup.transform.SetParent(_fightingPanelRoot);
             _currentPopup.transform.localPosition = Vector3.zero;
             _currentPopup.transform.localRotation = Quaternion.identity;
-            float scale = HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono ? 1f : PopupStarScale;
+            float scale = HoloKitCameraManager.Instance.RenderMode == HoloKitRenderMode.Mono ? 1f : PopupStarScale;
             _currentPopup.transform.localScale = new Vector3(scale, scale, scale);
         }
 
@@ -71,7 +71,7 @@ namespace Holoi.Library.MOFABase
             _currentPopup.transform.SetParent(_fightingPanelRoot);
             _currentPopup.transform.localPosition = Vector3.zero;
             _currentPopup.transform.localRotation = Quaternion.identity;
-            float scale = HoloKitCamera.Instance.RenderMode == HoloKitRenderMode.Mono ? 1f : PopupStarScale;
+            float scale = HoloKitCameraManager.Instance.RenderMode == HoloKitRenderMode.Mono ? 1f : PopupStarScale;
             _currentPopup.transform.localScale = new Vector3(scale, scale, scale);
 
             yield return new WaitForSeconds(destroyDelay);

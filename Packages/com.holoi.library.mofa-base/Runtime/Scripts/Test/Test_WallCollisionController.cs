@@ -11,8 +11,8 @@ namespace Holoi.Library.MOFABase.Test
     {
         private void Start()
         {
-            transform.position = HoloKitCamera.Instance.CenterEyePose.position + 8f * HoloKitCamera.Instance.CenterEyePose.forward;
-            transform.LookAt(HoloKitCamera.Instance.CenterEyePose);
+            transform.position = HoloKitCameraManager.Instance.CenterEyePose.position + 8f * HoloKitCameraManager.Instance.CenterEyePose.forward;
+            transform.LookAt(HoloKitCameraManager.Instance.CenterEyePose);
 
             Vector3 rotationEuler = transform.rotation.eulerAngles;
             transform.rotation = Quaternion.Euler(rotationEuler.x, rotationEuler.y, 0f);

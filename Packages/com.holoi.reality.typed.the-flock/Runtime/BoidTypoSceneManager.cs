@@ -40,7 +40,7 @@ namespace Holoi.Reality.Typed.TheFlock
         private void Start()
         {
             _raycastManager = GetComponent<ARRaycastManager>();
-             //_centerEye = HoloKitCamera.Instance.CenterEyePose;
+             //_centerEye = HoloKitCameraManager.Instance.CenterEyePose;
 
             _vfx = _boid.GetComponent<VisualEffect>();
             _vfx.enabled = true;
@@ -66,7 +66,7 @@ namespace Holoi.Reality.Typed.TheFlock
         /// </summary>
         private void UpdateBoidCenter()
         {
-            Vector3 horizontalForward = GetHorizontalForward(HoloKitCamera.Instance.CenterEyePose);
+            Vector3 horizontalForward = GetHorizontalForward(HoloKitCameraManager.Instance.CenterEyePose);
 
             Vector3 rayOrigin = _centerEye.position;
 

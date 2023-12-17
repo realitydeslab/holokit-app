@@ -41,7 +41,7 @@ namespace Holoi.Library.MOFABase
                 _hookVFX.gameObject.SetActive(true);
                 _placementVFX.gameObject.SetActive(true);
 
-                var centerEyePose = HoloKit.HoloKitCamera.Instance.CenterEyePose;
+                var centerEyePose = HoloKit.HoloKitCameraManager.Instance.CenterEyePose;
                 var pos = new Vector3(centerEyePose.position.x, _hitPoint.position.y, centerEyePose.position.z);
                 var direction = (_hitPoint.position - pos).normalized;
 

@@ -276,7 +276,7 @@ namespace Holoi.Library.HoloKitApp
             // Set VideoEnhancementMode in HoloKitSDK
             if (GlobalSettings.HighResHDREnabled && _localPlayerType == HoloKitAppPlayerType.Spectator)
             {
-                HoloKitCamera.Instance.VideoEnhancementMode = VideoEnhancementMode.HighResWithHDR;
+                HoloKitCameraManager.Instance.VideoEnhancementMode = VideoEnhancementMode.HighResWithHDR;
             }
             return;
         }

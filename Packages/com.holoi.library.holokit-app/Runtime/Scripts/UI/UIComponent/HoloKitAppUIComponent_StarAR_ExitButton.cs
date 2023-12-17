@@ -29,7 +29,7 @@ namespace Holoi.Library.HoloKitApp.UI
         {
             base.OnTriggerred();
             HoloKitApp.Instance?.UIPanelManager.PopUIPanel();
-            HoloKitCamera.Instance.RenderMode = HoloKitRenderMode.Mono;
+            HoloKitCameraManager.Instance.RenderMode = HoloKitRenderMode.Mono;
         }
     }
 }

@@ -9,12 +9,12 @@ public class ARShadowedPlane : MonoBehaviour
 
     private void OnEnable()
     {
-        HoloKitCamera.OnHoloKitRenderModeChanged += OnRenderModeChanged;
+        HoloKitCameraManager.OnHoloKitRenderModeChanged += OnRenderModeChanged;
     }
 
     private void OnDisable()
     {
-        HoloKitCamera.OnHoloKitRenderModeChanged -= OnRenderModeChanged;
+        HoloKitCameraManager.OnHoloKitRenderModeChanged -= OnRenderModeChanged;
     }
 
     void Start()

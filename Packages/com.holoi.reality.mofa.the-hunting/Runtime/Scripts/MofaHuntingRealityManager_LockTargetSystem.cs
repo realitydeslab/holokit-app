@@ -79,7 +79,7 @@ namespace Holoi.Reality.MOFA.TheHunting
                     if (touch.phase == TouchPhase.Began)
                     {
                         // Raycast any LockTargetPlayerIndicator
-                        Ray ray = HoloKitCamera.Instance.GetComponent<Camera>().ScreenPointToRay(touch.position);
+                        Ray ray = HoloKitCameraManager.Instance.GetComponent<Camera>().ScreenPointToRay(touch.position);
                         if (Physics.Raycast(ray, out var hit))
                         {
                             if (hit.transform.CompareTag("Lock Target Player Indicator"))

@@ -46,7 +46,7 @@ namespace Holoi.Reality.Typed.TheForce
         }
         private void Start()
         {
-            _centerEye = HoloKitCamera.Instance.CenterEyePose;
+            _centerEye = HoloKitCameraManager.Instance.CenterEyePose;
         }
 
         private void Update()

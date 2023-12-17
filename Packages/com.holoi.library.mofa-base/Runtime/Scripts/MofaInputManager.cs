@@ -236,7 +236,7 @@ namespace Holoi.Library.MOFABase
         private void CastBasicSpell()
         {
             _mofaBaseRealityManager.SpawnSpellServerRpc(_basicSpell.Id,
-                HoloKitCamera.Instance.CenterEyePose.position,
+                HoloKitCameraManager.Instance.CenterEyePose.position,
                 GetCameraGravitationalRotation(),
                 NetworkManager.Singleton.LocalClientId);
             _basicSpellCharge -= _basicSpell.ChargeTime;
@@ -263,7 +263,7 @@ namespace Holoi.Library.MOFABase
         private void CastSecondarySpell()
         {
             _mofaBaseRealityManager.SpawnSpellServerRpc(_secondarySpell.Id,
-                HoloKitCamera.Instance.CenterEyePose.position,
+                HoloKitCameraManager.Instance.CenterEyePose.position,
                 GetCameraGravitationalRotation(),
                 NetworkManager.Singleton.LocalClientId);
             _secondarySpellCharge = 0f;
@@ -272,7 +272,7 @@ namespace Holoi.Library.MOFABase
 
         private Quaternion GetCameraGravitationalRotation()
         {
-            Vector3 cameraRotationEuler = HoloKitCamera.Instance.CenterEyePose.rotation.eulerAngles;
+            Vector3 cameraRotationEuler = HoloKitCameraManager.Instance.CenterEyePose.rotation.eulerAngles;
             return Quaternion.Euler(cameraRotationEuler.x, cameraRotationEuler.y, 0f);
         }
     }

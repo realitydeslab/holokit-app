@@ -86,7 +86,7 @@ namespace Holoi.Library.ARUX
 
             if (_isActive && _arRaycastManager != null && _arRaycastManager.enabled)
             {
-                Transform centerEyePose = HoloKitCamera.Instance.CenterEyePose;
+                Transform centerEyePose = HoloKitCameraManager.Instance.CenterEyePose;
                 Vector3 horizontalForward = new Vector3(centerEyePose.forward.x, 0f, centerEyePose.forward.z).normalized;
                 Vector3 rayOrigin = centerEyePose.position + _horizontalRaycastOffset * horizontalForward;
                 Ray ray = new(rayOrigin, Vector3.down);

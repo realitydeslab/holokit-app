@@ -19,7 +19,7 @@ namespace Holoi.Library.ARUX
 
         private void Update()
         {
-            _vfx.SetVector3("CameraForward", HoloKitCamera.Instance.CenterEyePose.forward);
+            _vfx.SetVector3("CameraForward", HoloKitCameraManager.Instance.CenterEyePose.forward);
         }
     }
 }

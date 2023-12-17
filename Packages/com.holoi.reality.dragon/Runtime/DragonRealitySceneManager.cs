@@ -81,7 +81,7 @@ namespace Holoi.Reality.Dragon
 
             _targetGameObject.transform.position = _arRaycastController.transform.position + _offset;
 
-            //var playerPos = HoloKitCamera.Instance.CenterEyePose.position;
+            //var playerPos = HoloKitCameraManager.Instance.CenterEyePose.position;
 
             //var targetPos = new Vector3(playerPos.x, _targetGameObject.transform.position.y, playerPos.z);
 

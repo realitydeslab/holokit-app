@@ -1,0 +1,811 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4B188AD026F432B4001FD67D /* HandTracker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4B188ACF26F432B4001FD67D /* HandTracker.mm */; };
+		4B507AF528A8DC44001FD1D7 /* Utils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4B507AF428A8DC44001FD1D7 /* Utils.mm */; };
+		4B6C9420261493E300CBDFB4 /* ARSessionDelegateManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4B6C941F261493E300CBDFB4 /* ARSessionDelegateManager.mm */; };
+		4B6C944A2614B70900CBDFB4 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6615A325F39FED00CC4E81 /* Metal.framework */; };
+		4B6C944B2614B70D00CBDFB4 /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6615A125F39FE000CC4E81 /* ARKit.framework */; };
+		4BB5587326205B7D00DC0213 /* NFCSessionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB5587226205B7D00DC0213 /* NFCSessionController.m */; };
+		4BD9A6A1278AA53C000BD266 /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD9A6A0278AA53C000BD266 /* Crypto.swift */; };
+		4BE74F4A28853F6E0086FB89 /* HoloKitProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE74F4928853F6E0086FB89 /* HoloKitProfile.m */; };
+		4BE74F4F288540DD0086FB89 /* HoloKitOptics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4BE74F4E288540DD0086FB89 /* HoloKitOptics.mm */; };
+		9605FE292AFE32B400925F49 /* LowLatencyTracking.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE282AFE325C00925F49 /* LowLatencyTracking.cc */; };
+		9605FE2A2AFE32C600925F49 /* matrixutils.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE252AFE325C00925F49 /* matrixutils.cc */; };
+		9605FE2B2AFE32C700925F49 /* matrix_3x3.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE262AFE325C00925F49 /* matrix_3x3.cc */; };
+		9605FE2C2AFE32C900925F49 /* is_initialized.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE1E2AFE325C00925F49 /* is_initialized.cc */; };
+		9605FE2D2AFE32CB00925F49 /* matrix_4x4.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE1C2AFE325C00925F49 /* matrix_4x4.cc */; };
+		9605FE2E2AFE32CC00925F49 /* vectorutils.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE1A2AFE325C00925F49 /* vectorutils.cc */; };
+		9605FE2F2AFE32CD00925F49 /* rotation.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE192AFE325C00925F49 /* rotation.cc */; };
+		9605FE302AFE32D100925F49 /* lowpass_filter.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FDF62AFE325B00925F49 /* lowpass_filter.cc */; };
+		9605FE312AFE32D200925F49 /* median_filter.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FDF72AFE325B00925F49 /* median_filter.cc */; };
+		9605FE322AFE32D300925F49 /* neck_model.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FDF82AFE325B00925F49 /* neck_model.cc */; };
+		9605FE332AFE32D400925F49 /* sensor_fusion_ekf.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FDF92AFE325B00925F49 /* sensor_fusion_ekf.cc */; };
+		9605FE342AFE32D600925F49 /* gyroscope_bias_estimator.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE072AFE325B00925F49 /* gyroscope_bias_estimator.cc */; };
+		9605FE352AFE32D700925F49 /* mean_filter.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE0C2AFE325B00925F49 /* mean_filter.cc */; };
+		9605FE362AFE32DA00925F49 /* head_tracker.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE0F2AFE325B00925F49 /* head_tracker.cc */; };
+		9605FE372AFE32DB00925F49 /* cardboard.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FDF32AFE325B00925F49 /* cardboard.cc */; };
+		9605FE382AFE32DC00925F49 /* cardboard_input_api.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE152AFE325B00925F49 /* cardboard_input_api.mm */; };
+		9605FE3F2AFE331800925F49 /* device_gyroscope_sensor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9605FDFD2AFE325B00925F49 /* device_gyroscope_sensor.mm */; };
+		9605FE412AFE331A00925F49 /* device_accelerometer_sensor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9605FDFF2AFE325B00925F49 /* device_accelerometer_sensor.mm */; };
+		9605FE422AFE331B00925F49 /* sensor_event_producer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE002AFE325B00925F49 /* sensor_event_producer.mm */; };
+		9605FE432AFE331C00925F49 /* sensor_helper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE012AFE325B00925F49 /* sensor_helper.mm */; };
+		9605FE4B2AFE332900925F49 /* rotation_data.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE112AFE325B00925F49 /* rotation_data.cc */; };
+		9605FE4C2AFE332A00925F49 /* position_data.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9605FE122AFE325B00925F49 /* position_data.cc */; };
+		963F1F242B14FEC400F20056 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 963F1F232B14FEC400F20056 /* Metal.framework */; };
+		9674DCF62B2173BD00F32A19 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9674DCF52B2173BD00F32A19 /* Accelerate.framework */; };
+		969F176A2B12999300F8CA69 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 969F17592B12986C00F8CA69 /* CoreVideo.framework */; };
+		969F176B2B12999600F8CA69 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 969F17552B12982C00F8CA69 /* AVFoundation.framework */; };
+		969F176C2B12999B00F8CA69 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 969F17572B12985300F8CA69 /* CoreMedia.framework */; };
+		96C102C1279152B30052AF2B /* CryptoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C102C0279152B30052AF2B /* CryptoKit.framework */; };
+		96D052212B2E9D480082C34D /* VideoRecorder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 96D052202B2E9D480082C34D /* VideoRecorder.mm */; };
+		96D052222B2EB51E0082C34D /* VideoRecorder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 96D052202B2E9D480082C34D /* VideoRecorder.mm */; };
+		96D052252B2EB5290082C34D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D052242B2EB5290082C34D /* AudioToolbox.framework */; };
+		96D052262B2EB5510082C34D /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9674DCF52B2173BD00F32A19 /* Accelerate.framework */; };
+		96D052272B2EB55A0082C34D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 969F17592B12986C00F8CA69 /* CoreVideo.framework */; };
+		96D052282B2EB5600082C34D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 969F17552B12982C00F8CA69 /* AVFoundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4BE7B609261104ED001F39F2 /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		4B04D8A9260CCCA20055020F /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/iOSSupport/System/Library/Frameworks/MetalKit.framework; sourceTree = DEVELOPER_DIR; };
+		4B06977225ECADA3009D51BD /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
+		4B137E6B2886A37A00E10B38 /* HoloKitOptics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HoloKitOptics.h; sourceTree = "<group>"; };
+		4B188ACF26F432B4001FD67D /* HandTracker.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = HandTracker.mm; sourceTree = "<group>"; };
+		4B341B092859DEB0006AB99C /* IUnityInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUnityInterface.h; sourceTree = "<group>"; };
+		4B341B0B2859DEB0006AB99C /* IUnityXRDisplayShadingRateExt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUnityXRDisplayShadingRateExt.h; sourceTree = "<group>"; };
+		4B341B0C2859DEB0006AB99C /* IUnityXRInput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUnityXRInput.h; sourceTree = "<group>"; };
+		4B341B0D2859DEB0006AB99C /* UnityXRNativePtrs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnityXRNativePtrs.h; sourceTree = "<group>"; };
+		4B341B0E2859DEB0006AB99C /* IUnitySubsystemExample.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUnitySubsystemExample.h; sourceTree = "<group>"; };
+		4B341B0F2859DEB0006AB99C /* UnityTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnityTypes.h; sourceTree = "<group>"; };
+		4B341B102859DEB0006AB99C /* IUnityXRDisplay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUnityXRDisplay.h; sourceTree = "<group>"; };
+		4B341B112859DEB0006AB99C /* IUnityXRAudio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUnityXRAudio.h; sourceTree = "<group>"; };
+		4B341B122859DEB0006AB99C /* UnityXRDisplayStats.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnityXRDisplayStats.h; sourceTree = "<group>"; };
+		4B341B132859DEB0006AB99C /* UnityXRSubsystemTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnityXRSubsystemTypes.h; sourceTree = "<group>"; };
+		4B341B142859DEB0006AB99C /* IUnityXRMeshing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUnityXRMeshing.h; sourceTree = "<group>"; };
+		4B341B152859DEB0006AB99C /* IUnityXRTrace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUnityXRTrace.h; sourceTree = "<group>"; };
+		4B341B162859DEB0006AB99C /* IUnityXRPreInit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUnityXRPreInit.h; sourceTree = "<group>"; };
+		4B341B172859DEB0006AB99C /* IUnityXRStats.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUnityXRStats.h; sourceTree = "<group>"; };
+		4B341B182859DEB0006AB99C /* UnityXRTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnityXRTypes.h; sourceTree = "<group>"; };
+		4B341B192859DEB0006AB99C /* UnitySubsystemTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnitySubsystemTypes.h; sourceTree = "<group>"; };
+		4B341B1A2859DEB0006AB99C /* IUnityGraphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUnityGraphics.h; sourceTree = "<group>"; };
+		4B341B1B2859DEB0006AB99C /* IUnityRenderingExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUnityRenderingExtensions.h; sourceTree = "<group>"; };
+		4B341B1C2859DEB0006AB99C /* IUnityGraphicsMetal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUnityGraphicsMetal.h; sourceTree = "<group>"; };
+		4B341B1D2859DEB0006AB99C /* IUnityGraphicsD3D11.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUnityGraphicsD3D11.h; sourceTree = "<group>"; };
+		4B507AF228A8DC29001FD1D7 /* Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		4B507AF428A8DC44001FD1D7 /* Utils.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Utils.mm; sourceTree = "<group>"; };
+		4B6615A125F39FE000CC4E81 /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/iOSSupport/System/Library/Frameworks/ARKit.framework; sourceTree = DEVELOPER_DIR; };
+		4B6615A325F39FED00CC4E81 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
+		4B6C941F261493E300CBDFB4 /* ARSessionDelegateManager.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ARSessionDelegateManager.mm; sourceTree = "<group>"; };
+		4B981F922869B8180021F1EF /* HandTracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HandTracker.h; sourceTree = "<group>"; };
+		4BB5587226205B7D00DC0213 /* NFCSessionController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NFCSessionController.m; sourceTree = "<group>"; };
+		4BC45B25262815CB00BA98E4 /* CoreNFC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreNFC.framework; path = System/Library/Frameworks/CoreNFC.framework; sourceTree = SDKROOT; };
+		4BD9A6A0278AA53C000BD266 /* Crypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
+		4BE74F4928853F6E0086FB89 /* HoloKitProfile.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HoloKitProfile.m; sourceTree = "<group>"; };
+		4BE74F4B28853F910086FB89 /* HoloKitProfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HoloKitProfile.h; sourceTree = "<group>"; };
+		4BE74F4E288540DD0086FB89 /* HoloKitOptics.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = HoloKitOptics.mm; sourceTree = "<group>"; };
+		4BE7B60B261104ED001F39F2 /* libholokit-sdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libholokit-sdk.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9605FDF32AFE325B00925F49 /* cardboard.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cardboard.cc; sourceTree = "<group>"; };
+		9605FDF52AFE325B00925F49 /* device_accelerometer_sensor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = device_accelerometer_sensor.h; sourceTree = "<group>"; };
+		9605FDF62AFE325B00925F49 /* lowpass_filter.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = lowpass_filter.cc; sourceTree = "<group>"; };
+		9605FDF72AFE325B00925F49 /* median_filter.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = median_filter.cc; sourceTree = "<group>"; };
+		9605FDF82AFE325B00925F49 /* neck_model.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = neck_model.cc; sourceTree = "<group>"; };
+		9605FDF92AFE325B00925F49 /* sensor_fusion_ekf.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sensor_fusion_ekf.cc; sourceTree = "<group>"; };
+		9605FDFA2AFE325B00925F49 /* lowpass_filter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = lowpass_filter.h; sourceTree = "<group>"; };
+		9605FDFB2AFE325B00925F49 /* sensor_fusion_ekf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sensor_fusion_ekf.h; sourceTree = "<group>"; };
+		9605FDFD2AFE325B00925F49 /* device_gyroscope_sensor.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = device_gyroscope_sensor.mm; sourceTree = "<group>"; };
+		9605FDFE2AFE325B00925F49 /* sensor_helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sensor_helper.h; sourceTree = "<group>"; };
+		9605FDFF2AFE325B00925F49 /* device_accelerometer_sensor.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = device_accelerometer_sensor.mm; sourceTree = "<group>"; };
+		9605FE002AFE325B00925F49 /* sensor_event_producer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = sensor_event_producer.mm; sourceTree = "<group>"; };
+		9605FE012AFE325B00925F49 /* sensor_helper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = sensor_helper.mm; sourceTree = "<group>"; };
+		9605FE022AFE325B00925F49 /* gyroscope_data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gyroscope_data.h; sourceTree = "<group>"; };
+		9605FE032AFE325B00925F49 /* accelerometer_data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = accelerometer_data.h; sourceTree = "<group>"; };
+		9605FE042AFE325B00925F49 /* device_gyroscope_sensor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = device_gyroscope_sensor.h; sourceTree = "<group>"; };
+		9605FE052AFE325B00925F49 /* neck_model.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = neck_model.h; sourceTree = "<group>"; };
+		9605FE062AFE325B00925F49 /* mean_filter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mean_filter.h; sourceTree = "<group>"; };
+		9605FE072AFE325B00925F49 /* gyroscope_bias_estimator.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gyroscope_bias_estimator.cc; sourceTree = "<group>"; };
+		9605FE082AFE325B00925F49 /* gyroscope_bias_estimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gyroscope_bias_estimator.h; sourceTree = "<group>"; };
+		9605FE092AFE325B00925F49 /* rotation_state.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rotation_state.h; sourceTree = "<group>"; };
+		9605FE0A2AFE325B00925F49 /* sensor_event_producer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sensor_event_producer.h; sourceTree = "<group>"; };
+		9605FE0B2AFE325B00925F49 /* median_filter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = median_filter.h; sourceTree = "<group>"; };
+		9605FE0C2AFE325B00925F49 /* mean_filter.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mean_filter.cc; sourceTree = "<group>"; };
+		9605FE0D2AFE325B00925F49 /* head_tracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = head_tracker.h; sourceTree = "<group>"; };
+		9605FE0E2AFE325B00925F49 /* cardboard_input_api.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cardboard_input_api.h; sourceTree = "<group>"; };
+		9605FE0F2AFE325B00925F49 /* head_tracker.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = head_tracker.cc; sourceTree = "<group>"; };
+		9605FE112AFE325B00925F49 /* rotation_data.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rotation_data.cc; sourceTree = "<group>"; };
+		9605FE122AFE325B00925F49 /* position_data.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = position_data.cc; sourceTree = "<group>"; };
+		9605FE132AFE325B00925F49 /* rotation_data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rotation_data.h; sourceTree = "<group>"; };
+		9605FE142AFE325B00925F49 /* position_data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = position_data.h; sourceTree = "<group>"; };
+		9605FE152AFE325B00925F49 /* cardboard_input_api.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = cardboard_input_api.mm; sourceTree = "<group>"; };
+		9605FE172AFE325C00925F49 /* cardboard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cardboard.h; sourceTree = "<group>"; };
+		9605FE192AFE325C00925F49 /* rotation.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rotation.cc; sourceTree = "<group>"; };
+		9605FE1A2AFE325C00925F49 /* vectorutils.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vectorutils.cc; sourceTree = "<group>"; };
+		9605FE1B2AFE325C00925F49 /* rotation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rotation.h; sourceTree = "<group>"; };
+		9605FE1C2AFE325C00925F49 /* matrix_4x4.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = matrix_4x4.cc; sourceTree = "<group>"; };
+		9605FE1D2AFE325C00925F49 /* logging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = logging.h; sourceTree = "<group>"; };
+		9605FE1E2AFE325C00925F49 /* is_initialized.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = is_initialized.cc; sourceTree = "<group>"; };
+		9605FE1F2AFE325C00925F49 /* matrixutils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = matrixutils.h; sourceTree = "<group>"; };
+		9605FE202AFE325C00925F49 /* vectorutils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vectorutils.h; sourceTree = "<group>"; };
+		9605FE212AFE325C00925F49 /* matrix_3x3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = matrix_3x3.h; sourceTree = "<group>"; };
+		9605FE222AFE325C00925F49 /* matrix_4x4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = matrix_4x4.h; sourceTree = "<group>"; };
+		9605FE232AFE325C00925F49 /* is_initialized.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = is_initialized.h; sourceTree = "<group>"; };
+		9605FE242AFE325C00925F49 /* vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
+		9605FE252AFE325C00925F49 /* matrixutils.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = matrixutils.cc; sourceTree = "<group>"; };
+		9605FE262AFE325C00925F49 /* matrix_3x3.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = matrix_3x3.cc; sourceTree = "<group>"; };
+		9605FE272AFE325C00925F49 /* is_arg_null.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = is_arg_null.h; sourceTree = "<group>"; };
+		9605FE282AFE325C00925F49 /* LowLatencyTracking.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LowLatencyTracking.cc; sourceTree = "<group>"; };
+		961B8AFF253BBABF0025BA7D /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = ../../../../MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk/System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		961B8B02253BBACC0025BA7D /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = ../../../../MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk/System/iOSSupport/System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
+		963F1F232B14FEC400F20056 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
+		9666E9902572395C00A7F127 /* HandTracker.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HandTracker.framework; path = sdk/third_party/HandTracker.framework; sourceTree = "<group>"; };
+		9666EAB32572692700A7F127 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		9674DCF52B2173BD00F32A19 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
+		969F17552B12982C00F8CA69 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		969F17572B12985300F8CA69 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/CoreMedia.framework; sourceTree = DEVELOPER_DIR; };
+		969F17592B12986C00F8CA69 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = DEVELOPER_DIR; };
+		969F17652B12998200F8CA69 /* libholokit-sdk-macos.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libholokit-sdk-macos.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		96C102C0279152B30052AF2B /* CryptoKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks/CryptoKit.framework; sourceTree = DEVELOPER_DIR; };
+		96D0521F2B2E9D420082C34D /* VideoRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoRecorder.h; sourceTree = "<group>"; };
+		96D052202B2E9D480082C34D /* VideoRecorder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VideoRecorder.mm; sourceTree = "<group>"; };
+		96D052242B2EB5290082C34D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4BE7B608261104ED001F39F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96D052282B2EB5600082C34D /* AVFoundation.framework in Frameworks */,
+				96D052272B2EB55A0082C34D /* CoreVideo.framework in Frameworks */,
+				96D052262B2EB5510082C34D /* Accelerate.framework in Frameworks */,
+				96C102C1279152B30052AF2B /* CryptoKit.framework in Frameworks */,
+				4B6C944B2614B70D00CBDFB4 /* ARKit.framework in Frameworks */,
+				4B6C944A2614B70900CBDFB4 /* Metal.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		969F17632B12998200F8CA69 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96D052252B2EB5290082C34D /* AudioToolbox.framework in Frameworks */,
+				963F1F242B14FEC400F20056 /* Metal.framework in Frameworks */,
+				969F176C2B12999B00F8CA69 /* CoreMedia.framework in Frameworks */,
+				9674DCF62B2173BD00F32A19 /* Accelerate.framework in Frameworks */,
+				969F176B2B12999600F8CA69 /* AVFoundation.framework in Frameworks */,
+				969F176A2B12999300F8CA69 /* CoreVideo.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4B341B082859DEB0006AB99C /* UnityPluginApi */ = {
+			isa = PBXGroup;
+			children = (
+				4B341B092859DEB0006AB99C /* IUnityInterface.h */,
+				4B341B0A2859DEB0006AB99C /* XR */,
+				4B341B1A2859DEB0006AB99C /* IUnityGraphics.h */,
+				4B341B1B2859DEB0006AB99C /* IUnityRenderingExtensions.h */,
+				4B341B1C2859DEB0006AB99C /* IUnityGraphicsMetal.h */,
+				4B341B1D2859DEB0006AB99C /* IUnityGraphicsD3D11.h */,
+			);
+			path = UnityPluginApi;
+			sourceTree = "<group>";
+		};
+		4B341B0A2859DEB0006AB99C /* XR */ = {
+			isa = PBXGroup;
+			children = (
+				4B341B0B2859DEB0006AB99C /* IUnityXRDisplayShadingRateExt.h */,
+				4B341B0C2859DEB0006AB99C /* IUnityXRInput.h */,
+				4B341B0D2859DEB0006AB99C /* UnityXRNativePtrs.h */,
+				4B341B0E2859DEB0006AB99C /* IUnitySubsystemExample.h */,
+				4B341B0F2859DEB0006AB99C /* UnityTypes.h */,
+				4B341B102859DEB0006AB99C /* IUnityXRDisplay.h */,
+				4B341B112859DEB0006AB99C /* IUnityXRAudio.h */,
+				4B341B122859DEB0006AB99C /* UnityXRDisplayStats.h */,
+				4B341B132859DEB0006AB99C /* UnityXRSubsystemTypes.h */,
+				4B341B142859DEB0006AB99C /* IUnityXRMeshing.h */,
+				4B341B152859DEB0006AB99C /* IUnityXRTrace.h */,
+				4B341B162859DEB0006AB99C /* IUnityXRPreInit.h */,
+				4B341B172859DEB0006AB99C /* IUnityXRStats.h */,
+				4B341B182859DEB0006AB99C /* UnityXRTypes.h */,
+				4B341B192859DEB0006AB99C /* UnitySubsystemTypes.h */,
+			);
+			path = XR;
+			sourceTree = "<group>";
+		};
+		4BE7B60C261104ED001F39F2 /* holokit */ = {
+			isa = PBXGroup;
+			children = (
+				96D052202B2E9D480082C34D /* VideoRecorder.mm */,
+				96D0521F2B2E9D420082C34D /* VideoRecorder.h */,
+				9605FDF22AFE320000925F49 /* LowLatencyTracking */,
+				4B341B082859DEB0006AB99C /* UnityPluginApi */,
+				4B6C941F261493E300CBDFB4 /* ARSessionDelegateManager.mm */,
+				4BB5587226205B7D00DC0213 /* NFCSessionController.m */,
+				4B981F922869B8180021F1EF /* HandTracker.h */,
+				4B188ACF26F432B4001FD67D /* HandTracker.mm */,
+				4BD9A6A0278AA53C000BD266 /* Crypto.swift */,
+				4BE74F4B28853F910086FB89 /* HoloKitProfile.h */,
+				4BE74F4928853F6E0086FB89 /* HoloKitProfile.m */,
+				4B137E6B2886A37A00E10B38 /* HoloKitOptics.h */,
+				4BE74F4E288540DD0086FB89 /* HoloKitOptics.mm */,
+				4B507AF228A8DC29001FD1D7 /* Utils.h */,
+				4B507AF428A8DC44001FD1D7 /* Utils.mm */,
+			);
+			path = holokit;
+			sourceTree = "<group>";
+		};
+		9605FDF22AFE320000925F49 /* LowLatencyTracking */ = {
+			isa = PBXGroup;
+			children = (
+				9605FE0E2AFE325B00925F49 /* cardboard_input_api.h */,
+				9605FE152AFE325B00925F49 /* cardboard_input_api.mm */,
+				9605FDF32AFE325B00925F49 /* cardboard.cc */,
+				9605FE0F2AFE325B00925F49 /* head_tracker.cc */,
+				9605FE0D2AFE325B00925F49 /* head_tracker.h */,
+				9605FE162AFE325C00925F49 /* include */,
+				9605FDF42AFE325B00925F49 /* sensors */,
+				9605FE102AFE325B00925F49 /* sixdof */,
+				9605FE282AFE325C00925F49 /* LowLatencyTracking.cc */,
+				9605FE182AFE325C00925F49 /* util */,
+			);
+			path = LowLatencyTracking;
+			sourceTree = "<group>";
+		};
+		9605FDF42AFE325B00925F49 /* sensors */ = {
+			isa = PBXGroup;
+			children = (
+				9605FDF52AFE325B00925F49 /* device_accelerometer_sensor.h */,
+				9605FDF62AFE325B00925F49 /* lowpass_filter.cc */,
+				9605FDF72AFE325B00925F49 /* median_filter.cc */,
+				9605FDF82AFE325B00925F49 /* neck_model.cc */,
+				9605FDF92AFE325B00925F49 /* sensor_fusion_ekf.cc */,
+				9605FDFA2AFE325B00925F49 /* lowpass_filter.h */,
+				9605FDFB2AFE325B00925F49 /* sensor_fusion_ekf.h */,
+				9605FDFC2AFE325B00925F49 /* ios */,
+				9605FE022AFE325B00925F49 /* gyroscope_data.h */,
+				9605FE032AFE325B00925F49 /* accelerometer_data.h */,
+				9605FE042AFE325B00925F49 /* device_gyroscope_sensor.h */,
+				9605FE052AFE325B00925F49 /* neck_model.h */,
+				9605FE062AFE325B00925F49 /* mean_filter.h */,
+				9605FE072AFE325B00925F49 /* gyroscope_bias_estimator.cc */,
+				9605FE082AFE325B00925F49 /* gyroscope_bias_estimator.h */,
+				9605FE092AFE325B00925F49 /* rotation_state.h */,
+				9605FE0A2AFE325B00925F49 /* sensor_event_producer.h */,
+				9605FE0B2AFE325B00925F49 /* median_filter.h */,
+				9605FE0C2AFE325B00925F49 /* mean_filter.cc */,
+			);
+			path = sensors;
+			sourceTree = "<group>";
+		};
+		9605FDFC2AFE325B00925F49 /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				9605FDFD2AFE325B00925F49 /* device_gyroscope_sensor.mm */,
+				9605FDFE2AFE325B00925F49 /* sensor_helper.h */,
+				9605FDFF2AFE325B00925F49 /* device_accelerometer_sensor.mm */,
+				9605FE002AFE325B00925F49 /* sensor_event_producer.mm */,
+				9605FE012AFE325B00925F49 /* sensor_helper.mm */,
+			);
+			path = ios;
+			sourceTree = "<group>";
+		};
+		9605FE102AFE325B00925F49 /* sixdof */ = {
+			isa = PBXGroup;
+			children = (
+				9605FE112AFE325B00925F49 /* rotation_data.cc */,
+				9605FE122AFE325B00925F49 /* position_data.cc */,
+				9605FE132AFE325B00925F49 /* rotation_data.h */,
+				9605FE142AFE325B00925F49 /* position_data.h */,
+			);
+			path = sixdof;
+			sourceTree = "<group>";
+		};
+		9605FE162AFE325C00925F49 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				9605FE172AFE325C00925F49 /* cardboard.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		9605FE182AFE325C00925F49 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				9605FE192AFE325C00925F49 /* rotation.cc */,
+				9605FE1A2AFE325C00925F49 /* vectorutils.cc */,
+				9605FE1B2AFE325C00925F49 /* rotation.h */,
+				9605FE1C2AFE325C00925F49 /* matrix_4x4.cc */,
+				9605FE1D2AFE325C00925F49 /* logging.h */,
+				9605FE1E2AFE325C00925F49 /* is_initialized.cc */,
+				9605FE1F2AFE325C00925F49 /* matrixutils.h */,
+				9605FE202AFE325C00925F49 /* vectorutils.h */,
+				9605FE212AFE325C00925F49 /* matrix_3x3.h */,
+				9605FE222AFE325C00925F49 /* matrix_4x4.h */,
+				9605FE232AFE325C00925F49 /* is_initialized.h */,
+				9605FE242AFE325C00925F49 /* vector.h */,
+				9605FE252AFE325C00925F49 /* matrixutils.cc */,
+				9605FE262AFE325C00925F49 /* matrix_3x3.cc */,
+				9605FE272AFE325C00925F49 /* is_arg_null.h */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		96602134253930CC004019A5 = {
+			isa = PBXGroup;
+			children = (
+				4BE7B60C261104ED001F39F2 /* holokit */,
+				9660213E253930CC004019A5 /* Products */,
+				96602188253935D7004019A5 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		9660213E253930CC004019A5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4BE7B60B261104ED001F39F2 /* libholokit-sdk.a */,
+				969F17652B12998200F8CA69 /* libholokit-sdk-macos.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		96602188253935D7004019A5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				96D052242B2EB5290082C34D /* AudioToolbox.framework */,
+				9674DCF52B2173BD00F32A19 /* Accelerate.framework */,
+				963F1F232B14FEC400F20056 /* Metal.framework */,
+				969F17592B12986C00F8CA69 /* CoreVideo.framework */,
+				969F17572B12985300F8CA69 /* CoreMedia.framework */,
+				969F17552B12982C00F8CA69 /* AVFoundation.framework */,
+				96C102C0279152B30052AF2B /* CryptoKit.framework */,
+				4BC45B25262815CB00BA98E4 /* CoreNFC.framework */,
+				4B04D8A9260CCCA20055020F /* MetalKit.framework */,
+				4B6615A325F39FED00CC4E81 /* Metal.framework */,
+				4B6615A125F39FE000CC4E81 /* ARKit.framework */,
+				4B06977225ECADA3009D51BD /* Vision.framework */,
+				9666EAB32572692700A7F127 /* Accelerate.framework */,
+				9666E9902572395C00A7F127 /* HandTracker.framework */,
+				961B8B02253BBACC0025BA7D /* ARKit.framework */,
+				961B8AFF253BBABF0025BA7D /* Metal.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		969F17612B12998200F8CA69 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		4BE7B60A261104ED001F39F2 /* holokit-sdk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4BE7B613261104ED001F39F2 /* Build configuration list for PBXNativeTarget "holokit-sdk" */;
+			buildPhases = (
+				4BE7B607261104ED001F39F2 /* Sources */,
+				4BE7B608261104ED001F39F2 /* Frameworks */,
+				4BE7B609261104ED001F39F2 /* Copy Files */,
+				4BE7B6F22611CE4B001F39F2 /* Run Script */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "holokit-sdk";
+			productName = "holokit-sdk-skeleton";
+			productReference = 4BE7B60B261104ED001F39F2 /* libholokit-sdk.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		969F17642B12998200F8CA69 /* holokit-sdk-macos */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 969F17662B12998200F8CA69 /* Build configuration list for PBXNativeTarget "holokit-sdk-macos" */;
+			buildPhases = (
+				969F17612B12998200F8CA69 /* Headers */,
+				969F17622B12998200F8CA69 /* Sources */,
+				969F17632B12998200F8CA69 /* Frameworks */,
+				969F176D2B1299AB00F8CA69 /* Run Script */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "holokit-sdk-macos";
+			productName = "holokit-sdk-macos";
+			productReference = 969F17652B12998200F8CA69 /* libholokit-sdk-macos.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		96602135253930CC004019A5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1300;
+				LastUpgradeCheck = 1400;
+				TargetAttributes = {
+					4BE7B60A261104ED001F39F2 = {
+						CreatedOnToolsVersion = 12.4;
+						LastSwiftMigration = 1320;
+					};
+					969F17642B12998200F8CA69 = {
+						CreatedOnToolsVersion = 15.1;
+					};
+				};
+			};
+			buildConfigurationList = 96602138253930CC004019A5 /* Build configuration list for PBXProject "holokit" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 96602134253930CC004019A5;
+			productRefGroup = 9660213E253930CC004019A5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4BE7B60A261104ED001F39F2 /* holokit-sdk */,
+				969F17642B12998200F8CA69 /* holokit-sdk-macos */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4BE7B6F22611CE4B001F39F2 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "PRODUCT=\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\nARCH=\"iOS\"\nDESTDIR=\"${SRCROOT}/../Runtime/Plugins/${ARCH}\"\nmkdir -p \"${DESTDIR}\"\ncp -R \"${PRODUCT}\" \"${DESTDIR}/libUnityHoloKit.a\"\n\nDESTDIR=\"${SRCROOT}/../../../Build/Libraries/com.holoi.xr.holokit/Runtime/Plugins/${ARCH}\"\nmkdir -p \"${DESTDIR}\"\ncp -R \"${PRODUCT}\" \"${DESTDIR}/libUnityHoloKit.a\"\n\n\n";
+		};
+		969F176D2B1299AB00F8CA69 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "PRODUCT=\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\nBUNDLE_PRODUCT=\"${BUILT_PRODUCTS_DIR}/UnityHoloKit.bundle\"\n\nlipo -create -output ${BUNDLE_PRODUCT} ${PRODUCT}\n\nARCH=\"macOS\"\nDESTDIR=\"${SRCROOT}/../Runtime/Plugins/${ARCH}\"\nmkdir -p \"${DESTDIR}\"\ncp -R \"${BUNDLE_PRODUCT}\" \"${DESTDIR}/UnityHoloKit.bundle\"\n\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4BE7B607261104ED001F39F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BB5587326205B7D00DC0213 /* NFCSessionController.m in Sources */,
+				4BE74F4A28853F6E0086FB89 /* HoloKitProfile.m in Sources */,
+				4B507AF528A8DC44001FD1D7 /* Utils.mm in Sources */,
+				9605FE312AFE32D200925F49 /* median_filter.cc in Sources */,
+				9605FE332AFE32D400925F49 /* sensor_fusion_ekf.cc in Sources */,
+				9605FE372AFE32DB00925F49 /* cardboard.cc in Sources */,
+				9605FE382AFE32DC00925F49 /* cardboard_input_api.mm in Sources */,
+				9605FE362AFE32DA00925F49 /* head_tracker.cc in Sources */,
+				9605FE3F2AFE331800925F49 /* device_gyroscope_sensor.mm in Sources */,
+				9605FE4B2AFE332900925F49 /* rotation_data.cc in Sources */,
+				9605FE4C2AFE332A00925F49 /* position_data.cc in Sources */,
+				9605FE412AFE331A00925F49 /* device_accelerometer_sensor.mm in Sources */,
+				9605FE422AFE331B00925F49 /* sensor_event_producer.mm in Sources */,
+				9605FE432AFE331C00925F49 /* sensor_helper.mm in Sources */,
+				9605FE322AFE32D300925F49 /* neck_model.cc in Sources */,
+				9605FE342AFE32D600925F49 /* gyroscope_bias_estimator.cc in Sources */,
+				9605FE302AFE32D100925F49 /* lowpass_filter.cc in Sources */,
+				4B6C9420261493E300CBDFB4 /* ARSessionDelegateManager.mm in Sources */,
+				9605FE352AFE32D700925F49 /* mean_filter.cc in Sources */,
+				9605FE292AFE32B400925F49 /* LowLatencyTracking.cc in Sources */,
+				9605FE2F2AFE32CD00925F49 /* rotation.cc in Sources */,
+				9605FE2E2AFE32CC00925F49 /* vectorutils.cc in Sources */,
+				9605FE2D2AFE32CB00925F49 /* matrix_4x4.cc in Sources */,
+				9605FE2C2AFE32C900925F49 /* is_initialized.cc in Sources */,
+				9605FE2A2AFE32C600925F49 /* matrixutils.cc in Sources */,
+				9605FE2B2AFE32C700925F49 /* matrix_3x3.cc in Sources */,
+				4B188AD026F432B4001FD67D /* HandTracker.mm in Sources */,
+				4BE74F4F288540DD0086FB89 /* HoloKitOptics.mm in Sources */,
+				96D052212B2E9D480082C34D /* VideoRecorder.mm in Sources */,
+				4BD9A6A1278AA53C000BD266 /* Crypto.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		969F17622B12998200F8CA69 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96D052222B2EB51E0082C34D /* VideoRecorder.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4BE7B611261104ED001F39F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = E5MH87P5T3;
+				FRAMEWORK_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/holokit/LowLatencyTracking";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+			};
+			name = Debug;
+		};
+		4BE7B612261104ED001F39F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = E5MH87P5T3;
+				FRAMEWORK_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/holokit/LowLatencyTracking";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+			};
+			name = Release;
+		};
+		96602144253930CC004019A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		96602145253930CC004019A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		969F17672B12998200F8CA69 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KR9H35SQQ9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+			};
+			name = Debug;
+		};
+		969F17682B12998200F8CA69 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KR9H35SQQ9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4BE7B613261104ED001F39F2 /* Build configuration list for PBXNativeTarget "holokit-sdk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4BE7B611261104ED001F39F2 /* Debug */,
+				4BE7B612261104ED001F39F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		96602138253930CC004019A5 /* Build configuration list for PBXProject "holokit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				96602144253930CC004019A5 /* Debug */,
+				96602145253930CC004019A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		969F17662B12998200F8CA69 /* Build configuration list for PBXNativeTarget "holokit-sdk-macos" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				969F17672B12998200F8CA69 /* Debug */,
+				969F17682B12998200F8CA69 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 96602135253930CC004019A5 /* Project object */;
+}

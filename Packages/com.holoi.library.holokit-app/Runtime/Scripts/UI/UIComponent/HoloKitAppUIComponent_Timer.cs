@@ -24,7 +24,7 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void UpdateTimer()
         {
-            float sessionDuration = Time.time - HoloKitCamera.Instance.ARSessionStartTime;
+            float sessionDuration = Time.time - HoloKitCameraManager.Instance.ARSessionStartTime;
             _timerText.text = HoloKitAppUtils.SecondToMMSS(sessionDuration);
         }
     }

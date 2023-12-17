@@ -48,7 +48,7 @@ namespace Holoi.Library.HoloKitApp
             RealitySessionData realitySessionData = new()
             {
                 RealityBundleId = HoloKitApp.Instance.CurrentReality.BundleId,
-                SessionDuration = Time.time - HoloKitCamera.Instance.ARSessionStartTime,
+                SessionDuration = Time.time - HoloKitCameraManager.Instance.ARSessionStartTime,
                 PlayerCount = HoloKitApp.Instance.MultiplayerManager.PlayerCount
             };
             return realitySessionData;

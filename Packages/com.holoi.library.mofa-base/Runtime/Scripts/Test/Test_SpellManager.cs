@@ -56,7 +56,7 @@ namespace Holoi.Library.MOFABase.Test
 
         public void CastSpell()
         {
-            Vector3 centerEyePosition = HoloKitCamera.Instance.CenterEyePose.position;
+            Vector3 centerEyePosition = HoloKitCameraManager.Instance.CenterEyePose.position;
             Quaternion centerEyeRotation = GetCameraGravitationalRotation();
 
             Vector3 spellPosition = centerEyePosition + centerEyeRotation * _currentSpell.SpawnOffset;
@@ -71,8 +71,8 @@ namespace Holoi.Library.MOFABase.Test
         public void CastSpellOpposite()
         {
             const float spellDist = 8f;
-            Vector3 centerEyePosition = HoloKitCamera.Instance.CenterEyePose.position;
-            Vector3 centerEyeForward = HoloKitCamera.Instance.CenterEyePose.forward;
+            Vector3 centerEyePosition = HoloKitCameraManager.Instance.CenterEyePose.position;
+            Vector3 centerEyeForward = HoloKitCameraManager.Instance.CenterEyePose.forward;
             Vector3 horizontalCenterEyeForward = Vector3.ProjectOnPlane(centerEyeForward, Vector3.up).normalized;
 
             Vector3 spellPosition = centerEyePosition + spellDist * horizontalCenterEyeForward;
@@ -87,7 +87,7 @@ namespace Holoi.Library.MOFABase.Test
 
         private Quaternion GetCameraGravitationalRotation()
         {
-            Vector3 cameraRotationEuler = HoloKitCamera.Instance.CenterEyePose.rotation.eulerAngles;
+            Vector3 cameraRotationEuler = HoloKitCameraManager.Instance.CenterEyePose.rotation.eulerAngles;
             return Quaternion.Euler(cameraRotationEuler.x, cameraRotationEuler.y, 0f);
         }
     }

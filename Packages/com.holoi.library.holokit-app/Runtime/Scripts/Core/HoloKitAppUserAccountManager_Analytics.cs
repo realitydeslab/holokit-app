@@ -45,7 +45,7 @@ namespace Holoi.Library.HoloKitApp
             HoloKitAppAnalyticsEventManager.OnPlayerRegistered += OnPlayerRegistered;
             HoloKitAppAnalyticsEventManager.OnDreamOver += OnDreamOver;
             HoloKitAppAnalyticsEventManager.OnOverheated += OnOverheated;
-            HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
+            HoloKitCameraManager.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
         }
 
         private void Analytics_Deinit()
@@ -53,7 +53,7 @@ namespace Holoi.Library.HoloKitApp
             HoloKitAppAnalyticsEventManager.OnPlayerRegistered -= OnPlayerRegistered;
             HoloKitAppAnalyticsEventManager.OnDreamOver -= OnDreamOver;
             HoloKitAppAnalyticsEventManager.OnOverheated -= OnOverheated;
-            HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
+            HoloKitCameraManager.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
         }
 
         private void OnDreamOver(RealitySessionData realitySessionData)

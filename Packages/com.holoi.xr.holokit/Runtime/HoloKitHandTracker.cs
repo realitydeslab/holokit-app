@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: Copyright 2023 Holo Interactive <dev@holoi.com>
 // SPDX-FileContributor: Yuchen Zhang <yuchen@holoi.com>
+// SPDX-FileContributor: Botao Amber Hu <botao@holoi.com>
 // SPDX-License-Identifier: MIT
 
 using System;
@@ -7,31 +8,54 @@ using UnityEngine;
 
 namespace HoloKit
 {
-    public enum HoloKitHandJoint
+    // https://developer.apple.com/documentation/vision/vnhumanhandposeobservationjointname?language=objc
+    public enum HandJoint
     {
+         // The wrist.
         Wrist = 0,
-        Thumb0 = 1,
-        Thumb1 = 2,
-        Thumb2 = 3,
-        Thumb3 = 4,
-        Index0 = 5,
-        Index1 = 6,
-        Index2 = 7,
-        Index3 = 8,
-        Middle0 = 9,
-        Middle1 = 10,
-        Middle2 = 11,
-        Middle3 = 12,
-        Ring0 = 13,
-        Ring1 = 14,
-        Ring2 = 15,
-        Ring3 = 16,
-        Little0 = 17,
-        Little1 = 18,
-        Little2 = 19,
-        Little3 = 20
+        // The thumb’s carpometacarpal (CMC) joint.
+        ThumbCMC = 1,
+        //The thumb’s metacarpophalangeal (MP) joint.
+        ThumbMP = 2,
+        // The thumb’s interphalangeal (IP) joint.
+        ThumbIP = 3,
+        // The tip of the thumb.
+        ThumbTip = 4,
+        // The index finger’s metacarpophalangeal (MCP) joint.
+        IndexMCP = 5,
+        // The index finger’s proximal interphalangeal (PIP) joint.
+        IndexPIP = 6,
+        // The index finger’s distal interphalangeal (DIP) joint.
+        IndexDIP = 7,
+        // The tip of the index finger.
+        IndexTip = 8,
+        // The middle finger’s metacarpophalangeal (MCP) joint.
+        MiddleMCP = 9,
+        // The middle finger’s proximal interphalangeal (PIP) joint.
+        MiddlePIP = 10,
+        // The middle finger’s distal interphalangeal (DIP) joint.
+        MiddleDIP = 11,
+        // The tip of the middle finger.
+        MiddleTip = 12,
+        // The ring finger’s metacarpophalangeal (MCP) joint.
+        RingMCP = 13,
+        // The ring finger’s proximal interphalangeal (PIP) joint.
+        RingPIP = 14,
+        // The ring finger’s distal interphalangeal (DIP) joint.
+        RingDIP = 15,
+        // The tip of the ring finger.
+        RingTip = 16,
+        // The little finger’s metacarpophalangeal (MCP) joint.
+        LittleMCP = 17,
+        // The little finger’s proximal interphalangeal (PIP) joint.
+        LittlePIP = 18,
+        // The little finger’s distal interphalangeal (DIP) joint.
+        LittleDIP = 19,
+        // The tip of the little finger.
+        LittleTip = 20
     }
 
+    [DisallowMultipleComponent]
     public class HoloKitHandTracker : MonoBehaviour
     {
         public static HoloKitHandTracker Instance { get { return _instance; } }
@@ -78,7 +102,7 @@ namespace HoloKit
         {
             get
             {
-                if(HoloKitUtils.IsEditor) { return true; }
+                if (HoloKitUtils.IsEditor) { return true; }
                 return _isValid;
             }
         }
@@ -126,38 +150,38 @@ namespace HoloKit
         {
             for (int i = 0; i < 21; i++)
             {
-                HoloKitHandJoint joint = (HoloKitHandJoint)i;
+                HandJoint joint = (HandJoint)i;
                 switch (joint)
                 {
-                    case HoloKitHandJoint.Wrist:
+                    case HandJoint.Wrist:
                         _handJoints[i].GetComponent<MeshRenderer>().material.color = Color.red;
                         break;
-                    case HoloKitHandJoint.Thumb0:
-                    case HoloKitHandJoint.Index0:
-                    case HoloKitHandJoint.Middle0:
-                    case HoloKitHandJoint.Ring0:
-                    case HoloKitHandJoint.Little0:
+                    case HandJoint.ThumbCMC:
+                    case HandJoint.IndexMCP:
+                    case HandJoint.MiddleMCP:
+                    case HandJoint.RingMCP:
+                    case HandJoint.LittleMCP:
                         _handJoints[i].GetComponent<MeshRenderer>().material.color = Color.yellow;
                         break;
-                    case HoloKitHandJoint.Thumb1:
-                    case HoloKitHandJoint.Index1:
-                    case HoloKitHandJoint.Middle1:
-                    case HoloKitHandJoint.Ring1:
-                    case HoloKitHandJoint.Little1:
+                    case HandJoint.ThumbMP:
+                    case HandJoint.IndexPIP:
+                    case HandJoint.MiddlePIP:
+                    case HandJoint.RingPIP:
+                    case HandJoint.LittlePIP:
                         _handJoints[i].GetComponent<MeshRenderer>().material.color = Color.green;
                         break;
-                    case HoloKitHandJoint.Thumb2:
-                    case HoloKitHandJoint.Index2:
-                    case HoloKitHandJoint.Middle2:
-                    case HoloKitHandJoint.Ring2:
-                    case HoloKitHandJoint.Little2:
+                    case HandJoint.ThumbIP:
+                    case HandJoint.IndexDIP:
+                    case HandJoint.MiddleDIP:
+                    case HandJoint.RingDIP:
+                    case HandJoint.LittleDIP:
                         _handJoints[i].GetComponent<MeshRenderer>().material.color = Color.cyan;
                         break;
-                    case HoloKitHandJoint.Thumb3:
-                    case HoloKitHandJoint.Index3:
-                    case HoloKitHandJoint.Middle3:
-                    case HoloKitHandJoint.Ring3:
-                    case HoloKitHandJoint.Little3:
+                    case HandJoint.ThumbTip:
+                    case HandJoint.IndexTip:
+                    case HandJoint.MiddleTip:
+                    case HandJoint.RingTip:
+                    case HandJoint.LittleTip:
                         _handJoints[i].GetComponent<MeshRenderer>().material.color = Color.blue;
                         break;
                 }
@@ -204,7 +228,7 @@ namespace HoloKit
             }
         }
 
-        public Vector3 GetHandJointPosition(HoloKitHandJoint joint)
+        public Vector3 GetHandJointPosition(HandJoint joint)
         {
             return _handJoints[(int)joint].position;
         }

@@ -41,7 +41,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void Start()
         {
-            var xrOrigin = HoloKitCamera.Instance.GetComponentInParent<XROrigin>();
+            var xrOrigin = HoloKitCameraManager.Instance.GetComponentInParent<XROrigin>();
 
             // Setup Image Tracking for space anchor sharing
             if (xrOrigin.TryGetComponent(out _arTrackedImageManager))
@@ -73,12 +73,12 @@ namespace Holoi.Library.HoloKitApp
             }
 
             // Register callbacks
-            HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
+            HoloKitCameraManager.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
         }
 
         private void OnDestroy()
         {
-            HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
+            HoloKitCameraManager.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
         }
 
         private void SetupARTrackedImageManager()
@@ -102,7 +102,7 @@ namespace Holoi.Library.HoloKitApp
 
         public void AddARPlaneManager()
         {
-            var xrOrigin = HoloKitCamera.Instance.GetComponentInParent<XROrigin>();
+            var xrOrigin = HoloKitCameraManager.Instance.GetComponentInParent<XROrigin>();
 
             if (xrOrigin.TryGetComponent<ARPlaneManager>(out var _))
             {
@@ -119,7 +119,7 @@ namespace Holoi.Library.HoloKitApp
         {
             if (_arPlaneManager == null)
             {
-                var xrOrigin = HoloKitCamera.Instance.GetComponentInParent<XROrigin>();
+                var xrOrigin = HoloKitCameraManager.Instance.GetComponentInParent<XROrigin>();
                 if (!xrOrigin.TryGetComponent<ARPlaneManager>(out _arPlaneManager))
                 {
                     return;
@@ -144,7 +144,7 @@ namespace Holoi.Library.HoloKitApp
 
         public void AddARRaycastManager()
         {
-            var xrOrigin = HoloKitCamera.Instance.GetComponentInParent<XROrigin>();
+            var xrOrigin = HoloKitCameraManager.Instance.GetComponentInParent<XROrigin>();
 
             if (xrOrigin.TryGetComponent<ARRaycastManager>(out var _))
             {
@@ -160,7 +160,7 @@ namespace Holoi.Library.HoloKitApp
         {
             if (_arRaycastManager == null)
             {
-                var xrOrigin = HoloKitCamera.Instance.GetComponentInParent<XROrigin>();
+                var xrOrigin = HoloKitCameraManager.Instance.GetComponentInParent<XROrigin>();
                 if (!xrOrigin.TryGetComponent(out _arRaycastManager))
                 {
                     return;
@@ -171,7 +171,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void AddAROcclusionManager()
         {
-            _arOcclusionManager = HoloKitCamera.Instance.gameObject.AddComponent<AROcclusionManager>();
+            _arOcclusionManager = HoloKitCameraManager.Instance.gameObject.AddComponent<AROcclusionManager>();
             _arOcclusionManager.requestedEnvironmentDepthMode = EnvironmentDepthMode.Disabled;
             _arOcclusionManager.environmentDepthTemporalSmoothingRequested = false;
             _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Disabled;
@@ -183,7 +183,7 @@ namespace Holoi.Library.HoloKitApp
         {
             if (_arOcclusionManager == null)
             {
-                _arOcclusionManager = HoloKitCamera.Instance.GetComponent<AROcclusionManager>();
+                _arOcclusionManager = HoloKitCameraManager.Instance.GetComponent<AROcclusionManager>();
                 if (_arOcclusionManager == null)
                 {
                     return false;
@@ -205,7 +205,7 @@ namespace Holoi.Library.HoloKitApp
         {
             if (_arOcclusionManager == null)
             {
-                _arOcclusionManager = HoloKitCamera.Instance.GetComponent<AROcclusionManager>();
+                _arOcclusionManager = HoloKitCameraManager.Instance.GetComponent<AROcclusionManager>();
                 if (_arOcclusionManager == null)
                 {
                     AddAROcclusionManager();

@@ -10,7 +10,7 @@ public class AudioVFXManager : MonoBehaviour
 
     private void Update()
     {
-        Vector3 handOnPlane = Vector3.ProjectOnPlane(_handPositionSample.position, HoloKitCamera.Instance.CenterEyePose.forward);
+        Vector3 handOnPlane = Vector3.ProjectOnPlane(_handPositionSample.position, HoloKitCameraManager.Instance.CenterEyePose.forward);
 
         var dist = Vector2.Distance(Vector2.zero, new Vector2(handOnPlane.x, handOnPlane.y));
 

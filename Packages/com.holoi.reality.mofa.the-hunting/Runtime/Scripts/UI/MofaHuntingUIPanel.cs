@@ -20,7 +20,7 @@ namespace Holoi.Reality.MOFA.TheHunting.UI
 
         protected override void Start()
         {
-            HoloKitCamera.Instance.ForceScreenOrientation = !HoloKitApp.Instance.IsHost;
+            HoloKitCameraManager.Instance.ForceScreenOrientation = !HoloKitApp.Instance.IsHost;
 
             if (HoloKitApp.Instance.IsHost)
                 HoloKitApp.Instance.UIPanelManager.PushUIPanel(_dragonControllerUIPanel, HoloKitAppUICanvasType.Landscape);

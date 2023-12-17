@@ -68,8 +68,8 @@ namespace Holoi.Reality.Typed.TheForce
         {
             if(transform.position.y < -2f)
             {
-                transform.position = HoloKit.HoloKitCamera.Instance.CenterEyePose.position +
-                    HoloKit.HoloKitCamera.Instance.CenterEyePose.forward;
+                transform.position = HoloKit.HoloKitCameraManager.Instance.CenterEyePose.position +
+                    HoloKit.HoloKitCameraManager.Instance.CenterEyePose.forward;
             }
 
             if (MagicObject)

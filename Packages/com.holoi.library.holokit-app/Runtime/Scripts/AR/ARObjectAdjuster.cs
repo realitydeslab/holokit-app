@@ -119,9 +119,9 @@ namespace Holoi.Library.HoloKitApp
         [ServerRpc(RequireOwnership = false)]
         private void OnPositionChangedServerRpc(Vector2 offset)
         {
-            Vector3 forward = HoloKitCamera.Instance.CenterEyePose.forward;
+            Vector3 forward = HoloKitCameraManager.Instance.CenterEyePose.forward;
             Vector3 horizontalForward = new(forward.x, 0f, forward.z);
-            Vector3 right = HoloKitCamera.Instance.CenterEyePose.right;
+            Vector3 right = HoloKitCameraManager.Instance.CenterEyePose.right;
             Vector3 horizontalRight = new(right.x, 0f, right.z);
             _arObject.position += TranslationSpeed * (offset.x * horizontalRight + offset.y * horizontalForward);
         }

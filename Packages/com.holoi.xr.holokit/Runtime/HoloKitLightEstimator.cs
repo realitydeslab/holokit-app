@@ -7,6 +7,7 @@ using UnityEngine.XR.ARFoundation;
 
 namespace HoloKit
 {
+    [DisallowMultipleComponent]
     public class HoloKitLightEstimator : MonoBehaviour
     {
         [SerializeField] private ARCameraManager _arCameraManager;

@@ -71,7 +71,7 @@ namespace Holoi.Reality.MOFA.TheGhost
         /// <param name="axis"></param>
         private void OnAxisChanged(Vector2 axis)
         {
-            Transform centerEyePose = HoloKitCamera.Instance.CenterEyePose;
+            Transform centerEyePose = HoloKitCameraManager.Instance.CenterEyePose;
             Vector3 horizontalForward = Vector3.ProjectOnPlane(centerEyePose.forward, Vector3.up);
             Vector3 horizontalRight = Vector3.ProjectOnPlane(centerEyePose.right, Vector3.up);
 

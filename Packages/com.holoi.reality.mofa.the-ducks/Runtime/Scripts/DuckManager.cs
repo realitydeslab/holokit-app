@@ -52,7 +52,7 @@ namespace Holoi.Reality.MOFA.TheDucks
 
         private void OnStarUITriggered_Host()
         {
-            Transform centerEyePose = HoloKitCamera.Instance.CenterEyePose;
+            Transform centerEyePose = HoloKitCameraManager.Instance.CenterEyePose;
             Vector3 position = centerEyePose.position + centerEyePose.rotation * _duckSpawnPositionOffset;
             Quaternion rotation =  centerEyePose.rotation * _duckSpawnRotationOffset;
 

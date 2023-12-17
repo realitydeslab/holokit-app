@@ -35,7 +35,7 @@ namespace Holoi.Reality.Typed.TheTornado
         {
             if (_arRaycastManager.enabled)
             {
-                Transform centerEyePose = HoloKitCamera.Instance.CenterEyePose;
+                Transform centerEyePose = HoloKitCameraManager.Instance.CenterEyePose;
                 Vector3 horizontalForward = new Vector3(centerEyePose.position.x, 0f, centerEyePose.position.z).normalized;
                 Vector3 rayOrigin = centerEyePose.position + _raycastHorizontalOffset * horizontalForward;
                 Ray ray = new(rayOrigin, Vector3.down);

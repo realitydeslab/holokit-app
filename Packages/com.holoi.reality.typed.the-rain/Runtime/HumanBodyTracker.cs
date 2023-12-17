@@ -76,7 +76,7 @@ namespace Holoi.Reality.Typed.TheRain
                     m_SkeletonTracker.Add(humanBody.trackableId, boneController);
 
                     boneController.SkinnerVfx.transform.localPosition = new Vector3(0.5f, 0, 0);
-                    //boneController.SkinnerVfx.transform.InverseTransformPoint(HoloKitCamera.Instance.CenterEyePose.right * 0.5f);
+                    //boneController.SkinnerVfx.transform.InverseTransformPoint(HoloKitCameraManager.Instance.CenterEyePose.right * 0.5f);
                 }
                 Debug.Log("InitializeSkeletonJoints");
 

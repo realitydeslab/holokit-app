@@ -14,11 +14,11 @@ namespace Holoi.Library.HoloKitApp.UI
 
         private void OnEnable()
         {
-            if (HoloKitCamera.Instance.VideoEnhancementMode == VideoEnhancementMode.HighResWithHDR)
+            if (HoloKitCameraManager.Instance.VideoEnhancementMode == VideoEnhancementMode.HighResWithHDR)
             {
                 _videoEnhancementModeText.text = "4KHDR";
             }
-            else if (HoloKitCamera.Instance.VideoEnhancementMode == VideoEnhancementMode.HighRes)
+            else if (HoloKitCameraManager.Instance.VideoEnhancementMode == VideoEnhancementMode.HighRes)
             {
                 _videoEnhancementModeText.text = "4K";
             }

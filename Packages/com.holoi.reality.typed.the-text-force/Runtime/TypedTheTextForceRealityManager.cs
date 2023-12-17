@@ -44,7 +44,7 @@ namespace Holoi.Reality.Typed.TheTextForce
 
         private void Start()
         {
-            _centerEye = HoloKitCamera.Instance.CenterEyePose;
+            _centerEye = HoloKitCameraManager.Instance.CenterEyePose;
             StartCoroutine(WaitAndCreateMagicObjectAndCube());
         }
 

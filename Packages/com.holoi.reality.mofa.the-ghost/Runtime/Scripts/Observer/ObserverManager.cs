@@ -42,7 +42,7 @@ namespace Holoi.Reality.MOFA.TheGhost
 
         private void OnUITriggered()
         {
-            Transform centerEyePose = HoloKitCamera.Instance.CenterEyePose;
+            Transform centerEyePose = HoloKitCameraManager.Instance.CenterEyePose;
             SpawnDetectionWaveServerRpc(centerEyePose.position, centerEyePose.rotation);
         }
 

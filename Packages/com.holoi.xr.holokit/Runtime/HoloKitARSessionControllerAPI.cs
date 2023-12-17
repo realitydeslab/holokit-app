@@ -46,13 +46,13 @@ namespace HoloKit {
 
     public static class HoloKitARSessionControllerAPI
     {
-        public static byte[] ARWorldMapData => s_arWorldMapData;
+        public static byte[] ARWorldMapData => _arWorldMapData;
 
-        public static string ARWorldMapName => s_arWorldMapName;
+        public static string ARWorldMapName => _arWorldMapName;
 
-        private static byte[] s_arWorldMapData;
+        private static byte[] _arWorldMapData;
 
-        private static string s_arWorldMapName;
+        private static string _arWorldMapName;
 
         [DllImport("__Internal")]
         private static extern void HoloKitSDK_InterceptUnityARSessionDelegate(IntPtr ptr);
@@ -156,10 +156,10 @@ namespace HoloKit {
         {
             if (success)
             {
-                s_arWorldMapName = mapName;
+                _arWorldMapName = mapName;
                 byte[] data = new byte[mapSizeInBytes];
                 Marshal.Copy(mapPtr, data, 0, mapSizeInBytes);
-                s_arWorldMapData = data;
+                _arWorldMapData = data;
             }
             OnGotARWorldMapFromDisk(success);
         }
@@ -301,8 +301,8 @@ namespace HoloKit {
         public static void NullifyCurrentARWorldMap()
         {
             HoloKitSDK_NullifyCurrentARWorldMap();
-            s_arWorldMapData = null;
-            s_arWorldMapName = null;
+            _arWorldMapData = null;
+            _arWorldMapName = null;
         }
 
         public static void LoadARWorldMapWithData(byte[] mapData)

@@ -1,4 +1,8 @@
-#if UNITY_IOS
+// SPDX-FileCopyrightText: Copyright 2023 Holo Interactive <dev@holoi.com>
+// SPDX-FileContributor: Yuchen Zhang <yuchen@holoi.com>
+// SPDX-FileContributor: Botao Amber Hu <botao@holoi.com>
+// SPDX-License-Identifier: MIT
+
 using System;
 using System.IO;
 using System.Reflection;
@@ -24,8 +28,8 @@ namespace HoloKit.Editor
 
             void PostprocessBuild(BuildReport report)
             {
-                //AddXcodePlist(report.summary.outputPath);
-                //AddXcodeCapabilities(report.summary.outputPath);
+                AddXcodePlist(report.summary.outputPath);
+                AddXcodeCapabilities(report.summary.outputPath);
                 AddXcodeBuildSettings(report.summary.outputPath);
             }
 
@@ -36,11 +40,32 @@ namespace HoloKit.Editor
                 plist.ReadFromFile(plistPath);
 
                 PlistElementDict rootDict = plist.root;
+                
+                if (!rootDict.values.ContainsKey("NSCameraUsageDescription")) 
+                {
+                    rootDict.SetString("NSCameraUsageDescription", "Camera required For Augmented Reality");
+                }
 
-                // NFC Plist
-                rootDict.SetString("NFCReaderUsageDescription", "For NFC authentication");
-                PlistElementArray nfcArray = rootDict.CreateArray("com.apple.developer.nfc.readersession.iso7816.select-identifiers");
-                nfcArray.AddString("D2760000850101");
+                if (!rootDict.values.ContainsKey("NSMicrophoneUsageDescription")) 
+                {
+                    rootDict.SetString("NSMicrophoneUsageDescription", "Recording audios for AR videos");
+                }
+
+                if (!rootDict.values.ContainsKey("NSPhotoLibraryAddUsageDescription"))
+                {
+                    rootDict.SetString("NSPhotoLibraryAddUsageDescription", "Adds recorded videos to the library.");
+                }
+
+                if (!rootDict.values.ContainsKey("NFCReaderUsageDescription"))
+                {
+                    rootDict.SetString("NFCReaderUsageDescription", "For NFC authentication");
+                }
+
+                if (!rootDict.values.ContainsKey("com.apple.developer.nfc.readersession.iso7816.select-identifiers"))
+                {
+                    PlistElementArray nfcArray = rootDict.CreateArray("com.apple.developer.nfc.readersession.iso7816.select-identifiers");
+                    nfcArray.AddString("D2760000850101");
+                }
 
                 File.WriteAllText(plistPath, plist.WriteToString());
             }
@@ -60,6 +85,7 @@ namespace HoloKit.Editor
                 proj.SetBuildProperty(unityFrameworkTargetGuid, "ENABLE_BITCODE", "NO");
                 proj.AddBuildProperty(unityFrameworkTargetGuid, "LIBRARY_SEARCH_PATHS", "$(SDKROOT)/usr/lib/swift");
                 proj.SetBuildProperty(mainTargetGuid, "SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD", "NO");
+                proj.SetBuildProperty(mainTargetGuid, "SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD", "NO");
 
                 proj.WriteToFile(projPath);
             }
@@ -82,8 +108,7 @@ namespace HoloKit.Editor
                 var projectInfo = projectCapabilityManager.GetType().GetField("project", BindingFlags.NonPublic | BindingFlags.Instance);
                 project = (PBXProject)projectInfo.GetValue(projectCapabilityManager);
 
-                var constructor = typeof(PBXCapabilityType).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(string), typeof(bool), typeof(string), typeof(bool) }, null);
-                PBXCapabilityType nfcCapability = (PBXCapabilityType)constructor.Invoke(new object[] { "com.apple.NearFieldCommunicationTagReading", true, "", false });
+                PBXCapabilityType nfcCapability = PBXCapabilityType.StringToPBXCapabilityType("com.apple.NearFieldCommunicationTagReading");
                 project.AddCapability(target, nfcCapability, entitlementFileName);
 
                 projectCapabilityManager.WriteToFile();
@@ -103,4 +128,3 @@ namespace HoloKit.Editor
         }
     }
 }
-#endif

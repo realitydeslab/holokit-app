@@ -26,12 +26,12 @@ namespace Holoi.Library.MOFABase.Test.UI
         private void Start()
         {
             OnHoloKitRenderModeChanged(HoloKitRenderMode.Mono);
-            HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
+            HoloKitCameraManager.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
         }
 
         private void OnDestroy()
         {
-            HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
+            HoloKitCameraManager.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
         }
 
         private void Update()
@@ -69,7 +69,7 @@ namespace Holoi.Library.MOFABase.Test.UI
 
         public void OnStarButtonPressed()
         {
-            HoloKitCamera.Instance.OpenStereoWithoutNFC("SomethingForNothing");
+            HoloKitCameraManager.Instance.OpenStereoWithoutNFC("SomethingForNothing");
         }
 
         public void OnTriggerButtonPressed()

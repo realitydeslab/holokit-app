@@ -86,7 +86,7 @@ namespace Holoi.Reality.MOFA.TheGhost
         private void OnWatchTriggered()
         {
             // Get the center eye pose (pose = position + rotation)
-            Transform centerEyePose = HoloKitCamera.Instance.CenterEyePose;
+            Transform centerEyePose = HoloKitCameraManager.Instance.CenterEyePose;
             SpawnSpellServerRpc(_basicSpell.Id, centerEyePose.position, centerEyePose.rotation);
         }
     }

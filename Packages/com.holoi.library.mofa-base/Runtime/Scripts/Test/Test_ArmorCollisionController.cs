@@ -16,7 +16,7 @@ namespace Holoi.Library.MOFABase.Test
 
         private void LateUpdate()
         {
-            transform.SetPositionAndRotation(HoloKitCamera.Instance.CenterEyePose.position, HoloKitCamera.Instance.CenterEyePose.rotation);
+            transform.SetPositionAndRotation(HoloKitCameraManager.Instance.CenterEyePose.position, HoloKitCameraManager.Instance.CenterEyePose.rotation);
         }
     }
 }

@@ -85,7 +85,7 @@ namespace Holoi.Library.MOFABase
             _canvas = GetComponent<Canvas>();
 
             MofaBaseRealityManager.OnMofaPhaseChanged += OnMofaPhaseChanged;
-            HoloKitCamera.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
+            HoloKitCameraManager.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
 
             Scores.gameObject.SetActive(false);
             Time.gameObject.SetActive(false);
@@ -97,7 +97,7 @@ namespace Holoi.Library.MOFABase
         protected virtual void OnDestroy()
         {
             MofaBaseRealityManager.OnMofaPhaseChanged -= OnMofaPhaseChanged;
-            HoloKitCamera.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
+            HoloKitCameraManager.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
         }
 
         private void Update()
@@ -183,7 +183,7 @@ namespace Holoi.Library.MOFABase
             else if (renderMode == HoloKitRenderMode.Mono)
             {
                 _canvas.renderMode = RenderMode.ScreenSpaceCamera;
-                _canvas.worldCamera = HoloKitCamera.Instance.GetComponent<Camera>();
+                _canvas.worldCamera = HoloKitCameraManager.Instance.GetComponent<Camera>();
                 _deviceOrientation = HoloKitUtils.IsRuntime ?  Input.deviceOrientation : DeviceOrientation.Portrait;
                 OnDeviceOrientationChanged();
             }

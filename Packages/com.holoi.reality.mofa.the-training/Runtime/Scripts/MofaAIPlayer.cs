@@ -69,7 +69,7 @@ namespace Holoi.Reality.MOFA.TheTraining
         /// </summary>
         private void LootAtTarget()
         {
-            Vector3 lookForward = (HoloKitCamera.Instance.CenterEyePose.position - transform.position);
+            Vector3 lookForward = (HoloKitCameraManager.Instance.CenterEyePose.position - transform.position);
             Vector3 horizontalLookForward = Vector3.ProjectOnPlane(lookForward, Vector3.up);
             if (horizontalLookForward == Vector3.zero)
                 return;

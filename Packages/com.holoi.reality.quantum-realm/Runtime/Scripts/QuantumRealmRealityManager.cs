@@ -69,9 +69,9 @@ namespace Holoi.Reality.QuantumRealm
         private void SpawnBuddhaGroup()
         {
             var hitPoint = _arPlacementIndicator.HitPoint;
-            Vector3 position = new(HoloKitCamera.Instance.CenterEyePose.transform.position.x,
+            Vector3 position = new(HoloKitCameraManager.Instance.CenterEyePose.transform.position.x,
                                    hitPoint.position.y,
-                                   HoloKitCamera.Instance.CenterEyePose.transform.position.z);
+                                   HoloKitCameraManager.Instance.CenterEyePose.transform.position.z);
             var buddhaGroup = Instantiate(_buddhaGroupPrefab, position, hitPoint.rotation * Quaternion.Euler(180f * Vector3.up));
             buddhaGroup.Spawn();
         }

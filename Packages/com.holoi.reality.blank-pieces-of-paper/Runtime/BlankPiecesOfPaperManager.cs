@@ -16,7 +16,7 @@ namespace Holoi.Reality.BlankPiecesOfPaper
 
         void Start()
         {
-            _centereye = HoloKit.HoloKitCamera.Instance.CenterEyePose;
+            _centereye = HoloKit.HoloKitCameraManager.Instance.CenterEyePose;
         }
 
         public void CreateSinglePage()

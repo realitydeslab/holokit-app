@@ -9,7 +9,7 @@ namespace Holoi.Library.ARUX
 {
     public class ExtendedHandJoint : MonoBehaviour
     {
-        [SerializeField] private HoloKitHandJoint _handJoint;
+        [SerializeField] private HandJoint _handJoint;
 
         [SerializeField] private float _extendedLength;
 
@@ -18,7 +18,7 @@ namespace Holoi.Library.ARUX
             if (HoloKitHandTracker.Instance.IsValid)
             {
                 Vector3 handJointPosition = HoloKitHandTracker.Instance.GetHandJointPosition(_handJoint);
-                Vector3 direction = (handJointPosition - HoloKitCamera.Instance.CenterEyePose.position).normalized;
+                Vector3 direction = (handJointPosition - HoloKitCameraManager.Instance.CenterEyePose.position).normalized;
                 transform.position = handJointPosition + _extendedLength * direction;
             }
         }

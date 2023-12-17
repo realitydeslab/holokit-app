@@ -60,8 +60,8 @@ namespace Holoi.Reality.Typed.TheRain
         {
             if (_arRaycastManager.enabled && Time.time - _lastRaycastTime > RaycastInterval)
             {
-                Vector3 horizontalForward = GetHorizontalForward(HoloKitCamera.Instance.CenterEyePose);
-                Vector3 rayOrigin = HoloKitCamera.Instance.CenterEyePose.position + horizontalForward * RaycastHorizontalOffset;
+                Vector3 horizontalForward = GetHorizontalForward(HoloKitCameraManager.Instance.CenterEyePose);
+                Vector3 rayOrigin = HoloKitCameraManager.Instance.CenterEyePose.position + horizontalForward * RaycastHorizontalOffset;
                 Ray ray = new(rayOrigin, Vector3.down);
                 List<ARRaycastHit> hits = new();
                 if (_arRaycastManager.Raycast(ray, hits, TrackableType.Planes))

@@ -25,9 +25,9 @@ namespace HoloKit
             if (success && HoloKitUtils.IsRuntime)
             {
                 HoloKitCameraData cameraData = ParseHoloKitCameraData(cameraDataPtr);
-                if (HoloKitCamera.Instance != null)
+                if (HoloKitCameraManager.Instance != null)
                 {
-                    HoloKitCamera.Instance.SetupHoloKitCameraData(cameraData);
+                    HoloKitCameraManager.Instance.SetupHoloKitCameraData(cameraData);
                 }
             }
             OnNFCSessionCompleted?.Invoke(success);

@@ -24,7 +24,7 @@ namespace Holoi.Library.HoloKitApp
         private void LateUpdate()
         {
             // The pose visualizer should always look at the local camera.
-            transform.LookAt(HoloKit.HoloKitCamera.Instance.CenterEyePose);
+            transform.LookAt(HoloKit.HoloKitCameraManager.Instance.CenterEyePose);
             if (Player != null)
             {
                 transform.position = Player.transform.position + Offset;
