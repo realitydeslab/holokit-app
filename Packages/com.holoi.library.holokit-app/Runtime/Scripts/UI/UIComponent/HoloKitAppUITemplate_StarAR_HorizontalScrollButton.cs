@@ -13,7 +13,7 @@ namespace Holoi.Library.HoloKitApp.UI
     {
         public abstract bool SwipeRight { get; }
 
-        [SerializeField] private Mask _mask;
+        [SerializeField] private RectMask2D _mask;
 
         [SerializeField] private Scrollbar _horizontalScrollbar;
 
