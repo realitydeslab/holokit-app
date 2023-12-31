@@ -18,6 +18,7 @@ It compiles with Unity 2021.3 LTS.
 This app is structured in packages.
 Each reality is a package. 
 
+Thus, if you want to create a new reality, you have to create a new reality package followed by the structure of the project. For detailed guide on how to create a new reality, please see [How To Create A New Reality](#how-to-create-a-new-reality) section.
 
 ## Native Plugins
 
@@ -88,3 +89,5 @@ Line 35
             string libraryNameWithoutExtension = Path.GetFileNameWithoutExtension(libraryName);
             string[] results = AssetDatabase.FindAssets(libraryNameWithoutExtension);
 ```
+
+## How To Create A New Reality
