@@ -15,10 +15,11 @@ It compiles with Unity 2021.3 LTS.
 
 ## Architecture
 
-This app is structured in packages.
-Each reality is a package. 
+This app is organized into distinct packages, where each reality is represented by a differenct package. The core of these packages is `Holoi.Library.HoloKitApp`, which serves as the base package that all other reality packages depend on.
 
-Thus, if you want to create a new reality, you have to create a new reality package followed by the structure of the project. For detailed guide on how to create a new reality, please see [How To Create A New Reality](#how-to-create-a-new-reality) section.
+<img width="398" alt="image" src="https://github.com/holoi/holokit-app/assets/44870300/562e895c-31b2-4ada-b53d-968518d7a4e4">
+
+To develop a new reality, you should create a new reality package that follows the established project structure. For step-by-step instructions on creating a new reality, please refer to the [How To Create A New Reality](#how-to-create-a-new-reality) section.
 
 ## Native Plugins
 
