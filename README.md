@@ -95,7 +95,11 @@ Line 35
 
 Before creating your new reality, first clone the project to your local disk and open it in Unity Editor. We strongly recommend building it on your iPhone initially to ensure compatibility. Once confirmed, you can proceed to add new realities to the project.
 
-In this project's architecture, each reality is a package dependent on the `Holoi.Library.HoloKitApp` base package. To start, create a new reality package. We provide a template package to facilitate this. Duplicate the folder `Packages/com.holoi.reality.reality-template`, renaming it to `com.yuchen.reality.my-first-reality`. Of course you can rename this folder to whatever you like as long as it follows the naming rule.
+In this project's architecture, each reality is a package dependent on the `Holoi.Library.HoloKitApp` base package. To create a new reality, you need to create a new reality package. We offers two ways to create a new reality package. You can either use the Reality Template Package Generator tool or do it manually.
+
+<img width="169" alt="image" src="https://github.com/holoi/holokit-app/assets/44870300/cbfd048b-ed4d-4cb4-8932-80a4a6cce40d">
+
+For manual creation, we provide a template package to facilitate this. Duplicate the folder `Packages/com.holoi.reality.reality-template`, renaming it to `com.yuchen.reality.my-first-reality`. Of course you can rename this folder to whatever you like as long as it follows the naming rule.
 
 <img width="730" alt="image" src="https://github.com/holoi/holokit-app/assets/44870300/58b9b0e1-0943-4c0e-a637-9018b1bac26e">
 <img width="729" alt="image" src="https://github.com/holoi/holokit-app/assets/44870300/85ba078a-18fc-4373-b739-7291d6182c72">
