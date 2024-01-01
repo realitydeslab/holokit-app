@@ -137,3 +137,34 @@ Under the `TemplateRealityManager` prefab, you'll find the `RealityConfiguration
 - `URP Assets`: Your reality's URP (Universal Render Pipeline) asset. Leave empty to use the default URP asset.
 - `Sync Player Pose By Default`: Enable this to synchronize player poses across the network by default.
 
+You can now run and test your reality in Unity Editor. However, it's hard to test all functionalities of AR projecs within Unity Editor. We need to build it onto your iPhone.
+
+Locate the scriptable object of type `Reality` in your reality package's `Assets` folder. This object should contain important information about your reality. Although it has several fields, only fill in the essential ones.
+
+<img width="547" alt="image" src="https://github.com/holoi/holokit-app/assets/44870300/8b0c6f42-d895-48f1-b922-e18a68d2a1c0">
+
+- `Bundle Id`: The unique identifier for your reality, typically the name of your reality package folder.
+- `Display Name`: The name of your reality as it appears in the app.
+- `Description`: A detailed description of your reality.
+- `Author`: The creator's name.
+- `Version`: The current version of your reality.
+- `Thumbnail Prefab`: Represents your reality visually in the reality list menu.
+- `Preview Videos`: Preview videos for your reality in the menu.
+- `Tutorial Videos`: Instructional videos for your reality in the menu.
+- `Reality Tags`: Tags for your reality in the menu. These can be found in the `Holoi.Library.AssetFoundation package` under `Assets/ScriptableObjects/RealityTags`. This can be left empty. If you want your scene to support spectator view mode, drag the `SpectatorView` tag into this field.
+- `Reality Entrance Options`: Entrance buttons for your reality. Typically includes 'Enter Reality' and 'Join As Spectator' buttons. More complex realities may have additional options.
+- `Scene`: The main scene of your reality.
+
+Fill in all necessary fields as explained above and leave the rest empty.
+
+In the project's `Assets/Constants` folder, you'll find a scriptable object named `AvailableRealityList`. This object includes the `Reality` scriptable objects for all realities present in the app.
+
+<img width="547" alt="image" src="https://github.com/holoi/holokit-app/assets/44870300/d9f8ab2e-4e86-4918-bd53-3044c766d584">
+
+To add your reality to the app, drag your `Reality` scriptable object into this list. Also, add your reality scene to the build scene list. Then, build and deploy the app to your iPhone.
+
+<img width="692" alt="image" src="https://github.com/holoi/holokit-app/assets/44870300/6d3f3895-b2b1-4f2a-92b9-cebc02dbfe27">
+
+Upon completion, your reality will be accessible within the app.
+
+<img width="283" alt="image" src="https://github.com/holoi/holokit-app/assets/44870300/ef9918c0-0870-4603-bd83-ad9b85e26293">
