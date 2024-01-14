@@ -82,7 +82,7 @@ namespace HoloKit
         {
             get
             {
-                return _centerEyePose;
+                return _renderMode == HoloKitRenderMode.Mono ? _monoCamera.transform : _centerEyePose;
             }
         }
 

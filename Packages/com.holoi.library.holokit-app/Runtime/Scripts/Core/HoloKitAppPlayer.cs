@@ -63,6 +63,7 @@ namespace Holoi.Library.HoloKitApp
 
         public override void OnNetworkSpawn()
         {
+            Debug.Log($"[HoloKitAppPlayer] OnNetworkSpawn");
             SyncingPose.OnValueChanged += OnSyncingPoseValueChanged;
 
             if (IsOwner)
