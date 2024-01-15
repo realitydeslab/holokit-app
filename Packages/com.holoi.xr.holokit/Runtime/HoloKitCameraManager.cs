@@ -217,6 +217,8 @@ namespace HoloKit
                     if (Screen.orientation != ScreenOrientation.Portrait)
                         Screen.orientation = ScreenOrientation.Portrait;
                 }
+
+                _centerEyePose.SetPositionAndRotation(_monoCamera.transform.position, _monoCamera.transform.rotation);
             }
         }
 

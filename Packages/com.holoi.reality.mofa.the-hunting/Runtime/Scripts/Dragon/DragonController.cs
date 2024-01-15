@@ -66,6 +66,10 @@ namespace Holoi.Reality.MOFA.TheHunting
 
         private bool _readyForControl = false;
 
+        private float _lastAttackTime;
+
+        private const float ATTACK_COOLDOWN = 1f;
+
         //public AimMode AimMode
         //{
         //    get => _aimMode;
@@ -313,10 +317,16 @@ namespace Holoi.Reality.MOFA.TheHunting
         [ClientRpc]
         public void Mode_Pin_Attack1ClientRpc()
         {
-            if (!IsOwner)
-            {
-                _animal.Mode_Pin(_attack1);
-            }
+            if (Time.time - _lastAttackTime < ATTACK_COOLDOWN)
+                return;
+
+            _animal.Mode_Pin(_attack1);
+            _lastAttackTime = Time.time;
+
+            //if (!IsOwner)
+            //{
+            //    _animal.Mode_Pin(_attack1);
+            //}
         }
 
         [ClientRpc]
@@ -340,19 +350,31 @@ namespace Holoi.Reality.MOFA.TheHunting
         [ClientRpc]
         public void Mode_Pin_Attack1AirClientRpc()
         {
-            if (!IsOwner)
-            {
-                _animal.Mode_Pin(_attack1Air);
-            }
+            if (Time.time - _lastAttackTime < ATTACK_COOLDOWN)
+                return;
+
+            _animal.Mode_Pin(_attack1Air);
+            _lastAttackTime = Time.time;
+
+            //if (!IsOwner)
+            //{
+            //    _animal.Mode_Pin(_attack1Air);
+            //}
         }
 
         [ClientRpc]
         public void Mode_Pin_Attack2ClientRpc()
         {
-            if (!IsOwner)
-            {
-                _animal.Mode_Pin(_attack2);
-            }
+            if (Time.time - _lastAttackTime < ATTACK_COOLDOWN)
+                return;
+
+            _animal.Mode_Pin(_attack2);
+            _lastAttackTime = Time.time;
+
+            //if (!IsOwner)
+            //{
+            //    _animal.Mode_Pin(_attack2);
+            //}
         }
 
         [ClientRpc]
@@ -394,10 +416,12 @@ namespace Holoi.Reality.MOFA.TheHunting
         [ClientRpc]
         public void State_Pin_FlyClientRpc()
         {
-            if (!IsOwner)
-            {
-                _animal.State_Pin(_fly);
-            }
+            _animal.State_Pin(_fly);
+
+            //if (!IsOwner)
+            //{
+            //    _animal.State_Pin(_fly);
+            //}
         }
 
         [ClientRpc]

@@ -622,6 +622,11 @@ MonoBehaviour:
   m_EnvironmentDepthMode: 0
   m_EnvironmentDepthTemporalSmoothing: 0
   m_OcclusionPreferenceMode: 0
+--- !u!4 &313938503 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 156501665347230162, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
+  m_PrefabInstance: {fileID: 275482710}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &608755119
 GameObject:
   m_ObjectHideFlags: 0
@@ -959,6 +964,11 @@ Transform:
 --- !u!20 &1363829250 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 3107490079037284407, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
+  m_PrefabInstance: {fileID: 275482710}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1363829260 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3444732461945800459, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
   m_PrefabInstance: {fileID: 275482710}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1456962725
@@ -1502,6 +1512,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1822990877}
   - component: {fileID: 1822990878}
+  - component: {fileID: 1822990879}
   m_Layer: 0
   m_Name: Mofa Fighting Panel Root
   m_TagString: Untagged
@@ -1532,7 +1543,7 @@ ParentConstraint:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1822990876}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Weight: 1
   m_TranslationAtRest: {x: 0, y: 0, z: 0}
@@ -1550,8 +1561,22 @@ ParentConstraint:
   m_Active: 1
   m_IsLocked: 0
   m_Sources:
-  - sourceTransform: {fileID: 0}
+  - sourceTransform: {fileID: 313938503}
     weight: 1
+--- !u!114 &1822990879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1822990876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9562757c3aaa4c36bb00482d48417db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _monoCam: {fileID: 1363829260}
+  _centerEye: {fileID: 313938503}
 --- !u!1 &1868868440
 GameObject:
   m_ObjectHideFlags: 0

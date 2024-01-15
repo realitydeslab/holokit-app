@@ -79,13 +79,14 @@ void (*OnReceivedHealthDataMessage)(float, float) = NULL;
     }
 }
 
-- (void)OnRoundStarted {
+- (void)OnRoundStarted:(int)magicSchoolIndex {
     NSDictionary<NSString *, id> *message = @{
         @"MOFA" : [NSNumber numberWithBool:YES],
         @"Start" : [NSNumber numberWithBool:YES],
-        @"Timestamp" : [NSNumber numberWithDouble:[[NSProcessInfo processInfo] systemUptime]]
+        @"Timestamp" : [NSNumber numberWithDouble:[[NSProcessInfo processInfo] systemUptime]],
+        @"MagicSchool": [NSNumber numberWithInt:magicSchoolIndex]
     };
-    [[[HoloKitAppWatchConnectivityManager sharedInstance] wcSession] sendMessage:message replyHandler:nil errorHandler:nil];
+    [[[HoloKitAppWatchConnectivityManager sharedInstance] wcSession] updateApplicationContext:message error:nil];
 }
 
 - (void)queryWatchState {
@@ -115,7 +116,7 @@ void (*OnReceivedHealthDataMessage)(float, float) = NULL;
         @"Kill" : [NSNumber numberWithInt:kill],
         @"HitRate" : [NSNumber numberWithInt:hitRate]
     };
-    [[[HoloKitAppWatchConnectivityManager sharedInstance] wcSession] sendMessage:message replyHandler:nil errorHandler:nil];
+    [[[HoloKitAppWatchConnectivityManager sharedInstance] wcSession] updateApplicationContext:message error:nil];
 }
 
 @end
@@ -132,8 +133,8 @@ void MofaWatchConnectivity_Initialize(void (*OnReceivedStartRoundMessageDelegate
     OnReceivedHealthDataMessage = OnReceivedHealthDataMessageDelegate;
 }
 
-void MofaWatchConnectivity_OnRoundStarted(void) {
-    [[MofaWatchConnectivityManager sharedInstance] OnRoundStarted];
+void MofaWatchConnectivity_OnRoundStarted(int magicSchoolIndex) {
+    [[MofaWatchConnectivityManager sharedInstance] OnRoundStarted:magicSchoolIndex];
 }
 
 void MofaWatchConnectivity_QueryWatchState(void) {

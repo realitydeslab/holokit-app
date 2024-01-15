@@ -20,14 +20,14 @@ namespace Holoi.Library.HoloKitApp.Localization
 
         private void Start()
         {
-            var tmpText = GetComponent<TMP_Text>();
+            //var tmpText = GetComponent<TMP_Text>();
 
-            switch (LocalizationSettings.SelectedLocale.Identifier.Code)
-            {
-                case EnglishCode:
-                    tmpText.font = _englishFont;
-                    break;
-            }
+            //switch (LocalizationSettings.SelectedLocale.Identifier.Code)
+            //{
+            //    case EnglishCode:
+            //        tmpText.font = _englishFont;
+            //        break;
+            //}
         }
     }
 }
