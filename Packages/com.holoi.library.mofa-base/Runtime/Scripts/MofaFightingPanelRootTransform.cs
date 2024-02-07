@@ -29,10 +29,14 @@ namespace Holoi.Library.MOFABase
             if (renderMode == HoloKitRenderMode.Stereo)
             {
                 transform.SetParent(_centerEye);
+                transform.localPosition = Vector3.zero;
+                transform.localRotation = Quaternion.identity;
             }
             else
             {
                 transform.SetParent(_monoCam);
+                transform.localPosition = Vector3.zero;
+                transform.localRotation = Quaternion.identity;
             }
         }
     }
