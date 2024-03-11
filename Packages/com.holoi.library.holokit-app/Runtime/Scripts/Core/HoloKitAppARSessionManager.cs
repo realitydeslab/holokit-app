@@ -230,6 +230,25 @@ namespace Holoi.Library.HoloKitApp
             }
         }
 
+        public void SetEnvironmentOcclusionEnabled(bool enabled)
+        {
+            if (_arOcclusionManager == null)
+            {
+                _arOcclusionManager = HoloKitCameraManager.Instance.GetComponent<AROcclusionManager>();
+                if (_arOcclusionManager == null)
+                    return;
+            }
+
+            if (enabled)
+            {
+                _arOcclusionManager.requestedEnvironmentDepthMode = EnvironmentDepthMode.Fastest;
+            }
+            else
+            {
+                _arOcclusionManager.requestedEnvironmentDepthMode = EnvironmentDepthMode.Disabled;
+            }
+        }
+
         //private void Update()
         //{
         //    if (_arOcclusionManager)

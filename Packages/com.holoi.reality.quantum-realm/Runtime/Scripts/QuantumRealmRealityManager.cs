@@ -66,6 +66,12 @@ namespace Holoi.Reality.QuantumRealm
             HoloKitApp.Instance.ARSessionManager.SetARRaycastManagerEnabled(false);
         }
 
+        public override void OnNetworkSpawn()
+        {
+            if (!IsServer)
+                HoloKitApp.Instance.ARSessionManager.SetEnvironmentOcclusionEnabled(false);
+        }
+
         private void SpawnBuddhaGroup()
         {
             var hitPoint = _arPlacementIndicator.HitPoint;

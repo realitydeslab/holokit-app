@@ -64,6 +64,9 @@ namespace Holoi.Reality.Typed.TheSculpture
         {
             base.OnNetworkSpawn();
             _isHostHandValid.OnValueChanged += OnIsHostHandValidValueChanged;
+
+            if (!IsServer)
+                HoloKitApp.Instance.ARSessionManager.SetEnvironmentOcclusionEnabled(false);
         }
 
         public override void OnNetworkDespawn()
