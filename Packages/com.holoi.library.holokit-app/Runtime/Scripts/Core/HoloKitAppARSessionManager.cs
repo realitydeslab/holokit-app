@@ -232,8 +232,16 @@ namespace Holoi.Library.HoloKitApp
 
         private void Update()
         {
-            if (_arOcclusionManager) {
-                //Debug.Log($"Occlusion status: {_arOcclusionManager.enabled} {_arOcclusionManager.requestedEnvironmentDepthMode} {_arOcclusionManager.requestedHumanStencilMode}");
+            if (_arOcclusionManager)
+            {
+                Debug.Log($"Occlusion status: {_arOcclusionManager.enabled} {_arOcclusionManager.requestedHumanStencilMode} {_arOcclusionManager.requestedHumanDepthMode} {_arOcclusionManager.requestedOcclusionPreferenceMode}");
+                return;
+            }
+
+            _arOcclusionManager = FindObjectOfType<AROcclusionManager>();
+            if (_arOcclusionManager)
+            {
+                Debug.Log($"Occlusion status: {_arOcclusionManager.enabled} {_arOcclusionManager.requestedHumanStencilMode} {_arOcclusionManager.requestedHumanDepthMode} {_arOcclusionManager.requestedOcclusionPreferenceMode}");
             }
         }
 
