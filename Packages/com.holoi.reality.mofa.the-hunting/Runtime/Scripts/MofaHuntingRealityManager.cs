@@ -90,10 +90,19 @@ namespace Holoi.Reality.MOFA.TheHunting
 
             if (_arPlacementManager.IsValid)
             {
-                foreach (var mofaPlayer in MofaPlayerList)
+                if (MofaPlayerList.Count == 0)
                 {
-                    mofaPlayer.Ready.Value = true;
+                    // When there is only the host
+                    SetupRound();
+                    StartRound();
                 }
+                else
+                {
+                    foreach (var mofaPlayer in MofaPlayerList)
+                    {
+                        mofaPlayer.Ready.Value = true;
+                    }
+                } 
             }
             else
             {
@@ -103,9 +112,9 @@ namespace Holoi.Reality.MOFA.TheHunting
 
         protected override void OnMofaPlayerReadyChanged(MofaPlayer mofaPlayer)
         {
-            if (!IsServer) return;
+            if (!IsServer)
+                return;
 
-            Debug.Log("[ccc] aa");
             if (mofaPlayer.Ready.Value)
             {
                 var mofaPlayerList = MofaPlayerList;
@@ -114,7 +123,6 @@ namespace Holoi.Reality.MOFA.TheHunting
                 int readyPlayerCount = mofaPlayerList.Count(t => t.Ready.Value);
                 if (readyPlayerCount == mofaPlayerList.Count)
                 {
-                    Debug.Log("[ccc] bb");
                     SetupRound();
                     StartRound();
                 }
