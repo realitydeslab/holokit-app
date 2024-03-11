@@ -105,6 +105,7 @@ namespace Holoi.Reality.MOFA.TheHunting
         {
             if (!IsServer) return;
 
+            Debug.Log("[ccc] aa");
             if (mofaPlayer.Ready.Value)
             {
                 var mofaPlayerList = MofaPlayerList;
@@ -113,6 +114,7 @@ namespace Holoi.Reality.MOFA.TheHunting
                 int readyPlayerCount = mofaPlayerList.Count(t => t.Ready.Value);
                 if (readyPlayerCount == mofaPlayerList.Count)
                 {
+                    Debug.Log("[ccc] bb");
                     SetupRound();
                     StartRound();
                 }

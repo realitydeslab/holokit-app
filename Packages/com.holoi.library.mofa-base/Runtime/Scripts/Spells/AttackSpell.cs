@@ -69,7 +69,6 @@ namespace Holoi.Library.MOFABase
                     return;
                 }
 
-                Debug.Log($"[ccc] {gameObject.name} triggered {other.name}!");
                 var mofaBaseRealityManager = HoloKitApp.HoloKitApp.Instance.RealityManager as MofaBaseRealityManager;
                 if (mofaBaseRealityManager != null)
                 {
