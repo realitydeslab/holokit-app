@@ -2,9 +2,6 @@
 // SPDX-FileContributor: Yuchen Zhang <yuchen@holoi.com>
 // SPDX-License-Identifier: MIT
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Holoi.Library.MOFABase;
 using Holoi.Library.HoloKitApp;
 
@@ -14,6 +11,9 @@ namespace Holoi.Reality.MOFA.TheHunting
     {
         protected override void OnRoundResult()
         {
+            if (HoloKitApp.Instance.IsSpectator)
+                return;
+
             if (HoloKitApp.Instance.IsHost)
             {
                 SpawnDefeatPopup();
