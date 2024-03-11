@@ -1348,6 +1348,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1436315752}
     m_Modifications:
+    - target: {fileID: 5336281057477793680, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
+      propertyPath: m_EnvironmentDepthMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5336281057477793680, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
+      propertyPath: m_OcclusionPreferenceMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5626992624204144705, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -1503,19 +1511,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5626992625800642033, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1606215180}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
 --- !u!4 &1606215177 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5626992625800642032, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
-  m_PrefabInstance: {fileID: 1606215176}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1606215178 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5626992625800642033, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
   m_PrefabInstance: {fileID: 1606215176}
   m_PrefabAsset: {fileID: 0}
 --- !u!20 &1606215179 stripped
@@ -1523,23 +1523,6 @@ Camera:
   m_CorrespondingSourceObject: {fileID: 3107490079037284407, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
   m_PrefabInstance: {fileID: 1606215176}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1606215180
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1606215178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b15f82cc229284894964d2d30806969d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HumanSegmentationStencilMode: 1
-  m_HumanSegmentationDepthMode: 1
-  m_EnvironmentDepthMode: 0
-  m_EnvironmentDepthTemporalSmoothing: 0
-  m_OcclusionPreferenceMode: 0
 --- !u!4 &1606215181 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3444732461945800459, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
@@ -2692,7 +2675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cb9a6911e4ec47e79e994c004166809, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _arOcclusionManager: {fileID: 1606215180}
+  _arOcclusionManager: {fileID: 0}
   _arPlaneManager: {fileID: 1831356271}
   _arRaycastManager: {fileID: 1831356270}
   _arPlacementIndicator: {fileID: 1557357388}

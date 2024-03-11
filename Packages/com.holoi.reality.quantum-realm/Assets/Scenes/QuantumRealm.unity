@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1748544e115c24562a72a4512e3d624d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _arOcclusionManager: {fileID: 275482728}
+  _arOcclusionManager: {fileID: 0}
   _arPlaneManager: {fileID: 2068233602}
   _arRaycastManager: {fileID: 2068233603}
   _arPlacementIndicator: {fileID: 1371218925}
@@ -139,11 +139,6 @@ MonoBehaviour:
   HostHandPoint: {fileID: 172308136}
   CoreHapticsManager: {fileID: 725391263}
   _buddhaGroupPrefab: {fileID: 2143471666, guid: 6fe50cf1a5dd04298aa36ee8a21ddb0e, type: 3}
---- !u!1 &36259178 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5626992625800642033, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
-  m_PrefabInstance: {fileID: 275482710}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &153230845
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,6 +400,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 933475194}
     m_Modifications:
+    - target: {fileID: 5336281057477793680, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
+      propertyPath: m_EnvironmentDepthMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5336281057477793680, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
+      propertyPath: m_OcclusionPreferenceMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5626992624204144710, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
       propertyPath: m_RenderPostProcessing
       value: 1
@@ -492,10 +495,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5626992625800642033, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 275482728}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
 --- !u!4 &275482711 stripped
 Transform:
@@ -512,23 +512,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3444732461945800459, guid: 8c3baeda8ec2e42179a64fba10a812b1, type: 3}
   m_PrefabInstance: {fileID: 275482710}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &275482728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 36259178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b15f82cc229284894964d2d30806969d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HumanSegmentationStencilMode: 0
-  m_HumanSegmentationDepthMode: 0
-  m_EnvironmentDepthMode: 0
-  m_EnvironmentDepthTemporalSmoothing: 0
-  m_OcclusionPreferenceMode: 0
 --- !u!1 &371261688
 GameObject:
   m_ObjectHideFlags: 0
@@ -2093,7 +2076,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsValid:
     m_InternalValue: 0
-  _arOcclusionManager: {fileID: 275482728}
+  _arOcclusionManager: {fileID: 0}
 --- !u!1 &2068233599
 GameObject:
   m_ObjectHideFlags: 0
