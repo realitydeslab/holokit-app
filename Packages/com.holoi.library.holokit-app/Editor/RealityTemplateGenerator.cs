@@ -1124,7 +1124,7 @@ NativeFormatImporter:
     ""displayName"": ""{{_namespaceName}}"",
     ""author"": ""Holo Interactive"",
     ""version"": ""1.0.0"",
-    ""unity"": ""2023.2"",
+    ""unity"": ""2022.3"",
     ""dependencies"": {
         ""com.holoi.library.asset-foundation"": ""1.0.0"",
         ""com.holoi.library.holokit-app"": ""1.0.0""

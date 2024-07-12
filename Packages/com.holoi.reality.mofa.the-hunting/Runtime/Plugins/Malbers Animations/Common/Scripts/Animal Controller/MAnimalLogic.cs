@@ -144,7 +144,7 @@ namespace MalbersAnimations.Controller
             {
                // Anim.Rebind(); //Reset the Animator Controller
                 Anim.speed = AnimatorSpeed * TimeMultiplier;                         //Set the Global Animator Speed
-                Anim.updateMode = AnimatorUpdateMode.Fixed;
+                Anim.updateMode = AnimatorUpdateMode.AnimatePhysics;
                 
 
                 var AllModeBehaviours = Anim.GetBehaviours<ModeBehaviour>();
