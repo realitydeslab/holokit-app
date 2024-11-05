@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: Copyright 2023 Holo Interactive <dev@holoi.com>
-// SPDX-FileContributor: Yuchen Zhang <yuchen@holoi.com>
+// SPDX-FileCopyrightText: Copyright 2024 Reality Design Lab <dev@reality.design>
+// SPDX-FileContributor: Yuchen Zhang <yuchenz27@outlook.com>
 // SPDX-License-Identifier: MIT
 
 #import "HoloKitProfile.h"
@@ -77,7 +77,15 @@
         return iPhone15Pro;
     } else if ([deviceName isEqualToString:@"iPhone16,2"]) {
         return iPhone15ProMax;
-    }else if ( [deviceName isEqualToString:@"iPad13,4"] || //iPad Pro 11 inch 5th Gen
+    } else if ([deviceName isEqualToString:@"iPhone17,3"]) {
+        return iPhone16;
+    } else if ([deviceName isEqualToString:@"iPhone17,4"]) {
+        return iPhone16Plus;
+    } else if ([deviceName isEqualToString:@"iPhone17,1"]) {
+        return iPhone16Pro;
+    } else if ([deviceName isEqualToString:@"iPhone17,2"]) {
+        return iPhone16ProMax;
+    } else if ( [deviceName isEqualToString:@"iPad13,4"] || //iPad Pro 11 inch 5th Gen
                [deviceName isEqualToString:@"iPad13,5"] || //iPad Pro 11 inch 5th Gen
                [deviceName isEqualToString:@"iPad13,6"] || //iPad Pro 11 inch 5th Gen
                [deviceName isEqualToString:@"iPad13,7"] || //iPad Pro 11 inch 5th Gen
@@ -299,6 +307,12 @@
         return true;
     }
     if (phoneType == iPhone15ProMax) {
+        return true;
+    }
+    if (phoneType == iPhone16Pro) {
+        return true;
+    }
+    if (phoneType == iPhone16ProMax) {
         return true;
     }
     if (phoneType == iPadWithLidar) {

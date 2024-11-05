@@ -1,0 +1,24 @@
+// SPDX-FileCopyrightText: Copyright 2024 Reality Design Lab <dev@reality.design>
+// SPDX-FileContributor: Yuchen Zhang <yuchenz27@outlook.com>
+// SPDX-License-Identifier: MIT
+
+using UnityEngine;
+using UnityEngine.XR.ARFoundation;
+using RealityDesignLab.Library.HoloKitApp;
+
+namespace RealityDesignLab.Typed.TheHair
+{
+    public class TypedTheHairRealityManager : RealityManager
+    {
+        [Header("AR")]
+        [SerializeField] private AROcclusionManager _arOcclusionManager;
+
+        private void Start()
+        {
+            if (HoloKitApp.Instance.IsSpectator)
+            {
+                _arOcclusionManager.enabled = true;
+            }
+        }
+    }
+}

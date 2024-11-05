@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Holoi.Library.HoloKitApp;
+using RealityDesignLab.Library.HoloKitApp;
 public class InbetweenPlayer: HoloKitAppPlayer
 {
     // Start is called before the first frame update

@@ -1,13 +1,13 @@
-// SPDX-FileCopyrightText: Copyright 2023 Holo Interactive <dev@holoi.com>
-// SPDX-FileContributor: Yuchen Zhang <yuchen@holoi.com>
+// SPDX-FileCopyrightText: Copyright 2024 Reality Design Lab <dev@reality.design>
+// SPDX-FileContributor: Yuchen Zhang <yuchenz27@outlook.com>
 // SPDX-License-Identifier: MIT
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
-using Holoi.Library.HoloKitApp;
-using Holoi.Library.ARUX;
+using RealityDesignLab.Library.HoloKitApp;
+using RealityDesignLab.Library.ARUX;
 using HoloKit;
 using Unity.AI.Navigation;
 using UnityEngine.XR.ARFoundation;

@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: Copyright 2023 Holo Interactive <dev@holoi.com>
-// SPDX-FileContributor: Sizheng Hao <sizheng@holoi.com>
+// SPDX-FileCopyrightText: Copyright 2024 Reality Design Lab <dev@reality.design>
+// SPDX-FileContributor: Sizheng Hao <sizheng@reality.design>
 // SPDX-License-Identifier: MIT
 
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.Netcode;
-using Holoi.Library.HoloKitApp;
+using RealityDesignLab.Library.HoloKitApp;
 
 
 namespace Holoi.Reality.BlankPiecesOfPaper
