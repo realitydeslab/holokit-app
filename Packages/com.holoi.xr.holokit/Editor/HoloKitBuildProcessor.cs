@@ -108,7 +108,7 @@ namespace HoloKit.Editor
                 var projectInfo = projectCapabilityManager.GetType().GetField("project", BindingFlags.NonPublic | BindingFlags.Instance);
                 project = (PBXProject)projectInfo.GetValue(projectCapabilityManager);
 
-                PBXCapabilityType nfcCapability = PBXCapabilityType.StringToPBXCapabilityType("com.apple.NearFieldCommunicationTagReading");
+                PBXCapabilityType nfcCapability = PBXCapabilityType.NearFieldCommunication;
                 project.AddCapability(target, nfcCapability, entitlementFileName);
 
                 projectCapabilityManager.WriteToFile();

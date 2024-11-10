@@ -60,7 +60,7 @@ namespace MalbersAnimations.Controller
 
             RB.useGravity = false;
             RB.constraints = RigidbodyConstraints.FreezeRotation;
-            RB.drag = 0;
+            RB.linearDamping = 0;
 
             //Initialize The Default Stance
             if (defaultStance == null)
@@ -336,7 +336,7 @@ namespace MalbersAnimations.Controller
             DisableMainPlayer();
 
             MTools.ResetFloatParameters(Anim); //Reset all Anim Floats!!
-            RB.velocity = Vector3.zero;
+            RB.linearVelocity = Vector3.zero;
 
             if (!alwaysForward.UseConstant && alwaysForward.Variable != null) //??????
                 alwaysForward.Variable.OnValueChanged -= Always_Forward;
@@ -1500,13 +1500,13 @@ namespace MalbersAnimations.Controller
                     else
                     {
                         // var OldRBVelocity = RB.velocity;
-                        RB.velocity = Vector3.zero;
+                        RB.linearVelocity = Vector3.zero;
                         RB.angularVelocity = Vector3.zero;
 
                         if (DeltaTime > 0) 
                         {
                             DesiredRBVelocity = (AdditivePosition / DeltaTime) * TimeMultiplier;
-                            RB.velocity = DesiredRBVelocity;
+                            RB.linearVelocity = DesiredRBVelocity;
                             // RB.MoveRotation(transform.rotation * AdditiveRotation);// This does not work on newe versions of Unity
                         }
                         transform.rotation *= AdditiveRotation;
@@ -1588,7 +1588,7 @@ namespace MalbersAnimations.Controller
             DeltaPos = transform.position - LastPos;                    //DeltaPosition from the last frame
             CurrentCycle = (CurrentCycle + 1) % 999999999;
 
-            var DeltaRB = RB.velocity * DeltaTime;
+            var DeltaRB = RB.linearVelocity * DeltaTime;
             DeltaVelocity = Grounded ? Vector3.ProjectOnPlane(DeltaRB, UpVector) : DeltaRB; //When is not grounded take the Up Vector this is the one!!!
         }
     }

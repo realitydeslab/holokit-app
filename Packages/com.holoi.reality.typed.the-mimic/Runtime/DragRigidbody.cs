@@ -124,10 +124,10 @@ namespace Holoi.Reality.Typed.TheMimic
         {
             Debug.Log("DragObject");
 
-            var oldDrag = m_SpringJoint.connectedBody.drag;
-            var oldAngularDrag = m_SpringJoint.connectedBody.angularDrag;
-            m_SpringJoint.connectedBody.drag = Drag;
-            m_SpringJoint.connectedBody.angularDrag = AngularDrag;
+            var oldDrag = m_SpringJoint.connectedBody.linearDamping;
+            var oldAngularDrag = m_SpringJoint.connectedBody.angularDamping;
+            m_SpringJoint.connectedBody.linearDamping = Drag;
+            m_SpringJoint.connectedBody.angularDamping = AngularDrag;
             while (true)
             {
                 var connectedPosition = m_SpringJoint.connectedBody.transform.position +
@@ -148,8 +148,8 @@ namespace Holoi.Reality.Typed.TheMimic
 
             if (m_SpringJoint.connectedBody)
             {
-                m_SpringJoint.connectedBody.drag = oldDrag;
-                m_SpringJoint.connectedBody.angularDrag = oldAngularDrag;
+                m_SpringJoint.connectedBody.linearDamping = oldDrag;
+                m_SpringJoint.connectedBody.angularDamping = oldAngularDrag;
 
                 //if (Input.GetKeyDown(KeyToPinSpring))
                 //{

@@ -172,7 +172,7 @@ namespace Holoi.Library.HoloKitApp
         {
             CurrentStatus = HoloKitAppPlayerStatus.SyncingPose;
             var arSessionManager = HoloKitApp.Instance.ARSessionManager;
-            arSessionManager.ARTrackedImageManager.trackedImagesChanged += OnTrackedImagesChanged;
+            arSessionManager.ARTrackedImageManager.trackablesChanged.AddListener(OnTrackedImagesChanged);
             HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnARSessionUpdatedFrame_Client;
             arSessionManager.SetARTrackedImageManagerEnabled(true);
         }
@@ -180,12 +180,12 @@ namespace Holoi.Library.HoloKitApp
         private void StopScanningQRCode()
         {
             var arSessionManager = HoloKitApp.Instance.ARSessionManager;
-            arSessionManager.ARTrackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
+            arSessionManager.ARTrackedImageManager.trackablesChanged.RemoveListener(OnTrackedImagesChanged);
             HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnARSessionUpdatedFrame_Client;
             arSessionManager.SetARTrackedImageManagerEnabled(false);
         }
 
-        private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args)
+        private void OnTrackedImagesChanged(ARTrackablesChangedEventArgs<ARTrackedImage> args)
         {
             if (args.updated.Count == 1)
             {

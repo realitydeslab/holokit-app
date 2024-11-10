@@ -16,7 +16,7 @@ public class FrictionJoint3D : MonoBehaviour {
 
     void FixedUpdate()
     {
-        Rigidbody.velocity = Rigidbody.velocity * (1 - Friction);
+        Rigidbody.linearVelocity = Rigidbody.linearVelocity * (1 - Friction);
         Rigidbody.angularVelocity = Rigidbody.angularVelocity * (1 - Friction);
     }
 

@@ -27,7 +27,7 @@ namespace Holoi.Library.MOFABase
         {
             _animator.SetTrigger("Hit");
             //GetComponent<Rigidbody>().useGravity = false;
-            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
             StartCoroutine(HoloKitAppUtils.WaitAndDo(1f, () =>
             {
                 // Reset animator

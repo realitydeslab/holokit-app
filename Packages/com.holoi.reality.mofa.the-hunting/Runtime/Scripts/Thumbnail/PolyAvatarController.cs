@@ -42,7 +42,7 @@ namespace Holoi.Reality.MOFA.TheHunting
             var magicBall = Instantiate(_magicBallPrefab, _room);
             magicBall.transform.LookAt(transform.forward * 10f);
             magicBall.transform.position = transform.position + Vector3.up * 1.5f + transform.forward * 1f;
-            magicBall.GetComponent<Rigidbody>().velocity = transform.forward * 3f;
+            magicBall.GetComponent<Rigidbody>().linearVelocity = transform.forward * 3f;
         }
     }
 }

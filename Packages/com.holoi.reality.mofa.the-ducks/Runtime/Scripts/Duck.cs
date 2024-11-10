@@ -65,7 +65,7 @@ namespace Holoi.Reality.MOFA.TheDucks
         [ClientRpc]
         private void OnNaturalDeathClientRpc()
         {
-            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
             OnNaturalDeath?.Invoke();
         }
 
@@ -82,7 +82,7 @@ namespace Holoi.Reality.MOFA.TheDucks
         [ClientRpc]
         private void OnBeingHitClientRpc()
         {
-            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
             OnBeingHit?.Invoke();
         }
 

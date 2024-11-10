@@ -1,5 +1,5 @@
-﻿using Cinemachine;
-using UnityEngine;
+﻿using UnityEngine;
+using Unity.Cinemachine;
 
 /// <summary>
 /// Thanks Tahir Alir!

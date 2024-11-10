@@ -396,7 +396,7 @@ namespace MalbersAnimations.Controller
                             animal.ResetUPVector(); //IMPORTANT!
                         }
                         Debugging($"[Try Exit] (Grounded) + [Terrain Angle ={FallRayAngle}]. DeltaDist: {DeltaDistance:F3}");
-                        animal.InertiaPositionSpeed = Vector3.ProjectOnPlane(animal.RB.velocity * DeltaTime, animal.UpVector); //This is for Helping on Slopes
+                        animal.InertiaPositionSpeed = Vector3.ProjectOnPlane(animal.RB.linearVelocity * DeltaTime, animal.UpVector); //This is for Helping on Slopes
                         return;
                     }
                     else
@@ -441,7 +441,7 @@ namespace MalbersAnimations.Controller
             {
                 //Debug.Log("GoinDown");
 
-                var RBOldDown = Vector3.Project(animal.RB.velocity, Gravity);
+                var RBOldDown = Vector3.Project(animal.RB.linearVelocity, Gravity);
                 var RBNewDown = Vector3.Project(animal.DesiredRBVelocity, Gravity);
                 var NewDMagn = RBNewDown.magnitude;
                 var Old_DMagn = RBOldDown.magnitude;

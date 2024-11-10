@@ -232,7 +232,7 @@ namespace Holoi.Library.HoloKitApp
         private void InitializeRealityScene()
         {
             // Find RealityManager reference
-            _realityManager = FindObjectOfType<RealityManager>();
+            _realityManager = FindFirstObjectByType<RealityManager>();
             if (_realityManager == null)
             {
                 Debug.LogError("[HoloKitApp] There is no RealityManager in the scene");
@@ -402,7 +402,7 @@ namespace Holoi.Library.HoloKitApp
         private void SetUrpAssetForUI()
         {
             if (_urpAssetForUI != null)
-                GraphicsSettings.renderPipelineAsset = _urpAssetForUI;
+                GraphicsSettings.defaultRenderPipeline = _urpAssetForUI;
         }
 
         public void Shutdown()

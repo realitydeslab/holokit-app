@@ -42,7 +42,7 @@ namespace Holoi.Reality.Typed.TheTextForce
 
         private void Update()
         {
-            var speed = GetComponent<Rigidbody>().velocity;
+            var speed = GetComponent<Rigidbody>().linearVelocity;
             if (speed.magnitude > 3)
             {
                 speed = speed.normalized * 3f;

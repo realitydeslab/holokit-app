@@ -19,7 +19,7 @@ public class ShootMagicFake : MonoBehaviour
     void Start()
     {
         pos = transform.position;
-        GetComponent<Rigidbody>().velocity = Vector3.forward * speed;
+        GetComponent<Rigidbody>().linearVelocity = Vector3.forward * speed;
     }
 
     // Update is called once per frame

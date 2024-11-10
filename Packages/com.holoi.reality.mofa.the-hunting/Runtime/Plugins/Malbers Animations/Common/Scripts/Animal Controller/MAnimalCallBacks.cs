@@ -117,7 +117,7 @@ namespace MalbersAnimations.Controller
         } 
         internal void ResetUPVector()
         {
-            RB.velocity = Vector3.ProjectOnPlane(RB.velocity, UpVector);  
+            RB.linearVelocity = Vector3.ProjectOnPlane(RB.linearVelocity, UpVector);  
             //Extra OPTIONAL
             AdditivePosition = Vector3.ProjectOnPlane(AdditivePosition, UpVector);
             DeltaPos = Vector3.ProjectOnPlane(DeltaPos, UpVector);

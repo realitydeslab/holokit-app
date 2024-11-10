@@ -43,7 +43,7 @@ namespace Holoi.Reality.Typed.TheDuck
             var fixedYSpeed = Remap(length, 0, 600, 0, DuckMaxSpeed.y, true);
             var fixedXSpeed = Remap(length, 0, 600, 0, DuckMaxSpeed.x, true);
 
-            duckInstance.GetComponent<Rigidbody>().velocity = -direction * fixedYSpeed + HoloKit.HoloKitCameraManager.Instance.CenterEyePose.forward * fixedXSpeed;
+            duckInstance.GetComponent<Rigidbody>().linearVelocity = -direction * fixedYSpeed + HoloKit.HoloKitCameraManager.Instance.CenterEyePose.forward * fixedXSpeed;
         }
 
         float Remap(float x, float inMin, float inMax, float outMin, float outMax, bool clamp = false)

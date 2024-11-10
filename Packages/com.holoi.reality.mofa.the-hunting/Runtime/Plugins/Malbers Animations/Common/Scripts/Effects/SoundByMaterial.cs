@@ -60,7 +60,7 @@ namespace MalbersAnimations.Utilities
             PlayMaterialSound(hitSurface.sharedMaterial);
         }
 
-        public virtual void PlayMaterialSound(PhysicMaterial hitSurface)
+        public virtual void PlayMaterialSound(PhysicsMaterial hitSurface)
         {
             if (!Audio_Source)
             {
@@ -95,7 +95,7 @@ namespace MalbersAnimations.Utilities
     public class MaterialSound
     {
         public AudioClip[] Sounds;
-        public PhysicMaterial material;
+        public PhysicsMaterial material;
     }
 
 
@@ -169,7 +169,7 @@ namespace MalbersAnimations.Utilities
             Rect R_1 = new Rect(rect.x, rect.y, (rect.width), EditorGUIUtility.singleLineHeight);
             //Rect R_2 = new Rect(rect.x + 25 + ((rect.width - 30) / 2), rect.y, rect.width - ((rect.width) / 2) - 14, EditorGUIUtility.singleLineHeight);
 
-            element.material = (PhysicMaterial)EditorGUI.ObjectField(R_1, element.material, typeof(PhysicMaterial), false);
+            element.material = (PhysicsMaterial)EditorGUI.ObjectField(R_1, element.material, typeof(PhysicsMaterial), false);
         }
 
 

@@ -135,7 +135,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void DestroyExistingARPlanes()
         {
-            var planes = FindObjectsOfType<ARPlane>();
+            var planes = FindObjectsByType<ARPlane>(FindObjectsSortMode.None);
             foreach (var plane in planes)
             {
                 Destroy(plane.gameObject);

@@ -27,7 +27,7 @@ namespace Holoi.Library.HoloKitApp.Editor
             string entitlementFileName = name + ".entitlements";
 
             var manager = new ProjectCapabilityManager(projectPath, entitlementFileName, null, project.GetUnityMainTargetGuid());
-            manager.AddSignInWithAppleWithCompatibility(project.GetUnityFrameworkTargetGuid());
+            ProjectCapabilityManagerExtension.AddSignInWithAppleWithCompatibility(manager);
             manager.WriteToFile();
         }
     }

@@ -79,7 +79,7 @@ namespace Holoi.Library.MOFABase
             // Position
             bolt.transform.position = transform.position + Vector3.up * 1.5f + transform.forward * 1f;
             // Add velocity
-            bolt.GetComponent<Rigidbody>().velocity = (transform.forward * _boltMagicVelocity.z)  + (transform.up * _boltMagicVelocity.y)
+            bolt.GetComponent<Rigidbody>().linearVelocity = (transform.forward * _boltMagicVelocity.z)  + (transform.up * _boltMagicVelocity.y)
                 + (transform.right * _boltMagicVelocity.x);
         }
 

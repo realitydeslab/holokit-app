@@ -33,7 +33,7 @@ namespace MalbersAnimations
 
             ExitTime = false;
 
-            rb.drag = OnEnterDrag;
+            rb.linearDamping = OnEnterDrag;
             //  rb.isKinematic = OnEnterKinematic;
         }
 

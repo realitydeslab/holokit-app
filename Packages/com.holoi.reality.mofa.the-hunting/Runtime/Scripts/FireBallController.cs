@@ -56,36 +56,36 @@ namespace Holoi.Reality.MOFA.TheHunting
             if (!_isTheOriginalFireBall)
                 return;
 
-            if (!_beingAddedForce && _rigidbody.velocity != Vector3.zero)
+            if (!_beingAddedForce && _rigidbody.linearVelocity != Vector3.zero)
             {
                 _beingAddedForce = true;
 
-                Vector3 forward = _rigidbody.velocity.normalized;
-                float magnitude = _rigidbody.velocity.magnitude;
+                Vector3 forward = _rigidbody.linearVelocity.normalized;
+                float magnitude = _rigidbody.linearVelocity.magnitude;
 
                 // Spawn the left side fire ball 1
                 var leftFireBallInstance1 = Instantiate(_fireBallPrefab);
                 leftFireBallInstance1._isTheOriginalFireBall = false;
                 Vector3 leftForward1 = Quaternion.Euler(0f, -DeviationAngleInDeg1, 0f) * forward;
-                leftFireBallInstance1.GetComponent<Rigidbody>().velocity = magnitude * leftForward1;
+                leftFireBallInstance1.GetComponent<Rigidbody>().linearVelocity = magnitude * leftForward1;
 
                 // Spawn the left side fire ball 2
                 var leftFireBallInstance2 = Instantiate(_fireBallPrefab);
                 leftFireBallInstance2._isTheOriginalFireBall = false;
                 Vector3 leftForward2 = Quaternion.Euler(0f, -DeviationAngleInDeg2, 0f) * forward;
-                leftFireBallInstance2.GetComponent<Rigidbody>().velocity = magnitude * leftForward2;
+                leftFireBallInstance2.GetComponent<Rigidbody>().linearVelocity = magnitude * leftForward2;
 
                 // Spawn the right side fire ball 1
                 var rightFireBallInstance1 = Instantiate(_fireBallPrefab);
                 rightFireBallInstance1._isTheOriginalFireBall = false;
                 Vector3 rightForward1 = Quaternion.Euler(0f, DeviationAngleInDeg1, 0f) * forward;
-                rightFireBallInstance1.GetComponent<Rigidbody>().velocity = magnitude * rightForward1;
+                rightFireBallInstance1.GetComponent<Rigidbody>().linearVelocity = magnitude * rightForward1;
 
                 // Spawn the right side fire ball 2
                 var rightFireBallInstance2 = Instantiate(_fireBallPrefab);
                 rightFireBallInstance2._isTheOriginalFireBall = false;
                 Vector3 rightForward2 = Quaternion.Euler(0f, DeviationAngleInDeg2, 0f) * forward;
-                rightFireBallInstance2.GetComponent<Rigidbody>().velocity = magnitude * rightForward2;
+                rightFireBallInstance2.GetComponent<Rigidbody>().linearVelocity = magnitude * rightForward2;
             }
         }
 
@@ -109,7 +109,7 @@ namespace Holoi.Reality.MOFA.TheHunting
         {
             var rigidbody = GetComponent<Rigidbody>();
             rigidbody.useGravity = false;
-            rigidbody.velocity = Vector3.zero;
+            rigidbody.linearVelocity = Vector3.zero;
             _animator.SetTrigger("Explode");
             StartCoroutine(WaitAndDestory(1f));
         }

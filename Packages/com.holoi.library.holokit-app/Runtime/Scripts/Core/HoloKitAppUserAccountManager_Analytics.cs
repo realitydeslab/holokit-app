@@ -33,14 +33,16 @@ namespace Holoi.Library.HoloKitApp
         // We cannot initialize Analytics when there is no network connection
         private async void Analytics_Init()
         {
-            try
-            {
-                List<string> consentIdentifiers = await AnalyticsService.Instance.CheckForRequiredConsents();
-            }
-            catch (ConsentCheckException e)
-            {
+            // try
+            // {
+            //     List<string> consentIdentifiers = await AnalyticsService.Instance.CheckForRequiredConsents();
+            // }
+            // catch (ConsentCheckException e)
+            // {
                 
-            }
+            // }
+            
+        	AnalyticsService.Instance.StartDataCollection();
 
             HoloKitAppAnalyticsEventManager.OnPlayerRegistered += OnPlayerRegistered;
             HoloKitAppAnalyticsEventManager.OnDreamOver += OnDreamOver;
@@ -58,7 +60,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnDreamOver(RealitySessionData realitySessionData)
         {
-            Dictionary<string, object> parameters = new()
+            CustomEvent e = new CustomEvent("dreamOver") 
             {
                 { RealityBundleIdKey, realitySessionData.RealityBundleId },
                 { SessionDurationKey, realitySessionData.SessionDuration },
@@ -67,7 +69,7 @@ namespace Holoi.Library.HoloKitApp
 
             try
             {
-                AnalyticsService.Instance.CustomData("dreamOver", parameters);
+                AnalyticsService.Instance.RecordEvent(e);
             }
             catch (Exception)
             {
@@ -77,7 +79,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnOverheated(HoloKitAppOverheatData overheatData)
         {
-            Dictionary<string, object> parameters = new()
+            CustomEvent e = new CustomEvent("overheat") 
             {
                 { RealityBundleIdKey, overheatData.RealitySessionData.RealityBundleId },
                 { SessionDurationKey, overheatData.RealitySessionData.SessionDuration },
@@ -88,7 +90,7 @@ namespace Holoi.Library.HoloKitApp
 
             try
             {
-                AnalyticsService.Instance.CustomData("overheat", parameters);
+                AnalyticsService.Instance.RecordEvent(e);
             }
             catch (Exception)
             {
@@ -100,11 +102,11 @@ namespace Holoi.Library.HoloKitApp
         {
             if (renderMode == HoloKitRenderMode.Stereo)
             {
-                Dictionary<string, object> parameters = new();
+                CustomEvent e = new CustomEvent("enterStarMode") {};
 
                 try
                 {
-                    AnalyticsService.Instance.CustomData("enterStarMode", parameters);
+                    AnalyticsService.Instance.RecordEvent(e);
                 }
                 catch (Exception)
                 {
@@ -115,7 +117,7 @@ namespace Holoi.Library.HoloKitApp
 
         private void OnPlayerRegistered(string userEmail, string userName)
         {
-            Dictionary<string, object> parameters = new()
+            CustomEvent e = new CustomEvent("playerRegistered")
             {
                 { UserEmailKey, userEmail },
                 { UserNameKey, userName }
@@ -123,7 +125,7 @@ namespace Holoi.Library.HoloKitApp
 
             try
             {
-                AnalyticsService.Instance.CustomData("playerRegistered", parameters);
+                AnalyticsService.Instance.RecordEvent(e);
             }
             catch (Exception)
             {

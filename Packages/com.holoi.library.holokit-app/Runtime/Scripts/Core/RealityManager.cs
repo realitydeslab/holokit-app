@@ -39,7 +39,7 @@ namespace Holoi.Library.HoloKitApp
         {
             if (_config.UrpAsset != null)
             {
-                GraphicsSettings.renderPipelineAsset = _config.UrpAsset;
+                GraphicsSettings.defaultRenderPipeline = _config.UrpAsset;
             }
         }
 

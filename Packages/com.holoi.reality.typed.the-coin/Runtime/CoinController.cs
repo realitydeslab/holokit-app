@@ -17,7 +17,7 @@ namespace Holoi.Reality.Typed.TheCoin
         void Start()
         {
             //ROT.RotateVector = new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), Random.Range(-1, 1));
-            GetComponent<Rigidbody>().velocity = transform.forward * Speed;
+            GetComponent<Rigidbody>().linearVelocity = transform.forward * Speed;
         }
 
         // Update is called once per frame

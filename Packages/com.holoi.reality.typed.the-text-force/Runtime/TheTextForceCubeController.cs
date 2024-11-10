@@ -101,7 +101,7 @@ namespace Holoi.Reality.Typed.TheTextForce
         void OnRelease(TheTextForceObjectController forceObject)
         {
             _isFilled = false;
-            GetComponent<Rigidbody>().velocity = Vector3.up * 1;
+            GetComponent<Rigidbody>().linearVelocity = Vector3.up * 1;
             _intakeState = IntakeState.idle;
             _animator.SetTrigger("Release");
 
@@ -138,7 +138,7 @@ namespace Holoi.Reality.Typed.TheTextForce
             transform.GetComponent<Rigidbody>().useGravity = true;
             _movemenrtState = MovementState.Free;
             _followManager.enabled = false;
-            transform.GetComponent<Rigidbody>().velocity = direcion * 3f;
+            transform.GetComponent<Rigidbody>().linearVelocity = direcion * 3f;
         }
 
 

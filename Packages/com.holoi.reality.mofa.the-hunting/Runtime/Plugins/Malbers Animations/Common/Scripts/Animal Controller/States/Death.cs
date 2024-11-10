@@ -69,8 +69,8 @@ namespace MalbersAnimations.Controller
 
             if (animal.RB)
             {
-                animal.RB.drag = RigidbodyDrag;
-                animal.RB.angularDrag = RigidbodyAngularDrag;
+                animal.RB.linearDamping = RigidbodyDrag;
+                animal.RB.angularDamping = RigidbodyAngularDrag;
             }
 
             if (disableAnimal)
