@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: Copyright 2023 Holo Interactive <dev@holoi.com>
-// SPDX-FileContributor: Botao Amber Hu <botao@holoi.com>
-// SPDX-FileContributor: Yuchen Zhang <yuchen@holoi.com>
+// SPDX-FileCopyrightText: Copyright 2024 Reality Design Lab <dev@reality.design>
+// SPDX-FileContributor: Botao Amber Hu <botao@reality.design>
+// SPDX-FileContributor: Yuchen Zhang <yuchen@reality.design>
 // SPDX-License-Identifier: MIT
 
 using System;

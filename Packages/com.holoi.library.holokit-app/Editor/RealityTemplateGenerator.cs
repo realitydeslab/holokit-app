@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: Copyright 2023 Holo Interactive <dev@holoi.com>
-// SPDX-FileContributor: Botao Amber Hu <botao@holoi.com>
+// SPDX-FileCopyrightText: Copyright 2024 Reality Design Lab <dev@reality.design>
+// SPDX-FileContributor: Botao Amber Hu <botao@reality.design>
 // SPDX-License-Identifier: MIT
 
 using System;
@@ -18,7 +18,7 @@ namespace Holoi.Library.HoloKitApp.Editor
         string _displayName = "Typed: The Dream";
         string _bundleId = "com.holoi.reality.typed.the-dream";
         string _namespaceName = "Holoi.Reality.Typed.TheDream";
-        string _author = "Holo Interactive";
+        string _author = "Reality Design Lab";
 
         [MenuItem("Tools/Reality Template Package Generator")]
         public static void LaunchRealityPackageGeneraetorWindow()
@@ -115,8 +115,8 @@ namespace Holoi.Library.HoloKitApp.Editor
             Directory.CreateDirectory(docPath);
             
 					  // Generate RealityManager script
-            string realityManagerContent = @"// SPDX-FileCopyrightText: Copyright 2023 Holo Interactive <dev@holoi.com>
-// SPDX-FileContributor: Botao Amber Hu <botao@holoi.com>
+            string realityManagerContent = @"// SPDX-FileCopyrightText: Copyright 2024 Reality Design Lab <dev@reality.design>
+// SPDX-FileContributor: Botao Amber Hu <botao@reality.design>
 // SPDX-License-Identifier: MIT
 
 using UnityEngine;
@@ -1122,9 +1122,9 @@ NativeFormatImporter:
             string packageJsonContent = @"{
     ""name"": ""{{_bundleId}}"",
     ""displayName"": ""{{_namespaceName}}"",
-    ""author"": ""Holo Interactive"",
+    ""author"": ""Reality Design Lab"",
     ""version"": ""1.0.0"",
-    ""unity"": ""2023.2"",
+    ""unity"": ""6000.0"",
     ""dependencies"": {
         ""com.holoi.library.asset-foundation"": ""1.0.0"",
         ""com.holoi.library.holokit-app"": ""1.0.0""

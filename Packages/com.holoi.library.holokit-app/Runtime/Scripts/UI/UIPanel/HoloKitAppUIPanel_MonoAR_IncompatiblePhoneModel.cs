@@ -1,9 +1,9 @@
-// SPDX-FileCopyrightText: Copyright 2023 Holo Interactive <dev@holoi.com>
-// SPDX-FileContributor: Yuchen Zhang <yuchen@holoi.com>
+// SPDX-FileCopyrightText: Copyright 2024 Reality Design Lab <dev@reality.design>
+// SPDX-FileContributor: Yuchen Zhang <yuchen@reality.design>
 // SPDX-License-Identifier: MIT
 
-// SPDX-FileCopyrightText: Copyright 2023 Holo Interactive <dev@holoi.com>
-// SPDX-FileContributor: Yuchen Zhang <yuchen@holoi.com>
+// SPDX-FileCopyrightText: Copyright 2024 Reality Design Lab <dev@reality.design>
+// SPDX-FileContributor: Yuchen Zhang <yuchen@reality.design>
 // SPDX-License-Identifier: MIT
 
 namespace Holoi.Library.HoloKitApp.UI

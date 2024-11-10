@@ -21,8 +21,8 @@ HoloKit Unity SDK, built on the foundation of ARFoundation, is compatible with m
 HoloKit Unity SDK has been tested and found compatible with the following software versions:
 
 - Unity
-  - Unity 2023.2 LTS
-  - Unity 2023.2 
+  - Unity 6000.0 LTS
+  - Unity 6000.0 
   
 - ARFoundation
   - ARFoundation 5.1

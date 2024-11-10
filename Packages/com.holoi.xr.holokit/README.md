@@ -59,7 +59,7 @@ Use package manager via git install:
 HoloKit Unity SDK has been tested and found compatible with the following software versions:
 
 ### Unity
-- Unity 2023.2 LTS
+- Unity 6000.0 LTS
 
 ### ARFoundation
 - ARFoundation 5.1
