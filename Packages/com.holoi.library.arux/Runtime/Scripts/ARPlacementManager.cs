@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
-using Holoi.Library.HoloKitApp;
+using Holoi.Library.HoloKitAppLib;
 using HoloKit;
 
 namespace Holoi.Library.ARUX

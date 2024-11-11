@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 using UnityEngine;
-using Holoi.Library.HoloKitApp;
+using Holoi.Library.HoloKitAppLib;
 
 namespace Holoi.Library.ARUX
 {

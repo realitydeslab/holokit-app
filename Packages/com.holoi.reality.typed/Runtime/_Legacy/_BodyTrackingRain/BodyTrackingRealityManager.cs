@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Holoi.Library.HoloKitApp;
+using Holoi.Library.HoloKitAppLib;
 using Holoi.Library.ARUX;
 using Unity.Netcode;
 using HoloKit;

@@ -4,6 +4,7 @@
 
 using UnityEngine;
 using UnityEngine.Animations;
+using Holoi.Library.HoloKitAppLib;
 
 namespace Holoi.Library.ARUX
 {
@@ -13,7 +14,7 @@ namespace Holoi.Library.ARUX
 
         private void Start()
         {
-            if (HoloKitApp.HoloKitApp.Instance.IsHost)
+            if (HoloKitApp.Instance.IsHost)
             {
                 _parentConstraint.constraintActive = true;
             }

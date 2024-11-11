@@ -15,7 +15,7 @@ It compiles with Unity 2021.3 LTS.
 
 ## Architecture
 
-This app is organized into distinct packages, where each reality is represented by a differenct package. The core of these packages is `Holoi.Library.HoloKitApp`, which serves as the base package that all other reality packages depend on.
+This app is organized into distinct packages, where each reality is represented by a differenct package. The core of these packages is `Holoi.Library.HoloKitAppLib`, which serves as the base package that all other reality packages depend on.
 
 <img width="398" alt="image" src="https://github.com/holoi/holokit-app/assets/44870300/562e895c-31b2-4ada-b53d-968518d7a4e4">
 
@@ -27,11 +27,11 @@ To develop a new reality, you should create a new reality package that follows t
 There are some native plugins for this app. 
 
 * [HoloKitAppIOSNative] compiles to
-`Packages/com.holoi.library.holokit-app/Runtime/Plugins/HoloKitAppIOSNative`
+`Packages/com.holoi.library.holokit-app-lib/Runtime/Plugins/HoloKitAppIOSNative`
 
-* [HoloKitAppWatchConnectivityNativePlugin] compiles to `Packages/com.holoi.library.holokit-app/Runtime/Plugins/HoloKitAppWatchConnectivity/iOS/libHoloKitAppWatchConnectivityNativePlugin.a`
+* [HoloKitAppWatchConnectivityNativePlugin] compiles to `Packages/com.holoi.library.holokit-app-lib/Runtime/Plugins/HoloKitAppWatchConnectivity/iOS/libHoloKitAppWatchConnectivityNativePlugin.a`
 
-* [HoloiLibraryPermissionsNativePlugin] compiles to `Packages/com.holoi.library.permissions`
+* [HoloiLibraryPermissionsNativePlugin] compiles to `Packages/org.realitydeslab.library.permissions`
 
 * [MultipeerConnectivityTransportForNetcodeForGameObjectsNativePlugin] compiles to `Packages/com.holoi.netcode.transport.mpc`
 
@@ -95,7 +95,7 @@ Line 35
 
 Before creating your new reality, first clone the project to your local disk and open it in Unity Editor. We strongly recommend building it on your iPhone initially to ensure compatibility. Once confirmed, you can proceed to add new realities to the project.
 
-In this project's architecture, each reality is a package dependent on the `Holoi.Library.HoloKitApp` base package. To create a new reality, you need to create a new reality package. We offers two ways to create a new reality package. You can either use the Reality Template Package Generator tool or do it manually.
+In this project's architecture, each reality is a package dependent on the `Holoi.Library.HoloKitAppLib` base package. To create a new reality, you need to create a new reality package. We offers two ways to create a new reality package. You can either use the Reality Template Package Generator tool or do it manually.
 
 <img width="169" alt="image" src="https://github.com/holoi/holokit-app/assets/44870300/cbfd048b-ed4d-4cb4-8932-80a4a6cce40d">
 

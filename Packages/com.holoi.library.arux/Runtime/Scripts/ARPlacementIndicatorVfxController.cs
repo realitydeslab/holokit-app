@@ -5,7 +5,7 @@
 
 using UnityEngine;
 using UnityEngine.VFX;
-using Holoi.Library.HoloKitApp;
+using Holoi.Library.HoloKitAppLib;
 
 namespace Holoi.Library.ARUX
 {

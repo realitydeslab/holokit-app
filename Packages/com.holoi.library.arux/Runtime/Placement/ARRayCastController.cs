@@ -51,7 +51,7 @@ namespace Holoi.Library.ARUX
         void Start()
         {
             _centerEye = HoloKitCameraManager.Instance.CenterEyePose;
-            _arRaycastManager = FindObjectOfType<ARRaycastManager>();
+            _arRaycastManager = FindAnyObjectByType<ARRaycastManager>();
         }
 
         void Update()

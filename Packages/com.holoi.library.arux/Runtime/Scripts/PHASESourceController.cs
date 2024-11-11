@@ -7,7 +7,7 @@
 using UnityEngine;
 using Apple.PHASE;
 using HoloKit;
-using Holoi.Library.HoloKitApp;
+using Holoi.Library.HoloKitAppLib;
 
 namespace Holoi.Library.ARUX
 {
@@ -20,8 +20,8 @@ namespace Holoi.Library.ARUX
         private void Awake()
         {
             if (HoloKitUtils.IsRuntime
-                && HoloKitApp.HoloKitApp.Instance.GlobalSettings.PhaseEnabled
-                && HoloKitApp.HoloKitApp.Instance.CurrentReality.IsPhaseRequired())
+                && HoloKitAppLib.HoloKitApp.Instance.GlobalSettings.PhaseEnabled
+                && HoloKitAppLib.HoloKitApp.Instance.CurrentReality.IsPhaseRequired())
             {
                 _phaseSource.enabled = true;
                 _unityAudioSource.enabled = false;

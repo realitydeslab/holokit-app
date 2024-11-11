@@ -6,6 +6,7 @@
 using UnityEngine;
 using Apple.CoreHaptics;
 using HoloKit;
+using Holoi.Library.HoloKitAppLib;
 
 namespace Holoi.Library.ARUX
 {
@@ -17,7 +18,7 @@ namespace Holoi.Library.ARUX
         {
             get
             {
-                return HoloKitUtils.IsRuntime && HoloKitApp.HoloKitApp.Instance.GlobalSettings.VibrationEnabled;
+                return HoloKitUtils.IsRuntime && HoloKitAppLib.HoloKitApp.Instance.GlobalSettings.VibrationEnabled;
             }
         }
 

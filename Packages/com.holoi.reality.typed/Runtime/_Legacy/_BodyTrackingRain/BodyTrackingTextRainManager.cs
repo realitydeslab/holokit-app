@@ -4,7 +4,7 @@ using UnityEngine;
 using Unity.Netcode;
 using HoloKit;
 using UnityEngine.VFX;
-using Holoi.Library.HoloKitApp;
+using Holoi.Library.HoloKitAppLib;
 using Holoi.Library.ARUX;
 
 namespace Holoi.Reality.Typography

@@ -4,7 +4,7 @@
 
 using UnityEngine;
 using Unity.Netcode;
-using Holoi.Library.HoloKitApp;
+using Holoi.Library.HoloKitAppLib;
 
 namespace Holoi.Reality.BlankPiecesOfPaper
 {

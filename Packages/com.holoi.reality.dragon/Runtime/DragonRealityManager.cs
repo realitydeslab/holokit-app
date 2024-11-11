@@ -5,7 +5,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Holoi.Library.HoloKitApp;
+using Holoi.Library.HoloKitAppLib;
 using Unity.Netcode;
 using HoloKit;
 

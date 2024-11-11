@@ -1,5 +1,5 @@
 using UnityEngine;
-using Holoi.Library.HoloKitApp.UI;
+using Holoi.Library.HoloKitAppLib.UI;
 using UnityEngine.VFX;
 using UnityEngine.UI;
 using TMPro;

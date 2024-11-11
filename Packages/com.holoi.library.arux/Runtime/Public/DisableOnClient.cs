@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
-using Holoi.Library.HoloKitApp;
+using Holoi.Library.HoloKitAppLib;
 
 
 public class DisableOnClient : MonoBehaviour
