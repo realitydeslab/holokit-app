@@ -44,7 +44,9 @@ namespace HoloKit.DeviceTests
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void StartRequestedRun()
         {
-            if (!Environment.GetCommandLineArgs().Contains("--holokit-scene-test")) return;
+            if (!Environment.GetCommandLineArgs().Contains("--holokit-scene-test") &&
+                Environment.GetEnvironmentVariable("HOLOKIT_SCENE_TEST") != "1") return;
+            Debug.Log("[DEVICE TEST] Starting requested device scene smoke tests.");
             var runner = new GameObject("HoloKit Device Scene Tests");
             DontDestroyOnLoad(runner);
             runner.AddComponent<DeviceSceneSmokeTests>();
@@ -94,9 +96,9 @@ namespace HoloKit.DeviceTests
             var scenes = app.GlobalSettings.GetAllRealities().ToArray();
             if (scenes.Length == 0) throw new InvalidOperationException("The product catalog is empty.");
             var filter = Environment.GetCommandLineArgs().FirstOrDefault(a => a.StartsWith("--holokit-test-scene="));
-            if (filter != null)
+            var sceneName = filter == null ? Environment.GetEnvironmentVariable("HOLOKIT_TEST_SCENE") : filter.Substring("--holokit-test-scene=".Length);
+            if (!string.IsNullOrEmpty(sceneName))
             {
-                string sceneName = filter.Substring("--holokit-test-scene=".Length);
                 scenes = scenes.Where(r => r.Scene.SceneName == sceneName).ToArray();
                 if (scenes.Length == 0) throw new InvalidOperationException("Requested scene is absent from the product catalog: " + sceneName);
             }

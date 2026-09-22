@@ -121,5 +121,28 @@ Results are written to `Documents/HoloKitSceneTests/results.json` in the app's
 data container. This is a startup/lifecycle smoke test, not proof of physical
 hand gestures, optical calibration, remote-peer synchronization, or Watch use.
 
+### Existing-install migration
+
+The first development launch with logging enabled exposed a startup blocker that
+the silent initial launch could not reveal: the installed App Store preferences
+refer to assembly `Holoi.Library.HoloKitApp`, while the renamed runtime assembly
+is `Holoi.Library.HoloKitAppLib`. BinaryFormatter threw before bootstrap finished.
+The save loader now accepts only the known legacy settings types, migrates to a
+versioned JSON document, and retains the original `.save` file. Repeated JSON
+saves keep a previous copy; unreadable JSON is preserved before fallback.
+
+Eight migration regression tests passed through `unity test`, including both
+assembly names, corrupt data, unexpected object types, null preference maps,
+round trips, and previous-file preservation. The old-assembly test also used a
+copy of the connected iPhone's actual settings, supplied using
+`-legacySettingsFixture /path/to/HoloKitAppGlobalSettings.save` after `--`.
+The device fixture remains outside Git.
+
+For iOS launches, the smoke runner also supports process environment variables
+`HOLOKIT_SCENE_TEST=1` and optional `HOLOKIT_TEST_SCENE=<scene name>` through
+`devicectl --environment-variables`. This avoids relying on Unity's managed
+command-line argument forwarding. The migration build still requires renewed
+device validation before the startup bug can be considered resolved on iPhone.
+
 This document describes the intended architecture and work in progress, not a
 claim that the four apps have built or run successfully.
