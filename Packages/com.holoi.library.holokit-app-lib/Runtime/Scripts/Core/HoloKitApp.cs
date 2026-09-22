@@ -130,6 +130,7 @@ namespace Holoi.Library.HoloKitAppLib
 
             Debug.unityLogger.logEnabled = _logEnabled || Debug.isDebugBuild;
             // Load Global Settings
+            GlobalSettings = HoloKitProductConfiguration.LoadRuntimeSettings(GlobalSettings);
             GlobalSettings.Load();
             // Register scene management delegates
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -155,7 +156,8 @@ namespace Holoi.Library.HoloKitAppLib
                 StartCoroutine(HoloKitAppPermissionsManager.RequestWirelessDataPermission());
             }
             // Activate WCSession
-            HoloKitAppWatchConnectivityAPI.ActivateWatchConnectivitySession();
+            if (GlobalSettings.AppConfig.WatchCompanionEnabled)
+                HoloKitAppWatchConnectivityAPI.ActivateWatchConnectivitySession();
             // Set a default reality
             CurrentReality = GlobalSettings.RealityList.List[0];
             // Simulate iOS's FPS when testing on Editor
@@ -302,6 +304,7 @@ namespace Holoi.Library.HoloKitAppLib
 
         private void ResetWatchConnectivity()
         {
+            if (GlobalSettings == null || !GlobalSettings.AppConfig.WatchCompanionEnabled) return;
             // Make Watch App jump back to the main page
             HoloKitAppWatchConnectivityAPI.UpdateWatchPanel(HoloKitWatchPanel.None);
         }

@@ -31,7 +31,7 @@ namespace HoloKit.Tests
             _previous = EditorSceneManager.GetSceneManagerSetup();
             if (Enumerable.Range(0, SceneManager.sceneCount).Any(i => SceneManager.GetSceneAt(i).isDirty))
                 Assert.Fail("Save edited scenes before running scene contracts.");
-            Assert.That(File.Exists(ScenePath), Is.True, "Missing product scene: " + ScenePath);
+            Assert.That(AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath), Is.Not.Null, "Missing product scene: " + ScenePath);
             _scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
         }
 

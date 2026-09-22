@@ -20,5 +20,7 @@ namespace Holoi.Library.HoloKitAppLib
         // Account System Enabled
         // Apple Signin, Cloud Save and Analytics
         public bool UserAccountSystemEnabled;
+
+        public bool WatchCompanionEnabled = true;
     }
 }

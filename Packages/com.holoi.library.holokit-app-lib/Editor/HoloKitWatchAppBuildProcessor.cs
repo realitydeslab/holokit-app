@@ -8,13 +8,12 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using UnityEngine;
+using Holoi.Library.HoloKitAppLib;
 
 namespace Holoi.Library.HoloKitAppLib.Editor
 {
     public class HoloKitWatchAppBuildProcessor
     {
-        private const string WatchAppDisplayName = "HoloKit";
-
         private const string WatchAppTargetName = "HoloKitWatchApp";
 
         private const string HealthShareUsageDescription = "Your workout data during the gameplay will be displayed after each round.";
@@ -39,10 +38,14 @@ namespace Holoi.Library.HoloKitAppLib.Editor
         [PostProcessBuild]
         private static void AppleWatchSetup(BuildTarget target, string buildPath)
         {
+            if (target != BuildTarget.iOS) return;
+            var settings = Resources.Load<HoloKitAppGlobalSettings>(HoloKitProductConfiguration.ResourceName);
+            if (settings == null || settings.AppConfig == null)
+                throw new UnityEditor.Build.BuildFailedException("Missing product settings for Apple Watch packaging.");
+            if (!settings.AppConfig.WatchCompanionEnabled) return;
             if (!Directory.Exists("WatchApp"))
             {
-                Debug.LogWarning("WatchApp folder not found. Skipping Apple Watch setup.");
-                return;
+                throw new UnityEditor.Build.BuildFailedException("Apple Watch is enabled for this product, but its WatchApp folder is missing.");
             }
 
             string packageName = UnityEngine.Application.identifier;
@@ -152,7 +155,7 @@ namespace Holoi.Library.HoloKitAppLib.Editor
             project.SetBuildProperty(watchAppTargetGuid, "MARKETING_VERSION", PlayerSettings.bundleVersion);
             project.SetBuildProperty(watchAppTargetGuid, "TARGETED_DEVICE_FAMILY", "4");
             project.SetBuildProperty(watchAppTargetGuid, "INFOPLIST_FILE", $"{destinationPathPrefix}/HoloKitWatchApp-Info.plist");
-            project.SetBuildProperty(watchAppTargetGuid, "INFOPLIST_KEY_CFBundleDisplayName", WatchAppDisplayName);
+            project.SetBuildProperty(watchAppTargetGuid, "INFOPLIST_KEY_CFBundleDisplayName", PlayerSettings.productName);
             project.SetBuildProperty(watchAppTargetGuid, "INFOPLIST_KEY_UISupportedInterfaceOrientations",
                 "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown");
             project.SetBuildProperty(watchAppTargetGuid, "INFOPLIST_KEY_WKCompanionAppBundleIdentifier", packageName);

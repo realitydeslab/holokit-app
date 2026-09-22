@@ -1,5 +1,39 @@
 # Unity 6.3 / iOS 27 upgrade
 
+## 最新进度：2026-09-22，继续执行后
+
+- 上一轮 Xcode 27 原生构建最终成功；修复包已安装到指定的 iPhone 16 Pro
+  (`00008140-001111563A0B001C`，iOS 26.0)。完整真机结果位于
+  `/tmp/holokit-upgrade-20260922/iphone16pro-fixed/results.json`，附 26 张截图。
+  **26/26 场景生命周期检查通过，启动错误 0，场景错误 0**；每例 AR tracking、
+  host listening、共享管理器已生成、回到列表均为真。截图已人工检查 QRealm 和 Tornado。
+  这仍不等于真实手势、双设备联网、录屏和光学校准均通过。
+- 产品配置已转为 `Assets/Resources/HoloKitAppGlobalSettings.asset`，共享壳在运行时
+  加载各产品的配置副本。HoloKit 与三个小产品各拥有游戏目录、封面和 App 图标。
+  Watch 打包由产品配置控制，HoloKit 和 MOFA 启用，Typed 与 QRealm 关闭。
+- 已将 21 个被多个游戏引用的渲染/特效资源连同原 GUID 移到
+  `Packages/com.holoi.library.shared-assets`。原路径与新路径记录在
+  `Documentation/Validation/2026-09-22/shared-asset-moves.json`。
+- `Products/MOFA`、`Products/Typed`、`Products/QRealm` 是新生成的独立 Unity 项目，
+  游戏目录分别 5/7/1 项、场景总数 7/9/3、引用本仓库本地包数 17/18/12。
+  用户的原有兄弟项目没有被修改。生成脚本在
+  `Tools/Products/generate_thin_projects.py`，拒绝覆盖已存在的产品目录。
+- 主项目在配置变更后 Unity CLI 编辑器测试 **118/118 通过**，报告
+  `/tmp/holokit-upgrade-20260922/product-config-tests-3.xml`。三个小项目的独立
+  Unity CLI 测试现已通过：MOFA **50/50**、Typed **70/70**、QRealm **22/22**；
+  报告分别为 `/tmp/holokit-upgrade-20260922/mofa-isolated-tests.xml`、
+  `typed-isolated-tests-2.xml`、`qrealm-isolated-tests-2.xml`。首次 QRealm 测试
+  发现生成器 `file:` 路径少了一层；首次 Typed 测试发现雕塑场景材质原先只在主项目，
+  均已修复并通过重跑。
+- QRealm、Typed 的独立 iOS 导出已启动，结果仍待确认；MOFA 尚未导出。三个
+  小产品均尚未在真机安装。生成器已排除主项目的本地 NatML/NatShare 配置，
+  不把这些非产品配置复制到小项目或提交到 Git。
+
+下一步确认三个独立产品使用原生
+`unity build Products/<产品> --profile iOS --output-path ...` 分别导出，
+用 Xcode 签名编译并在 iPhone 16 Pro 上安装验证。完成所有产品后，再重建当前
+HoloKit 根项目并做回归，因为根项目的产品资源归属也已变化。
+
 ## 续接记录：2026-09-22，用户要求及时保存进度
 
 **先读本节再继续。项目尚未完成四 App 拆分；不要把编辑器测试通过或旧包真机
