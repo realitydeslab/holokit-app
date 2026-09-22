@@ -42,6 +42,11 @@
   新 runner 已通过 MOFA 独立项目 Unity CLI 编译及包内 Editor 测试 **49/49**，
   报告 `/tmp/holokit-upgrade-20260922/mofa-two-phone-editor.xml`；仍待两台真机
   共同验证，不能仅凭联网对象数宣称空间对齐成功。
+- MOFA 双机/双目最终 Unity CLI iOS 导出已成功，日志在
+  `/tmp/holokit-upgrade-20260922/mofa-two-phone-final-export.log`；Xcode 原生
+  签名编译正在运行，结果目录
+  `/tmp/holokit-upgrade-20260922/mofa-two-phone-final-iphone.xcresult`。
+  当前尚未将这一版安装到两台 iPhone，不能把前一版战斗/召唤报告当作新版本验收。
 
 - **Dragon 召唤排查与修复待真机确认。** Hunting 召唤按钮最终调用
   `MofaHuntingRealityManager.TryGetReady()`；原实现只有 ARPlacementManager 找到
