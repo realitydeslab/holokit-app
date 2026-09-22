@@ -61,6 +61,8 @@ namespace RealityDesignLab.MOFA.TheTraining
 
         private IEnumerator Start()
         {
+            var previousSleepTimeout = Screen.sleepTimeout;
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
             Application.logMessageReceived += OnLog;
             _directory = Path.Combine(Application.persistentDataPath, "MofaCombatTests");
             Directory.CreateDirectory(_directory);
@@ -83,6 +85,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             }
             Save();
             Application.logMessageReceived -= OnLog;
+            Screen.sleepTimeout = previousSleepTimeout;
             Debug.Log($"[MOFA COMBAT TEST] COMPLETE={_report.complete} fighting={_report.fighting} casts={_report.castsBefore}->{_report.castsAfter} errors={_report.errors.Count} report={_directory}/results.json");
             Destroy(gameObject);
         }
@@ -110,6 +113,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             _report.arTracking = ARSession.state == ARSessionState.SessionTracking;
             _report.hostListening = NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost && NetworkManager.Singleton.IsListening;
             _report.aiSpawned = FindObjectOfType<MofaAIPlayer>(true) != null;
+            Save();
             Require(_report.arTracking && _report.hostListening && _report.aiSpawned, "AR, host, or AI opponent is not ready.");
 
             var placement = FindObjectOfType<ARPlacementManager>(true);
@@ -137,12 +141,14 @@ namespace RealityDesignLab.MOFA.TheTraining
             for (var i = 0; i < 120 && manager.CurrentPhase.Value != MofaPhase.Fighting; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             _report.fighting = manager.CurrentPhase.Value == MofaPhase.Fighting;
+            Save();
             Require(_report.fighting, "The Star tap did not advance Training to Fighting: " + manager.CurrentPhase.Value);
             Debug.Log("[MOFA COMBAT TEST] Fighting phase entered.");
             var ai = FindObjectOfType<MofaAIPlayer>(true);
             for (var i = 0; i < 80 && ai.AvatarAnimator == null; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             _report.aiAvatarVisible = ai.AvatarAnimator != null && ai.AvatarAnimator.gameObject.activeInHierarchy;
+            Save();
             Require(_report.aiAvatarVisible, "AI opponent avatar did not appear.");
             yield return new WaitForEndOfFrame();
             Capture("fighting-before-shot.png");
@@ -177,6 +183,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             for (var i = 0; i < 200 && ai.CastCount.Value == 0; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             _report.aiCasts = ai.CastCount.Value;
+            Save();
             Capture("ai-attack.png");
             Require(_report.aiCasts > 0, "AI opponent did not cast a spell during combat.");
             Require(_report.errors.Count == 0, "Combat produced runtime errors: " + _report.errors.Count);

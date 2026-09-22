@@ -2,6 +2,24 @@
 
 ## 最新进度：2026-09-22，继续执行后
 
+- **序列化指针专项排查进行中。** 在共享 `Tests/Editor` 新增自动测试，沿每个产品
+  所启用场景与产品配置的资源依赖，检查场景、prefab、ScriptableObject、Animator、
+  材质里的 GUID 是否可由该产品的 Unity AssetDatabase 解析，并检查 prefab 缺失
+  脚本。HoloKit 根项目首轮精确 GUID 扫描发现 359 个引用位置、67 个不同缺失
+  GUID，主要是旧 Dragon 动画控制器、旧 VFX/材质纹理和 URP 调试资源；prefab
+  缺失脚本检查通过。四产品的精确扫描结果分别是 HoloKit **359 处/67 GUID**、
+  MOFA **365 处/61 GUID**、Typed **20 处/13 GUID**、QRealm **11 处/10 GUID**；
+  四者的 prefab 缺失脚本测试均通过。所有未解析 GUID 和首个源码位置已保存到
+  `Documentation/Serialized-Reference-Audit-2026-09-22.md`，完整逐行结果在
+  `/tmp/holokit-upgrade-20260922/guid-audit-{root,mofa,typed,qrealm}.xml`。
+  已移除 MOFA Death Circle 里无用途的旧调试脚本组件，
+  将 MOFA Hunting Portal 所需的两个 FBX 连原 GUID 移到游戏包，清理 UI 的
+  12 个未使用的断链按钮状态精灵引用。扫描结果未清零，不能宣称指针问题全部修复。
+- MOFA 对手修复版已完成 Unity 导出、Xcode 签名并安装到 iPhone 16 Pro。
+  首两次真机战斗测试在 App 运行十余秒后被系统退到后台，测试尚未跑完，
+  不能据此判断对手是否已修好。已给仅开发版设备测试加防自动休眠，并在
+  战斗阶段保存中途状态；需重编译并复测。
+
 - **升级验收新阻断：MOFA Training 真机战斗缺失对手。** 点击游戏实际开始按钮后
   已进入 Fighting，模拟 Watch 射击使本机法术计数从 0 增至 3；但本轮共 141
   次错误，其中 1 次 AI 头像生成失败、其余主要是 AI 动画引用空值。报告和
