@@ -12,8 +12,12 @@
   启动和场景错误均为 0；报告与两张截图位于
   `/tmp/holokit-upgrade-20260922/qrealm-iphone16-fixed/`。Typed 修复版已重导出，
   Xcode 编译中；MOFA 修复版尚未重导出。旧版成功结果不能代表这两款已真机通过。
-- HoloKit 根项目的新 Xcode 编译已成功，新包已安装到 iPhone 16 Pro；26 例
-  真机回归正在运行，终态待确认。
+- HoloKit 根项目的新 Xcode 编译已成功，新包已安装到 iPhone 16 Pro 并通过
+  **26/26** 场景生命周期检查。报告和 26 张截图位于
+  `/tmp/holokit-upgrade-20260922/holokit-four-products-iphone16/`：启动错误 0、
+  场景错误 0，26 例均确认 AR tracking、host listening、共享管理器生成及返回列表。
+- Typed 修复版已完成独立 Xcode 签名并安装到 iPhone 16 Pro，14 例场景检查
+  正在运行；MOFA 修复版也已完成独立 Unity 导出和 Xcode 签名，但尚未安装复测。
 - 上一轮 Xcode 27 原生构建最终成功；修复包已安装到指定的 iPhone 16 Pro
   (`00008140-001111563A0B001C`，iOS 26.0)。完整真机结果位于
   `/tmp/holokit-upgrade-20260922/iphone16pro-fixed/results.json`，附 26 张截图。
