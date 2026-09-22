@@ -111,9 +111,9 @@ def own_app_icons(destination, index):
 def copy_project_assets(destination, product, include_watch):
     source = ROOT / "Assets"
     target = destination / "Assets"
-    for name in ("URP Assets", "XR", "Text Mesh Pro", "Settings"):
+    for name in ("URP Assets", "XR", "TextMesh Pro", "Settings"):
         if not (source / name).exists():
-            continue
+            raise FileNotFoundError(f"Required Unity project assets are missing: {source / name}")
         shutil.copytree(source / name, target / name)
         if (source / (name + ".meta")).exists():
             shutil.copy2(source / (name + ".meta"), target / (name + ".meta"))

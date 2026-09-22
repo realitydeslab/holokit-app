@@ -44,5 +44,14 @@ namespace HoloKit.Tests
         {
             Assert.Throws<InvalidOperationException>(() => HoloKitProductConfiguration.CreateRuntimeSettings(null));
         }
+
+        [Test]
+        public void TextMeshProRuntimeSettingsAreIncluded()
+        {
+            var settings = Resources.Load("TMP Settings");
+            Assert.That(settings, Is.Not.Null, "TextMesh Pro settings must be included in the product build.");
+            Assert.That(AssetDatabase.GetAssetPath(settings), Does.StartWith("Assets/"));
+            Assert.That(Resources.Load("Style Sheets/Default Style Sheet"), Is.Not.Null);
+        }
     }
 }

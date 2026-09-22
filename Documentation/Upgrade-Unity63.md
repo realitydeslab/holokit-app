@@ -2,6 +2,12 @@
 
 ## 最新进度：2026-09-22，继续执行后
 
+- **新发现的真机问题与当前修复（待复测）：** QRealm 的首个独立签名包已安装到
+  iPhone 16 Pro，但启动后 `TMP_Settings.get_defaultStyleSheet()` 连续空引用。
+  生成器误写 `Text Mesh Pro`，实际目录是 `Assets/TextMesh Pro`，使三个小产品
+  都漏掉 TMP 默认 Resources。已修正生成器、给三个产品补入原 GUID 的 TMP 资源，
+  并新增共享产品测试断言。必须重新运行三个产品测试、Unity 导出与 Xcode 编译，
+  再做真机测试；之前三个小产品的导出/编译成功只证明旧版本可构建。
 - 上一轮 Xcode 27 原生构建最终成功；修复包已安装到指定的 iPhone 16 Pro
   (`00008140-001111563A0B001C`，iOS 26.0)。完整真机结果位于
   `/tmp/holokit-upgrade-20260922/iphone16pro-fixed/results.json`，附 26 张截图。
