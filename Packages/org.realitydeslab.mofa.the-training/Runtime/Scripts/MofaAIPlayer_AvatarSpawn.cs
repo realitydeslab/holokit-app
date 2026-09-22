@@ -25,7 +25,7 @@ namespace RealityDesignLab.MOFA.TheTraining
         /// </summary>
         [SerializeField] private RuntimeAnimatorController _mofaAvatarAnimatorController;
 
-        // SH_Meebits fails Metal pipeline creation on the upgraded iOS player.
+        // SH_Meebits and URP Lit fail Metal pipeline creation on the upgraded iOS player.
         // Keep the AI visible while retaining each avatar material's base colour.
         [SerializeField] private Material _iosAvatarFallbackMaterial;
 
@@ -122,7 +122,8 @@ namespace RealityDesignLab.MOFA.TheTraining
                         replacement.SetColor("_BaseColor", original.GetColor("_BaseColor"));
                     if (original.HasProperty("_BaseMap") && original.GetTexture("_BaseMap") != null)
                         replacement.SetTexture("_BaseMap", original.GetTexture("_BaseMap"));
-                    replacement.SetFloat("_Smoothness", 0.1f);
+                    if (replacement.HasProperty("_Smoothness"))
+                        replacement.SetFloat("_Smoothness", 0.1f);
                     _avatarMaterialOverrides.Add(replacement);
                     materials[i] = replacement;
                     changed = true;

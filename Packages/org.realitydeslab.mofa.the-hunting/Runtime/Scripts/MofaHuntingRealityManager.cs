@@ -45,6 +45,8 @@ namespace RealityDesignLab.MOFA.TheHunting
 
         private DragonController _dragonController;
 
+        public bool UsedDefaultPlacement { get; private set; }
+
         public static event Action OnFailedToSpawnDragonAtCurrentPosition;
 
         private void Start()
@@ -87,6 +89,17 @@ namespace RealityDesignLab.MOFA.TheHunting
             // Only the host can get ready in Hunting
             if (!IsServer)
                 return;
+
+            if (!_arPlacementManager.IsValid && ARSession.state == ARSessionState.SessionTracking &&
+                _arPlacementManager.IsActive)
+            {
+                // ARKit does not always classify a horizontal surface as Floor.
+                // The placement manager still updates its configured camera-relative
+                // default point, so a host can summon the dragon after tracking starts.
+                _arPlacementManager.HitPoint.gameObject.SetActive(true);
+                UsedDefaultPlacement = true;
+                Debug.Log("[MofaHunting] No classified floor; summoning at the default placement point.");
+            }
 
             if (_arPlacementManager.IsValid)
             {

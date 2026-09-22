@@ -43,7 +43,7 @@ namespace HoloKit.GameTests
             Assert.That(player, Is.Not.Null);
             var fallback = new SerializedObject(player).FindProperty("_iosAvatarFallbackMaterial").objectReferenceValue as Material;
             Assert.That(fallback, Is.Not.Null);
-            Assert.That(fallback.shader.name, Is.EqualTo("Universal Render Pipeline/Lit"));
+            Assert.That(fallback.shader.name, Is.EqualTo("Universal Render Pipeline/Unlit"));
         }
     }
 }

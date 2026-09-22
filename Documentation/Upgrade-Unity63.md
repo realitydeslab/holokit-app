@@ -2,6 +2,20 @@
 
 ## 最新进度：2026-09-22，继续执行后
 
+- **Dragon 召唤排查与修复待真机确认。** Hunting 召唤按钮最终调用
+  `MofaHuntingRealityManager.TryGetReady()`；原实现只有 ARPlacementManager 找到
+  `HorizontalUp` 且精确分类为 `Floor` 的平面才可进入 `SetupRound()`。在 AR 已正常追踪、
+  但当前房间没有这种地面分类时，用户按按钮只会触发失败事件。现在改为使用场景原本
+  配置并持续更新的相机前方默认放置点，继续生成 Portal 和 Dragon；在 Hunting 包
+  `Tests/Device` 新增真机测试，实际调用召唤按钮并断言网络 Dragon/Portal 生成。
+  MOFA 包内场景测试 **48/48** 通过；新 iOS 包正在重编，尚未有真机召唤证据。
+- **对手材质首个 fallback 失败，已改 Unlit 待真机复测。** 前一轮把 14 个
+  `SH_Meebits` 材质替换为 URP Lit，运行日志确认替换，但截图中人仍不可见，Metal
+  同样报告 Lit 的插值输入不匹配。报告与截图：
+  `/tmp/holokit-upgrade-20260922/mofa-visible-avatar-final/`。已改用更简单的
+  URP Unlit，并重新通过 MOFA 包内 **48/48** 场景测试；必须以新 iPhone 截图判定
+  是否真的修复，不能以材质替换计数作为可见性证据。
+
 - **MOFA 对手可见性修复待重编译复测。** 最新 iPhone 16 Pro 真机战斗报告
   `/tmp/holokit-upgrade-20260922/mofa-combat-awake-final/results.json`：
   AR、host、AI 对象、Fighting 均正常；模拟 Watch 使本机施法 0→3，AI 自己施法
