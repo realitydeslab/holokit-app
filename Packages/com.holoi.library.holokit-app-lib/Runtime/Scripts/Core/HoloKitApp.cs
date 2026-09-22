@@ -128,7 +128,7 @@ namespace Holoi.Library.HoloKitAppLib
             }
             DontDestroyOnLoad(gameObject);
 
-            Debug.unityLogger.logEnabled = _logEnabled;
+            Debug.unityLogger.logEnabled = _logEnabled || Debug.isDebugBuild;
             // Load Global Settings
             GlobalSettings.Load();
             // Register scene management delegates
