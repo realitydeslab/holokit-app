@@ -23,6 +23,8 @@ namespace HoloKit
 
         private InputDevice _inputDevice;
 
+        public bool HasTrackingDevice => _inputDevice.isValid;
+
         private ARCameraManager _arCameraManager;
 
         private HoloKitCameraManager _holoKitCameraManager; 
@@ -46,7 +48,9 @@ namespace HoloKit
             }
 
             List<InputDevice> devices = new();
-            InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.TrackedDevice | InputDeviceCharacteristics.HeadMounted, devices);
+            // Unity 6 exposes the ARKit pose device as TrackedDevice without
+            // HeadMounted. Requiring both silently disables stereo pose updates.
+            InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.TrackedDevice, devices);
             if (devices.Count > 0)
                 _inputDevice = devices[0];
             if (_inputDevice == null)

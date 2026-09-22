@@ -35,6 +35,12 @@ namespace RealityDesignLab.MOFA.TheTraining
             public bool aiSpawned;
             public bool aiAvatarVisible;
             public bool aiWeaponPresent;
+            public bool stereoRequested;
+            public string renderMode;
+            public bool trackingDeviceFound;
+            public float centerEyeY;
+            public float placementY;
+            public float aiOriginY;
             public int aiFallbackMaterials;
             public int aiCasts;
             public bool starButtonActive;
@@ -97,6 +103,18 @@ namespace RealityDesignLab.MOFA.TheTraining
             yield return new WaitForSecondsRealtime(3);
             var app = HoloKitApp.Instance;
             Require(app != null, "HoloKitApp did not start.");
+            _report.stereoRequested = Environment.GetEnvironmentVariable("MOFA_COMBAT_STEREO_TEST") == "1";
+            if (_report.stereoRequested)
+            {
+                HoloKitCameraManager.Instance.OpenStereoWithoutNFC("SomethingForNothing");
+                yield return new WaitForSecondsRealtime(2);
+            }
+            _report.renderMode = HoloKitCameraManager.Instance.RenderMode.ToString();
+            _report.trackingDeviceFound = FindObjectOfType<HoloKitTrackedPoseDriver>(true)?.HasTrackingDevice == true;
+            Save();
+            if (_report.stereoRequested)
+                Require(_report.renderMode == HoloKitRenderMode.Stereo.ToString() && _report.trackingDeviceFound,
+                    "Stereo mode or its ARKit tracking device did not initialize.");
             yield return Application.RequestUserAuthorization(UserAuthorization.WebCam);
             Require(Application.HasUserAuthorization(UserAuthorization.WebCam), "Camera permission is required.");
             var training = app.GlobalSettings.GetAllRealities().FirstOrDefault(r => r.Scene.SceneName == "MOFATheTraining");
@@ -133,6 +151,9 @@ namespace RealityDesignLab.MOFA.TheTraining
                 placement.HitPoint.gameObject.SetActive(true);
                 _report.syntheticPlacement = true;
             }
+            _report.centerEyeY = HoloKitCameraManager.Instance.CenterEyePose.position.y;
+            _report.placementY = placement.HitPoint.position.y;
+            Save();
 
             var button = FindObjectsOfType<MofaUIPanel>(true)
                 .FirstOrDefault(item => item.isActiveAndEnabled);
@@ -149,7 +170,10 @@ namespace RealityDesignLab.MOFA.TheTraining
             var ai = FindObjectOfType<MofaAIPlayer>(true);
             for (var i = 0; i < 80 && ai.AvatarAnimator == null; i++)
                 yield return new WaitForSecondsRealtime(.1f);
+            for (var i = 0; i < 80 && !ai.AvatarWeaponPresent; i++)
+                yield return new WaitForSecondsRealtime(.1f);
             _report.aiAvatarVisible = ai.AvatarAnimator != null && ai.AvatarAnimator.gameObject.activeInHierarchy;
+            _report.aiOriginY = ai.transform.position.y;
             _report.aiWeaponPresent = ai.AvatarWeaponPresent;
             _report.aiFallbackMaterials = ai.AvatarFallbackMaterialCount;
             Save();

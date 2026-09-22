@@ -25,6 +25,23 @@
   项目对应游戏包的 Unity CLI Editor 测试 **49/49 通过**，报告
   `/tmp/holokit-upgrade-20260922/mofa-wand-placement-editor.xml`；魔杖与落点
   新逻辑尚未经过 iPhone 复测。
+- **已查到 HoloKit SDK 的对应历史修复。** 同机的
+  `holokit-unity-sdk` 仓库提交 `5bc5b40`（2025-01-07，
+  `fix position shift problem in stereo mode for unity 6000`）说明 Unity 6 的
+  ARKit 输入设备只带 `TrackedDevice` 特征；旧代码还额外要求 `HeadMounted`，
+  可能导致双目头部位置完全不更新。App 内 `HoloKitTrackedPoseDriver` 仍是旧筛选，
+  已按 SDK 提交改为 `TrackedDevice`。包内设备测试现可用
+  `MOFA_COMBAT_STEREO_TEST=1` 显式切换双目，并记录是否找到追踪设备、中心眼
+  Y、放置点 Y 和 AI 根节点 Y；此历史修复移植需重新编译并真机验证。
+- **双机实测准备中。** `devicectl` 确认 iPhone 16 Pro
+  `00008140-001111563A0B001C` 与 iPhone 15 Pro
+  `00008130-000848EA38298D3A` 均物理连接。分别在 Duel/Hunting 游戏包的
+  `Tests/Device` 加了开发版双机 runner：一端作为 host 展示现有 QR 配对面板，
+  另一端作为 client 走现有 MultipeerConnectivity 发现、连接和 ARKit 图像追踪；
+  分阶段保存玩家数、空间对齐状态、双人战斗施法或 Dragon/Portal 两端生成状态。
+  新 runner 已通过 MOFA 独立项目 Unity CLI 编译及包内 Editor 测试 **49/49**，
+  报告 `/tmp/holokit-upgrade-20260922/mofa-two-phone-editor.xml`；仍待两台真机
+  共同验证，不能仅凭联网对象数宣称空间对齐成功。
 
 - **Dragon 召唤排查与修复待真机确认。** Hunting 召唤按钮最终调用
   `MofaHuntingRealityManager.TryGetReady()`；原实现只有 ARPlacementManager 找到
