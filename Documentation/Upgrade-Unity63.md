@@ -32,7 +32,8 @@
   非产品配置复制到小项目或提交到 Git。
 - 共享资源迁移后的 HoloKit 根项目再次通过 Unity CLI 编辑器测试 **118/118**，
   报告 `/tmp/holokit-upgrade-20260922/holokit-root-after-split.xml`。根项目
-  的新 iOS 导出正在运行，结果尚未确认。
+  新 iOS 导出也已成功，`Builds/Upgrade/HoloKit-four-products/unity-build.provenance.json`
+  的 `outcome` 为 `success`。其新导出尚未做 Xcode 编译与真机回归。
 
 下一步确认三个独立产品使用原生
 `unity build Products/<产品> --profile iOS --output-path ...` 分别导出，
