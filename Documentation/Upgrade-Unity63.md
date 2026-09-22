@@ -9,6 +9,20 @@
   Unity CLI 编辑器测试 **52/52** 通过，新 iOS 导出成功，Xcode 签名编译中；
   **尚不能声称真机战斗或射击通过**。该模拟从 Watch 识别出挥腕之后的手机事件
   开始，不能验证实体 Watch 的 CoreMotion 识别。
+- 用户要求测试代码放在每个游戏的 `Tests` 文件夹。MOFA 与 QRealm 的开发版
+  真机交互脚本已移至各自 `Tests/Device`，各有 iOS/Editor 测试程序集；运行时
+  仅保留 Watch 事件与手部姿态的开发版注入接口。MOFA 首次真机交互运行发现
+  测试误找通用 Star 按钮，实际单目模式使用 `MofaUIPanel.OnTriggerButtonPressed()`；
+  首次报告 `starButtonActive=false`、`fighting=false`，位于
+  `/tmp/holokit-upgrade-20260922/mofa-combat-iphone16/`。已修正入口，待重编译
+  与真机复测；修正后 MOFA 独立项目 Unity CLI 编辑器测试 **53/53** 通过，
+  第二轮 iOS 导出中。不能把首次失败算作战斗通过。
+- QRealm 新增设备测试拟用合成 21 关节姿态驱动实际手部追踪路径，检查手部光点
+  移动、悬停开始和佛像切换，截图留存。合成姿态不验证相机视觉识别；此测试
+  已在独立项目通过 Unity CLI 编辑器测试 **25/25**，新 iOS 导出中；真机交互
+  尚未验证。Typed Finger Ribbon 的 palm/fist/手部晃动测试也已放入其
+  `Tests/Device`，待 Unity CLI 编译、Xcode 与真机验证。二者的注入姿态
+  只能覆盖识别之后的游戏响应，不能证明 Vision 摄像头识别能力。
 - MOFA 缺法术包修复版已在指定 iPhone 16 Pro 通过 **10/10** 场景生命周期
   检查，启动与场景错误均为 0；报告及 10 张截图：
   `/tmp/holokit-upgrade-20260922/mofa-iphone16-fixed/`。Typed 清理目录前的版本

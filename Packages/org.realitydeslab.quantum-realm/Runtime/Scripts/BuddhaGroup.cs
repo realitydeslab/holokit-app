@@ -15,6 +15,10 @@ namespace RealityDesignLab.QuantumRealm
 
         private NetworkVariable<int> _currentBuddhaIndex = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        public int CurrentBuddhaIndexForDeviceTest => _currentBuddhaIndex.Value;
+#endif
+
         private void Start()
         {
             UI.QuantumRealmUIPanel.OnSwitchButtonPressed += OnSwitchButtonPressed;

@@ -10,6 +10,7 @@ using Holoi.Library.HoloKitAppLib;
 using Holoi.Library.HoloKitAppLib.UI;
 using Holoi.Library.HoloKitAppLib.WatchConnectivity.MOFA;
 using RealityDesignLab.MOFA.Library.Base;
+using RealityDesignLab.MOFA.Library.Base.UI;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -123,14 +124,12 @@ namespace RealityDesignLab.MOFA.TheTraining
                 _report.syntheticPlacement = true;
             }
 
-            var button = FindObjectsOfType<HoloKitAppUIComponent_StarAR_TriggerButton>(true)
+            var button = FindObjectsOfType<MofaUIPanel>(true)
                 .FirstOrDefault(item => item.isActiveAndEnabled);
             _report.starButtonActive = button != null;
-            Require(button != null, "The visible Star trigger button is missing.");
-            Debug.Log("[MOFA COMBAT TEST] Tapping the Star trigger to start the round.");
-            button.OnPointerDown(null);
-            yield return new WaitForSecondsRealtime(.15f);
-            button.OnPointerUp(null);
+            Require(button != null, "The visible MOFA start panel is missing.");
+            Debug.Log("[MOFA COMBAT TEST] Tapping the MOFA start button to start the round.");
+            button.OnTriggerButtonPressed();
             for (var i = 0; i < 120 && manager.CurrentPhase.Value != MofaPhase.Fighting; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             _report.fighting = manager.CurrentPhase.Value == MofaPhase.Fighting;
