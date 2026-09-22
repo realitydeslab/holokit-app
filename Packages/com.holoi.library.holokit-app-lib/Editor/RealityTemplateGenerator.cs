@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: Copyright 2024 Reality Design Lab <dev@reality.design>
-// SPDX-FileContributor: Botao 'Amber' Hu <botao@reality.design>
+// SPDX-FileContributor: Botao 'Amber' Hu <amber@reality.design>
 // SPDX-License-Identifier: MIT
 
 using System;
@@ -116,7 +116,7 @@ namespace Holoi.Library.HoloKitAppLib.Editor
             
 					  // Generate RealityManager script
             string realityManagerContent = @"// SPDX-FileCopyrightText: Copyright 2024 Reality Design Lab <dev@reality.design>
-// SPDX-FileContributor: Botao 'Amber' Hu <botao@reality.design>
+// SPDX-FileContributor: Botao 'Amber' Hu <amber@reality.design>
 // SPDX-License-Identifier: MIT
 
 using UnityEngine;

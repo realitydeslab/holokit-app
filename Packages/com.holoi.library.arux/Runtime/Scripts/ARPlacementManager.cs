@@ -96,7 +96,7 @@ namespace Holoi.Library.ARUX
                     foreach (var hit in hits)
                     {
                         var arPlane = hit.trackable.GetComponent<ARPlane>();
-                        if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classification == PlaneClassification.Floor)
+                        if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classifications == PlaneClassifications.Floor)
                         {
                             Vector3 position = centerEyePose.position + _horizontalPlacementOffset * horizontalForward;
                             Vector3 hitPosition = new(position.x, hit.pose.position.y, position.z);
