@@ -2,6 +2,14 @@
 
 ## 最新进度：2026-09-22，继续执行后
 
+- **第二个真机发现（MOFA，修复待真机复测）：** 独立 MOFA 启动时
+  `Reality.IsCompatibleWithMetaObjectCollection` 空引用，修复前 10 例共记录
+  2932 次错误，报告 `/tmp/holokit-upgrade-20260922/mofa-iphone16-before-spells/`。
+  根因是生成器漏把 `org.realitydeslab.mofa.object.spells` 纳入 MOFA 包闭包。
+  现已补包；Typed/QRealm 没有兼容 MetaObject 的游戏，因此把两者产品目录中
+  指向该包的无效条目清空。新增产品测试检查所有目录条目均可解析。MOFA 修复后
+  Unity CLI 测试 **52/52** 已通过，新 iOS 导出与真机复测正在进行；修复前的
+  10 例结果不能算通过。
 - **新发现的真机问题与已验证的修复：** QRealm 的首个独立签名包已安装到
   iPhone 16 Pro，但启动后 `TMP_Settings.get_defaultStyleSheet()` 连续空引用。
   生成器误写 `Text Mesh Pro`，实际目录是 `Assets/TextMesh Pro`，使三个小产品
@@ -16,8 +24,10 @@
   **26/26** 场景生命周期检查。报告和 26 张截图位于
   `/tmp/holokit-upgrade-20260922/holokit-four-products-iphone16/`：启动错误 0、
   场景错误 0，26 例均确认 AR tracking、host listening、共享管理器生成及返回列表。
-- Typed 修复版已完成独立 Xcode 签名并安装到 iPhone 16 Pro，14 例场景检查
-  正在运行；MOFA 修复版也已完成独立 Unity 导出和 Xcode 签名，但尚未安装复测。
+- Typed 的 TMP 修复版已在 iPhone 16 Pro 通过 **14/14** 场景检查；报告和 14 张
+  截图位于 `/tmp/holokit-upgrade-20260922/typed-iphone16-fixed/`。其产品目录
+  又按上述 MOFA 发现做了清理，最终包需再增量构建和回归。MOFA 的上一版
+  Unity 导出和 Xcode 签名已成功，但含缺包错误，不能作为最终验证。
 - 上一轮 Xcode 27 原生构建最终成功；修复包已安装到指定的 iPhone 16 Pro
   (`00008140-001111563A0B001C`，iOS 26.0)。完整真机结果位于
   `/tmp/holokit-upgrade-20260922/iphone16pro-fixed/results.json`，附 26 张截图。

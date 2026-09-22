@@ -127,6 +127,12 @@ def copy_project_assets(destination, product, include_watch):
         mapping[old] = new
     config = target / "Constants/HoloKitAppConfig.asset"
     config.write_text(re.sub(r"^  WatchCompanionEnabled: [01]$", "  WatchCompanionEnabled: " + ("1" if include_watch else "0"), config.read_text(), flags=re.M))
+    if product != "MOFA":
+        object_list = target / "Constants/AvailableMetaObjectCollectionList.asset"
+        original = object_list.read_text()
+        updated, count = re.subn(r"(?m)^  List:\n(?:  - \{fileID:.*\}\n)+", "  List: []\n", original)
+        assert count == 1, "Expected the source meta-object catalog to contain entries"
+        object_list.write_text(updated)
     old, new = copy_asset(source / "Resources/HoloKitAppGlobalSettings.asset", target / "Resources/HoloKitAppGlobalSettings.asset", True)
     settings = target / "Resources/HoloKitAppGlobalSettings.asset"
     content = settings.read_text()
@@ -208,6 +214,8 @@ def main():
         if destination.exists():
             raise SystemExit(f"Refusing to overwrite existing product: {destination}")
         games = {Path(path).parts[1] for path, _ in SCENES if Path(path).stem in scene_names}
+        if label == "MOFA":
+            games.add("org.realitydeslab.mofa.object.spells")
         selected = local_closure(games)
         with tempfile.TemporaryDirectory(prefix="." + label + "-", dir=destination.parent) as staging:
             staging = Path(staging)

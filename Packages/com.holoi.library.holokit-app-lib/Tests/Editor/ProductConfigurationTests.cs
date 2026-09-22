@@ -53,5 +53,15 @@ namespace HoloKit.Tests
             Assert.That(AssetDatabase.GetAssetPath(settings), Does.StartWith("Assets/"));
             Assert.That(Resources.Load("Style Sheets/Default Style Sheet"), Is.Not.Null);
         }
+
+        [Test]
+        public void ProductCatalogCollectionsHaveNoMissingEntries()
+        {
+            var settings = Resources.Load<HoloKitAppGlobalSettings>(HoloKitProductConfiguration.ResourceName);
+            Assert.That(settings.AvatarCollectionList.List.All(item => item != null), Is.True,
+                "A product avatar collection points at an absent package.");
+            Assert.That(settings.ObjectCollectionList.List.All(item => item != null), Is.True,
+                "A product object collection points at an absent package.");
+        }
     }
 }
