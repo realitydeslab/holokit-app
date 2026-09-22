@@ -144,7 +144,7 @@ namespace Holoi.Library.HoloKitAppLib
         public static IEnumerator RequestWirelessDataPermission()
         {
             yield return new WaitForSeconds(0.2f); // TODO: To make sure the UI has already popped up
-            UnityWebRequest request = UnityWebRequest.Get("http://holoi.com");
+            using UnityWebRequest request = UnityWebRequest.Get("https://holoi.com");
             request.timeout = 10;
             yield return request.SendWebRequest();
 

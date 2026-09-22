@@ -357,6 +357,11 @@ namespace Holoi.Library.HoloKitAppLib
             else
                 Destroy(networkManager.GetComponent<UnityTransport>());
 
+            // Both peers create this service before player callbacks run. NGO must
+            // spawn that same instance on clients instead of creating a duplicate.
+            PreinstantiatedNetworkPrefab.Register(networkManager, _multiplayerManagerPrefab.gameObject,
+                _multiplayerManager.GetComponent<NetworkObject>());
+
             // Setup reality specific player prefab for NetworkManager
             if (_realityManager.Config.PlayerPrefab != null)
                 networkManager.NetworkConfig.PlayerPrefab = _realityManager.Config.PlayerPrefab;

@@ -13,5 +13,8 @@ namespace HoloKit.GameTests
         {
             AssertRequiredReferences("_arPlaneManager", "_arRaycastManager", "_hostCenterEyeTransform", "_rainVfx");
         }
+
+        [Test]
+        public void SpatialAudioHasBothListeners() => AssertComponentReferences("PHASEListenerController", "_phaseListener", "_unityListener");
     }
 }

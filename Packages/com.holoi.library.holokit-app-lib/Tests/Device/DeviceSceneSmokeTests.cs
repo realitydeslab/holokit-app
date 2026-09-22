@@ -21,6 +21,7 @@ namespace HoloKit.DeviceTests
             public string role;
             public string arState;
             public bool hostListening;
+            public bool multiplayerManagerSpawned;
             public bool returnedToGallery;
             public string screenshot;
             public List<string> errors = new();
@@ -117,6 +118,8 @@ namespace HoloKit.DeviceTests
                 if (app.RealityManager == null) Errors.Add("Reality manager did not initialize.");
                 _current.hostListening = NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost && NetworkManager.Singleton.IsListening;
                 if (!_current.hostListening) Errors.Add("Local network host did not start.");
+                _current.multiplayerManagerSpawned = app.MultiplayerManager != null && app.MultiplayerManager.IsSpawned;
+                if (!_current.multiplayerManagerSpawned) Errors.Add("Shared multiplayer manager did not spawn.");
                 _current.arState = ARSession.state.ToString();
                 if (ARSession.state != ARSessionState.SessionTracking)
                     Errors.Add("AR did not reach SessionTracking: " + _current.arState);

@@ -13,5 +13,11 @@ namespace HoloKit.GameTests
         {
             AssertRequiredReferences("_arOcclusionManager", "_arPlaneManager", "_arRaycastManager", "_arPlacementIndicator", "_hoverableStartButton", "_buddhaGroupPrefab");
         }
+
+        [Test]
+        public void HandTrackingHasDepthManager() => AssertComponentReferences("NetworkHoloKitHandTracker", "_arOcclusionManager");
+
+        [Test]
+        public void SpatialAudioHasBothListeners() => AssertComponentReferences("PHASEListenerController", "_phaseListener", "_unityListener");
     }
 }

@@ -138,5 +138,34 @@ namespace HoloKit.Tests
                     Assert.That(property.objectReferenceValue, Is.Not.Null, name);
             }
         }
+
+        protected void AssertComponentReferences(string componentName, params string[] fieldNames)
+        {
+            var components = Objects.SelectMany(go => go.GetComponents<MonoBehaviour>())
+                .Where(c => c != null && c.GetType().Name == componentName).ToArray();
+            Assert.That(components, Is.Not.Empty, "Missing component: " + componentName);
+            foreach (var component in components)
+            {
+                using var serialized = new SerializedObject(component);
+                foreach (var name in fieldNames)
+                {
+                    var property = serialized.FindProperty(name);
+                    Assert.That(property, Is.Not.Null, componentName + "." + name);
+                    Assert.That(property.objectReferenceValue, Is.Not.Null, component.name + ": " + componentName + "." + name);
+                }
+            }
+        }
+
+        [Test]
+        public void CameraDirectionFeedersHaveMatchingVfxParameters()
+        {
+            foreach (var component in Objects.SelectMany(go => go.GetComponents<MonoBehaviour>())
+                         .Where(c => c != null && c.GetType().Name == "CameraForwardVfxFeeder"))
+            {
+                var effect = component.GetComponent<UnityEngine.VFX.VisualEffect>();
+                Assert.That(effect, Is.Not.Null, component.name);
+                Assert.That(effect.HasVector3("CameraForward"), Is.True, component.name + " graph has no CameraForward Vector3.");
+            }
+        }
     }
 }

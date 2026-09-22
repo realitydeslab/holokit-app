@@ -1,5 +1,105 @@
 # Unity 6.3 / iOS 27 upgrade
 
+## 续接记录：2026-09-22，用户要求及时保存进度
+
+**先读本节再继续。项目尚未完成四 App 拆分；不要把编辑器测试通过或旧包真机
+启动成功写成四个产品全部验收通过。**
+
+- 工作目录：`/Users/amber/Projects/HoloKit/HoloKit2/holokit-app`。
+- 工作分支：`upgrade/unity63-ios27-four-apps`。用户原始改动已保存为
+  `72434830`；场景引用修复和第一批测试为 `ae12da52`；旧设置迁移为 `7cd5d197`。
+  本文与本轮运行时修复会一起提交；用 `git log -1` 获取本次保存的提交。
+- 用户明确要求使用 Unity CLI，尤其 `/Users/amber/.unity/bin/unity test`；
+  游戏测试放在各自 package 内。不要恢复已删除的 `Assets/Editor/HoloKitProductBuild.cs`，
+  也不要改用 Unity MCP。构建使用原生 `--profile iOS`。
+- **当前指定真机：iPhone 16 Pro，Holo’s iPhone 16 J，iOS 26.0 (23A341)，
+  UDID `00008140-001111563A0B001C`，型号代码 `iPhone17,1`。**
+  之前使用的 iPhone 15 Pro / iOS 27 不是当前主测试机。iPhone 18 Pro 尚未到手。
+- 用户不希望反复确认权限；已授权的常规构建、测试、修复和保存直接继续。
+  当前沙盒限制仍由环境控制，不能声称已关闭；已有 Unity/Xcode/devicectl/Git 命令许可。
+
+### 已验证及当前正在运行的工作
+
+1. 最新 Unity CLI 测试 **115/115 passed，0 failed，0 skipped**。
+   包括 106 个游戏场景检查、8 个设置迁移检查，以及 1 个进入 Play Mode 的
+   本机主机/客户端测试（共享服务生成、复用实例、无重复、远端销毁）。
+   报告：`/tmp/holokit-upgrade-20260922/iphone16-regressions.xml`。
+2. iPhone 16 Pro 上旧设置迁移与封面列表启动成功。修复前完整真机基线跑完
+   13 场景 × Player/Spectator = 26 例，26 例均 tracking、host listening、返回列表；
+   但日志共有 569 次错误，**该基线不通过**。
+3. 本轮已修复 HTTP 启动请求、NGO 未注册共享管理器、QuantumRealm 手部深度引用、
+   QuantumRealm/Flock/Rain 音频引用、Tornado 不存在的 CameraForward 参数写入。
+   NGO 客户端使用 prefab handler 复用预先创建的实例，避免重复服务。
+4. 最新修复的 Unity iOS 导出已成功，2026-09-22 11:17:45 UTC 完成：
+   `Builds/Upgrade/HoloKit/unity-build.provenance.json` 的 outcome 为 success。
+   导出日志：`/tmp/holokit-upgrade-20260922/holokit-iphone16-fixes-export.log`。
+5. **保存本记录时 Xcode 原生编译仍在进行；尚未确认成功，尚未安装本轮修复包，
+   尚未重新跑真机 26 例。** 当前执行会话为 `81150`（仅本会话可用），
+   xcodebuild 最初 PID 为 `34254`。后续须先检查进程/结果，避免并行重复构建。
+   结果目录：`/tmp/holokit-upgrade-20260922/holokit-iphone16-fixes.xcresult`。
+   曾打印旧 Xcode 账号缺少 token 的提示，不能据此认定构建失败；以终态为准。
+
+### 立即续接步骤与命令
+
+先检查上述 Xcode 构建是否结束及其结果。产物路径一直复用，**旧的 .app 存在不代表
+这轮构建成功**。若需要重跑，使用新的、不存在的 `-resultBundlePath`：
+
+```sh
+xcodebuild -project Builds/Upgrade/HoloKit/Unity-iPhone.xcodeproj \
+  -scheme Unity-iPhone -configuration ReleaseForRunning \
+  -destination generic/platform=iOS \
+  -derivedDataPath /tmp/holokit-upgrade-20260922/xcode-holokit \
+  -resultBundlePath /tmp/holokit-upgrade-20260922/holokit-iphone16-fixes-retry.xcresult \
+  CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM=KR9H35SQQ9 \
+  -allowProvisioningUpdates -quiet
+```
+
+确认该轮成功后安装并运行；这会替换当前 HoloKit 开发包并终止现有 app 进程：
+
+```sh
+xcrun devicectl device install app --device 00008140-001111563A0B001C \
+  /tmp/holokit-upgrade-20260922/xcode-holokit/Build/Products/ReleaseForRunning-iphoneos/HoloKit.app
+xcrun devicectl device process launch --device 00008140-001111563A0B001C \
+  --terminate-existing --console --environment-variables '{"HOLOKIT_SCENE_TEST":"1"}' \
+  com.holoi.holokit.holokit-app --holokit-scene-test
+```
+
+等日志出现 `[DEVICE TEST] COMPLETE=True`，约 4–6 分钟。console 会话在测试完后仍可能
+保持打开；不要等待 app 自行退出。测试运行后 app 会留在封面列表。复制新报告与截图：
+
+```sh
+xcrun devicectl device copy from --device 00008140-001111563A0B001C \
+  --domain-type appDataContainer --domain-identifier com.holoi.holokit.holokit-app \
+  --source Documents/HoloKitSceneTests \
+  --destination /tmp/holokit-upgrade-20260922/iphone16pro-fixed
+```
+
+验收 `complete=true`、26 个结果、所有 `errors` 和 `startupErrors` 为空，
+以及新增的 `multiplayerManagerSpawned=true`。检查截图，发现错误就继续修复。
+目前这些测试不证明真实手势、双手机 MPC、Watch、录屏音轨或头显光学校准已经通过。
+
+### 证据、保护范围与后续大项
+
+- 修复前真机 JSON 与 26 张截图：
+  `/tmp/holokit-upgrade-20260922/iphone16pro-baseline/`。
+  型号确认：`iphone16pro-details.json`、`iphone16pro-before-install.png`，同一临时根目录。
+- 仓库内持久摘要：`Documentation/Validation/2026-09-22/iphone16-progress.json`。
+  原始 XML、xcresult、截图体积较大，仍在上述 `/tmp`，系统清理后可能消失。
+  真实旧设置 fixture `device-legacy-settings.save` 是用户数据，禁止提交进 Git。
+- 现有未跟踪的 `mono_crash.*`、`holokit-app.slnx`、Watch Xcode userdata
+  都没有纳入此次提交，不删除、不覆盖。兄弟项目 mofa-realverse、typed-realverse
+  有用户本地改动，不直接改写它们。
+- Unity 构建过程中会暂时删除 XR simulation resources、修改图像库与 ProjectSettings；
+  成功结束时恢复。不要把构建中的临时变化误提交。
+- 四薄项目、产品自己的配置/封面/目录、共享壳解耦、Watch 按产品启用：
+  **仍是接下来要实现的架构，不是已完成内容。**
+- 已做只读资源闭包分析：`MOFA-asset-closure.json`、`Typed-asset-closure.json`、
+  `QRealm-asset-closure.json` 位于临时根目录。MOFA/Typed/QRealm 之间仍有共享
+  skybox、renderer、粒子纹理/VFX 对其他游戏包的依赖；应保留 GUID 提取到共享资源包，
+  再证明每个小产品不安装其他游戏包也能构建。不能只过滤根项目 scene list 就声称解耦。
+- HoloKit SDK 当前资料包含 iPhone 16 Pro，iPhone 18 Pro 的光学校准不能凭空编造；
+  等硬件与校准数据可用再做物理验证。
+
 ## Preservation and target
 
 The working upgrade starts from checkpoint `72434830` on
@@ -56,9 +156,12 @@ Use Unity CLI for editor operations and builds. Logs for this session are in
    Validate launch, each catalog scene, AR permissions/tracking, stereo and mono
    transitions, multiplayer/spectator mode, recording, audio/haptics, and Watch
    features where enabled. Keep per-app evidence and explicit unsupported tests.
-4. Validate iPhone 18 Pro with the real hardware. The currently connected physical
-   device is an iPhone 15 Pro; an iPhone 18 Pro simulator cannot prove AR/optical
-   correctness. Do not call the whole upgrade complete based on simulator tests.
+4. Validate iPhone 18 Pro with the real hardware when available. Initial checks
+   used Holo iPhone 15 I (iPhone 15 Pro, iOS 27). At the user's request, subsequent
+   scene testing targets Holo's iPhone 16 J (iPhone 16 Pro, iOS 26.0), UDID
+   `00008140-001111563A0B001C`. The Xcode/iOS SDK remains 27; device runtime
+   versions must be reported separately. A simulator cannot prove AR/optical
+   correctness.
 
 ## Initial findings
 
@@ -141,8 +244,32 @@ The device fixture remains outside Git.
 For iOS launches, the smoke runner also supports process environment variables
 `HOLOKIT_SCENE_TEST=1` and optional `HOLOKIT_TEST_SCENE=<scene name>` through
 `devicectl --environment-variables`. This avoids relying on Unity's managed
-command-line argument forwarding. The migration build still requires renewed
-device validation before the startup bug can be considered resolved on iPhone.
+command-line argument forwarding. The migration was verified on the user's
+iPhone 16 Pro (`Holo’s iPhone 16 J`, iOS 26.0): the old settings loaded, the
+original binary was retained, and the gallery appeared.
+
+### iPhone 16 Pro baseline
+
+The first full device run completed all 13 catalog scenes as both Player and
+Spectator (26 cases). All reached AR `SessionTracking`, started a local host,
+and returned to the gallery. It was **not a passing run**: 569 logged errors
+included repeated instances of an unregistered multiplayer service, missing
+audio/depth references, and a Tornado feeder writing a nonexistent VFX property,
+plus an insecure HTTP request at startup. The report and 26 screenshots are
+preserved outside Git at
+`/tmp/holokit-upgrade-20260922/iphone16pro-baseline/`.
+
+The device OS is iOS 26.0; the build toolchain remains Xcode 27 with the iOS 27
+SDK. These are separate compatibility checks.
+
+The corresponding fixes register the shared multiplayer prefab and reuse the
+pre-instantiated client service through an NGO prefab handler, restore the
+existing audio/depth component references, remove Tornado's obsolete direction
+feeder, and use HTTPS for the startup permission request. The expanded Unity
+CLI run passed **115/115 tests, zero skipped**, including a loopback host/client
+spawn-and-despawn test and package-local checks for the device-discovered
+references. Evidence: `/tmp/holokit-upgrade-20260922/iphone16-regressions.xml`.
+The rebuilt player still needs the full device rerun.
 
 This document describes the intended architecture and work in progress, not a
 claim that the four apps have built or run successfully.
