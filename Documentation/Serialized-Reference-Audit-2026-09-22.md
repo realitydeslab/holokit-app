@@ -11,6 +11,8 @@ Run from each Unity product with `/Users/amber/.unity/bin/unity test <project> -
 
 The MOFA AI avatar collection null entry was fixed earlier. This audit additionally found a missing debug component in `Death Circle` and two Hunting Portal meshes absent from the MOFA product; those were repaired before the counts above. Twelve broken UI Button sprite-state pointers were cleared because their buttons use Color Tint (`m_Transition: 1`). Existing unresolved GUIDs remain and need visual or gameplay review before being replaced or removed.
 
+The MOFA Training AI uses `AC_MofaTraining_Avatar.controller`, which still has four transitions to missing GUID `74535b8bda892f4428e70719b7801c63`. These may affect attack animation events; physical-device combat validation is pending. The large number of Dragon thumbnail controller references also means a passed scene-open test cannot establish that every animation renders correctly.
+
 ## root
 
 | GUID | Occurrences | First source location |

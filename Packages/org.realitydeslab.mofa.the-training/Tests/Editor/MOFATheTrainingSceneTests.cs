@@ -32,5 +32,18 @@ namespace HoloKit.GameTests
                 Assert.That(collection, Is.Not.Null, $"Avatar configuration {i} has no avatar collection.");
             }
         }
+
+        [Test]
+        public void AiAvatarHasAnIosVisibleMaterial()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+                "Packages/org.realitydeslab.mofa.the-training/Assets/Prefabs/Mofa AI Player.prefab");
+            Assert.That(prefab, Is.Not.Null);
+            var player = prefab.GetComponent("MofaAIPlayer");
+            Assert.That(player, Is.Not.Null);
+            var fallback = new SerializedObject(player).FindProperty("_iosAvatarFallbackMaterial").objectReferenceValue as Material;
+            Assert.That(fallback, Is.Not.Null);
+            Assert.That(fallback.shader.name, Is.EqualTo("Universal Render Pipeline/Lit"));
+        }
     }
 }

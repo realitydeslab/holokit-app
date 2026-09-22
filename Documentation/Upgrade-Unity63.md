@@ -2,6 +2,16 @@
 
 ## 最新进度：2026-09-22，继续执行后
 
+- **MOFA 对手可见性修复待重编译复测。** 最新 iPhone 16 Pro 真机战斗报告
+  `/tmp/holokit-upgrade-20260922/mofa-combat-awake-final/results.json`：
+  AR、host、AI 对象、Fighting 均正常；模拟 Watch 使本机施法 0→3，AI 自己施法
+  1 次。因此“AI 不攻击”已由本轮头像参数修复；但截图里仍看不到对手身体，
+  原生日志报 `Shader Graphs/SH_Meebits` 的 Metal pipeline state 创建失败。
+  同次运行还有一次 `Touch was already deallocated`，因此设备测试未标为通过。
+  已给 Training AI avatar 增加 iOS 专用的 URP Lit 材质 fallback，逐个保留原
+  Meebits 材质底色；新增包内 Editor 测试和设备端 fallback 计数断言。
+  **材质修复尚待 Unity 编译、Xcode 签名和真机截图复测。**
+
 - **序列化指针专项排查进行中。** 在共享 `Tests/Editor` 新增自动测试，沿每个产品
   所启用场景与产品配置的资源依赖，检查场景、prefab、ScriptableObject、Animator、
   材质里的 GUID 是否可由该产品的 Unity AssetDatabase 解析，并检查 prefab 缺失
@@ -15,6 +25,9 @@
   已移除 MOFA Death Circle 里无用途的旧调试脚本组件，
   将 MOFA Hunting Portal 所需的两个 FBX 连原 GUID 移到游戏包，清理 UI 的
   12 个未使用的断链按钮状态精灵引用。扫描结果未清零，不能宣称指针问题全部修复。
+  其中 MOFA Training 头像 Animator Controller 还有 4 处转场指向已不存在的
+  GUID `74535b8bda892f4428e70719b7801c63`，可能影响 AI 战斗动作；须结合真机
+  施法测试判断实际影响，不应只把这些当成旧美术残留。
 - MOFA 对手修复版已完成 Unity 导出、Xcode 签名并安装到 iPhone 16 Pro。
   首两次真机战斗测试在 App 运行十余秒后被系统退到后台，测试尚未跑完，
   不能据此判断对手是否已修好。已给仅开发版设备测试加防自动休眠，并在

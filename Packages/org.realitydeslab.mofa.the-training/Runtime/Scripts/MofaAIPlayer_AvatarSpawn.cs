@@ -25,6 +25,13 @@ namespace RealityDesignLab.MOFA.TheTraining
         /// </summary>
         [SerializeField] private RuntimeAnimatorController _mofaAvatarAnimatorController;
 
+        // SH_Meebits fails Metal pipeline creation on the upgraded iOS player.
+        // Keep the AI visible while retaining each avatar material's base colour.
+        [SerializeField] private Material _iosAvatarFallbackMaterial;
+
+        private readonly List<Material> _avatarMaterialOverrides = new();
+        public int AvatarFallbackMaterialCount => _avatarMaterialOverrides.Count;
+
         public Animator AvatarAnimator => _avatarAnimator;
 
         /// <summary>
@@ -82,11 +89,54 @@ namespace RealityDesignLab.MOFA.TheTraining
             _avatar.transform.localPosition = Vector3.zero;
             _avatar.transform.localRotation = Quaternion.identity;
             _avatar.transform.localScale = new(avatarCollectionParams.Scale, avatarCollectionParams.Scale, avatarCollectionParams.Scale);
+            ApplyIOSAvatarMaterialFallback();
             _avatarAnimator = _avatar.GetComponent<Animator>();
             _avatarAnimator.runtimeAnimatorController = _mofaAvatarAnimatorController;
             _avatarAnimator.applyRootMotion = false;
             _avatarAnimator.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
             _avatar.AddComponent<MofaAvatarAnimationEventHandler>();
+        }
+
+        private void ApplyIOSAvatarMaterialFallback()
+        {
+            if (Application.platform != RuntimePlatform.IPhonePlayer) return;
+            if (_iosAvatarFallbackMaterial == null)
+            {
+                Debug.LogError("[MofaAIPlayer] iOS avatar fallback material is missing.");
+                return;
+            }
+            foreach (var renderer in _avatar.GetComponentsInChildren<Renderer>(true))
+            {
+                var materials = renderer.sharedMaterials;
+                var changed = false;
+                for (var i = 0; i < materials.Length; i++)
+                {
+                    var original = materials[i];
+                    if (original == null || original.shader == null ||
+                        original.shader.name != "Shader Graphs/SH_Meebits") continue;
+                    var replacement = new Material(_iosAvatarFallbackMaterial)
+                    {
+                        name = original.name + " (iOS fallback)"
+                    };
+                    if (original.HasProperty("_BaseColor"))
+                        replacement.SetColor("_BaseColor", original.GetColor("_BaseColor"));
+                    if (original.HasProperty("_BaseMap") && original.GetTexture("_BaseMap") != null)
+                        replacement.SetTexture("_BaseMap", original.GetTexture("_BaseMap"));
+                    replacement.SetFloat("_Smoothness", 0.1f);
+                    _avatarMaterialOverrides.Add(replacement);
+                    materials[i] = replacement;
+                    changed = true;
+                }
+                if (changed) renderer.sharedMaterials = materials;
+            }
+            Debug.Log($"[MofaAIPlayer] iOS avatar fallback applied to {_avatarMaterialOverrides.Count} materials.");
+        }
+
+        private void ReleaseAvatarMaterialOverrides()
+        {
+            foreach (var material in _avatarMaterialOverrides)
+                if (material != null) Destroy(material);
+            _avatarMaterialOverrides.Clear();
         }
     }
 }
