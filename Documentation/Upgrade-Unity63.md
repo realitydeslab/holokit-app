@@ -2,12 +2,18 @@
 
 ## 最新进度：2026-09-22，继续执行后
 
-- **新发现的真机问题与当前修复（待复测）：** QRealm 的首个独立签名包已安装到
+- **新发现的真机问题与已验证的修复：** QRealm 的首个独立签名包已安装到
   iPhone 16 Pro，但启动后 `TMP_Settings.get_defaultStyleSheet()` 连续空引用。
   生成器误写 `Text Mesh Pro`，实际目录是 `Assets/TextMesh Pro`，使三个小产品
   都漏掉 TMP 默认 Resources。已修正生成器、给三个产品补入原 GUID 的 TMP 资源，
-  并新增共享产品测试断言。必须重新运行三个产品测试、Unity 导出与 Xcode 编译，
-  再做真机测试；之前三个小产品的导出/编译成功只证明旧版本可构建。
+  并新增共享产品测试断言。修复后三个独立项目 Unity CLI 测试分别为 QRealm
+  **23/23**、MOFA **51/51**、Typed **71/71**，根项目 **119/119**。QRealm 修复版
+  已重新导出、Xcode 签名并在指定 iPhone 16 Pro 通过 **2/2** 场景生命周期测试，
+  启动和场景错误均为 0；报告与两张截图位于
+  `/tmp/holokit-upgrade-20260922/qrealm-iphone16-fixed/`。Typed 修复版已重导出，
+  Xcode 编译中；MOFA 修复版尚未重导出。旧版成功结果不能代表这两款已真机通过。
+- HoloKit 根项目的新 Xcode 编译已成功，新包已安装到 iPhone 16 Pro；26 例
+  真机回归正在运行，终态待确认。
 - 上一轮 Xcode 27 原生构建最终成功；修复包已安装到指定的 iPhone 16 Pro
   (`00008140-001111563A0B001C`，iOS 26.0)。完整真机结果位于
   `/tmp/holokit-upgrade-20260922/iphone16pro-fixed/results.json`，附 26 张截图。
