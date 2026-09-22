@@ -62,6 +62,15 @@ namespace Holoi.Library.HoloKitAppLib.WatchConnectivity.MOFA
 
         public static event Action OnWatchTriggered;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        // Exercise the iPhone gameplay path after a watch wrist swing has been recognized.
+        // This does not claim to test CoreMotion classification or a paired physical watch.
+        public static void EmitSimulatedWatchTriggerForDeviceTest()
+        {
+            OnWatchTriggered?.Invoke();
+        }
+#endif
+
         public static event Action<float, float> OnReceivedHealthDataMessage;
 
         public static void Initialize()

@@ -2,6 +2,24 @@
 
 ## 最新进度：2026-09-22，继续执行后
 
+- **交互测试正在补齐：** 用户要求 MOFA 真正点击开始进入战斗，并模拟 Apple Watch
+  挥腕射击；Type-D 与 Q-Quantum 也要覆盖手势、晃动等实际交互。已在 MOFA
+  包内加入仅开发版启用的真机战斗测试：调用 Star 按钮的按下/松开回调，断言进入
+  Fighting 阶段，注入 WatchConnectivity 射击事件，检查法术计数并保存截图。
+  Unity CLI 编辑器测试 **52/52** 通过，新 iOS 导出成功，Xcode 签名编译中；
+  **尚不能声称真机战斗或射击通过**。该模拟从 Watch 识别出挥腕之后的手机事件
+  开始，不能验证实体 Watch 的 CoreMotion 识别。
+- MOFA 缺法术包修复版已在指定 iPhone 16 Pro 通过 **10/10** 场景生命周期
+  检查，启动与场景错误均为 0；报告及 10 张截图：
+  `/tmp/holokit-upgrade-20260922/mofa-iphone16-fixed/`。Typed 清理目录前的版本
+  **14/14**、QRealm 清理目录前的版本 **2/2**；两者最终清理版 Unity 导出与
+  Xcode 签名成功，但还需重新安装回归。主 HoloKit **26/26** 已通过。
+- QRealm 清理目录后的最终包真机回归发现新问题：Player 例无错，但 Spectator
+  返回列表时，`QuantumRealmHostHandPoint` 的 LeanTween 仍访问已销毁的光点
+  MeshRenderer，产生 77 次空引用。已给动画回调加入对象生命周期检查，**修复尚需
+  重新 Unity 导出、Xcode 构建及 iPhone 复测**。失败报告：
+  `/tmp/holokit-upgrade-20260922/qrealm-catalog-iphone16/results.json`。
+
 - **第二个真机发现（MOFA，修复待真机复测）：** 独立 MOFA 启动时
   `Reality.IsCompatibleWithMetaObjectCollection` 空引用，修复前 10 例共记录
   2932 次错误，报告 `/tmp/holokit-upgrade-20260922/mofa-iphone16-before-spells/`。

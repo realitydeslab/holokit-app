@@ -46,10 +46,11 @@ namespace RealityDesignLab.QuantumRealm
                 _networkTransform.Interpolate = true;
                 LeanTween.value(0f, 0.8f, HostHandPointVisualReappearTime)
                     .setOnUpdate((float alpha) => {
-                        _hosthandPointVisualMeshRenderer.material.SetFloat("_Alpha", alpha);
+                        if (_hosthandPointVisualMeshRenderer != null)
+                            _hosthandPointVisualMeshRenderer.material.SetFloat("_Alpha", alpha);
                     })
                     .setOnComplete(() => {
-                        _hoverObject.IsActive = true;
+                        if (_hoverObject != null) _hoverObject.IsActive = true;
                     });
             }
             else
@@ -57,11 +58,12 @@ namespace RealityDesignLab.QuantumRealm
                 // Make it disappear
                 LeanTween.value(0.8f, 0f, HostHandPointVisualDisappearTime)
                     .setOnUpdate((float alpha) => {
-                        _hosthandPointVisualMeshRenderer.material.SetFloat("_Alpha", alpha);
+                        if (_hosthandPointVisualMeshRenderer != null)
+                            _hosthandPointVisualMeshRenderer.material.SetFloat("_Alpha", alpha);
                     })
                     .setOnComplete(() => {
-                        _hoverObject.IsActive = false;
-                        _networkTransform.Interpolate = false;
+                        if (_hoverObject != null) _hoverObject.IsActive = false;
+                        if (_networkTransform != null) _networkTransform.Interpolate = false;
                     });
             }
         }

@@ -211,6 +211,24 @@ namespace HoloKit
             }
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        // Drives the same pose/validity path as Vision for opt-in device tests.
+        // This does not validate camera-based hand detection itself.
+        public void InjectPoseForDeviceTest(Vector3[] joints)
+        {
+            if (joints == null || joints.Length != 21)
+                throw new ArgumentException("A hand pose must contain 21 joints.", nameof(joints));
+            var poses = new float[63];
+            for (var i = 0; i < 21; i++)
+            {
+                poses[i * 3] = joints[i].x;
+                poses[i * 3 + 1] = joints[i].y;
+                poses[i * 3 + 2] = joints[i].z;
+            }
+            OnHandPoseUpdated(poses);
+        }
+#endif
+
         private void Update()
         {
             if (!_isActive) { return; }
