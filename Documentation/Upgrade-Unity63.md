@@ -2,6 +2,22 @@
 
 ## 最新进度：2026-09-22，继续执行后
 
+- **升级验收新阻断：MOFA Training 真机战斗缺失对手。** 点击游戏实际开始按钮后
+  已进入 Fighting，模拟 Watch 射击使本机法术计数从 0 增至 3；但本轮共 141
+  次错误，其中 1 次 AI 头像生成失败、其余主要是 AI 动画引用空值。报告和
+  战斗/射击截图：`/tmp/holokit-upgrade-20260922/mofa-combat-2-iphone16/`。
+  根因是 AI 头像参数列表第一项 Chibi Apes 指向不存在的 collection GUID，
+  `GetAvatarCollectionParams()` 未判空就调用 `Equals`，使 Meebits 对手也无法生成；
+  攻击需要头像动画事件，因而玩家看到对手不出现、也不攻击。已移除不可解析
+  条目、增加判空及 package 内编辑器测试，并把真机测试升级为断言 AI 模型可见、
+  AI 自己实际施法、运行错误为 0。**这些修复尚待重编译/真机复测，当前不算通过。**
+  MOFA 独立项目修复后 Unity CLI 编辑器测试 **54/54** 通过；修复版 iOS 导出中。
+- 用户要求先完成升级，不额外搭 Mac 双人环境。现有 Editor 联机使用
+  UnityTransport `127.0.0.1:7777`，Mac 双实例有可行路径；Dragon/Hunting 与
+  Duel 的真实双人加入、空间对齐和战斗同步暂列后续专项验证。Hand Tracking
+  的合成姿态测试不代表原生 Vision 成功，日志出现间歇 `Failed to get scene depth`；
+  本轮暂不改原生算法，先完成四 App 构建与现有真机问题修复。
+
 - **交互测试正在补齐：** 用户要求 MOFA 真正点击开始进入战斗，并模拟 Apple Watch
   挥腕射击；Type-D 与 Q-Quantum 也要覆盖手势、晃动等实际交互。已在 MOFA
   包内加入仅开发版启用的真机战斗测试：调用 Star 按钮的按下/松开回调，断言进入
@@ -21,8 +37,14 @@
   移动、悬停开始和佛像切换，截图留存。合成姿态不验证相机视觉识别；此测试
   已在独立项目通过 Unity CLI 编辑器测试 **25/25**，新 iOS 导出中；真机交互
   尚未验证。Typed Finger Ribbon 的 palm/fist/手部晃动测试也已放入其
-  `Tests/Device`，待 Unity CLI 编译、Xcode 与真机验证。二者的注入姿态
+  `Tests/Device`，Typed 独立项目 Unity CLI 编辑器测试 **73/73** 已通过，
+  新 iOS 导出中，真机交互尚未验证。随后又给 Typed Sculpture 包增设
+  `Tests/Device`，检查手势激活悬停、按住启动及雕塑网络对象生成，待编译/导出。
+  这些注入姿态
   只能覆盖识别之后的游戏响应，不能证明 Vision 摄像头识别能力。
+- Typed 产品目录清理后的独立包已在 iPhone 16 Pro 完成 **14/14** 场景生命周期
+  回归，启动错误 0、场景错误 0。报告与截图：
+  `/tmp/holokit-upgrade-20260922/typed-catalog-iphone16-final/`。
 - MOFA 缺法术包修复版已在指定 iPhone 16 Pro 通过 **10/10** 场景生命周期
   检查，启动与场景错误均为 0；报告及 10 张截图：
   `/tmp/holokit-upgrade-20260922/mofa-iphone16-fixed/`。Typed 清理目录前的版本
@@ -33,6 +55,12 @@
   MeshRenderer，产生 77 次空引用。已给动画回调加入对象生命周期检查，**修复尚需
   重新 Unity 导出、Xcode 构建及 iPhone 复测**。失败报告：
   `/tmp/holokit-upgrade-20260922/qrealm-catalog-iphone16/results.json`。
+- QRealm 加入交互测试与上述空引用修复的 iOS 包已导出、Xcode 签名并安装。
+  第一次专项真机运行在等待 6 秒后检查 AR 时碰到短暂的 `SessionInitializing`/
+  追踪受限，尚未运行手部/悬停/切换步骤；报告：
+  `/tmp/holokit-upgrade-20260922/qrealm-interaction-iphone16/results.json`。
+  已把设备测试改为最多等待 30 秒并记录最终 AR 状态，待重新导出/编译/真机复测。
+  同一已安装包的 2 场景生命周期回归正在跑，用于验证退场空引用修复。
 
 - **第二个真机发现（MOFA，修复待真机复测）：** 独立 MOFA 启动时
   `Reality.IsCompatibleWithMetaObjectCollection` 空引用，修复前 10 例共记录

@@ -33,6 +33,8 @@ namespace RealityDesignLab.MOFA.TheTraining
             public bool arTracking;
             public bool hostListening;
             public bool aiSpawned;
+            public bool aiAvatarVisible;
+            public int aiCasts;
             public bool starButtonActive;
             public bool syntheticPlacement;
             public bool fighting;
@@ -103,6 +105,8 @@ namespace RealityDesignLab.MOFA.TheTraining
             for (var i = 0; i < 80 && manager.LocalMofaPlayer == null; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             Require(manager.LocalMofaPlayer != null, "Local MOFA player did not spawn.");
+            for (var i = 0; i < 300 && ARSession.state != ARSessionState.SessionTracking; i++)
+                yield return new WaitForSecondsRealtime(.1f);
             _report.arTracking = ARSession.state == ARSessionState.SessionTracking;
             _report.hostListening = NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost && NetworkManager.Singleton.IsListening;
             _report.aiSpawned = FindObjectOfType<MofaAIPlayer>(true) != null;
@@ -135,6 +139,11 @@ namespace RealityDesignLab.MOFA.TheTraining
             _report.fighting = manager.CurrentPhase.Value == MofaPhase.Fighting;
             Require(_report.fighting, "The Star tap did not advance Training to Fighting: " + manager.CurrentPhase.Value);
             Debug.Log("[MOFA COMBAT TEST] Fighting phase entered.");
+            var ai = FindObjectOfType<MofaAIPlayer>(true);
+            for (var i = 0; i < 80 && ai.AvatarAnimator == null; i++)
+                yield return new WaitForSecondsRealtime(.1f);
+            _report.aiAvatarVisible = ai.AvatarAnimator != null && ai.AvatarAnimator.gameObject.activeInHierarchy;
+            Require(_report.aiAvatarVisible, "AI opponent avatar did not appear.");
             yield return new WaitForEndOfFrame();
             Capture("fighting-before-shot.png");
 
@@ -165,6 +174,12 @@ namespace RealityDesignLab.MOFA.TheTraining
             _report.castsAfter = manager.LocalMofaPlayer.CastCount.Value;
             Require(_report.castsAfter > _report.castsBefore, "Simulated watch shooting did not spawn a spell.");
             Debug.Log($"[MOFA COMBAT TEST] Spell cast recorded: {_report.castsBefore}->{_report.castsAfter}.");
+            for (var i = 0; i < 200 && ai.CastCount.Value == 0; i++)
+                yield return new WaitForSecondsRealtime(.1f);
+            _report.aiCasts = ai.CastCount.Value;
+            Capture("ai-attack.png");
+            Require(_report.aiCasts > 0, "AI opponent did not cast a spell during combat.");
+            Require(_report.errors.Count == 0, "Combat produced runtime errors: " + _report.errors.Count);
         }
 
         private void Capture(string name)

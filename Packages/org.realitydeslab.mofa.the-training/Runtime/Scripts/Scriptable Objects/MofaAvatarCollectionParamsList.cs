@@ -17,7 +17,8 @@ namespace RealityDesignLab.MOFA.TheTraining
         {
             foreach (var avatarCollectionParams in List)
             {
-                if (avatarCollectionParams.MetaAvatarCollection.Equals(avatarCollection))
+                if (avatarCollectionParams != null && avatarCollectionParams.MetaAvatarCollection != null &&
+                    avatarCollectionParams.MetaAvatarCollection.Equals(avatarCollection))
                 {
                     return avatarCollectionParams;
                 }

@@ -79,8 +79,10 @@ namespace RealityDesignLab.QuantumRealm
             app.EnterRealityAs(true, HoloKitAppPlayerType.Player);
             yield return new WaitForSecondsRealtime(6);
             Require(SceneManager.GetActiveScene().name == "QuantumRealm", "Quantum Realm scene did not open.");
+            for (var i = 0; i < 300 && ARSession.state != ARSessionState.SessionTracking; i++)
+                yield return new WaitForSecondsRealtime(.1f);
             _report.arTracking = ARSession.state == ARSessionState.SessionTracking;
-            Require(_report.arTracking, "AR tracking unavailable.");
+            Require(_report.arTracking, "AR tracking unavailable: " + ARSession.state);
             var manager = app.RealityManager as QuantumRealmRealityManager;
             var tracker = HoloKitHandTracker.Instance;
             Require(manager != null && tracker != null, "Reality manager or hand tracker missing.");

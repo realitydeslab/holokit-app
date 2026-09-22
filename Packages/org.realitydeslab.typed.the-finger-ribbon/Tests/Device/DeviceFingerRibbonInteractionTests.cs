@@ -76,8 +76,10 @@ namespace RealityDesignLab.Typed.TheFingerRibbon
             app.EnterRealityAs(true, HoloKitAppPlayerType.Player);
             yield return new WaitForSecondsRealtime(6);
             Require(SceneManager.GetActiveScene().name == "TypedTheFingerRibbon", "Finger Ribbon scene did not open.");
+            for (var i = 0; i < 300 && ARSession.state != ARSessionState.SessionTracking; i++)
+                yield return new WaitForSecondsRealtime(.1f);
             _report.arTracking = ARSession.state == ARSessionState.SessionTracking;
-            Require(_report.arTracking, "AR tracking unavailable.");
+            Require(_report.arTracking, "AR tracking unavailable: " + ARSession.state);
             var tracker = HoloKitHandTracker.Instance;
             var gesture = FindObjectOfType<HandGestureManager>(true);
             Require(tracker != null && gesture != null, "Hand tracker or gesture manager missing.");
