@@ -104,6 +104,17 @@ namespace RealityDesignLab.MOFA.TheTraining
             var app = HoloKitApp.Instance;
             Require(app != null, "HoloKitApp did not start.");
             _report.stereoRequested = Environment.GetEnvironmentVariable("MOFA_COMBAT_STEREO_TEST") == "1";
+            yield return Application.RequestUserAuthorization(UserAuthorization.WebCam);
+            Require(Application.HasUserAuthorization(UserAuthorization.WebCam), "Camera permission is required.");
+            var training = app.GlobalSettings.GetAllRealities().FirstOrDefault(r => r.Scene.SceneName == "MOFATheTraining");
+            Require(training != null, "MOFA Training is missing from the product catalog.");
+            app.CurrentReality = training;
+            app.EnterRealityAs(true, HoloKitAppPlayerType.Player);
+            yield return new WaitForSecondsRealtime(6);
+            Require(SceneManager.GetActiveScene().name == "MOFATheTraining", "Training scene did not open.");
+            var manager = app.RealityManager as MofaTrainingRealityManager;
+            Require(manager != null, "Training reality manager did not initialize.");
+            Require(HoloKitCameraManager.Instance != null, "Training camera rig did not initialize.");
             if (_report.stereoRequested)
             {
                 HoloKitCameraManager.Instance.OpenStereoWithoutNFC("SomethingForNothing");
@@ -115,16 +126,6 @@ namespace RealityDesignLab.MOFA.TheTraining
             if (_report.stereoRequested)
                 Require(_report.renderMode == HoloKitRenderMode.Stereo.ToString() && _report.trackingDeviceFound,
                     "Stereo mode or its ARKit tracking device did not initialize.");
-            yield return Application.RequestUserAuthorization(UserAuthorization.WebCam);
-            Require(Application.HasUserAuthorization(UserAuthorization.WebCam), "Camera permission is required.");
-            var training = app.GlobalSettings.GetAllRealities().FirstOrDefault(r => r.Scene.SceneName == "MOFATheTraining");
-            Require(training != null, "MOFA Training is missing from the product catalog.");
-            app.CurrentReality = training;
-            app.EnterRealityAs(true, HoloKitAppPlayerType.Player);
-            yield return new WaitForSecondsRealtime(6);
-            Require(SceneManager.GetActiveScene().name == "MOFATheTraining", "Training scene did not open.");
-            var manager = app.RealityManager as MofaTrainingRealityManager;
-            Require(manager != null, "Training reality manager did not initialize.");
             for (var i = 0; i < 80 && manager.LocalMofaPlayer == null; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             Require(manager.LocalMofaPlayer != null, "Local MOFA player did not spawn.");
