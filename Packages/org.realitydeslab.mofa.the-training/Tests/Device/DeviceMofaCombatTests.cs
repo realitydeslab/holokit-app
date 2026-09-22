@@ -34,6 +34,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             public bool hostListening;
             public bool aiSpawned;
             public bool aiAvatarVisible;
+            public bool aiWeaponPresent;
             public int aiFallbackMaterials;
             public int aiCasts;
             public bool starButtonActive;
@@ -149,9 +150,11 @@ namespace RealityDesignLab.MOFA.TheTraining
             for (var i = 0; i < 80 && ai.AvatarAnimator == null; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             _report.aiAvatarVisible = ai.AvatarAnimator != null && ai.AvatarAnimator.gameObject.activeInHierarchy;
+            _report.aiWeaponPresent = ai.AvatarWeaponPresent;
             _report.aiFallbackMaterials = ai.AvatarFallbackMaterialCount;
             Save();
             Require(_report.aiAvatarVisible, "AI opponent avatar did not appear.");
+            Require(_report.aiWeaponPresent, "AI opponent wand did not spawn on the hand joint.");
             Require(_report.aiFallbackMaterials > 0, "AI avatar did not replace the incompatible Meebits shader on iOS.");
             yield return new WaitForEndOfFrame();
             Capture("fighting-before-shot.png");

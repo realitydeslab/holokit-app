@@ -1,6 +1,30 @@
 # Unity 6.3 / iOS 27 upgrade
 
-## 最新进度：2026-09-22，继续执行后
+## 最新进度：2026-09-23，继续执行后
+
+- **MOFA Training 真机战斗已跑通，对手外观仍需校正。** 最新 Unlit 构建在
+  iPhone 16 Pro（`iPhone17,1`）上完成真实开始按钮进入 Fighting、模拟 Watch
+  射击令本机施法计数 0→2、AI 自己施法 1 次，运行错误 0，`complete=true`。
+  报告与原始截图在 `/tmp/holokit-upgrade-20260922/mofa-unlit-final/`。截图可见
+  对手身体，但位置/尺寸明显异常，不能把运行时 `aiAvatarVisible=true` 当成视觉验收。
+  用户又指出手中没有魔杖；追查发现 Meebits prefab 的 `_holdWeapon=1`，但
+  `WeaponPrefab` 为空，`MeebitsController.Start()` 因而不会生成武器。Training AI
+  现在在头像 `Start()` 前注入已有的 `ancient art vfx` 武器 prefab，并让设备测试
+  断言手部武器实例存在；新构建与真机复测待完成。
+- **Dragon 召唤真机通过。** iPhone 16 Pro 上按 Hunting 实际召唤按钮，在
+  AR 已追踪、没有 `Floor` 分类平面的场景中，默认放置点允许继续进入生成流程；
+  Dragon 和 Portal 两个网络对象均生成，错误 0，`complete=true`。报告和截图在
+  `/tmp/holokit-upgrade-20260922/mofa-hunting-spawn-final/`。截图拍摄时相机朝桌面，
+  只证明召唤流程与控制 UI，尚不能证明龙模型在画面中正确渲染。
+- **双目模式落点高度正在复查。** `ARPlacementManager` 原来用带俯仰的
+  `CenterEyePose.TransformVector` 计算默认落点；当距离配置为 6 米时，轻微抬头
+  会显著改变 Y 坐标。已改为仅绕竖直轴计算水平距离，保留配置的固定 Y 偏移；
+  同时接受包含 `Floor` 标志的复合 ARKit 平面分类，而非要求分类恰好等于
+  `Floor`。这修复了可确认的落点计算缺陷，但双目下 AI 的实际离地高度还需
+  真机数据与画面验证，不能把用户观察的全部高度问题视为已解决。MOFA 独立
+  项目对应游戏包的 Unity CLI Editor 测试 **49/49 通过**，报告
+  `/tmp/holokit-upgrade-20260922/mofa-wand-placement-editor.xml`；魔杖与落点
+  新逻辑尚未经过 iPhone 复测。
 
 - **Dragon 召唤排查与修复待真机确认。** Hunting 召唤按钮最终调用
   `MofaHuntingRealityManager.TryGetReady()`；原实现只有 ARPlacementManager 找到

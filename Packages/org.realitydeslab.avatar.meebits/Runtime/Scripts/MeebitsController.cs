@@ -19,6 +19,7 @@ namespace RealityDesignLab.Avatar.Meebits
         [SerializeField] bool _holdWeapon;
         public Transform HandJoint;
         public GameObject WeaponPrefab;
+        public GameObject WeaponInstance { get; private set; }
         public Vector3 Offset= new Vector3(-.025f, 0.05f, 0.01f);
         public float Scale = 0.2f;
 
@@ -36,10 +37,10 @@ namespace RealityDesignLab.Avatar.Meebits
             {
                 if (HandJoint != null && WeaponPrefab != null)
                 {
-                    var weaponInstance = Instantiate(WeaponPrefab, HandJoint);
-                    weaponInstance.transform.localPosition = Offset;
-                    weaponInstance.transform.localEulerAngles = new Vector3(-90, 0, 0);
-                    weaponInstance.transform.localScale = Vector3.one * Scale;
+                    WeaponInstance = Instantiate(WeaponPrefab, HandJoint);
+                    WeaponInstance.transform.localPosition = Offset;
+                    WeaponInstance.transform.localEulerAngles = new Vector3(-90, 0, 0);
+                    WeaponInstance.transform.localScale = Vector3.one * Scale;
                 }
             }
 

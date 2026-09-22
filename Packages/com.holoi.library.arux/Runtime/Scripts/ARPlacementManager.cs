@@ -96,7 +96,8 @@ namespace Holoi.Library.ARUX
                     foreach (var hit in hits)
                     {
                         var arPlane = hit.trackable.GetComponent<ARPlane>();
-                        if (arPlane.alignment == PlaneAlignment.HorizontalUp && arPlane.classifications == PlaneClassifications.Floor)
+                        if (arPlane.alignment == PlaneAlignment.HorizontalUp &&
+                            (arPlane.classifications & PlaneClassifications.Floor) != 0)
                         {
                             Vector3 position = centerEyePose.position + _horizontalPlacementOffset * horizontalForward;
                             Vector3 hitPosition = new(position.x, hit.pose.position.y, position.z);
@@ -112,7 +113,7 @@ namespace Holoi.Library.ARUX
                     }
                 }
                 // Set ARRaycastPoint to its default pose relative to the center eye
-                _hitPoint.SetPositionAndRotation(centerEyePose.position + centerEyePose.TransformVector(_hitPositionDefaultOffset),
+                _hitPoint.SetPositionAndRotation(CalculateDefaultHitPosition(centerEyePose, _hitPositionDefaultOffset),
                                                  Quaternion.Euler(0f, centerEyePose.rotation.eulerAngles.y, 0f) * Quaternion.Euler(180f * Vector3.up));
                 if (_hitPoint.gameObject.activeSelf)
                 {
@@ -120,6 +121,14 @@ namespace Holoi.Library.ARUX
                     OnLostPlane?.Invoke();
                 }
             }
+        }
+
+        // A placement distance is horizontal. Pitching the phone/headset must not
+        // lift a ground-level target several metres ahead of the player.
+        public static Vector3 CalculateDefaultHitPosition(Transform centerEyePose, Vector3 offset)
+        {
+            var yaw = Quaternion.Euler(0f, centerEyePose.eulerAngles.y, 0f);
+            return centerEyePose.position + yaw * offset;
         }
 
         /// <summary>

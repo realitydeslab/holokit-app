@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitAppLib;
+using RealityDesignLab.Avatar.Meebits;
 
 namespace RealityDesignLab.MOFA.TheTraining
 {
@@ -29,10 +30,14 @@ namespace RealityDesignLab.MOFA.TheTraining
         // Keep the AI visible while retaining each avatar material's base colour.
         [SerializeField] private Material _iosAvatarFallbackMaterial;
 
+        [SerializeField] private GameObject _aiWeaponPrefab;
+
         private readonly List<Material> _avatarMaterialOverrides = new();
         public int AvatarFallbackMaterialCount => _avatarMaterialOverrides.Count;
 
         public Animator AvatarAnimator => _avatarAnimator;
+        public bool AvatarWeaponPresent => _avatar != null &&
+            _avatar.GetComponent<MeebitsController>()?.WeaponInstance != null;
 
         /// <summary>
         /// The reference to the AI player's avatar
@@ -89,6 +94,9 @@ namespace RealityDesignLab.MOFA.TheTraining
             _avatar.transform.localPosition = Vector3.zero;
             _avatar.transform.localRotation = Quaternion.identity;
             _avatar.transform.localScale = new(avatarCollectionParams.Scale, avatarCollectionParams.Scale, avatarCollectionParams.Scale);
+            var meebits = _avatar.GetComponent<MeebitsController>();
+            if (meebits != null)
+                meebits.WeaponPrefab = _aiWeaponPrefab;
             ApplyIOSAvatarMaterialFallback();
             _avatarAnimator = _avatar.GetComponent<Animator>();
             _avatarAnimator.runtimeAnimatorController = _mofaAvatarAnimatorController;
