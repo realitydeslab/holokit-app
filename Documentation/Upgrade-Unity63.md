@@ -25,9 +25,14 @@
   `typed-isolated-tests-2.xml`、`qrealm-isolated-tests-2.xml`。首次 QRealm 测试
   发现生成器 `file:` 路径少了一层；首次 Typed 测试发现雕塑场景材质原先只在主项目，
   均已修复并通过重跑。
-- QRealm、Typed 的独立 iOS 导出已启动，结果仍待确认；MOFA 尚未导出。三个
-  小产品均尚未在真机安装。生成器已排除主项目的本地 NatML/NatShare 配置，
-  不把这些非产品配置复制到小项目或提交到 Git。
+- MOFA、Typed、QRealm 三个独立项目的原生 Unity CLI iOS 导出均已成功，
+  各自 `Products/<产品>/Builds/iOS/unity-build.provenance.json` 的 `outcome`
+  均为 `success`。QRealm 和 Typed 的 Xcode 27 原生编译正在运行；三个小产品
+  尚未在真机安装。生成器已排除主项目的本地 NatML/NatShare 配置，不把这些
+  非产品配置复制到小项目或提交到 Git。
+- 共享资源迁移后的 HoloKit 根项目再次通过 Unity CLI 编辑器测试 **118/118**，
+  报告 `/tmp/holokit-upgrade-20260922/holokit-root-after-split.xml`。根项目
+  的新 iOS 导出正在运行，结果尚未确认。
 
 下一步确认三个独立产品使用原生
 `unity build Products/<产品> --profile iOS --output-path ...` 分别导出，
