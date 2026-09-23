@@ -1,6 +1,32 @@
 # Unity 6.3 / iOS 27 upgrade
 
-## 最新进度：2026-09-23，继续执行后
+## 最新进度：2026-09-24，继续执行后
+
+- 2026-09-23 的第二次双机实测改跑 Hunting，仍在 MPC `Connecting` 后约
+  10 秒双端断开；未出现 `Connected`，Dragon/Portal 的双机复制未能开始。
+  日志在 `/tmp/holokit-upgrade-20260923/mofa-hunting-{host,client}-console.log`。
+  因为 Duel 和 Hunting 两个独立场景都以相同方式失败，下一步先诊断原生
+  MultipeerConnectivity 握手；不能把问题归给某个游戏的网络 prefab。
+  清理期空引用与双目测试入口修复已通过 MOFA 包内 Unity CLI Editor 测试
+  **49/49**，报告 `/tmp/holokit-upgrade-20260923/mofa-dual-fixes-editor.xml`，
+  但仍未在新 iOS 包上验证。
+
+- **首次两台 iPhone 的 MOFA Duel 实测定位到连接失败阶段。** 16 Pro host 已广播，
+  15 Pro client 搜到 host、发出连接请求，host 接受；约 10 秒后双方
+  MultipeerConnectivity 都报告断开，Netcode 始终未出现第二名玩家（host
+  `playerCount=1`，client `playerCount=0`）。原始日志与阶段报告：
+  `/tmp/holokit-upgrade-20260922/mofa-duel-two-phone-{host,client}/`、
+  同名前缀 `*-console.log`。因此二维码空间对齐和双人战斗均未开始，不能当作
+  多人测试通过。15 Pro 断线清理时还在 `MofaFightingPanel.CheckAppearance()`
+  遇到 `LocalPlayer` 空引用；已给网络管理器及面板添加销毁期判空，待编译、
+  重装和重试。客户端首次运行还记录一次 `Touch was already deallocated`，
+  与连接断开之间尚无确定因果关系。
+- **首次双目 Training 实测已找到 ARKit 追踪设备。** 16 Pro 的报告
+  `/tmp/holokit-upgrade-20260922/mofa-stereo-wand-iphone16/results.json` 显示
+  `renderMode=Stereo`、`trackingDeviceFound=true`、AR tracking/host 正常；
+  测试之后因只寻找单目开始按钮而中止，尚未验证魔杖或 AI 高度。
+  已让包内设备测试打开双目的 `StarAR` 面板并调用其真实触发组件，且去掉测试
+  人为将 AI 放在 1.5 米前方的特殊落点，改用场景的默认落点；待新包复测。
 
 - **MOFA Training 真机战斗已跑通，对手外观仍需校正。** 最新 Unlit 构建在
   iPhone 16 Pro（`iPhone17,1`）上完成真实开始按钮进入 Fighting、模拟 Watch

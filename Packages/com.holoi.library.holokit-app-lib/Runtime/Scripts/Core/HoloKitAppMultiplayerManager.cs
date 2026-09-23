@@ -19,7 +19,15 @@ namespace Holoi.Library.HoloKitAppLib
 
         public HoloKitAppPlayer HostPlayer => _playerDict.ContainsKey(0) ? _playerDict[0] : null;
 
-        public HoloKitAppPlayer LocalPlayer => _playerDict.ContainsKey(NetworkManager.LocalClientId) ? _playerDict[NetworkManager.LocalClientId] : null;
+        public HoloKitAppPlayer LocalPlayer
+        {
+            get
+            {
+                var networkManager = NetworkManager.Singleton;
+                return networkManager != null && _playerDict.TryGetValue(networkManager.LocalClientId, out var player)
+                    ? player : null;
+            }
+        }
 
         /// <summary>
         /// This is a local property which controls the visibility of pose visualizers of players.

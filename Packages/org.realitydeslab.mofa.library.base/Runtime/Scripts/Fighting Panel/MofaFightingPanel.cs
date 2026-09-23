@@ -134,6 +134,11 @@ namespace RealityDesignLab.MOFA.Library.Base
         private void CheckAppearance()
         {
             var holokitApp = HoloKitApp.Instance;
+            if (holokitApp == null || holokitApp.Recorder == null || holokitApp.MultiplayerManager == null)
+            {
+                OnDisappear();
+                return;
+            }
             if (holokitApp.Recorder.IsRecording)
             {
                 OnDisappear();

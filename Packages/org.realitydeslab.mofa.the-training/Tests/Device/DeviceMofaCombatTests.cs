@@ -117,6 +117,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             Require(HoloKitCameraManager.Instance != null, "Training camera rig did not initialize.");
             if (_report.stereoRequested)
             {
+                app.UIPanelManager.PushUIPanel("StarAR", HoloKitAppUICanvasType.StAR);
                 HoloKitCameraManager.Instance.OpenStereoWithoutNFC("SomethingForNothing");
                 yield return new WaitForSecondsRealtime(2);
             }
@@ -145,10 +146,9 @@ namespace RealityDesignLab.MOFA.TheTraining
             {
                 // Keep the real-device combat test runnable if the current room
                 // offers no horizontal AR plane. The report records this fallback.
-                var eye = HoloKitCameraManager.Instance.CenterEyePose;
                 placement.IsActive = false;
-                placement.HitPoint.SetPositionAndRotation(eye.position + eye.forward * 1.5f,
-                    Quaternion.Euler(0f, eye.rotation.eulerAngles.y + 180f, 0f));
+                // ARPlacementManager has already updated this configured default
+                // point; only make it selectable for the synthetic combat run.
                 placement.HitPoint.gameObject.SetActive(true);
                 _report.syntheticPlacement = true;
             }
@@ -156,12 +156,25 @@ namespace RealityDesignLab.MOFA.TheTraining
             _report.placementY = placement.HitPoint.position.y;
             Save();
 
-            var button = FindObjectsOfType<MofaUIPanel>(true)
-                .FirstOrDefault(item => item.isActiveAndEnabled);
-            _report.starButtonActive = button != null;
-            Require(button != null, "The visible MOFA start panel is missing.");
-            Debug.Log("[MOFA COMBAT TEST] Tapping the MOFA start button to start the round.");
-            button.OnTriggerButtonPressed();
+            if (_report.stereoRequested)
+            {
+                var stereoButton = FindObjectsOfType<HoloKitAppUIComponent_StarAR_TriggerButton>(true)
+                    .FirstOrDefault(item => item.isActiveAndEnabled);
+                _report.starButtonActive = stereoButton != null;
+                Require(stereoButton != null, "The visible stereo trigger button is missing.");
+                Debug.Log("[MOFA COMBAT TEST] Tapping the stereo trigger button to start the round.");
+                stereoButton.OnPointerDown(null);
+                stereoButton.OnPointerUp(null);
+            }
+            else
+            {
+                var button = FindObjectsOfType<MofaUIPanel>(true)
+                    .FirstOrDefault(item => item.isActiveAndEnabled);
+                _report.starButtonActive = button != null;
+                Require(button != null, "The visible MOFA start panel is missing.");
+                Debug.Log("[MOFA COMBAT TEST] Tapping the MOFA start button to start the round.");
+                button.OnTriggerButtonPressed();
+            }
             for (var i = 0; i < 120 && manager.CurrentPhase.Value != MofaPhase.Fighting; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             _report.fighting = manager.CurrentPhase.Value == MofaPhase.Fighting;
