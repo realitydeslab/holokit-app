@@ -1,6 +1,25 @@
 # Unity 6.3 / iOS 27 upgrade
 
-## 最新进度：2026-09-24，继续执行后
+## 最新进度：2026-09-25，双机复测后
+
+- 最新 MOFA Unity CLI iOS 导出成功：`Products/MOFA/Builds/iOS/unity-build.provenance.json`
+  的结果为 `success`，源提交 `3afd1d58`；Xcode 27 使用命令行完成
+  `ReleaseForRunning` 签名构建，结果包在
+  `/tmp/holokit-upgrade-20260924/mofa-stereo-cleanup-iphone.xcresult`。此版本已安装并
+  能在两台 iPhone 15 Pro（Crack B、I，均 iOS 27.0）启动。15 A 虽可安装，iOS
+  拒绝启动并报告签名、entitlement 或开发者信任不足；原先指定的 iPhone 16 J
+  当前在 CoreDevice 中显示 unavailable，不能把 15 Pro 结果当作 16 Pro 验收。
+- 两台 15 Pro 的 Duel 重跑已越过本地网络权限弹窗，且双端 AR tracking。
+  原生 MPC 日志显示 client 发现 host、发出邀请，host 自动接受；两端在
+  `Connecting` 约 10 秒后转为 `Disconnected`，从未到 `Connected`。host 的
+  `playerCount=1`，client 为 0，二维码空间对齐与双人施法均未开始。无 console
+  附着的重跑也没有第二名玩家，故不能把故障归于 console 附着。
+  证据与设备编号、阶段门槛写在
+  `Documentation/Validation/2026-09-25/mofa-two-iphone-duel.md`；原始报告与
+  截图保存在本机 `output/validation-20260925/`。下一步在两机暂时关闭蜂窝数据、
+  保持 Wi-Fi/蓝牙的条件下复测，以检验网络路径假设；尚未将此假设当作原因。
+
+## 先前进度：2026-09-24
 
 - 2026-09-23 的第二次双机实测改跑 Hunting，仍在 MPC `Connecting` 后约
   10 秒双端断开；未出现 `Connected`，Dragon/Portal 的双机复制未能开始。
