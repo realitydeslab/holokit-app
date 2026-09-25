@@ -67,6 +67,15 @@ Dragon Fireball and spell effects, now resolve.
 | Typed | **0** | `output/validation-20260925/typed-clean-guid-full-editor.xml` (full suite **75/75**) |
 | QRealm | **0** | `output/validation-20260925/qrealm-clean-guid-full-editor.xml` (full suite **27/27**) |
 
+The three red Dragon materials also held the same missing texture GUID
+`d775cd6c…` under an old generated Shader Graph sample-property name.
+That property is absent from their current `SH_Dragon_Body.shadergraph`, so its
+three stale material entries were removed without changing the current shader
+inputs. A subsequent Unity CLI audit reports **333** unresolved occurrences in
+MOFA (`output/validation-20260925/mofa-removed-stale-dragon-texture-editor.xml`)
+and **333** in root
+(`output/validation-20260925/root-removed-stale-dragon-texture-editor.xml`).
+
 Root and MOFA still have unresolved project-owned references, notably the
 MOFA spell texture `5044169c…` and Dragon thumbnail animator transitions.
 Typed/QRealm passing the serialized audit does not prove native hand tracking

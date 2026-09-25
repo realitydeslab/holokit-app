@@ -5,7 +5,8 @@
 - Typed 当前完整 Unity CLI Editor 套件 **75/75**、QRealm **27/27** 均通过，
   两产品的启用资源 GUID 审计现为 **0** 未解析引用。MOFA 的法术 VFX 网格
   已连同原 GUID 移入基础包，完整套件 59/60；根项目 GUID 定向测试 1/2。
-  两者唯一失败仍是资源审计，剩余引用各 **336** 处。详见
+  两者唯一失败仍是资源审计；清除当前 Dragon shader 已不使用的旧材质条目后，
+  剩余引用各 **333** 处。详见
   `Documentation/Serialized-Reference-Audit-2026-09-22.md`；此前已安装的
   iOS 包早于这些资产改动，须重建后再做真机验收。
 - 根项目当前源码的 Unity CLI EditMode 全套 **127/128 通过**；唯一失败是
