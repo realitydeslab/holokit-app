@@ -33,12 +33,23 @@ namespace RealityDesignLab.MOFA.TheTraining
         }
 
         [Serializable]
+        private sealed class PoseSample
+        {
+            public string phase;
+            public string camera;
+            public Vector3 position;
+            public Vector3 forward;
+            public Vector3 placementViewport;
+        }
+
+        [Serializable]
         private sealed class Report
         {
             public string device;
             public string product;
             public bool complete;
             public bool arTracking;
+            public string arSessionState;
             public bool hostListening;
             public bool aiSpawned;
             public bool aiAvatarVisible;
@@ -54,6 +65,8 @@ namespace RealityDesignLab.MOFA.TheTraining
             public Vector3 aiBodyBoundsCenter;
             public Vector3 aiBodyBoundsSize;
             public List<CameraView> aiCameraViews = new();
+            public Vector3 placementPosition;
+            public List<PoseSample> poseSamples = new();
             public int aiFallbackMaterials;
             public int aiCasts;
             public bool starButtonActive;
@@ -143,9 +156,11 @@ namespace RealityDesignLab.MOFA.TheTraining
             for (var i = 0; i < 80 && manager.LocalMofaPlayer == null; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             Require(manager.LocalMofaPlayer != null, "Local MOFA player did not spawn.");
-            for (var i = 0; i < 300 && ARSession.state != ARSessionState.SessionTracking; i++)
+            for (var i = 0; i < 600 && ARSession.state != ARSessionState.SessionTracking; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             _report.arTracking = ARSession.state == ARSessionState.SessionTracking;
+            _report.arSessionState = ARSession.state.ToString();
+            RecordPoseSamples("ar-readiness");
             _report.hostListening = NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost && NetworkManager.Singleton.IsListening;
             _report.aiSpawned = FindObjectOfType<MofaAIPlayer>(true) != null;
             Save();
@@ -167,6 +182,8 @@ namespace RealityDesignLab.MOFA.TheTraining
             }
             _report.centerEyeY = HoloKitCameraManager.Instance.CenterEyePose.position.y;
             _report.placementY = placement.HitPoint.position.y;
+            _report.placementPosition = placement.HitPoint.position;
+            RecordPoseSamples("placement");
             Save();
 
             if (_report.stereoRequested)
@@ -203,6 +220,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             _report.aiOriginY = ai.transform.position.y;
             _report.aiWeaponPresent = ai.AvatarWeaponPresent;
             _report.aiFallbackMaterials = ai.AvatarFallbackMaterialCount;
+            RecordPoseSamples("fighting");
             RecordAiCameraViews(ai);
             Save();
             Require(_report.aiAvatarVisible, "AI opponent avatar did not appear.");
@@ -241,6 +259,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             for (var i = 0; i < 200 && ai.CastCount.Value == 0; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             _report.aiCasts = ai.CastCount.Value;
+            RecordPoseSamples("ai-attack");
             RecordAiCameraViews(ai);
             Save();
             Capture("ai-attack.png");
@@ -270,6 +289,30 @@ namespace RealityDesignLab.MOFA.TheTraining
                     avatarViewport = viewport,
                     insideViewport = viewport.z > 0f && viewport.x >= 0f && viewport.x <= 1f &&
                                      viewport.y >= 0f && viewport.y <= 1f
+                });
+            }
+        }
+
+        private void RecordPoseSamples(string phase)
+        {
+            var rig = HoloKitCameraManager.Instance;
+            var eye = rig.CenterEyePose;
+            _report.poseSamples.Add(new PoseSample
+            {
+                phase = phase,
+                camera = "Center Eye Pose",
+                position = eye.position,
+                forward = eye.forward
+            });
+            foreach (var camera in rig.GetComponentsInChildren<Camera>(true))
+            {
+                _report.poseSamples.Add(new PoseSample
+                {
+                    phase = phase,
+                    camera = camera.name,
+                    position = camera.transform.position,
+                    forward = camera.transform.forward,
+                    placementViewport = camera.WorldToViewportPoint(_report.placementPosition)
                 });
             }
         }

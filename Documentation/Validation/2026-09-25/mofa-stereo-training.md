@@ -24,14 +24,25 @@ bounds、相机距离和各活动相机的 viewport 坐标。新版在 Crack B
 (`00008130-001168E428EB8D3A`) 的真机报告显示身体网格
 `aiBodyRenderers=1`、bounds 高约 1.75 m、距中心眼约 6.55 m，但左右眼
 viewport 中心 x 分别约 2.46、2.43，明显超出 0–1 的可见范围。因此该轮的
-缺席是落点/朝向问题，材质是否在视野内正确渲染仍待复测。
+缺席至少涉及落点与相机视野不一致；材质是否在视野内正确渲染仍待复测。
 
 共享 `ARPlacementManager` 默认落点原来用 `centerEyePose.eulerAngles.y` 构造
 水平偏移。双目手机横放后可同时带 pitch 和 roll，此 Euler Y 不保证等于相机
 forward 的水平朝向。代码已改为投影相机真实 forward 到水平面，并让 floor
 命中分支用同一朝向；Training 包内新增横放旋转测试，Unity CLI 定向测试通过
 （`output/validation-20260925/mofa-rolled-placement-editor.xml`）。
-修复版尚未在 iPhone 上重编、观察和验收。
+修复版 `a9f87263` 已在 iPhone 15 Crack B 重新编译并实测：
+`output/validation-20260925/stereo-training-B-horizontal/results.json`
+记录左右眼 viewport x 仍为 2.42、2.39，截图仍看不到对手。因此该修改
+**没有解决真机画面问题**。它的横放朝向单元测试通过，但不能据此宣称视觉修复。
+包内真机测试现增加放置、开战、AI 攻击时的中心眼和各相机 pose/落点投影记录，
+诊断包已通过 MOFA 包内 12/12 个 Unity CLI 定向 Editor 测试、Unity iOS 导出
+和 Xcode 签名构建，但在 Crack B 连续两次启动后，ARSession 均未在 30 秒内进入
+Tracking；测试在放置前中止，未取得 pose 对比。两次原始报告保存在
+`output/validation-20260925/stereo-training-B-pose-diagnostics/` 与
+`output/validation-20260925/stereo-training-B-pose-diagnostics-retry/`。
+需在 AR tracking 恢复后重跑，区分放置时相机方向、战斗期间追踪姿态变化及
+投影配置问题。
 
 高度参考：Training 场景默认偏移为 `{x:0,y:-0.6,z:6}`，单位为米。Apple 的
 [ARKit gravity 世界对齐文档](https://developer.apple.com/documentation/arkit/arconfiguration/worldalignment-swift.enum/gravity)

@@ -16,7 +16,11 @@
   `centerEyePose.eulerAngles.y` 当水平朝向，手机带 roll 时不等同于真实相机
   forward；现改为沿相机 forward 的水平投影放置，并让地板命中分支使用同一
   水平朝向。MOFA 包内新增横放双目相机测试，Unity CLI 定向测试通过；
-  **修复版尚未真机验证**。详情：
+  但 `a9f87263` 修复版在 Crack B 真机的左右眼 viewport x 仍约 2.42、2.39，
+  截图仍看不到对手，**视觉问题未解决**。包内设备测试进一步记录放置、
+  开战和攻击阶段的相机 pose；定向 Editor 测试 12/12，通过 Unity CLI 再次
+  导出并由 Xcode 签名。诊断包在 Crack B 上连续两次未进入 AR Tracking，
+  因此还没有得到可比较的 pose，需继续真机复测。详情：
   `Documentation/Validation/2026-09-25/mofa-stereo-training.md`。
   MOFA 完整 EditMode 套件在该修复前为 **57/58**：唯一失败是原有
   `SerializedAssetReferenceTests.PlayableProductAssetGuidsResolve`，不能声称
