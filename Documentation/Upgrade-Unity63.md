@@ -18,6 +18,12 @@
   `SyncingPose`，B 等待空间对齐超时。截图显示 B 的二维码已显示，但 I 的
   后置相机未拍到它；所以 Fighting、对方人物和双端 Watch 施法仍未验收。
   见 `Documentation/Validation/2026-09-25/mofa-two-iphone-duel.md`。
+- 资产提交 `1784a5ae` 已由 Unity CLI 重新导出 MOFA iOS，并经 Xcode 27
+  `ReleaseForRunning` 签名构建成功（0 错误、59 警告），同一新包已安装到
+  B/I。第一轮新包双机测试没有建立第二名玩家；第二轮原生日志在发现、邀请后
+  双端从 `Connecting` 约 10 秒回到 `Disconnected`。I 在本轮未进入 AR
+  tracking。新包的二维码对齐、Fighting、人物可见性和 Watch 施法仍未通过。
+  详情见上述双机记录。
 
 - Typed 当前完整 Unity CLI Editor 套件 **75/75**、QRealm **27/27** 均通过，
   两产品的启用资源 GUID 审计现为 **0** 未解析引用。MOFA 的法术 VFX 网格

@@ -138,3 +138,28 @@ B 截图清楚显示共享二维码。I 的后置相机画面没有拍到该二�
 不能验证扫码空间对齐、对方人物可见性或双人施法。需要让 I 后置摄像头实际
 对准 B 屏幕上的二维码并保持两机解锁，再重跑完整流程。CLI 可以启动应用、
 收集双端报告与截图，但不能物理转动设备或代替相机扫码。
+
+## Dragon/VFX 资源修复后的新签名包
+
+提交 `1784a5ae` 经 Unity CLI 独立导出 MOFA iOS，
+`Builds/iOS-dragon-ref-recovery/unity-build.provenance.json` 为 `success`。
+Xcode 27 命令行 `ReleaseForRunning` 构建结果
+`/tmp/holokit-mofa-dragon-ref-iphone.xcresult` 为 `succeeded`、0 错误、
+59 警告；同一个 `MOFA.app` 已安装在 Crack B 和 I。
+
+新包第一轮包内双机测试：B `arTracking=true`、`playerCount=1`；I
+`arTracking=false`、`playerCount=0`。两端最终均报告未连接第二名玩家，
+没有进入 Fighting 或触发 Watch 射击。报告在
+`output/validation-20260925/duel-dragon-ref-{host-B,client-I}-final/`。
+两端屏幕抓取分别保存为 `duel-dragon-ref-{host-B,client-I}-screen.png`；
+B 的共享二维码正常显示，I 是黑色相机背景及连接页。
+
+第二轮带原生 console 的重跑中，B 19:27:48 开始广播，I 19:27:47
+开始浏览，两端 19:27:50 进入 `Connecting`，19:28:00 均回到
+`Disconnected`。握手没有到 `Connected`；这与前一轮旧包曾短暂连接的
+事实并存，尚不能证明新资源提交造成网络回归。二维码空间对齐发生在
+MPC 连接之后；当前阻点首先是握手。I 的 AR tracking 也未恢复，因而
+无法继续验收双人战斗或画面中的对手。两端最终测试报告在
+`output/validation-20260925/duel-dragon-ref-console-{host-B,client-I}-final-v2/`，
+各自以「两台 iPhone 未经 MPC 连上」结束；`watchTriggers=0`，无其它
+运行异常记录。
