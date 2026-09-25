@@ -9,6 +9,10 @@
   剩余引用各 **333** 处。详见
   `Documentation/Serialized-Reference-Audit-2026-09-22.md`；此前已安装的
   iOS 包早于这些资产改动，须重建后再做真机验收。
+- 修复版四产品已分别完成 Unity CLI iOS 导出；QRealm 新版 Xcode 签名
+  构建成功并安装到 I，但其设备交互测试尚无终态，最新屏幕为纯白横屏。
+  Typed 新版 Xcode 构建正在运行，MOFA/根项目新版仍待 Xcode 构建。
+  详见 `Documentation/Validation/2026-09-25/qrealm-typed-device.md`。
 - 根项目当前源码的 Unity CLI EditMode 全套 **127/128 通过**；唯一失败是
   `SerializedAssetReferenceTests.PlayableProductAssetGuidsResolve`，在 604 个
   文件中发现未解析 GUID。报告为

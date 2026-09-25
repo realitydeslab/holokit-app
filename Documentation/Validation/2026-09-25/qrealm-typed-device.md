@@ -27,3 +27,21 @@ Unity 6000.3.24f1 CLI iOS 导出成功，产物：
 警告 60，其中包含 AR 参考图库的重复 QR 图像名称警告。bundle ID 为
 `org.realitydeslab.typed`，已安装在 iPhone 15 Crack B。尚未打开这版
 Typed 包或运行各游戏的真机交互测试。
+
+## 修复资源指针后的新包
+
+Typed 的四个启用场景 Lighting Settings 指针和共享 URP 旧字段修复后，
+Typed 完整 Unity CLI EditMode 测试 **75/75 通过**，报告
+`output/validation-20260925/typed-clean-guid-full-editor.xml`；QRealm 完整
+测试 **27/27 通过**，报告
+`output/validation-20260925/qrealm-clean-guid-full-editor.xml`。
+两个产品的 `PlayableProductAssetGuidsResolve` 都通过。
+
+两产品已由 Unity CLI 重新导出至各自的 `Builds/iOS-current-ref-fix/`；
+QRealm 新版 Xcode 27 签名构建成功，结果包
+`/tmp/holokit-qrealm-ref-fix-iphone.xcresult` 为 0 错误、57 警告，
+已安装到 I。新包以 `QREALM_INTERACTION_TEST=1` 启动后，设备截图
+`output/validation-20260925/qrealm-ref-fix-I-permission.png` 呈纯白横屏；
+当前 `results.json` 仍为 `complete=false`、所有交互标记 false、错误 0。
+CoreDevice 启动会话尚未返回终态，因此不能把白屏判为应用逻辑崩溃，
+也不能认定相机授权已解除。Typed 新版 Xcode 构建仍在运行，尚未安装。
