@@ -39,6 +39,9 @@ namespace RealityDesignLab.MOFA.TheTraining
             public string camera;
             public Vector3 position;
             public Vector3 forward;
+            public Vector3 up;
+            public Vector3 localPosition;
+            public Vector3 localEulerAngles;
             public Vector3 placementViewport;
         }
 
@@ -50,6 +53,8 @@ namespace RealityDesignLab.MOFA.TheTraining
             public bool complete;
             public bool arTracking;
             public string arSessionState;
+            public string screenOrientation;
+            public string deviceOrientation;
             public bool hostListening;
             public bool aiSpawned;
             public bool aiAvatarVisible;
@@ -160,6 +165,8 @@ namespace RealityDesignLab.MOFA.TheTraining
                 yield return new WaitForSecondsRealtime(.1f);
             _report.arTracking = ARSession.state == ARSessionState.SessionTracking;
             _report.arSessionState = ARSession.state.ToString();
+            _report.screenOrientation = Screen.orientation.ToString();
+            _report.deviceOrientation = Input.deviceOrientation.ToString();
             RecordPoseSamples("ar-readiness");
             _report.hostListening = NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost && NetworkManager.Singleton.IsListening;
             _report.aiSpawned = FindObjectOfType<MofaAIPlayer>(true) != null;
@@ -302,9 +309,13 @@ namespace RealityDesignLab.MOFA.TheTraining
                 phase = phase,
                 camera = "Center Eye Pose",
                 position = eye.position,
-                forward = eye.forward
+                forward = eye.forward,
+                up = eye.up,
+                localPosition = eye.localPosition,
+                localEulerAngles = eye.localEulerAngles
             });
-            foreach (var camera in rig.GetComponentsInChildren<Camera>(true))
+            var cameraRoot = eye.parent != null ? eye.parent : rig.transform.root;
+            foreach (var camera in cameraRoot.GetComponentsInChildren<Camera>(true))
             {
                 _report.poseSamples.Add(new PoseSample
                 {
@@ -312,6 +323,9 @@ namespace RealityDesignLab.MOFA.TheTraining
                     camera = camera.name,
                     position = camera.transform.position,
                     forward = camera.transform.forward,
+                    up = camera.transform.up,
+                    localPosition = camera.transform.localPosition,
+                    localEulerAngles = camera.transform.localEulerAngles,
                     placementViewport = camera.WorldToViewportPoint(_report.placementPosition)
                 });
             }

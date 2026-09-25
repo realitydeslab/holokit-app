@@ -44,6 +44,32 @@ Tracking；测试在放置前中止，未取得 pose 对比。两次原始报告
 需在 AR tracking 恢复后重跑，区分放置时相机方向、战斗期间追踪姿态变化及
 投影配置问题。
 
+后续在 Crack B 上用 `xcrun devicectl device orientation set ... landscapeLeft`
+设置测试方向后，AR Tracking 恢复，`stereo-training-B-landscape-pose` 报告
+完成真实 Fighting 流程（模拟 Watch 施法 0→1，AI 施法 1，运行错误 0）。
+截图依旧看不到对手。放置时 `Center Eye Pose.y≈−0.199 m`，AR `Main Camera.y≈
+0.918 m`，两者相差约 1.12 m；放置到 AI 攻击期间该差值持续存在。落点
+`(-5.69,−0.80,−1.47)`；AI 身体中心 `(-6.28,0.08,−0.62)`，左右眼
+viewport x≈2.30、2.28，仍在画外。这证明了相机/眼睛姿态不一致，
+但单次报告不能断定差值全部来自同一种坐标错误。报告中的相机层级采样只
+包含 AR 主相机，下一版已修正为记录左右眼、中心眼本地位姿与屏幕方向。
+
+对照同机 `holokit-unity-sdk` 的 `Runtime/HoloKitCameraManager.cs` 和
+`Runtime/LowLatencyTrackingManager.cs`，新版 SDK 将低延迟追踪写到
+`Stereo Tracked Pose` 父节点、保留子节点 `Center Eye Pose` 的相机到眼睛校准
+偏移。此项目此前直接在每帧写 `Center Eye Pose` 世界位姿，覆盖了
+`SetupHoloKitCameraData` 写入的本地偏移。现已按该层级修改共享相机 prefab
+与追踪驱动；MOFA Training 包内对应 Editor 测试 13/13 通过，MOFA iOS
+导出和 Xcode 签名构建成功，构建已安装到 Crack B 和 I。两台手机此时锁屏，
+**新层级的真机画面尚未验收**。
+
+同一共享修改后的 Unity CLI EditMode 全套结果：MOFA 59/60、Typed 74/75、
+QRealm 26/27、HoloKit 根项目 127/128。四套各自唯一失败均为
+`SerializedAssetReferenceTests.PlayableProductAssetGuidsResolve`，报告在
+`output/validation-20260925/*-after-stereo-parent-editor.xml` 与
+`mofa-stereo-pose-parent-full-editor.xml`；这些失败仍须按资源 GUID 清单修复，
+不能将回归测试记为全部通过。
+
 高度参考：Training 场景默认偏移为 `{x:0,y:-0.6,z:6}`，单位为米。Apple 的
 [ARKit gravity 世界对齐文档](https://developer.apple.com/documentation/arkit/arconfiguration/worldalignment-swift.enum/gravity)
 指出原点是会话启动时的设备位置，而非地板；

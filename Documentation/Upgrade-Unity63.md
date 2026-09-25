@@ -22,6 +22,12 @@
   导出并由 Xcode 签名。诊断包在 Crack B 上连续两次未进入 AR Tracking，
   因此还没有得到可比较的 pose，需继续真机复测。详情：
   `Documentation/Validation/2026-09-25/mofa-stereo-training.md`。
+  后续用 CoreDevice 将 Crack B 测试方向设为 `landscapeLeft` 后，AR Tracking
+  恢复，得到的姿态数据显示 `Center Eye Pose` 比 AR 主相机低约 1.12 m，
+  左右眼对手投影仍在画外。对照同机新版 HoloKit SDK，已在共享相机 prefab
+  加入 `Stereo Tracked Pose` 父节点，让低延迟追踪更新父节点，保留子节点
+  的相机到眼睛校准偏移；MOFA Training 包内测试 13/13 通过，新的 iOS
+  签名包已安装至 Crack B 与 I。两机当前锁屏，**该修改尚未真机视觉验收**。
   MOFA 完整 EditMode 套件在该修复前为 **57/58**：唯一失败是原有
   `SerializedAssetReferenceTests.PlayableProductAssetGuidsResolve`，不能声称
   指针审计通过；报告 `output/validation-20260925/mofa-visual-diagnostics-editor.xml`。

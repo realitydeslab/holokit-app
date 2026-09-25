@@ -51,6 +51,8 @@ namespace HoloKit
 
         [SerializeField] internal Transform _centerEyePose;
 
+        [SerializeField] internal Transform _stereoTrackedPose;
+
         [SerializeField] internal Camera _monoCamera;
 
         [SerializeField] internal Camera _leftEyeCamera;
@@ -85,6 +87,8 @@ namespace HoloKit
                 return _renderMode == HoloKitRenderMode.Mono ? _monoCamera.transform : _centerEyePose;
             }
         }
+
+        public Transform StereoTrackedPose => _stereoTrackedPose;
 
         public HoloKitRenderMode RenderMode
         {
@@ -251,6 +255,9 @@ namespace HoloKit
         {
             if (_renderMode == HoloKitRenderMode.Stereo)
             {
+                // The tracked parent owns the AR pose; the center-eye child keeps
+                // the camera-to-eye calibration supplied by the native SDK.
+                _centerEyePose.localRotation = Quaternion.identity;
                 // Switch ARBackground
                 _arCameraBackground.enabled = false;
                 // Switch cameras

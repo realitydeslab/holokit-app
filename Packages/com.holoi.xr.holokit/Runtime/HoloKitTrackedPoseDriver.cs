@@ -72,8 +72,8 @@ namespace HoloKit
                 return;
             }
 
-            if (_holoKitCameraManager.CenterEyePose == null) {
-                Debug.LogWarning("[HoloKitTrackedPoseDriver] Failed to find CenterEyePose from HoloKitCamera");
+            if (_holoKitCameraManager.StereoTrackedPose == null) {
+                Debug.LogWarning("[HoloKitTrackedPoseDriver] Failed to find StereoTrackedPose from HoloKitCamera");
                 return;
             }
 
@@ -162,8 +162,7 @@ namespace HoloKit
             Vector3 position = new(positionArr[0], positionArr[1], positionArr[2]);
             Quaternion rotation = new(rotationArr[0], rotationArr[1], rotationArr[2], rotationArr[3]);
 
-            _holoKitCameraManager.CenterEyePose.position = position;
-            _holoKitCameraManager.CenterEyePose.rotation = rotation;
+            _holoKitCameraManager.StereoTrackedPose.SetPositionAndRotation(position, rotation);
         #endif
         }
 

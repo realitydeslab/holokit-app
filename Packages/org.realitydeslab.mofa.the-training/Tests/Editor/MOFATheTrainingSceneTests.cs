@@ -1,3 +1,4 @@
+using HoloKit;
 using HoloKit.Tests;
 using Holoi.Library.ARUX;
 using NUnit.Framework;
@@ -83,6 +84,38 @@ namespace HoloKit.GameTests
                 Assert.That(position.y, Is.EqualTo(1.1f).Within(0.0001f));
             }
             finally { Object.DestroyImmediate(head); }
+        }
+
+        [Test]
+        public void StereoTrackingPreservesCenterEyeCalibrationAndMonoCameraPose()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+                "Packages/com.holoi.xr.holokit/Assets/Prefabs/HoloKit Camera Rig.prefab");
+            Assert.That(prefab, Is.Not.Null);
+            var instance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+            Assert.That(instance, Is.Not.Null);
+            try
+            {
+                var manager = instance.GetComponentInChildren<HoloKitCameraManager>(true);
+                Assert.That(manager, Is.Not.Null);
+                var trackedPose = manager.StereoTrackedPose;
+                var centerEye = new SerializedObject(manager).FindProperty("_centerEyePose").objectReferenceValue as Transform;
+                Assert.That(trackedPose, Is.Not.Null);
+                Assert.That(centerEye, Is.Not.Null);
+                Assert.That(centerEye.parent, Is.EqualTo(trackedPose));
+
+                var monoPose = manager.transform.position;
+                centerEye.localPosition = new Vector3(0.02f, 0.06f, -0.09f);
+                var trackingPosition = new Vector3(1f, 1.5f, -2f);
+                var trackingRotation = Quaternion.Euler(10f, 40f, 5f);
+                trackedPose.SetPositionAndRotation(trackingPosition, trackingRotation);
+
+                var expectedEyePosition = trackingPosition + trackingRotation * centerEye.localPosition;
+                Assert.That(Vector3.Distance(centerEye.position, expectedEyePosition), Is.LessThan(0.0001f));
+                Assert.That(centerEye.localPosition, Is.EqualTo(new Vector3(0.02f, 0.06f, -0.09f)));
+                Assert.That(manager.transform.position, Is.EqualTo(monoPose));
+            }
+            finally { Object.DestroyImmediate(instance); }
         }
     }
 }
