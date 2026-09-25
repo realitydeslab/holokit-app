@@ -2,6 +2,25 @@
 
 ## 最新进度：2026-09-25，双机复测后
 
+- 新版 MOFA 在 iPhone 15 I（iOS 27）的双目 Training 设备测试完成：
+  `renderMode=Stereo`、追踪设备与 AR tracking 均正常；按实际双目触发按钮
+  进入 Fighting，模拟 Watch 射击计数 0→1，AI 自行施法 1 次，手部武器实例存在，
+  运行错误 0。但三张双目战斗截图均未呈现 AI 身体或魔杖，**画面可见性仍不通过**。
+  本轮无 floor 平面，包内测试用了场景默认的相机相对回退落点（相机 Y≈0，
+  AI 脚点 Y≈−0.60 m）；这不是实测地面高度。SDK 历史中的
+  `WorldOriginResetter` 是显式重置 ARKit 世界原点的接口；ARKit `gravity`
+  模式默认原点是启动追踪时设备位置，不是 floor。已在 Training 包内设备测试
+  增加 AI 身体 bounds 和各相机投影坐标记录后，Crack B 的新版真机报告确认
+  AI 身体网格存在（高约 1.75 m），但中心在左右眼 viewport x≈2.45，超出
+  可见范围 0–1；这解释该轮截图中身体不出现。共享默认落点此前取
+  `centerEyePose.eulerAngles.y` 当水平朝向，手机带 roll 时不等同于真实相机
+  forward；现改为沿相机 forward 的水平投影放置，并让地板命中分支使用同一
+  水平朝向。MOFA 包内新增横放双目相机测试，Unity CLI 定向测试通过；
+  **修复版尚未真机验证**。详情：
+  `Documentation/Validation/2026-09-25/mofa-stereo-training.md`。
+  MOFA 完整 EditMode 套件在该修复前为 **57/58**：唯一失败是原有
+  `SerializedAssetReferenceTests.PlayableProductAssetGuidsResolve`，不能声称
+  指针审计通过；报告 `output/validation-20260925/mofa-visual-diagnostics-editor.xml`。
 - 最新 MOFA Unity CLI iOS 导出成功：`Products/MOFA/Builds/iOS/unity-build.provenance.json`
   的结果为 `success`，源提交 `3afd1d58`；Xcode 27 使用命令行完成
   `ReleaseForRunning` 签名构建，结果包在

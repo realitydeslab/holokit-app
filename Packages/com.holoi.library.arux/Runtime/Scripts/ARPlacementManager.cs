@@ -87,7 +87,8 @@ namespace Holoi.Library.ARUX
             if (_isActive && _arRaycastManager != null && _arRaycastManager.enabled)
             {
                 Transform centerEyePose = HoloKitCameraManager.Instance.CenterEyePose;
-                Vector3 horizontalForward = new Vector3(centerEyePose.forward.x, 0f, centerEyePose.forward.z).normalized;
+                Quaternion horizontalRotation = CalculateHorizontalRotation(centerEyePose);
+                Vector3 horizontalForward = horizontalRotation * Vector3.forward;
                 Vector3 rayOrigin = centerEyePose.position + _horizontalRaycastOffset * horizontalForward;
                 Ray ray = new(rayOrigin, Vector3.down);
                 List<ARRaycastHit> hits = new();
@@ -102,7 +103,7 @@ namespace Holoi.Library.ARUX
                             Vector3 position = centerEyePose.position + _horizontalPlacementOffset * horizontalForward;
                             Vector3 hitPosition = new(position.x, hit.pose.position.y, position.z);
                             _hitPoint.SetPositionAndRotation(hitPosition + _hitPointGroundOffset * Vector3.up,
-                                                             Quaternion.Euler(0f, centerEyePose.rotation.eulerAngles.y, 0f) * Quaternion.Euler(180f * Vector3.up));
+                                                             horizontalRotation * Quaternion.Euler(180f * Vector3.up));
                             if (!_hitPoint.gameObject.activeSelf)
                             {
                                 _hitPoint.gameObject.SetActive(true);
@@ -114,7 +115,7 @@ namespace Holoi.Library.ARUX
                 }
                 // Set ARRaycastPoint to its default pose relative to the center eye
                 _hitPoint.SetPositionAndRotation(CalculateDefaultHitPosition(centerEyePose, _hitPositionDefaultOffset),
-                                                 Quaternion.Euler(0f, centerEyePose.rotation.eulerAngles.y, 0f) * Quaternion.Euler(180f * Vector3.up));
+                                                 horizontalRotation * Quaternion.Euler(180f * Vector3.up));
                 if (_hitPoint.gameObject.activeSelf)
                 {
                     _hitPoint.gameObject.SetActive(false);
@@ -127,8 +128,17 @@ namespace Holoi.Library.ARUX
         // lift a ground-level target several metres ahead of the player.
         public static Vector3 CalculateDefaultHitPosition(Transform centerEyePose, Vector3 offset)
         {
-            var yaw = Quaternion.Euler(0f, centerEyePose.eulerAngles.y, 0f);
-            return centerEyePose.position + yaw * offset;
+            return centerEyePose.position + CalculateHorizontalRotation(centerEyePose) * offset;
+        }
+
+        // Euler Y is not the camera's heading when a phone has both pitch and
+        // landscape roll. Place content along its actual horizontal look direction.
+        public static Quaternion CalculateHorizontalRotation(Transform centerEyePose)
+        {
+            var forward = Vector3.ProjectOnPlane(centerEyePose.forward, Vector3.up);
+            if (forward.sqrMagnitude < 0.0001f)
+                forward = Quaternion.Euler(0f, centerEyePose.eulerAngles.y, 0f) * Vector3.forward;
+            return Quaternion.LookRotation(forward.normalized, Vector3.up);
         }
 
         /// <summary>

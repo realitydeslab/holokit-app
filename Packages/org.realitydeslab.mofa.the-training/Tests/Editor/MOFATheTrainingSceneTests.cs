@@ -65,5 +65,24 @@ namespace HoloKit.GameTests
             }
             finally { Object.DestroyImmediate(head); }
         }
+
+        [Test]
+        public void DefaultPlacementStaysAheadOfRolledStereoCamera()
+        {
+            var head = new GameObject("Rolled stereo eye");
+            try
+            {
+                head.transform.position = new Vector3(1f, 1.7f, -2f);
+                head.transform.rotation = Quaternion.Euler(30f, 45f, 90f);
+                var position = ARPlacementManager.CalculateDefaultHitPosition(
+                    head.transform, new Vector3(0f, -0.6f, 6f));
+                var horizontalDirection = Vector3.ProjectOnPlane(
+                    position - head.transform.position, Vector3.up).normalized;
+                var cameraHeading = Vector3.ProjectOnPlane(head.transform.forward, Vector3.up).normalized;
+                Assert.That(Vector3.Dot(horizontalDirection, cameraHeading), Is.GreaterThan(0.999f));
+                Assert.That(position.y, Is.EqualTo(1.1f).Within(0.0001f));
+            }
+            finally { Object.DestroyImmediate(head); }
+        }
     }
 }
