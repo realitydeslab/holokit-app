@@ -57,3 +57,19 @@ Crack B 与 I。同一对设备连续两次运行时，host 收到并批准邀�
 前一版在同日连接成功、新版两次失败，说明 MPC 握手结果不稳定；当前证据
 既不能证明新包引入网络回归，也不能证明蜂窝数据是原因。两机实际蜂窝数据
 状态尚待确认，双端充能后施法和远端复制仍未验收。
+
+## 两机面对面摆放的复测（11:51）
+
+Crack B 与 I 均由 CoreDevice 显示 connected、`passcodeRequired=false`。在同一
+已安装的充能等待版 MOFA 上，以 `devicectl` 分别启动 host/client。两机
+AR tracking 均为 true；client 发现名为 `iPhone` 的 host，host 自动批准邀请，
+双方于 11:51:49 进入 MPC `Connecting`，11:51:59 均回到 `Disconnected`。
+最终报告中 host `playerCount=1`、client `playerCount=0`，都没有进入
+Fighting，`watchTriggers=0`。双端 `results.json` 与 `connection.png` 在
+`output/validation-20260925/duel-face-to-face-{host-B,client-I}-complete/`。
+
+截图显示 host 的 QR 分享面板已打开；client 后置摄像头拍到的是旁边物品，
+不是 host 屏幕上的 QR。MPC 握手先于 QR 空间对齐，这次失败仍发生在握手
+阶段；若之后连接成功，需让 client 后置摄像头对准 host 的屏幕二维码，
+才能验证真实空间对齐。此次没有记录 Wi-Fi、蓝牙、蜂窝数据的系统开关
+状态，不能把断线归因于摆放角度或某个网络开关。

@@ -12,7 +12,8 @@
   `Connected`，两端 `playerCount=2`、空间同步且进入 Fighting；模拟 Watch
   触发在首发法术未充能时被正常拒绝。Duel 包内真机测试已改为等待护盾与基础
   法术充能，Unity CLI 定向测试 8/8，通过后新 iOS 签名包已安装双机。
-  该新包随后两次重跑又在 MPC 握手阶段断开，因此充能后的双端施法与复制
+  该新包随后三次重跑又在 MPC 握手阶段断开（第三次为两机面对面摆放），
+  因此充能后的双端施法与复制
   **仍未真机通过**；蜂窝数据状态待确认。详见
   `Documentation/Validation/2026-09-25/mofa-two-iphone-duel.md`。
 - 从 Git 历史和本地 LFS 找回原资产/原 GUID 后，严格资源审计的未解析
