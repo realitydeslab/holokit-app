@@ -123,3 +123,18 @@ host 最终报告 `playerCount=1`、`connected=false`，client 最后一次报�
 而 B 仍显示 MOFA 二维码；因此 client 没有持续保持在 MOFA 扫码界面。
 报告在 `output/validation-20260925/duel-ref-fix-retry-{host-B,client-I}/`。
 不能据此判断连接不稳定的单一根因，也不能把这次运行计为完整双人验收。
+
+## 资源审计修复期间双机重跑（约 17:20）
+
+仍使用两机已安装的同一 `MOFA.app` 签名包（早于本轮 Dragon/VFX 资产修复），
+以 `devicectl` 启动 Crack B host 和 I client 的包内双机设备测试。两端报告均
+记录 `networkListening=true`、`playerCount=2`：本轮越过了 MPC 握手。
+I 端 `arTracking=true`，但 `localStatus=SyncingPose`、`spatialSynced=false`；
+B 端 `localStatus=Checked`，等待对方空间对齐超时。两端均未进入 Fighting，
+`watchTriggers=0`。报告和截图在
+`output/validation-20260925/duel-face-to-face-20260925-{host-B,client-I}-final/`。
+
+B 截图清楚显示共享二维码。I 的后置相机画面没有拍到该二维码，因此这次
+不能验证扫码空间对齐、对方人物可见性或双人施法。需要让 I 后置摄像头实际
+对准 B 屏幕上的二维码并保持两机解锁，再重跑完整流程。CLI 可以启动应用、
+收集双端报告与截图，但不能物理转动设备或代替相机扫码。

@@ -41,7 +41,7 @@ namespace HoloKit.Tests
                         var guid = match.Groups[1].Value;
                         if (guid.StartsWith("0000000000000000", StringComparison.Ordinal)) continue;
                         if (!resolved.TryGetValue(guid, out var exists))
-                            resolved[guid] = exists = !string.IsNullOrEmpty(AssetDatabase.GUIDToAssetPath(guid));
+                            resolved[guid] = exists = GuidAssetExists(guid);
                         if (!exists) missing.Add(path + ":" + lineNumber + " -> " + guid);
                     }
                 }
@@ -49,6 +49,36 @@ namespace HoloKit.Tests
             Assert.That(missing, Is.Empty,
                 "Missing asset GUIDs in playable product dependencies (" + paths.Length + " files checked):\n" +
                 string.Join("\n", missing));
+        }
+
+        private static bool GuidAssetExists(string guid)
+        {
+            var assetPath = AssetDatabase.GUIDToAssetPath(guid);
+            if (string.IsNullOrEmpty(assetPath)) return false;
+
+            // A local package can retain an obsolete GUID mapping in the Library
+            // after its source .meta is removed. Resolve the on-disk path too.
+            if (assetPath.StartsWith("Assets/", StringComparison.Ordinal))
+            {
+                var physicalPath = Path.Combine(Application.dataPath, assetPath.Substring("Assets/".Length));
+                return File.Exists(physicalPath) || Directory.Exists(physicalPath);
+            }
+
+            if (assetPath.StartsWith("Packages/", StringComparison.Ordinal))
+            {
+                var package = UnityEditor.PackageManager.PackageInfo.FindForAssetPath(assetPath);
+                if (package != null && !string.IsNullOrEmpty(package.resolvedPath))
+                {
+                    var prefix = "Packages/" + package.name + "/";
+                    if (assetPath.StartsWith(prefix, StringComparison.Ordinal))
+                    {
+                        var physicalPath = Path.Combine(package.resolvedPath, assetPath.Substring(prefix.Length));
+                        return File.Exists(physicalPath) || Directory.Exists(physicalPath);
+                    }
+                }
+            }
+
+            return AssetDatabase.LoadMainAssetAtPath(assetPath) != null;
         }
 
         [Test]

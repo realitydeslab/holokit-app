@@ -2,6 +2,23 @@
 
 ## 2026-09-25 最新复测
 
+- 最新资源修复从相邻 HoloKit 原始工程找回 26 个 Dragon/Wolf 动画、FBX 和
+  粒子贴图及其原 `.meta` GUID；没有引入会带来 489 个额外断链的三份第三方
+  Animator Controller。Unity CLI 资源测试还修正了 AssetDatabase 缓存导致的
+  假阳性，并清理当前 VFX Graph/Shader Graph 已弃用的序列化贴图字段。
+  MOFA 严格审计从 333 处、52 个 GUID 降到 **132 处、21 个 GUID**，仍为
+  1/2 通过；根项目相同为 **132 处、21 个 GUID**、1/2 通过。
+  MOFA 完整 EditMode 套件 **59/60**，根项目 **127/128**，唯一失败都是
+  该资源审计；Typed 完整套件 **75/75**、QRealm **27/27**，其严格审计
+  各 2/2 通过。证据和保留的风险见
+  `Documentation/Serialized-Reference-Audit-2026-09-22.md`。当前设备签名包早于
+  这些资产改动，不能用旧包的画面为它们验收。
+- 两台 iPhone 15 Pro（Crack B 与 I）用同一已安装 MOFA 包再次跑了双机 Duel：
+  两端都到 `playerCount=2`，I 的 AR tracking 为真；I 停在
+  `SyncingPose`，B 等待空间对齐超时。截图显示 B 的二维码已显示，但 I 的
+  后置相机未拍到它；所以 Fighting、对方人物和双端 Watch 施法仍未验收。
+  见 `Documentation/Validation/2026-09-25/mofa-two-iphone-duel.md`。
+
 - Typed 当前完整 Unity CLI Editor 套件 **75/75**、QRealm **27/27** 均通过，
   两产品的启用资源 GUID 审计现为 **0** 未解析引用。MOFA 的法术 VFX 网格
   已连同原 GUID 移入基础包，最终源码完整套件 **59/60**；根项目最终源码

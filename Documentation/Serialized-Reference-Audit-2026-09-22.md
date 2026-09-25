@@ -1,5 +1,52 @@
 # Playable serialized-reference audit — 2026-09-22
 
+## 2026-09-25: Dragon source recovery and physical GUID audit
+
+The latest Unity CLI audit checks that a GUID resolves to a file or directory
+that actually exists in the product. The prior `AssetDatabase.GUIDToAssetPath`
+check could report stale Library mappings as valid after a package asset was
+removed. `SerializedAssetReferenceTests` now verifies physical package paths;
+this exposes missing controller GUIDs in the independent MOFA product rather
+than hiding them. Typed and QRealm still pass this stricter audit, **2/2 each**
+(`output/validation-20260925/typed-physical-guid-audit-editor.xml` and
+`qrealm-physical-guid-audit-editor.xml`).
+
+Exact original assets and `.meta` GUIDs were found in sibling HoloKit source
+checkouts. **26** missing Dragon/Wolf animations, FBXs, and particle textures
+were restored to the Hunting package with their original GUIDs. Three original
+third-party animator controllers were deliberately left out: importing them
+created 489 additional unresolved serialized dependencies, with no local
+originals found for that larger chain. The gameplay Dragon controller's
+recovered animation clips now resolve; the thumbnail controller and Training
+AI controller still contain unresolved transitions.
+
+The absent texture GUID `5044169c…` appeared 125 times as old named texture
+overrides across 25 prefabs/scenes. The current `V_Flare_Explosion` and
+`V_Flare_Follow` graphs no longer expose those property names, so those
+obsolete overrides were removed. Five more absent texture references were
+removed only where the current material shader/graph no longer uses their
+serialized property: Thunder LifeShield (1), Hunting Portal (1), and the
+Stag's `_BaseMap`/`_MainTex`/`_BumpMap` (3). Current shader inputs and other
+missing material textures were preserved.
+
+| Product | Earlier strict audit | Current strict audit | Evidence |
+| --- | ---: | ---: | --- |
+| MOFA | 333 occurrences / 52 GUIDs | **132 / 21**, 1/2 tests | `output/validation-20260925/mofa-final-guid-audit-editor.xml` |
+| root | 333 occurrences / 52 GUIDs | **132 / 21**, 1/2 tests | `output/validation-20260925/root-final-guid-audit-editor.xml` |
+| Typed | 0 | **0**, 2/2 tests | `output/validation-20260925/typed-physical-guid-audit-editor.xml` |
+| QRealm | 0 | **0**, 2/2 tests | `output/validation-20260925/qrealm-physical-guid-audit-editor.xml` |
+
+The remaining MOFA references include the thumbnail animator's missing
+transitions, the Training AI controller's four missing transition references,
+the Mobile Input DLL GUID, and material textures still used by their current
+shaders. These are recorded as unresolved rather than guessed replacements.
+The installed iOS apps predate these source edits, so this audit is not a
+physical-device visual pass.
+
+Final full EditMode runs on this source: MOFA **59/60** and root **127/128**
+(their only failure is this strict GUID audit); Typed **75/75** and QRealm
+**27/27**. XML reports are `output/validation-20260925/{mofa,root,typed,qrealm}-final-reference-full-editor.xml`.
+
 Run from each Unity product with `/Users/amber/.unity/bin/unity test <project> --mode EditMode --filter HoloKit.Tests.SerializedAssetReferenceTests`. The test checks GUID resolution across enabled scenes and their asset dependencies, and separately checks prefab missing scripts. Every row below is a GUID that Unity cannot resolve in that product; counts are serialized occurrences, not necessarily separate runtime failures.
 
 | Product | Unresolved occurrences | Distinct GUIDs | Source files | Missing-script test |
