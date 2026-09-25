@@ -1,5 +1,24 @@
 # Unity 6.3 / iOS 27 upgrade
 
+## 2026-09-25 最新复测
+
+- MOFA Training 的双目追踪父节点修复已在 iPhone 15 Crack B 真机运行：
+  `SessionTracking`，实际进入 Fighting，模拟 Watch 施法 0→1、AI 施法 1，
+  运行错误 0。左右眼中 AI 身体中心 viewport x≈0.495/0.484，三张战斗截图
+  实际显示对手身体；先前“完全没有小人”的画外问题在本轮消失。人物姿态、特效
+  遮挡、魔杖的独立可辨性及真实 floor 高度仍需验收，不能把实例存在等同于最终
+  视觉通过。证据在 `Documentation/Validation/2026-09-25/mofa-stereo-training.md`。
+- Duel 双机在 Crack B/I 同一签名包上曾成功从原生 MPC `Connecting` 进入
+  `Connected`，两端 `playerCount=2`、空间同步且进入 Fighting；模拟 Watch
+  触发在首发法术未充能时被正常拒绝。Duel 包内真机测试已改为等待护盾与基础
+  法术充能，Unity CLI 定向测试 8/8，通过后新 iOS 签名包已安装双机。
+  该新包随后两次重跑又在 MPC 握手阶段断开，因此充能后的双端施法与复制
+  **仍未真机通过**；蜂窝数据状态待确认。详见
+  `Documentation/Validation/2026-09-25/mofa-two-iphone-duel.md`。
+- 从 Git 历史和本地 LFS 找回原资产/原 GUID 后，严格资源审计的未解析
+  引用现为 root **350**、MOFA **365**、Typed **12**、QRealm **8** 处；
+  四产品仍有失败项，详情见 `Documentation/Serialized-Reference-Audit-2026-09-22.md`。
+
 ## 最新进度：2026-09-25，双机复测后
 
 - 新版 MOFA 在 iPhone 15 I（iOS 27）的双目 Training 设备测试完成：
@@ -27,7 +46,7 @@
   左右眼对手投影仍在画外。对照同机新版 HoloKit SDK，已在共享相机 prefab
   加入 `Stereo Tracked Pose` 父节点，让低延迟追踪更新父节点，保留子节点
   的相机到眼睛校准偏移；MOFA Training 包内测试 13/13 通过，新的 iOS
-  签名包已安装至 Crack B 与 I。两机当前锁屏，**该修改尚未真机视觉验收**。
+  签名包已安装至 Crack B 与 I。该阶段两机锁屏；后续真机结果见上方最新复测。
   MOFA 完整 EditMode 套件在该修复前为 **57/58**：唯一失败是原有
   `SerializedAssetReferenceTests.PlayableProductAssetGuidsResolve`，不能声称
   指针审计通过；报告 `output/validation-20260925/mofa-visual-diagnostics-editor.xml`。

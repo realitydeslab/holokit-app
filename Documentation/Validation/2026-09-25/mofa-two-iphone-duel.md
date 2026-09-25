@@ -31,3 +31,29 @@ Xcode 27 `ReleaseForRunning` 命令行签名构建成功，结果包：
 CoreDevice 列表中为 unavailable；iPhone 15 A 可安装新版 MOFA，但 iOS 拒绝
 启动，报告无效签名、entitlement 不足或开发者 profile 未信任。此次只验证
 Crack B 与 I 两台 iPhone 15 Pro，不能代替 iPhone 16 Pro 的真机验收。
+
+## 后续同机复测
+
+两机解锁后，用已安装的 `8feab44e` MOFA 签名包再次运行游戏包内
+`DeviceMofaDuelTwoPhoneTests`。本轮原生 MPC 在两端从 `Connecting` 进入
+`Connected`；两份 `results.json` 均记录 `arTracking=true`、`playerCount=2`、
+`spatialSynced=true`、`localStatus=Checked`、`fighting=true`。原始报告与
+`connection.png` 在 `output/validation-20260925/duel-tracked-parent-{host-B,client-I}/`。
+这证明两机至少成功连接过一次；本轮没有记录两机蜂窝数据开关状态，
+不能把变化归因于某项系统设置。
+
+两端 `complete=false`，唯一测试异常都是「模拟 Watch 射击没有在本地施法」。
+代码检查显示原测试在进入 Fighting 后立即触发 Watch，而基础法术需要先充能；
+该事件会被 `MofaInputManager.TryCastBasicSpell` 正常拒绝。Duel 包内真机测试
+现改为等待本机护盾和首发基础法术充能就绪，并报告等待时的充能比例；MOFA
+定向 Unity CLI Editor 测试 8/8 通过。修正测试时序后的双机施法及远端复制
+**尚待新签名包复测**。
+
+新包已由 Unity CLI 成功导出、Xcode 27 `ReleaseForRunning` 签名，并安装到
+Crack B 与 I。同一对设备连续两次运行时，host 收到并批准邀请，双方均进入
+`Connecting`，约 10 秒后又变为 `Disconnected`，未达到新测试的充能阶段。
+第二次 host 最终 `playerCount=1`、`connected=false`，报告在
+`output/validation-20260925/duel-charged-shot-retry-{host-B,client-I}-final/`。
+前一版在同日连接成功、新版两次失败，说明 MPC 握手结果不稳定；当前证据
+既不能证明新包引入网络回归，也不能证明蜂窝数据是原因。两机实际蜂窝数据
+状态尚待确认，双端充能后施法和远端复制仍未验收。

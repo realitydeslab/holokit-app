@@ -32,6 +32,10 @@ namespace RealityDesignLab.MOFA.TheDuel
             public bool connected;
             public bool spatialSynced;
             public bool fighting;
+            public bool lifeShieldReady;
+            public float requiredBasicCharge;
+            public float basicChargeBeforeShot;
+            public int watchTriggers;
             public int localCastsBefore;
             public int localCastsAfter;
             public int remoteCastsSeen;
@@ -138,8 +142,34 @@ namespace RealityDesignLab.MOFA.TheDuel
             _report.fighting = duel.CurrentPhase.Value == MofaPhase.Fighting;
             Save();
             Require(_report.fighting, "Both players did not enter a Duel fighting round.");
+
+            // Fighting starts before the first basic spell has finished charging.
+            // A watch swing at that instant is correctly ignored by MofaInputManager.
+            var input = FindObjectOfType<MofaInputManager>(true);
+            Require(input != null, "Duel input manager did not initialize.");
+            var selectedSchool = app.GlobalSettings.GetPreferencedObject();
+            var basicSpell = duel.SpellList.List.FirstOrDefault(spell =>
+                spell.SpellType == SpellType.Basic && spell.MagicSchool.TokenId == selectedSchool.TokenId);
+            Require(basicSpell != null && basicSpell.MaxChargeCount > 0,
+                "The selected basic spell or its charge capacity is missing.");
+            _report.requiredBasicCharge = 1f / basicSpell.MaxChargeCount;
+            for (var i = 0; i < 300; i++)
+            {
+                _report.lifeShieldReady = duel.LocalMofaPlayer.LifeShield != null &&
+                                          !duel.LocalMofaPlayer.LifeShield.IsDestroyed;
+                if (_report.lifeShieldReady &&
+                    input.BasicSpellChargePercentage + 0.0001f >= _report.requiredBasicCharge)
+                    break;
+                yield return new WaitForSecondsRealtime(.1f);
+            }
+            _report.basicChargeBeforeShot = input.BasicSpellChargePercentage;
+            Save();
+            Require(_report.lifeShieldReady &&
+                    _report.basicChargeBeforeShot + 0.0001f >= _report.requiredBasicCharge,
+                "Local life shield or basic spell charge was not ready for a Watch shot.");
             _report.localCastsBefore = duel.LocalMofaPlayer.CastCount.Value;
             MofaWatchConnectivityAPI.EmitSimulatedWatchTriggerForDeviceTest();
+            _report.watchTriggers++;
             for (var i = 0; i < 100 && duel.LocalMofaPlayer.CastCount.Value <= _report.localCastsBefore; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             _report.localCastsAfter = duel.LocalMofaPlayer.CastCount.Value;

@@ -63,6 +63,17 @@ viewport x≈2.30、2.28，仍在画外。这证明了相机/眼睛姿态不一�
 导出和 Xcode 签名构建成功，构建已安装到 Crack B 和 I。两台手机此时锁屏，
 **新层级的真机画面尚未验收**。
 
+随后在同一台 Crack B 安装该签名包并重新运行包内真机战斗测试，报告
+`output/validation-20260925/stereo-training-B-tracked-parent/results.json`：
+AR `SessionTracking`、屏幕与设备均为 `LandscapeLeft`；左右眼 AI 身体
+viewport 中心 x≈0.495、0.484，y≈0.411，均在可见范围。中心眼本地偏移
+`(0.0399,−0.0615,−0.0781) m` 在放置和战斗阶段保持一致。
+`fighting-before-shot.png`、`ai-attack.png` 均实际显示双目 AI 身体，
+先前的“完全没有小人”已在本轮复测中消失。模拟 Watch 施法 0→1、AI 施法 1、
+运行错误 0。不过人物姿态、大小、法术特效遮挡以及手中魔杖的独立可辨性
+仍需继续视觉验收；`aiWeaponPresent=true` 只证明实例存在。仍无 floor 平面，
+本轮使用默认回退落点，不能据此确认真实地板高度。
+
 同一共享修改后的 Unity CLI EditMode 全套结果：MOFA 59/60、Typed 74/75、
 QRealm 26/27、HoloKit 根项目 127/128。四套各自唯一失败均为
 `SerializedAssetReferenceTests.PlayableProductAssetGuidsResolve`，报告在

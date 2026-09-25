@@ -11,6 +11,35 @@ Run from each Unity product with `/Users/amber/.unity/bin/unity test <project> -
 
 The MOFA AI avatar collection null entry was fixed earlier. This audit additionally found a missing debug component in `Death Circle` and two Hunting Portal meshes absent from the MOFA product; those were repaired before the counts above. Twelve broken UI Button sprite-state pointers were cleared because their buttons use Color Tint (`m_Transition: 1`). Existing unresolved GUIDs remain and need visual or gameplay review before being replaced or removed.
 
+## 2026-09-25: recovered original assets from Git and local LFS
+
+The old removed typography, thumbnail, and ARUX package histories still contain
+several exact source assets and `.meta` GUIDs. They have been restored into the
+corresponding game or shared package, preserving the asset content and GUIDs:
+
+- Typed Sculpture's `TypoStickerManSDF.asset` (`4058f446…`) from commit `0b1812ac`.
+- The QuantumRealm thumbnail controller (`1e28e33c…`) and animation FBXs
+  (`32923e45…`, `c384443e…`, `59fdb1bb…`) into `com.holoi.library.shared-assets`,
+  which both Typed and QRealm load. Existing QRealm files were moved with their
+  `.meta`; missing FBXs were recovered from local Git LFS objects.
+- ARUX hover texture `Asset 17build.png` (`ca361939…`) from `910ee8e2`.
+- Typed Scanner floor textures (`6eb205c4…`, `a3b7830…`) from `7c0f05e0`.
+
+Unity CLI `SerializedAssetReferenceTests` no longer lists those GUIDs. Strict
+remaining counts (occurrences / distinct GUIDs / source files) are:
+
+| Product | Earlier | Current | Current report |
+| --- | ---: | ---: | --- |
+| root | 359 / 67 / 41 | 350 / 61 / 35 | `output/validation-20260925/root-restored-guid-final-editor.xml` |
+| mofa | 365 / 61 / 36 | 365 / 61 / 36 | `output/validation-20260925/mofa-restored-guid-final-editor.xml` |
+| typed | 20 / 13 / 11 | 12 / 8 / 6 | `output/validation-20260925/typed-restored-floor-textures-editor.xml` |
+| qrealm | 11 / 10 / 4 | 8 / 7 / 2 | `output/validation-20260925/qrealm-restored-hover-texture-editor.xml` |
+
+The audit still fails in all four products. These counts are serialized
+references, not a claim that every remaining GUID causes a runtime failure;
+the unresolved Dragon animation, MOFA Training controller, VFX materials, and
+URP renderer resource pointers need separate assessment.
+
 The MOFA Training AI uses `AC_MofaTraining_Avatar.controller`, which still has four transitions to missing GUID `74535b8bda892f4428e70719b7801c63`. These may affect attack animation events; physical-device combat validation is pending. The large number of Dragon thumbnail controller references also means a passed scene-open test cannot establish that every animation renders correctly.
 
 ## root
