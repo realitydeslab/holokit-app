@@ -73,3 +73,18 @@ Fighting，`watchTriggers=0`。双端 `results.json` 与 `connection.png` 在
 阶段；若之后连接成功，需让 client 后置摄像头对准 host 的屏幕二维码，
 才能验证真实空间对齐。此次没有记录 Wi-Fi、蓝牙、蜂窝数据的系统开关
 状态，不能把断线归因于摆放角度或某个网络开关。
+
+## 同一签名包再次双机复测（13:10）
+
+将 Crack B 已安装的同一 MOFA 签名包安装到 I 后，两机分别以 host/client
+启动包内 `DeviceMofaDuelTwoPhoneTests`。两端 AR tracking 为 true；I 于
+13:10:28 发现 B，B 收到并自动批准邀请，两端进入原生 MPC `Connecting`，
+13:10:38 双端又进入 `Disconnected`。最终 host `playerCount=1`、client
+`playerCount=0`，均未进入 Fighting、未触发 Watch 射击。原始报告和截图在
+`output/validation-20260925/duel-same-build-{host-B,client-I}-complete/`。
+
+此次 I 的屏幕截图还显示先前 QRealm 的首次相机授权系统弹窗覆盖在 MOFA
+画面之上；即使结束 QRealm 进程，弹窗仍在。I 的后置相机也尚未对准 B 的
+屏幕二维码。这两项是本轮环境限制，但目前没有证据证明它们造成 10 秒的
+MPC 握手断线。需清除弹窗并让 I 后置相机面向 B 的二维码后，再跑一次完整
+连接、空间对齐和双端施法测试。
