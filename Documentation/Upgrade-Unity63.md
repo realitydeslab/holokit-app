@@ -2,6 +2,10 @@
 
 ## 2026-09-25 最新复测
 
+- QRealm 当前源码场景测试 10/10、独立 iOS 导出与 Xcode 签名构建成功，新包
+  已安装 iPhone 15 I；首次相机权限弹窗尚待在设备上允许，交互测试仍未开始。
+  Typed 七个游戏包场景测试 58/58、独立 iOS 导出成功，Xcode 签名构建运行中。
+  详见 `Documentation/Validation/2026-09-25/qrealm-typed-device.md`。
 - Hunting Dragon 在 Crack B 上通过实际召唤按钮生成，Portal 也生成，入口动画
   结束后龙已可控制、身体网格存在、运行错误 0；但当前机位的龙身体中心投影
   在主相机 viewport y≈−1.73，截图看不到龙。已在 Hunting 包的设备测试中
