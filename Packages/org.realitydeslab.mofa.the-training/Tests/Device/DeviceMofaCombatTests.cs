@@ -25,6 +25,14 @@ namespace RealityDesignLab.MOFA.TheTraining
     public sealed class DeviceMofaCombatTests : MonoBehaviour
     {
         [Serializable]
+        private sealed class CameraView
+        {
+            public string camera;
+            public Vector3 avatarViewport;
+            public bool insideViewport;
+        }
+
+        [Serializable]
         private sealed class Report
         {
             public string device;
@@ -41,6 +49,11 @@ namespace RealityDesignLab.MOFA.TheTraining
             public float centerEyeY;
             public float placementY;
             public float aiOriginY;
+            public float aiDistanceFromEye;
+            public int aiBodyRenderers;
+            public Vector3 aiBodyBoundsCenter;
+            public Vector3 aiBodyBoundsSize;
+            public List<CameraView> aiCameraViews = new();
             public int aiFallbackMaterials;
             public int aiCasts;
             public bool starButtonActive;
@@ -190,6 +203,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             _report.aiOriginY = ai.transform.position.y;
             _report.aiWeaponPresent = ai.AvatarWeaponPresent;
             _report.aiFallbackMaterials = ai.AvatarFallbackMaterialCount;
+            RecordAiCameraViews(ai);
             Save();
             Require(_report.aiAvatarVisible, "AI opponent avatar did not appear.");
             Require(_report.aiWeaponPresent, "AI opponent wand did not spawn on the hand joint.");
@@ -227,10 +241,37 @@ namespace RealityDesignLab.MOFA.TheTraining
             for (var i = 0; i < 200 && ai.CastCount.Value == 0; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             _report.aiCasts = ai.CastCount.Value;
+            RecordAiCameraViews(ai);
             Save();
             Capture("ai-attack.png");
             Require(_report.aiCasts > 0, "AI opponent did not cast a spell during combat.");
             Require(_report.errors.Count == 0, "Combat produced runtime errors: " + _report.errors.Count);
+        }
+
+        private void RecordAiCameraViews(MofaAIPlayer ai)
+        {
+            var renderers = ai.AvatarAnimator.GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                .Where(renderer => renderer.gameObject.activeInHierarchy && renderer.enabled).ToArray();
+            _report.aiBodyRenderers = renderers.Length;
+            _report.aiCameraViews.Clear();
+            if (renderers.Length == 0) return;
+
+            var bounds = renderers[0].bounds;
+            for (var i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
+            _report.aiBodyBoundsCenter = bounds.center;
+            _report.aiBodyBoundsSize = bounds.size;
+            _report.aiDistanceFromEye = Vector3.Distance(HoloKitCameraManager.Instance.CenterEyePose.position, bounds.center);
+            foreach (var camera in Camera.allCameras)
+            {
+                var viewport = camera.WorldToViewportPoint(bounds.center);
+                _report.aiCameraViews.Add(new CameraView
+                {
+                    camera = camera.name,
+                    avatarViewport = viewport,
+                    insideViewport = viewport.z > 0f && viewport.x >= 0f && viewport.x <= 1f &&
+                                     viewport.y >= 0f && viewport.y <= 1f
+                });
+            }
         }
 
         private void Capture(string name)
