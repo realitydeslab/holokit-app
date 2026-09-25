@@ -7,8 +7,11 @@
   文件中发现未解析 GUID。报告为
   `output/validation-20260925/root-current-editor.xml`。同一源码的根项目
   iOS Unity CLI 导出成功，产物为 `Builds/Upgrade/HoloKit-four-products/`；
-  Xcode 27 `ReleaseForRunning` 签名构建正在运行。这些结果还不是四应用的
-  真机交互验收。
+  Xcode 27 `ReleaseForRunning` 签名构建成功，结果包为
+  `/tmp/holokit-root-20260925-unrestricted-iphone.xcresult`（0 错误、49 警告）。
+  新包在 Crack B 的 Duel Player/Spectator 场景启动测试 2/2 通过，
+  详见 `Documentation/Validation/2026-09-25/root-current-build-device.md`；
+  这些结果还不是四应用的真机交互验收。
 - QRealm 当前源码场景测试 10/10、独立 iOS 导出与 Xcode 签名构建成功，新包
   已安装 iPhone 15 I；首次相机权限弹窗尚待在设备上允许，交互测试仍未开始。
   Typed 七个游戏包场景测试 58/58、独立 iOS 导出和 Xcode 签名构建成功，
