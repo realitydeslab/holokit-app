@@ -2,6 +2,12 @@
 
 ## 2026-09-25 最新复测
 
+- Hunting Dragon 在 Crack B 上通过实际召唤按钮生成，Portal 也生成，入口动画
+  结束后龙已可控制、身体网格存在、运行错误 0；但当前机位的龙身体中心投影
+  在主相机 viewport y≈−1.73，截图看不到龙。已在 Hunting 包的设备测试中
+  增加动画结束后的截图和网格/投影记录，并完成 Unity CLI 8/8 与新包真机复测。
+  需在后置摄像头朝向开阔区域时复测视觉，详见
+  `Documentation/Validation/2026-09-25/mofa-hunting-dragon-visual.md`。
 - MOFA Training 的双目追踪父节点修复已在 iPhone 15 Crack B 真机运行：
   `SessionTracking`，实际进入 Fighting，模拟 Watch 施法 0→1、AI 施法 1，
   运行错误 0。左右眼中 AI 身体中心 viewport x≈0.495/0.484，三张战斗截图

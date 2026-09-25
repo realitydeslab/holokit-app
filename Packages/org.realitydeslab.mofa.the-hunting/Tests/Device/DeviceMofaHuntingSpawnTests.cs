@@ -19,6 +19,14 @@ namespace RealityDesignLab.MOFA.TheHunting
     public sealed class DeviceMofaHuntingSpawnTests : MonoBehaviour
     {
         [Serializable]
+        private sealed class CameraView
+        {
+            public string camera;
+            public Vector3 dragonViewport;
+            public bool insideViewport;
+        }
+
+        [Serializable]
         private sealed class Report
         {
             public string device;
@@ -29,6 +37,14 @@ namespace RealityDesignLab.MOFA.TheHunting
             public bool defaultPlacementUsed;
             public bool dragonSpawned;
             public bool portalSpawned;
+            public bool dragonReadyForControl;
+            public Vector3 centerEyePosition;
+            public Vector3 portalPosition;
+            public Vector3 dragonPosition;
+            public int dragonBodyRenderers;
+            public Vector3 dragonBodyBoundsCenter;
+            public Vector3 dragonBodyBoundsSize;
+            public List<CameraView> dragonCameraViews = new();
             public List<string> errors = new();
         }
 
@@ -114,7 +130,47 @@ namespace RealityDesignLab.MOFA.TheHunting
             Destroy(screenshot);
             Require(_report.defaultPlacementUsed && _report.dragonSpawned && _report.portalSpawned,
                 "The summon button did not spawn the dragon and portal using default placement.");
+
+            // The entrance animation clips the body for five seconds. Inspect
+            // the rendered dragon after that effect has finished, not only the
+            // NetworkObject on its first spawn frame.
+            yield return new WaitForSecondsRealtime(6);
+            RecordDragonVisuals(manager);
+            Save();
+            yield return new WaitForEndOfFrame();
+            screenshot = ScreenCapture.CaptureScreenshotAsTexture();
+            File.WriteAllBytes(Path.Combine(_directory, "dragon-after-entrance.png"), screenshot.EncodeToPNG());
+            Destroy(screenshot);
             Require(_report.errors.Count == 0, "Hunting produced runtime errors: " + _report.errors.Count);
+        }
+
+        private void RecordDragonVisuals(MofaHuntingRealityManager manager)
+        {
+            var dragon = manager.DragonController;
+            _report.dragonReadyForControl = dragon.ReadyForControl;
+            _report.dragonPosition = dragon.transform.position;
+            _report.portalPosition = manager.PortalController.transform.position;
+            _report.centerEyePosition = HoloKitCameraManager.Instance.CenterEyePose.position;
+            var renderers = dragon.GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                .Where(renderer => renderer.gameObject.activeInHierarchy && renderer.enabled).ToArray();
+            _report.dragonBodyRenderers = renderers.Length;
+            if (renderers.Length == 0) return;
+
+            var bounds = renderers[0].bounds;
+            for (var i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
+            _report.dragonBodyBoundsCenter = bounds.center;
+            _report.dragonBodyBoundsSize = bounds.size;
+            foreach (var camera in Camera.allCameras)
+            {
+                var viewport = camera.WorldToViewportPoint(bounds.center);
+                _report.dragonCameraViews.Add(new CameraView
+                {
+                    camera = camera.name,
+                    dragonViewport = viewport,
+                    insideViewport = viewport.z > 0f && viewport.x >= 0f && viewport.x <= 1f &&
+                                     viewport.y >= 0f && viewport.y <= 1f
+                });
+            }
         }
 
         private static void Require(bool condition, string message)
