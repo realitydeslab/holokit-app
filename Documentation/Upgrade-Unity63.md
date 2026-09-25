@@ -2,6 +2,12 @@
 
 ## 2026-09-25 最新复测
 
+- Typed 当前完整 Unity CLI Editor 套件 **75/75**、QRealm **27/27** 均通过，
+  两产品的启用资源 GUID 审计现为 **0** 未解析引用。MOFA 的法术 VFX 网格
+  已连同原 GUID 移入基础包，完整套件 59/60；根项目 GUID 定向测试 1/2。
+  两者唯一失败仍是资源审计，剩余引用各 **336** 处。详见
+  `Documentation/Serialized-Reference-Audit-2026-09-22.md`；此前已安装的
+  iOS 包早于这些资产改动，须重建后再做真机验收。
 - 根项目当前源码的 Unity CLI EditMode 全套 **127/128 通过**；唯一失败是
   `SerializedAssetReferenceTests.PlayableProductAssetGuidsResolve`，在 604 个
   文件中发现未解析 GUID。报告为
@@ -39,9 +45,10 @@
   因此充能后的双端施法与复制
   **仍未真机通过**；蜂窝数据状态待确认。详见
   `Documentation/Validation/2026-09-25/mofa-two-iphone-duel.md`。
-- 从 Git 历史和本地 LFS 找回原资产/原 GUID 后，严格资源审计的未解析
-  引用现为 root **350**、MOFA **365**、Typed **12**、QRealm **8** 处；
-  四产品仍有失败项，详情见 `Documentation/Serialized-Reference-Audit-2026-09-22.md`。
+- 从 Git 历史和本地 LFS 找回原资产/原 GUID 后，进一步修正了 Typed 场景
+  Lighting Settings 指针、废弃 URP 字段和 MOFA 独立产品缺失的 VFX 网格；
+  最新严格资源审计见上方及
+  `Documentation/Serialized-Reference-Audit-2026-09-22.md`。
 
 ## 最新进度：2026-09-25，双机复测后
 

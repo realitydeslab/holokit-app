@@ -88,3 +88,8 @@ Fighting，`watchTriggers=0`。双端 `results.json` 与 `connection.png` 在
 屏幕二维码。这两项是本轮环境限制，但目前没有证据证明它们造成 10 秒的
 MPC 握手断线。需清除弹窗并让 I 后置相机面向 B 的二维码后，再跑一次完整
 连接、空间对齐和双端施法测试。
+
+另一台 iPhone 15 Pro A 后来变为 CoreDevice `connected`。将同一 MOFA
+签名包安装到 A 成功，但 iOS 在启动时明确以无效签名、entitlement 或
+开发者 profile 未被信任为由拒绝启动。因此本轮仍无法用 A 绕开 I 的系统
+弹窗做第二组双机握手；没有把 A 的安装成功计为真机测试通过。

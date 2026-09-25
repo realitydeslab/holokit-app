@@ -42,6 +42,37 @@ URP renderer resource pointers need separate assessment.
 
 The MOFA Training AI uses `AC_MofaTraining_Avatar.controller`, which still has four transitions to missing GUID `74535b8bda892f4428e70719b7801c63`. These may affect attack animation events; physical-device combat validation is pending. The large number of Dragon thumbnail controller references also means a passed scene-open test cannot establish that every animation renders correctly.
 
+## 2026-09-25: enabled Typed scenes and obsolete URP fields
+
+Four enabled Typed scenes referenced the absent Lighting Settings GUID
+`4e030e48131472843ac21feecf4a46a2`. They now use the existing
+`Typo Default.lighting` (`edc2bd7dccbb846e482c1e69de9a6afa`) with the same
+Unity file ID; other Typed scenes already used this asset. The seven missing
+GUIDs in the product renderer data were stored only in URP fields marked
+obsolete in the installed Unity 6.3 URP package: APV probe debug resources
+and `xrSystemData`, both moved to Graphics Settings. Those stale serialized
+entries were removed from the project's five renderer assets, not suppressed
+in the audit test.
+
+The VFX mesh `SM_MF_Flash_2.fbx` and its original `.meta`/GUID
+`65588ce964fcf45aca098c8d81bd4661` moved from root `Assets/VFX` into
+`org.realitydeslab.mofa.library.base`; this makes the same mesh available in
+the independent MOFA product. Its 20 missing MOFA references, including
+Dragon Fireball and spell effects, now resolve.
+
+| Product | Latest unresolved occurrences | Unity CLI evidence |
+| --- | ---: | --- |
+| root | 336 | `output/validation-20260925/root-restored-flash-mesh-editor.xml` (GUID test 1/2) |
+| MOFA | 336 | `output/validation-20260925/mofa-restored-flash-mesh-editor.xml` (full suite 59/60) |
+| Typed | **0** | `output/validation-20260925/typed-clean-guid-full-editor.xml` (full suite **75/75**) |
+| QRealm | **0** | `output/validation-20260925/qrealm-clean-guid-full-editor.xml` (full suite **27/27**) |
+
+Root and MOFA still have unresolved project-owned references, notably the
+MOFA spell texture `5044169c…` and Dragon thumbnail animator transitions.
+Typed/QRealm passing the serialized audit does not prove native hand tracking
+or all rendered interactions; the current signed device packages predate these
+asset edits and need rebuilding before runtime acceptance.
+
 ## root
 
 | GUID | Occurrences | First source location |
