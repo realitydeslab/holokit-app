@@ -93,3 +93,33 @@ MPC 握手断线。需清除弹窗并让 I 后置相机面向 B 的二维码后�
 签名包安装到 A 成功，但 iOS 在启动时明确以无效签名、entitlement 或
 开发者 profile 未被信任为由拒绝启动。因此本轮仍无法用 A 绕开 I 的系统
 弹窗做第二组双机握手；没有把 A 的安装成功计为真机测试通过。
+
+## 修复资源引用后的同包双机复测（16:55）
+
+MOFA 独立产品从修复资源引用后的 Unity CLI 导出
+`Products/MOFA/Builds/iOS-current-ref-fix/` 以 Xcode 27 命令行完成
+`ReleaseForRunning` 签名构建；结果包
+`/tmp/holokit-mofa-ref-fix-iphone.xcresult` 为 0 错误、49 警告。
+同一最终源码的完整 Unity CLI EditMode 复测为 **59/60**，唯一失败是
+资源 GUID 审计，报告 `output/validation-20260925/mofa-ref-fix-full-editor.xml`。
+同一 `MOFA.app` 已分别安装到 Crack B 和 I，分别用包内
+`DeviceMofaDuelTwoPhoneTests` 的 host/client 环境变量启动。
+
+本轮原生 MPC 日志显示 B 在 16:55:22 收到并批准 I 的邀请，
+两端于 16:55:24 进入 `Connected`，不再停在前一轮的握手阶段。
+两端设备报告曾同时记录 `playerCount=2`、`networkListening=true`。
+随后 host 日志于 16:55:45 出现 `Disconnected`，但报告尚未记录进入
+Fighting。抓屏中 B 显示共享二维码，I 仍显示 “Scan The QR Code”且
+相机背景为黑色；I 的状态是 `SyncingPose`，没有完成二维码空间对齐。
+两端报告采样时 `arTracking=false`，运行错误列表为空，Watch 射击计数为 0。
+原始报告与两端画面保存在 `output/validation-20260925/duel-ref-fix-*`。
+因此只验证了两机的发现、握手和 NGO 双玩家短暂建立；空间对齐、
+真正开打、双方施法及对面人物可见性还未通过。
+
+16:58 再次以同一签名包重启 host/client，I 发现 B、B 批准邀请，
+但两端于 16:58:41 从 `Connecting` 直接回到 `Disconnected`；
+host 最终报告 `playerCount=1`、`connected=false`，client 最后一次报告
+`playerCount=0`。这次运行中 I 的前台画面切换为 HoloKit 诊断应用，
+而 B 仍显示 MOFA 二维码；因此 client 没有持续保持在 MOFA 扫码界面。
+报告在 `output/validation-20260925/duel-ref-fix-retry-{host-B,client-I}/`。
+不能据此判断连接不稳定的单一根因，也不能把这次运行计为完整双人验收。

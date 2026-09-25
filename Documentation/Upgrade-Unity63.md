@@ -4,15 +4,26 @@
 
 - Typed 当前完整 Unity CLI Editor 套件 **75/75**、QRealm **27/27** 均通过，
   两产品的启用资源 GUID 审计现为 **0** 未解析引用。MOFA 的法术 VFX 网格
-  已连同原 GUID 移入基础包，完整套件 59/60；根项目 GUID 定向测试 1/2。
+  已连同原 GUID 移入基础包，最终源码完整套件 **59/60**；根项目最终源码
+  完整套件 **127/128**。两者唯一失败均为
+  `PlayableProductAssetGuidsResolve`；最终完整报告分别是
+  `output/validation-20260925/mofa-ref-fix-full-editor.xml` 和
+  `output/validation-20260925/root-ref-fix-full-editor.xml`。
   两者唯一失败仍是资源审计；清除当前 Dragon shader 已不使用的旧材质条目后，
   剩余引用各 **333** 处。详见
   `Documentation/Serialized-Reference-Audit-2026-09-22.md`；此前已安装的
   iOS 包早于这些资产改动，须重建后再做真机验收。
-- 修复版四产品已分别完成 Unity CLI iOS 导出；QRealm 新版 Xcode 签名
-  构建成功并安装到 I，但其设备交互测试尚无终态，最新屏幕为纯白横屏。
-  Typed 新版 Xcode 构建正在运行，MOFA/根项目新版仍待 Xcode 构建。
-  详见 `Documentation/Validation/2026-09-25/qrealm-typed-device.md`。
+- 修复版四产品已分别完成 Unity CLI iOS 导出与 Xcode 27
+  `ReleaseForRunning` 签名构建，四个结果包均为 0 编译错误。
+  QRealm 新版已安装到 I，但其设备交互测试尚无终态，所见屏幕为纯白横屏；
+  Typed 新版已安装到 Crack B，其首次本地网络授权弹窗挡住了 Finger Ribbon
+  测试。MOFA 同一新版包已安装到 B/I 并重跑双机：一次短暂进入 MPC
+  `Connected` 且双方 `playerCount=2`，却仍未完成二维码对齐或进入 Fighting；
+  再次重跑在 `Connecting` 后断开。根项目新版签名包已安装 Crack B，
+  Duel Player/Spectator 场景各自启动、开 host 和回 Gallery 均成功，
+  但两次 AR 都停在 `SessionInitializing`，场景启动测试 **0/2 通过**；
+  截图相机背景为黑色，本轮不能归为真机通过。
+  详见 `Documentation/Validation/2026-09-25/` 中各产品报告。
 - 根项目当前源码的 Unity CLI EditMode 全套 **127/128 通过**；唯一失败是
   `SerializedAssetReferenceTests.PlayableProductAssetGuidsResolve`，在 604 个
   文件中发现未解析 GUID。报告为

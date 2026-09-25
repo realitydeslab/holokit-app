@@ -44,4 +44,10 @@ QRealm 新版 Xcode 27 签名构建成功，结果包
 `output/validation-20260925/qrealm-ref-fix-I-permission.png` 呈纯白横屏；
 当前 `results.json` 仍为 `complete=false`、所有交互标记 false、错误 0。
 CoreDevice 启动会话尚未返回终态，因此不能把白屏判为应用逻辑崩溃，
-也不能认定相机授权已解除。Typed 新版 Xcode 构建仍在运行，尚未安装。
+也不能认定相机授权已解除。Typed 新版 Xcode 27 `ReleaseForRunning`
+签名构建成功，结果包 `/tmp/holokit-typed-ref-fix-iphone.xcresult`
+为 0 错误、58 警告，已安装到 Crack B 并启动 Finger Ribbon 包内设备测试。
+启动时屏幕截图 `output/validation-20260925/typed-ref-fix-B-permission.png`
+明确显示 iOS「本地网络」授权弹窗；测试进程存在，但授权尚未完成，
+所以不能把 Finger Ribbon 的触摸/交互判为通过。该测试随后被切换到
+MOFA 双机复测和根项目场景测试，尚未取得完成报告；需在系统授权后重跑。
