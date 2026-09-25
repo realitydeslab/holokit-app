@@ -23,5 +23,7 @@ Unity 6000.3.24f1 CLI iOS 导出成功，产物：
 报告 `output/validation-20260925/typed-current-scenes-editor.xml`。独立
 产品的 Unity 6000.3.24f1 CLI iOS 导出成功，产物：
 `Products/Typed/Builds/iOS/`。Xcode 27 `ReleaseForRunning` 签名构建
-已启动，当前还须以结果包 `/tmp/holokit-typed-20260925-iphone.xcresult`
-的终态确认；尚未安装或运行这版 Typed 真机交互测试。
+成功，结果包 `/tmp/holokit-typed-20260925-iphone.xcresult`，错误 0、
+警告 60，其中包含 AR 参考图库的重复 QR 图像名称警告。bundle ID 为
+`org.realitydeslab.typed`，已安装在 iPhone 15 Crack B。尚未打开这版
+Typed 包或运行各游戏的真机交互测试。

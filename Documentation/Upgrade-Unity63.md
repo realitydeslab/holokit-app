@@ -2,9 +2,17 @@
 
 ## 2026-09-25 最新复测
 
+- 根项目当前源码的 Unity CLI EditMode 全套 **127/128 通过**；唯一失败是
+  `SerializedAssetReferenceTests.PlayableProductAssetGuidsResolve`，在 604 个
+  文件中发现未解析 GUID。报告为
+  `output/validation-20260925/root-current-editor.xml`。同一源码的根项目
+  iOS Unity CLI 导出成功，产物为 `Builds/Upgrade/HoloKit-four-products/`；
+  Xcode 27 `ReleaseForRunning` 签名构建正在运行。这些结果还不是四应用的
+  真机交互验收。
 - QRealm 当前源码场景测试 10/10、独立 iOS 导出与 Xcode 签名构建成功，新包
   已安装 iPhone 15 I；首次相机权限弹窗尚待在设备上允许，交互测试仍未开始。
-  Typed 七个游戏包场景测试 58/58、独立 iOS 导出成功，Xcode 签名构建运行中。
+  Typed 七个游戏包场景测试 58/58、独立 iOS 导出和 Xcode 签名构建成功，
+  新包已安装 Crack B，仍待真机交互测试。
   详见 `Documentation/Validation/2026-09-25/qrealm-typed-device.md`。
 - Hunting Dragon 在 Crack B 上通过实际召唤按钮生成，Portal 也生成，入口动画
   结束后龙已可控制、身体网格存在、运行错误 0；但当前机位的龙身体中心投影
