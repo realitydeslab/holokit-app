@@ -1,5 +1,40 @@
 # Unity 6.3 / iOS 27 upgrade
 
+## 2026-09-27 Editor 全场景巡检、渲染资源检查与产品图标
+
+- **Editor 全场景巡检**（`Packages/com.holoi.library.holokit-app-lib/Tests/Editor/EditorScenePlaythroughTests.cs`，
+  `[Explicit]`，用 `--filter EditorScenePlaythroughTests` 运行）：打开产品启动场景进入
+  Play Mode，按产品目录用 XR Simulation 逐个以 Player/Spectator 进场，检查
+  `SessionTracking`、本机 host、共享管理器、返回列表、运行报错、缺失脚本、
+  不受支持的着色器、空 VFX，并把主相机渲染成 PNG。四个产品**依次**运行结果：
+
+  | 产品 | 用例 | 报错 | XR Simulation 内部报错 |
+  | --- | ---: | ---: | ---: |
+  | MOFA | 10/10 | 0 | 0 |
+  | Typed | 14/14 | 0 | 4 |
+  | QRealm | 2/2 | 0 | 0 |
+  | HoloKit | 26/26 | 0 | 0 |
+
+  Typed 的 4 条来自 AR Foundation `SimulationEnvironmentScanner.CreateMeshColliders`
+  在换场景时访问已销毁的模拟环境，仅存在于 Editor 模拟，单独记录、不计失败。
+  报告与截图在 `output/validation-20260927/playthrough/<产品>/`（未入 Git）。
+  **局限**：多数游戏内容需交互（伸手、点开始）才生成，模拟房间背景在部分
+  截图中也未出现，所以截图多为黑底+提示，只能证明没有品红错误着色器，
+  不能单独证明所有游戏内容渲染正确。并行运行多个 Editor 会争用 UnityTransport
+  7777 端口，必须顺序跑。
+- **渲染资源静态检查**（`PlayableProductRenderingAssetTests`，常规套件）：对产品依赖闭包
+  内全部材质、Shader/Shader Graph、VFX 检查着色器缺失、编译错误、当前 GPU 不支持、
+  以及 URP 无可绘制 pass（旧内置着色器会画成品红）。四个产品各 **3/3 通过**。
+  覆盖交互后才出现的内容，但不证明美术效果正确。
+- **iPhone 模拟器无法运行**：`libUnityARKit.a`、`libUnityHoloKit.a`、PHASE、
+  MPC 原生库均只有真机切片（LC_BUILD_VERSION platform 2），模拟器构建会在
+  链接阶段失败；要跑模拟器需为这些库做替身，改动面大，本轮未做。
+- **产品图标**（`aed24896`）：MOFA 用用户提供的法阵图（iPhone 与 Watch）；
+  QRealm 用画廊佛像网格 `SM_Buddhas.obj` 正面渲染成金色粒子；Typed 为 ObjectSans
+  斜体 “T” 与流出的字母。原地替换 PNG，`ProjectSettings` 中的图标 GUID 不变。
+  三个产品重新导出并经 Xcode 27 签名构建（0 error、签名校验通过）；从 `.app` 取出的
+  `AppIcon60x60@2x.png` 已是新图标，MOFA Watch 的 `Assets.car` 含 1024 AppIcon。
+
 ## 2026-09-27 四 App 编译复核
 
 - 源提交 `4c0cb888`（Animator/Mobile Input 清理及产品 Apple 构建配置入库）。
