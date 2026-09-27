@@ -2,6 +2,14 @@
 
 ## 2026-09-25 最新复测
 
+- 继续清理序列化断链：Training 控制器的 4 个无引用旧 transition、两份 Dragon
+  控制器各 51 个无引用子对象，以及 14 个旧 Malbers Mobile Input prefab 的
+  Unity UI 脚本 GUID。Hunting 包内新增 3 个 Editor 测试验证方向按钮和
+  指针事件。MOFA 完整测试 **62/63**、根项目 **130/131**；唯一失败均为严格
+  GUID 审计，已从 132 处降到 **4 处、3 个 GUID**。剩下的是真正被当前
+  FireBall/LifeShield 材质使用、尚未找回原文件的贴图，未猜测替换。
+  细节见 `Documentation/Serialized-Reference-Audit-2026-09-22.md`。
+
 - 最新资源修复从相邻 HoloKit 原始工程找回 26 个 Dragon/Wolf 动画、FBX 和
   粒子贴图及其原 `.meta` GUID；没有引入会带来 489 个额外断链的三份第三方
   Animator Controller。Unity CLI 资源测试还修正了 AssetDatabase 缓存导致的

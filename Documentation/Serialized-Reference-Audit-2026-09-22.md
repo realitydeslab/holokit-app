@@ -1,5 +1,39 @@
 # Playable serialized-reference audit — 2026-09-22
 
+## 2026-09-25: controller dead objects and legacy Unity UI
+
+The next pass reduced both root and independent MOFA audits from **132
+occurrences / 21 GUIDs** to **4 occurrences / 3 GUIDs**. In Training's
+`AC_MofaTraining_Avatar.controller`, four broken transitions were not referenced
+by any state and used parameters absent from the controller. Each of the two
+Hunting Dragon controllers had another 51 unreferenced subassets carrying 58
+broken GUID occurrences. These objects were removed only after confirming
+their local file IDs occur nowhere else in their controller; reachable states,
+transitions, and animation clips remain serialized.
+
+Fourteen Malbers Mobile Input prefabs still referenced an old, absent Unity UI
+DLL GUID. Their serialized fields identify seven current Unity UI components:
+Image, Button, Text, EventTrigger, Shadow, CanvasScaler, and GraphicRaycaster.
+All 61 old script references were retargeted to the matching Unity 6 UGUI
+source-script GUIDs. Hunting package Editor tests verify all Mobile Input
+prefabs load without missing scripts and that both playable direction buttons
+retain their Image, Button, Text, EventTrigger, target graphic, and two pointer
+events. This removed eight occurrences from the playable dependency audit.
+
+| Product | Full Unity CLI EditMode suite | Strict unresolved GUIDs | Report |
+| --- | ---: | ---: | --- |
+| MOFA | **62/63** | **4 occurrences / 3 GUIDs** | `output/validation-20260925/mofa-mobile-input-migration-full-editor.xml` |
+| root | **130/131** | **4 occurrences / 3 GUIDs** | `output/validation-20260925/root-mobile-input-migration-full-editor.xml` |
+
+Each suite has one failure: `PlayableProductAssetGuidsResolve`. The remaining
+GUIDs are `f343d204…` (two FireBall material references), `10ff51d2…`
+(FireBall Core), and `d9df6ed1…` (HarryPotter LifeShield). These are actual
+texture inputs in the current materials; the LifeShield Shader Graph also
+embeds `d9df6ed1…` as the texture slot's default. Exact original `.meta`
+assets were not found in the nearby source checkouts or this repository's Git
+history. They remain unresolved rather than being removed or guessed. The
+currently installed iOS app predates this controller/UI cleanup.
+
 ## 2026-09-25: Dragon source recovery and physical GUID audit
 
 The latest Unity CLI audit checks that a GUID resolves to a file or directory

@@ -163,3 +163,17 @@ MPC 连接之后；当前阻点首先是握手。I 的 AR tracking 也未恢复�
 `output/validation-20260925/duel-dragon-ref-console-{host-B,client-I}-final-v2/`，
 各自以「两台 iPhone 未经 MPC 连上」结束；`watchTriggers=0`，无其它
 运行异常记录。
+
+## 同一新包的客户端重启诊断
+
+保持 B 作为 host，I 在同一签名包上连续启动三次 client，每次约 17 秒后
+收集两端报告。三轮 B 均为 `playerCount=1`，I 为 0，没有一次到双玩家。
+报告位于 `output/validation-20260925/duel-retry-round{1,2,3}-*`。
+这是有限次数的重试结果，不能证明重试永远无效。
+
+代码审查确认：原生 MPC 在尚未 `Connected` 时回调 `NotConnected`，旧传输
+层会把它作为 NGO `NetworkEvent.Disconnect` 上报；NGO 客户端随后调用
+`NetworkManager.Shutdown(true)`，等待连接的 UI 仍显示 “Connecting”，
+没有自动重启连接。这解释失败后 UI 为什么停住，但不解释原生握手最初
+失败的原因。Apple Developer Forums 亦有 [iOS 26 上相似的 MPC 连接不稳定报告](https://developer.apple.com/forums/thread/811978)；
+本项目运行的是 iOS 27，不能据论坛帖子归因于同一系统问题。
