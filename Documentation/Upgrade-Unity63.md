@@ -1,5 +1,36 @@
 # Unity 6.3 / iOS 27 upgrade
 
+## 2026-09-27 四 App 编译复核
+
+- 源提交 `4c0cb888`（Animator/Mobile Input 清理及产品 Apple 构建配置入库）。
+  四个 App 均用 Unity CLI `--profile iOS` 分别导出成功，Unity 日志均为
+  `Build Finished, Result: Success`；随后 Xcode 27 `ReleaseForRunning`
+  签名构建均 exit 0、**0 个 error**，`codesign --verify --deep --strict` 通过。
+
+  | App | Bundle ID | 导出目录 | 最低 iOS / SDK | Watch |
+  | --- | --- | --- | --- | --- |
+  | HoloKit | `com.holoi.holokit.holokit-app` | `Builds/Upgrade/HoloKit-four-products` | 18.0 / iphoneos27.0 | 内嵌 |
+  | MOFA | `org.realitydeslab.mofa` | `Products/MOFA/Builds/iOS` | 18.0 / iphoneos27.0 | 内嵌 |
+  | Typed | `org.realitydeslab.typed` | `Products/Typed/Builds/iOS` | 18.0 / iphoneos27.0 | 无 |
+  | QRealm | `org.realitydeslab.qrealm` | `Products/QRealm/Builds/iOS` | 18.0 / iphoneos27.0 | 无 |
+
+  日志与 `.xcresult` 在本机 `output/validation-20260927/`（未入 Git）。
+  本轮只证明编译与签名；新包未安装真机，不代表交互验收。
+- 并行导出须给 `--output-path` 传**绝对路径**：相对路径按当前目录解析，
+  首轮三个产品同时写入根目录 `Builds/iOS` 并互相覆盖，该目录内容作废。
+- 联网传输：用户决定继续使用原有 `com.holoi.netcode.transport.multipeer-connectivity`
+  1.0.3，不迁移 Network.framework 2.0.0，也不改原生代码。上游各 MPC 版本
+  （1.0.3/1.1.0/1.2.0）的 `MPCSession.m` 除版权头外相同，换版本不会改变握手行为。
+  Apple 已在 Xcode 27 弃用 MPC（TN3213）；DTS 对 iOS 26 同类
+  `Connecting` 不稳定的答复是只能在应用层超时并重置会话。双机握手问题仍未解决。
+- 三处剩余缺失贴图保持不动：本机仅找到 `10ff51d2…` 对应的 Amplify 示例
+  `MudNormal.tif`（`gravfield3`），挂在 `FireBall Core.mat` 旧属性
+  `_BrushedMetalNormal`，当前内置着色器应不读取该属性，未经 Unity 确认前不删除；
+  `f343d204…`（FireBall/SmokeDust `_BumpMap`）与 `d9df6ed1…`（LifeShield 等
+  Shader Graph 默认贴图）本机无原文件。
+- 产品构建会重写 MOFA XR Simulation 的 `.meta` GUID 并生成
+  `AddressableAssetsData/link.xml`；前者构建后还原，后者已加入 `.gitignore`。
+
 ## 2026-09-25 最新复测
 
 - 继续清理序列化断链：Training 控制器的 4 个无引用旧 transition、两份 Dragon
