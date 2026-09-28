@@ -23,6 +23,7 @@ Spectators see the host's hand point and the current Buddha. Clients never get t
 | --- | --- |
 | `QuantumRealmBuddhaInteractionTests.HostHandDwellActivatesEveryBuddhaInTurn` | Steps 2–6 in Editor Play Mode (XR Simulation), with a synthetic hand pose injected into `HoloKitHandTracker` |
 | `QuantumRealmBuddhaInteractionTests.ActivatedBuddhaIsVisibleToThePlayer` | Turns the player toward the shown Buddha and compares renders with and without its effect. **Fails as of 2026-09-28**: the Buddha point cloud draws nothing in the Editor while the seat ring does; not yet checked on a device |
+| `QuantumRealmMultiplayerTests` | Three Editors (`Tools/run_multiplayer_test.sh QRealm QuantumRealmMultiplayerTests`): clients get no start button; while the host dwells on three Buddhas and then presses Switch, a second client and a spectator see the host's hand point reach each Buddha and switch to the same Buddha; the spectator renders its view |
 | `QuantumRealmBuddhaVfxTests` | Every Buddha effect exposes the properties its controller drives. "Particles 1" has no `Process` property (as in the App Store build), so the first Buddha shows no dissolve progress |
 | `HoverableStartButtonTriggerTests` (shared) | Trigger button and phone-mode tap start a hover button without a hand |
 | `Tests/Device` | On an iPhone: synthetic hand motion, hover start and switch |
@@ -30,4 +31,4 @@ Spectators see the host's hand point and the current Buddha. Clients never get t
 ## Not covered
 
 - Camera-based hand recognition (Vision on the device).
-- Multiplayer spectators: no multi-Editor scenario yet.
+- Multipeer Connectivity and QR alignment (the multi-Editor test uses UnityTransport in one simulated room).

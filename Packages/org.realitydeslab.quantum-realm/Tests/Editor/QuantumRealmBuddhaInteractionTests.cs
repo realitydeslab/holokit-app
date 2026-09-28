@@ -19,8 +19,6 @@ namespace HoloKit.Tests
     /// </summary>
     public sealed class QuantumRealmBuddhaInteractionTests
     {
-        private const float DwellTimeout = 6f;
-
         [UnityTest]
         public IEnumerator HostHandDwellActivatesEveryBuddhaInTurn()
         {
@@ -50,36 +48,18 @@ namespace HoloKit.Tests
             // A hand dwell on each Buddha activates the next one, wrapping after the last.
             var first = group.CurrentBuddhaIndexForDeviceTest;
             for (var step = 0; step < count; step++)
-            {
-                var index = group.CurrentBuddhaIndexForDeviceTest;
-                var hover = ActiveBuddhaHover(group);
-                var startedLoading = false;
-                var peakLoad = 0f;
-                for (var t = 0f; group.CurrentBuddhaIndexForDeviceTest == index && t < DwellTimeout; t += Time.unscaledDeltaTime)
-                {
-                    PlaceHand(hover.CenterPosition);
-                    startedLoading |= hover.IsLoading;
-                    peakLoad = Mathf.Max(peakLoad, hover.CurrentLoadPercentage);
-                    yield return null;
-                }
-                Assert.That(startedLoading, Is.True, $"Buddha {index}: the hand inside its radius did not start loading.");
-                Assert.That(group.CurrentBuddhaIndexForDeviceTest, Is.EqualTo((index + 1) % count),
-                    $"Buddha {index}: a full dwell (peak load {peakLoad:P0}) did not activate the next Buddha.");
-                PlaceHand(hover.CenterPosition + Vector3.up * 5f);
-                // The previous Buddha fades out before the next one is the only one shown.
-                yield return new WaitForSecondsRealtime(1.5f);
-            }
+                yield return QuantumRealmTestActions.DwellOnActiveBuddha(group);
             Assert.That(group.CurrentBuddhaIndexForDeviceTest, Is.EqualTo(first), "Ten dwells should wrap back to the first Buddha.");
 
             // Leaving before the dwell completes does not switch.
             var before = group.CurrentBuddhaIndexForDeviceTest;
-            var partial = ActiveBuddhaHover(group);
+            var partial = QuantumRealmTestActions.ActiveBuddhaHover(group);
             for (var t = 0f; t < 0.8f; t += Time.unscaledDeltaTime)
             {
-                PlaceHand(partial.CenterPosition);
+                QuantumRealmTestActions.PlaceHand(partial.CenterPosition);
                 yield return null;
             }
-            PlaceHand(partial.CenterPosition + Vector3.up * 5f);
+            QuantumRealmTestActions.PlaceHand(partial.CenterPosition + Vector3.up * 5f);
             yield return new WaitForSecondsRealtime(3f);
             Assert.That(group.CurrentBuddhaIndexForDeviceTest, Is.EqualTo(before), "A short hover must not switch the Buddha.");
             Assert.That(partial.IsLoading, Is.False, "Loading must stop once the hand leaves.");
@@ -95,7 +75,7 @@ namespace HoloKit.Tests
             BuddhaGroup group = null;
             yield return StartSession(result => group = result);
             var output = EditorAppDriver.OutputDirectory("QuantumRealmBuddhas");
-            var hover = ActiveBuddhaHover(group);
+            var hover = QuantumRealmTestActions.ActiveBuddhaHover(group);
             // The group spawns around the player; turn to face the Buddha as a player would.
             yield return EditorAppDriver.FaceMainCameraTowards(hover.CenterPosition);
             var with = Path.Combine(output, "buddha-facing.png");
@@ -122,29 +102,7 @@ namespace HoloKit.Tests
         private static IEnumerator StartSession(System.Action<BuddhaGroup> done)
         {
             yield return EditorAppDriver.EnterReality("QuantumRealm", true, HoloKitAppPlayerType.Player);
-            // Once the start button shows, the Star mode Trigger starts the session without a hand.
-            yield return EditorAppDriver.WaitUntil(
-                () => Object.FindAnyObjectByType<HoverableStartButton>() is { isActiveAndEnabled: true },
-                "The hover-to-start button did not appear.");
-            HoloKitAppUIEventManager.OnStarUITriggered?.Invoke();
-            yield return EditorAppDriver.WaitUntil(() => Object.FindAnyObjectByType<BuddhaGroup>() is { IsSpawned: true },
-                "The Trigger button did not spawn the Buddha group.");
-            yield return new WaitForSecondsRealtime(1.5f);
-            done(Object.FindAnyObjectByType<BuddhaGroup>());
-        }
-
-        private static HoverableObject ActiveBuddhaHover(BuddhaGroup group)
-        {
-            var active = group.GetComponentsInChildren<BuddhaController>(false)
-                .Select(buddha => buddha.GetComponent<HoverableObject>())
-                .Where(hover => hover != null && hover.isActiveAndEnabled).ToList();
-            Assert.That(active, Has.Count.EqualTo(1), "Exactly one Buddha should be shown.");
-            return active[0];
-        }
-
-        private static void PlaceHand(Vector3 position)
-        {
-            HoloKitHandTracker.Instance.InjectPoseForDeviceTest(Enumerable.Repeat(position, 21).ToArray());
+            yield return QuantumRealmTestActions.StartSession(done);
         }
     }
 }

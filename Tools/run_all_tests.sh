@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # Runs every automated check for the four apps, one product at a time.
 #
-#   Tools/run_all_tests.sh [--products "HoloKit MOFA Typed QRealm"] [--skip-playthrough] [--export] [--out DIR]
+#   Tools/run_all_tests.sh [--products "HoloKit MOFA Typed QRealm"] [--skip-playthrough] [--export] [--multiplayer] [--out DIR]
 #
 # First the tool tests (Tools/tests). Per product: the EditMode suite, the Editor scene playthrough with XR Simulation, and
-# with --export a Unity iOS export checked by Tools/verify_ios_export.py.
+# with --export a Unity iOS export checked by Tools/verify_ios_export.py, and with --multiplayer the
+# three-Editor tests in MULTIPLAYER_TESTS (Tools/run_multiplayer_test.sh).
 # Products run sequentially: parallel Editors collide on the local Netcode port 7777 and
 # recompile the shared packages at the same time. Close Unity Editors on these projects first.
 # Exits non-zero if anything fails. Needs the Unity CLI and Unity 6000.3.24f1.
@@ -16,6 +17,9 @@ EDITOR="${UNITY_EDITOR:-/Applications/Unity/6000.3.24f1/Unity.app}"
 PRODUCTS="HoloKit MOFA Typed QRealm"
 PLAYTHROUGH=1
 EXPORT=0
+MULTIPLAYER=0
+# "<product>:<test class>" pairs run by --multiplayer.
+MULTIPLAYER_TESTS="MOFA:MofaHuntingMultiplayerTests MOFA:MofaDuelMultiplayerTests QRealm:QuantumRealmMultiplayerTests"
 OUT="$REPO/output/test-run-$(date +%Y%m%d-%H%M%S)"
 
 while [[ $# -gt 0 ]]; do
@@ -23,8 +27,9 @@ while [[ $# -gt 0 ]]; do
     --products) PRODUCTS="$2"; shift 2 ;;
     --skip-playthrough) PLAYTHROUGH=0; shift ;;
     --export) EXPORT=1; shift ;;
+    --multiplayer) MULTIPLAYER=1; shift ;;
     --out) OUT="$2"; shift 2 ;;
-    -h|--help) sed -n '2,10p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,11p' "$0"; exit 0 ;;
     *) echo "Unknown option: $1" >&2; exit 2 ;;
   esac
 done
@@ -91,6 +96,15 @@ for product in $PRODUCTS; do
     else record "$product export" FAIL "$(tail -n +2 "$OUT/$product-verify.txt" | tr '\n' ' ')"; fi
   fi
 done
+
+if [[ $MULTIPLAYER -eq 1 ]]; then
+  for pair in $MULTIPLAYER_TESTS; do
+    product="${pair%%:*}"; test="${pair#*:}"
+    if "$REPO/Tools/run_multiplayer_test.sh" "$product" "$test" --out "$OUT/multiplayer-$test" > "$OUT/multiplayer-$test.txt" 2>&1
+    then record "$test" PASS "host, player and spectator passed"
+    else record "$test" FAIL "$(grep -v Passed "$OUT/multiplayer-$test/summary.txt" 2>/dev/null | head -n 1)"; fi
+  done
+fi
 
 if changed="$("$REPO/Tools/asset_snapshot.sh" check "$OUT/assets-before.txt")"; then
   record "assets unchanged" PASS "tests wrote no tracked files"
