@@ -18,7 +18,9 @@ namespace Holoi.Library.HoloKitAppLib.Editor
 
         private const string HealthShareUsageDescription = "Your workout data during the gameplay will be displayed after each round.";
 
-        private const string HealthUpdateUsageDescription = "Workouts tracked by HoloKit app on Apple Watch will be saved to HealthKit.";
+        // Names the product being built, e.g. MOFA, rather than always HoloKit.
+        private static string HealthUpdateUsageDescription =>
+            $"Workouts tracked by {PlayerSettings.productName} on Apple Watch will be saved to HealthKit.";
 
         private static int FindBuildPhaseIndex(PBXProject project, string targetGuid, string buildPhaseName) 
         {
@@ -59,16 +61,33 @@ namespace Holoi.Library.HoloKitAppLib.Editor
 
             string watchAppTargetGuid = project.TargetGuidByName(WatchAppTargetName);
 
-            if (watchAppTargetGuid != null)
-            {
-                Debug.Log("Watch App Target exists. GUID: " + watchAppTargetGuid);
-                return;
-            }
-            else
+            // Unity can append to an existing Xcode export. The target then already exists, but
+            // its copied sources, icon and build settings must still be refreshed for this build.
+            bool isNewTarget = watchAppTargetGuid == null;
+            if (isNewTarget)
             {
                 watchAppTargetGuid = project.AddTarget(WatchAppTargetName, ".app", "com.apple.product-type.application");
             }
 
+            // Copy Files
+            string sourcePathPrefix = $"WatchApp/{WatchAppTargetName}";
+            string destinationPathPrefix = "WatchApp";
+            FileUtil.DeleteFileOrDirectory(Path.Combine(buildPath, destinationPathPrefix));
+
+            // Copy the entire directory into Xcode
+            FileUtil.CopyFileOrDirectory(sourcePathPrefix, Path.Combine(buildPath, destinationPathPrefix));
+
+            if (isNewTarget)
+            {
+                AddWatchTargetContents(project, mainTargetGuid, frameworkTargetGuid, watchAppTargetGuid, destinationPathPrefix);
+            }
+            SetWatchBuildSettings(project, watchAppTargetGuid, packageName, destinationPathPrefix);
+            project.WriteToFile(projectPath);
+        }
+
+        private static void AddWatchTargetContents(PBXProject project, string mainTargetGuid, string frameworkTargetGuid,
+            string watchAppTargetGuid, string destinationPathPrefix)
+        {
             project.AddTargetDependency(mainTargetGuid, watchAppTargetGuid); 
             project.AddFrameworkToProject(frameworkTargetGuid, "WatchConnectivity.framework", true);
 
@@ -84,14 +103,6 @@ namespace Holoi.Library.HoloKitAppLib.Editor
                 string sectionGuid = project.InsertCopyFilesBuildPhase(insertionIndex, mainTargetGuid, "Embed Watch Content", "$(CONTENTS_FOLDER_PATH)/Watch", "16");
                 project.AddFileToBuildSection(mainTargetGuid, sectionGuid, project.GetTargetProductFileRef(watchAppTargetGuid));
             }
-
-            // Copy Files
-            string sourcePathPrefix = $"WatchApp/{WatchAppTargetName}";
-            string destinationPathPrefix = "WatchApp";
-            FileUtil.DeleteFileOrDirectory(Path.Combine(buildPath, destinationPathPrefix));
-
-            // Copy the entire directory into Xcode
-            FileUtil.CopyFileOrDirectory(sourcePathPrefix, Path.Combine(buildPath, destinationPathPrefix));
 
             // Add each file in Xcode one by one
             var filesToBuild = new List<string>
@@ -145,7 +156,12 @@ namespace Holoi.Library.HoloKitAppLib.Editor
 
             //Add Library
             project.AddFrameworkToProject(watchAppTargetGuid, "HealthKit.framework", true);
+            project.SetTeamId(watchAppTargetGuid, PlayerSettings.iOS.appleDeveloperTeamID);
+        }
 
+        private static void SetWatchBuildSettings(PBXProject project, string watchAppTargetGuid, string packageName,
+            string destinationPathPrefix)
+        {
             //Set Swift Version
             project.SetBuildProperty(watchAppTargetGuid, "PRODUCT_NAME", WatchAppTargetName);
             project.SetBuildProperty(watchAppTargetGuid, "PRODUCT_BUNDLE_IDENTIFIER", $"{packageName}.watch-app");
@@ -168,9 +184,9 @@ namespace Holoi.Library.HoloKitAppLib.Editor
             project.SetBuildProperty(watchAppTargetGuid, "SDKROOT", "watchos");
             project.SetBuildProperty(watchAppTargetGuid, "SUPPORTED_PLATFORMS", "watchsimulator watchos");
             project.SetBuildProperty(watchAppTargetGuid, "SKIP_INSTALL", "YES");
-            project.SetTeamId(watchAppTargetGuid, PlayerSettings.iOS.appleDeveloperTeamID);
-
-            project.WriteToFile(projectPath);
+            // SetTeamId also adds target attributes and throws if they exist, so it runs only for a
+            // new target; the build setting is refreshed on every export.
+            project.SetBuildProperty(watchAppTargetGuid, "DEVELOPMENT_TEAM", PlayerSettings.iOS.appleDeveloperTeamID);
         }
     }
 }
