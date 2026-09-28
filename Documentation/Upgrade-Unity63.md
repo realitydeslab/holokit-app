@@ -1,5 +1,50 @@
 # Unity 6.3 / iOS 27 upgrade
 
+## 2026-09-28 自动化测试补齐（每项提案都有测试）
+
+测试总览和运行方法见 `Documentation/Testing.md`；各游戏的角色与交互规格见
+`Packages/<game>/README.md`（Hunting、Duel、Quantum Realm）。一键全测：
+`Tools/run_all_tests.sh --export --multiplayer`。
+
+新增测试（均先确认红灯，或用变异/负对照验证不是空测）：
+
+- 悬停开始不依赖手势：`HoverableStartButtonTriggerTests`（双目 Trigger、冷却、隐藏按钮、单目点击命中/未命中/点在 UI 上）。
+- 产品图标 `ProductIconTests`、Watch 源码防分叉 `ProductWatchAppSourceTests`、导出产物校验
+  `Tools/verify_ios_export.py`，以及这些工具自身的 `Tools/tests`（13 项）。
+- 渲染：`PlayableProductRenderingAssetTests`；Shader Graph/VFX 内嵌资源缺失用基线棘轮
+  `KnownMissingGraphReferences.txt`（73 处升级前遗留，新增或已修复未移除都会失败）。
+- Quantum Realm：模拟手依次悬停 10 尊佛像、短悬停不切换、Switch 按钮。
+- 三 Editor 联机（`Tools/run_multiplayer_test.sh`，主机/玩家/观众）：全目录同步
+  `CatalogMultiplayerSyncTests`（MOFA 5 + Typed 7 + QRealm 1 场景通过）、MOFA Hunting、
+  MOFA Duel、Quantum Realm 场景测试均通过。Editor 走 UnityTransport，不覆盖 MPC 与扫码对齐。
+- 测试结束若改动了资源目录下的受控文件即判失败（`Tools/asset_snapshot.sh`）。
+
+测试发现并已修复的真实问题：
+
+- 导出到已有 Xcode 工程时 Watch 打包提前返回，MOFA Watch 仍是 HoloKit 图标与旧设置；
+  `SetTeamId` 在已有 target 上抛异常而 Unity 仍报构建成功。已修复并由导出校验覆盖。
+- Watch 健康权限文案写死 “HoloKit app”，现为产品名。
+- Editor 中客户端无法加入：Netcode 同步到不在 Build 的 XR Simulation 场景即抛异常；现只同步 Build 场景（真机无影响）。
+- 回合总结在某队无玩家（有人中途离开）时每帧空引用；`GetPlayerStats` 已判空，命中率不再除零。
+- Hunting 血条直接改共享材质，Editor 中会改写 `M_DragonHealthBar.mat`；现写入自身副本。
+- 设置存档固定临时文件名，并发写入冲突；现用唯一临时文件。
+- 1 号佛像 VFX（`Particles 1.vfx`）自 App Store 版起就缺 `Process` 参数，每帧报错；现按需写入，美术侧补参数另行处理。
+- 4 处材质残留贴图引用（着色器已不读取）已清除；从兄弟工程找回 `T_Aurora_Corona_D.tga`（原 GUID）。
+- 共享包 ARUX 的 `Indicator.vfx` 依赖根项目 `Assets/` 下的 `arrow-l.png`，独立 Typed 缺这张贴图；
+  已连原 GUID 移入 ARUX 包（最终全量回归中由图资源引用测试在 Typed 上发现）。
+
+最终全量回归（`output/test-run-20260928-final/`，`run_all_tests.sh --export --multiplayer`）：
+工具测试 13/13；EditMode HoloKit 143/146、MOFA 75/75、Typed 83/86、QRealm 38/41；四产品场景巡检与
+iOS 导出校验全部通过；6 项三 Editor 联机测试全部通过；测试未改写任何资源。失败项：两处为已知的
+佛像可见性问题，一处为上面的 `arrow-l.png`（已修，Typed 与根项目复测 3/3）。
+
+仍未解决 / 需真机确认：
+
+- **Quantum Realm 佛像点云在 Editor 中不渲染**（`ActivatedBuddhaIsVisibleToThePlayer` 红灯；座台光环 VFX 正常）。真机上从未有生成佛像后的截图，需真机确认是否为升级回归。
+- Hunting 观众截图中龙身呈纯白，未断言，需人工确认。
+- 观众连接后到 `InitPlayerInfo` RPC 之前短暂被当作玩家（测试已等待最终状态）。
+- 双机 MPC 握手问题依旧（按决定保留 MPC 1.0.3，未改原生代码）。
+
 ## 2026-09-27 Editor 全场景巡检、渲染资源检查与产品图标
 
 - **Editor 全场景巡检**（`Packages/com.holoi.library.holokit-app-lib/Tests/Editor/EditorScenePlaythroughTests.cs`，
