@@ -7,6 +7,7 @@ using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
@@ -93,6 +94,51 @@ namespace HoloKit.Tests
                 Vector3.ProjectOnPlane(target - camera.position, Vector3.up), Vector3.up);
             origin.RotateAroundCameraUsingOriginUp(angle);
             for (var frame = 0; frame < 10; frame++) yield return new WaitForEndOfFrame();
+        }
+
+        /// <summary>
+        /// Points the simulated player's view straight at <paramref name="target"/>, pitch included, as a player
+        /// aims the phone. MOFA spells fly along the camera's pitch, so turning alone is not enough to hit.
+        /// </summary>
+        public static IEnumerator AimMainCameraAt(Vector3 target)
+        {
+            yield return FaceMainCameraTowards(target);
+            var origin = UnityEngine.Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();
+            var camera = Camera.main.transform;
+            var pitch = Vector3.SignedAngle(camera.forward, target - camera.position, camera.right);
+            origin.transform.RotateAround(camera.position, camera.right, pitch);
+            for (var frame = 0; frame < 5; frame++) yield return new WaitForEndOfFrame();
+        }
+
+        /// <summary>
+        /// Moves the simulated player: shifts and turns the XR Origin. Editor peers share one simulated room
+        /// and origin, so without this every player stands at the same spot.
+        /// </summary>
+        public static IEnumerator MovePlayer(Vector3 offset, float yawDegrees)
+        {
+            var origin = UnityEngine.Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();
+            Assert.That(origin, Is.Not.Null, "No XR Origin to move.");
+            origin.transform.position += offset;
+            origin.RotateAroundCameraUsingOriginUp(yawDegrees);
+            for (var frame = 0; frame < 10; frame++) yield return new WaitForEndOfFrame();
+        }
+
+        /// <summary>The single visible UI element with this name.</summary>
+        public static GameObject FindVisibleUi(string name)
+        {
+            var found = UnityEngine.Object.FindObjectsByType<RectTransform>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
+                .Where(rect => rect.name == name).Select(rect => rect.gameObject).ToList();
+            Assert.That(found, Has.Count.EqualTo(1), $"Expected one visible '{name}'.");
+            return found[0];
+        }
+
+        /// <summary>Presses and releases a UI element the way a finger tap does.</summary>
+        public static void Tap(GameObject target)
+        {
+            var data = new PointerEventData(EventSystem.current) { button = PointerEventData.InputButton.Left };
+            ExecuteEvents.ExecuteHierarchy(target, data, ExecuteEvents.pointerDownHandler);
+            ExecuteEvents.ExecuteHierarchy(target, data, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.ExecuteHierarchy(target, data, ExecuteEvents.pointerClickHandler);
         }
 
         /// <summary>

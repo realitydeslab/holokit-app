@@ -10,7 +10,6 @@ using RealityDesignLab.MOFA.TheHunting;
 using RealityDesignLab.MOFA.TheHunting.UI;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.TestTools;
 
 namespace HoloKit.Tests
@@ -26,7 +25,7 @@ namespace HoloKit.Tests
     {
         private const string Scene = "MOFATheHunting";
 
-        [UnityTest]
+        [UnityTest, Timeout(600000)]
         public IEnumerator HostDragonFightsPlayerWhileSpectatorWatches()
         {
             MultiplayerScenario.RequireConfigured();
@@ -59,9 +58,11 @@ namespace HoloKit.Tests
             yield return EditorAppDriver.WaitUntil(() => app.MultiplayerManager.PlayerCount == 3, "Host did not see three peers.");
 
             // The spectator is connected but is not a combatant.
+            // A joining peer counts as a player until its InitPlayerInfo RPC reports the spectator role.
             var spectatorId = ulong.Parse(MultiplayerScenario.Read(MultiplayerScenario.Spectator, "joined"));
             var playerId = ulong.Parse(MultiplayerScenario.Read(MultiplayerScenario.Player, "joined"));
-            Assert.That(hunting.MofaPlayerDict.ContainsKey(spectatorId), Is.False, "The spectator must not be a combatant.");
+            yield return EditorAppDriver.WaitUntil(() => !hunting.MofaPlayerDict.ContainsKey(spectatorId),
+                "The spectator must not be a combatant.", 10f);
             Assert.That(hunting.MofaPlayerDict.ContainsKey(playerId), Is.True, "The player must be a combatant.");
 
             // Summon the dragon.
@@ -76,10 +77,11 @@ namespace HoloKit.Tests
             hunting.LockTargetForTest(playerId);
             // Press the on-screen attack button the way a finger does; it raises the Malbers attack
             // events the dragon listens to (OnDragonPrimaryAttackButtonPressed has no subscribers).
-            var attackButton = FindUi("Primary Attack Button");
-            for (var t = 0f; !ShieldDamaged(target) && t < 45f; t += 1.5f)
+            var attackButton = EditorAppDriver.FindVisibleUi("Primary Attack Button");
+            var deadline = Time.realtimeSinceStartup + 45f;
+            while (!ShieldDamaged(target) && Time.realtimeSinceStartup < deadline)
             {
-                Tap(attackButton);
+                EditorAppDriver.Tap(attackButton);
                 yield return new WaitForSecondsRealtime(1.5f);
             }
             Assert.That(ShieldDamaged(target), Is.True, "The dragon's attacks on the locked player did not damage its life shield.");
@@ -113,7 +115,8 @@ namespace HoloKit.Tests
             var local = hunting.LocalMofaPlayer;
             var input = Object.FindAnyObjectByType<MofaInputManager>();
             var casts = 0;
-            for (var t = 0f; hunting.DragonController.CurrentHealthPercent >= 1f && t < 60f; t += Time.unscaledDeltaTime)
+            var deadline = Time.realtimeSinceStartup + 60f;
+            while (hunting.DragonController.CurrentHealthPercent >= 1f && Time.realtimeSinceStartup < deadline)
             {
                 yield return EditorAppDriver.FaceMainCameraTowards(hunting.DragonController.transform.position);
                 if (input.BasicSpellChargePercentage > 0.5f)
@@ -169,22 +172,6 @@ namespace HoloKit.Tests
             var stats = EditorAppDriver.RenderMainCamera(Path.Combine(EditorAppDriver.OutputDirectory("MofaHunting"), "spectator.png"));
             Assert.That(stats.Magenta, Is.LessThan(0.002f), "The spectator view renders error-shader magenta.");
             yield return PublishFinalState(hunting);
-        }
-
-        private static GameObject FindUi(string name)
-        {
-            var found = Object.FindObjectsByType<RectTransform>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
-                .Where(rect => rect.name == name).Select(rect => rect.gameObject).ToList();
-            Assert.That(found, Has.Count.EqualTo(1), $"Expected one visible '{name}'.");
-            return found[0];
-        }
-
-        private static void Tap(GameObject target)
-        {
-            var data = new PointerEventData(EventSystem.current) { button = PointerEventData.InputButton.Left };
-            ExecuteEvents.ExecuteHierarchy(target, data, ExecuteEvents.pointerDownHandler);
-            ExecuteEvents.ExecuteHierarchy(target, data, ExecuteEvents.pointerUpHandler);
-            ExecuteEvents.ExecuteHierarchy(target, data, ExecuteEvents.pointerClickHandler);
         }
 
         private static IEnumerator PublishFinalState(MofaHuntingRealityManager hunting)

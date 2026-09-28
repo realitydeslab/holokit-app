@@ -92,6 +92,23 @@ namespace HoloKit.GameTests
             }
         }
 
+        [Test] public void ConcurrentSavesToOneDirectoryDoNotFail()
+        {
+            // Several app instances (e.g. multi-Editor tests) can share one data directory.
+            var data = new HoloKitAppGlobalSettingsData(_settings);
+            var failures = new System.Collections.Concurrent.ConcurrentBag<Exception>();
+            System.Threading.Tasks.Parallel.For(0, 8, _ =>
+            {
+                for (var i = 0; i < 25; i++)
+                {
+                    try { HoloKitAppSaveSystem.SaveToDirectory(_directory, data); }
+                    catch (IOException error) { failures.Add(error); }
+                }
+            });
+            Assert.That(failures, Is.Empty, failures.FirstOrDefault()?.ToString());
+            Assert.That(HoloKitAppSaveSystem.LoadFromDirectory(_directory), Is.Not.Null);
+        }
+
         [Test] public void MalformedJsonIsPreservedBeforeLegacyFallback()
         {
             WriteLegacy(new HoloKitAppGlobalSettingsData(_settings), true);

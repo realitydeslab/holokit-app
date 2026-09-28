@@ -51,10 +51,24 @@ namespace Holoi.Library.HoloKitAppLib
                     .Select(pair => new PreferenceEntry { RealityBundleId = pair.Key, Preference = pair.Value }).ToArray()
             };
             var path = Path.Combine(directory, FileName);
-            var temporary = path + ".tmp";
+            // A unique temporary name keeps concurrent writers (e.g. several Editors sharing the
+            // data directory in multiplayer tests) from moving each other's file away.
+            var temporary = $"{path}.{Guid.NewGuid():N}.tmp";
             File.WriteAllText(temporary, JsonUtility.ToJson(document, true));
-            if (File.Exists(path)) File.Replace(temporary, path, path + ".previous");
-            else File.Move(temporary, path);
+            try
+            {
+                if (File.Exists(path)) File.Replace(temporary, path, path + ".previous");
+                else File.Move(temporary, path);
+            }
+            catch (IOException) when (File.Exists(path) && File.Exists(temporary))
+            {
+                // Another writer created or replaced the document meanwhile; the latest write wins.
+                File.Replace(temporary, path, null);
+            }
+            finally
+            {
+                if (File.Exists(temporary)) File.Delete(temporary);
+            }
             // The original binary save is deliberately retained for recovery.
         }
 
