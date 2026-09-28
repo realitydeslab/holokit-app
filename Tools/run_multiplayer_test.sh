@@ -17,6 +17,7 @@ FILTER="${2:?test filter, e.g. MofaHuntingMultiplayerTests}"
 OUT="$REPO/output/multiplayer-$PRODUCT-$(date +%Y%m%d-%H%M%S)"
 [[ "${3:-}" == "--out" ]] && OUT="${4:?}"
 mkdir -p "$OUT/exchange"
+"$REPO/Tools/asset_snapshot.sh" save "$OUT/assets-before.txt"
 
 for index in 1 2; do
   [[ -d "$REPO/Products/$PRODUCT-peer$index" ]] || "$REPO/Tools/make_peer_project.sh" "$PRODUCT" "$index" > /dev/null
@@ -52,5 +53,9 @@ PY
   printf '%-10s exit %-3s %s\n' "$role" "$code" "$message" | tee -a "$OUT/summary.txt"
   [[ "$code" == 0 && "$message" == Passed* ]] || FAILED=1
 done
+if ! changed="$("$REPO/Tools/asset_snapshot.sh" check "$OUT/assets-before.txt")"; then
+  echo "assets     FAIL tests modified: $(echo "$changed" | tr '\n' ' ')" | tee -a "$OUT/summary.txt"
+  FAILED=1
+fi
 echo "Checkpoints: $(ls "$OUT/exchange" | tr '\n' ' ')"
 exit $FAILED

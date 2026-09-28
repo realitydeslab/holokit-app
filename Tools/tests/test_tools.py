@@ -133,6 +133,27 @@ class VerifyIosExportTests(unittest.TestCase):
         self.assertEqual(verify_ios_export.log_exceptions(log), [])
 
 
+class AssetSnapshotTests(unittest.TestCase):
+    def test_reports_tracked_files_changed_after_saving_and_ignores_xr_settings(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp) / "repo"
+            (repo / "Products/MOFA/Assets/XR").mkdir(parents=True)
+            (repo / "health.mat").write_text("_Health: 1\n")
+            (repo / "Products/MOFA/Assets/XR/settings.asset").write_text("a\n")
+            git = lambda *args: subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True)
+            git("init", "-q"); git("add", "."); git("-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "init")
+            env = dict(os.environ, ASSET_SNAPSHOT_REPO=str(repo))
+            script = str(TOOLS / "asset_snapshot.sh")
+            snapshot = Path(tmp) / "before.txt"
+            subprocess.run([script, "save", str(snapshot)], env=env, check=True)
+            (repo / "Products/MOFA/Assets/XR/settings.asset").write_text("b\n")
+            self.assertEqual(subprocess.run([script, "check", str(snapshot)], env=env).returncode, 0)
+            (repo / "health.mat").write_text("_Health: 0.98\n")
+            result = subprocess.run([script, "check", str(snapshot)], env=env, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 1)
+            self.assertEqual(result.stdout.strip(), "health.mat")
+
+
 class RunAllTestsScriptTests(unittest.TestCase):
     def run_script(self, *args: str, fail: str = "") -> tuple[int, str, list[str]]:
         with tempfile.TemporaryDirectory() as tmp:
@@ -148,7 +169,7 @@ class RunAllTestsScriptTests(unittest.TestCase):
     def test_passing_run_exits_zero_and_runs_products_in_order(self):
         code, summary, calls = self.run_script("--products", "MOFA Typed")
         self.assertEqual(code, 0, summary)
-        self.assertEqual(summary.count("PASS"), 4)
+        self.assertEqual(summary.count("PASS"), 4 + 1)  # 4 product steps + "assets unchanged"
         self.assertEqual([c.split()[1].split("/")[-1] for c in calls], ["MOFA", "MOFA", "Typed", "Typed"])
         self.assertIn("--filter EditorScenePlaythroughTests", calls[1])
 

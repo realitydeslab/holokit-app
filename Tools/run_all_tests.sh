@@ -33,6 +33,7 @@ project_dir() { [[ "$1" == HoloKit ]] && echo "$REPO" || echo "$REPO/Products/$1
 export_dir() { [[ "$1" == HoloKit ]] && echo "$REPO/Builds/Upgrade/HoloKit-four-products" || echo "$REPO/Products/$1/Builds/iOS"; }
 
 mkdir -p "$OUT"
+"$REPO/Tools/asset_snapshot.sh" save "$OUT/assets-before.txt"
 SUMMARY="$OUT/summary.txt"
 : > "$SUMMARY"
 FAILED=0
@@ -90,6 +91,12 @@ for product in $PRODUCTS; do
     else record "$product export" FAIL "$(tail -n +2 "$OUT/$product-verify.txt" | tr '\n' ' ')"; fi
   fi
 done
+
+if changed="$("$REPO/Tools/asset_snapshot.sh" check "$OUT/assets-before.txt")"; then
+  record "assets unchanged" PASS "tests wrote no tracked files"
+else
+  record "assets unchanged" FAIL "tests modified: $(echo "$changed" | tr '\n' ' ')"
+fi
 
 echo
 echo "Summary ($SUMMARY):"

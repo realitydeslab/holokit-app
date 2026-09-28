@@ -16,7 +16,17 @@ namespace RealityDesignLab.MOFA.TheHunting.UI
 
         private void Start()
         {
-            _material = GetComponent<Image>().material;
+            // Write to this bar's own copy: setting the shared material changes the asset in the
+            // Editor and every other user of it on devices.
+            var image = GetComponent<Image>();
+            _material = new Material(image.material);
+            image.material = _material;
+        }
+
+        private void OnDestroy()
+        {
+            if (_material != null)
+                Destroy(_material);
         }
 
         private void Update()
