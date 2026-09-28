@@ -33,7 +33,9 @@
   QRealm 用画廊佛像网格 `SM_Buddhas.obj` 正面渲染成金色粒子；Typed 为 ObjectSans
   斜体 “T” 与流出的字母。原地替换 PNG，`ProjectSettings` 中的图标 GUID 不变。
   三个产品重新导出并经 Xcode 27 签名构建（0 error、签名校验通过）；从 `.app` 取出的
-  `AppIcon60x60@2x.png` 已是新图标，MOFA Watch 的 `Assets.car` 含 1024 AppIcon。
+  `AppIcon60x60@2x.png` 已是新图标。**更正**：当时称 MOFA Watch 的 `Assets.car` 含 1024
+  AppIcon，但那仍是旧 HoloKit 图标——导出到已有 Xcode 工程时 Watch 打包步骤提前返回、
+  没有重新复制。已在 `79cea69c` 修复，并由 `Tools/verify_ios_export.py` 自动检查。
 
 ## 2026-09-27 四 App 编译复核
 

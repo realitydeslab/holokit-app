@@ -50,10 +50,19 @@ def build_configurations(pbxproj: str) -> list[dict[str, str]]:
     return configs
 
 
+def image_width(path: Path) -> int:
+    with Image.open(path) as image:
+        return image.size[0]
+
+
+def thumbnail(path: Path) -> Image.Image:
+    with Image.open(path) as image:
+        return image.convert("RGB").resize((64, 64), Image.LANCZOS)
+
+
 def same_pixels(a: Path, b: Path) -> bool:
     """Same picture after Unity/Xcode re-encoding: compare 64x64 thumbnails by mean difference."""
-    left = Image.open(a).convert("RGB").resize((64, 64), Image.LANCZOS)
-    right = Image.open(b).convert("RGB").resize((64, 64), Image.LANCZOS)
+    left, right = thumbnail(a), thumbnail(b)
     histogram = ImageChops.difference(left, right).histogram()
     total = sum(value * (index % 256) for index, value in enumerate(histogram))
     return total / (64 * 64 * 3) < 6
@@ -84,7 +93,7 @@ def verify(project: Path, export: Path) -> list[str]:
             failures.append(f"Info.plist has no {key}")
 
     icons = sorted((export / "Unity-iPhone/Images.xcassets/AppIcon.appiconset").glob("*.png"),
-                   key=lambda p: Image.open(p).size[0], reverse=True)
+                   key=image_width, reverse=True)
     if not icons:
         failures.append("Exported app has no AppIcon images")
     elif not same_pixels(product["icon"], icons[0]):

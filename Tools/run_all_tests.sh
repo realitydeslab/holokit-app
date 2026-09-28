@@ -3,7 +3,7 @@
 #
 #   Tools/run_all_tests.sh [--products "HoloKit MOFA Typed QRealm"] [--skip-playthrough] [--export] [--out DIR]
 #
-# Per product: the EditMode suite, the Editor scene playthrough with XR Simulation, and
+# First the tool tests (Tools/tests). Per product: the EditMode suite, the Editor scene playthrough with XR Simulation, and
 # with --export a Unity iOS export checked by Tools/verify_ios_export.py.
 # Products run sequentially: parallel Editors collide on the local Netcode port 7777 and
 # recompile the shared packages at the same time. Close Unity Editors on these projects first.
@@ -58,13 +58,22 @@ run_tests() {  # product, label, filter-or-empty
   local product="$1" label="$2" filter="$3" xml="$OUT/$1-$2.xml" args=()
   [[ -n "$filter" ]] && args=(--filter "$filter")
   HOLOKIT_PLAYTHROUGH_OUTPUT="$OUT/$product-playthrough" \
-    "$UNITY" test "$(project_dir "$product")" --mode EditMode "${args[@]}" --editor-path "$EDITOR" \
+    "$UNITY" test "$(project_dir "$product")" --mode EditMode ${args[@]+"${args[@]}"} --editor-path "$EDITOR" \
     --output "$xml" --timeout 3600 --no-banner -- -buildTarget iOS -logFile "$OUT/$product-$label.log" \
     > "$OUT/$product-$label.cli.txt" 2>&1
   local code=$?
   if [[ $code -eq 0 ]]; then record "$product $label" PASS "$(totals "$xml")"
   else record "$product $label" FAIL "exit $code; $(totals "$xml"); see $OUT/$product-$label.log"; fi
 }
+
+# Tools/tests runs this script with a stub Unity; HOLOKIT_SKIP_TOOL_TESTS stops the recursion.
+if [[ -n "${HOLOKIT_SKIP_TOOL_TESTS:-}" ]]; then
+  :
+elif python3 -m unittest discover -s "$REPO/Tools/tests" > "$OUT/tools-tests.txt" 2>&1; then
+  record "tools" PASS "$(tail -n 3 "$OUT/tools-tests.txt" | head -n 1)"
+else
+  record "tools" FAIL "see $OUT/tools-tests.txt"
+fi
 
 for product in $PRODUCTS; do
   echo "== $product ($(project_dir "$product"))"
