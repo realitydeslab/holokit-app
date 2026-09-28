@@ -391,7 +391,10 @@ namespace Holoi.Library.HoloKitAppLib
                 Debug.Log("[HoloKitApp] Failed to start host because NetworkManager is not initialized");
 
             if (NetworkManager.Singleton.StartHost())
+            {
+                SynchronizeOnlyBuildScenes();
                 Debug.Log("[HoloKitApp] Host started");
+            }
             else
                 Debug.Log("[HoloKitApp] Failed to start host");
         }
@@ -402,9 +405,24 @@ namespace Holoi.Library.HoloKitAppLib
                 Debug.Log("[HoloKitApp] Failed to start host because NetworkManager is not initialized");
 
             if (NetworkManager.Singleton.StartClient())
+            {
+                SynchronizeOnlyBuildScenes();
                 Debug.Log("[HoloKitApp] Client started");
+            }
             else
                 Debug.Log("[HoloKitApp] Failed to start client");
+        }
+
+        /// <summary>
+        /// Netcode synchronizes every loaded scene to joining clients and throws on a scene that is not in
+        /// the build, which rejects the client. XR Simulation adds such a scene in the Editor. On devices all
+        /// loaded scenes are build scenes, so this changes nothing there.
+        /// </summary>
+        private static void SynchronizeOnlyBuildScenes()
+        {
+            var sceneManager = NetworkManager.Singleton.SceneManager;
+            if (sceneManager != null)
+                sceneManager.VerifySceneBeforeLoading = (buildIndex, sceneName, mode) => buildIndex >= 0;
         }
 
         private void SetUrpAssetForUI()

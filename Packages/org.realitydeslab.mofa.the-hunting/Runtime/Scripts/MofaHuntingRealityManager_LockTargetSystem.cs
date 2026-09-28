@@ -97,6 +97,19 @@ namespace RealityDesignLab.MOFA.TheHunting
             }
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        /// <summary>
+        /// Host only. Same result as pressing Lock and tapping a player's indicator; for automated
+        /// tests, which cannot tap world-space indicators.
+        /// </summary>
+        public void LockTargetForTest(ulong clientId)
+        {
+            OnTargetSelectedClientRpc(clientId);
+            OnLockTargetSessionEnded();
+            OnTargetLocked?.Invoke();
+        }
+#endif
+
         /// <summary>
         /// When a new target is selected by the host, this selection operation should be
         /// replicated across the network.
