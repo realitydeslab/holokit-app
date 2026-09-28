@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Holoi.Library.ARUX;
 using Holoi.Library.HoloKitAppLib;
+using Holoi.Library.HoloKitAppLib.UI;
 using NUnit.Framework;
 using Unity.Netcode;
 using UnityEditor;
@@ -41,6 +43,8 @@ namespace HoloKit.Tests
             public bool hostListening;
             public bool multiplayerManagerSpawned;
             public bool returnedToGallery;
+            public bool hoverStartButton;
+            public bool startedWithoutHand;
             public int renderers;
             public int missingScripts;
             public float magentaFraction;
@@ -158,6 +162,16 @@ namespace HoloKit.Tests
                 if (!_current.hostListening) Errors.Add("Local network host did not start.");
                 _current.multiplayerManagerSpawned = app.MultiplayerManager != null && app.MultiplayerManager.IsSpawned;
                 if (!_current.multiplayerManagerSpawned) Errors.Add("Shared multiplayer manager did not spawn.");
+                var startButton = UnityEngine.Object.FindObjectsByType<HoverableStartButton>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).FirstOrDefault();
+                _current.hoverStartButton = startButton != null;
+                if (startButton != null)
+                {
+                    // The Star mode Trigger button must start the game without hand tracking.
+                    HoloKitAppUIEventManager.OnStarUITriggered?.Invoke();
+                    yield return new WaitForSecondsRealtime(WarmupSeconds);
+                    _current.startedWithoutHand = startButton == null || !startButton.isActiveAndEnabled;
+                    if (!_current.startedWithoutHand) Errors.Add("Trigger button did not start the game without a hand.");
+                }
                 AuditLoadedScenes();
                 yield return new WaitForEndOfFrame();
                 RenderMainCamera();

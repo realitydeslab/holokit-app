@@ -34,7 +34,7 @@ namespace Holoi.Library.ARUX
 
         private bool _isLoading;
 
-        private float _lastTriggerTime;
+        private float _lastTriggerTime = float.NegativeInfinity;
 
         private const float TriggerCoolDownTime = 5f;
 
@@ -80,12 +80,27 @@ namespace Holoi.Library.ARUX
             if (_currentLoad > _loadTime)
             {
                 _currentLoad = _loadTime;
-                if (Time.time - _lastTriggerTime > TriggerCoolDownTime)
-                {
-                    _lastTriggerTime = Time.time;
-                    OnTriggered?.Invoke();
-                }
+                InvokeTriggered();
             }
+        }
+
+        /// <summary>
+        /// Completes the dwell at once, so the object can be triggered without hand tracking.
+        /// </summary>
+        public void Trigger()
+        {
+            _currentLoad = _loadTime;
+            InvokeTriggered();
+        }
+
+        private void InvokeTriggered()
+        {
+            if (Time.time - _lastTriggerTime <= TriggerCoolDownTime)
+            {
+                return;
+            }
+            _lastTriggerTime = Time.time;
+            OnTriggered?.Invoke();
         }
 
         public void OnUnloaded(float time)
