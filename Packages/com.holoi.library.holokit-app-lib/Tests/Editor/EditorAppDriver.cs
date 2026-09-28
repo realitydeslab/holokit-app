@@ -1,0 +1,165 @@
+using System;
+using System.Collections;
+using System.IO;
+using System.Linq;
+using Holoi.Library.HoloKitAppLib;
+using NUnit.Framework;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
+using UnityEngine.XR.ARFoundation;
+
+namespace HoloKit.Tests
+{
+    /// <summary>
+    /// Drives the real app in Editor Play Mode with XR Simulation, for game interaction tests.
+    /// Call <see cref="OpenStartScene"/>, yield <c>new EnterPlayMode()</c> from the test, then
+    /// yield a separate coroutine that uses the helpers here. Entering Play Mode reloads the domain,
+    /// and the test method's lambda closures are created before that reload and come back null, so
+    /// any lambda or captured local must live in the coroutine started after <c>EnterPlayMode</c>.
+    /// </summary>
+    public static class EditorAppDriver
+    {
+        public const float Timeout = 30f;
+
+        public static void OpenStartScene()
+        {
+            var start = EditorBuildSettings.scenes.FirstOrDefault(s => s.enabled);
+            Assert.That(start, Is.Not.Null, "The product has no enabled build scene.");
+            EditorSceneManager.OpenScene(start.path, OpenSceneMode.Single);
+        }
+
+        /// <summary>Waits for app bootstrap, enters a catalog scene and waits for AR tracking.</summary>
+        public static IEnumerator EnterReality(string sceneName, bool isHost, HoloKitAppPlayerType role)
+        {
+            for (var t = 0f; HoloKitApp.Instance == null && t < Timeout; t += Time.unscaledDeltaTime) yield return null;
+            var app = HoloKitApp.Instance;
+            Assert.That(app, Is.Not.Null, "App bootstrap did not create HoloKitApp.");
+            yield return new WaitForSecondsRealtime(1);
+            var reality = app.GlobalSettings.GetAllRealities().FirstOrDefault(r => r.Scene.SceneName == sceneName);
+            if (reality == null) Assert.Ignore(sceneName + " is not in this product's catalog.");
+            app.CurrentReality = reality;
+            app.EnterRealityAs(isHost, role);
+            yield return WaitUntil(() => SceneManager.GetActiveScene().name == sceneName, sceneName + " did not load.");
+            yield return WaitUntil(() => ARSession.state == ARSessionState.SessionTracking,
+                "XR Simulation did not reach SessionTracking.");
+        }
+
+        public static IEnumerator WaitUntil(Func<bool> condition, string failure, float timeout = Timeout)
+        {
+            for (var t = 0f; !condition() && t < timeout; t += Time.unscaledDeltaTime) yield return null;
+            Assert.That(condition(), Is.True, failure);
+        }
+
+        public static string OutputDirectory(string name)
+        {
+            var root = Environment.GetEnvironmentVariable("HOLOKIT_PLAYTHROUGH_OUTPUT");
+            if (string.IsNullOrEmpty(root))
+                root = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Logs", "EditorPlaythrough"));
+            var directory = Path.Combine(root, name);
+            Directory.CreateDirectory(directory);
+            return directory;
+        }
+
+        public readonly struct RenderStats
+        {
+            public RenderStats(float magenta, float litCenter) { Magenta = magenta; LitCenter = litCenter; }
+            /// <summary>Fraction of pixels in Unity's error-shader magenta.</summary>
+            public float Magenta { get; }
+            /// <summary>Fraction of the central half of the image brighter than the dark background.</summary>
+            public float LitCenter { get; }
+        }
+
+        /// <summary>Renders the main camera to a PNG.</summary>
+        public static RenderStats RenderMainCamera(string path, int width = 540, int height = 960)
+        {
+            var camera = Camera.main;
+            Assert.That(camera, Is.Not.Null, "No main camera to render.");
+            return Render(camera, path, width, height);
+        }
+
+        /// <summary>
+        /// Turns the simulated player toward <paramref name="target"/> by rotating the XR Origin about the
+        /// camera, as if the player turned their head, and waits for the frame to update.
+        /// </summary>
+        public static IEnumerator FaceMainCameraTowards(Vector3 target)
+        {
+            var origin = UnityEngine.Object.FindAnyObjectByType<Unity.XR.CoreUtils.XROrigin>();
+            Assert.That(origin, Is.Not.Null, "No XR Origin to turn.");
+            var camera = Camera.main.transform;
+            var angle = Vector3.SignedAngle(Vector3.ProjectOnPlane(camera.forward, Vector3.up),
+                Vector3.ProjectOnPlane(target - camera.position, Vector3.up), Vector3.up);
+            origin.RotateAroundCameraUsingOriginUp(angle);
+            for (var frame = 0; frame < 10; frame++) yield return new WaitForEndOfFrame();
+        }
+
+        /// <summary>
+        /// Fraction of pixels that differ between two renders of the same view. Render once with and once
+        /// without an object to measure what that object itself contributes, independent of the background.
+        /// </summary>
+        public static float DifferentPixelFraction(string pathA, string pathB)
+        {
+            var a = new Texture2D(2, 2);
+            var b = new Texture2D(2, 2);
+            try
+            {
+                Assert.That(a.LoadImage(File.ReadAllBytes(pathA)) && b.LoadImage(File.ReadAllBytes(pathB)), Is.True);
+                Assert.That(a.width == b.width && a.height == b.height, Is.True, "Renders differ in size.");
+                var pa = a.GetPixels32();
+                var pb = b.GetPixels32();
+                var different = 0;
+                for (var i = 0; i < pa.Length; i++)
+                    if (Math.Abs(pa[i].r - pb[i].r) + Math.Abs(pa[i].g - pb[i].g) + Math.Abs(pa[i].b - pb[i].b) > 30) different++;
+                return (float)different / pa.Length;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(a);
+                UnityEngine.Object.DestroyImmediate(b);
+            }
+        }
+
+        private static RenderStats Render(Camera camera, string path, int width, int height)
+        {
+            var target = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.ARGB32);
+            var request = new RenderPipeline.StandardRequest { destination = target };
+            if (RenderPipeline.SupportsRenderRequest(camera, request))
+                RenderPipeline.SubmitRenderRequest(camera, request);
+            else
+            {
+                var previous = camera.targetTexture;
+                camera.targetTexture = target;
+                camera.Render();
+                camera.targetTexture = previous;
+            }
+            var stats = Read(target, path);
+            RenderTexture.ReleaseTemporary(target);
+            return stats;
+        }
+
+        private static RenderStats Read(RenderTexture source, string path)
+        {
+            int width = source.width, height = source.height;
+            var active = RenderTexture.active;
+            RenderTexture.active = source;
+            var texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            texture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            texture.Apply();
+            RenderTexture.active = active;
+            var pixels = texture.GetPixels32();
+            var magenta = (float)pixels.Count(p => p.r > 230 && p.b > 230 && p.g < 40) / pixels.Length;
+            int lit = 0, center = 0;
+            for (var y = height / 4; y < height * 3 / 4; y++)
+            for (var x = width / 4; x < width * 3 / 4; x++, center++)
+            {
+                var p = pixels[y * width + x];
+                if (p.r + p.g + p.b > 180) lit++;
+            }
+            File.WriteAllBytes(path, texture.EncodeToPNG());
+            UnityEngine.Object.DestroyImmediate(texture);
+            return new RenderStats(magenta, (float)lit / center);
+        }
+    }
+}

@@ -30,6 +30,8 @@ namespace RealityDesignLab.QuantumRealm
 
         private const float FadeAwayDelay = 1f;
 
+        private const string ProcessProperty = "Process";
+
         private void Start()
         {
             _realityManager = HoloKitApp.Instance.RealityManager as QuantumRealmRealityManager;
@@ -45,7 +47,7 @@ namespace RealityDesignLab.QuantumRealm
 
         private void OnEnable()
         {
-            _vfx.SetFloat("Process", 0);
+            SetProcess(0f);
         }
 
         private void OnDisable()
@@ -53,7 +55,7 @@ namespace RealityDesignLab.QuantumRealm
             StopHapticsPlayer();
             // Reset buddha's VFX
             _vfx.SetVector3("Hand Position", new Vector3(0f, 99f, 0f));
-            _vfx.SetFloat("Process", 1f);
+            SetProcess(1f);
         }
 
         private void Update()
@@ -61,7 +63,17 @@ namespace RealityDesignLab.QuantumRealm
             if (_hoverableObject.IsLoading)
             {
                 _vfx.SetVector3("Hand Position", _realityManager.HostHandPoint.position);
-                _vfx.SetFloat("Process", _hoverableObject.CurrentLoadPercentage);
+                SetProcess(_hoverableObject.CurrentLoadPercentage);
+            }
+        }
+
+        // Not every Buddha graph has a dissolve Process property (e.g. "Particles 1");
+        // writing a missing one logs an error every frame.
+        private void SetProcess(float value)
+        {
+            if (_vfx.HasFloat(ProcessProperty))
+            {
+                _vfx.SetFloat(ProcessProperty, value);
             }
         }
 
