@@ -19,7 +19,7 @@ PLAYTHROUGH=1
 EXPORT=0
 MULTIPLAYER=0
 # "<product>:<test class>" pairs run by --multiplayer.
-MULTIPLAYER_TESTS="MOFA:MofaHuntingMultiplayerTests MOFA:MofaDuelMultiplayerTests QRealm:QuantumRealmMultiplayerTests"
+MULTIPLAYER_TESTS="MOFA:CatalogMultiplayerSyncTests Typed:CatalogMultiplayerSyncTests QRealm:CatalogMultiplayerSyncTests MOFA:MofaHuntingMultiplayerTests MOFA:MofaDuelMultiplayerTests QRealm:QuantumRealmMultiplayerTests"
 OUT="$REPO/output/test-run-$(date +%Y%m%d-%H%M%S)"
 
 while [[ $# -gt 0 ]]; do
@@ -100,9 +100,9 @@ done
 if [[ $MULTIPLAYER -eq 1 ]]; then
   for pair in $MULTIPLAYER_TESTS; do
     product="${pair%%:*}"; test="${pair#*:}"
-    if "$REPO/Tools/run_multiplayer_test.sh" "$product" "$test" --out "$OUT/multiplayer-$test" > "$OUT/multiplayer-$test.txt" 2>&1
-    then record "$test" PASS "host, player and spectator passed"
-    else record "$test" FAIL "$(grep -v Passed "$OUT/multiplayer-$test/summary.txt" 2>/dev/null | head -n 1)"; fi
+    if "$REPO/Tools/run_multiplayer_test.sh" "$product" "$test" --out "$OUT/multiplayer-$product-$test" > "$OUT/multiplayer-$product-$test.txt" 2>&1
+    then record "$product $test" PASS "host, player and spectator passed"
+    else record "$product $test" FAIL "$(grep -v Passed "$OUT/multiplayer-$product-$test/summary.txt" 2>/dev/null | head -n 1)"; fi
   done
 fi
 

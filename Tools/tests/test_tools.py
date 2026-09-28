@@ -134,11 +134,14 @@ class VerifyIosExportTests(unittest.TestCase):
 
 
 class AssetSnapshotTests(unittest.TestCase):
-    def test_reports_tracked_files_changed_after_saving_and_ignores_xr_settings(self):
+    def test_reports_changed_assets_and_ignores_xr_settings_and_non_assets(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp) / "repo"
             (repo / "Products/MOFA/Assets/XR").mkdir(parents=True)
-            (repo / "health.mat").write_text("_Health: 1\n")
+            (repo / "Packages/game").mkdir(parents=True)
+            (repo / "Packages/game/health.mat").write_text("_Health: 1\n")
+            (repo / "Tools").mkdir()
+            (repo / "Tools/run.sh").write_text("echo 1\n")
             (repo / "Products/MOFA/Assets/XR/settings.asset").write_text("a\n")
             git = lambda *args: subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True)
             git("init", "-q"); git("add", "."); git("-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "init")
@@ -148,10 +151,12 @@ class AssetSnapshotTests(unittest.TestCase):
             subprocess.run([script, "save", str(snapshot)], env=env, check=True)
             (repo / "Products/MOFA/Assets/XR/settings.asset").write_text("b\n")
             self.assertEqual(subprocess.run([script, "check", str(snapshot)], env=env).returncode, 0)
-            (repo / "health.mat").write_text("_Health: 0.98\n")
+            (repo / "Tools/run.sh").write_text("echo 2\n")
+            self.assertEqual(subprocess.run([script, "check", str(snapshot)], env=env).returncode, 0, "scripts are not assets")
+            (repo / "Packages/game/health.mat").write_text("_Health: 0.98\n")
             result = subprocess.run([script, "check", str(snapshot)], env=env, capture_output=True, text=True)
             self.assertEqual(result.returncode, 1)
-            self.assertEqual(result.stdout.strip(), "health.mat")
+            self.assertEqual(result.stdout.strip(), "Packages/game/health.mat")
 
 
 class RunAllTestsScriptTests(unittest.TestCase):

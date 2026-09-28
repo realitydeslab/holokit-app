@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.ExceptionServices;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace HoloKit.Tests
 {
@@ -70,28 +71,48 @@ namespace HoloKit.Tests
         /// </summary>
         public static IEnumerator Guard(IEnumerator body)
         {
+            // Errors are collected here rather than failing at once, so errors raised inside AR Foundation's
+            // XR Simulation (Editor-only) can be told apart from the game's; the game's fail the role.
+            var errors = new List<string>();
+            void OnLog(string message, string stackTrace, LogType type)
+            {
+                if (type != LogType.Error && type != LogType.Exception && type != LogType.Assert) return;
+                if (stackTrace.Contains("UnityEngine.XR.Simulation.")) return;
+                lock (errors) errors.Add(message.Split('\n')[0]);
+            }
+            LogAssert.ignoreFailingMessages = true;
+            Application.logMessageReceivedThreaded += OnLog;
             var stack = new Stack<IEnumerator>();
             stack.Push(body);
-            while (stack.Count > 0)
+            try
             {
-                bool more;
-                try
+                while (stack.Count > 0)
                 {
-                    more = stack.Peek().MoveNext();
+                    bool more;
+                    try
+                    {
+                        more = stack.Peek().MoveNext();
+                        if (!more && stack.Count == 1 && errors.Count > 0)
+                            Assert.Fail($"{errors.Count} runtime error(s), first: {errors[0]}");
+                    }
+                    catch (Exception exception)
+                    {
+                        File.WriteAllText(PathOf(Role, "failed"), exception.Message);
+                        ExceptionDispatchInfo.Capture(exception).Throw();
+                        throw;
+                    }
+                    if (!more)
+                    {
+                        stack.Pop();
+                        continue;
+                    }
+                    if (stack.Peek().Current is IEnumerator nested) stack.Push(nested);
+                    else yield return stack.Peek().Current;
                 }
-                catch (Exception exception)
-                {
-                    File.WriteAllText(PathOf(Role, "failed"), exception.Message);
-                    ExceptionDispatchInfo.Capture(exception).Throw();
-                    throw;
-                }
-                if (!more)
-                {
-                    stack.Pop();
-                    continue;
-                }
-                if (stack.Peek().Current is IEnumerator nested) stack.Push(nested);
-                else yield return stack.Peek().Current;
+            }
+            finally
+            {
+                Application.logMessageReceivedThreaded -= OnLog;
             }
             Publish("done");
         }

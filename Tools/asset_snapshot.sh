@@ -5,13 +5,16 @@
 #   Tools/asset_snapshot.sh save  <file>   # before the tests
 #   Tools/asset_snapshot.sh check <file>   # after; prints changed paths and exits 1 if any
 #
-# XR Simulation settings under */Assets/XR/ are excluded: Unity rewrites them whenever it plays.
+# Only asset directories are watched (Packages/, Assets/, ProjectSettings/, and the same under Products/*/),
+# so editing docs or scripts during a run is not reported. XR Simulation settings under */Assets/XR/ are
+# excluded: Unity rewrites them whenever it plays.
 set -euo pipefail
 REPO="${ASSET_SNAPSHOT_REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 snapshot() {
   git -C "$REPO" status --porcelain=v1 --untracked-files=no | while IFS= read -r line; do
     path="${line:3}"; path="${path#\"}"; path="${path%\"}"
     [[ "$path" == */Assets/XR/* ]] && continue
+    [[ "$path" =~ ^(Products/[^/]+/)?(Assets|Packages|ProjectSettings)/ ]] || continue
     printf '%s %s\n' "$(git -C "$REPO" hash-object -- "$path" 2>/dev/null || echo deleted)" "$path"
   done | sort
 }
