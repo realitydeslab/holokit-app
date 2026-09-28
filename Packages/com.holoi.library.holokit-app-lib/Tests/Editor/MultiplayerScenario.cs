@@ -54,6 +54,17 @@ namespace HoloKit.Tests
         }
 
         /// <summary>
+        /// Publishes <paramref name="step"/> and waits until every role has. Roles finish together, so no
+        /// Editor leaves the session (despawning its player on the others) while another still checks state.
+        /// </summary>
+        public static IEnumerator Barrier(string step, float timeout = 120f)
+        {
+            Publish(step);
+            foreach (var role in new[] { Host, Player, Spectator })
+                yield return WaitFor(role, step, timeout);
+        }
+
+        /// <summary>
         /// Runs a role's coroutine, including nested coroutines, and records the first failure so the
         /// other Editors stop waiting instead of timing out.
         /// </summary>

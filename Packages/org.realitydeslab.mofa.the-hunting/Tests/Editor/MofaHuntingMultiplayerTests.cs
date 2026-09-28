@@ -98,6 +98,7 @@ namespace HoloKit.Tests
             var host = Health(MultiplayerScenario.Host);
             Assert.That(Health(MultiplayerScenario.Player), Is.EqualTo(host).Within(0.001f), "Player sees a different dragon health.");
             Assert.That(Health(MultiplayerScenario.Spectator), Is.EqualTo(host).Within(0.001f), "Spectator sees a different dragon health.");
+            yield return MultiplayerScenario.Barrier("finished");
         }
 
         private static IEnumerator PlayerRole()
@@ -137,6 +138,7 @@ namespace HoloKit.Tests
             yield return MultiplayerScenario.WaitFor(MultiplayerScenario.Host, "dragon-hit-player");
             yield return EditorAppDriver.WaitUntil(() => ShieldDamaged(local), "The player did not see its own shield damaged.");
             yield return PublishFinalState(hunting);
+            yield return MultiplayerScenario.Barrier("finished");
         }
 
         private static IEnumerator SpectatorRole()
@@ -172,6 +174,7 @@ namespace HoloKit.Tests
             var stats = EditorAppDriver.RenderMainCamera(Path.Combine(EditorAppDriver.OutputDirectory("MofaHunting"), "spectator.png"));
             Assert.That(stats.Magenta, Is.LessThan(0.002f), "The spectator view renders error-shader magenta.");
             yield return PublishFinalState(hunting);
+            yield return MultiplayerScenario.Barrier("finished");
         }
 
         private static IEnumerator PublishFinalState(MofaHuntingRealityManager hunting)

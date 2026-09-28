@@ -439,10 +439,13 @@ namespace RealityDesignLab.MOFA.Library.Base
         public MofaPlayerStats GetPlayerStats(MofaPlayer mofaPlayer)
         {
             MofaPlayerStats stats = new();
+            // A team can be empty when its player left during the round.
+            if (mofaPlayer == null)
+                return stats;
             stats.PersonalRoundResult = GetPersonalRoundResult(mofaPlayer);
             stats.Kill = mofaPlayer.Kill.Value;
             stats.Death = mofaPlayer.Death.Value;
-            stats.HitRate = (float)mofaPlayer.HitCount.Value / mofaPlayer.CastCount.Value;
+            stats.HitRate = mofaPlayer.CastCount.Value == 0 ? 0f : (float)mofaPlayer.HitCount.Value / mofaPlayer.CastCount.Value;
             stats.Distance = mofaPlayer.Distance.Value;
             stats.Energy = mofaPlayer.Energy.Value;
 
