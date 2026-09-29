@@ -27,6 +27,7 @@ namespace RealityDesignLab.QuantumRealm
             public bool handMoved;
             public bool hoverStartedSession;
             public bool buddhaSwitched;
+            public List<HoloKit.DeviceTests.DeviceInspection.Result> buddhaInspections = new();
             public List<string> screenshots = new();
             public List<string> errors = new();
         }
@@ -130,6 +131,8 @@ namespace RealityDesignLab.QuantumRealm
             _report.hoverStartedSession = group != null && group.IsSpawned;
             Require(_report.hoverStartedSession, "Hand hover did not start the Buddha session.");
             Capture("buddha-started.png");
+            yield return new WaitForSecondsRealtime(1.5f);
+            yield return InspectActiveBuddha(group, "buddha-first");
             var panel = FindObjectOfType<QuantumRealmUIPanel>(true);
             Require(panel != null, "Buddha switch panel missing.");
             var before = group.CurrentBuddhaIndexForDeviceTest;
@@ -138,6 +141,22 @@ namespace RealityDesignLab.QuantumRealm
             _report.buddhaSwitched = group.CurrentBuddhaIndexForDeviceTest != before;
             Require(_report.buddhaSwitched, "Buddha switch button did not change the active object.");
             Capture("buddha-switched.png");
+            yield return new WaitForSecondsRealtime(1.5f);
+            yield return InspectActiveBuddha(group, "buddha-second");
+            var invisible = _report.buddhaInspections.Where(r => r.objectPixels < 0.005f).Select(r => Path.GetFileName(r.withPath)).ToList();
+            Require(invisible.Count == 0, "Buddha not visible from a virtual camera aimed at it: " + string.Join(", ", invisible));
+        }
+
+        // Aims a virtual camera at the shown Buddha and compares renders with and without its effects.
+        private IEnumerator InspectActiveBuddha(BuddhaGroup group, string name)
+        {
+            var shown = group.GetComponentsInChildren<BuddhaController>(false)
+                .Select(b => b.GetComponent<HoverableObject>()).FirstOrDefault(h => h != null && h.isActiveAndEnabled);
+            Require(shown != null, "No Buddha is shown.");
+            var effects = shown.GetComponentsInChildren<UnityEngine.VFX.VisualEffect>(false).Cast<Component>().ToList();
+            yield return HoloKit.DeviceTests.DeviceInspection.Capture(shown.CenterPosition, 1.5f, effects, _directory, name,
+                result => _report.buddhaInspections.Add(result));
+            Save();
         }
 
         private void Capture(string name)

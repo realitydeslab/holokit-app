@@ -45,6 +45,7 @@ namespace RealityDesignLab.MOFA.TheHunting
             public Vector3 dragonBodyBoundsCenter;
             public Vector3 dragonBodyBoundsSize;
             public List<CameraView> dragonCameraViews = new();
+            public HoloKit.DeviceTests.DeviceInspection.Result dragonInspection;
             public List<string> errors = new();
         }
 
@@ -141,6 +142,18 @@ namespace RealityDesignLab.MOFA.TheHunting
             screenshot = ScreenCapture.CaptureScreenshotAsTexture();
             File.WriteAllBytes(Path.Combine(_directory, "dragon-after-entrance.png"), screenshot.EncodeToPNG());
             Destroy(screenshot);
+
+            // Close-up of the dragon from a virtual camera: does its body draw, and is it textured
+            // rather than flat white?
+            var body = manager.DragonController.GetComponentsInChildren<SkinnedMeshRenderer>(false).Where(r => r.enabled).ToArray();
+            Require(body.Length > 0, "The dragon has no visible body renderer.");
+            var bounds = body[0].bounds;
+            foreach (var renderer in body) bounds.Encapsulate(renderer.bounds);
+            yield return HoloKit.DeviceTests.DeviceInspection.Capture(bounds.center, bounds.size.magnitude * 1.2f, body,
+                _directory, "dragon-inspection", result => _report.dragonInspection = result);
+            Save();
+            Require(_report.dragonInspection.objectPixels > 0.02f,
+                $"The dragon body does not draw ({_report.dragonInspection.objectPixels:P1} of the close-up).");
             Require(_report.errors.Count == 0, "Hunting produced runtime errors: " + _report.errors.Count);
         }
 
