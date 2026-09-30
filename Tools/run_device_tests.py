@@ -24,6 +24,7 @@ REPO = Path(__file__).resolve().parents[1]
 UNITY = str(Path.home() / ".unity/bin/unity")
 EDITOR = "/Applications/Unity/6000.3.24f1/Unity.app"
 TEAM = "KR9H35SQQ9"
+STALLED_POLLS = 3
 
 PRODUCTS = {
     "HoloKit": {"project": REPO, "export": REPO / "Builds/Upgrade/HoloKit-four-products",
@@ -132,15 +133,18 @@ def read_report(device: str, bundle: str, folder: str) -> dict | None:
 def poll(device: str, bundle: str, folder: str, timeout: int, previous: dict | None) -> dict | None:
     """Waits for this run's report: complete and different from the one left by an earlier run.
 
-    Some tests write results.json only when they finish, so an incomplete report is not required."""
-    started, report, deadline = False, None, time.time() + timeout
+    Some tests write results.json only when they finish, so an incomplete report is not required.
+    A test that stopped on an error without marking itself complete is taken as finished once its
+    report has errors and has not changed for STALLED_POLLS polls."""
+    started, report, stalled, deadline = False, None, 0, time.time() + timeout
     while time.time() < deadline:
         time.sleep(15)
         current = read_report(device, bundle, folder)
         if current is None or current == previous:
             continue
+        stalled = stalled + 1 if current == report else 0
         report, started = current, True
-        if report.get("complete"):
+        if report.get("complete") or (report.get("errors") and stalled >= STALLED_POLLS):
             return report
     return report if started else None
 

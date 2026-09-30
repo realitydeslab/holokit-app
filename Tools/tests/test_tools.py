@@ -216,3 +216,9 @@ class DeviceReportPollingTests(unittest.TestCase):
         old = {"complete": True, "run": 1}
         with mock.patch.object(run_device_tests.time, "time", side_effect=[0, 1, 2, 100]):
             self.assertIsNone(self.poll([old, old, old], old))
+
+    def test_test_that_stopped_on_an_error_is_reported_without_waiting_for_the_timeout(self):
+        failed = {"complete": False, "errors": ["Open palm gesture was not recognized."]}
+        # The clock never reaches the deadline, and reading past the given reports raises StopIteration.
+        with mock.patch.object(run_device_tests.time, "time", return_value=0):
+            self.assertEqual(self.poll([{"complete": False}, failed, failed, failed, failed], None), failed)
