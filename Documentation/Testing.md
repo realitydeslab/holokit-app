@@ -57,6 +57,30 @@ needs players at distinct positions. Watch swings and hand poses are injected af
 
 Each game's README (`Packages/<game>/README.md`) lists its roles, interactions and the tests that cover them.
 
+### On iPhones (unattended)
+
+```sh
+python3 Tools/run_device_tests.py --device <UDID> [--second-device <UDID>] [--products MOFA Typed] [--tests mofa-combat] [--no-build]
+```
+
+Builds each product (Unity export, signed `ReleaseForRunning` Xcode build), installs it with
+`devicectl`, launches each development-build test through its environment variable, waits for the
+test's `Documents/<Folder>/results.json` to report this run complete and copies the folder (report
+and screenshots) to `output/device-<timestamp>/<test>/<device>/`. `progress.log` there has one
+PASS/FAIL line per build, install and test. Phones must be unlocked (or have no passcode).
+
+| Test | Product | Checks |
+| --- | --- | --- |
+| `*-scenes` | all | Every catalog scene loads as player and spectator, the local host starts, a screenshot is saved for review, exit returns to the gallery; no exceptions logged |
+| `qrealm-interaction` | QRealm | Host hand dwell switches Buddhas; the active Buddha draws on the device (virtual-camera close-up) |
+| `mofa-hunting-spawn` | MOFA | Dragon summons and enters; close-up of the dragon: pixels drawn and colour saturation |
+| `mofa-combat`, `mofa-combat-stereo` | MOFA | Training round in mono and stereo: casting, hits, summary |
+| `typed-finger-ribbon`, `typed-sculpture` | Typed | Ribbon: palm, fist and shake gestures move the ribbon. Sculpture: hand dwell spawns the sculpture |
+| `mofa-duel-two-phone`, `mofa-hunting-two-phone` | MOFA | Two phones over Multipeer: host and client (needs `--second-device`) |
+
+Permission prompts (camera, local network) appear on the first launch of each app; grant them by
+hand once, or the test waits on the prompt and times out.
+
 ## Not automated
 
 - iPhone Simulator: ARKit, HoloKit, PHASE and Multipeer native libraries ship device slices only.

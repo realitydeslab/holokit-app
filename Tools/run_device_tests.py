@@ -118,23 +118,30 @@ def fetch(device: str, bundle: str, source: str, destination: Path) -> bool:
                           capture_output=True, timeout=180).returncode == 0
 
 
-def poll(device: str, bundle: str, folder: str, timeout: int) -> dict | None:
-    """Waits for this run's report: first incomplete (run started), then complete or timeout."""
-    started, report, deadline = False, None, time.time() + timeout
+def read_report(device: str, bundle: str, folder: str) -> dict | None:
     with tempfile.TemporaryDirectory() as tmp:
         target = Path(tmp) / "results.json"
-        while time.time() < deadline:
-            time.sleep(15)
-            if not fetch(device, bundle, f"Documents/{folder}/results.json", target):
-                continue
-            try:
-                report = json.loads(target.read_text())
-            except json.JSONDecodeError:
-                continue
-            if not report.get("complete"):
-                started = True
-            elif started:
-                return report
+        if not fetch(device, bundle, f"Documents/{folder}/results.json", target):
+            return None
+        try:
+            return json.loads(target.read_text())
+        except json.JSONDecodeError:
+            return None
+
+
+def poll(device: str, bundle: str, folder: str, timeout: int, previous: dict | None) -> dict | None:
+    """Waits for this run's report: complete and different from the one left by an earlier run.
+
+    Some tests write results.json only when they finish, so an incomplete report is not required."""
+    started, report, deadline = False, None, time.time() + timeout
+    while time.time() < deadline:
+        time.sleep(15)
+        current = read_report(device, bundle, folder)
+        if current is None or current == previous:
+            continue
+        report, started = current, True
+        if report.get("complete"):
+            return report
     return report if started else None
 
 
@@ -155,6 +162,7 @@ def verdict(report: dict | None) -> tuple[bool, str]:
 def run_test(devices: list[str], product: str, name: str, environments: list[dict[str, str]], folder: str,
              timeout: int, out: Path) -> bool:
     bundle = PRODUCTS[product]["bundle"]
+    previous = {device: read_report(device, bundle, folder) for device in devices}
     for device, environment in zip(devices, environments):
         if not launch(device, bundle, environment, out / f"{name}-launch-{device[-6:]}.log"):
             log(out, f"FAIL {name}: could not launch on {device[-6:]} (locked or disconnected?)")
@@ -162,7 +170,7 @@ def run_test(devices: list[str], product: str, name: str, environments: list[dic
         time.sleep(5)
     ok = True
     for device in devices:
-        report = poll(device, bundle, folder, timeout)
+        report = poll(device, bundle, folder, timeout, previous[device])
         destination = out / name / device[-6:]
         destination.mkdir(parents=True, exist_ok=True)
         fetch(device, bundle, f"Documents/{folder}", destination)

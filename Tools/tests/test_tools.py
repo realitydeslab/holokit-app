@@ -1,4 +1,4 @@
-"""Tests for Tools/verify_ios_export.py and Tools/run_all_tests.sh.
+"""Tests for Tools/verify_ios_export.py, Tools/run_all_tests.sh and Tools/run_device_tests.py.
 
 Run: python3 -m unittest discover -s Tools/tests
 """
@@ -11,11 +11,13 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from PIL import Image
 
 TOOLS = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(TOOLS))
+import run_device_tests  # noqa: E402
 import verify_ios_export  # noqa: E402
 
 BUNDLE = "org.example.mofa"
@@ -192,3 +194,25 @@ class RunAllTestsScriptTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DeviceReportPollingTests(unittest.TestCase):
+    """The device runner must take only this run's report, whether or not the test saved progress."""
+
+    def poll(self, reports, previous):
+        with mock.patch.object(run_device_tests.time, "sleep"), \
+                mock.patch.object(run_device_tests, "read_report", side_effect=reports):
+            return run_device_tests.poll("device", "bundle", "Folder", 60, previous)
+
+    def test_report_written_only_at_the_end_is_accepted(self):
+        old = {"complete": True, "run": 1}
+        self.assertEqual(self.poll([old, old, {"complete": True, "run": 2}], old), {"complete": True, "run": 2})
+
+    def test_report_saved_during_the_run_is_followed_to_completion(self):
+        report = self.poll([None, {"complete": False}, {"complete": True, "x": 1}], None)
+        self.assertEqual(report, {"complete": True, "x": 1})
+
+    def test_unchanged_report_from_an_earlier_run_is_not_this_runs(self):
+        old = {"complete": True, "run": 1}
+        with mock.patch.object(run_device_tests.time, "time", side_effect=[0, 1, 2, 100]):
+            self.assertIsNone(self.poll([old, old, old], old))
