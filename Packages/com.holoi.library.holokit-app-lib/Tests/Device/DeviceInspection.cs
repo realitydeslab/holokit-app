@@ -24,6 +24,8 @@ namespace HoloKit.DeviceTests
             public Color32 meanColor;
             /// <summary>Mean HSV saturation (0-1) of the changed pixels; near 0 means grey or white.</summary>
             public float meanSaturation;
+            /// <summary>What the caller's probe reported while the object was shown and time frozen.</summary>
+            public string probe;
             public string withPath;
             public string withoutPath;
         }
@@ -35,10 +37,11 @@ namespace HoloKit.DeviceTests
         /// object is graded as the player sees it, and renders for <paramref name="warmupSeconds"/> first:
         /// VFX Graph pauses effects no camera has seen, so their particles must build up again.
         /// <paramref name="onCameraReady"/> runs once the camera faces the target, for example to
-        /// restart an effect whose start was culled because no camera saw it.
+        /// restart an effect whose start was culled because no camera saw it. <paramref name="probe"/>
+        /// runs just before the object is hidden, for example to read a particle count.
         /// </summary>
         public static IEnumerator Capture(Vector3 target, float distance, IEnumerable<Component> toggle,
-            string directory, string name, Action<Result> done, int size = 720, float warmupSeconds = 2f, Action onCameraReady = null)
+            string directory, string name, Action<Result> done, int size = 720, float warmupSeconds = 2f, Action onCameraReady = null, Func<string> probe = null)
         {
             var main = Camera.main;
             var behaviours = toggle.Where(c => c != null && IsEnabled(c)).ToList();
@@ -75,6 +78,7 @@ namespace HoloKit.DeviceTests
                 Time.timeScale = 0f;
                 for (var frame = 0; frame < 3; frame++) yield return new WaitForEndOfFrame();
                 var with = Read(texture);
+                result.probe = probe?.Invoke();
                 behaviours.ForEach(c => SetEnabled(c, false));
                 for (var frame = 0; frame < 3; frame++) yield return new WaitForEndOfFrame();
                 var without = Read(texture);

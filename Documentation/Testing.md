@@ -71,11 +71,11 @@ PASS/FAIL line per build, install and test. Phones must be unlocked (or have no 
 
 | Test | Product | Checks |
 | --- | --- | --- |
-| `*-scenes` | all | Every catalog scene loads as player and spectator, the local host starts, a screenshot is saved for review, exit returns to the gallery; no exceptions logged |
+| `*-scenes` | all | Every catalog scene loads as player and spectator, AR tracks, the local host starts, the frame matches any forced orientation, a screenshot is saved for review, exit returns to the gallery; no errors logged |
 | `qrealm-interaction` | QRealm | Host hand dwell switches Buddhas; the active Buddha draws on the device (virtual-camera close-up) |
-| `mofa-hunting-spawn` | MOFA | Dragon summons and enters; close-up of the dragon: pixels drawn and colour saturation |
+| `mofa-hunting-spawn` | MOFA | Dragon summons and enters; close-up of the dragon (pixels drawn, colour) and the ambient lighting in use |
 | `mofa-combat`, `mofa-combat-stereo` | MOFA | Training round in mono and stereo: casting, hits, summary |
-| `typed-finger-ribbon`, `typed-sculpture` | Typed | Ribbon: palm, fist and shake gestures move the ribbon. Sculpture: hand dwell spawns the sculpture |
+| `typed-finger-ribbon`, `typed-sculpture` | Typed | Ribbon: with an injected open hand the five ribbons appear, sit on the fingertips, follow the hand and leave a trail. Sculpture: hand dwell spawns the sculpture, and a close-up shows it draws |
 | `mofa-duel-two-phone`, `mofa-hunting-two-phone` | MOFA | Two phones over Multipeer: host and client (needs `--second-device`) |
 
 Permission prompts (camera, local network) appear on the first launch of each app; grant them by
@@ -88,7 +88,15 @@ hand once, or the test waits on the prompt and times out.
   alignment need physical devices; the device runners cover them only when launched on phones.
 - Screens are checked for error shaders and specific objects, not for overall visual quality.
 
-## Known failing tests (2026-09-28)
+## Known limits and failing tests
+
+- Editor playthrough renders (`EditorScenePlaythroughTests`) come out black for most scenes, so their
+  error-shader (magenta) check proves little. Visual checks rely on the iPhone runs until this is fixed.
+- `typed-sculpture` on iPhone: the sculpture spawns, but its close-up draws nothing, even after restarting
+  its VFX in view. Unresolved (2026-09-30); look at The Sculpture by hand to tell a real problem from a
+  test artefact.
+
+### 2026-09-28
 
 - `QuantumRealmBuddhaInteractionTests.ActivatedBuddhaIsVisibleToThePlayer`: the Buddha point cloud
   draws nothing in the Editor while the seat ring does. Needs a device check.

@@ -26,6 +26,9 @@ namespace RealityDesignLab.Typed.TheSculpture
             public bool handHoverEnabled;
             public bool syntheticPlacement;
             public bool sculptureSpawned;
+            public string sculptureObject;
+            public Bounds sculptureBounds;
+            public HoloKit.DeviceTests.DeviceInspection.Result sculptureInspection;
             public List<string> screenshots = new();
             public List<string> errors = new();
         }
@@ -108,8 +111,10 @@ namespace RealityDesignLab.Typed.TheSculpture
             yield return new WaitForSecondsRealtime(1);
             var hover = startButton.GetComponent<HoverableObject>();
             Require(hover != null && startButton.gameObject.activeInHierarchy, "Hover start control is not visible.");
-            var before = NetworkManager.Singleton.SpawnManager.SpawnedObjects.Count;
-            for (var i = 0; i < 100 && NetworkManager.Singleton.SpawnManager.SpawnedObjects.Count == before; i++)
+            var spawned = NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+            var existing = spawned.Keys.ToList();
+            var before = spawned.Count;
+            for (var i = 0; i < 100 && spawned.Count == before; i++)
             {
                 hover.OnLoaded(.1f);
                 yield return new WaitForSecondsRealtime(.02f);
@@ -117,6 +122,27 @@ namespace RealityDesignLab.Typed.TheSculpture
             _report.sculptureSpawned = NetworkManager.Singleton.SpawnManager.SpawnedObjects.Count > before;
             Require(_report.sculptureSpawned, "Hover dwell did not spawn sculpture.");
             Capture("sculpture-started.png");
+
+            // The phone may not face the sculpture, so render it from a virtual camera to see that it draws.
+            yield return new WaitForSecondsRealtime(3);
+            var sculpture = spawned.Where(o => !existing.Contains(o.Key)).Select(o => o.Value)
+                .OrderByDescending(o => o.GetComponentsInChildren<Renderer>().Length).First();
+            _report.sculptureObject = sculpture.name;
+            var renderers = sculpture.GetComponentsInChildren<Renderer>().Where(r => r.enabled).ToArray();
+            Require(renderers.Length > 0, $"The spawned {sculpture.name} has no enabled renderers.");
+            var bounds = renderers.Select(r => r.bounds).Aggregate((a, b) => { a.Encapsulate(b); return a; });
+            _report.sculptureBounds = bounds;
+            // The figure is a VFX Graph effect that only simulates while seen; the phone may not have
+            // faced it when it spawned, so restart it once the inspection camera looks at it.
+            var effects = sculpture.GetComponentsInChildren<UnityEngine.VFX.VisualEffect>();
+            yield return HoloKit.DeviceTests.DeviceInspection.Capture(bounds.center, Mathf.Max(1.5f, bounds.extents.y * 2.5f),
+                effects.Cast<Component>().Concat(renderers.Where(r => r.GetComponent<UnityEngine.VFX.VisualEffect>() == null)),
+                _directory, "sculpture-inspection", result => _report.sculptureInspection = result,
+                warmupSeconds: 3f, onCameraReady: () => { foreach (var effect in effects) effect.Reinit(); },
+                probe: () => string.Join(", ", effects.Select(e => $"{e.name}: {e.aliveParticleCount} particles, culled={e.culled}")));
+            Save();
+            Require(_report.sculptureInspection.objectPixels > .01f,
+                $"The sculpture draws {_report.sculptureInspection.objectPixels:P1} of a close-up view.");
         }
 
         private void Capture(string name)
