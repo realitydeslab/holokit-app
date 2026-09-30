@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace HoloKit.DeviceTests
 {
@@ -30,11 +31,14 @@ namespace HoloKit.DeviceTests
         /// <summary>
         /// Renders <paramref name="target"/> from <paramref name="distance"/> metres with and without
         /// <paramref name="toggle"/> enabled, with time frozen so only the toggled parts differ.
-        /// The virtual camera copies the main camera's settings and renders several frames first,
-        /// because VFX Graph only draws for cameras it has prepared.
+        /// The virtual camera copies the main camera's settings, including URP post-processing so the
+        /// object is graded as the player sees it, and renders for <paramref name="warmupSeconds"/> first:
+        /// VFX Graph pauses effects no camera has seen, so their particles must build up again.
+        /// <paramref name="onCameraReady"/> runs once the camera faces the target, for example to
+        /// restart an effect whose start was culled because no camera saw it.
         /// </summary>
         public static IEnumerator Capture(Vector3 target, float distance, IEnumerable<Component> toggle,
-            string directory, string name, Action<Result> done, int size = 720)
+            string directory, string name, Action<Result> done, int size = 720, float warmupSeconds = 2f, Action onCameraReady = null)
         {
             var main = Camera.main;
             var behaviours = toggle.Where(c => c != null && IsEnabled(c)).ToList();
@@ -48,7 +52,15 @@ namespace HoloKit.DeviceTests
             };
             try
             {
-                if (main != null) inspector.CopyFrom(main);
+                if (main != null)
+                {
+                    inspector.CopyFrom(main);
+                    var source = main.GetUniversalAdditionalCameraData();
+                    var copy = inspector.GetUniversalAdditionalCameraData();
+                    copy.renderPostProcessing = source.renderPostProcessing;
+                    copy.antialiasing = source.antialiasing;
+                    copy.volumeLayerMask = source.volumeLayerMask;
+                }
                 inspector.targetTexture = texture;
                 inspector.clearFlags = CameraClearFlags.SolidColor;
                 inspector.backgroundColor = Color.black;
@@ -57,7 +69,9 @@ namespace HoloKit.DeviceTests
                 if (from.sqrMagnitude < 1e-4f) from = Vector3.forward;
                 inspector.transform.position = target - from.normalized * distance + Vector3.up * 0.2f;
                 inspector.transform.LookAt(target);
-                for (var frame = 0; frame < 10; frame++) yield return new WaitForEndOfFrame();
+                onCameraReady?.Invoke();
+                var warmupEnd = Time.realtimeSinceStartup + warmupSeconds;
+                while (Time.realtimeSinceStartup < warmupEnd) yield return new WaitForEndOfFrame();
                 Time.timeScale = 0f;
                 for (var frame = 0; frame < 3; frame++) yield return new WaitForEndOfFrame();
                 var with = Read(texture);

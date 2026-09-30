@@ -24,6 +24,10 @@ namespace HoloKit.DeviceTests
             public bool multiplayerManagerSpawned;
             public bool returnedToGallery;
             public string screenshot;
+            public string screenOrientation;
+            public string deviceOrientation;
+            public string screenSize;
+            public string screenshotSize;
             public List<string> errors = new();
         }
 
@@ -120,6 +124,9 @@ namespace HoloKit.DeviceTests
                 if (!_current.hostListening) Errors.Add("Local network host did not start.");
                 _current.multiplayerManagerSpawned = app.MultiplayerManager != null && app.MultiplayerManager.IsSpawned;
                 if (!_current.multiplayerManagerSpawned) Errors.Add("Shared multiplayer manager did not spawn.");
+                // ARKit can take longer to start tracking in low light or facing a plain surface.
+                for (var i = 0; i < 150 && ARSession.state != ARSessionState.SessionTracking; i++)
+                    yield return new WaitForSecondsRealtime(.1f);
                 _current.arState = ARSession.state.ToString();
                 if (ARSession.state != ARSessionState.SessionTracking)
                     Errors.Add("AR did not reach SessionTracking: " + _current.arState);
@@ -127,6 +134,14 @@ namespace HoloKit.DeviceTests
                 yield return new WaitForEndOfFrame();
                 _current.screenshot = _current.scene + "-" + role + ".png";
                 var texture = ScreenCapture.CaptureScreenshotAsTexture();
+                // A scene that forces an orientation must get a matching frame; otherwise its UI is stretched.
+                _current.screenOrientation = Screen.orientation.ToString();
+                _current.deviceOrientation = Input.deviceOrientation.ToString();
+                _current.screenSize = $"{Screen.width}x{Screen.height}";
+                _current.screenshotSize = $"{texture.width}x{texture.height}";
+                var landscape = Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight;
+                if (landscape != (texture.width > texture.height))
+                    Errors.Add($"Screen orientation {_current.screenOrientation} does not match the {_current.screenshotSize} frame.");
                 File.WriteAllBytes(Path.Combine(_directory, _current.screenshot), texture.EncodeToPNG());
                 Destroy(texture);
                 Save();

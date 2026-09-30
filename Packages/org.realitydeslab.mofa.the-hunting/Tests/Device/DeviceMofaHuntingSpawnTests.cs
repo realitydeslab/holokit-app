@@ -46,6 +46,10 @@ namespace RealityDesignLab.MOFA.TheHunting
             public Vector3 dragonBodyBoundsSize;
             public List<CameraView> dragonCameraViews = new();
             public HoloKit.DeviceTests.DeviceInspection.Result dragonInspection;
+            // Scene lighting the player uses; ambient light strongly changes how pale the dragon looks.
+            public string ambientMode;
+            public float ambientIntensity;
+            public Vector3 ambientProbeL0;
             public List<string> errors = new();
         }
 
@@ -151,6 +155,10 @@ namespace RealityDesignLab.MOFA.TheHunting
             foreach (var renderer in body) bounds.Encapsulate(renderer.bounds);
             yield return HoloKit.DeviceTests.DeviceInspection.Capture(bounds.center, bounds.size.magnitude * 1.2f, body,
                 _directory, "dragon-inspection", result => _report.dragonInspection = result);
+            var probe = RenderSettings.ambientProbe;
+            _report.ambientMode = RenderSettings.ambientMode.ToString();
+            _report.ambientIntensity = RenderSettings.ambientIntensity;
+            _report.ambientProbeL0 = new Vector3(probe[0, 0], probe[1, 0], probe[2, 0]);
             Save();
             Require(_report.dragonInspection.objectPixels > 0.02f,
                 $"The dragon body does not draw ({_report.dragonInspection.objectPixels:P1} of the close-up).");
