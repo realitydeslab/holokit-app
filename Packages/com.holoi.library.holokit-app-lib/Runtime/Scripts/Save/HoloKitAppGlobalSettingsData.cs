@@ -10,7 +10,7 @@ namespace Holoi.Library.HoloKitAppLib
     [Serializable]
     public class HoloKitAppGlobalSettingsData
     {
-        public bool InstructionEnabled = true;
+        public bool InstructionEnabled = false;
 
         public bool VibrationEnabled = true;
 

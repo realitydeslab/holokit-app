@@ -92,7 +92,8 @@ namespace Holoi.Library.HoloKitAppLib
 
         public void LoadDefaultSettings()
         {
-            InstructionEnabled = true;
+            // Tapping the stereo icon enters stereo directly; players can turn instructions on in Settings.
+            InstructionEnabled = false;
             VibrationEnabled = true;
             PhaseEnabled = true;
             HighResHDREnabled = true;
