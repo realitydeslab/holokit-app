@@ -8,11 +8,13 @@ using HoloKit;
 using Holoi.Library.HoloKitAppLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
 
 namespace RealityDesignLab.Typed.TheFingerRibbon
 {
-    // Opt-in physical-device check of finger curl and hand shake response.
+    // Opt-in physical-device check that the five ribbons appear with the host's hand, sit on the
+    // fingertips and trail them as the hand moves. The hand pose is injected after recognition.
     public sealed class DeviceFingerRibbonInteractionTests : MonoBehaviour
     {
         [Serializable]
@@ -20,13 +22,21 @@ namespace RealityDesignLab.Typed.TheFingerRibbon
         {
             public bool complete;
             public bool arTracking;
+            public bool ribbonsHiddenBeforeHand;
             public bool handValid;
-            public bool palmDetected;
-            public bool fistDetected;
-            public bool shakeMovedRibbon;
+            public bool ribbonsShownWithHand;
+            public int ribbonCount;
+            public float farthestRibbonFromItsTip;
+            public float leastRibbonMovement;
+            public List<int> aliveParticlesAfterMove = new();
             public List<string> screenshots = new();
             public List<string> errors = new();
         }
+
+        private const float FingerLength = .16f;
+        private const float MoveDistance = .4f;
+        private static readonly HandJoint[] Tips =
+            { HandJoint.ThumbTip, HandJoint.IndexTip, HandJoint.MiddleTip, HandJoint.RingTip, HandJoint.LittleTip };
 
         private readonly Report _report = new();
         private string _directory;
@@ -59,7 +69,7 @@ namespace RealityDesignLab.Typed.TheFingerRibbon
             }
             Save();
             Application.logMessageReceived -= OnLog;
-            Debug.Log($"[FINGER RIBBON INTERACTION TEST] complete={_report.complete} palm={_report.palmDetected} fist={_report.fistDetected} shake={_report.shakeMovedRibbon} errors={_report.errors.Count}");
+            Debug.Log($"[FINGER RIBBON INTERACTION TEST] complete={_report.complete} shown={_report.ribbonsShownWithHand} farthest={_report.farthestRibbonFromItsTip:F3} moved={_report.leastRibbonMovement:F3} errors={_report.errors.Count}");
             Destroy(gameObject);
         }
 
@@ -80,39 +90,61 @@ namespace RealityDesignLab.Typed.TheFingerRibbon
                 yield return new WaitForSecondsRealtime(.1f);
             _report.arTracking = ARSession.state == ARSessionState.SessionTracking;
             Require(_report.arTracking, "AR tracking unavailable: " + ARSession.state);
+
             var tracker = HoloKitHandTracker.Instance;
-            var gesture = FindObjectOfType<HandGestureManager>(true);
-            Require(tracker != null && gesture != null, "Hand tracker or gesture manager missing.");
+            var manager = FindObjectsByType<FingerTextManager>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault();
+            Require(tracker != null && manager != null, "Hand tracker or finger ribbon manager missing.");
+            var ribbons = manager.GetComponentsInChildren<VisualEffect>(true);
+            _report.ribbonCount = ribbons.Length;
+            Require(ribbons.Length == Tips.Length, $"Expected {Tips.Length} finger ribbons, found {ribbons.Length}.");
+            _report.ribbonsHiddenBeforeHand = !manager.gameObject.activeInHierarchy;
+            Require(_report.ribbonsHiddenBeforeHand, "Ribbons were shown before any hand was seen.");
+
+            // An open hand in front of the camera, fingers fanned in the view plane.
             var eye = HoloKitCameraManager.Instance.CenterEyePose;
-            var origin = eye.position + eye.forward * .6f;
-            var joints = new Vector3[21];
-            for (var i = 0; i < 21; i++) joints[i] = origin;
-            joints[(int)HandJoint.MiddleMCP] += Vector3.up * .05f;
-            joints[(int)HandJoint.MiddlePIP] += Vector3.up * .1f;
-            joints[(int)HandJoint.MiddleDIP] += Vector3.up * .15f;
-            joints[(int)HandJoint.MiddleTip] += Vector3.up * .23f;
-            for (var i = 0; i < 25; i++) { tracker.InjectPoseForDeviceTest(joints); yield return null; }
+            var wrist = eye.position + eye.forward * .5f;
+            var directions = Enumerable.Range(0, Tips.Length)
+                .Select(f => Quaternion.AngleAxis(-60f + 30f * f, eye.forward) * eye.up).ToArray();
+            var joints = Hand(wrist, directions);
+            for (var i = 0; i < 90; i++) { tracker.InjectPoseForDeviceTest(joints); yield return null; }
             _report.handValid = tracker.IsValid;
-            _report.palmDetected = gesture.CurrentGesture == HandGestureManager.Gesture.Palm;
-            Require(_report.handValid && _report.palmDetected, "Open palm gesture was not recognized.");
-            Capture("palm.png");
-            joints[(int)HandJoint.MiddleTip] = origin + Vector3.up * .02f;
-            for (var i = 0; i < 25; i++) { tracker.InjectPoseForDeviceTest(joints); yield return null; }
-            _report.fistDetected = gesture.CurrentGesture == HandGestureManager.Gesture.Fist;
-            Require(_report.fistDetected, "Closed fist gesture was not recognized.");
-            Capture("fist.png");
-            var start = gesture.HandTips[2].position;
-            for (var i = 0; i < 40; i++)
+            _report.ribbonsShownWithHand = manager.gameObject.activeInHierarchy;
+            Require(_report.handValid && _report.ribbonsShownWithHand, "Ribbons did not appear when the hand was recognized.");
+            // Each ribbon rides on its own fingertip.
+            var tips = Tips.Select(t => joints[(int)t]).ToArray();
+            _report.farthestRibbonFromItsTip = ribbons.Max(r => tips.Min(t => Vector3.Distance(r.transform.position, t)));
+            var claimed = ribbons.Select(r => Array.IndexOf(tips, tips.OrderBy(t => Vector3.Distance(r.transform.position, t)).First())).Distinct().Count();
+            Save();
+            Require(_report.farthestRibbonFromItsTip < .03f && claimed == Tips.Length,
+                $"Ribbons are not on the fingertips (farthest {_report.farthestRibbonFromItsTip:F3} m, {claimed} tips used).");
+            Capture("hand.png");
+
+            // Sweep the hand sideways: every ribbon follows and leaves a trail.
+            var before = ribbons.Select(r => r.transform.position).ToArray();
+            for (var i = 1; i <= 60; i++)
             {
-                var delta = (i % 10 < 5 ? .15f : -.15f) * Vector3.right;
-                for (var joint = 0; joint < 21; joint++) joints[joint] += delta;
-                tracker.InjectPoseForDeviceTest(joints);
+                tracker.InjectPoseForDeviceTest(Hand(wrist + eye.right * (MoveDistance * i / 60f), directions));
                 yield return null;
             }
-            _report.shakeMovedRibbon = Vector3.Distance(start, gesture.HandTips[2].position) > .05f ||
-                                       gesture.TipVelocityDirection[2].sqrMagnitude > .1f;
-            Require(_report.shakeMovedRibbon, "Shaking did not drive the finger ribbon tip.");
-            Capture("shake.png");
+            joints = Hand(wrist + eye.right * MoveDistance, directions);
+            for (var i = 0; i < 60; i++) { tracker.InjectPoseForDeviceTest(joints); yield return null; }
+            _report.leastRibbonMovement = ribbons.Select((r, i) => Vector3.Distance(r.transform.position, before[i])).Min();
+            _report.aliveParticlesAfterMove = ribbons.Select(r => r.aliveParticleCount).ToList();
+            Save();
+            Require(_report.leastRibbonMovement > MoveDistance * .75f, $"A ribbon did not follow the hand (moved {_report.leastRibbonMovement:F3} m).");
+            Require(_report.aliveParticlesAfterMove.All(n => n > 0), "A ribbon left no trail while the hand moved.");
+            Capture("trail.png");
+        }
+
+        /// <summary>A 21-joint hand: each finger's four joints lie along its direction from the wrist.</summary>
+        private static Vector3[] Hand(Vector3 wrist, Vector3[] directions)
+        {
+            var joints = new Vector3[21];
+            joints[(int)HandJoint.Wrist] = wrist;
+            for (var finger = 0; finger < Tips.Length; finger++)
+            for (var segment = 1; segment <= 4; segment++)
+                joints[(int)Tips[finger] - 4 + segment] = wrist + directions[finger] * (FingerLength * segment / 4f);
+            return joints;
         }
 
         private void Capture(string name)
