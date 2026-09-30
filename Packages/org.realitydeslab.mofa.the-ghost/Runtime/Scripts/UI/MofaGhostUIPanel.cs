@@ -25,6 +25,9 @@ namespace RealityDesignLab.MOFA.TheGhost.UI
 
         private void Start()
         {
+            // Spectators have no Trigger action in this reality
+            if (HoloKitApp.Instance.IsSpectator)
+                TriggerButton.gameObject.SetActive(false);
             GhostSpawner.OnGhostSpawned += OnGhostSpawned;
         }
 

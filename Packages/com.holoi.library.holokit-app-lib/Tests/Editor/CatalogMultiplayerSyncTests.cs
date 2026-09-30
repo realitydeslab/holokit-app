@@ -14,7 +14,7 @@ namespace HoloKit.Tests
     /// <summary>
     /// For every scene in the open product's catalog, a host, a player (if the reality supports multiplayer)
     /// and a spectator (if it supports spectator view) join the same session in three Editors; the host starts hover-to-start games with the Trigger button; all three
-    /// must end up with the same set of network objects, and the spectator must not count as a player.
+    /// must end up with the same set of network objects, and the spectator must not count as a player or see a Trigger button.
     /// Run with <c>Tools/run_multiplayer_test.sh &lt;Product&gt; CatalogMultiplayerSyncTests</c>.
     /// </summary>
     [Explicit("Needs three Editors; run with Tools/run_multiplayer_test.sh.")]
@@ -93,6 +93,10 @@ namespace HoloKit.Tests
                     var expected = MultiplayerScenario.Read(MultiplayerScenario.Host, $"{scene}-objects");
                     yield return EditorAppDriver.WaitUntil(() => NetworkObjects() == expected,
                         $"{scene}: the {role} has network objects [{NetworkObjects()}], the host [{expected}].", 15f);
+                    // Spectators cannot act, so they must not be offered a Trigger button that does nothing.
+                    if (role == MultiplayerScenario.Spectator)
+                        Assert.That(Object.FindObjectsByType<RectTransform>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
+                            .Any(rect => rect.name == "Trigger Button"), Is.False, $"{scene}: the spectator sees a Trigger button.");
                 }
 
                 // Clients leave first, then the host ends the session; all return to the gallery.
