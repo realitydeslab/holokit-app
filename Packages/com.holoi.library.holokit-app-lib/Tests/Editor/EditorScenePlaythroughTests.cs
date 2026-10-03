@@ -16,6 +16,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.Management;
 
 namespace HoloKit.Tests
 {
@@ -48,6 +49,7 @@ namespace HoloKit.Tests
             public int renderers;
             public int missingScripts;
             public float magentaFraction;
+            public float litFraction;
             public string render;
             public string camera;
             public bool cameraBackground;
@@ -187,7 +189,21 @@ namespace HoloKit.Tests
                 Debug.Log($"[PLAYTHROUGH] EXIT {_current.scene} role={role} errors={_current.errors.Count}");
                 _current = null;
                 Save();
+                yield return RestartXR();
             }
+        }
+
+        // XR Simulation keeps its simulated room in a scene that the app's single-mode scene loads unload, and
+        // does not rebuild it for the next AR session, so later cases rendered black. Restarting XR at the gallery
+        // (which has no AR session) gives every case the room. Editor-only; devices are unaffected.
+        private static IEnumerator RestartXR()
+        {
+            var manager = XRGeneralSettings.Instance != null ? XRGeneralSettings.Instance.Manager : null;
+            if (manager == null || manager.activeLoader == null) yield break;
+            manager.StopSubsystems();
+            manager.DeinitializeLoader();
+            yield return manager.InitializeLoader();
+            manager.StartSubsystems();
         }
 
         private void AuditLoadedScenes()
@@ -264,6 +280,10 @@ namespace HoloKit.Tests
             _current.magentaFraction = (float)magenta / pixels.Length;
             if (_current.magentaFraction > 0.002f)
                 Errors.Add($"Render is {_current.magentaFraction:P1} error-shader magenta.");
+            // XR Simulation's room is always in view, so a frame that is almost all black drew nothing.
+            _current.litFraction = (float)pixels.Count(p => p.r + p.g + p.b > 30) / pixels.Length;
+            if (_current.litFraction < 0.01f)
+                Errors.Add($"Render is black ({_current.litFraction:P1} of pixels lit): nothing was drawn.");
             _current.render = $"{_current.scene}-{_current.role}.png";
             File.WriteAllBytes(Path.Combine(_directory, _current.render), texture.EncodeToPNG());
             UnityEngine.Object.DestroyImmediate(texture);
