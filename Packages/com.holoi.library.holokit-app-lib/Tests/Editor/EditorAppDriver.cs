@@ -82,6 +82,38 @@ namespace HoloKit.Tests
         }
 
         /// <summary>
+        /// Waits <paramref name="seconds"/> while rendering the main camera every frame. In batch mode no Game
+        /// view renders it, so VFX Graph treats effects as unseen and stops simulating them; rendering it lets
+        /// effects form as they do on a device.
+        /// </summary>
+        public static IEnumerator RenderMainCameraFor(float seconds) =>
+            RenderMainCameraWhile(start => Time.realtimeSinceStartup - start < seconds);
+
+        /// <summary>As <see cref="RenderMainCameraFor"/>, for a number of frames (works with time frozen).</summary>
+        public static IEnumerator RenderMainCameraFrames(int frames)
+        {
+            var remaining = frames;
+            return RenderMainCameraWhile(_ => remaining-- > 0);
+        }
+
+        private static IEnumerator RenderMainCameraWhile(Func<float, bool> keepGoing)
+        {
+            var target = RenderTexture.GetTemporary(270, 480, 24, RenderTextureFormat.ARGB32);
+            try
+            {
+                for (var start = Time.realtimeSinceStartup; keepGoing(start);)
+                {
+                    if (Camera.main != null) RenderInto(Camera.main, target);
+                    yield return null;
+                }
+            }
+            finally
+            {
+                RenderTexture.ReleaseTemporary(target);
+            }
+        }
+
+        /// <summary>
         /// Turns the simulated player toward <paramref name="target"/> by rotating the XR Origin about the
         /// camera, as if the player turned their head, and waits for the frame to update.
         /// </summary>
@@ -170,6 +202,14 @@ namespace HoloKit.Tests
         private static RenderStats Render(Camera camera, string path, int width, int height)
         {
             var target = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.ARGB32);
+            RenderInto(camera, target);
+            var stats = Read(target, path);
+            RenderTexture.ReleaseTemporary(target);
+            return stats;
+        }
+
+        private static void RenderInto(Camera camera, RenderTexture target)
+        {
             var request = new RenderPipeline.StandardRequest { destination = target };
             if (RenderPipeline.SupportsRenderRequest(camera, request))
                 RenderPipeline.SubmitRenderRequest(camera, request);
@@ -180,9 +220,6 @@ namespace HoloKit.Tests
                 camera.Render();
                 camera.targetTexture = previous;
             }
-            var stats = Read(target, path);
-            RenderTexture.ReleaseTemporary(target);
-            return stats;
         }
 
         private static RenderStats Read(RenderTexture source, string path)

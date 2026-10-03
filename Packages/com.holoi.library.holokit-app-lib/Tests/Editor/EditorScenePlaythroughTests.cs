@@ -157,7 +157,7 @@ namespace HoloKit.Tests
                 _current.arState = ARSession.state.ToString();
                 if (ARSession.state != ARSessionState.SessionTracking)
                     Errors.Add("XR Simulation did not reach SessionTracking: " + _current.arState);
-                yield return new WaitForSecondsRealtime(WarmupSeconds);
+                yield return EditorAppDriver.RenderMainCameraFor(WarmupSeconds);
 
                 if (app.RealityManager == null) Errors.Add("Reality manager did not initialize.");
                 _current.hostListening = NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost && NetworkManager.Singleton.IsListening;
@@ -170,7 +170,7 @@ namespace HoloKit.Tests
                 {
                     // The Star mode Trigger button must start the game without hand tracking.
                     HoloKitAppUIEventManager.OnStarUITriggered?.Invoke();
-                    yield return new WaitForSecondsRealtime(WarmupSeconds);
+                    yield return EditorAppDriver.RenderMainCameraFor(WarmupSeconds);
                     _current.startedWithoutHand = startButton == null || !startButton.isActiveAndEnabled;
                     if (!_current.startedWithoutHand) Errors.Add("Trigger button did not start the game without a hand.");
                 }

@@ -78,18 +78,20 @@ namespace HoloKit.Tests
             var hover = QuantumRealmTestActions.ActiveBuddhaHover(group);
             // The group spawns around the player; turn to face the Buddha as a player would.
             yield return EditorAppDriver.FaceMainCameraTowards(hover.CenterPosition);
+            // Let the effect form; VFX Graph only simulates effects a rendering camera sees.
+            yield return EditorAppDriver.RenderMainCameraFor(3f);
             var with = Path.Combine(output, "buddha-facing.png");
             var without = Path.Combine(output, "buddha-facing-hidden.png");
             // Freeze animation (the seat's ring text rotates) so only the toggled effect differs.
             var timeScale = Time.timeScale;
             Time.timeScale = 0f;
-            for (var frame = 0; frame < 3; frame++) yield return new WaitForEndOfFrame();
+            yield return EditorAppDriver.RenderMainCameraFrames(3);
             var stats = EditorAppDriver.RenderMainCamera(with);
             Assert.That(stats.Magenta, Is.LessThan(0.002f), "The Buddha renders error-shader magenta.");
             // Render the same view without this Buddha's effects; the difference is the Buddha itself.
             var effects = hover.GetComponentsInChildren<UnityEngine.VFX.VisualEffect>().Where(v => v.enabled).ToList();
             effects.ForEach(v => v.enabled = false);
-            for (var frame = 0; frame < 5; frame++) yield return new WaitForEndOfFrame();
+            yield return EditorAppDriver.RenderMainCameraFrames(5);
             EditorAppDriver.RenderMainCamera(without);
             effects.ForEach(v => v.enabled = true);
             Time.timeScale = timeScale;

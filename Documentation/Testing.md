@@ -90,15 +90,22 @@ hand once, or the test waits on the prompt and times out.
 
 ## Known limits and failing tests
 
-- Editor playthrough renders show XR Simulation's room and world-space content, but effects that need
-  a hand, time or a different view (Typed Rain and Tornado letters, the Quantum Realm Buddhas) are not in
-  frame; the iPhone runs remain the visual check for those. Each case fails if its render is almost all
-  black (fixed 2026-10-04: after the first scene in a Play session XR Simulation stopped showing its room, so later renders were black; XR now restarts at the gallery between cases).
+No known failing tests (2026-10-04).
+
+- Editor playthrough renders show XR Simulation's room and world-space content. Effects that need a
+  hand or appear outside this one view (Typed Rain and Tornado letters) are not in frame; the iPhone runs
+  remain the visual check for those. Each case fails if its render is almost all black.
+- In batch mode no Game view renders the main camera, so VFX Graph treats effects as unseen and does not
+  simulate them. Editor tests that look at effects wait with `EditorAppDriver.RenderMainCameraFor` /
+  `RenderMainCameraFrames`, which render the main camera every frame.
 - `typed-sculpture` on iPhone: the sculpture spawns, but its close-up draws nothing, even after restarting
   its VFX in view. Unresolved (2026-09-30); look at The Sculpture by hand to tell a real problem from a
   test artefact.
 
-### 2026-09-28
+### Fixed 2026-10-04
 
-- `QuantumRealmBuddhaInteractionTests.ActivatedBuddhaIsVisibleToThePlayer`: the Buddha point cloud
-  draws nothing in the Editor while the seat ring does. Needs a device check.
+- After the first scene in a Play session XR Simulation stopped showing its room, so later playthrough
+  renders were black; XR now restarts at the gallery between cases.
+- `QuantumRealmBuddhaInteractionTests.ActivatedBuddhaIsVisibleToThePlayer` failed since 2026-09-28: it
+  waited without rendering, so the Buddha's effect was never simulated. It now renders while waiting; the
+  Buddha changes about 13% of the view, and fixed-view renders show it upright above its seat.
