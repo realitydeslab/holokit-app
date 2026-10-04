@@ -12,6 +12,14 @@ namespace HoloKit.Tests
     /// </summary>
     public sealed class SimulatedPersonTests
     {
+        // Hand tests need a scene with hand tracking (the HoloKit app's first scene, MOFA Training, has none).
+        private static HoloKit.HoloKitHandTracker RequireHandTracking()
+        {
+            var tracker = HoloKit.HoloKitHandTracker.Instance;
+            if (tracker == null) Assert.Ignore("This product's first scene has no hand tracker.");
+            return tracker;
+        }
+
         [TearDown] public void RestoreEnvironment() => SimulationArena.Restore();
 
         [UnityTest, Timeout(300000)]
@@ -81,7 +89,7 @@ namespace HoloKit.Tests
         {
             yield return EditorAppDriver.EnterFirstReality();
             var person = SimulatedPerson.Spawn();
-            var tracker = HoloKit.HoloKitHandTracker.Instance;
+            var tracker = RequireHandTracking();
             Vector3 Palm() => tracker.GetHandJointPosition(HoloKit.HandJoint.MiddleMCP);
 
             // A real hand is tracked only within arm's length and in front of the camera.
@@ -117,7 +125,7 @@ namespace HoloKit.Tests
         {
             yield return EditorAppDriver.EnterFirstReality();
             var person = SimulatedPerson.Spawn();
-            var tracker = HoloKit.HoloKitHandTracker.Instance;
+            var tracker = RequireHandTracking();
             var start = person.Phone.position + person.Phone.forward * 0.5f;
             var side = Vector3.Cross(Vector3.up, person.Phone.forward).normalized;
             var began = Time.realtimeSinceStartup;
@@ -130,6 +138,30 @@ namespace HoloKit.Tests
             }, 5f, "Holding the hand did not finish.");
             Assert.That(maxLag, Is.LessThan(0.03f), "The palm did not stay on the moving target.");
             Assert.That(Vector3.Distance(tracker.GetHandJointPosition(HoloKit.HandJoint.MiddleMCP), start + side * 0.2f), Is.LessThan(0.02f));
+        }
+
+        [UnityTest, Timeout(300000)]
+        public IEnumerator WithAnExtendedPointerThePalmStopsShortOfTheTargetOnTheViewRay()
+        {
+            EditorAppDriver.OpenStartScene();
+            yield return new EnterPlayMode();
+            yield return Extended();
+            yield return new ExitPlayMode();
+        }
+
+        // Some games touch with a point projected beyond the hand along the eye-to-hand ray (ExtendedHandJoint).
+        private static IEnumerator Extended()
+        {
+            yield return EditorAppDriver.EnterFirstReality();
+            var person = SimulatedPerson.Spawn();
+            var tracker = RequireHandTracking();
+            var target = person.Phone.position + person.Phone.forward * 1.1f;
+            var held = false;
+            yield return person.HoldHandOn(() => target, () => held = true, 1f, "Holding did not run.", extension: 0.5f);
+            var palm = tracker.GetHandJointPosition(HoloKit.HandJoint.MiddleMCP);
+            Assert.That(Vector3.Distance(palm, person.Phone.position + person.Phone.forward * 0.6f), Is.LessThan(0.02f),
+                "With a 0.5 m extension the palm should be 0.5 m short of a target 1.1 m away, on the view ray.");
+            Assert.That(held, Is.True);
         }
     }
 }

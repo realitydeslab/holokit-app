@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -96,12 +97,14 @@ namespace HoloKit.Tests
             InputSystem.onAfterUpdate += OnUpdate;
         }
 
+        /// <summary>Stops recording and saves the timeline, so a failed run still leaves its trace.</summary>
         public void Dispose()
         {
             if (!_recording) return;
             _recording = false;
             Application.logMessageReceived -= OnLog;
             InputSystem.onAfterUpdate -= OnUpdate;
+            Save();
         }
 
         /// <summary>Records a step of the journey with a snapshot of every probe.</summary>
@@ -120,6 +123,42 @@ namespace HoloKit.Tests
             var stats = EditorAppDriver.RenderMainCamera(Path.Combine(Directory, file));
             _document.checkpoints.Add(new Checkpoint { name = name, time = Now, image = file, magenta = stats.Magenta, litCenter = stats.LitCenter });
             return stats;
+        }
+
+        /// <summary>
+        /// Renders what the player sees (without the camera image) from a camera that follows the phone, after
+        /// warming it up: VFX Graph draws some effects only for a camera that has rendered for a while, and the
+        /// Editor's main-camera render requests never qualify. Use this to check that content is visible.
+        /// </summary>
+        public IEnumerator CapturePlayerView(string name, Action<EditorAppDriver.RenderStats> done, float warmupSeconds = 1.5f)
+        {
+            var phone = Camera.main;
+            var view = new GameObject("E2E Player View").AddComponent<Camera>();
+            view.CopyFrom(phone);
+            view.clearFlags = CameraClearFlags.SolidColor;
+            view.backgroundColor = Color.black;
+            var target = RenderTexture.GetTemporary(540, 960, 24, RenderTextureFormat.ARGB32);
+            view.targetTexture = target;
+            try
+            {
+                for (var start = Time.realtimeSinceStartup; Time.realtimeSinceStartup - start < warmupSeconds;)
+                {
+                    view.transform.SetPositionAndRotation(phone.transform.position, phone.transform.rotation);
+                    view.Render();
+                    yield return null;
+                }
+                view.Render();
+                var file = $"{_document.checkpoints.Count + 1:00}-{name}.png";
+                var stats = EditorAppDriver.Measure(target, Path.Combine(Directory, file));
+                _document.checkpoints.Add(new Checkpoint { name = name, time = Now, image = file, magenta = stats.Magenta, litCenter = stats.LitCenter });
+                done(stats);
+            }
+            finally
+            {
+                view.targetTexture = null;
+                RenderTexture.ReleaseTemporary(target);
+                UnityEngine.Object.Destroy(view.gameObject);
+            }
         }
 
         public void AssertNoErrors() =>

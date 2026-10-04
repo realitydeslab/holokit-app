@@ -100,19 +100,34 @@ namespace HoloKit.Tests
         /// Keeps the palm on a target that may move (e.g. a button floating in front of the player) until
         /// <paramref name="until"/> holds; fails if the target leaves arm's reach or the camera's view.
         /// </summary>
-        public IEnumerator HoldHandOn(System.Func<Vector3> target, System.Func<bool> until, float timeout, string failure)
+        /// <param name="extension">
+        /// For games that touch with a point projected this far beyond the hand along the eye-to-hand ray
+        /// (ARUX ExtendedHandJoint): the palm stays that far short of the target on the view ray.
+        /// </param>
+        public IEnumerator HoldHandOn(System.Func<Vector3> target, System.Func<bool> until, float timeout, string failure,
+            float extension = 0f)
         {
-            Assert.That(CanReach(target()), Is.True, $"{failure} The target at {target()} is out of reach.");
+            Vector3 Palm() => HandFor(target(), extension);
+            Assert.That(CanReach(Palm()), Is.True, $"{failure} The hand for a target at {target()} would be out of reach at {Palm()}.");
             // Reach for where the target is now, frame by frame, not where it was when the reach began.
-            yield return MoveHand(() => Quaternion.Inverse(BodyRotation) * (target() - Phone.position), 0.4f);
+            yield return MoveHand(() => Quaternion.Inverse(BodyRotation) * (Palm() - Phone.position), 0.4f);
             for (var t = 0f; !until() && t < timeout; t += Time.unscaledDeltaTime)
             {
-                var point = target();
-                Assert.That(CanReach(point), Is.True, $"{failure} The target moved out of reach to {point}.");
-                _hand = Quaternion.Inverse(BodyRotation) * (point - Phone.position);
+                var palm = Palm();
+                Assert.That(CanReach(palm), Is.True, $"{failure} The target moved; the hand would be out of reach at {palm}.");
+                _hand = Quaternion.Inverse(BodyRotation) * (palm - Phone.position);
                 yield return null;
             }
             Assert.That(until(), Is.True, failure);
+        }
+
+        private const float NearestHand = 0.15f;   // a hand cannot be closer to the phone than this
+
+        private Vector3 HandFor(Vector3 target, float extension)
+        {
+            if (extension <= 0f) return target;
+            var ray = target - Phone.position;
+            return Phone.position + ray.normalized * Mathf.Max(NearestHand, ray.magnitude - extension);
         }
 
         /// <summary>Lowers the hand to the person's side, out of view and away from anything in front.</summary>

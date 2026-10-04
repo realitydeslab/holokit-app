@@ -57,6 +57,25 @@ needs players at distinct positions. Watch swings and hand poses are injected af
 
 Each game's README (`Packages/<game>/README.md`) lists its roles, interactions and the tests that cover them.
 
+### End-to-end journeys (a simulated person in XR Simulation)
+
+A journey plays a game the way a person does, in the Editor, and records every step.
+
+| Piece | What it does |
+| --- | --- |
+| `SimulatedPerson` | Carries the phone: `WalkTo` / `LookAt` move XR Simulation's simulated device (`SimulationCameraPoseProvider`), so tracking, plane discovery and raycasts follow; the XR Origin never moves. `RaiseHandTo` / `HoldHandOn` / `LowerHand` inject an open 21-joint hand, only within arm's length (0.75 m) and in front of the camera, held relative to the body and re-sent every input update. `HoldHandOn(..., extension)` supports games that touch with a point projected beyond the hand (Quantum Realm, 0.5 m). |
+| `SimulationArena` | A 12 m x 12 m room (walls, table, light) for XR Simulation, built from code and saved as `Tests/Editor/Environments/HoloKit Test Arena.prefab`; `Use()` selects it for the next Play session, `Restore()` (in `[TearDown]`) puts the previous environment back. The default room only allows about 1.3 m of movement. |
+| `E2ETrace` | Named events with a snapshot of every registered probe (game state), samples every 0.25 s, checkpoint renders (`Capture` from the phone camera, `CapturePlayerView` from a warmed-up camera at the phone's pose, used for visibility checks) and logged errors. Saved as `<scenario>.trace.json` even when the run fails. |
+| Baselines | `AssertMatchesBaseline` compares event names and snapshots (not times or poses) with `Packages/<game>/Tests/Editor/Baselines/<scenario>.json`, listing every difference. Record or refresh with `HOLOKIT_E2E_UPDATE_BASELINES=1`, review the JSON, commit it. |
+| `EditorAppDriver.Run` | Runs a journey so that a failing step still runs every enclosing `finally`/`using` (Unity abandons outer coroutines when a nested one throws). |
+
+| Journey | Where | Steps |
+| --- | --- | --- |
+| `QuantumRealmJourneyTests` | `quantum-realm/Tests/Editor` | In the arena: scan the floor until AR finds a plane; hold a hand on the floating start button; walk the circle, standing 1 m from each of the ten Buddhas in turn, look at it (the player's view must show it), hold the extended touch on it until the next Buddha appears, wait for the previous one to fade. Baseline: plane found, start, ten touches with the active effect and exactly one Buddha shown, wrap to the first. About 75 s. |
+
+Run one: `unity test Products/QRealm --mode EditMode --filter QuantumRealmJourneyTests` (the runner sets
+`HOLOKIT_PLAYTHROUGH_OUTPUT`; the trace and checkpoint images go to `E2E-<scenario>/` under it).
+
 ### On iPhones (unattended)
 
 ```sh

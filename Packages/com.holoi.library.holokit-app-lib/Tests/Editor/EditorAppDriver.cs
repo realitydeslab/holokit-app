@@ -49,6 +49,39 @@ namespace HoloKit.Tests
             yield return WaitUntil(() => Camera.main != null, sceneName + " has no enabled main camera.");
         }
 
+        /// <summary>
+        /// Runs a coroutine and every coroutine it yields. Unity abandons outer coroutines when a nested one
+        /// throws, so their finally/using blocks (an E2ETrace saving its timeline, for example) never run; this
+        /// disposes every level, innermost first, then rethrows the original failure.
+        /// </summary>
+        public static IEnumerator Run(IEnumerator body)
+        {
+            var stack = new System.Collections.Generic.Stack<IEnumerator>();
+            stack.Push(body);
+            while (stack.Count > 0)
+            {
+                bool more;
+                try
+                {
+                    more = stack.Peek().MoveNext();
+                }
+                catch (Exception exception)
+                {
+                    stack.Pop();   // the coroutine that threw has already run its own finally blocks
+                    while (stack.Count > 0) (stack.Pop() as IDisposable)?.Dispose();
+                    System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
+                    throw;
+                }
+                if (!more)
+                {
+                    stack.Pop();
+                    continue;
+                }
+                if (stack.Peek().Current is IEnumerator nested) stack.Push(nested);
+                else yield return stack.Peek().Current;
+            }
+        }
+
         /// <summary>Enters the first scene of the product's catalog as the host player.</summary>
         public static IEnumerator EnterFirstReality()
         {
@@ -99,6 +132,16 @@ namespace HoloKit.Tests
         /// </summary>
         public static IEnumerator RenderMainCameraFor(float seconds) =>
             RenderMainCameraWhile(start => Time.realtimeSinceStartup - start < seconds);
+
+        /// <summary>
+        /// Waits for a condition while rendering the main camera every frame (see <see cref="RenderMainCameraFor"/>),
+        /// for steps that depend on effects or animations progressing.
+        /// </summary>
+        public static IEnumerator WaitUntilRendering(Func<bool> condition, string failure, float timeout = Timeout)
+        {
+            yield return RenderMainCameraWhile(start => !condition() && Time.realtimeSinceStartup - start < timeout);
+            Assert.That(condition(), Is.True, failure);
+        }
 
         /// <summary>As <see cref="RenderMainCameraFor"/>, for a number of frames (works with time frozen).</summary>
         public static IEnumerator RenderMainCameraFrames(int frames)
@@ -232,6 +275,9 @@ namespace HoloKit.Tests
                 camera.targetTexture = previous;
             }
         }
+
+        /// <summary>Saves a render target as a PNG and measures it (error-shader magenta, lit centre).</summary>
+        public static RenderStats Measure(RenderTexture source, string path) => Read(source, path);
 
         private static RenderStats Read(RenderTexture source, string path)
         {
