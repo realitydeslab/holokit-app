@@ -201,7 +201,9 @@ namespace RealityDesignLab.MOFA.Library.Base
             }
         }
 
-        public void Reset()
+        // Every round starts uncharged with the full ultimate allowance. (Not named Reset: Unity calls Reset only in
+        // the Editor, so the allowance used to carry over from round to round.)
+        private void ResetSpells()
         {
             _basicSpellCharge = 0f;
             _secondarySpellCharge = 0f;
@@ -251,7 +253,7 @@ namespace RealityDesignLab.MOFA.Library.Base
                 return;
             } 
 
-            if (_secondarySpellUseCount > _secondarySpell.MaxUseCount)
+            if (_secondarySpellUseCount >= _secondarySpell.MaxUseCount)
             {
                 Debug.Log("[MofaInputManager] Secondary spell exceeded max use count");
                 OnSecondarySpellExceededMaxUseCount?.Invoke();

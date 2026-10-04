@@ -69,6 +69,7 @@ namespace RealityDesignLab.MOFA.Library.Base
 
             if (newPhase == MofaPhase.Countdown)
             {
+                ResetSpells();
                 MofaWatchConnectivityAPI.OnRoundStarted(int.Parse(HoloKitApp.Instance.GlobalSettings.GetPreferencedObject().TokenId));
                 return;
             }

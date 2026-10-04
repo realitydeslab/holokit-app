@@ -69,6 +69,41 @@ namespace Holoi.Library.HoloKitAppLib.WatchConnectivity.MOFA
         {
             OnWatchTriggered?.Invoke();
         }
+
+        // The event emitted when the watch turns to or from the Ground pose.
+        public static void EmitSimulatedWatchStateForDeviceTest(MofaWatchState state)
+        {
+            OnWatchStateChanged?.Invoke(state);
+        }
+
+        [DllImport("__Internal")]
+        private static extern void HoloKitAppWatchConnectivity_ReceiveMessageForDeviceTest(int kind, int value);
+
+        [DllImport("__Internal")]
+        private static extern int HoloKitAppWatchConnectivity_ActivationState();
+
+        [DllImport("__Internal")]
+        private static extern string MofaWatchConnectivity_LastContextError();
+
+        /// <summary>Delivers a watch swing through the iPhone's WatchConnectivity session delegate (iOS only).</summary>
+        public static void ReceiveWatchTriggerForDeviceTest()
+        {
+            if (HoloKit.HoloKitUtils.IsRuntime) HoloKitAppWatchConnectivity_ReceiveMessageForDeviceTest(0, 0);
+        }
+
+        /// <summary>Delivers a watch state change through the iPhone's WatchConnectivity session delegate (iOS only).</summary>
+        public static void ReceiveWatchStateForDeviceTest(MofaWatchState state)
+        {
+            if (HoloKit.HoloKitUtils.IsRuntime) HoloKitAppWatchConnectivity_ReceiveMessageForDeviceTest(1, (int)state);
+        }
+
+        /// <summary>WCSessionActivationState (0 not activated, 1 inactive, 2 activated); -1 without a session.</summary>
+        public static int SessionActivationStateForDeviceTest =>
+            HoloKit.HoloKitUtils.IsRuntime ? HoloKitAppWatchConnectivity_ActivationState() : -1;
+
+        /// <summary>Why the last round start or end did not reach the watch's context; empty when it did.</summary>
+        public static string LastContextErrorForDeviceTest =>
+            HoloKit.HoloKitUtils.IsRuntime ? MofaWatchConnectivity_LastContextError() : "";
 #endif
 
         public static event Action<float, float> OnReceivedHealthDataMessage;

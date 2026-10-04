@@ -132,3 +132,18 @@ bool HoloKitAppWatchConnectivity_IsWatchReachable(void) {
 void HoloKitAppWatchConnectivity_UpdateWatchPanel(int watchPanelIndex) {
     [[HoloKitAppWatchConnectivityManager sharedInstance] updateWatchPanel:watchPanelIndex];
 }
+
+// Device tests: deliver a watch message through the session delegate, as WatchConnectivity does.
+// kind 0: a wrist swing ("WatchTriggered"); kind 1: a watch state change ("WatchState" = value).
+void HoloKitAppWatchConnectivity_ReceiveMessageForDeviceTest(int kind, int value) {
+    HoloKitAppWatchConnectivityManager *manager = [HoloKitAppWatchConnectivityManager sharedInstance];
+    NSDictionary<NSString *, id> *message = kind == 0
+        ? @{ @"MOFA" : @YES, @"WatchTriggered" : @YES }
+        : @{ @"MOFA" : @YES, @"WatchState" : @(value) };
+    [(id<WCSessionDelegate>)manager session:manager.wcSession didReceiveMessage:message];
+}
+
+int HoloKitAppWatchConnectivity_ActivationState(void) {
+    WCSession *session = [[HoloKitAppWatchConnectivityManager sharedInstance] wcSession];
+    return session == nil ? -1 : (int)session.activationState;
+}

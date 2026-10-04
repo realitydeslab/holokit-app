@@ -11,6 +11,19 @@ void (*OnWatchTriggered)(void) = NULL;
 // dist and energy.
 void (*OnReceivedHealthDataMessage)(float, float) = NULL;
 
+// The last application context error ("" after a successful update), for device tests.
+static NSString *lastContextError = @"";
+
+// The watch reads the round's start and end from the application context.
+static void UpdateWatchContext(NSDictionary<NSString *, id> *context) {
+    NSError *error = nil;
+    [[[HoloKitAppWatchConnectivityManager sharedInstance] wcSession] updateApplicationContext:context error:&error];
+    lastContextError = error == nil ? @"" : error.localizedDescription;
+    if (error != nil) {
+        NSLog(@"[WatchConnectivity_MOFA] Failed to update the watch's context: %@", error);
+    }
+}
+
 @interface MofaWatchConnectivityManager()
 
 @end
@@ -86,7 +99,7 @@ void (*OnReceivedHealthDataMessage)(float, float) = NULL;
         @"Timestamp" : [NSNumber numberWithDouble:[[NSProcessInfo processInfo] systemUptime]],
         @"MagicSchool": [NSNumber numberWithInt:magicSchoolIndex]
     };
-    [[[HoloKitAppWatchConnectivityManager sharedInstance] wcSession] updateApplicationContext:message error:nil];
+    UpdateWatchContext(message);
 }
 
 - (void)queryWatchState {
@@ -108,15 +121,15 @@ void (*OnReceivedHealthDataMessage)(float, float) = NULL;
     }];
 }
 
-- (void)OnRoundEndedWithResult:(int)result kill:(int)kill hitRate:(int)hitRate {
+- (void)OnRoundEndedWithResult:(int)result kill:(int)kill hitRate:(float)hitRate {
     NSDictionary<NSString *, id> *message = @{
         @"MOFA" : [NSNumber numberWithBool:YES],
         @"End" : [NSNumber numberWithBool:YES],
         @"Result" : [NSNumber numberWithInt:result],
         @"Kill" : [NSNumber numberWithInt:kill],
-        @"HitRate" : [NSNumber numberWithInt:hitRate]
+        @"HitRate" : [NSNumber numberWithFloat:hitRate]
     };
-    [[[HoloKitAppWatchConnectivityManager sharedInstance] wcSession] updateApplicationContext:message error:nil];
+    UpdateWatchContext(message);
 }
 
 @end
@@ -141,6 +154,10 @@ void MofaWatchConnectivity_QueryWatchState(void) {
     [[MofaWatchConnectivityManager sharedInstance] queryWatchState];
 }
 
-void MofaWatchConnectivity_OnRoundEnded(int result, int kill, int hitRate) {
+void MofaWatchConnectivity_OnRoundEnded(int result, int kill, float hitRate) {
     [[MofaWatchConnectivityManager sharedInstance] OnRoundEndedWithResult:result kill:kill hitRate:hitRate];
+}
+
+const char* MofaWatchConnectivity_LastContextError(void) {
+    return strdup(lastContextError.UTF8String);
 }
