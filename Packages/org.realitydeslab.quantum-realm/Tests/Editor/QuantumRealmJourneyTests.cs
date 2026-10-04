@@ -10,7 +10,7 @@ using UnityEngine.TestTools;
 namespace HoloKit.Tests
 {
     /// <summary>
-    /// End to end: a simulated person in the test arena scans the room, starts Quantum Realm with a hand, then walks the circle
+    /// End to end: a simulated person in the test arena waits for placement, starts Quantum Realm with a hand, then walks the circle
     /// and holds a hand on each of the ten Buddhas in turn. Every step is recorded and compared with
     /// Tests/Editor/Baselines/QuantumRealmJourney.json. The spec is in the package README.
     /// </summary>
@@ -57,16 +57,11 @@ namespace HoloKit.Tests
             trace.StartRecording();
             trace.Event("entered");
 
-            // Look at the floor ahead and around until AR finds a plane to place the Buddhas on.
+            // Look at the floor ahead and wait for the placement indicator. In the Editor ARPlacementManager does
+            // not raycast: it shows its default point after 1.2 s, so plane detection itself is a device check.
             var ahead = Vector3.ProjectOnPlane(person.Phone.forward, Vector3.up).normalized;
-            foreach (var turn in new[] { 0f, -40f, 40f, 0f })
-            {
-                if (placement.IsValid) break;
-                var look = Quaternion.Euler(0f, turn, 0f) * ahead * 1.5f + Vector3.down * 1.2f;
-                yield return person.LookAt(person.Phone.position + look);
-                yield return EditorAppDriver.RenderMainCameraFor(1f);
-            }
-            Assert.That(placement.IsValid, Is.True, "Scanning the floor did not find a plane.");
+            yield return person.LookAt(person.Phone.position + ahead * 1.5f + Vector3.down * 1.2f);
+            yield return EditorAppDriver.WaitUntilRendering(() => placement.IsValid, "The placement indicator did not appear.", 5f);
             trace.Event("plane found");
 
             // Start as a player does: the start button floats in front of the player; reach out and hold it.

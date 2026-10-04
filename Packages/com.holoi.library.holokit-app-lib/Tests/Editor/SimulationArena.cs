@@ -34,8 +34,11 @@ namespace HoloKit.Tests
             var (preferences, environment) = Preferences();
             if (!SessionState.GetBool(ActiveKey, false))
             {
+                // Multiplayer peer projects share this preferences file, so another Editor may already have
+                // selected the arena; never record the arena itself as the environment to restore.
                 var previous = environment.objectReferenceValue;
-                SessionState.SetString(PreviousKey, previous == null ? "" : AssetDatabase.GetAssetPath(previous));
+                var path = previous == null ? "" : AssetDatabase.GetAssetPath(previous);
+                SessionState.SetString(PreviousKey, path == PrefabPath ? "" : path);
                 SessionState.SetBool(ActiveKey, true);
             }
             environment.objectReferenceValue = Prefab;
