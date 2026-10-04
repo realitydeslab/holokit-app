@@ -84,6 +84,7 @@ namespace HoloKit.Tests
             Application.logMessageReceivedThreaded += OnLog;
             var stack = new Stack<IEnumerator>();
             stack.Push(body);
+            var nextPeerCheck = 0f;
             try
             {
                 while (stack.Count > 0)
@@ -91,6 +92,14 @@ namespace HoloKit.Tests
                     bool more;
                     try
                     {
+                        // Stop as soon as another Editor fails: its game session is gone, so this role would only time out.
+                        if (Time.realtimeSinceStartup >= nextPeerCheck)
+                        {
+                            nextPeerCheck = Time.realtimeSinceStartup + 1f;
+                            foreach (var role in new[] { Host, Player, Spectator })
+                                if (role != Role && File.Exists(PathOf(role, "failed")))
+                                    Assert.Fail($"The {role} Editor failed: {Read(role, "failed")}");
+                        }
                         more = stack.Peek().MoveNext();
                         if (!more && stack.Count == 1 && errors.Count > 0)
                             Assert.Fail($"{errors.Count} runtime error(s), first: {errors[0]}");

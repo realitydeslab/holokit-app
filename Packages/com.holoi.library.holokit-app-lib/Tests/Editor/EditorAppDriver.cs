@@ -210,6 +210,10 @@ namespace HoloKit.Tests
         }
 
         /// <summary>The single visible UI element with this name.</summary>
+        /// <summary>Whether any active UI element has this name.</summary>
+        public static bool IsUiVisible(string name) =>
+            UnityEngine.Object.FindObjectsByType<RectTransform>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Any(rect => rect.name == name);
+
         public static GameObject FindVisibleUi(string name)
         {
             var found = UnityEngine.Object.FindObjectsByType<RectTransform>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
