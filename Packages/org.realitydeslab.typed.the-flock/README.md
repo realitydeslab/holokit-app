@@ -33,3 +33,26 @@ Here you can change the size of each bird and change the text of each bird, but 
 ## Reference:
 
 - [BoidsSimulationOnGPU](https://github.com/IndieVisualLab/UnityGraphicsProgramming/tree/master/Assets/BoidsSimulationOnGPU)
+
+## Roles and interactions
+
+| Role | Can do | Cannot do |
+| --- | --- | --- |
+| Host | Walk around; the flock of letters circles the host 1.5 m away and follows wherever the host goes | — |
+| Spectator | Watch the host's reality from their own phone ("Join As Spectator"), including when joining late | Change anything |
+
+## Automated tests
+
+| Test | What it does | Run |
+| --- | --- | --- |
+| `TypedTheFlockJourneyTests` | Three Editors: the flock circles the host and keeps circling after the host walks 3 m; an early and a late spectator see the host's head and the flock where the host does. Baselines per role | `Tools/run_multiplayer_test.sh Typed TypedTheFlockJourneyTests` |
+| `TypedTheFlockDrawTests` | One moment of the simulated birds, held still, is drawn where the birds are | EditMode suite |
+| `TypedThe*SceneTests` | Scene, prefab and reference checks | EditMode suite |
+
+## Fixed
+
+- Before 2026-10-04 the head pose had no source (scene constraint pointed at nothing), so the flock circled the session origin instead of the player, on device too; fixed and covered by the journey.
+
+## Not covered by the Editor tests
+
+- Multipeer Connectivity and QR alignment (the Editor uses UnityTransport on 127.0.0.1 in one simulated room).
