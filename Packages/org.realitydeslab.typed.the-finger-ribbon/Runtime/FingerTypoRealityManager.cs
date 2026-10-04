@@ -44,13 +44,16 @@ namespace RealityDesignLab.Typed.TheFingerRibbon
                     tip.GetComponent<FollowMovementManager>().enabled = false;
                 }
             }
-            _fingerVfxManager.SetActive(false);
+            _fingerVfxManager.SetActive(IsSpawned && _isHostHandValid.Value);
         }
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
             _isHostHandValid.OnValueChanged += OnIsHostHandValidValueChanged;
+            // A spectator joining while the host's hand is up gets the current value without a change event.
+            if (_isHostHandValid.Value)
+                _fingerVfxManager.SetActive(true);
 
             if (!IsServer)
                 HoloKitApp.Instance.ARSessionManager.SetEnvironmentOcclusionEnabled(false);
