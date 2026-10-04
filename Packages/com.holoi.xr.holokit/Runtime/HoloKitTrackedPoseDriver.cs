@@ -31,6 +31,10 @@ namespace HoloKit
 
         private IntPtr _headTrackerPtr;
 
+        [Tooltip("In Stereo, predict the pose for the moment each frame is seen (LowLatencyTrackingManager, from the " +
+                 "HoloKit Unity SDK). Off: the earlier Cardboard head tracker.")]
+        [SerializeField] private bool _kalmanPrediction = true;
+
         private void Start()
         {
             _arCameraManager = GetComponent<ARCameraManager>();
@@ -74,6 +78,15 @@ namespace HoloKit
 
             if (_holoKitCameraManager.StereoTrackedPose == null) {
                 Debug.LogWarning("[HoloKitTrackedPoseDriver] Failed to find StereoTrackedPose from HoloKitCamera");
+                return;
+            }
+
+            if (_kalmanPrediction)
+            {
+                // The predictor drives "Stereo Tracked Pose" in Stereo; the earlier head tracker stays unused.
+                var stereoPose = _holoKitCameraManager.StereoTrackedPose.gameObject;
+                if (stereoPose.GetComponent<LowLatencyTrackingManager>() == null)
+                    stereoPose.AddComponent<LowLatencyTrackingManager>();
                 return;
             }
 

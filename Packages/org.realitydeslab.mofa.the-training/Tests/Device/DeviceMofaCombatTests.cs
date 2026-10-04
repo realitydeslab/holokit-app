@@ -62,6 +62,10 @@ namespace RealityDesignLab.MOFA.TheTraining
             public bool stereoRequested;
             public string renderMode;
             public bool trackingDeviceFound;
+            public bool lowLatencyPredicting;
+            public double presentLatencySeconds = -1;
+            public double predictionLeadSeconds;
+            public double imuSampleAgeSeconds = -1;
             public float centerEyeY;
             public float placementY;
             public float aiOriginY;
@@ -172,6 +176,22 @@ namespace RealityDesignLab.MOFA.TheTraining
             _report.aiSpawned = FindObjectOfType<MofaAIPlayer>(true) != null;
             Save();
             Require(_report.arTracking && _report.hostListening && _report.aiSpawned, "AR, host, or AI opponent is not ready.");
+            if (_report.stereoRequested)
+            {
+                // In Stereo the pose is predicted for the moment each frame is seen (LowLatencyTrackingManager).
+                var predictor = FindObjectOfType<LowLatencyTrackingManager>(true);
+                for (var i = 0; i < 50 && (predictor == null || !predictor.IsPredicting); i++)
+                    yield return new WaitForSecondsRealtime(.1f);
+                _report.lowLatencyPredicting = predictor != null && predictor.IsPredicting;
+                if (predictor != null)
+                {
+                    _report.presentLatencySeconds = predictor.PresentLatency;
+                    _report.predictionLeadSeconds = predictor.PredictionLeadTime;
+                    _report.imuSampleAgeSeconds = predictor.IMUSampleAge;
+                }
+                Save();
+                Require(_report.lowLatencyPredicting, "Stereo is not predicting the pose (LowLatencyTrackingManager).");
+            }
 
             var placement = FindObjectOfType<ARPlacementManager>(true);
             Require(placement != null, "Training placement manager is missing.");

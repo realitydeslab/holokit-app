@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-10-04
+
+### Added
+
+- Low-latency tracking from the HoloKit Unity SDK: in Stereo, `LowLatencyTrackingManager` predicts the camera pose
+  for the moment each frame is seen (C++ Kalman filter over Core Motion, corrected by every ARKit frame, leading by
+  the measured render-to-present time). `HoloKitTrackedPoseDriver` adds it to "Stereo Tracked Pose"; switch
+  `Kalman Prediction` off to use the earlier Cardboard head tracker. Native code in
+  `Runtime/Plugins/iOS/LowLatencyTracking`; host tests in `Tests/Tracking` (same results as the Swift SDK on an
+  iPhone 15 Pro trace: rotation 0.21 deg median, 1.03 deg p95). See `Documentation~/LowLatencyTracking.md`.
+- In Stereo the frame rate is held at 60 fps and ARSession's Match Frame Rate is off; both are restored in Mono.
+
+### Fixed
+
+- Screen recordings now keep bloom: the recorder's camera texture is HDR (it was 8-bit, so colours clipped at 1).
+
 ## [0.3.12] - 2023.10.28
 
 ### Added
