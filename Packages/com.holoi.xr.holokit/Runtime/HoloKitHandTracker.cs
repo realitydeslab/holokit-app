@@ -102,7 +102,8 @@ namespace HoloKit
         {
             get
             {
-                if (HoloKitUtils.IsEditor) { return true; }
+                // In the Editor there is no camera to find a hand; once a test injects poses it behaves as on a device.
+                if (HoloKitUtils.IsEditor && !_injectedInEditor) { return true; }
                 return _isValid;
             }
         }
@@ -234,15 +235,16 @@ namespace HoloKit
             }
             OnHandPoseUpdated(poses);
         }
-
-        private bool _injectedInEditor;
 #endif
+
+        // Set by the first pose a test injects in the Editor; from then on the hand appears and fades out as on a device.
+        private bool _injectedInEditor;
 
         private void Update()
         {
             if (!_isActive) { return; }
 
-            if (HoloKitUtils.IsEditor) { return; }
+            if (HoloKitUtils.IsEditor && !_injectedInEditor) { return; }
 
             if (_isValid)
             {

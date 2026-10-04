@@ -86,9 +86,15 @@ namespace HoloKit.Tests
             return offset.magnitude <= ArmReach && Vector3.Angle(Phone.forward, offset) <= CameraHalfAngle;
         }
 
-        /// <summary>Moves the open hand (palm) to a point in front of the camera and holds it there.</summary>
-        public IEnumerator RaiseHandTo(Vector3 worldPosition, float seconds = 0.4f)
+        /// <summary>Hand shapes a person makes; joints follow the HoloKit 21-joint layout.</summary>
+        public enum HandShape { Open, Point, Fist, Pinch }
+
+        private HandShape _shape = HandShape.Open;
+
+        /// <summary>Moves the hand (palm) to a point in front of the camera, in this shape, and holds it there.</summary>
+        public IEnumerator RaiseHandTo(Vector3 worldPosition, float seconds = 0.4f, HandShape shape = HandShape.Open)
         {
+            _shape = shape;
             var offset = worldPosition - Phone.position;
             Assert.That(CanReach(worldPosition), Is.True,
                 $"A hand cannot be tracked at {worldPosition}: {offset.magnitude:F2} m away (reach {ArmReach} m), " +
@@ -105,8 +111,9 @@ namespace HoloKit.Tests
         /// (ARUX ExtendedHandJoint): the palm stays that far short of the target on the view ray.
         /// </param>
         public IEnumerator HoldHandOn(System.Func<Vector3> target, System.Func<bool> until, float timeout, string failure,
-            float extension = 0f)
+            float extension = 0f, HandShape shape = HandShape.Open)
         {
+            _shape = shape;
             Vector3 Palm() => HandFor(target(), extension);
             Assert.That(CanReach(Palm()), Is.True, $"{failure} The hand for a target at {target()} would be out of reach at {Palm()}.");
             // Reach for where the target is now, frame by frame, not where it was when the reach began.
@@ -122,6 +129,13 @@ namespace HoloKit.Tests
         }
 
         private const float NearestHand = 0.15f;   // a hand cannot be closer to the phone than this
+
+        /// <summary>Whether the phone's camera sees a hand at this point (what hand tracking needs).</summary>
+        public bool InView(Vector3 worldPosition)
+        {
+            var offset = worldPosition - Phone.position;
+            return offset.magnitude <= ArmReach + 0.1f && Vector3.Angle(Phone.forward, offset) <= CameraHalfAngle + 5f;
+        }
 
         private Vector3 HandFor(Vector3 target, float extension)
         {
@@ -162,8 +176,47 @@ namespace HoloKit.Tests
             if (_hand == null || tracker == null || Camera.main == null) return;
             var body = BodyRotation;
             var palm = Phone.position + body * _hand.Value;
+            // The camera finds a hand only where it can see it: a hand lowered to the side is not tracked, and the
+            // tracker drops it once it has been out of view for its fade-out delay, as on a device.
+            if (!InView(palm)) return;
             var pointing = _hand.Value.y < -0.5f ? Vector3.down : body * Vector3.forward;
-            tracker.InjectPoseForDeviceTest(OpenHand(palm, pointing));
+            tracker.InjectPoseForDeviceTest(Hand(palm, pointing, _shape));
+        }
+
+        /// <summary>A hand in <paramref name="shape"/>: palm (middle MCP) at <paramref name="palm"/>, fingers along <paramref name="pointing"/>.</summary>
+        public static Vector3[] Hand(Vector3 palm, Vector3 pointing, HandShape shape)
+        {
+            var joints = OpenHand(palm, pointing);
+            if (shape == HandShape.Open) return joints;
+            var forward = pointing.normalized;
+            var side = Vector3.Cross(Mathf.Abs(Vector3.Dot(forward, Vector3.up)) > 0.9f ? Vector3.forward : Vector3.up, forward).normalized;
+            var palmFacing = Vector3.Cross(forward, side).normalized;   // the side the fingers curl towards
+            void Curl(HandJoint mcp)
+            {
+                var knuckle = joints[(int)mcp];
+                joints[(int)mcp + 1] = knuckle + forward * 0.03f + palmFacing * 0.01f;
+                joints[(int)mcp + 2] = knuckle + forward * 0.035f + palmFacing * 0.035f;
+                joints[(int)mcp + 3] = knuckle + forward * 0.015f + palmFacing * 0.045f;
+            }
+            switch (shape)
+            {
+                case HandShape.Point:
+                    Curl(HandJoint.MiddleMCP); Curl(HandJoint.RingMCP); Curl(HandJoint.LittleMCP);
+                    break;
+                case HandShape.Fist:
+                    Curl(HandJoint.IndexMCP); Curl(HandJoint.MiddleMCP); Curl(HandJoint.RingMCP); Curl(HandJoint.LittleMCP);
+                    joints[(int)HandJoint.ThumbTip] = joints[(int)HandJoint.MiddleMCP + 1] + palmFacing * 0.02f;
+                    joints[(int)HandJoint.ThumbIP] = Vector3.Lerp(joints[(int)HandJoint.ThumbMP], joints[(int)HandJoint.ThumbTip], 0.5f);
+                    break;
+                case HandShape.Pinch:
+                    // Index bends towards the thumb; their tips meet.
+                    var meet = Vector3.Lerp(joints[(int)HandJoint.IndexMCP + 2], joints[(int)HandJoint.ThumbTip], 0.5f) + palmFacing * 0.01f;
+                    joints[(int)HandJoint.IndexTip] = meet;
+                    joints[(int)HandJoint.ThumbTip] = meet;
+                    joints[(int)HandJoint.ThumbIP] = Vector3.Lerp(joints[(int)HandJoint.ThumbMP], meet, 0.5f);
+                    break;
+            }
+            return joints;
         }
 
         /// <summary>An open hand: palm (middle MCP) at <paramref name="palm"/>, fingers along <paramref name="pointing"/>.</summary>

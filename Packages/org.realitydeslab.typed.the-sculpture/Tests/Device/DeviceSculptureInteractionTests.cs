@@ -135,11 +135,27 @@ namespace RealityDesignLab.Typed.TheSculpture
             // The figure is a VFX Graph effect that only simulates while seen; the phone may not have
             // faced it when it spawned, so restart it once the inspection camera looks at it.
             var effects = sculpture.GetComponentsInChildren<UnityEngine.VFX.VisualEffect>();
+            // The figure fills with letters launched from the host's hand: its spawner runs only while a hand is tracked
+            // (IsInteractable), and the tracker drops a hand silent for 0.33 s. Keep a hand in the figure, as a host
+            // reaching into it would, while the inspection camera looks.
+            var holding = true;
+            IEnumerator HoldHand()
+            {
+                var inFigure = new Vector3[21];
+                while (holding)
+                {
+                    for (var i = 0; i < 21; i++) inFigure[i] = bounds.center;
+                    tracker.InjectPoseForDeviceTest(inFigure);
+                    yield return null;
+                }
+            }
+            StartCoroutine(HoldHand());
             yield return HoloKit.DeviceTests.DeviceInspection.Capture(bounds.center, Mathf.Max(1.5f, bounds.extents.y * 2.5f),
                 effects.Cast<Component>().Concat(renderers.Where(r => r.GetComponent<UnityEngine.VFX.VisualEffect>() == null)),
                 _directory, "sculpture-inspection", result => _report.sculptureInspection = result,
                 warmupSeconds: 3f, onCameraReady: () => { foreach (var effect in effects) effect.Reinit(); },
-                probe: () => string.Join(", ", effects.Select(e => $"{e.name}: {e.aliveParticleCount} particles, culled={e.culled}")));
+                probe: () => string.Join(", ", effects.Select(e => $"{e.name}: {e.aliveParticleCount} particles, culled={e.culled}, interactable={e.GetBool("IsInteractable")}")));
+            holding = false;
             Save();
             Require(_report.sculptureInspection.objectPixels > .01f,
                 $"The sculpture draws {_report.sculptureInspection.objectPixels:P1} of a close-up view.");

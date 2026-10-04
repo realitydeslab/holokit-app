@@ -91,8 +91,12 @@ namespace RealityDesignLab.QuantumRealm
             var pose = new Vector3[21];
             var basePosition = eye.position + eye.forward * 0.6f;
             for (var i = 0; i < 21; i++) pose[i] = basePosition;
-            tracker.InjectPoseForDeviceTest(pose);
-            yield return new WaitForSecondsRealtime(.35f);
+            // A hand in view sends a pose every frame; the tracker drops a hand silent for its fade-out delay (0.33 s).
+            for (var start = Time.realtimeSinceStartup; Time.realtimeSinceStartup - start < .35f;)
+            {
+                tracker.InjectPoseForDeviceTest(pose);
+                yield return null;
+            }
             _report.handValid = tracker.IsValid;
             var first = manager.HostHandPoint.position;
             for (var i = 0; i < 21; i++) pose[i] += Vector3.right * 0.35f;

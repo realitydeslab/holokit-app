@@ -108,8 +108,9 @@ namespace HoloKit.Tests
             yield return person.WalkTo(person.Phone.position + ahead);
             Assert.That(Vector3.Distance(Palm(), target + ahead), Is.LessThan(0.05f), "The raised hand did not move with the person.");
 
+            // Down by the person's side the hand is out of the camera's view, so the tracker loses it, as on a phone.
             yield return person.LowerHand();
-            Assert.That(Palm().y, Is.LessThan(person.Phone.position.y - 0.4f), "The lowered hand is not down by the person's side.");
+            yield return EditorAppDriver.WaitUntilRendering(() => !tracker.IsValid, "The lowered hand is still tracked.", 2f);
         }
 
         [UnityTest, Timeout(300000)]
