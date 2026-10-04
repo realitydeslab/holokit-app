@@ -45,6 +45,9 @@ SINGLE_PHONE_TESTS = [
     ("MOFA", "mofa-hunting-spawn", {"MOFA_HUNTING_SPAWN_TEST": "1"}, "MofaHuntingSpawnTests", 300),
     ("MOFA", "mofa-combat", {"MOFA_COMBAT_TEST": "1"}, "MofaCombatTests", 400),
     ("MOFA", "mofa-combat-stereo", {"MOFA_COMBAT_TEST": "1", "MOFA_COMBAT_STEREO_TEST": "1"}, "MofaCombatTests", 400),
+    ("MOFA", "mofa-single", {"MOFA_SINGLE_TEST": "1"}, "MofaSinglePlayerTests", 400),
+    # Needs a person wearing the paired Apple Watch to swing during a 90 s window.
+    ("MOFA", "mofa-single-real-watch", {"MOFA_SINGLE_TEST": "1", "MOFA_SINGLE_REAL_WATCH": "1"}, "MofaSinglePlayerTests", 600),
     ("Typed", "typed-scenes", {"HOLOKIT_SCENE_TEST": "1"}, "HoloKitSceneTests", 700),
     ("Typed", "typed-finger-ribbon", {"FINGER_RIBBON_INTERACTION_TEST": "1"}, "FingerRibbonInteractionTests", 300),
     ("Typed", "typed-sculpture", {"SCULPTURE_INTERACTION_TEST": "1"}, "SculptureInteractionTests", 300),
@@ -191,12 +194,36 @@ def main() -> int:
     parser.add_argument("--products", nargs="+", default=["QRealm", "MOFA", "Typed", "HoloKit"])
     parser.add_argument("--tests", nargs="+", help="only these test names")
     parser.add_argument("--no-build", action="store_true", help="use the apps already installed")
+    parser.add_argument("--in-app", choices=sorted(PRODUCTS),
+                        help="run every selected test inside this one app (the HoloKit app has every reality), "
+                             "so a phone grants camera access once")
     parser.add_argument("--out", type=Path, default=REPO / f"output/device-{time.strftime('%Y%m%d-%H%M%S')}")
     args = parser.parse_args()
     out = args.out
     out.mkdir(parents=True, exist_ok=True)
     devices = [args.device] + ([args.second_device] if args.second_device else [])
     ok = True
+
+    if args.in_app:
+        # Tests find their reality by scene name in the app's catalog, so they run in any app that has it. The
+        # in-app product's scene test covers its whole catalog, replacing the other products' scene tests.
+        if not args.no_build:
+            app = build(args.in_app, out)
+            if app is None:
+                log(out, "SOME FAILED")
+                return 1
+            for device in devices:
+                ok &= install(device, app, out, args.in_app)
+        for test_product, name, environment, folder, timeout in SINGLE_PHONE_TESTS:
+            selected = test_product in args.products and (not args.tests or name in args.tests)
+            if selected and (not name.endswith("-scenes") or test_product == args.in_app):
+                ok &= run_test([args.device], args.in_app, name, [environment], folder, timeout, out)
+        if args.second_device:
+            for test_product, name, variable, folder, timeout in TWO_PHONE_TESTS:
+                if test_product in args.products and (not args.tests or name in args.tests):
+                    ok &= run_test(devices, args.in_app, name, [{variable: "host"}, {variable: "client"}], folder, timeout, out)
+        log(out, "ALL PASSED" if ok else "SOME FAILED")
+        return 0 if ok else 1
 
     for product in args.products:
         if not args.no_build:

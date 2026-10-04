@@ -252,6 +252,7 @@ namespace HoloKit {
             }
             else {
                 IsRecording = true;
+                StartCoroutine(CaptureFrames());
             }
 
             OnHoloKitRenderModeChanged(HoloKitCameraManager.Instance.RenderMode);
@@ -287,8 +288,16 @@ namespace HoloKit {
             }
         }
 
-        void Update() {
-            CommitFrame(_recordingCamera, _bufferCamera);
+        // Records at the end of the frame, as the HoloKit Unity SDK does: by then the camera has this frame's final pose
+        // and AR background (on iOS 27 ARKitCameraCompatibility corrects both after Update and before rendering).
+        IEnumerator CaptureFrames()
+        {
+            var endOfFrame = new WaitForEndOfFrame();
+            while (IsRecording)
+            {
+                yield return endOfFrame;
+                CommitFrame(_recordingCamera, _bufferCamera);
+            }
         }
 
         void OnDestroy()

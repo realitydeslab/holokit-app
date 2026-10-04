@@ -28,6 +28,10 @@ namespace HoloKit.DeviceTests
             public string deviceOrientation;
             public string screenSize;
             public string screenshotSize;
+            public float screenAspect;
+            public float cameraProjectionAspect;
+            public float arFrameProjectionAspect;
+            public string arFrameDisplayMatrix;
             public List<string> errors = new();
         }
 
@@ -130,6 +134,30 @@ namespace HoloKit.DeviceTests
                 _current.arState = ARSession.state.ToString();
                 if (ARSession.state != ARSessionState.SessionTracking)
                     Errors.Add("AR did not reach SessionTracking: " + _current.arState);
+                // Virtual content drawn 90 degrees off from the camera image shows up as a camera projection
+                // whose aspect does not match the screen. This holds even with the phone lying flat.
+                ARCameraFrameEventArgs? frame = null;
+                var cameraManager = FindAnyObjectByType<ARCameraManager>();
+                if (cameraManager != null)
+                {
+                    Action<ARCameraFrameEventArgs> onFrame = args => frame = args;
+                    cameraManager.frameReceived += onFrame;
+                    for (var i = 0; i < 60 && frame == null; i++) yield return null;
+                    cameraManager.frameReceived -= onFrame;
+                }
+                _current.screenAspect = (float)Screen.width / Screen.height;
+                if (frame?.projectionMatrix is Matrix4x4 arProjection)
+                    _current.arFrameProjectionAspect = arProjection.m11 / arProjection.m00;
+                if (frame?.displayMatrix is Matrix4x4 display)
+                    _current.arFrameDisplayMatrix = $"[{display.GetRow(0)}; {display.GetRow(1)}; {display.GetRow(2)}; {display.GetRow(3)}]";
+                var mainCamera = Camera.main;
+                if (mainCamera != null)
+                {
+                    var projection = mainCamera.projectionMatrix;
+                    _current.cameraProjectionAspect = projection.m11 / projection.m00;
+                    if (Mathf.Abs(_current.cameraProjectionAspect - _current.screenAspect) > .1f * _current.screenAspect)
+                        Errors.Add($"Main camera projection aspect {_current.cameraProjectionAspect:F2} does not match the screen aspect {_current.screenAspect:F2}: virtual content is drawn rotated or stretched against the camera image.");
+                }
                 // Capture frames for visual inspection; startup success does not prove correct rendering.
                 yield return new WaitForEndOfFrame();
                 _current.screenshot = _current.scene + "-" + role + ".png";
