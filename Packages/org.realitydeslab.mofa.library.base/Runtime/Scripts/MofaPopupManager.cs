@@ -64,20 +64,14 @@ namespace RealityDesignLab.MOFA.Library.Base
         protected IEnumerator SpawnPopupAndDestroy(GameObject popupPrefab, float destroyDelay)
         {
             if (popupPrefab == null)
-                yield return null;
-            if (_currentPopup != null)
-                Destroy(_currentPopup);
-
-            _currentPopup = Instantiate(popupPrefab);
-            _currentPopup.transform.SetParent(_fightingPanelRoot);
-            _currentPopup.transform.localPosition = Vector3.zero;
-            _currentPopup.transform.localRotation = Quaternion.identity;
-            float scale = HoloKitCameraManager.Instance.RenderMode == HoloKitRenderMode.Mono ? 1f : PopupStarScale;
-            _currentPopup.transform.localScale = new Vector3(scale, scale, scale);
+                yield break;
+            SpawnPopup(popupPrefab);
+            var popup = _currentPopup;
 
             yield return new WaitForSeconds(destroyDelay);
-            if (_currentPopup != null)
-                Destroy(_currentPopup);
+            // Only this popup: a later one (the summary board after a result popup) must stay.
+            if (popup != null)
+                Destroy(popup);
         }
 
         protected virtual void OnMofaPhaseChanged(MofaPhase mofaPhase)
