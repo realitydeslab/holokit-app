@@ -46,6 +46,17 @@ namespace HoloKit.Tests
             yield return WaitUntil(() => SceneManager.GetActiveScene().name == sceneName, sceneName + " did not load.");
             yield return WaitUntil(() => ARSession.state == ARSessionState.SessionTracking,
                 "XR Simulation did not reach SessionTracking.");
+            yield return WaitUntil(() => Camera.main != null, sceneName + " has no enabled main camera.");
+        }
+
+        /// <summary>Enters the first scene of the product's catalog as the host player.</summary>
+        public static IEnumerator EnterFirstReality()
+        {
+            for (var t = 0f; HoloKitApp.Instance == null && t < Timeout; t += Time.unscaledDeltaTime) yield return null;
+            Assert.That(HoloKitApp.Instance, Is.Not.Null, "App bootstrap did not create HoloKitApp.");
+            var first = HoloKitApp.Instance.GlobalSettings.GetAllRealities().FirstOrDefault();
+            Assert.That(first, Is.Not.Null, "The product catalog is empty.");
+            yield return EnterReality(first.Scene.SceneName, true, HoloKitAppPlayerType.Player);
         }
 
         public static IEnumerator WaitUntil(Func<bool> condition, string failure, float timeout = Timeout)
