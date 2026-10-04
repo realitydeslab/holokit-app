@@ -42,7 +42,8 @@ runs it against its own catalog and settings.
 `Tools/run_multiplayer_test.sh <Product> <TestClass>` runs a test as host in `Products/<Product>`,
 player in `Products/<Product>-peer1` and spectator in `Products/<Product>-peer2`. Peers are created
 on first use (`Tools/make_peer_project.sh`: symlinked Assets/Packages/ProjectSettings, own Library,
-ignored by Git). Roles exchange checkpoints as files and finish together.
+ignored by Git). Roles exchange checkpoints as files and finish together; when one role fails, the others stop within a
+second instead of waiting for their timeouts.
 
 | Test | Product | What the roles do |
 | --- | --- | --- |
@@ -73,6 +74,8 @@ A journey plays a game the way a person does, in the Editor, and records every s
 | --- | --- | --- |
 | `QuantumRealmJourneyTests` | `quantum-realm/Tests/Editor` | In the arena: look at the floor and wait for the placement indicator (in the Editor `ARPlacementManager` shows a default point without a raycast, so plane detection is a device check); hold a hand on the floating start button; walk the circle, standing 1 m from each of the ten Buddhas in turn, look at it (the player's view must show it), hold the extended touch on it until the next Buddha appears, wait for the previous one to fade. Baseline: plane found, start, ten touches with the active effect and exactly one Buddha shown, wrap to the first. About 75 s. |
 | `MofaTrainingJourneyTests` | `mofa.the-training/Tests/Editor` | In the arena: wait for the placement indicator; press Trigger (round shortened to 40 s); look at the AI (the player's view must show it); step from side to side until the AI attacks; then aim at the AI's shield and cast with simulated Watch swings, stepping aside after each cast, until the round ends by time; wait for the summary board; press Trigger for the next round. Checks: casts counted equal the spells cast, 1 ≤ hits ≤ casts, kills and deaths mirror the AI's, the round result follows the kills. Baseline: placement, countdown, fighting, AI attacked, first hit, round over, result, summary in round 2, next countdown. About 70 s. |
+| `MofaDuelJourneyTests` | `mofa.the-duel/Tests/Editor` (three Editors: `Tools/run_multiplayer_test.sh MOFA MofaDuelJourneyTests`) | In the arena the two players walk to opposite ends (4 m apart) and the spectator to the side; both players press Trigger (round shortened to 40 s); each looks at the opponent (its view must show it); they take turns, host first, casting at each other's shield once the opponent's spell has landed and once their own shield has renovated, stepping aside after each cast, until the round ends by time; summary board; Trigger again starts round 2. The spectator has no Trigger, its swings cast nothing, it sees the host and both players hit. Checks: casts, 1 ≤ hits ≤ casts, kills mirror deaths, distance walked > 1 m, result follows kills; the three Editors publish identical stats and summary-board text. Baselines per role. About 6 min including startup. |
+| `MofaHuntingJourneyTests` | `mofa.the-hunting/Tests/Editor` (three Editors: `Tools/run_multiplayer_test.sh MOFA MofaHuntingJourneyTests`) | Host enters as the dragon (puppeteer, as in the product), player and spectator walk to their spots. Host: summon, wait for the dragon's controls, look at it, Lock (one indicator over the player) and lock the player, Primary Attack until the player's shield breaks. Player: cast at the dragon's body with simulated Watch swings until it dies (about 56 spells for 50 health) and keep swinging through the 5 s death animation. Every peer: the dragon dies once, the round ends once (round over, result, waiting; round count 2), identical stats; the host summons the next dragon. Baselines per role. |
 
 Run one: `unity test Products/QRealm --mode EditMode --filter QuantumRealmJourneyTests` (the runner sets
 `HOLOKIT_PLAYTHROUGH_OUTPUT`; the trace and checkpoint images go to `E2E-<scenario>/` under it).
@@ -124,6 +127,13 @@ No known failing tests (2026-10-04).
 
 ### Fixed 2026-10-04
 
+- MOFA Hunting: the dragon's entrance and death animations clipped it through its shared material assets, so a
+  dead dragon left `_IsClip` on in the assets (saved into the project when played in the Editor, carried into
+  the next dragon in an app session). Each dragon now clips its own copies (found by the multiplayer runner's
+  asset check during `MofaHuntingJourneyTests`).
+- MOFA: a timed popup destroyed whatever popup was current when its timer ran out, so the Victory/Defeat
+  popup (3 s, as long as the result phase) could remove the summary board that replaced it; a player then saw
+  no summary. Each timed popup now removes only itself (`MofaPopupTests`; found by `MofaDuelJourneyTests`).
 - After the first scene in a Play session XR Simulation stopped showing its room, so later playthrough
   renders were black; XR now restarts at the gallery between cases.
 - `QuantumRealmBuddhaInteractionTests.ActivatedBuddhaIsVisibleToThePlayer` failed since 2026-09-28: it
