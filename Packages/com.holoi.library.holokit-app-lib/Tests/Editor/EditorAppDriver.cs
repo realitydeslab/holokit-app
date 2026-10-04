@@ -110,11 +110,13 @@ namespace HoloKit.Tests
 
         public readonly struct RenderStats
         {
-            public RenderStats(float magenta, float litCenter) { Magenta = magenta; LitCenter = litCenter; }
+            public RenderStats(float magenta, float litCenter, float lit) { Magenta = magenta; LitCenter = litCenter; Lit = lit; }
             /// <summary>Fraction of pixels in Unity's error-shader magenta.</summary>
             public float Magenta { get; }
             /// <summary>Fraction of the central half of the image brighter than the dark background.</summary>
             public float LitCenter { get; }
+            /// <summary>Fraction of the whole image brighter than the dark background (for content spread across the view).</summary>
+            public float Lit { get; }
         }
 
         /// <summary>Renders the main camera to a PNG.</summary>
@@ -294,16 +296,15 @@ namespace HoloKit.Tests
             RenderTexture.active = active;
             var pixels = texture.GetPixels32();
             var magenta = (float)pixels.Count(p => p.r > 230 && p.b > 230 && p.g < 40) / pixels.Length;
+            static bool Bright(Color32 p) => p.r + p.g + p.b > 180;
             int lit = 0, center = 0;
             for (var y = height / 4; y < height * 3 / 4; y++)
             for (var x = width / 4; x < width * 3 / 4; x++, center++)
-            {
-                var p = pixels[y * width + x];
-                if (p.r + p.g + p.b > 180) lit++;
-            }
+                if (Bright(pixels[y * width + x])) lit++;
+            var litAll = (float)pixels.Count(Bright) / pixels.Length;
             File.WriteAllBytes(path, texture.EncodeToPNG());
             UnityEngine.Object.DestroyImmediate(texture);
-            return new RenderStats(magenta, (float)lit / center);
+            return new RenderStats(magenta, (float)lit / center, litAll);
         }
     }
 }

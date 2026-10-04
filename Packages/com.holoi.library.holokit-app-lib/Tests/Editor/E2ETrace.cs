@@ -45,6 +45,7 @@ namespace HoloKit.Tests
             public string image;
             public float magenta;
             public float litCenter;
+            public float lit;
         }
 
         [Serializable] private sealed class Document
@@ -121,7 +122,7 @@ namespace HoloKit.Tests
         {
             var file = $"{_document.checkpoints.Count + 1:00}-{name}.png";
             var stats = EditorAppDriver.RenderMainCamera(Path.Combine(Directory, file));
-            _document.checkpoints.Add(new Checkpoint { name = name, time = Now, image = file, magenta = stats.Magenta, litCenter = stats.LitCenter });
+            _document.checkpoints.Add(new Checkpoint { name = name, time = Now, image = file, magenta = stats.Magenta, litCenter = stats.LitCenter, lit = stats.Lit });
             return stats;
         }
 
@@ -130,9 +131,12 @@ namespace HoloKit.Tests
         /// warming it up: VFX Graph draws some effects only for a camera that has rendered for a while, and the
         /// Editor's main-camera render requests never qualify. Use this to check that content is visible.
         /// </summary>
+        private const int WarmupFrames = 30;   // several Editors at once render few frames per second
+
         public IEnumerator CapturePlayerView(string name, Action<EditorAppDriver.RenderStats> done, float warmupSeconds = 1.5f)
         {
             var phone = Camera.main;
+            var startTime = Time.realtimeSinceStartup;
             var view = new GameObject("E2E Player View").AddComponent<Camera>();
             view.CopyFrom(phone);
             view.clearFlags = CameraClearFlags.SolidColor;
@@ -141,7 +145,7 @@ namespace HoloKit.Tests
             view.targetTexture = target;
             try
             {
-                for (var start = Time.realtimeSinceStartup; Time.realtimeSinceStartup - start < warmupSeconds;)
+                for (var frames = 0; frames < WarmupFrames || Time.realtimeSinceStartup - startTime < warmupSeconds; frames++)
                 {
                     view.transform.SetPositionAndRotation(phone.transform.position, phone.transform.rotation);
                     view.Render();
@@ -150,7 +154,7 @@ namespace HoloKit.Tests
                 view.Render();
                 var file = $"{_document.checkpoints.Count + 1:00}-{name}.png";
                 var stats = EditorAppDriver.Measure(target, Path.Combine(Directory, file));
-                _document.checkpoints.Add(new Checkpoint { name = name, time = Now, image = file, magenta = stats.Magenta, litCenter = stats.LitCenter });
+                _document.checkpoints.Add(new Checkpoint { name = name, time = Now, image = file, magenta = stats.Magenta, litCenter = stats.LitCenter, lit = stats.Lit });
                 done(stats);
             }
             finally
