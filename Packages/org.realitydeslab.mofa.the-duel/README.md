@@ -6,7 +6,7 @@ Two players duel with spells; spectators watch.
 
 | Role | Can do | Cannot do |
 | --- | --- | --- |
-| Player (host = Blue, client = Red) | Press the Trigger button to get ready (the round starts when both are); cast the basic spell with an Apple Watch wrist swing, or Trigger, once charged; break the opponent's life shield | Hurt a teammate |
+| Player (host = Blue, client = Red) | Press the Trigger button to get ready (the round starts when both are); cast the basic spell with an Apple Watch wrist swing, or Trigger, once charged; break the opponent's life shield | Hurt a teammate; cast or charge while its own shield is broken (it renovates after 3 s) |
 | Spectator | Watch both players, their shields and spells | Get ready, cast (no Trigger button; Watch swings are ignored), count as a duelist |
 
 Spells fly from the phone camera along its heading and pitch, so players aim by pointing the phone.
@@ -18,6 +18,8 @@ shows each team's kills and hit rate (a team whose player left shows zeros).
 | Test | What it does | Run |
 | --- | --- | --- |
 | `MofaDuelMultiplayerTests` | Three Editors: host and client duel, spectator watches. The client stands 3 m away facing the host. Both press the on-screen Trigger to start. Players take turns aiming at the other's shield and casting with simulated Watch swings until it is damaged, and each sees its own shield damaged. The spectator is not a duelist, has no Trigger button, cannot cast, sees both shields damaged and renders the duel. All three report the same casts and shield state. | `Tools/run_multiplayer_test.sh MOFA MofaDuelMultiplayerTests` |
+| `MofaDuelJourneyTests` | End to end in the test arena with three Editors: the players walk to opposite ends, ready with Trigger and duel a full (shortened) round, taking turns and stepping aside after each cast; the spectator watches from the side. All three report the same stats and summary board; each role's event timeline is compared with `Tests/Editor/Baselines/MofaDuelJourney-<role>.json` | `Tools/run_multiplayer_test.sh MOFA MofaDuelJourneyTests` |
+| `MofaPopupTests` | The summary board stays after the round's Victory/Defeat/Draw popup times out | EditMode suite |
 | `MofaPlayerStatsTests` | The round summary copes with a team whose player left | EditMode suite |
 | `MOFATheDuelSceneTests` | Scene, prefab and UI references | EditMode suite |
 | `Tests/Device` | Two iPhones over Multipeer Connectivity with QR alignment | development build |
