@@ -79,6 +79,10 @@ namespace HoloKit.Tests
             System.IO.Directory.CreateDirectory(Directory);
         }
 
+        /// <summary>Where a package keeps a scenario's baseline: Tests/Editor/Baselines/&lt;scenario&gt;.json, on disk.</summary>
+        public static string BaselinePath(string packageName, string scenario) =>
+            UnityEditor.FileUtil.GetPhysicalPath($"Packages/{packageName}/Tests/Editor/Baselines/{scenario}.json");
+
         /// <summary>A named piece of game state, read at every event and sample. Return stable values.</summary>
         public void Probe(string name, Func<object> read) => _probes.Add((name, read));
 

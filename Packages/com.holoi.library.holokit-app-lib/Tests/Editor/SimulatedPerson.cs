@@ -47,25 +47,32 @@ namespace HoloKit.Tests
         {
             var device = Device;
             var target = new Vector3(worldPosition.x, Phone.position.y, worldPosition.z);
-            var goal = device.position + Session.InverseTransformVector(target - Phone.position);
-            while ((device.position - goal).sqrMagnitude > 1e-8f)
+            // Track progress here: XR Simulation clamps the device to the room's movement bounds.
+            var current = device.position;
+            var goal = current + Session.InverseTransformVector(target - Phone.position);
+            while (current != goal)
             {
-                device.position = Vector3.MoveTowards(device.position, goal, speed * Time.unscaledDeltaTime);
+                current = Vector3.MoveTowards(current, goal, speed * Time.unscaledDeltaTime);
+                device.position = current;
                 yield return null;
             }
             yield return WaitForPhone(() => Vector3.Distance(Phone.position, target) < 0.01f,
-                $"The phone did not arrive at {target}; it is at {Phone.position} (outside the room's movement bounds?).");
+                $"The phone did not arrive at {target}; it is at {Phone.position}. " +
+                "XR Simulation keeps the phone inside the simulated room's movement bounds.");
         }
 
-        /// <summary>Turns the head so the phone looks at a point.</summary>
+        /// <summary>Turns the head so the phone looks at a point (XR Simulation limits pitch to 85 degrees).</summary>
         public IEnumerator LookAt(Vector3 worldPosition, float speed = TurnSpeed)
         {
             var device = Device;
             var direction = worldPosition - Phone.position;
+            var current = device.rotation;
             var goal = Quaternion.Inverse(Session.rotation) * Quaternion.LookRotation(direction, Vector3.up);
-            while (Quaternion.Angle(device.rotation, goal) > 0.01f)
+            while (current != goal)
             {
-                device.rotation = Quaternion.RotateTowards(device.rotation, goal, speed * Time.unscaledDeltaTime);
+                current = Quaternion.RotateTowards(current, goal, speed * Time.unscaledDeltaTime);
+                if (Quaternion.Angle(current, goal) < 0.01f) current = goal;
+                device.rotation = current;
                 yield return null;
             }
             yield return WaitForPhone(() => Vector3.Angle(Phone.forward, worldPosition - Phone.position) < 1f,
@@ -86,28 +93,49 @@ namespace HoloKit.Tests
             Assert.That(CanReach(worldPosition), Is.True,
                 $"A hand cannot be tracked at {worldPosition}: {offset.magnitude:F2} m away (reach {ArmReach} m), " +
                 $"{Vector3.Angle(Phone.forward, offset):F0} deg off the camera axis (limit {CameraHalfAngle}).");
-            yield return MoveHand(Quaternion.Inverse(BodyRotation) * offset, seconds);
+            yield return MoveHand(() => Quaternion.Inverse(BodyRotation) * (worldPosition - Phone.position), seconds);
+        }
+
+        /// <summary>
+        /// Keeps the palm on a target that may move (e.g. a button floating in front of the player) until
+        /// <paramref name="until"/> holds; fails if the target leaves arm's reach or the camera's view.
+        /// </summary>
+        public IEnumerator HoldHandOn(System.Func<Vector3> target, System.Func<bool> until, float timeout, string failure)
+        {
+            Assert.That(CanReach(target()), Is.True, $"{failure} The target at {target()} is out of reach.");
+            // Reach for where the target is now, frame by frame, not where it was when the reach began.
+            yield return MoveHand(() => Quaternion.Inverse(BodyRotation) * (target() - Phone.position), 0.4f);
+            for (var t = 0f; !until() && t < timeout; t += Time.unscaledDeltaTime)
+            {
+                var point = target();
+                Assert.That(CanReach(point), Is.True, $"{failure} The target moved out of reach to {point}.");
+                _hand = Quaternion.Inverse(BodyRotation) * (point - Phone.position);
+                yield return null;
+            }
+            Assert.That(until(), Is.True, failure);
         }
 
         /// <summary>Lowers the hand to the person's side, out of view and away from anything in front.</summary>
-        public IEnumerator LowerHand(float seconds = 0.4f) => MoveHand(new Vector3(0.2f, -0.7f, -0.3f), seconds);
+        public IEnumerator LowerHand(float seconds = 0.4f) => MoveHand(() => Lowered, seconds);
+
+        private static readonly Vector3 Lowered = new(0.2f, -0.7f, -0.3f);
 
         private Quaternion BodyRotation => Quaternion.Euler(0f, Phone.eulerAngles.y, 0f);
 
-        private IEnumerator MoveHand(Vector3 bodyOffset, float seconds)
+        private IEnumerator MoveHand(System.Func<Vector3> bodyOffset, float seconds)
         {
             if (_hand == null)
             {
-                _hand = new Vector3(0.2f, -0.7f, -0.3f);
+                _hand = Lowered;
                 InputSystem.onAfterUpdate += InjectHand;
             }
             var from = _hand.Value;
             for (var t = 0f; t < seconds; t += Time.unscaledDeltaTime)
             {
-                _hand = Vector3.Lerp(from, bodyOffset, Mathf.SmoothStep(0f, 1f, t / seconds));
+                _hand = Vector3.Lerp(from, bodyOffset(), Mathf.SmoothStep(0f, 1f, t / seconds));
                 yield return null;
             }
-            _hand = bodyOffset;
+            _hand = bodyOffset();
             yield return null;
             yield return null;
         }
