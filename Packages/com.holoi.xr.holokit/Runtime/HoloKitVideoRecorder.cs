@@ -242,8 +242,7 @@ namespace HoloKit {
             var width = Screen.width;
             var height = Screen.height;
 
-            var _descriptor = new RenderTextureDescriptor(width, height, RenderTextureFormat.ARGB32, 32);
-            _bufferCamera = new RenderTexture(_descriptor);
+            _bufferCamera = CreateCameraBuffer(width, height);
             _bufferFrame = new RenderTexture(width, height, 0);
             int status = HoloKitVideoRecorder_StartRecording(path, width, height, sampleRate, channelCount);
 
@@ -338,12 +337,25 @@ namespace HoloKit {
             if (!IsRecording) return;
             if (!_timeQueue.TryEnqueueNow(_clock.timestamp)) return;
 
+            RenderFrame(source, destination, _bufferFrame);
+            AsyncGPUReadback.Request(_bufferFrame, 0, OnSourceReadback);
+        }
+
+        /// <summary>
+        /// The texture the camera renders a recorded frame into. URP renders into this texture's format instead of
+        /// its HDR buffer, so it must be HDR: in 8 bits colours clip at 1 and bloom (threshold 1) never shows in recordings.
+        /// </summary>
+        public static RenderTexture CreateCameraBuffer(int width, int height) =>
+            new(new RenderTextureDescriptor(width, height, RenderTextureFormat.DefaultHDR, 32));
+
+        /// <summary>Renders one recorded frame: the camera into its buffer, then flipped into the frame that is encoded.</summary>
+        public static void RenderFrame(Camera source, RenderTexture cameraBuffer, RenderTexture frame)
+        {
             var prevTarget = source.targetTexture;
-            source.targetTexture = destination;
+            source.targetTexture = cameraBuffer;
             source.Render();
             source.targetTexture = prevTarget;
-            Graphics.Blit(_bufferCamera, _bufferFrame, new Vector2(1, -1), new Vector2(0, 1));
-            AsyncGPUReadback.Request(_bufferFrame, 0, OnSourceReadback);
+            Graphics.Blit(cameraBuffer, frame, new Vector2(1, -1), new Vector2(0, 1));
         }
         public void ToggleRecording()
         {
