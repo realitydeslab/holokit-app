@@ -77,6 +77,28 @@ A journey plays a game the way a person does, in the Editor, and records every s
 | `MofaDuelJourneyTests` | `mofa.the-duel/Tests/Editor` (three Editors: `Tools/run_multiplayer_test.sh MOFA MofaDuelJourneyTests`) | In the arena the two players walk to opposite ends (4 m apart) and the spectator to the side; both players press Trigger (round shortened to 40 s); each looks at the opponent (its view must show it); they take turns, host first, casting at each other's shield once the opponent's spell has landed and once their own shield has renovated, stepping aside after each cast, until the round ends by time; summary board; Trigger again starts round 2. The spectator has no Trigger, its swings cast nothing, it sees the host and both players hit. Checks: casts, 1 ≤ hits ≤ casts, kills mirror deaths, distance walked > 1 m, result follows kills; the three Editors publish identical stats and summary-board text. Baselines per role. About 6 min including startup. |
 | `MofaHuntingJourneyTests` | `mofa.the-hunting/Tests/Editor` (three Editors: `Tools/run_multiplayer_test.sh MOFA MofaHuntingJourneyTests`) | Host enters as the dragon (puppeteer, as in the product), player and spectator walk to their spots. Host: summon, wait for the dragon's controls, look at it, Lock (one indicator over the player) and lock the player, Primary Attack until the player's shield breaks. Player: cast at the dragon's body with simulated Watch swings until it dies (about 56 spells for 50 health) and keep swinging through the 5 s death animation. Every peer: the dragon dies once, the round ends once (round over, result, waiting; round count 2), identical stats; the host summons the next dragon. Baselines per role. |
 
+Typed realities are played by one host and watched by spectators. `SpectatedJourney` (holokit-app-lib) runs them in
+three Editors: the host ("Enter Reality"), a spectator who watches from the start (the runner's spectator Editor) and a
+spectator who joins after the host has acted (the runner's player Editor). Spectators stand at the sides of the arena;
+the host shares where content is (handshaked, so it holds still while it is checked) and each spectator must see it
+there. Run one with `Tools/run_multiplayer_test.sh Typed <Class>`; each role has its own baseline.
+
+| Journey | Host | Spectators (early and late) |
+| --- | --- | --- |
+| `TypedTheFlockJourneyTests` | The head pose follows the host; the flock's centre stays with the host and circles 1.5 m away; the birds fly around the host; again after walking 3 m | See the host's head (early) and the flock's centre where the host does |
+| `TypedTheRainJourneyTests` | The cloud floats 1.5 m above the head and the rain falls around the head; again after walking 3 m | See the host's head (early) and the cloud where the host does |
+| `TypedTheTornadoJourneyTests` | The tornado stands where the host stands; again after walking 3 m | See the tornado there |
+| `TypedTheHairJourneyTests` | The cap sits on the head pose; every strand grows within 0.3 m of the head (from the effect's PositionMap); again after walking and turning | See the cap where the host does |
+| `TypedTheScannerJourneyTests` | The room is meshed; every mesh centres its ribbons on the scanner centre; the floor shows ribbons; the waiting hint fades | Mesh their own view around the host's scanner centre; their hint fades |
+| `TypedTheFingerRibbonJourneyTests` | A raised hand starts five ribbons whose tips catch up with the fingertips and follow when the hand moves | See the ribbons and their tips where the host's are, also when joining while the hand is up |
+| `TypedTheSculptureJourneyTests` | A hand held on the floating start button starts the sculpture; walking up and reaching into it, the sculpture follows the hand | See the sculpture and the host's hand where the host does, and the sculpture following it |
+
+Single-Editor draw checks: `TypedTheSculptureDrawTests` (the sculpture is visible from where it was started, a step
+away, after a hand was lowered, and when started with a hand) and `TypedTheFlockDrawTests` (one moment of the
+simulated birds, held still, is drawn where they are; live birds move up to 5 m/s, too fast to keep in a capture).
+With three Editors running, captures of the sculpture and the flock draw no particles at all although the effects
+have them; the journeys therefore leave visibility to the draw checks.
+
 Run one: `unity test Products/QRealm --mode EditMode --filter QuantumRealmJourneyTests` (the runner sets
 `HOLOKIT_PLAYTHROUGH_OUTPUT`; the trace and checkpoint images go to `E2E-<scenario>/` under it).
 
@@ -127,6 +149,16 @@ No known failing tests (2026-10-04).
 
 ### Fixed 2026-10-04
 
+- Typed Flock and Rain: the "Host Center Eye Pose" constraint had no source (since early 2024), so the flock
+  circled and the cloud hung at the session origin instead of following the player, on device too. It now follows
+  the camera rig's Center Eye Pose, as in Hair (found by `TypedTheRainJourneyTests`).
+- Typed Tornado: the floor was looked for 1 m along the direction from the session origin to the player instead
+  of ahead of the player (`TornadoFloorRayTests`).
+- Typed Finger Ribbon: a spectator who joined while the host's hand was up never saw the ribbons (the state was
+  applied only on change). Found by the late spectator in `TypedTheFingerRibbonJourneyTests`.
+- Editor hand injection: the Editor tracker starts out valid, so injected poses never raised
+  `OnHandValidityChanged` and hand-driven effects (Finger Ribbon) never started; the first injected pose now appears
+  the way a detected hand does on a device. Device behaviour is unchanged.
 - MOFA Hunting: the dragon's entrance and death animations clipped it through its shared material assets, so a
   dead dragon left `_IsClip` on in the assets (saved into the project when played in the Editor, carried into
   the next dragon in an app session). Each dragon now clips its own copies (found by the multiplayer runner's
