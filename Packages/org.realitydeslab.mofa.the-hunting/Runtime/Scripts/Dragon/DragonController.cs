@@ -112,6 +112,33 @@ namespace RealityDesignLab.MOFA.TheHunting
 
         public static event Action<bool> OnDragonControlStateChanged;
 
+        private void Awake()
+        {
+            // The entrance and death animations clip the dragon through its materials. Clip this dragon's own copies:
+            // on the shared assets the clipping would carry into the next dragon and, in the Editor, into the project.
+            _bodyMaterial = UseOwnCopy(_bodyMaterial);
+            _wingMaterial = UseOwnCopy(_wingMaterial);
+            _eyeMaterial = UseOwnCopy(_eyeMaterial);
+        }
+
+        private Material UseOwnCopy(Material shared)
+        {
+            var copy = new Material(shared);
+            foreach (var meshRenderer in GetComponentsInChildren<Renderer>(true))
+            {
+                var materials = meshRenderer.sharedMaterials;
+                var uses = false;
+                for (var i = 0; i < materials.Length; i++)
+                {
+                    if (materials[i] != shared) continue;
+                    materials[i] = copy;
+                    uses = true;
+                }
+                if (uses) meshRenderer.sharedMaterials = materials;
+            }
+            return copy;
+        }
+
         private void Start()
         {
             //AimMode = AimMode.Camera;
@@ -164,6 +191,9 @@ namespace RealityDesignLab.MOFA.TheHunting
         public override void OnDestroy()
         {
             base.OnDestroy();
+            Destroy(_bodyMaterial);
+            Destroy(_wingMaterial);
+            Destroy(_eyeMaterial);
         }
 
         public void OnDamaged(int damage, ulong attackerClientId)
