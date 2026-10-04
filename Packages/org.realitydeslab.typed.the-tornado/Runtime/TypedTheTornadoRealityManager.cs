@@ -31,14 +31,18 @@ namespace RealityDesignLab.Typed.TheTornado
             }
         }
 
+        /// <summary>The downward ray that finds the floor under the tornado, a little ahead of the player.</summary>
+        public static Ray FloorRay(Transform centerEyePose, float horizontalOffset)
+        {
+            Vector3 horizontalForward = Vector3.ProjectOnPlane(centerEyePose.forward, Vector3.up).normalized;
+            return new Ray(centerEyePose.position + horizontalOffset * horizontalForward, Vector3.down);
+        }
+
         private void Update()
         {
             if (_arRaycastManager.enabled)
             {
-                Transform centerEyePose = HoloKitCameraManager.Instance.CenterEyePose;
-                Vector3 horizontalForward = new Vector3(centerEyePose.position.x, 0f, centerEyePose.position.z).normalized;
-                Vector3 rayOrigin = centerEyePose.position + _raycastHorizontalOffset * horizontalForward;
-                Ray ray = new(rayOrigin, Vector3.down);
+                Ray ray = FloorRay(HoloKitCameraManager.Instance.CenterEyePose, _raycastHorizontalOffset);
                 List<ARRaycastHit> hits = new();
                 if (_arRaycastManager.Raycast(ray, hits, TrackableType.Planes))
                 {

@@ -219,3 +219,23 @@ Select the music ball and locate the "Audio VFX Manager" component, which has tw
 
 
 # Reference
+
+## Roles and interactions
+
+| Role | Can do | Cannot do |
+| --- | --- | --- |
+| Host | Walk around; the tornado of letters stands where the host stands | — |
+| Spectator | Watch the host's reality from their own phone ("Join As Spectator"), including when joining late | Change anything |
+
+## Automated tests
+
+| Test | What it does | Run |
+| --- | --- | --- |
+| `TypedTheTornadoJourneyTests` | Three Editors: the tornado stands where the host stands, also after a 3 m walk; an early and a late spectator see it there. Baselines per role | `Tools/run_multiplayer_test.sh Typed TypedTheTornadoJourneyTests` |
+| `TornadoFloorRayTests` | The floor is looked for straight down, 1 m ahead in the direction the player faces (it used the direction from the session origin; fixed 2026-10-04) | EditMode suite |
+| `TypedThe*SceneTests` | Scene, prefab and reference checks | EditMode suite |
+
+## Not covered by the Editor tests
+
+- The tornado's ground height needs a Floor-classified plane, which XR Simulation never reports; device check.
+- Multipeer Connectivity and QR alignment (the Editor uses UnityTransport on 127.0.0.1 in one simulated room).
