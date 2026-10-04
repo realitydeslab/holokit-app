@@ -225,8 +225,17 @@ namespace HoloKit
                 poses[i * 3 + 1] = joints[i].y;
                 poses[i * 3 + 2] = joints[i].z;
             }
+            // In the Editor the tracker starts out valid (there is no camera to find a hand), so injected poses would
+            // never raise OnHandValidityChanged; let the first one appear the way a detected hand does on a device.
+            if (HoloKitUtils.IsEditor && !_injectedInEditor)
+            {
+                _injectedInEditor = true;
+                _isValid = false;
+            }
             OnHandPoseUpdated(poses);
         }
+
+        private bool _injectedInEditor;
 #endif
 
         private void Update()
