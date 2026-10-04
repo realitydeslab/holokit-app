@@ -99,6 +99,8 @@ simulated birds, held still, is drawn where they are; live birds move up to 5 m/
 With three Editors running, captures of the sculpture and the flock draw no particles at all although the effects
 have them; the journeys therefore leave visibility to the draw checks.
 
+Run them all, unattended (about an hour; summary in `output/journeys-*/summary.txt`): `Tools/run_journeys.sh`.
+
 Run one: `unity test Products/QRealm --mode EditMode --filter QuantumRealmJourneyTests` (the runner sets
 `HOLOKIT_PLAYTHROUGH_OUTPUT`; the trace and checkpoint images go to `E2E-<scenario>/` under it).
 
@@ -143,6 +145,15 @@ No known failing tests (2026-10-04).
 - In batch mode no Game view renders the main camera, so VFX Graph treats effects as unseen and does not
   simulate them. Editor tests that look at effects wait with `EditorAppDriver.RenderMainCameraFor` /
   `RenderMainCameraFrames`, which render the main camera every frame.
+- With three Editors running at once, captures of particle-heavy effects (Typed Sculpture, Flock) draw no
+  particles although the effects have them and are not culled; one Editor draws them. Journeys check those
+  effects for error shaders only and leave visibility to the single-Editor draw tests.
+- XR Simulation sometimes takes more than 30 s to start tracking when three Editors start together (Typed Hair,
+  2 of 4 runs on 2026-10-04); the wait is now 60 s and the failure names the session state.
+- The Editor placement shortcut puts content at an absolute world point (y = -0.6), while in the test arena the
+  phone is at world y 2.57 (1.45 m starting height plus the XR Origin's 1.12 m camera offset); on an iPhone the
+  fallback point is 0.6 m below the eye. Editor captures therefore look down on MOFA's AI and dragon more steeply
+  than a player would. Not changed yet: aligning it moves every placed object in the Editor journeys.
 - `typed-sculpture` on iPhone: the sculpture spawns, but its close-up draws nothing, even after restarting
   its VFX in view. Unresolved (2026-09-30); look at The Sculpture by hand to tell a real problem from a
   test artefact.

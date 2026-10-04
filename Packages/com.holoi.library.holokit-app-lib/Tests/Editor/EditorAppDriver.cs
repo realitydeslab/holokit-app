@@ -44,8 +44,9 @@ namespace HoloKit.Tests
             app.CurrentReality = reality;
             app.EnterRealityAs(isHost, role);
             yield return WaitUntil(() => SceneManager.GetActiveScene().name == sceneName, sceneName + " did not load.");
-            yield return WaitUntil(() => ARSession.state == ARSessionState.SessionTracking,
-                "XR Simulation did not reach SessionTracking.");
+            // With three Editors running, XR Simulation sometimes needs more than 30 s to start tracking.
+            for (var t = 0f; ARSession.state != ARSessionState.SessionTracking && t < 2 * Timeout; t += Time.unscaledDeltaTime) yield return null;
+            Assert.That(ARSession.state, Is.EqualTo(ARSessionState.SessionTracking), $"XR Simulation did not reach SessionTracking in {sceneName}.");
             yield return WaitUntil(() => Camera.main != null, sceneName + " has no enabled main camera.");
         }
 

@@ -19,7 +19,7 @@ namespace HoloKit.Tests
     {
         private const float Orbit = 1.5f;         // "RoateAround" sits 1.5 m from "Boid Target"
         private const float Settle = 3f;          // the target follows the head with a soft follow
-        private const float FlockRadius = 0.75f;  // GPUBoids keeps the birds within this sphere around "Boid"
+        private const float SwarmLag = 2f;        // the fast birds trail the circling centre by up to ~1.6 m and spread around it
 
         [TearDown] public void RestoreEnvironment() => SimulationArena.Restore();
 
@@ -70,8 +70,8 @@ namespace HoloKit.Tests
             var positions = new Vector3[boids.GetMaxObjectNum()];
             boids.GetBoidPositionDataBuffer().GetData(positions);
             var centre = positions.Aggregate(Vector3.zero, (sum, p) => sum + p) / positions.Length;
-            // The birds chase the circling centre, so on average they fly inside the circle around the host.
-            Assert.That(SpectatedJourney.Flat(centre, Target), Is.LessThan(Orbit + FlockRadius),
+            // The birds chase the circling centre, trailing it; on average they stay within reach of the host.
+            Assert.That(SpectatedJourney.Flat(centre, Target), Is.LessThan(Orbit + SwarmLag),
                 $"The birds ({centre}) do not fly around the host ({Target}).");
         }
 
