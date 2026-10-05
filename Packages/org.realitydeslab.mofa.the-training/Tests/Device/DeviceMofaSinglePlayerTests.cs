@@ -39,6 +39,11 @@ namespace RealityDesignLab.MOFA.TheTraining
             public bool referenceAvailable;
             // Degrees between the camera and ARKit's camera for this interface orientation, as scripts see it after Update.
             public float cameraAngle;
+            // The same as a script reads it during Update, and as the screen renders it.
+            public float scriptUpdateAngle;
+            public float screenRenderAngle;
+            public float screenBackgroundError;
+            public int screenRenders;
             // The same with ARKitCameraCompatibility disabled: AR Foundation's own pose.
             public float arFoundationAngle;
             // Degrees between Mono's Center Eye Pose and the camera.
@@ -91,6 +96,10 @@ namespace RealityDesignLab.MOFA.TheTraining
             public int recordingAppendFailures;
             public string video;
             public long videoBytes;
+            public bool videoFinished;
+            // Screenshots taken while recording, and their time in the movie, to compare with its frames.
+            public List<string> recordingShots = new();
+            public List<float> recordingShotSeconds = new();
             public List<string> screenshots = new();
             public List<string> errors = new();
         }
@@ -99,6 +108,7 @@ namespace RealityDesignLab.MOFA.TheTraining
         private int _updateTimeRenders;
         private bool _renderingInUpdate;
         private RenderTexture _probeBuffer, _probeFrame;
+        private OrientationCheck _measuring;
         private readonly Report _report = new();
         private string _directory;
 
@@ -213,6 +223,18 @@ namespace RealityDesignLab.MOFA.TheTraining
 
             var centerEye = (Transform)typeof(HoloKitCameraManager)
                 .GetField("_centerEyePose", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(HoloKitCameraManager.Instance);
+            var background = camera.GetComponent<ARCameraBackground>();
+            void OnScreenRender(ScriptableRenderContext context, Camera rendering)
+            {
+                if (rendering != camera || rendering.targetTexture != null) return;
+                if (!ARKitCameraCompatibility.TryGetReference(camera, out var reference, out _, out var display)) return;
+                check.screenRenders++;
+                check.screenRenderAngle = Mathf.Max(check.screenRenderAngle, Quaternion.Angle(camera.transform.localRotation, reference));
+                var used = background.material.GetMatrix("_UnityDisplayTransform");
+                for (var i = 0; i < 16; i++) check.screenBackgroundError = Mathf.Max(check.screenBackgroundError, Mathf.Abs(used[i] - display[i]));
+            }
+            RenderPipelineManager.beginCameraRendering += OnScreenRender;
+            _measuring = check;
             var samples = 0;
             for (var frame = 0; frame < 30; frame++)
             {
@@ -227,6 +249,8 @@ namespace RealityDesignLab.MOFA.TheTraining
                 check.arkitFovH = Fov(projection.m00);
                 check.arkitFovV = Fov(projection.m11);
             }
+            _measuring = null;
+            RenderPipelineManager.beginCameraRendering -= OnScreenRender;
             check.referenceAvailable = samples > 0;
             yield return new WaitForEndOfFrame();
             check.screenshot = $"{orientation}.png";
@@ -253,6 +277,9 @@ namespace RealityDesignLab.MOFA.TheTraining
             Require(check.compatibilityAttached, "ARKitCameraCompatibility is not on the AR camera.");
             Require(check.referenceAvailable, "ARKit gave no camera reference.");
             Require(check.cameraAngle < 2f, $"The camera is {check.cameraAngle:F1} deg from ARKit's camera in {orientation}.");
+            Require(check.scriptUpdateAngle < 2f, $"Scripts reading the camera in Update see it {check.scriptUpdateAngle:F1} deg from ARKit's camera in {orientation}.");
+            Require(check.screenRenders > 0 && check.screenRenderAngle < 2f && check.screenBackgroundError < .05f,
+                $"The screen renders the camera {check.screenRenderAngle:F1} deg from ARKit's, background off by {check.screenBackgroundError:F2} in {orientation}.");
             Require(check.centerEyeAngle < 2f, $"Mono's Center Eye Pose is {check.centerEyeAngle:F1} deg from the camera in {orientation}.");
             Require(Mathf.Abs(check.unityFovH - check.arkitFovH) < .5f && Mathf.Abs(check.unityFovV - check.arkitFovV) < .5f,
                 $"Field of view {check.unityFovH:F1}x{check.unityFovV:F1} deg differs from ARKit's {check.arkitFovH:F1}x{check.arkitFovV:F1} in {orientation}.");
@@ -433,6 +460,9 @@ namespace RealityDesignLab.MOFA.TheTraining
             Destroy(_probeBuffer);
             Destroy(_probeFrame);
             recorder.StartRecording();
+            // The movie's clock starts with its first frame, at the end of this frame.
+            yield return new WaitForEndOfFrame();
+            var movieStart = Time.realtimeSinceStartup;
             _report.recordingStarted = recorder.IsRecording;
             Save();
             Require(_report.recordingStarted, "Recording did not start.");
@@ -440,6 +470,14 @@ namespace RealityDesignLab.MOFA.TheTraining
             {
                 MofaWatchConnectivityAPI.ReceiveWatchTriggerForDeviceTest();
                 yield return new WaitForSecondsRealtime(1.1f);
+                if (i % 2 == 1)
+                {
+                    yield return new WaitForEndOfFrame();
+                    var shot = $"recording-shot-{i}.png";
+                    _report.recordingShotSeconds.Add(Time.realtimeSinceStartup - movieStart);
+                    Capture(shot);
+                    _report.recordingShots.Add(shot);
+                }
             }
             RenderPipelineManager.beginCameraRendering -= OnRecordedFrame;
             Save();
@@ -460,7 +498,12 @@ namespace RealityDesignLab.MOFA.TheTraining
             File.Copy(file, Path.Combine(_directory, "recording.mp4"), true);
             _report.video = "recording.mp4";
             _report.videoBytes = new FileInfo(file).Length;
+            // A finished MP4 has its index ("moov"); a movie whose writer never finished does not and will not play.
+            var bytes = File.ReadAllBytes(file);
+            for (var i = 0; i + 4 <= bytes.Length && !_report.videoFinished; i++)
+                _report.videoFinished = bytes[i] == 'm' && bytes[i + 1] == 'o' && bytes[i + 2] == 'o' && bytes[i + 3] == 'v';
             Save();
+            Require(_report.videoFinished, "The recording was not finished (no MP4 index); it will not play.");
             Require(_report.recordedFramesChecked > 0, "No recorded frame was rendered.");
             // ARKit's frame can advance between the correction and the recorded render, so allow a few degrees.
             Require(_report.recordedCameraAngle < 5f,
@@ -469,9 +512,13 @@ namespace RealityDesignLab.MOFA.TheTraining
                 $"A recorded frame's AR background differs from ARKit's display transform by {_report.recordedBackgroundError:F2}.");
         }
 
-        // Runs at the default execution order, as HoloKitVideoRecorder.Update did.
+        // Runs at the default execution order, as game scripts and HoloKitVideoRecorder.Update did.
         private void Update()
         {
+            if (_measuring != null && ARCamera is Camera camera &&
+                ARKitCameraCompatibility.TryGetReference(camera, out var reference, out _))
+                _measuring.scriptUpdateAngle = Mathf.Max(_measuring.scriptUpdateAngle,
+                    Quaternion.Angle(camera.transform.localRotation, reference));
             if (_updateTimeRenders <= 0) return;
             _updateTimeRenders--;
             _renderingInUpdate = true;

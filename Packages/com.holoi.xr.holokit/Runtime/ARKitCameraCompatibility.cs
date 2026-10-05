@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: MIT
-// From the HoloKit Unity SDK (Runtime/iOS/ARKitCameraCompatibility.cs). App changes: Mono's Center Eye Pose is
-// re-synced after the correction, and TryGetReference exposes ARKit's pose and projection to device tests.
+// From the HoloKit Unity SDK (Runtime/iOS/ARKitCameraCompatibility.cs). App changes: the pose is also corrected right
+// after each input update, Mono's Center Eye Pose is re-synced after the correction, and TryGetReference exposes
+// ARKit's pose, projection and display transform to device tests.
 #if UNITY_IOS
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -60,8 +63,22 @@ namespace HoloKit.iOS
                     camera.gameObject.AddComponent<ARKitCameraCompatibility>();
         }
 
-        void OnEnable() => Application.onBeforeRender += ApplyPose;
-        void OnDisable() => Application.onBeforeRender -= ApplyPose;
+        void OnEnable()
+        {
+            Application.onBeforeRender += ApplyPose;
+            InputSystem.onAfterUpdate += OnInputUpdated;
+        }
+        void OnDisable()
+        {
+            Application.onBeforeRender -= ApplyPose;
+            InputSystem.onAfterUpdate -= OnInputUpdated;
+        }
+        // TrackedPoseDriver writes AR Foundation's pose when input updates, before every script's Update, so scripts
+        // that read the camera in Update saw it 90 degrees off in portrait. Correct it right after that write.
+        void OnInputUpdated()
+        {
+            if (InputState.currentUpdateType == InputUpdateType.Dynamic) ApplyPose();
+        }
         // Also correct the pose during the frame: parent constraints and LateUpdate scripts that follow
         // the camera would otherwise read the uncorrected pose and end up 90 degrees off in portrait.
         void Update() => ApplyPose();

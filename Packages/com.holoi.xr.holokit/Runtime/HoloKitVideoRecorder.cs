@@ -50,8 +50,8 @@ namespace HoloKit {
 
         public double StartTime => _start;
 
-        public double Dequeue()
-            => _queue.Dequeue();
+        public bool TryDequeue(out double timestamp)
+            => _queue.TryDequeue(out timestamp);
 
         public bool TryEnqueueNow(double timestamp)
         {
@@ -231,6 +231,8 @@ namespace HoloKit {
 
         public void StartRecording()
         {
+            // A second start (a double tap) must not reset a recording in progress.
+            if (IsRecording) return;
             _clock = new RealtimeClock();
             // var sampleRate = _audioDevice != null ? _audioDevice.sampleRate : 24000;
             // var channelCount = _audioDevice != null ? _audioDevice.channelCount : 2;
@@ -260,6 +262,7 @@ namespace HoloKit {
 
         public void EndRecording()
         {
+            if (!IsRecording) return;
             if (_recordMicrophone && _microphoneAudioSource != null) {
                 _microphoneAudioSource.Stop();
                 Microphone.End(null);
@@ -277,10 +280,10 @@ namespace HoloKit {
 
         unsafe void OnSourceReadback(AsyncGPUReadbackRequest request)
         {
-            if (!IsRecording) return;
+            // Never throw here: EndRecording waits for pending readbacks, and an exception would skip finishing the movie.
+            if (!IsRecording || !_timeQueue.TryDequeue(out var timestamp) || request.hasError) return;
             var data = request.GetData<byte>(0);
             var ptr = (IntPtr) NativeArrayUnsafeUtility.GetUnsafeReadOnlyPtr(data);
-            var timestamp = _timeQueue.Dequeue();
             int status = HoloKitVideoRecorder_AppendVideoFrame(ptr, data.Length, timestamp);
 
             if (status != 0) {

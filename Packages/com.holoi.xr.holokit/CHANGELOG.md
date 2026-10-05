@@ -26,6 +26,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Screen recordings now keep bloom: the recorder's camera texture is HDR (it was 8-bit, so colours clipped at 1).
 - Screen recordings were 90 degrees off in portrait on iOS 27: the recorder rendered during Update, before the camera
   correction. It now records at the end of the frame, as the HoloKit Unity SDK does.
+- iOS 27 portrait: scripts that read the camera during Update still saw it 90 degrees off, because TrackedPoseDriver
+  writes AR Foundation's pose at each input update, before every Update. `ARKitCameraCompatibility` now also
+  corrects the pose right after that write.
+- Tapping Record while a recording was running restarted the recorder mid-movie; finishing then threw ("Queue
+  empty") before the movie was written, so it would not play. Start and stop now ignore repeats, and a frame
+  callback can no longer throw.
 
 ## [0.3.12] - 2023.10.28
 
