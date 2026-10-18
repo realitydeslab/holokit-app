@@ -81,8 +81,19 @@ namespace Holoi.Library.HoloKitAppLib.Editor
             {
                 AddWatchTargetContents(project, mainTargetGuid, frameworkTargetGuid, watchAppTargetGuid, destinationPathPrefix);
             }
+            AddPrivacyManifest(project, watchAppTargetGuid, destinationPathPrefix);
             SetWatchBuildSettings(project, watchAppTargetGuid, packageName, destinationPathPrefix);
             project.WriteToFile(projectPath);
+        }
+
+        // App Store Connect refuses a Watch app that reads UserDefaults or the boot time without a privacy manifest.
+        // Added on every build, not only to a new target, so an appended export gets it too.
+        private static void AddPrivacyManifest(PBXProject project, string watchAppTargetGuid, string destinationPathPrefix)
+        {
+            string path = $"{destinationPathPrefix}/PrivacyInfo.xcprivacy";
+            if (project.FindFileGuidByProjectPath(path) != null) return;
+            string fileGuid = project.AddFile(path, path);
+            project.AddFileToBuildSection(watchAppTargetGuid, project.GetResourcesBuildPhaseByTarget(watchAppTargetGuid), fileGuid);
         }
 
         private static void AddWatchTargetContents(PBXProject project, string mainTargetGuid, string frameworkTargetGuid,

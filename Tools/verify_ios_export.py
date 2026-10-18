@@ -126,6 +126,11 @@ def verify(project: Path, export: Path) -> list[str]:
         failures.append("Exported Watch app has no 1024 icon")
     elif not same_pixels(product["icon"], watch_icon):
         failures.append("Exported Watch icon is not the product icon")
+    # App Store Connect refuses a Watch app that reads UserDefaults or the boot time without declaring why.
+    if not (export / "WatchApp/PrivacyInfo.xcprivacy").exists():
+        failures.append("Exported Watch app has no PrivacyInfo.xcprivacy")
+    elif "PrivacyInfo.xcprivacy in Resources" not in pbxproj:
+        failures.append("PrivacyInfo.xcprivacy is not in a Resources build phase")
     return sorted(set(failures))
 
 

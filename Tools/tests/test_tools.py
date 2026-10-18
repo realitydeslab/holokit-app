@@ -58,8 +58,10 @@ class Fixture:
             "INFOPLIST_KEY_NSHealthUpdateUsageDescription": f"Workouts tracked by {name} will be saved.",
         }
         self.has_watch_target = watch
+        self.watch_privacy_in_resources = watch
         if watch:
             icon(self.export / "WatchApp/Assets.xcassets/AppIcon.appiconset/1024.png", RED)
+            self.write_dir("WatchApp/PrivacyInfo.xcprivacy").write_text("<plist/>")
         with open(self.write_dir("Info.plist"), "wb") as handle:
             plistlib.dump({
                 "NSBonjourServices": ["_netcode-mpc._tcp", "_netcode-mpc._udp"],
@@ -74,6 +76,8 @@ class Fixture:
 
     def verify(self) -> list[str]:
         blocks = config_block(self.main) + (config_block(self.watch) if self.has_watch_target else "")
+        if self.watch_privacy_in_resources:
+            blocks += "\t\tA1 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A2; };\n"
         self.write_dir("Unity-iPhone.xcodeproj/project.pbxproj").write_text(
             "// !$*UTF8*$!\n{\n\tobjects = {\n" + blocks + "\t};\n}\n")
         return verify_ios_export.verify(self.project, self.export)
@@ -109,6 +113,16 @@ class VerifyIosExportTests(unittest.TestCase):
         fixture = Fixture(self.root)
         icon(fixture.export / "WatchApp/Assets.xcassets/AppIcon.appiconset/1024.png", BLUE)
         self.assertIn("Exported Watch icon is not the product icon", fixture.verify())
+
+    def test_watch_without_privacy_manifest_fails(self):
+        fixture = Fixture(self.root)
+        (fixture.export / "WatchApp/PrivacyInfo.xcprivacy").unlink()
+        self.assertIn("Exported Watch app has no PrivacyInfo.xcprivacy", fixture.verify())
+
+    def test_watch_privacy_manifest_outside_resources_fails(self):
+        fixture = Fixture(self.root)
+        fixture.watch_privacy_in_resources = False
+        self.assertIn("PrivacyInfo.xcprivacy is not in a Resources build phase", fixture.verify())
 
     def test_watch_bundle_id_must_derive_from_app(self):
         fixture = Fixture(self.root)
