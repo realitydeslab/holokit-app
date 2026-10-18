@@ -36,8 +36,19 @@ namespace HoloKit.Tests
         /// <summary>Marks a checkpoint for this role, with an optional text value for the other roles.</summary>
         public static void Publish(string step, string value = "")
         {
-            File.WriteAllText(PathOf(Role, step), value);
+            WriteWhole(PathOf(Role, step), value);
             Debug.Log($"[MULTIPLAYER {Role}] {step} {value}");
+        }
+
+        // WaitFor returns as soon as a checkpoint file exists, so it must appear with its whole value: a plain
+        // WriteAllText creates the file before writing it, and another Editor read "" from it (Hunting journey,
+        // 2026-10-18). Write a temporary file, then rename it into place.
+        private static void WriteWhole(string path, string value)
+        {
+            var temporary = path + ".writing";
+            File.WriteAllText(temporary, value);
+            if (File.Exists(path)) File.Delete(path);
+            File.Move(temporary, path);
         }
 
         public static string Read(string role, string step) => File.ReadAllText(PathOf(role, step));
@@ -106,7 +117,7 @@ namespace HoloKit.Tests
                     }
                     catch (Exception exception)
                     {
-                        File.WriteAllText(PathOf(Role, "failed"), exception.Message);
+                        WriteWhole(PathOf(Role, "failed"), exception.Message);
                         ExceptionDispatchInfo.Capture(exception).Throw();
                         throw;
                     }
