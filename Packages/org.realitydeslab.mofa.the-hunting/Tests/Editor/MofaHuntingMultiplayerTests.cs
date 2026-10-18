@@ -119,7 +119,8 @@ namespace HoloKit.Tests
             var deadline = Time.realtimeSinceStartup + 60f;
             while (hunting.DragonController.CurrentHealthPercent >= 1f && Time.realtimeSinceStartup < deadline)
             {
-                yield return EditorAppDriver.FaceMainCameraTowards(hunting.DragonController.transform.position);
+                // Pitch included: from a 2 m eye a level spell flies over the landed dragon (body centre ~0.4 m).
+                yield return EditorAppDriver.AimMainCameraAt(MofaHuntingJourneyTests.DragonBody());
                 if (input.BasicSpellChargePercentage > 0.5f)
                 {
                     MofaWatchConnectivityAPI.EmitSimulatedWatchTriggerForDeviceTest();

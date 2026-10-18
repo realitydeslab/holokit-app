@@ -70,7 +70,7 @@ namespace HoloKit.Tests
         private static bool DragonAlive => TheDragon != null && TheDragon.CurrentHealthPercent > 0f;
 
         /// <summary>Where to aim at the dragon: the middle of its body as drawn.</summary>
-        private static Vector3 DragonBody()
+        internal static Vector3 DragonBody()
         {
             var renderers = TheDragon.GetComponentsInChildren<SkinnedMeshRenderer>();
             if (renderers.Length == 0) return TheDragon.transform.position + Vector3.up;
