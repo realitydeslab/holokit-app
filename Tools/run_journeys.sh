@@ -8,7 +8,7 @@
 set -uo pipefail
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 UNITY="${UNITY_CLI:-$HOME/.unity/bin/unity}"
-EDITOR="${UNITY_EDITOR:-/Applications/Unity/6000.3.24f1/Unity.app}"
+EDITOR="${UNITY_EDITOR:-/Applications/Unity/6000.3.26f1/Unity.app}"
 OUT="$REPO/output/journeys-$(date +%Y%m%d-%H%M%S)"
 [[ "${1:-}" == "--out" ]] && OUT="${2:?}"
 mkdir -p "$OUT"

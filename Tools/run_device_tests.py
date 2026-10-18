@@ -23,7 +23,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 UNITY = str(Path.home() / ".unity/bin/unity")
-EDITOR = "/Applications/Unity/6000.3.24f1/Unity.app"
+EDITOR = "/Applications/Unity/6000.3.26f1/Unity.app"
 TEAM = "KR9H35SQQ9"
 STALLED_POLLS = 3
 
