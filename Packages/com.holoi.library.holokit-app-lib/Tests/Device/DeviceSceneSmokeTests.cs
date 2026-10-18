@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Holoi.Library.HoloKitAppLib;
@@ -9,6 +10,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 namespace HoloKit.DeviceTests
 {
@@ -41,6 +43,10 @@ namespace HoloKit.DeviceTests
             public string device;
             public string operatingSystem;
             public string product;
+            public bool holokitSupported;
+            public bool lidar;
+            public string phoneCameraOffset;
+            public string arkitSceneDepth;
             public bool complete;
             public List<string> startupErrors = new();
             public List<SceneResult> scenes = new();
@@ -98,6 +104,21 @@ namespace HoloKit.DeviceTests
             yield return new WaitForSecondsRealtime(3);
             var app = HoloKitApp.Instance;
             if (app == null) throw new InvalidOperationException("App bootstrap did not create HoloKitApp.");
+            // A phone missing from the native phone table cannot enter Stereo, and LiDAR realities send it to NoLiDAR.
+            _report.holokitSupported = HoloKitOpticsAPI.IsCurrentDeviceSupportedByHoloKit();
+            _report.lidar = HoloKitOpticsAPI.IsCurrentDeviceEquippedWithLiDAR();
+            if (HoloKitUtils.IsRuntime)
+                _report.phoneCameraOffset = HoloKitOpticsAPI.GetPhoneModelCameraOffset(HoloKitType.HoloKitX).ToString("F5", CultureInfo.InvariantCulture);
+            // ARKit's scene depth needs LiDAR, so it checks the table's LiDAR answer against the hardware.
+            var occlusion = new List<XROcclusionSubsystemDescriptor>();
+            SubsystemManager.GetSubsystemDescriptors(occlusion);
+            var sceneDepth = occlusion.Count > 0 ? occlusion[0].environmentDepthImageSupported : Supported.Unknown;
+            _report.arkitSceneDepth = sceneDepth.ToString();
+            Save();
+            if (!_report.holokitSupported)
+                Errors.Add($"HoloKit does not support this phone ({_report.device}): the Star button shows the incompatible phone panel.");
+            if (sceneDepth != Supported.Unknown && _report.lidar != (sceneDepth == Supported.Supported))
+                Errors.Add($"The phone table says LiDAR is {_report.lidar} on {_report.device}, but ARKit scene depth is {sceneDepth}.");
             // Native permissions remain system controlled; a device operator may need to respond.
             yield return Application.RequestUserAuthorization(UserAuthorization.WebCam);
             if (!Application.HasUserAuthorization(UserAuthorization.WebCam))
