@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -106,13 +107,19 @@ def install(device: str, app: Path, out: Path, name: str) -> bool:
 
 
 def launch(device: str, bundle: str, environment: dict[str, str], logfile: Path) -> bool:
-    for attempt in range(3):
+    # A locked phone refuses every launch ("Locked"), and iOS refuses a freshly installed app for a few minutes while
+    # it verifies it ("Security"); keep trying for 10 minutes in those cases, 3 tries otherwise.
+    attempt = 0
+    while True:
         code = run(["xcrun", "devicectl", "device", "process", "launch", "--device", device, "--terminate-existing",
                     "--environment-variables", json.dumps(environment), bundle], logfile, 120)
         if code == 0:
             return True
+        attempt += 1
+        waiting = re.search(r"for reason: (Locked|Security)", logfile.read_text(errors="replace"))
+        if attempt >= (40 if waiting else 3):
+            return False
         time.sleep(15)
-    return False
 
 
 def fetch(device: str, bundle: str, source: str, destination: Path) -> bool:
