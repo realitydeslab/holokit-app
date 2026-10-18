@@ -119,7 +119,9 @@ namespace HoloKit
         private void OnDestroy()
         {
             HoloKitCameraManager.OnHoloKitRenderModeChanged -= OnHoloKitRenderModeChanged;
-            _arCameraManager.frameReceived -= OnFrameReceived;
+            // Null when the driver is destroyed before Start found it (scene torn down in its first frame).
+            if (_arCameraManager != null)
+                _arCameraManager.frameReceived -= OnFrameReceived;
             Application.onBeforeRender -= OnBeforeRender;
         #if UNITY_IOS && !UNITY_EDITOR
             if (_headTrackerPtr != IntPtr.Zero) {
