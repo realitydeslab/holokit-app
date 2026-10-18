@@ -36,12 +36,12 @@ namespace HoloKit.DeviceTests
         /// The virtual camera copies the main camera's settings, including URP post-processing so the
         /// object is graded as the player sees it, and renders for <paramref name="warmupSeconds"/> first:
         /// VFX Graph pauses effects no camera has seen, so their particles must build up again.
-        /// <paramref name="onCameraReady"/> runs once the camera faces the target, for example to
+        /// <paramref name="onCameraReady"/> runs once the camera faces the target and receives it, for example to
         /// restart an effect whose start was culled because no camera saw it. <paramref name="probe"/>
         /// runs just before the object is hidden, for example to read a particle count.
         /// </summary>
         public static IEnumerator Capture(Vector3 target, float distance, IEnumerable<Component> toggle,
-            string directory, string name, Action<Result> done, int size = 720, float warmupSeconds = 2f, Action onCameraReady = null, Func<string> probe = null)
+            string directory, string name, Action<Result> done, int size = 720, float warmupSeconds = 2f, Action<Camera> onCameraReady = null, Func<string> probe = null)
         {
             var main = Camera.main;
             var behaviours = toggle.Where(c => c != null && IsEnabled(c)).ToList();
@@ -72,7 +72,7 @@ namespace HoloKit.DeviceTests
                 if (from.sqrMagnitude < 1e-4f) from = Vector3.forward;
                 inspector.transform.position = target - from.normalized * distance + Vector3.up * 0.2f;
                 inspector.transform.LookAt(target);
-                onCameraReady?.Invoke();
+                onCameraReady?.Invoke(inspector);
                 var warmupEnd = Time.realtimeSinceStartup + warmupSeconds;
                 while (Time.realtimeSinceStartup < warmupEnd) yield return new WaitForEndOfFrame();
                 Time.timeScale = 0f;

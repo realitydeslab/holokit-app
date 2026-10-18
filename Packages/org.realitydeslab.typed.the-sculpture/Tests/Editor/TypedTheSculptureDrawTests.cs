@@ -11,8 +11,8 @@ using HoloKit;
 namespace HoloKit.Tests
 {
     /// <summary>
-    /// The Sculpture draws when the host looks at it from where it started it, from a step away (on iPhone its
-    /// close-up drew nothing) and after reaching out with a hand. Started with Trigger, so no hand is needed to start.
+    /// The Sculpture draws when the host looks at it from where it started it, from a step away and after reaching out
+    /// with a hand. Started with Trigger, so no hand is needed to start; TheFigureFillsFromTheHostsHand starts it with one.
     /// </summary>
     public sealed class TypedTheSculptureDrawTests
     {
@@ -26,42 +26,6 @@ namespace HoloKit.Tests
             yield return new EnterPlayMode();
             yield return EditorAppDriver.Run(Draws());
             yield return new ExitPlayMode();
-        }
-
-        [UnityTest, Timeout(300000)]
-        public IEnumerator TheSculptureStartedWithAHandDrawsUpClose()
-        {
-            SimulationArena.Use();
-            EditorAppDriver.OpenStartScene();
-            yield return new EnterPlayMode();
-            yield return EditorAppDriver.Run(StartedWithAHand());
-            yield return new ExitPlayMode();
-        }
-
-        // As a host starts it: a hand held on the floating start button, then lowered; then walking up to it.
-        private static IEnumerator StartedWithAHand()
-        {
-            yield return EditorAppDriver.EnterReality("TypedTheSculpture", true, HoloKitAppPlayerType.Player);
-            var person = SimulatedPerson.Spawn();
-            using var trace = new E2ETrace("TypedTheSculptureHandStart");
-            var button = SpectatedJourney.Find("Hoverable Start Button");
-            yield return EditorAppDriver.WaitUntilRendering(() => button.activeInHierarchy, "The start button did not appear.", 5f);
-            yield return person.HoldHandOn(() => button.transform.position, () => Object.FindAnyObjectByType<StickerManController>() != null, 8f,
-                "Holding a hand on the start button did not start the sculpture.");
-            yield return person.LowerHand();
-            var sculpture = Object.FindAnyObjectByType<StickerManController>();
-            var vfx = sculpture.GetComponentInChildren<VisualEffect>();
-            var toward = Vector3.ProjectOnPlane(sculpture.transform.position - person.Phone.position, Vector3.up).normalized;
-            yield return person.WalkTo(sculpture.transform.position - toward * 1.2f);
-            yield return person.LookAt(sculpture.transform.position + Vector3.up * 0.8f);
-            yield return EditorAppDriver.RenderMainCameraFor(2f);
-            var view = default(EditorAppDriver.RenderStats);
-            yield return trace.CapturePlayerView("the sculpture up close", stats => view = stats);
-            var hand = ((TypedTheSculptureRealityManager)HoloKitApp.Instance.RealityManager).HostHandPose;
-            var state = $"alive {vfx.aliveParticleCount}; hand at {hand.transform.position} active {hand.IsActive}; " +
-                        $"interactable {vfx.GetBool("IsInteractable")} vfx hand {vfx.GetVector3("Hand")}";
-            Debug.Log("[E2E] started with a hand: " + state);
-            Assert.That(view.LitCenter, Is.GreaterThan(0.02f), "The sculpture started with a hand does not draw up close: " + state);
         }
 
         /// <summary>

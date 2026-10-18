@@ -433,12 +433,21 @@ namespace Holoi.Library.HoloKitAppLib
 
         public void Shutdown()
         {
-            if (_isHost)
-                HoloKitAppAnalyticsEventManager.FireEvent_OnDreamOver(_realityManager.GetRealitySessionData());
+            try
+            {
+                // A host whose session never started has no reality manager.
+                if (_isHost && _realityManager != null)
+                    HoloKitAppAnalyticsEventManager.FireEvent_OnDreamOver(_realityManager.GetRealitySessionData());
 
-            NetworkManager.Singleton.Shutdown();
-            DestroyNetworkManager();
-            SceneManager.LoadSceneAsync("Start", LoadSceneMode.Single);
+                if (NetworkManager.Singleton != null)
+                    NetworkManager.Singleton.Shutdown();
+                DestroyNetworkManager();
+            }
+            finally
+            {
+                // Always return to the gallery, so a failed session cannot trap the player in a reality.
+                SceneManager.LoadSceneAsync("Start", LoadSceneMode.Single);
+            }
         }
         #endregion
     }

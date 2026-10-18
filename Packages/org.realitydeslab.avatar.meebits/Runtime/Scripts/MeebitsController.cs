@@ -71,6 +71,11 @@ namespace RealityDesignLab.Avatar.Meebits
             }
         }
 
+        private void OnDestroy()
+        {
+            LeanTween.cancel(gameObject);
+        }
+
         private void FadeInAnimation()
         {
             // Set initial clip value
@@ -80,7 +85,8 @@ namespace RealityDesignLab.Avatar.Meebits
                 mat.SetVector("_ClipRange", new Vector2(-0.6f, -0.6f + (1.8f * transform.localScale.x)));
             }
 
-            LeanTween.value(0f, 1f, 1f)
+            // Bound to this object and cancelled in OnDestroy: leaving a reality within the second destroys the avatar.
+            LeanTween.value(gameObject, 0f, 1f, 1f)
                 .setOnUpdate((float t) =>
                 {
                     foreach (var mat in _meshRenderer.materials)

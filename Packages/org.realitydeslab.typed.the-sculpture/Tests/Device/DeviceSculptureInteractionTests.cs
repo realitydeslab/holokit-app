@@ -89,8 +89,7 @@ namespace RealityDesignLab.Typed.TheSculpture
             var tracker = HoloKitHandTracker.Instance;
             Require(manager != null && tracker != null, "Reality manager or hand tracker missing.");
             var eye = HoloKitCameraManager.Instance.CenterEyePose;
-            var pose = new Vector3[21];
-            for (var i = 0; i < 21; i++) pose[i] = eye.position + eye.forward * .6f;
+            var pose = Hand(eye.position + eye.forward * .6f, eye.forward);
             for (var i = 0; i < 25; i++) { tracker.InjectPoseForDeviceTest(pose); yield return null; }
             _report.handValid = tracker.IsValid;
             _report.handHoverEnabled = manager.HostHandPose.IsActive;
@@ -141,24 +140,49 @@ namespace RealityDesignLab.Typed.TheSculpture
             var holding = true;
             IEnumerator HoldHand()
             {
-                var inFigure = new Vector3[21];
+                var inFigure = Hand(bounds.center, bounds.center - Camera.main.transform.position);
                 while (holding)
                 {
-                    for (var i = 0; i < 21; i++) inFigure[i] = bounds.center;
                     tracker.InjectPoseForDeviceTest(inFigure);
                     yield return null;
                 }
             }
+            // The letters face the player's view direction (CameraForwardVfxFeeder), and the phone may lie flat looking
+            // down; turn them to the inspection camera while it looks.
+            var feeders = sculpture.GetComponentsInChildren<CameraForwardVfxFeeder>().Where(f => f.enabled).ToList();
             StartCoroutine(HoldHand());
-            yield return HoloKit.DeviceTests.DeviceInspection.Capture(bounds.center, Mathf.Max(1.5f, bounds.extents.y * 2.5f),
+            // Letters take seconds to fly from the hand into the figure, which fills far less than the effect's bounds.
+            yield return HoloKit.DeviceTests.DeviceInspection.Capture(bounds.center, Mathf.Max(1.5f, bounds.extents.y * 1.7f),
                 effects.Cast<Component>().Concat(renderers.Where(r => r.GetComponent<UnityEngine.VFX.VisualEffect>() == null)),
                 _directory, "sculpture-inspection", result => _report.sculptureInspection = result,
-                warmupSeconds: 3f, onCameraReady: () => { foreach (var effect in effects) effect.Reinit(); },
+                warmupSeconds: 6f, onCameraReady: camera =>
+                {
+                    feeders.ForEach(f => f.enabled = false);
+                    foreach (var effect in effects)
+                    {
+                        effect.SetVector3("CameraForward", camera.transform.forward);
+                        effect.Reinit();
+                    }
+                },
                 probe: () => string.Join(", ", effects.Select(e => $"{e.name}: {e.aliveParticleCount} particles, culled={e.culled}, interactable={e.GetBool("IsInteractable")}")));
             holding = false;
+            feeders.ForEach(f => f.enabled = true);
             Save();
             Require(_report.sculptureInspection.objectPixels > .01f,
                 $"The sculpture draws {_report.sculptureInspection.objectPixels:P1} of a close-up view.");
+        }
+
+        // A hand as the tracker reports one: 21 distinct joints spread over the palm, fingers along toward. With every
+        // joint at one point (no real hand) the sculpture's letters never form, so its close-up stayed empty.
+        private static Vector3[] Hand(Vector3 palm, Vector3 toward)
+        {
+            toward = toward.normalized;
+            var side = Vector3.Cross(Vector3.up, toward);
+            side = side.sqrMagnitude > 1e-4f ? side.normalized : Vector3.right;
+            var joints = new Vector3[21];
+            for (var i = 0; i < 21; i++)
+                joints[i] = palm + toward * (0.012f * (i % 5)) + side * (0.02f * (i / 5 - 2));
+            return joints;
         }
 
         private void Capture(string name)
