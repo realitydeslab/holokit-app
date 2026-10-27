@@ -35,17 +35,15 @@ namespace RealityDesignLab.MOFA.TheTraining
             public string orientation;
             public int width;
             public int height;
-            public bool compatibilityAttached;
             public bool referenceAvailable;
-            // Degrees between the camera and ARKit's camera for this interface orientation, as scripts see it after Update.
+            // Degrees between AR Foundation's camera and ARKit's camera for this interface orientation, as scripts see
+            // it after Update.
             public float cameraAngle;
             // The same as a script reads it during Update, and as the screen renders it.
             public float scriptUpdateAngle;
             public float screenRenderAngle;
             public float screenBackgroundError;
             public int screenRenders;
-            // The same with ARKitCameraCompatibility disabled: AR Foundation's own pose.
-            public float arFoundationAngle;
             // Degrees between Mono's Center Eye Pose and the camera.
             public float centerEyeAngle;
             public float unityFovH, unityFovV, arkitFovH, arkitFovV;
@@ -215,8 +213,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             {
                 orientation = Screen.orientation.ToString(),
                 width = Screen.width,
-                height = Screen.height,
-                compatibilityAttached = camera.GetComponent<ARKitCameraCompatibility>() != null
+                height = Screen.height
             };
             _report.orientations.Add(check);
             Require((Screen.width > Screen.height) == landscape, $"The screen did not turn {orientation}: {Screen.width}x{Screen.height}.");
@@ -227,7 +224,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             void OnScreenRender(ScriptableRenderContext context, Camera rendering)
             {
                 if (rendering != camera || rendering.targetTexture != null) return;
-                if (!ARKitCameraCompatibility.TryGetReference(camera, out var reference, out _, out var display)) return;
+                if (!ARKitCameraReference.TryGetReference(camera, out var reference, out _, out var display)) return;
                 check.screenRenders++;
                 check.screenRenderAngle = Mathf.Max(check.screenRenderAngle, Quaternion.Angle(camera.transform.localRotation, reference));
                 var used = background.material.GetMatrix("_UnityDisplayTransform");
@@ -240,7 +237,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             {
                 // A coroutine resumes after every script's Update: what constraints and LateUpdate scripts see.
                 yield return null;
-                if (!ARKitCameraCompatibility.TryGetReference(camera, out var rotation, out var projection)) continue;
+                if (!ARKitCameraReference.TryGetReference(camera, out var rotation, out var projection)) continue;
                 samples++;
                 check.cameraAngle = Mathf.Max(check.cameraAngle, Quaternion.Angle(camera.transform.localRotation, rotation));
                 check.centerEyeAngle = Mathf.Max(check.centerEyeAngle, Quaternion.Angle(centerEye.rotation, camera.transform.rotation));
@@ -256,25 +253,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             check.screenshot = $"{orientation}.png";
             Capture(check.screenshot);
 
-            var compatibility = camera.GetComponent<ARKitCameraCompatibility>();
-            if (compatibility != null)
-            {
-                compatibility.enabled = false;
-                for (var frame = 0; frame < 5; frame++) yield return null;
-                float sum = 0;
-                var count = 0;
-                for (var frame = 0; frame < 20; frame++)
-                {
-                    yield return null;
-                    if (!ARKitCameraCompatibility.TryGetReference(camera, out var rotation, out _)) continue;
-                    sum += Quaternion.Angle(camera.transform.localRotation, rotation);
-                    count++;
-                }
-                compatibility.enabled = true;
-                check.arFoundationAngle = count == 0 ? -1 : sum / count;
-            }
             Save();
-            Require(check.compatibilityAttached, "ARKitCameraCompatibility is not on the AR camera.");
             Require(check.referenceAvailable, "ARKit gave no camera reference.");
             Require(check.cameraAngle < 2f, $"The camera is {check.cameraAngle:F1} deg from ARKit's camera in {orientation}.");
             Require(check.scriptUpdateAngle < 2f, $"Scripts reading the camera in Update see it {check.scriptUpdateAngle:F1} deg from ARKit's camera in {orientation}.");
@@ -435,7 +414,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             void OnRecordedFrame(ScriptableRenderContext context, Camera rendering)
             {
                 if (rendering != camera || rendering.targetTexture == null) return;
-                if (!ARKitCameraCompatibility.TryGetReference(camera, out var rotation, out _, out var display)) return;
+                if (!ARKitCameraReference.TryGetReference(camera, out var rotation, out _, out var display)) return;
                 var angle = Quaternion.Angle(camera.transform.localRotation, rotation);
                 var used = background.material.GetMatrix("_UnityDisplayTransform");
                 var error = 0f;
@@ -505,7 +484,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             Save();
             Require(_report.videoFinished, "The recording was not finished (no MP4 index); it will not play.");
             Require(_report.recordedFramesChecked > 0, "No recorded frame was rendered.");
-            // ARKit's frame can advance between the correction and the recorded render, so allow a few degrees.
+            // ARKit's frame can advance between AR Foundation's pose update and the recorded render, so allow a few degrees.
             Require(_report.recordedCameraAngle < 5f,
                 $"A recorded frame was rendered with the camera {_report.recordedCameraAngle:F1} deg from ARKit's camera.");
             Require(_report.recordedBackgroundError < .05f,
@@ -516,7 +495,7 @@ namespace RealityDesignLab.MOFA.TheTraining
         private void Update()
         {
             if (_measuring != null && ARCamera is Camera camera &&
-                ARKitCameraCompatibility.TryGetReference(camera, out var reference, out _))
+                ARKitCameraReference.TryGetReference(camera, out var reference, out _))
                 _measuring.scriptUpdateAngle = Mathf.Max(_measuring.scriptUpdateAngle,
                     Quaternion.Angle(camera.transform.localRotation, reference));
             if (_updateTimeRenders <= 0) return;

@@ -292,7 +292,7 @@ namespace HoloKit {
         }
 
         // Records at the end of the frame, as the HoloKit Unity SDK does: by then the camera has this frame's final pose
-        // and AR background (on iOS 27 ARKitCameraCompatibility corrects both after Update and before rendering).
+        // and AR background, after every script's Update and LateUpdate.
         IEnumerator CaptureFrames()
         {
             var endOfFrame = new WaitForEndOfFrame();

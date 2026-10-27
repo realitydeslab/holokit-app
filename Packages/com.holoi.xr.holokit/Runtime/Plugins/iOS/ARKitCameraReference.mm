@@ -11,7 +11,7 @@ typedef struct HoloKitCameraReferenceNativeSession
     void* sessionPtr;
 } HoloKitCameraReferenceNativeSession;
 
-// Native pose and background reference for the iOS 27 compatibility path.
+// ARKit's camera pose, projection and background transform for one interface orientation (ARKitCameraReference.cs).
 extern "C" int HoloKit_GetARCameraReference(void* nativeSession, int orientation,
     int width, int height, float* view, float* projection, float* display) {
     if (!nativeSession || orientation < 1 || orientation > 4) return 0;

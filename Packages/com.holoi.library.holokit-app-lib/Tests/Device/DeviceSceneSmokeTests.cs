@@ -11,6 +11,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+#if UNITY_IOS
+using HoloKit.iOS;
+#endif
 
 namespace HoloKit.DeviceTests
 {
@@ -34,6 +37,13 @@ namespace HoloKit.DeviceTests
             public float cameraProjectionAspect;
             public float arFrameProjectionAspect;
             public string arFrameDisplayMatrix;
+            // AR Foundation's camera against ARKit's own camera for this interface orientation, worst of 30 frames:
+            // degrees between their rotations, the largest background display-transform difference, and degrees
+            // of field of view.
+            public bool arkitReference;
+            public float cameraAngle;
+            public float backgroundError;
+            public float fovError;
             public List<string> errors = new();
         }
 
@@ -179,6 +189,29 @@ namespace HoloKit.DeviceTests
                     if (Mathf.Abs(_current.cameraProjectionAspect - _current.screenAspect) > .1f * _current.screenAspect)
                         Errors.Add($"Main camera projection aspect {_current.cameraProjectionAspect:F2} does not match the screen aspect {_current.screenAspect:F2}: virtual content is drawn rotated or stretched against the camera image.");
                 }
+#if UNITY_IOS
+                // As scripts see it after Update. With ARKit XR 6.4.3 on iOS 27 the camera was 90 degrees off in
+                // portrait; 6.7.0 fixed it, and this checks every scene and role against ARKit itself.
+                var arCamera = cameraManager != null ? cameraManager.GetComponent<Camera>() : null;
+                var background = arCamera != null ? arCamera.GetComponent<ARCameraBackground>() : null;
+                for (var i = 0; i < 30 && arCamera != null; i++)
+                {
+                    yield return null;
+                    if (!ARKitCameraReference.TryGetReference(arCamera, out var rotation, out var arkitProjection, out var arkitDisplay)) continue;
+                    _current.arkitReference = true;
+                    _current.cameraAngle = Mathf.Max(_current.cameraAngle, Quaternion.Angle(arCamera.transform.localRotation, rotation));
+                    var used = arCamera.projectionMatrix;
+                    _current.fovError = Mathf.Max(_current.fovError, Mathf.Abs(Fov(used.m00) - Fov(arkitProjection.m00)),
+                        Mathf.Abs(Fov(used.m11) - Fov(arkitProjection.m11)));
+                    if (background == null || background.material == null) continue;
+                    var shown = background.material.GetMatrix("_UnityDisplayTransform");
+                    for (var k = 0; k < 16; k++) _current.backgroundError = Mathf.Max(_current.backgroundError, Mathf.Abs(shown[k] - arkitDisplay[k]));
+                }
+                if (!_current.arkitReference) Errors.Add("ARKit gave no camera reference.");
+                else if (_current.cameraAngle > 2f || _current.backgroundError > .05f || _current.fovError > .5f)
+                    Errors.Add($"The camera is {_current.cameraAngle:F1} deg, the background {_current.backgroundError:F2} and the field " +
+                        $"of view {_current.fovError:F1} deg from ARKit's camera.");
+#endif
                 // Capture frames for visual inspection; startup success does not prove correct rendering.
                 yield return new WaitForEndOfFrame();
                 _current.screenshot = _current.scene + "-" + role + ".png";
@@ -203,6 +236,8 @@ namespace HoloKit.DeviceTests
                 Debug.Log($"[DEVICE TEST] EXIT {_current.scene} role={role} errors={_current.errors.Count}");
             }
         }
+
+        private static float Fov(float focal) => 2 * Mathf.Atan(1 / focal) * Mathf.Rad2Deg;
 
         private List<string> Errors => _current == null ? _report.startupErrors : _current.errors;
         private void OnLog(string message, string stackTrace, LogType type)

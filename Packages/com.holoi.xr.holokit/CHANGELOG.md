@@ -16,19 +16,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `Runtime/Plugins/iOS/LowLatencyTracking`; host tests in `Tests/Tracking` (same results as the Swift SDK on an
   iPhone 15 Pro trace: rotation 0.21 deg median, 1.03 deg p95). See `Documentation~/LowLatencyTracking.md`.
 - In Stereo the frame rate is held at 60 fps and ARSession's Match Frame Rate is off; both are restored in Mono.
-- `ARKitCameraCompatibility` from the HoloKit Unity SDK (iOS 27): the AR camera takes ARKit's rotation, projection
-  and background display transform for the current interface orientation. With ARKit XR 6.4.3 on iOS 27 AR
-  Foundation's pose lacks the interface roll, so in portrait virtual content was 90 degrees off (measured 89.96 deg
-  on an iPhone 15 Pro). Mono's Center Eye Pose is re-synced after the correction.
+- `ARKitCameraReference` (development builds only): ARKit's own camera pose, projection and background transform
+  for the current interface orientation, read from the ARSession, so device tests can check AR Foundation's camera.
+
+### Changed
+
+- AR Foundation and the ARKit XR Plugin 6.7.0 (both resolved to 6.4.3 before). With 6.4.3 on iOS 27, AR content was 90 degrees
+  off in portrait (measured 89.96 deg on an iPhone 15 Pro): the native plug-in read the deprecated
+  `statusBarOrientation`, which returns Unknown with the iOS 27 SDK. 6.7.0 reads the orientation from the window
+  scene, so the camera correction taken from the HoloKit Unity SDK (`ARKitCameraCompatibility`) is removed.
 
 ### Fixed
 
 - Screen recordings now keep bloom: the recorder's camera texture is HDR (it was 8-bit, so colours clipped at 1).
-- Screen recordings were 90 degrees off in portrait on iOS 27: the recorder rendered during Update, before the camera
-  correction. It now records at the end of the frame, as the HoloKit Unity SDK does.
-- iOS 27 portrait: scripts that read the camera during Update still saw it 90 degrees off, because TrackedPoseDriver
-  writes AR Foundation's pose at each input update, before every Update. `ARKitCameraCompatibility` now also
-  corrects the pose right after that write.
+- Screen recordings capture at the end of the frame, as the HoloKit Unity SDK does, so each frame has the camera's
+  final pose and AR background.
 - Tapping Record while a recording was running restarted the recorder mid-movie; finishing then threw ("Queue
   empty") before the movie was written, so it would not play. Start and stop now ignore repeats, and a frame
   callback can no longer throw.

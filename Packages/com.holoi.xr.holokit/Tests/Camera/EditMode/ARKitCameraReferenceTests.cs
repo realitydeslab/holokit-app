@@ -3,7 +3,7 @@ using HoloKit.iOS;
 using NUnit.Framework;
 using UnityEngine;
 
-public class ARKitCameraCompatibilityTests
+public class ARKitCameraReferenceTests
 {
     // Column-major ARKit projection for a portrait 1206x2622 viewport of a 1920x1440 image
     // (68.15 deg vertical, 34.66 deg horizontal field of view), zNear 0.1, zFar 20.
@@ -22,7 +22,7 @@ public class ARKitCameraCompatibilityTests
     [Test]
     public void ProjectionMatrix_KeepsARKitFieldOfViewAndPrincipalPoint()
     {
-        Matrix4x4 m = ARKitCameraCompatibility.ProjectionMatrix(PortraitProjection(), 0.1f, 20f);
+        Matrix4x4 m = ARKitCameraReference.ProjectionMatrix(PortraitProjection(), 0.1f, 20f);
         Assert.That(Fov(m.m00), Is.EqualTo(34.66f).Within(0.01f));
         Assert.That(Fov(m.m11), Is.EqualTo(68.15f).Within(0.01f));
         Assert.That(m.m02, Is.EqualTo(0.01f).Within(1e-6f));
@@ -33,7 +33,7 @@ public class ARKitCameraCompatibilityTests
     [Test]
     public void ProjectionMatrix_UsesCameraClipPlanes()
     {
-        Matrix4x4 m = ARKitCameraCompatibility.ProjectionMatrix(PortraitProjection(), 0.05f, 100f);
+        Matrix4x4 m = ARKitCameraReference.ProjectionMatrix(PortraitProjection(), 0.05f, 100f);
         Matrix4x4 reference = Matrix4x4.Perspective(68.15f, Mathf.Tan(34.66f * 0.5f * Mathf.Deg2Rad) / Mathf.Tan(68.15f * 0.5f * Mathf.Deg2Rad), 0.05f, 100f);
         Assert.That(m.m22, Is.EqualTo(reference.m22).Within(1e-5f));
         Assert.That(m.m23, Is.EqualTo(reference.m23).Within(1e-5f));

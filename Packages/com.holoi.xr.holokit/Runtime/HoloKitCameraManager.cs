@@ -222,15 +222,8 @@ namespace HoloKit
                         Screen.orientation = ScreenOrientation.Portrait;
                 }
 
-                SyncMonoCenterEyePose();
-            }
-        }
-
-        /// <summary>In Mono the Center Eye Pose follows the phone's camera.</summary>
-        internal void SyncMonoCenterEyePose()
-        {
-            if (_renderMode == HoloKitRenderMode.Mono)
                 _centerEyePose.SetPositionAndRotation(_monoCamera.transform.position, _monoCamera.transform.rotation);
+            }
         }
 
         private void OnDestroy()
