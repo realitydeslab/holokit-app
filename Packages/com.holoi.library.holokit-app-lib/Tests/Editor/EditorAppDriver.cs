@@ -11,6 +11,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.Simulation;
 
 namespace HoloKit.Tests
 {
@@ -48,6 +49,13 @@ namespace HoloKit.Tests
             for (var t = 0f; ARSession.state != ARSessionState.SessionTracking && t < 2 * Timeout; t += Time.unscaledDeltaTime) yield return null;
             Assert.That(ARSession.state, Is.EqualTo(ARSessionState.SessionTracking), $"XR Simulation did not reach SessionTracking in {sceneName}.");
             yield return WaitUntil(() => Camera.main != null, sceneName + " has no enabled main camera.");
+            // AR Foundation 6.6+ starts subsystems asynchronously: ARSession reports SessionTracking a frame before the
+            // TrackedPoseDriver applies the first pose, so the camera still sits at the session origin. Wait until it
+            // has the simulated device's pose (session space is the simulation environment's space).
+            var device = UnityEngine.Object.FindAnyObjectByType<SimulationCameraPoseProvider>(FindObjectsInactive.Include);
+            if (device != null)
+                yield return WaitUntil(() => Vector3.Distance(Camera.main.transform.localPosition, device.transform.position) < 0.001f,
+                    $"{sceneName}: the camera never took the simulated device's pose.");
         }
 
         /// <summary>
