@@ -8,12 +8,12 @@
 # three-Editor tests in MULTIPLAYER_TESTS (Tools/run_multiplayer_test.sh).
 # Products run sequentially: parallel Editors collide on the local Netcode port 7777 and
 # recompile the shared packages at the same time. Close Unity Editors on these projects first.
-# Exits non-zero if anything fails. Needs the Unity CLI and Unity 6000.3.26f1.
+# Exits non-zero if anything fails. Needs the Unity CLI and Unity 6000.3.27f1.
 set -uo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 UNITY="${UNITY_CLI:-$HOME/.unity/bin/unity}"
-EDITOR="${UNITY_EDITOR:-/Applications/Unity/6000.3.26f1/Unity.app}"
+EDITOR="${UNITY_EDITOR:-/Applications/Unity/6000.3.27f1/Unity.app}"
 PRODUCTS="HoloKit MOFA Typed QRealm"
 PLAYTHROUGH=1
 EXPORT=0
