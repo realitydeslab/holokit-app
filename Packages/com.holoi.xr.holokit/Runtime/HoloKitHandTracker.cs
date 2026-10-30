@@ -199,6 +199,11 @@ namespace HoloKit
 
         private void OnHandPoseUpdated(float[] poses)
         {
+            // Where the depth map has no value the native tracker unprojects a joint to NaN; skip that frame.
+            for (int i = 0; i < 63; i++)
+            {
+                if (!float.IsFinite(poses[i])) { return; }
+            }
             _lastUpdateTime = Time.time;
             if (!_isValid)
             {

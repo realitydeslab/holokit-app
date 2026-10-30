@@ -6,6 +6,7 @@ using Holoi.AssetFoundation;
 using Holoi.Library.HoloKitAppLib;
 using NUnit.Framework;
 using Unity.Netcode;
+using Unity.XR.CoreUtils;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -67,6 +68,16 @@ namespace HoloKit.Tests
                             missing.Add(go.name + ": " + component.GetType().Name + "." + property.propertyPath);
                 }
             Assert.That(missing, Is.Empty, string.Join("\n", missing));
+        }
+
+        [Test]
+        public void XROriginAddsNoCameraHeight()
+        {
+            // ARKit XR 6.1+ reports Device tracking, so the XR Origin lifts the camera by Camera Y Offset. HoloKit's native
+            // hand tracker gives joints in ARKit session space, which matches the scene only when nothing is lifted.
+            var lifted = Objects.SelectMany(go => go.GetComponents<XROrigin>()).Where(origin => origin.CameraYOffset != 0f)
+                .Select(origin => origin.name + ": " + origin.CameraYOffset);
+            Assert.That(lifted, Is.Empty, "XR Origin Camera Y Offset must be 0 in " + ScenePath);
         }
 
         [Test]
