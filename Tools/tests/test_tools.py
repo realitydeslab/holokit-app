@@ -210,6 +210,21 @@ if __name__ == "__main__":
     unittest.main()
 
 
+class DeviceSigningKeyTests(unittest.TestCase):
+    """Automatic signing on a Mac without a signed-in Xcode account needs the App Store Connect key."""
+
+    def test_key_config_gives_the_authentication_flags(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            config = Path(tmp) / "config.json"
+            config.write_text('{"key_path": "~/keys/AuthKey_X.p8", "key_id": "X", "issuer_id": "I"}')
+            args = run_device_tests.signing_key_args(config)
+        self.assertEqual(args, ["-authenticationKeyPath", str(Path.home() / "keys/AuthKey_X.p8"),
+                                "-authenticationKeyID", "X", "-authenticationKeyIssuerID", "I"])
+
+    def test_no_key_config_gives_no_flags(self):
+        self.assertEqual(run_device_tests.signing_key_args(Path("/nonexistent/config.json")), [])
+
+
 class DeviceReportPollingTests(unittest.TestCase):
     """The device runner must take only this run's report, whether or not the test saved progress."""
 

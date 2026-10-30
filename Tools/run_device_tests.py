@@ -78,6 +78,18 @@ def run(command: list[str], logfile: Path, timeout: int) -> int:
             return 124
 
 
+def signing_key_args(config: Path = Path.home() / ".appstoreconnect/config.json") -> list[str]:
+    """xcodebuild flags that let automatic signing fetch profiles with the App Store Connect API key.
+
+    Xcode on the build Mac has no signed-in account, so without them -allowProvisioningUpdates fails with
+    "No Accounts" whenever a profile is missing or out of date. Empty when the key's config is absent."""
+    if not config.exists():
+        return []
+    settings = json.loads(config.read_text())
+    return ["-authenticationKeyPath", str(Path(settings["key_path"]).expanduser()),
+            "-authenticationKeyID", settings["key_id"], "-authenticationKeyIssuerID", settings["issuer_id"]]
+
+
 def build(product: str, out: Path) -> Path | None:
     spec = PRODUCTS[product]
     code = run([UNITY, "build", str(spec["project"]), "--profile", "iOS", "--output-path", str(spec["export"]),
@@ -90,7 +102,7 @@ def build(product: str, out: Path) -> Path | None:
     code = run(["xcodebuild", "-project", str(spec["export"] / "Unity-iPhone.xcodeproj"), "-scheme", "Unity-iPhone",
                 "-configuration", "ReleaseForRunning", "-destination", "generic/platform=iOS",
                 "-derivedDataPath", str(derived), "CODE_SIGN_STYLE=Automatic", f"DEVELOPMENT_TEAM={TEAM}",
-                "-allowProvisioningUpdates", "-quiet"], out / f"{product}-xcode.log", 5400)
+                "-allowProvisioningUpdates", *signing_key_args(), "-quiet"], out / f"{product}-xcode.log", 5400)
     app = derived / "Build/Products/ReleaseForRunning-iphoneos" / spec["app"]
     if code != 0 or not app.exists():
         log(out, f"FAIL build {product}: xcodebuild exit {code}")
