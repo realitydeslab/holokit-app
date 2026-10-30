@@ -126,3 +126,19 @@ __pycache__/
 
 # Peer copies for multi-Editor tests (Tools/make_peer_project.sh)
 Products/*-peer*/
+
+# Mono crash dumps written next to the project when an Editor crashes
+mono_crash.*.blob
+
+# Unity's autosaved copy of an unsaved scene after a crash
+**/Assets/_Recovery/
+**/Assets/_Recovery.meta
+
+# Test and device-run results (Tools/run_*), Unity CLI test results, working notes
+output/
+test-results.xml
+/plan/
+
+# IDE solution and per-user Xcode state
+*.slnx
+xcuserdata/
