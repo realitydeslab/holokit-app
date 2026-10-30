@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitAppLib;
+using Holoi.Library.HoloKitAppLib.UI;
 
 namespace RealityDesignLab.QuantumRealm
 {
@@ -22,6 +23,8 @@ namespace RealityDesignLab.QuantumRealm
         private void Start()
         {
             UI.QuantumRealmUIPanel.OnSwitchButtonPressed += OnSwitchButtonPressed;
+            // Stereo hides the Switch button; the Star mode Trigger switches the Buddha instead.
+            HoloKitAppUIEventManager.OnStarUITriggered += OnSwitchButtonPressed;
             ARObjectAdjuster.Instance.SetARObject(transform);
         }
 
@@ -42,6 +45,7 @@ namespace RealityDesignLab.QuantumRealm
         {
             base.OnDestroy();
             UI.QuantumRealmUIPanel.OnSwitchButtonPressed -= OnSwitchButtonPressed;
+            HoloKitAppUIEventManager.OnStarUITriggered -= OnSwitchButtonPressed;
         }
 
         private void OnCurrentBuddhaIndexChanged(int oldValue, int newValue)

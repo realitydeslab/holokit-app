@@ -68,6 +68,11 @@ namespace HoloKit.Tests
             Object.FindAnyObjectByType<QuantumRealmUIPanel>(FindObjectsInactive.Include).OnSwitchButtonPressedFunc();
             yield return EditorAppDriver.WaitUntil(() => group.CurrentBuddhaIndexForDeviceTest == (before + 1) % count,
                 "The Switch button did not activate the next Buddha.", 5f);
+
+            // In Stereo the Switch button is hidden; the Star mode Trigger does the same.
+            HoloKitAppUIEventManager.OnStarUITriggered?.Invoke();
+            yield return EditorAppDriver.WaitUntil(() => group.CurrentBuddhaIndexForDeviceTest == (before + 2) % count,
+                "The Star mode Trigger did not activate the next Buddha.", 5f);
         }
 
         private static IEnumerator Visibility()
