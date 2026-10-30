@@ -60,6 +60,11 @@ SINGLE_PHONE_TESTS = [
 TWO_PHONE_TESTS = [
     ("MOFA", "mofa-duel-two-phone", "MOFA_DUEL_TWO_PHONE_ROLE", "MofaDuelTwoPhoneTests", 400),
     ("MOFA", "mofa-hunting-two-phone", "MOFA_HUNTING_TWO_PHONE_ROLE", "MofaHuntingTwoPhoneTests", 400),
+    # The app's Network Manager in an empty toy scene: connect, round trips, poses, leave; five times. No person needed.
+    ("HoloKit", "holokit-toy-transport", "HOLOKIT_TOY_TRANSPORT_ROLE", "ToyTransportTests", 420),
+    ("MOFA", "mofa-toy-transport", "HOLOKIT_TOY_TRANSPORT_ROLE", "ToyTransportTests", 420),
+    ("QRealm", "qrealm-toy-transport", "HOLOKIT_TOY_TRANSPORT_ROLE", "ToyTransportTests", 420),
+    ("Typed", "typed-toy-transport", "HOLOKIT_TOY_TRANSPORT_ROLE", "ToyTransportTests", 420),
 ]
 
 
