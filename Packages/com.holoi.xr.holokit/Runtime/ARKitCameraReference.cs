@@ -20,8 +20,24 @@ namespace HoloKit.iOS
         static readonly List<XRSessionSubsystem> sessions = new();
 
         /// <summary>
-        /// ARKit's camera rotation (local to the XR Origin's camera offset) and projection for the current interface
-        /// orientation and screen size, with the camera's clip planes. False before the session has a frame.
+        /// UIKit's interface orientation, which ARKit XR renders with. Screen.orientation can differ from it on iPad;
+        /// 0 when UIKit has no window scene (or in the Editor).
+        /// </summary>
+        public static ScreenOrientation InterfaceOrientation
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return 0;
+#else
+                return (ScreenOrientation)HoloKit_GetInterfaceOrientation();
+#endif
+            }
+        }
+
+        /// <summary>
+        /// ARKit's camera rotation (local to the XR Origin's camera offset) and projection for UIKit's interface
+        /// orientation and the screen size, with the camera's clip planes. False before the session has a frame.
         /// </summary>
         public static bool TryGetReference(Camera camera, out Quaternion localRotation, out Matrix4x4 cameraProjection) =>
             TryGetReference(camera, out localRotation, out cameraProjection, out _);
@@ -42,7 +58,8 @@ namespace HoloKit.iOS
             foreach (var candidate in sessions)
                 if (candidate.running) { session = candidate; break; }
             if (session == null) return false;
-            if (HoloKit_GetARCameraReference(session.nativePtr, (int)Screen.orientation,
+            var orientation = InterfaceOrientation;
+            if (HoloKit_GetARCameraReference(session.nativePtr, (int)(orientation == 0 ? Screen.orientation : orientation),
                 Screen.width, Screen.height, view, projection, display) == 0) return false;
             var nativeView = new Matrix4x4();
             for (int i=0; i<16; i++) nativeView[i] = view[i];
@@ -82,6 +99,9 @@ namespace HoloKit.iOS
         }
 
 #if !UNITY_EDITOR
+        [DllImport("__Internal")]
+        static extern int HoloKit_GetInterfaceOrientation();
+
         [DllImport("__Internal")]
         static extern int HoloKit_GetARCameraReference(IntPtr session, int orientation, int width, int height,
             [Out] float[] view, [Out] float[] projection, [Out] float[] display);

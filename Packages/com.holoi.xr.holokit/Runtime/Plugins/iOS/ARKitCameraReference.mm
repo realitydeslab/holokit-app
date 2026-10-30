@@ -11,6 +11,22 @@ typedef struct HoloKitCameraReferenceNativeSession
     void* sessionPtr;
 } HoloKitCameraReferenceNativeSession;
 
+// UIKit's interface orientation in Unity's numbering (ScreenOrientation: Portrait 1, PortraitUpsideDown 2,
+// LandscapeLeft 3, LandscapeRight 4), the one ARKit XR 6.7 renders with; 0 without a window scene.
+extern "C" int HoloKit_GetInterfaceOrientation() {
+    for (UIScene* scene in UIApplication.sharedApplication.connectedScenes) {
+        if (![scene isKindOfClass:UIWindowScene.class]) continue;
+        switch (((UIWindowScene*)scene).effectiveGeometry.interfaceOrientation) {
+            case UIInterfaceOrientationPortrait: return 1;
+            case UIInterfaceOrientationPortraitUpsideDown: return 2;
+            case UIInterfaceOrientationLandscapeRight: return 3;
+            case UIInterfaceOrientationLandscapeLeft: return 4;
+            default: return 0;
+        }
+    }
+    return 0;
+}
+
 // ARKit's camera pose, projection and background transform for one interface orientation (ARKitCameraReference.cs).
 extern "C" int HoloKit_GetARCameraReference(void* nativeSession, int orientation,
     int width, int height, float* view, float* projection, float* display) {

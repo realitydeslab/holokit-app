@@ -30,6 +30,7 @@ namespace HoloKit.DeviceTests
             public bool returnedToGallery;
             public string screenshot;
             public string screenOrientation;
+            public string interfaceOrientation; // UIKit's, which ARKit XR renders with
             public string deviceOrientation;
             public string screenSize;
             public string screenshotSize;
@@ -54,6 +55,7 @@ namespace HoloKit.DeviceTests
             public string operatingSystem;
             public string product;
             public bool holokitSupported;
+            public bool ipad;
             public bool lidar;
             public string phoneCameraOffset;
             public string arkitSceneDepth;
@@ -116,6 +118,7 @@ namespace HoloKit.DeviceTests
             if (app == null) throw new InvalidOperationException("App bootstrap did not create HoloKitApp.");
             // A phone missing from the native phone table cannot enter Stereo, and LiDAR realities send it to NoLiDAR.
             _report.holokitSupported = HoloKitOpticsAPI.IsCurrentDeviceSupportedByHoloKit();
+            _report.ipad = HoloKitOpticsAPI.IsCurrentDeviceIpad();
             _report.lidar = HoloKitOpticsAPI.IsCurrentDeviceEquippedWithLiDAR();
             if (HoloKitUtils.IsRuntime)
                 _report.phoneCameraOffset = HoloKitOpticsAPI.GetPhoneModelCameraOffset(HoloKitType.HoloKitX).ToString("F5", CultureInfo.InvariantCulture);
@@ -125,7 +128,8 @@ namespace HoloKit.DeviceTests
             var sceneDepth = occlusion.Count > 0 ? occlusion[0].environmentDepthImageSupported : Supported.Unknown;
             _report.arkitSceneDepth = sceneDepth.ToString();
             Save();
-            if (!_report.holokitSupported)
+            // An iPad does not fit the HoloKit headset: it runs the realities on its screen only.
+            if (!_report.holokitSupported && !_report.ipad)
                 Errors.Add($"HoloKit does not support this phone ({_report.device}): the Star button shows the incompatible phone panel.");
             if (sceneDepth != Supported.Unknown && _report.lidar != (sceneDepth == Supported.Supported))
                 Errors.Add($"The phone table says LiDAR is {_report.lidar} on {_report.device}, but ARKit scene depth is {sceneDepth}.");
@@ -218,6 +222,9 @@ namespace HoloKit.DeviceTests
                 var texture = ScreenCapture.CaptureScreenshotAsTexture();
                 // A scene that forces an orientation must get a matching frame; otherwise its UI is stretched.
                 _current.screenOrientation = Screen.orientation.ToString();
+#if UNITY_IOS
+                _current.interfaceOrientation = ARKitCameraReference.InterfaceOrientation.ToString();
+#endif
                 _current.deviceOrientation = Input.deviceOrientation.ToString();
                 _current.screenSize = $"{Screen.width}x{Screen.height}";
                 _current.screenshotSize = $"{texture.width}x{texture.height}";

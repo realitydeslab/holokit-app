@@ -33,6 +33,7 @@ namespace RealityDesignLab.MOFA.TheTraining
         private sealed class OrientationCheck
         {
             public string orientation;
+            public string interfaceOrientation; // UIKit's, which ARKit XR renders with
             public int width;
             public int height;
             public bool referenceAvailable;
@@ -212,6 +213,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             var check = new OrientationCheck
             {
                 orientation = Screen.orientation.ToString(),
+                interfaceOrientation = ARKitCameraReference.InterfaceOrientation.ToString(),
                 width = Screen.width,
                 height = Screen.height
             };
