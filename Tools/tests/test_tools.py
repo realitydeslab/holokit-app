@@ -64,7 +64,7 @@ class Fixture:
             self.write_dir("WatchApp/PrivacyInfo.xcprivacy").write_text("<plist/>")
         with open(self.write_dir("Info.plist"), "wb") as handle:
             plistlib.dump({
-                "NSBonjourServices": ["_netcode-mpc._tcp", "_netcode-mpc._udp"],
+                "NSBonjourServices": ["_netcode-nw._udp"],
                 "NSLocalNetworkUsageDescription": "Nearby devices",
                 "NSCameraUsageDescription": "AR",
             }, handle)
@@ -137,9 +137,17 @@ class VerifyIosExportTests(unittest.TestCase):
     def test_missing_bonjour_service_fails(self):
         fixture = Fixture(self.root)
         with open(fixture.export / "Info.plist", "wb") as handle:
-            plistlib.dump({"NSBonjourServices": ["_netcode-mpc._tcp"], "NSLocalNetworkUsageDescription": "x",
+            plistlib.dump({"NSBonjourServices": [], "NSLocalNetworkUsageDescription": "x",
                            "NSCameraUsageDescription": "x"}, handle)
-        self.assertTrue(any("_netcode-mpc._udp" in f for f in fixture.verify()))
+        self.assertTrue(any("_netcode-nw._udp" in f for f in fixture.verify()))
+
+    def test_export_still_on_multipeer_connectivity_fails(self):
+        # An export from before the Network framework transport declares only the Multipeer service.
+        fixture = Fixture(self.root)
+        with open(fixture.export / "Info.plist", "wb") as handle:
+            plistlib.dump({"NSBonjourServices": ["_netcode-mpc._tcp", "_netcode-mpc._udp"],
+                           "NSLocalNetworkUsageDescription": "x", "NSCameraUsageDescription": "x"}, handle)
+        self.assertTrue(any("_netcode-nw._udp" in f for f in fixture.verify()))
 
     def test_exception_in_export_log_is_reported(self):
         log = self.root / "export.log"
@@ -208,6 +216,27 @@ class RunAllTestsScriptTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DeviceBuildExportTests(unittest.TestCase):
+    """Each device build exports a fresh Xcode project, so nothing from an older export survives."""
+
+    def test_existing_export_is_removed_before_unity_exports(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            export = Path(tmp) / "Builds/iOS"
+            (export / "Libraries/Plugins").mkdir(parents=True)
+            (export / "Libraries/Plugins/libRemovedPlugin.a").write_text("stale")
+            seen = []
+
+            def fake_run(command, logfile, timeout):
+                seen.append(export.exists())
+                return 1  # stop after the Unity step
+
+            products = {"P": {"project": Path(tmp), "export": export, "bundle": "b", "app": "P.app"}}
+            with mock.patch.object(run_device_tests, "PRODUCTS", products), \
+                    mock.patch.object(run_device_tests, "run", side_effect=fake_run):
+                self.assertIsNone(run_device_tests.build("P", Path(tmp)))
+        self.assertEqual(seen, [False])
 
 
 class DeviceSigningKeyTests(unittest.TestCase):

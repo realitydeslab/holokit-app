@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using Netcode.Transports.MultipeerConnectivity;
+using Netcode.Transports.NetworkFramework;
 using HoloKit;
 
 namespace Holoi.Library.HoloKitAppLib
@@ -67,7 +67,7 @@ namespace Holoi.Library.HoloKitAppLib
             _cameraToQRCodeOffset = cameraToQRCodeOffset;
             CalculateCameraToScreenCenterOffset();
             HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame += OnARSessionUpdatedFrame_Host;
-            MultipeerConnectivityTransport.Instance.StartAdvertising();
+            NetworkFrameworkTransport.Instance.StartAdvertising();
             _isAdvertising = true;
             OnStartedAdvertising?.Invoke();
         }
@@ -77,7 +77,7 @@ namespace Holoi.Library.HoloKitAppLib
             if (_isAdvertising)
             {
                 HoloKitARSessionControllerAPI.OnARSessionUpdatedFrame -= OnARSessionUpdatedFrame_Host;
-                MultipeerConnectivityTransport.Instance.StopAdvertising();
+                NetworkFrameworkTransport.Instance.StopAdvertising();
                 _timedCameraPoseQueue.Clear();
                 _isAdvertising = false;
                 OnStoppedAdvertising?.Invoke();

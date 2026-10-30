@@ -10,7 +10,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
-using Netcode.Transports.MultipeerConnectivity;
+using Netcode.Transports.NetworkFramework;
 using Holoi.AssetFoundation;
 using RealityDesignLab.Library.Permissions;
 using Holoi.Library.HoloKitAppLib.WatchConnectivity;
@@ -259,7 +259,7 @@ namespace Holoi.Library.HoloKitAppLib
             // Initialize NetworkManager
             InitializeNetworkManager();
             // We finally start the network after instantiating all necessary objects
-            MultipeerConnectivityTransport.Instance.SessionId = _currentReality.BundleId;
+            NetworkFrameworkTransport.Instance.SessionId = _currentReality.BundleId;
             if (IsHost)
                 StartHost();
             else

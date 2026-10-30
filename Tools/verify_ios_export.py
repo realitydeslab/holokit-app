@@ -20,7 +20,8 @@ from pathlib import Path
 from PIL import Image, ImageChops
 
 WATCH_TARGET = "HoloKitWatchApp"
-BONJOUR = {"_netcode-mpc._tcp", "_netcode-mpc._udp"}
+# Bonjour service the Network framework transport (org.realitydeslab.netcode.transport.network-framework) browses.
+BONJOUR = {"_netcode-nw._udp"}
 
 
 def read_product(project: Path) -> dict:

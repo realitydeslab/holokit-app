@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 using UnityEngine;
-using Netcode.Transports.MultipeerConnectivity;
+using Netcode.Transports.NetworkFramework;
 using TMPro;
 
 namespace Holoi.Library.HoloKitAppLib.UI
@@ -18,21 +18,37 @@ namespace Holoi.Library.HoloKitAppLib.UI
 
         private string _hostName;
 
+        private NetworkFrameworkTransport _transport;
+
         private void Start()
         {
-            MultipeerConnectivityTransport.Instance.OnBrowserFoundPeer += OnBrowserFoundPeer;
-            MultipeerConnectivityTransport.Instance.OnBrowserLostPeer += OnBrowserLostPeer;
-            MultipeerConnectivityTransport.Instance.OnConnectingWithPeer += OnConnectingWithPeer;
+            _transport = NetworkFrameworkTransport.Instance;
+            _transport.OnHostFound += OnBrowserFoundPeer;
+            _transport.OnHostLost += OnBrowserLostPeer;
+            _transport.OnConnectingToHost += OnConnectingWithPeer;
+            _transport.OnLocalNetworkDenied += OnLocalNetworkDenied;
 
             // Start browsing manually
-            MultipeerConnectivityTransport.Instance.StartBrowsing();
+            _transport.StartBrowsing();
+            if (_transport.IsLocalNetworkDenied)
+                OnLocalNetworkDenied();
         }
 
         private void OnDestroy()
         {
-            MultipeerConnectivityTransport.Instance.OnBrowserFoundPeer -= OnBrowserFoundPeer;
-            MultipeerConnectivityTransport.Instance.OnBrowserLostPeer -= OnBrowserLostPeer;
-            MultipeerConnectivityTransport.Instance.OnConnectingWithPeer -= OnConnectingWithPeer;
+            // The transport goes away with the NetworkManager when a reality shuts down.
+            if (_transport == null)
+                return;
+            _transport.OnHostFound -= OnBrowserFoundPeer;
+            _transport.OnHostLost -= OnBrowserLostPeer;
+            _transport.OnConnectingToHost -= OnConnectingWithPeer;
+            _transport.OnLocalNetworkDenied -= OnLocalNetworkDenied;
+        }
+
+        // Without Local Network access nothing nearby can be found, and iOS shows no error of its own.
+        private void OnLocalNetworkDenied()
+        {
+            _text.text = $"Turn on Local Network for {Application.productName}\nin Settings > Privacy & Security";
         }
 
         private void OnBrowserFoundPeer(int hostKey, string hostName)

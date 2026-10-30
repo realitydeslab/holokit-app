@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -92,6 +93,10 @@ def signing_key_args(config: Path = Path.home() / ".appstoreconnect/config.json"
 
 def build(product: str, out: Path) -> Path | None:
     spec = PRODUCTS[product]
+    # Unity appends to an existing Xcode project, which keeps what the older export linked and declared: after the move
+    # to the Network framework transport, the removed Multipeer plugin still failed the link. Export afresh every time.
+    if spec["export"].exists():
+        shutil.rmtree(spec["export"])
     code = run([UNITY, "build", str(spec["project"]), "--profile", "iOS", "--output-path", str(spec["export"]),
                 "--editor-path", EDITOR, "--no-tail", "-l", str(out / f"{product}-export.log")],
                out / f"{product}-export.cli.txt", 3600)

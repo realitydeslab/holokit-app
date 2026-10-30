@@ -14,7 +14,7 @@ namespace HoloKit.Tests
     /// (Tools/run_multiplayer_test.sh). Each Editor runs the same test with HOLOKIT_MP_ROLE set to
     /// host, player or spectator; roles exchange checkpoints as files in HOLOKIT_MP_DIR.
     /// The Editor transport is UnityTransport on 127.0.0.1, so this covers game-level networking,
-    /// not the Multipeer Connectivity transport or QR alignment used on iPhones.
+    /// not the Network framework transport or QR alignment used on iPhones (DeviceTransportToyTests covers the transport).
     /// </summary>
     public static class MultiplayerScenario
     {
