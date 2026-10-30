@@ -157,15 +157,16 @@ namespace RealityDesignLab.MOFA.TheDuel
             {
                 _report.lifeShieldReady = duel.LocalMofaPlayer.LifeShield != null &&
                                           !duel.LocalMofaPlayer.LifeShield.IsDestroyed;
-                if (_report.lifeShieldReady &&
-                    input.BasicSpellChargePercentage + 0.0001f >= _report.requiredBasicCharge)
+                if (_report.lifeShieldReady && input.BasicSpellChargePercentage >= _report.requiredBasicCharge)
                     break;
                 yield return new WaitForSecondsRealtime(.1f);
             }
+            // The charge grows one physics step at a time and a swing casts only once it has reached a whole spell; at
+            // 0.1999998 of 0.2 the swing is rightly ignored. Let one more step pass so the charge is past the line.
+            yield return new WaitForFixedUpdate();
             _report.basicChargeBeforeShot = input.BasicSpellChargePercentage;
             Save();
-            Require(_report.lifeShieldReady &&
-                    _report.basicChargeBeforeShot + 0.0001f >= _report.requiredBasicCharge,
+            Require(_report.lifeShieldReady && _report.basicChargeBeforeShot >= _report.requiredBasicCharge,
                 "Local life shield or basic spell charge was not ready for a Watch shot.");
             _report.localCastsBefore = duel.LocalMofaPlayer.CastCount.Value;
             MofaWatchConnectivityAPI.EmitSimulatedWatchTriggerForDeviceTest();
