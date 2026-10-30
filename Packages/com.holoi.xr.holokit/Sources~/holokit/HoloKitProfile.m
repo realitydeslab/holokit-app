@@ -97,7 +97,11 @@
         return iPhone18Pro;
     } else if ([deviceName isEqualToString:@"iPhone19,3"]) {
         return iPhone18ProMax;
-    } else if ( [deviceName isEqualToString:@"iPad13,4"] || //iPad Pro 11 inch 5th Gen
+    } else if ( [deviceName isEqualToString:@"iPad8,9"] || //iPad Pro 11 inch 2nd Gen
+               [deviceName isEqualToString:@"iPad8,10"] || //iPad Pro 11 inch 2nd Gen
+               [deviceName isEqualToString:@"iPad8,11"] || //iPad Pro 12.9 inch 4th Gen
+               [deviceName isEqualToString:@"iPad8,12"] || //iPad Pro 12.9 inch 4th Gen
+               [deviceName isEqualToString:@"iPad13,4"] || //iPad Pro 11 inch 5th Gen
                [deviceName isEqualToString:@"iPad13,5"] || //iPad Pro 11 inch 5th Gen
                [deviceName isEqualToString:@"iPad13,6"] || //iPad Pro 11 inch 5th Gen
                [deviceName isEqualToString:@"iPad13,7"] || //iPad Pro 11 inch 5th Gen
@@ -108,7 +112,15 @@
                [deviceName isEqualToString:@"iPad14,3"] || //iPad Pro 11 inch 4th Gen
                [deviceName isEqualToString:@"iPad14,4"] ||  //iPad Pro 11 inch 4th Gen
                [deviceName isEqualToString:@"iPad14,5"] || //iPad Pro 12.9 inch 6th Gen
-               [deviceName isEqualToString:@"iPad14,6"]  //iPad Pro 12.9 inch 6th Gen
+               [deviceName isEqualToString:@"iPad14,6"] || //iPad Pro 12.9 inch 6th Gen
+               [deviceName isEqualToString:@"iPad16,3"] || //iPad Pro 11 inch (M4)
+               [deviceName isEqualToString:@"iPad16,4"] || //iPad Pro 11 inch (M4)
+               [deviceName isEqualToString:@"iPad16,5"] || //iPad Pro 13 inch (M4)
+               [deviceName isEqualToString:@"iPad16,6"] || //iPad Pro 13 inch (M4)
+               [deviceName isEqualToString:@"iPad17,1"] || //iPad Pro 11 inch (M5)
+               [deviceName isEqualToString:@"iPad17,2"] || //iPad Pro 11 inch (M5)
+               [deviceName isEqualToString:@"iPad17,3"] || //iPad Pro 13 inch (M5)
+               [deviceName isEqualToString:@"iPad17,4"]    //iPad Pro 13 inch (M5)
               ) {
         return iPadWithLidar;
     } else {

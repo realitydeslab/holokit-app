@@ -57,6 +57,15 @@ static void Check(const PhoneCase *c) {
     Expect(Near(model.ScreenDpi, 460), c, "screen dpi");
 }
 
+// iPads with LiDAR do not fit the HoloKit headset, but run the LiDAR realities on the screen.
+static void CheckIpadWithLidar(const char *machine, const char *name) {
+    const PhoneCase c = {machine, name, NO, YES, 0, 0, 0, simd_make_float3(0, 0, 0)};
+    currentMachine = machine;
+    Expect(![HoloKitProfile IsCurrentDeviceSupportedByHoloKit], &c, "not supported by HoloKit");
+    Expect([HoloKitProfile IsCurrentDeviceEquippedWithLiDAR], &c, "LiDAR");
+    Expect([HoloKitProfile IsCurrentDeviceIpad], &c, "an iPad");
+}
+
 int main(void) {
     @autoreleasepool {
         const simd_float3 proCamera = simd_make_float3(0.039895, -0.03254, -0.00759);
@@ -87,11 +96,28 @@ int main(void) {
         for (size_t i = 0; i < count; i++) {
             Check(&cases[i]);
         }
+        // Every iPad Pro with LiDAR, Wi-Fi and cellular (Xcode 27.1's device types list 8,9 8,12 13,5 13,10 14,3 14,5
+        // 16,4 16,6 17,2 17,4; the others are their pairs).
+        const char *ipads[][2] = {
+            {"iPad8,9", "iPad Pro 11-inch 2nd gen"}, {"iPad8,10", "iPad Pro 11-inch 2nd gen"},
+            {"iPad8,11", "iPad Pro 12.9-inch 4th gen"}, {"iPad8,12", "iPad Pro 12.9-inch 4th gen"},
+            {"iPad13,4", "iPad Pro 11-inch 3rd gen"}, {"iPad13,7", "iPad Pro 11-inch 3rd gen"},
+            {"iPad13,8", "iPad Pro 12.9-inch 5th gen"}, {"iPad13,11", "iPad Pro 12.9-inch 5th gen"},
+            {"iPad14,3", "iPad Pro 11-inch 4th gen"}, {"iPad14,6", "iPad Pro 12.9-inch 6th gen"},
+            {"iPad16,3", "iPad Pro 11-inch (M4)"}, {"iPad16,4", "iPad Pro 11-inch (M4)"},
+            {"iPad16,5", "iPad Pro 13-inch (M4)"}, {"iPad16,6", "iPad Pro 13-inch (M4)"},
+            {"iPad17,1", "iPad Pro 11-inch (M5)"}, {"iPad17,2", "iPad Pro 11-inch (M5)"},
+            {"iPad17,3", "iPad Pro 13-inch (M5)"}, {"iPad17,4", "iPad Pro 13-inch (M5)"},
+        };
+        const size_t ipadCount = sizeof(ipads) / sizeof(ipads[0]);
+        for (size_t i = 0; i < ipadCount; i++) {
+            CheckIpadWithLidar(ipads[i][0], ipads[i][1]);
+        }
         if (failures > 0) {
-            fprintf(stderr, "%d failure(s) in %zu phones\n", failures, count);
+            fprintf(stderr, "%d failure(s) in %zu phones and %zu iPads\n", failures, count, ipadCount);
             return 1;
         }
-        printf("All %zu phones pass\n", count);
+        printf("All %zu phones and %zu iPads pass\n", count, ipadCount);
     }
     return 0;
 }

@@ -12,7 +12,7 @@ clang -fobjc-arc -Wall -Wextra -Werror -Wno-unused-parameter -Duname=FakeUname \
 "$OUT"
 if [ $# -eq 0 ]; then
   LIB_STRINGS="$(strings -a "$ROOT/Runtime/Plugins/iOS/libUnityHoloKit.a")"
-  for id in $(grep -oE '@"iPhone[0-9]+,[0-9]+"' "$SRC/HoloKitProfile.m" | tr -d '@"' | sort -u); do
+  for id in $(grep -oE '@"iP(hone|ad)[0-9]+,[0-9]+"' "$SRC/HoloKitProfile.m" | tr -d '@"' | sort -u); do
     grep -qx "$id" <<< "$LIB_STRINGS" || { echo "libUnityHoloKit.a is stale: no $id. Rebuild it from Sources~."; exit 1; }
   done
   echo "libUnityHoloKit.a has every phone id in HoloKitProfile.m"
