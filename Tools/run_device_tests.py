@@ -67,6 +67,19 @@ TWO_PHONE_TESTS = [
     ("Typed", "typed-toy-transport", "HOLOKIT_TOY_TRANSPORT_ROLE", "ToyTransportTests", 420),
 ]
 
+# Role variable -> the variable that tells the host how many clients to wait for. Only these tests take more devices.
+CLIENT_COUNT_VARIABLES = {"HOLOKIT_TOY_TRANSPORT_ROLE": "HOLOKIT_TOY_TRANSPORT_CLIENTS"}
+
+
+def host_and_clients(devices: list[str], more: list[str], variable: str) -> tuple[list[str], list[dict[str, str]]]:
+    """The devices of a host-and-clients test and their environments: extra devices join as clients when the test
+    counts its clients, otherwise it keeps the first two."""
+    if variable not in CLIENT_COUNT_VARIABLES or not more:
+        return devices, [{variable: "host"}, {variable: "client"}]
+    group = devices + more
+    host = {variable: "host", CLIENT_COUNT_VARIABLES[variable]: str(len(group) - 1)}
+    return group, [host] + [{variable: "client"} for _ in group[1:]]
+
 
 def log(out: Path, message: str) -> None:
     line = time.strftime("%H:%M:%S ") + message
@@ -220,6 +233,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--device", required=True)
     parser.add_argument("--second-device")
+    parser.add_argument("--more-devices", nargs="+", default=[],
+                        help="extra clients for the tests whose host counts clients (the toy transport test)")
     parser.add_argument("--products", nargs="+", default=["QRealm", "MOFA", "Typed", "HoloKit"])
     parser.add_argument("--tests", nargs="+", help="only these test names")
     parser.add_argument("--no-build", action="store_true", help="use the apps already installed")
@@ -231,6 +246,7 @@ def main() -> int:
     out = args.out
     out.mkdir(parents=True, exist_ok=True)
     devices = [args.device] + ([args.second_device] if args.second_device else [])
+    more = args.more_devices if args.second_device else []
     ok = True
 
     if args.in_app:
@@ -241,7 +257,7 @@ def main() -> int:
             if app is None:
                 log(out, "SOME FAILED")
                 return 1
-            for device in devices:
+            for device in devices + more:
                 ok &= install(device, app, out, args.in_app)
         for test_product, name, environment, folder, timeout in SINGLE_PHONE_TESTS:
             selected = test_product in args.products and (not args.tests or name in args.tests)
@@ -250,7 +266,8 @@ def main() -> int:
         if args.second_device:
             for test_product, name, variable, folder, timeout in TWO_PHONE_TESTS:
                 if test_product in args.products and (not args.tests or name in args.tests):
-                    ok &= run_test(devices, args.in_app, name, [{variable: "host"}, {variable: "client"}], folder, timeout, out)
+                    group, environments = host_and_clients(devices, more, variable)
+                    ok &= run_test(group, args.in_app, name, environments, folder, timeout, out)
         log(out, "ALL PASSED" if ok else "SOME FAILED")
         return 0 if ok else 1
 
@@ -260,7 +277,7 @@ def main() -> int:
             if app is None:
                 ok = False
                 continue
-            for device in devices:
+            for device in devices + more:
                 ok &= install(device, app, out, product)
         for test_product, name, environment, folder, timeout in SINGLE_PHONE_TESTS:
             if test_product == product and (not args.tests or name in args.tests):
@@ -268,7 +285,8 @@ def main() -> int:
         if args.second_device:
             for test_product, name, variable, folder, timeout in TWO_PHONE_TESTS:
                 if test_product == product and (not args.tests or name in args.tests):
-                    ok &= run_test(devices, product, name, [{variable: "host"}, {variable: "client"}], folder, timeout, out)
+                    group, environments = host_and_clients(devices, more, variable)
+                    ok &= run_test(group, product, name, environments, folder, timeout, out)
     log(out, "ALL PASSED" if ok else "SOME FAILED")
     return 0 if ok else 1
 

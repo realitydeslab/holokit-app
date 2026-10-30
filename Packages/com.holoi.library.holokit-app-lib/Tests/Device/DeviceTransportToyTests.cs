@@ -22,7 +22,8 @@ namespace HoloKit.DeviceTests
     /// person: the host advertises the way the QR sharing panel does and the client browses the way the
     /// waiting-for-connection panel does. The client joins, exchanges reliable and unreliable round trips and 60 Hz
     /// poses, and leaves, Cycles times, as a player entering and leaving realities would.
-    /// Run with HOLOKIT_TOY_TRANSPORT_ROLE=host on one phone and =client on the other.
+    /// Run with HOLOKIT_TOY_TRANSPORT_ROLE=host on one phone and =client on the other. With more clients at once, give
+    /// the host HOLOKIT_TOY_TRANSPORT_CLIENTS=n so it waits for all of them.
     /// </summary>
     public sealed class DeviceTransportToyTests : MonoBehaviour
     {
@@ -48,6 +49,7 @@ namespace HoloKit.DeviceTests
             public float reliableRttP50Ms, reliableRttP95Ms, unreliableRttP50Ms, unreliableRttP95Ms;
             public int posesSent;
             public int hostConnections, hostDisconnects, hostPosesReceived;
+            public int expectedClients = 1, hostClientsFinished;
             public bool hostSawClientFinish;
             public List<string> errors = new();
             public List<string> otherErrorLogs = new();
@@ -67,7 +69,10 @@ namespace HoloKit.DeviceTests
             if (role != "host" && role != "client") return;
             var runner = new GameObject("HoloKit Toy Transport Tests");
             DontDestroyOnLoad(runner);
-            runner.AddComponent<DeviceTransportToyTests>()._report.role = role;
+            var report = runner.AddComponent<DeviceTransportToyTests>()._report;
+            report.role = role;
+            if (int.TryParse(Environment.GetEnvironmentVariable("HOLOKIT_TOY_TRANSPORT_CLIENTS"), out var clients) && clients > 1)
+                report.expectedClients = clients;
         }
 
         private IEnumerator Start()
@@ -142,7 +147,8 @@ namespace HoloKit.DeviceTests
                 Send(manager, sender, "toy-pong", reliable == 1 ? NetworkDelivery.Reliable : NetworkDelivery.Unreliable, seq, reliable);
             });
             messages.RegisterNamedMessageHandler("toy-pose", (_, _) => _report.hostPosesReceived++);
-            messages.RegisterNamedMessageHandler("toy-done", (_, _) => _report.hostSawClientFinish = true);
+            messages.RegisterNamedMessageHandler("toy-done", (_, _) =>
+                _report.hostSawClientFinish = ++_report.hostClientsFinished >= _report.expectedClients);
             var clock = Stopwatch.StartNew();
             while (!_report.hostSawClientFinish && clock.Elapsed.TotalSeconds < 300)
             {
@@ -151,8 +157,11 @@ namespace HoloKit.DeviceTests
             }
             yield return new WaitForSecondsRealtime(2f);
             manager.Shutdown();
-            Require(_report.hostSawClientFinish, "The client never finished its cycles.");
-            Require(_report.hostConnections >= Cycles, $"Only {_report.hostConnections} of {Cycles} client connections reached the host.");
+            Require(_report.hostSawClientFinish,
+                $"Only {_report.hostClientsFinished} of {_report.expectedClients} client(s) finished their cycles.");
+            var expectedConnections = Cycles * _report.expectedClients;
+            Require(_report.hostConnections >= expectedConnections,
+                $"Only {_report.hostConnections} of {expectedConnections} client connections reached the host.");
         }
 
         private IEnumerator Client()

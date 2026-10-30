@@ -280,3 +280,37 @@ class DeviceReportPollingTests(unittest.TestCase):
         # The clock never reaches the deadline, and reading past the given reports raises StopIteration.
         with mock.patch.object(run_device_tests.time, "time", return_value=0):
             self.assertEqual(self.poll([{"complete": False}, failed, failed, failed, failed], None), failed)
+
+
+class DeviceGroupTests(unittest.TestCase):
+    """More devices join the toy transport test as extra clients; every other test keeps two phones."""
+
+    def run_main(self, argv):
+        calls = []
+
+        def fake_run_test(devices, product, name, environments, folder, timeout, out):
+            calls.append((name, devices, environments))
+            return True
+
+        with tempfile.TemporaryDirectory() as tmp, \
+                mock.patch.object(run_device_tests, "run_test", side_effect=fake_run_test), \
+                mock.patch.object(sys, "argv", ["run_device_tests.py", *argv, "--no-build", "--out", tmp]):
+            self.assertEqual(run_device_tests.main(), 0)
+        return calls
+
+    def test_extra_devices_join_the_toy_test_as_clients(self):
+        calls = self.run_main(["--device", "A", "--second-device", "I", "--more-devices", "P",
+                               "--in-app", "HoloKit", "--tests", "holokit-toy-transport", "mofa-duel-two-phone"])
+        self.assertEqual(calls, [
+            ("mofa-duel-two-phone", ["A", "I"],
+             [{"MOFA_DUEL_TWO_PHONE_ROLE": "host"}, {"MOFA_DUEL_TWO_PHONE_ROLE": "client"}]),
+            ("holokit-toy-transport", ["A", "I", "P"],
+             [{"HOLOKIT_TOY_TRANSPORT_ROLE": "host", "HOLOKIT_TOY_TRANSPORT_CLIENTS": "2"},
+              {"HOLOKIT_TOY_TRANSPORT_ROLE": "client"}, {"HOLOKIT_TOY_TRANSPORT_ROLE": "client"}]),
+        ])
+
+    def test_without_more_devices_the_toy_test_has_one_client(self):
+        calls = self.run_main(["--device", "A", "--second-device", "I", "--products", "HoloKit",
+                               "--tests", "holokit-toy-transport"])
+        self.assertEqual(calls, [("holokit-toy-transport", ["A", "I"],
+                                  [{"HOLOKIT_TOY_TRANSPORT_ROLE": "host"}, {"HOLOKIT_TOY_TRANSPORT_ROLE": "client"}])])
