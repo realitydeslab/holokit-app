@@ -39,6 +39,9 @@ namespace Holoi.Library.HoloKitAppLib
 
         private bool _humanOcclusionEnabled;
 
+        // The scene's own occlusion preference, put back when the Human Occlusion switch turns occlusion on again.
+        private OcclusionPreferenceMode? _scenePreference;
+
         private void Start()
         {
             var xrOrigin = HoloKitCameraManager.Instance.GetComponentInParent<XROrigin>();
@@ -212,6 +215,12 @@ namespace Holoi.Library.HoloKitAppLib
                 }
             }
 
+            if (_scenePreference == null)
+            {
+                var preference = _arOcclusionManager.requestedOcclusionPreferenceMode;
+                _scenePreference = preference == OcclusionPreferenceMode.NoOcclusion ? OcclusionPreferenceMode.PreferHumanOcclusion : preference;
+            }
+
             if (enabled)
             {
                 if (!_arOcclusionManager.enabled)
@@ -220,13 +229,16 @@ namespace Holoi.Library.HoloKitAppLib
                 }
                 _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Fastest;
                 _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Fastest;
-                //_arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.PreferHumanOcclusion;
+                _arOcclusionManager.requestedOcclusionPreferenceMode = _scenePreference.Value;
             }
             else
             {
                 _arOcclusionManager.requestedHumanDepthMode = HumanSegmentationDepthMode.Disabled;
                 _arOcclusionManager.requestedHumanStencilMode = HumanSegmentationStencilMode.Disabled;
-                //_arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.NoOcclusion;
+                // A reality that keeps LiDAR depth on (QRealm needs it for hand tracking) still occludes people with it,
+                // so turning off human segmentation alone changes nothing on screen. NoOcclusion stops the camera
+                // background from occluding; the depth stays available to the hand tracker.
+                _arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionPreferenceMode.NoOcclusion;
             }
         }
 
