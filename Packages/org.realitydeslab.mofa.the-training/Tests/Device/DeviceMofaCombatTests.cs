@@ -84,6 +84,8 @@ namespace RealityDesignLab.MOFA.TheTraining
             public int watchTriggers;
             public int castsBefore;
             public int castsAfter;
+            public float requiredBasicCharge;
+            public List<string> shotReadiness = new(); // per shot: shield up, basic charge
             public List<string> screenshots = new();
             public List<string> errors = new();
         }
@@ -258,27 +260,37 @@ namespace RealityDesignLab.MOFA.TheTraining
 
             var input = FindObjectOfType<MofaInputManager>(true);
             Require(input != null, "MOFA input manager is missing.");
+            var school = app.GlobalSettings.GetPreferencedObject();
+            var basicSpell = manager.SpellList.List.FirstOrDefault(spell =>
+                spell.SpellType == SpellType.Basic && spell.MagicSchool.TokenId == school.TokenId);
+            Require(basicSpell != null && basicSpell.MaxChargeCount > 0, "The selected basic spell or its charge capacity is missing.");
+            _report.requiredBasicCharge = 1f / basicSpell.MaxChargeCount;
             _report.castsBefore = manager.LocalMofaPlayer.CastCount.Value;
             // A wrist swing is recognized on the watch when abs(x acceleration)
             // crosses its threshold. Inject the resulting WatchConnectivity event;
             // the Watch's CoreMotion sensor and classifier are outside this test.
-            yield return new WaitForSecondsRealtime(5);
-            MofaWatchConnectivityAPI.EmitSimulatedWatchTriggerForDeviceTest();
-            _report.watchTriggers++;
-            Debug.Log("[MOFA COMBAT TEST] Injected simulated Apple Watch shooting event.");
-            yield return new WaitForSecondsRealtime(.15f);
-            yield return new WaitForEndOfFrame();
-            Capture("watch-shot-1.png");
-            for (var i = 0; i < 20 && manager.LocalMofaPlayer.CastCount.Value <= _report.castsBefore; i++)
-                yield return new WaitForSecondsRealtime(.1f);
-            if (manager.LocalMofaPlayer.CastCount.Value <= _report.castsBefore)
+            // The AI can break the player's life shield first, and a reviving player rightly cannot cast, so each
+            // shot waits until the shield is up and a basic spell is charged, as a player would.
+            for (var shot = 1; shot <= 2 && manager.LocalMofaPlayer.CastCount.Value <= _report.castsBefore; shot++)
             {
-                yield return new WaitForSecondsRealtime(5);
+                var ready = false;
+                for (var i = 0; i < 300 && !ready; i++)
+                {
+                    var shield = manager.LocalMofaPlayer.LifeShield;
+                    ready = shield != null && !shield.IsDestroyed && input.BasicSpellChargePercentage >= _report.requiredBasicCharge;
+                    if (!ready) yield return new WaitForSecondsRealtime(.1f);
+                }
+                // The charge grows one physics step at a time; let one more step pass so it is past the line.
+                yield return new WaitForFixedUpdate();
+                _report.shotReadiness.Add($"shield {ready}, charge {input.BasicSpellChargePercentage:F3}");
                 MofaWatchConnectivityAPI.EmitSimulatedWatchTriggerForDeviceTest();
                 _report.watchTriggers++;
+                Debug.Log("[MOFA COMBAT TEST] Injected simulated Apple Watch shooting event.");
                 yield return new WaitForSecondsRealtime(.15f);
                 yield return new WaitForEndOfFrame();
-                Capture("watch-shot-2.png");
+                Capture($"watch-shot-{shot}.png");
+                for (var i = 0; i < 20 && manager.LocalMofaPlayer.CastCount.Value <= _report.castsBefore; i++)
+                    yield return new WaitForSecondsRealtime(.1f);
             }
             _report.castsAfter = manager.LocalMofaPlayer.CastCount.Value;
             Require(_report.castsAfter > _report.castsBefore, "Simulated watch shooting did not spawn a spell.");
