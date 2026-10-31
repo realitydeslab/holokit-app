@@ -414,6 +414,24 @@ namespace Holoi.Library.HoloKitAppLib
         }
 
         /// <summary>
+        /// Starts the client again after a connection attempt ended before it joined: the host rejected it, the
+        /// handshake timed out, or the host left first. Nothing else restarts it.
+        /// </summary>
+        public void RestartClient()
+        {
+            if (IsHost || NetworkManager.Singleton == null || NetworkManager.Singleton.IsListening)
+                return;
+            // The client's shutdown destroyed the multiplayer manager it was waiting to have spawned.
+            if (_multiplayerManager == null)
+            {
+                _multiplayerManager = Instantiate(_multiplayerManagerPrefab);
+                PreinstantiatedNetworkPrefab.Replace(NetworkManager.Singleton, _multiplayerManagerPrefab.gameObject,
+                    _multiplayerManager.GetComponent<NetworkObject>());
+            }
+            StartClient();
+        }
+
+        /// <summary>
         /// Netcode synchronizes every loaded scene to joining clients and throws on a scene that is not in
         /// the build, which rejects the client. XR Simulation adds such a scene in the Editor. On devices all
         /// loaded scenes are build scenes, so this changes nothing there.

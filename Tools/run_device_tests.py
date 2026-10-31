@@ -65,6 +65,8 @@ TWO_PHONE_TESTS = [
     ("MOFA", "mofa-toy-transport", "HOLOKIT_TOY_TRANSPORT_ROLE", "ToyTransportTests", 420),
     ("QRealm", "qrealm-toy-transport", "HOLOKIT_TOY_TRANSPORT_ROLE", "ToyTransportTests", 420),
     ("Typed", "typed-toy-transport", "HOLOKIT_TOY_TRANSPORT_ROLE", "ToyTransportTests", 420),
+    # The host rejects the client's first connection request; the client must try again and join. No camera needed.
+    ("HoloKit", "holokit-reconnect", "HOLOKIT_RECONNECT_ROLE", "ReconnectTests", 300),
 ]
 
 # Role variable -> the variable that tells the host how many clients to wait for. Only these tests take more devices.

@@ -2,7 +2,9 @@
 // SPDX-FileContributor: Yuchen Zhang <yuchen@reality.design>
 // SPDX-License-Identifier: MIT
 
+using System.Collections;
 using UnityEngine;
+using Unity.Netcode;
 using Netcode.Transports.NetworkFramework;
 using TMPro;
 
@@ -20,6 +22,8 @@ namespace Holoi.Library.HoloKitAppLib.UI
 
         private NetworkFrameworkTransport _transport;
 
+        private bool _leaving;
+
         private void Start()
         {
             _transport = NetworkFrameworkTransport.Instance;
@@ -27,6 +31,7 @@ namespace Holoi.Library.HoloKitAppLib.UI
             _transport.OnHostLost += OnBrowserLostPeer;
             _transport.OnConnectingToHost += OnConnectingWithPeer;
             _transport.OnLocalNetworkDenied += OnLocalNetworkDenied;
+            NetworkManager.Singleton.OnClientStopped += OnClientStopped;
 
             // Start browsing manually
             _transport.StartBrowsing();
@@ -36,6 +41,8 @@ namespace Holoi.Library.HoloKitAppLib.UI
 
         private void OnDestroy()
         {
+            if (NetworkManager.Singleton != null)
+                NetworkManager.Singleton.OnClientStopped -= OnClientStopped;
             // The transport goes away with the NetworkManager when a reality shuts down.
             if (_transport == null)
                 return;
@@ -68,9 +75,33 @@ namespace Holoi.Library.HoloKitAppLib.UI
             _text.text = $"Connecting to nearby\nhost {hostName}...";
         }
 
+        // A connection attempt that ends before the client joins (the host rejected it, the handshake timed out, or
+        // the host left first) stops the client, and nothing started it again: the panel stayed on "Connecting" for
+        // good. Search again instead, as leaving and entering the reality would.
+        private void OnClientStopped(bool wasHost)
+        {
+            if (wasHost || _leaving || !isActiveAndEnabled)
+                return;
+            StartCoroutine(SearchAgain());
+        }
+
+        private IEnumerator SearchAgain()
+        {
+            _text.text = "Searching for a nearby\nhost device...";
+            yield return new WaitForSecondsRealtime(1f);
+            while (NetworkManager.Singleton != null && NetworkManager.Singleton.ShutdownInProgress)
+                yield return null;
+            if (_leaving || NetworkManager.Singleton == null)
+                yield break;
+            HoloKitApp.Instance.RestartClient();
+            _transport.StartBrowsing();
+        }
+
         private void Update()
         {
-            if (HoloKitApp.Instance.MultiplayerManager.IsSpawned)
+            // Between a failed attempt and the next one the multiplayer manager is gone (see SearchAgain).
+            var multiplayerManager = HoloKitApp.Instance.MultiplayerManager;
+            if (multiplayerManager != null && multiplayerManager.IsSpawned)
             {
                 var localPlayer = HoloKitApp.Instance.MultiplayerManager.LocalPlayer;
                 if (localPlayer != null)
@@ -99,6 +130,7 @@ namespace Holoi.Library.HoloKitAppLib.UI
 
         public void OnExitButtonPressed()
         {
+            _leaving = true;
             HoloKitApp.Instance.UIPanelManager.PopUIPanel();
             HoloKitApp.Instance.Shutdown();
         }
