@@ -104,7 +104,7 @@ namespace RealityDesignLab.MOFA.TheHunting
             Refresh(app);
             Save();
             Capture("connection.png");
-            Require(_report.connected, "Two iPhones did not connect through the app's MPC transport.");
+            Require(_report.connected, "Two iPhones did not connect through the app's Network framework transport.");
             if (_report.role == "client")
             {
                 Require(_report.spatialSynced, "Client did not complete QR spatial alignment.");

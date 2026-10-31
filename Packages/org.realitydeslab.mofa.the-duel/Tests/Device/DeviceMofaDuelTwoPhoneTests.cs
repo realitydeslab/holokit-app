@@ -16,7 +16,7 @@ using UnityEngine.XR.ARFoundation;
 namespace RealityDesignLab.MOFA.TheDuel
 {
     // Run on two physical iPhones with MOFA_DUEL_TWO_PHONE_ROLE=host/client.
-    // The client's normal MPC discovery and QR image tracking are left intact.
+    // The client's normal Network framework discovery and QR image tracking are left intact.
     public sealed class DeviceMofaDuelTwoPhoneTests : MonoBehaviour
     {
         [Serializable]
@@ -116,7 +116,7 @@ namespace RealityDesignLab.MOFA.TheDuel
             Refresh(app);
             Save();
             Capture("connection.png");
-            Require(_report.connected, "Two iPhones did not connect through the app's MPC transport.");
+            Require(_report.connected, "Two iPhones did not connect through the app's Network framework transport.");
             if (_report.role == "client")
             {
                 Require(_report.spatialSynced, "Client did not complete QR spatial alignment.");
