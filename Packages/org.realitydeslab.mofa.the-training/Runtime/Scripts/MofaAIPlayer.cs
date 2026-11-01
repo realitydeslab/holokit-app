@@ -28,6 +28,10 @@ namespace RealityDesignLab.MOFA.TheTraining
                 InitMofaAIPlayerInfo();
                 InitStateMachine();
             }
+            else
+            {
+                SpawnAvatarForLateJoiner();
+            }
             InitAnimationControl();
         }
 

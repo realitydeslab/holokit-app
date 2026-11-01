@@ -5,6 +5,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Collections;
 using Unity.Netcode;
 using Holoi.Library.HoloKitAppLib;
 using RealityDesignLab.Avatar.Meebits;
@@ -55,6 +56,14 @@ namespace RealityDesignLab.MOFA.TheTraining
         private Vector3 _avatarOriginToCenterEyeOffset;
 
         /// <summary>
+        /// The avatar the host picked, kept as network state. The spawn RPC reaches only the devices connected when
+        /// the first round starts, so a device that joins later (a spectator, most often) builds the avatar from this.
+        /// </summary>
+        private readonly NetworkVariable<FixedString128Bytes> _avatarCollectionBundleId = new();
+
+        private readonly NetworkVariable<FixedString128Bytes> _avatarTokenId = new();
+
+        /// <summary>
         /// Spawn a specific avatar on each client device.
         /// </summary>
         /// <param name="avatarCollectionBundleId">The collection bundle Id of the avatar</param>
@@ -69,8 +78,21 @@ namespace RealityDesignLab.MOFA.TheTraining
                 InitialPosition = position;
                 InitialForward = rotation * Vector3.forward;
                 transform.SetPositionAndRotation(position, rotation);
+                _avatarCollectionBundleId.Value = avatarCollectionBundleId;
+                _avatarTokenId.Value = avatarTokenId;
             }
-            SpawnAvatar(avatarCollectionBundleId, avatarTokenId);
+            // A device that joined just as the round started may already have built it from the network state.
+            if (_avatar == null)
+                SpawnAvatar(avatarCollectionBundleId, avatarTokenId);
+        }
+
+        /// <summary>
+        /// Builds the avatar on a device that joined after the host spawned it.
+        /// </summary>
+        private void SpawnAvatarForLateJoiner()
+        {
+            if (_avatar == null && !_avatarCollectionBundleId.Value.IsEmpty)
+                SpawnAvatar(_avatarCollectionBundleId.Value.ToString(), _avatarTokenId.Value.ToString());
         }
 
         private void SpawnAvatar(string avatarCollectionBundleId, string avatarTokenId)
