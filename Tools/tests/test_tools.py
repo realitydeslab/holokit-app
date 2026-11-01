@@ -17,6 +17,7 @@ from PIL import Image
 
 TOOLS = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(TOOLS))
+import compare_network_objects  # noqa: E402
 import run_device_tests  # noqa: E402
 import verify_ios_export  # noqa: E402
 
@@ -283,7 +284,8 @@ class DeviceReportPollingTests(unittest.TestCase):
 
 
 class DeviceGroupTests(unittest.TestCase):
-    """More devices join the toy transport test as extra clients; every other test keeps two phones."""
+    """More devices join the tests that count their clients, each with its own index; every other test keeps two
+    phones."""
 
     def run_main(self, argv):
         calls = []
@@ -306,7 +308,37 @@ class DeviceGroupTests(unittest.TestCase):
              [{"MOFA_DUEL_TWO_PHONE_ROLE": "host"}, {"MOFA_DUEL_TWO_PHONE_ROLE": "client"}]),
             ("holokit-toy-transport", ["A", "I", "P"],
              [{"HOLOKIT_TOY_TRANSPORT_ROLE": "host", "HOLOKIT_TOY_TRANSPORT_CLIENTS": "2"},
-              {"HOLOKIT_TOY_TRANSPORT_ROLE": "client"}, {"HOLOKIT_TOY_TRANSPORT_ROLE": "client"}]),
+              {"HOLOKIT_TOY_TRANSPORT_ROLE": "client", "HOLOKIT_CLIENT_INDEX": "1"},
+              {"HOLOKIT_TOY_TRANSPORT_ROLE": "client", "HOLOKIT_CLIENT_INDEX": "2"}]),
+        ])
+
+    def test_extra_devices_join_every_reality_as_numbered_clients(self):
+        calls = self.run_main(["--device", "P", "--second-device", "I", "--more-devices", "B",
+                               "--in-app", "HoloKit", "--tests", "holokit-multiplayer-scenes"])
+        self.assertEqual(calls, [
+            ("holokit-multiplayer-scenes", ["P", "I", "B"],
+             [{"HOLOKIT_MULTIPLAYER_SCENES_ROLE": "host", "HOLOKIT_MULTIPLAYER_SCENES_CLIENTS": "2"},
+              {"HOLOKIT_MULTIPLAYER_SCENES_ROLE": "client", "HOLOKIT_CLIENT_INDEX": "1"},
+              {"HOLOKIT_MULTIPLAYER_SCENES_ROLE": "client", "HOLOKIT_CLIENT_INDEX": "2"}]),
+        ])
+
+    def test_extra_devices_join_hunting_as_numbered_clients(self):
+        calls = self.run_main(["--device", "P", "--second-device", "I", "--more-devices", "B",
+                               "--in-app", "HoloKit", "--tests", "mofa-hunting-two-phone"])
+        self.assertEqual(calls, [
+            ("mofa-hunting-two-phone", ["P", "I", "B"],
+             [{"MOFA_HUNTING_TWO_PHONE_ROLE": "host", "MOFA_HUNTING_TWO_PHONE_CLIENTS": "2"},
+              {"MOFA_HUNTING_TWO_PHONE_ROLE": "client", "HOLOKIT_CLIENT_INDEX": "1"},
+              {"MOFA_HUNTING_TWO_PHONE_ROLE": "client", "HOLOKIT_CLIENT_INDEX": "2"}]),
+        ])
+
+    def test_client_env_reaches_every_client_and_not_the_host(self):
+        calls = self.run_main(["--device", "P", "--second-device", "I", "--client-env", "HOLOKIT_CLIENT_INDEX=2",
+                               "--in-app", "HoloKit", "--tests", "holokit-multiplayer-scenes"])
+        self.assertEqual(calls, [
+            ("holokit-multiplayer-scenes", ["P", "I"],
+             [{"HOLOKIT_MULTIPLAYER_SCENES_ROLE": "host"},
+              {"HOLOKIT_MULTIPLAYER_SCENES_ROLE": "client", "HOLOKIT_CLIENT_INDEX": "2"}]),
         ])
 
     def test_without_more_devices_the_toy_test_has_one_client(self):
@@ -314,3 +346,41 @@ class DeviceGroupTests(unittest.TestCase):
                                "--tests", "holokit-toy-transport"])
         self.assertEqual(calls, [("holokit-toy-transport", ["A", "I"],
                                   [{"HOLOKIT_TOY_TRANSPORT_ROLE": "host"}, {"HOLOKIT_TOY_TRANSPORT_ROLE": "client"}])])
+
+
+class CompareNetworkObjectsTests(unittest.TestCase):
+    """A client must show every object the host has, where the host has it at the same network time."""
+
+    HEADER = "serverTime,objectId,name,x,y,z\n"
+
+    def write_device(self, root, name, role, rows):
+        folder = root / "holokit-multiplayer-scenes" / name
+        folder.mkdir(parents=True)
+        (folder / "results.json").write_text(
+            '{"role": "%s", "scenes": [{"scene": "Duel"}]}' % role)
+        (folder / "objects-Duel.csv").write_text(self.HEADER + "".join(rows))
+
+    def compare(self, client_rows):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            # Object 1 stands still, object 2 moves 1 m along x every second.
+            self.write_device(root, "HOST", "host", [
+                "0.0,1,Player,0,0,0\n", "1.0,1,Player,0,0,0\n", "2.0,1,Player,0,0,0\n",
+                "0.0,2,Dragon,0,1,0\n", "1.0,2,Dragon,1,1,0\n", "2.0,2,Dragon,2,1,0\n"])
+            self.write_device(root, "CLIENT", "client", client_rows)
+            return compare_network_objects.compare_run(root, tolerance=0.25)
+
+    def test_a_client_that_follows_the_host_passes(self):
+        lines, ok = self.compare(["0.5,1,Player,0.02,0,0\n", "1.5,1,Player,0,0.01,0\n",
+                                  "0.5,2,Dragon,0.5,1,0\n", "1.5,2,Dragon,1.55,1,0\n"])
+        self.assertTrue(ok, lines)
+
+    def test_an_object_left_behind_on_the_client_fails(self):
+        lines, ok = self.compare(["0.5,1,Player,0,0,0\n", "0.5,2,Dragon,0,1,0\n", "1.5,2,Dragon,0,1,0\n"])
+        self.assertFalse(ok)
+        self.assertIn("Dragon", "\n".join(lines))
+
+    def test_an_object_missing_on_the_client_fails(self):
+        lines, ok = self.compare(["0.5,1,Player,0,0,0\n"])
+        self.assertFalse(ok)
+        self.assertIn("missing", "\n".join(lines))
