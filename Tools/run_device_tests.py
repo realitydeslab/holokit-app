@@ -72,12 +72,16 @@ TWO_PHONE_TESTS = [
     # Every reality: the host shows its QR code, each client joins (players and spectators in turn), scans it and taps
     # the check button. The clients' cameras must see the host's screen.
     ("HoloKit", "holokit-multiplayer-scenes", "HOLOKIT_MULTIPLAYER_SCENES_ROLE", "MultiplayerSceneTests", 3600),
+    # The client scans the host's QR code three times as a spectator; after each alignment it tracks the code again,
+    # so where it sees the code can be compared with where the host says it is (Tools/analyze_qr_alignment.py).
+    ("HoloKit", "holokit-qr-alignment", "HOLOKIT_QR_ALIGNMENT_ROLE", "QRAlignmentTests", 600),
 ]
 
 # Role variable -> the variable that tells the host how many clients to wait for. Only these tests take more devices.
 CLIENT_COUNT_VARIABLES = {"HOLOKIT_TOY_TRANSPORT_ROLE": "HOLOKIT_TOY_TRANSPORT_CLIENTS",
                           "HOLOKIT_MULTIPLAYER_SCENES_ROLE": "HOLOKIT_MULTIPLAYER_SCENES_CLIENTS",
-                          "MOFA_HUNTING_TWO_PHONE_ROLE": "MOFA_HUNTING_TWO_PHONE_CLIENTS"}
+                          "MOFA_HUNTING_TWO_PHONE_ROLE": "MOFA_HUNTING_TWO_PHONE_CLIENTS",
+                          "HOLOKIT_QR_ALIGNMENT_ROLE": "HOLOKIT_QR_ALIGNMENT_CLIENTS"}
 
 
 def host_and_clients(devices: list[str], more: list[str], variable: str) -> tuple[list[str], list[dict[str, str]]]:

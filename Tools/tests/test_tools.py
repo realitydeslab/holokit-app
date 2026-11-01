@@ -17,6 +17,7 @@ from PIL import Image
 
 TOOLS = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(TOOLS))
+import analyze_qr_alignment  # noqa: E402
 import compare_network_objects  # noqa: E402
 import run_device_tests  # noqa: E402
 import verify_ios_export  # noqa: E402
@@ -214,6 +215,33 @@ class RunAllTestsScriptTests(unittest.TestCase):
         self.assertEqual(len(calls), 1)
         self.assertNotIn("--filter", calls[0])
 
+
+
+class QRAlignmentMathTests(unittest.TestCase):
+    """The alignment yaw for a client whose world is turned 40 degrees from the host's, by the host's screen pose."""
+
+    TURN = 40.0
+    UPRIGHT = ((1.0, 0.0, 0.0), (0.0, 0.0, 1.0), (0.0, -1.0, 0.0))  # code facing -Z, its top up
+    FLAT = ((1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0))  # code facing up
+
+    def pairs(self, screen):
+        q = analyze_qr_alignment
+        turn, offset = q.yaw_matrix(self.TURN), (0.5, 0.0, -1.2)
+        pairs = []
+        for i in range(10):  # the host's hand moves the screen by a few millimetres
+            p = (0.3 + 0.001 * (i % 3), 1.1 + 0.0005 * i, 0.8 - 0.001 * (i % 2))
+            moved = q.apply(turn, p)
+            client = (moved[0] + offset[0], moved[1] + offset[1], moved[2] + offset[2])
+            pairs.append((q.Pose(p, screen), q.Pose(client, q.multiply(turn, screen))))
+        return pairs
+
+    def test_world_frame_yaw_is_the_turn_for_any_screen_pose(self):
+        for screen in (self.UPRIGHT, self.FLAT):
+            self.assertAlmostEqual(analyze_qr_alignment.world_theta(self.pairs(screen)), self.TURN, places=3)
+
+    def test_app_theta_finds_the_turn_only_for_a_screen_lying_face_up(self):
+        self.assertAlmostEqual(analyze_qr_alignment.legacy_theta(self.pairs(self.FLAT)), self.TURN, places=1)
+        self.assertAlmostEqual(analyze_qr_alignment.legacy_theta(self.pairs(self.UPRIGHT)), 0.0, places=1)
 
 if __name__ == "__main__":
     unittest.main()
