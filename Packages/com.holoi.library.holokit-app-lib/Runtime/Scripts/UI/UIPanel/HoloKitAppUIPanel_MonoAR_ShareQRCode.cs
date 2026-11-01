@@ -48,8 +48,13 @@ namespace Holoi.Library.HoloKitAppLib.UI
 
         private void AdjustQRCodeSize()
         {
+            // The code must be QRCodeWidth wide on the glass: the scanner's reference image says so, and a bigger code
+            // makes the scanner think the host is closer than it is. sizeDelta is in canvas units, which the canvas
+            // scales to screen pixels (by 1.09 on a 13-inch iPad), so undo that scale.
             float qrCodeWithInPixel = HoloKitUtils.MeterToPixel(QRCodeWidth);
-            _qrCode.sizeDelta = new Vector2(qrCodeWithInPixel, qrCodeWithInPixel);
+            var canvas = _qrCode.GetComponentInParent<Canvas>();
+            float scaleFactor = canvas != null && canvas.rootCanvas.scaleFactor > 0f ? canvas.rootCanvas.scaleFactor : 1f;
+            _qrCode.sizeDelta = new Vector2(qrCodeWithInPixel, qrCodeWithInPixel) / scaleFactor;
         }
 
         private Vector3 CalculateCameraToQRCodeOffset()

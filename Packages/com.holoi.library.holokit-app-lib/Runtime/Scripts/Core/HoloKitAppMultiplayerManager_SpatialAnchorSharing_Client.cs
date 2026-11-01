@@ -259,14 +259,19 @@ namespace Holoi.Library.HoloKitAppLib
                 _imagePosePairQueue.Select(o => o.HostImagePosition.y).Average(),
                 _imagePosePairQueue.Select(o => o.HostImagePosition.z).Average());
 
+            // Theta is the yaw that turns the host's world into the client's: R(theta) * host = client, for the code's
+            // positions and for its rotations. The rotation term must compare the two views of the code in world space
+            // (client * host^-1), not in the code's own frame (host^-1 * client): in the code's frame, the yaw about
+            // world up becomes a turn about whichever axis of the code points up, so for a screen held upright the
+            // term measured nothing and pulled theta to 0, leaving the client turned by its heading difference.
             Vector2 tanThetaAB = _imagePosePairQueue.Select(o =>
             {
                 var p = o.HostImagePosition - hostImagePositionCenter;
                 var q = o.ClientImagePosition - clientImagePositionCenter;
-                var r = Matrix4x4.Rotate(o.HostImageRotation).transpose * Matrix4x4.Rotate(o.ClientImageRotation);
+                var r = Matrix4x4.Rotate(o.ClientImageRotation) * Matrix4x4.Rotate(o.HostImageRotation).transpose;
 
-                    var a = p.x * q.x + p.z * q.z + OptimizationPenaltyConstant * (r.m00 + r.m22);
-                    var b = -p.x * q.z + p.z * q.x + OptimizationPenaltyConstant * (-r.m20 + r.m02);
+                var a = p.x * q.x + p.z * q.z + OptimizationPenaltyConstant * (r.m00 + r.m22);
+                var b = -p.x * q.z + p.z * q.x + OptimizationPenaltyConstant * (-r.m20 + r.m02);
                 return new Vector2(a, b);
             }).Aggregate(Vector2.zero, (r, o) => r + o);
 
@@ -274,7 +279,9 @@ namespace Holoi.Library.HoloKitAppLib
 
             Matrix4x4 rotation = Matrix4x4.Rotate(Quaternion.AngleAxis(thetaInDeg, Vector3.up));
 
-            Vector3 translate = -rotation.MultiplyPoint3x4(hostImagePositionCenter - clientImagePositionCenter);
+            // ResetOrigin puts the new origin at (translate, rotation) in the client's current world, so a client point
+            // x becomes R^-1 (x - translate); the code's centre must land on the host's: translate = q - R p.
+            Vector3 translate = clientImagePositionCenter - rotation.MultiplyPoint3x4(hostImagePositionCenter);
 
             return new SyncResult()
             {

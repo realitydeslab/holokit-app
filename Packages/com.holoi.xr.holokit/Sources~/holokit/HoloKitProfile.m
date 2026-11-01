@@ -128,6 +128,21 @@
     }
 }
 
+// The portrait pixel size of an iPad Pro with LiDAR (Apple's tech specs); all of them have 264 pixels per inch.
+static simd_float2 IpadPortraitPixels(void) {
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    NSString *deviceName = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+    NSArray<NSString *> *thirteenInch = @[@"iPad16,5", @"iPad16,6", @"iPad17,3", @"iPad17,4"];
+    NSArray<NSString *> *elevenInchM4 = @[@"iPad16,3", @"iPad16,4", @"iPad17,1", @"iPad17,2"];
+    NSArray<NSString *> *twelveNineInch = @[@"iPad8,11", @"iPad8,12", @"iPad13,8", @"iPad13,9", @"iPad13,10",
+                                            @"iPad13,11", @"iPad14,5", @"iPad14,6"];
+    if ([thirteenInch containsObject:deviceName]) return simd_make_float2(2064, 2752);
+    if ([elevenInchM4 containsObject:deviceName]) return simd_make_float2(1668, 2420);
+    if ([twelveNineInch containsObject:deviceName]) return simd_make_float2(2048, 2732);
+    return simd_make_float2(1668, 2388); // 11-inch 2nd to 4th generation
+}
+
 + (PhoneModel)getPhoneModel {
     PhoneModel phoneModel;
     switch ([HoloKitProfile getPhoneType])
@@ -322,7 +337,20 @@
             phoneModel.CameraOffset = simd_make_float3(0.04652, -0.0598, -0.00773);
             phoneModel.ScreenDpi = 460;
             break;
-        case iPadWithLidar:
+        // iPad Pros with LiDAR (screen only, not the headset), so a spectator scanning an iPad host's QR code finds it
+        // at the right size and place. Screen from its pixels at 264 dpi. Camera not measured: Apple publishes no
+        // position, so the rear camera is taken 6.5 mm in from the display's top and right edges seen from the front
+        // (about 15 mm from the body's edges, behind ~8.5 mm borders), 4.5 mm behind the glass.
+        case iPadWithLidar: {
+            simd_float2 pixels = IpadPortraitPixels();
+            float wide = pixels.x / 264.0f * 0.0254f, high = pixels.y / 264.0f * 0.0254f;
+            phoneModel.ScreenWidth = high;
+            phoneModel.ScreenHeight = wide;
+            phoneModel.ScreenBottom = 0.0085f;
+            phoneModel.CameraOffset = simd_make_float3(high / 2 - 0.0065f, -wide + 0.0065f, -0.0045f);
+            phoneModel.ScreenDpi = 264;
+            break;
+        }
         case Unknown:
         default:
             phoneModel.ScreenWidth = 0.15390;

@@ -57,13 +57,33 @@ static void Check(const PhoneCase *c) {
     Expect(Near(model.ScreenDpi, 460), c, "screen dpi");
 }
 
-// iPads with LiDAR do not fit the HoloKit headset, but run the LiDAR realities on the screen.
-static void CheckIpadWithLidar(const char *machine, const char *name) {
-    const PhoneCase c = {machine, name, NO, YES, 0, 0, 0, simd_make_float3(0, 0, 0)};
-    currentMachine = machine;
+typedef struct {
+    const char *machine;
+    const char *name;
+    float portraitPixelsWide;  // Apple's tech specs; every iPad Pro with LiDAR has 264 pixels per inch
+    float portraitPixelsHigh;
+} IpadCase;
+
+static BOOL NearMm(float a, float b) {
+    return fabsf(a - b) < 1e-5f;
+}
+
+// iPads with LiDAR do not fit the HoloKit headset, but run the LiDAR realities on the screen and host shared realities:
+// the QR code a spectator scans is sized and placed with the screen's real size, dpi and camera position.
+static void CheckIpadWithLidar(const IpadCase *ipad) {
+    const PhoneCase c = {ipad->machine, ipad->name, NO, YES, 0, 0, 0, simd_make_float3(0, 0, 0)};
+    currentMachine = ipad->machine;
     Expect(![HoloKitProfile IsCurrentDeviceSupportedByHoloKit], &c, "not supported by HoloKit");
     Expect([HoloKitProfile IsCurrentDeviceEquippedWithLiDAR], &c, "LiDAR");
     Expect([HoloKitProfile IsCurrentDeviceIpad], &c, "an iPad");
+    PhoneModel model = [HoloKitProfile getPhoneModel];
+    const float wide = ipad->portraitPixelsWide / 264.0f * 0.0254f, high = ipad->portraitPixelsHigh / 264.0f * 0.0254f;
+    Expect(Near(model.ScreenDpi, 264), &c, "screen dpi 264");
+    Expect(NearMm(model.ScreenWidth, high) && NearMm(model.ScreenHeight, wide), &c, "screen size (landscape)");
+    // Camera to the middle of the screen's left edge, as (-y, x) in portrait: the rear camera sits behind the
+    // display's top-right corner seen from the front, 6.5 mm in from both edges (not measured).
+    Expect(NearMm(model.CameraOffset.x, high / 2 - 0.0065f) && NearMm(model.CameraOffset.y, -wide + 0.0065f)
+           && NearMm(model.CameraOffset.z, -0.0045f), &c, "camera offset");
 }
 
 int main(void) {
@@ -98,20 +118,20 @@ int main(void) {
         }
         // Every iPad Pro with LiDAR, Wi-Fi and cellular (Xcode 27.1's device types list 8,9 8,12 13,5 13,10 14,3 14,5
         // 16,4 16,6 17,2 17,4; the others are their pairs).
-        const char *ipads[][2] = {
-            {"iPad8,9", "iPad Pro 11-inch 2nd gen"}, {"iPad8,10", "iPad Pro 11-inch 2nd gen"},
-            {"iPad8,11", "iPad Pro 12.9-inch 4th gen"}, {"iPad8,12", "iPad Pro 12.9-inch 4th gen"},
-            {"iPad13,4", "iPad Pro 11-inch 3rd gen"}, {"iPad13,7", "iPad Pro 11-inch 3rd gen"},
-            {"iPad13,8", "iPad Pro 12.9-inch 5th gen"}, {"iPad13,11", "iPad Pro 12.9-inch 5th gen"},
-            {"iPad14,3", "iPad Pro 11-inch 4th gen"}, {"iPad14,6", "iPad Pro 12.9-inch 6th gen"},
-            {"iPad16,3", "iPad Pro 11-inch (M4)"}, {"iPad16,4", "iPad Pro 11-inch (M4)"},
-            {"iPad16,5", "iPad Pro 13-inch (M4)"}, {"iPad16,6", "iPad Pro 13-inch (M4)"},
-            {"iPad17,1", "iPad Pro 11-inch (M5)"}, {"iPad17,2", "iPad Pro 11-inch (M5)"},
-            {"iPad17,3", "iPad Pro 13-inch (M5)"}, {"iPad17,4", "iPad Pro 13-inch (M5)"},
+        const IpadCase ipads[] = {
+            {"iPad8,9", "iPad Pro 11-inch 2nd gen", 1668, 2388}, {"iPad8,10", "iPad Pro 11-inch 2nd gen", 1668, 2388},
+            {"iPad8,11", "iPad Pro 12.9-inch 4th gen", 2048, 2732}, {"iPad8,12", "iPad Pro 12.9-inch 4th gen", 2048, 2732},
+            {"iPad13,4", "iPad Pro 11-inch 3rd gen", 1668, 2388}, {"iPad13,7", "iPad Pro 11-inch 3rd gen", 1668, 2388},
+            {"iPad13,8", "iPad Pro 12.9-inch 5th gen", 2048, 2732}, {"iPad13,11", "iPad Pro 12.9-inch 5th gen", 2048, 2732},
+            {"iPad14,3", "iPad Pro 11-inch 4th gen", 1668, 2388}, {"iPad14,6", "iPad Pro 12.9-inch 6th gen", 2048, 2732},
+            {"iPad16,3", "iPad Pro 11-inch (M4)", 1668, 2420}, {"iPad16,4", "iPad Pro 11-inch (M4)", 1668, 2420},
+            {"iPad16,5", "iPad Pro 13-inch (M4)", 2064, 2752}, {"iPad16,6", "iPad Pro 13-inch (M4)", 2064, 2752},
+            {"iPad17,1", "iPad Pro 11-inch (M5)", 1668, 2420}, {"iPad17,2", "iPad Pro 11-inch (M5)", 1668, 2420},
+            {"iPad17,3", "iPad Pro 13-inch (M5)", 2064, 2752}, {"iPad17,4", "iPad Pro 13-inch (M5)", 2064, 2752},
         };
         const size_t ipadCount = sizeof(ipads) / sizeof(ipads[0]);
         for (size_t i = 0; i < ipadCount; i++) {
-            CheckIpadWithLidar(ipads[i][0], ipads[i][1]);
+            CheckIpadWithLidar(&ipads[i]);
         }
         if (failures > 0) {
             fprintf(stderr, "%d failure(s) in %zu phones and %zu iPads\n", failures, count, ipadCount);
