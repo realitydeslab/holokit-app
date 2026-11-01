@@ -11,19 +11,21 @@ using UnityEngine.VFX;
 
 namespace HoloKit.Tests
 {
-    /// <summary>The reality thumbnails show the wands they showed from January to December 2023.</summary>
+    /// <summary>Which reality thumbnail avatars hold the magic circle (the wand) in their hand.</summary>
     public class MofaThumbnailTests
     {
         // The hand effect the in-game AI player holds; the only wand a thumbnail has ever held.
         private const string WandPath = "Packages/org.realitydeslab.mofa.object.spells/Assets/WeaponsVFX/_prefabs/ancient art vfx.prefab";
 
-        // Who held it from 01e272fb (2023-01-05) until "Remove Weapons" (60f9645f, 2023-12-10) cleared the Meebits prefabs'
-        // default wand: the Duel's 5958 and both Hunting avatars. Every other thumbnail avatar is empty-handed, as then.
+        // Who holds it: both Hunting avatars and the Duel's 5958 held it from 01e272fb (2023-01-05) until "Remove Weapons"
+        // (60f9645f, 2023-12-10) cleared the Meebits prefabs' default wand; the Duel's 13173 and Training's opponent hold it
+        // too (2026-11-01, the product owner's call). Ghost, Ducks and the Typed/QRealm thumbnails stay empty-handed.
         // Keyed by reality asset name and avatar prefab name.
         private static readonly Dictionary<string, string[]> Holders = new()
         {
-            ["MOFATheDuel"] = new[] { "5958" },
+            ["MOFATheDuel"] = new[] { "5958", "13173" },
             ["MOFATheHunting"] = new[] { "5958", "13173" },
+            ["MOFATheTraining"] = new[] { "13173" },
         };
 
         private static bool Holds(string reality, string avatar) =>
@@ -32,7 +34,7 @@ namespace HoloKit.Tests
         // The Meebits prefabs no longer carry a wand, so each thumbnail gives one to the avatars that hold it.
         // Checks the thumbnails the realities in this project point to, which in the MOFA app are its own covers.
         [Test]
-        public void ThumbnailAvatarsHoldTheir2023Wands()
+        public void ThumbnailAvatarsHoldTheirWands()
         {
             var wrong = new List<string>();
             var avatars = 0;
@@ -55,7 +57,7 @@ namespace HoloKit.Tests
                 }
             }
             Assert.That(avatars, Is.GreaterThan(0), "No reality thumbnail with a Meebits avatar was found.");
-            Assert.That(wrong, Is.Empty, "Thumbnail avatars that differ from 2023:\n" + string.Join("\n", wrong));
+            Assert.That(wrong, Is.Empty, "Thumbnail avatars that hold the wrong thing:\n" + string.Join("\n", wrong));
         }
 
         // An iPhone 15 Pro screen, which the gallery's orthographic camera fills.
@@ -138,7 +140,7 @@ namespace HoloKit.Tests
             File.WriteAllLines(Path.Combine(directory, "wands.txt"), report);
             Debug.Log("[MofaThumbnails]\n" + string.Join("\n", report));
             var expected = Holders.SelectMany(h => h.Value.Select(avatar => $"{h.Key}/{avatar}"));
-            Assert.That(measured, Is.EquivalentTo(expected), "The gallery's wands are not the 2023 ones.");
+            Assert.That(measured, Is.EquivalentTo(expected), "The gallery shows other wands than the thumbnails should hold.");
             Assert.That(hidden, Is.Empty, $"Gallery avatars whose wand shows fewer than {MinWandPixels} pixels on an iPhone 15 Pro " +
                                           $"screen (frames in {directory}):\n" + string.Join("\n", hidden));
         }
