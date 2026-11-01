@@ -80,6 +80,18 @@ namespace HoloKit.Tests
             Assert.That(lifted, Is.Empty, "XR Origin Camera Y Offset must be 0 in " + ScenePath);
         }
 
+        // HoloKitHandTracker's joint cubes are a debugging aid: a reality draws its own hand effects. Their material is
+        // missing; Unity 6.3 gives them a lit default when the tracker colours them, so Finger Ribbon showed 21 cubes.
+        [Test]
+        public void HandJointCubesStayHidden()
+        {
+            var shown = Objects.SelectMany(go => go.GetComponents<MonoBehaviour>())
+                .Where(c => c != null && c.GetType().Name == "HoloKitHandTracker")
+                .Where(c => new SerializedObject(c).FindProperty("_isVisible").boolValue)
+                .Select(c => c.name);
+            Assert.That(shown, Is.Empty, "Hand trackers that draw their joint cubes in " + ScenePath);
+        }
+
         [Test]
         public void RealityManagerHasNetworkIdentityAndConfiguration()
         {
