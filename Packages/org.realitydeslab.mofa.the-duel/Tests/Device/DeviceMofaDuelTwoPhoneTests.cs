@@ -31,6 +31,7 @@ namespace RealityDesignLab.MOFA.TheDuel
             public string localStatus;
             public bool connected;
             public bool spatialSynced;
+            public bool checkMarkTapped;
             public bool fighting;
             public bool lifeShieldReady;
             public float requiredBasicCharge;
@@ -120,18 +121,28 @@ namespace RealityDesignLab.MOFA.TheDuel
             if (_report.role == "client")
             {
                 Require(_report.spatialSynced, "Client did not complete QR spatial alignment.");
-                app.MultiplayerManager.OnCheckAlignmentMarker();
+                // The player taps the check button once the alignment marker sits on the host.
+                for (var i = 0; i < 100 && !_report.checkMarkTapped; i++)
+                {
+                    yield return new WaitForSecondsRealtime(.1f);
+                    _report.checkMarkTapped = HoloKit.DeviceTests.DeviceTaps.TapCheckMark();
+                }
+                Require(_report.checkMarkTapped, "The alignment marker panel with its check button did not appear.");
             }
 
-            for (var i = 0; i < 200; i++)
+            // The host gets here as soon as the client joins, while the client may still be scanning the QR code: give
+            // it as long as the client's own scan loop above.
+            for (var i = 0; i < 900; i++)
             {
                 Refresh(app);
-                if (app.MultiplayerManager.PlayerList.All(p => p.PlayerStatus.Value == HoloKitAppPlayerStatus.Checked))
+                if (BothChecked(app))
                     break;
                 yield return new WaitForSecondsRealtime(.1f);
             }
-            Require(app.MultiplayerManager.PlayerList.All(p => p.PlayerStatus.Value == HoloKitAppPlayerStatus.Checked),
+            Require(BothChecked(app),
                 "Both players did not finish spatial alignment.");
+            if (_report.role == "host")
+                Require(HoloKit.DeviceTests.DeviceTaps.CloseShareQRCode(), "The QR code panel's close button is not shown.");
             for (var i = 0; i < 100 && duel.LocalMofaPlayer == null; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             Require(duel.LocalMofaPlayer != null, "Local MOFA player did not spawn.");
@@ -203,6 +214,11 @@ namespace RealityDesignLab.MOFA.TheDuel
             File.WriteAllBytes(Path.Combine(_directory, name), texture.EncodeToPNG());
             Destroy(texture);
         }
+
+        // Both players confirmed the alignment. A client that has left drops out of the list, so the host alone would
+        // count as everyone having confirmed.
+        private static bool BothChecked(HoloKitApp app) => app.MultiplayerManager.PlayerList.Count >= 2 &&
+            app.MultiplayerManager.PlayerList.All(p => p.PlayerStatus.Value == HoloKitAppPlayerStatus.Checked);
 
         private static void Require(bool condition, string message)
         {
