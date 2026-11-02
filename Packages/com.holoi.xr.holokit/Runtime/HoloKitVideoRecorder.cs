@@ -261,6 +261,7 @@ namespace HoloKit {
             AsyncGPUReadback.WaitAllRequests();
             HoloKitVideoRecorder_EndRecording();
             IsRecording = false;
+            OnHoloKitRenderModeChanged(HoloKitCameraManager.Instance.RenderMode);
 
             Destroy(_bufferFrame);
             _bufferFrame = null;
@@ -301,20 +302,19 @@ namespace HoloKit {
             }
         }
 
+        // In Stereo the screen shows the eyes, and the recorder renders the AR camera itself (RenderFrame), so only the
+        // camera's AR background is switched on while recording; the camera stays disabled. Enabled, it also rendered to
+        // the screen every frame, unseen under the eyes, and Unity 6.3's render graph reused that screen render's
+        // compiled graph for the recorded frame (same passes, size and format; the compilation cache does not tell a
+        // top-left screen from a bottom-left texture): when the screen render compiled first, as when Stereo was opened
+        // straight from portrait, every later recording came out upside down. Mono renders the camera to both too, and
+        // stays apart only because its screen render, as the last camera, adds the UI overlay pass: another base camera
+        // drawing after it, or HDR display output, would bring the same collision there
+        // (Tools/check_recording_orientation.py, mofa-stereo-recording).
         void OnHoloKitRenderModeChanged(HoloKitRenderMode mode) {
-            if (IsRecording) {
-                if (HoloKitCameraManager.Instance.RenderMode == HoloKitRenderMode.Stereo)
-                {
-                    GetComponent<ARCameraBackground>().enabled = true;
-                    _recordingCamera.enabled = true;
-                }
-            } else {
-                if (HoloKitCameraManager.Instance.RenderMode == HoloKitRenderMode.Stereo)
-                {
-                    GetComponent<ARCameraBackground>().enabled = false;
-                    _recordingCamera.enabled = false;
-                }
-            }
+            if (HoloKitCameraManager.Instance.RenderMode != HoloKitRenderMode.Stereo) return;
+            GetComponent<ARCameraBackground>().enabled = IsRecording;
+            _recordingCamera.enabled = false;
         }
 
         unsafe void OnAudioFilterRead(float[] data, int channels)
