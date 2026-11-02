@@ -76,7 +76,6 @@ namespace RealityDesignLab.MOFA.TheTraining
             public List<CameraView> aiCameraViews = new();
             public Vector3 placementPosition;
             public List<PoseSample> poseSamples = new();
-            public int aiFallbackMaterials;
             public int aiCasts;
             public bool starButtonActive;
             public bool syntheticPlacement;
@@ -248,13 +247,11 @@ namespace RealityDesignLab.MOFA.TheTraining
             _report.aiAvatarVisible = ai.AvatarAnimator != null && ai.AvatarAnimator.gameObject.activeInHierarchy;
             _report.aiOriginY = ai.transform.position.y;
             _report.aiWeaponPresent = ai.AvatarWeaponPresent;
-            _report.aiFallbackMaterials = ai.AvatarFallbackMaterialCount;
             RecordPoseSamples("fighting");
             RecordAiCameraViews(ai);
             Save();
             Require(_report.aiAvatarVisible, "AI opponent avatar did not appear.");
             Require(_report.aiWeaponPresent, "AI opponent wand did not spawn on the hand joint.");
-            Require(_report.aiFallbackMaterials > 0, "AI avatar did not replace the incompatible Meebits shader on iOS.");
             yield return new WaitForEndOfFrame();
             Capture("fighting-before-shot.png");
 

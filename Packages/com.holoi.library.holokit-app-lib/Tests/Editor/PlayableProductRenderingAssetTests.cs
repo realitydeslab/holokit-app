@@ -34,6 +34,27 @@ namespace HoloKit.Tests
             return AssetDatabase.GetDependencies(seeds, true).Distinct().OrderBy(p => p, StringComparer.Ordinal).ToArray();
         }
 
+        // A reality switches to its own URP asset at runtime (RealityConfiguration.UrpAsset), but the player build keeps
+        // shader variants by the default URP asset's keyword prefiltering only. When the default asset has main light
+        // shadows on, the build drops every lit shader's shadows-off variant. An asset with main light shadows off then
+        // asks for that variant, and Metal pairs the programs of two others: "Fragment input(s) user(INTERP4) mismatching
+        // vertex shader output" for SH_Meebits, and the MOFA Training opponent was not drawn (iPhone 15 Pro, 2026-11-02).
+        // A reality that draws no shadows keeps shadows supported and sets the shadow distance to 0 instead.
+        [Test]
+        public void RealityUrpAssetsMatchTheDefaultAssetsMainLightShadowSupport()
+        {
+            var defaultAsset = GraphicsSettings.defaultRenderPipeline as UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset;
+            Assert.That(defaultAsset, Is.Not.Null, "The default render pipeline is not a URP asset.");
+            var urpAssets = ProductDependencies().Where(p => p.EndsWith(".asset", StringComparison.OrdinalIgnoreCase))
+                .Select(AssetDatabase.LoadMainAssetAtPath).OfType<UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset>().ToArray();
+            Assert.That(urpAssets, Is.Not.Empty, "No URP asset found; the dependency scan is broken.");
+            var mismatched = urpAssets.Where(asset => asset.supportsMainLightShadows != defaultAsset.supportsMainLightShadows)
+                .Select(AssetDatabase.GetAssetPath).ToArray();
+            Assert.That(mismatched, Is.Empty,
+                $"The default URP asset has main light shadows {(defaultAsset.supportsMainLightShadows ? "on" : "off")}; these differ:\n" +
+                string.Join("\n", mismatched));
+        }
+
         [Test]
         public void PlayableProductMaterialsUseWorkingUrpShaders()
         {

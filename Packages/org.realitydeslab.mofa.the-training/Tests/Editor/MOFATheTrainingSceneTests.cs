@@ -35,18 +35,19 @@ namespace HoloKit.GameTests
             }
         }
 
+        // The opponent wears its avatar's own SH_Meebits materials on every platform. An unlit iOS stand-in hid a build that
+        // lacked SH_Meebits' shadows-off variant (PlayableProductRenderingAssetTests.RealityUrpAssetsMatchTheDefaultAssetsMainLightShadowSupport) and made it look dark.
         [Test]
-        public void AiAvatarHasAnIosVisibleMaterial()
+        public void AiAvatarWearsItsOwnMaterialsAndWand()
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
                 "Packages/org.realitydeslab.mofa.the-training/Assets/Prefabs/Mofa AI Player.prefab");
             Assert.That(prefab, Is.Not.Null);
             var player = prefab.GetComponent("MofaAIPlayer");
             Assert.That(player, Is.Not.Null);
-            var fallback = new SerializedObject(player).FindProperty("_iosAvatarFallbackMaterial").objectReferenceValue as Material;
-            Assert.That(fallback, Is.Not.Null);
-            Assert.That(fallback.shader.name, Is.EqualTo("Universal Render Pipeline/Unlit"));
-            var weapon = new SerializedObject(player).FindProperty("_aiWeaponPrefab").objectReferenceValue as GameObject;
+            using var serialized = new SerializedObject(player);
+            Assert.That(serialized.FindProperty("_iosAvatarFallbackMaterial"), Is.Null, "The opponent needs no stand-in material.");
+            var weapon = serialized.FindProperty("_aiWeaponPrefab").objectReferenceValue as GameObject;
             Assert.That(weapon, Is.Not.Null, "AI hand-held wand prefab is missing.");
         }
 

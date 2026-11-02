@@ -55,7 +55,6 @@ namespace RealityDesignLab.MOFA.TheTraining
                 DeinitStateMachine();
             }
             DeinitAnimationControl();
-            ReleaseAvatarMaterialOverrides();
         }
 
         protected override void Update()
