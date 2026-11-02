@@ -23,6 +23,7 @@ import time
 from pathlib import Path
 
 import check_recording_audio
+import check_recording_orientation
 
 REPO = Path(__file__).resolve().parents[1]
 UNITY = str(Path.home() / ".unity/bin/unity")
@@ -53,6 +54,9 @@ SINGLE_PHONE_TESTS = [
     # Settings > Record Microphone off: the recording carries the game track alone.
     ("MOFA", "mofa-single-no-mic", {"MOFA_SINGLE_TEST": "1", "MOFA_SINGLE_RECORD_MICROPHONE": "0"},
      "MofaSinglePlayerTests", 400),
+    # MR recordings the right way up (Tools/check_recording_orientation.py). The phone must stay still and see a
+    # detailed scene, best in a HoloKit headset standing upright; a plain ceiling or desk fails with "cannot tell".
+    ("MOFA", "mofa-stereo-recording", {"MOFA_STEREO_RECORDING_TEST": "1"}, "MofaStereoRecordingTests", 300),
     # Needs a person wearing the paired Apple Watch to swing during a 90 s window.
     ("MOFA", "mofa-single-real-watch", {"MOFA_SINGLE_TEST": "1", "MOFA_SINGLE_REAL_WATCH": "1"}, "MofaSinglePlayerTests", 600),
     ("Typed", "typed-scenes", {"HOLOKIT_SCENE_TEST": "1"}, "HoloKitSceneTests", 700),
@@ -245,6 +249,23 @@ def check_recordings(folder: Path, passed: bool, detail: str, microphone: bool =
     return passed, detail
 
 
+def check_orientation(folder: Path, passed: bool, detail: str) -> tuple[bool, str]:
+    """Adds the orientation check of a stereo recording test's movies (Tools/check_recording_orientation.py)."""
+    for report in sorted(folder.rglob("results.json")):
+        if not (report.parent / "stereo.mp4").exists():
+            continue
+        # The device test asserts nothing about orientation itself: without this check it has not passed.
+        if shutil.which("ffmpeg") is None:
+            return False, f"{detail}; orientation not checked (no ffmpeg)"
+        try:
+            _, issues = check_recording_orientation.problems(report.parent)
+        except (subprocess.CalledProcessError, ValueError, KeyError, OSError) as error:
+            issues = [f"orientation not checked: {error}"]
+        if issues:
+            passed, detail = False, f"{detail}; {issues[0]}"
+    return passed, detail
+
+
 def run_test(devices: list[str], product: str, name: str, environments: list[dict[str, str]], folder: str,
              timeout: int, out: Path) -> bool:
     bundle = PRODUCTS[product]["bundle"]
@@ -262,6 +283,7 @@ def run_test(devices: list[str], product: str, name: str, environments: list[dic
         fetch(device, bundle, f"Documents/{folder}", destination)
         passed, detail = verdict(report)
         passed, detail = check_recordings(destination, passed, detail, expects_microphone(environment))
+        passed, detail = check_orientation(destination, passed, detail)
         ok &= passed
         log(out, f"{'PASS' if passed else 'FAIL'} {name} on {device[-6:]}: {detail}")
     return ok
