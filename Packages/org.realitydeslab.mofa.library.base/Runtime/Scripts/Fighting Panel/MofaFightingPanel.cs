@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 using System;
+using System.Collections;
 using UnityEngine;
 using Unity.Netcode;
 using Holoi.Library.HoloKitAppLib;
@@ -92,6 +93,23 @@ namespace RealityDesignLab.MOFA.Library.Base
             Reticle.gameObject.SetActive(false);
             Status.gameObject.SetActive(false);
             RedScreen.gameObject.SetActive(false);
+
+            StartCoroutine(ShowIfJoinedDuringRound());
+        }
+
+        // A spectator who joins during a round receives the current phase, not the countdown that shows the scores and
+        // the time, so it shows them itself once the reality manager has arrived.
+        private IEnumerator ShowIfJoinedDuringRound()
+        {
+            MofaBaseRealityManager manager = null;
+            while (manager == null || !manager.IsSpawned)
+            {
+                yield return null;
+                manager = HoloKitApp.Instance != null ? HoloKitApp.Instance.RealityManager as MofaBaseRealityManager : null;
+            }
+            var phase = manager.CurrentPhase.Value;
+            if (phase == MofaPhase.Countdown || phase == MofaPhase.Fighting)
+                OnCountdown();
         }
 
         protected virtual void OnDestroy()

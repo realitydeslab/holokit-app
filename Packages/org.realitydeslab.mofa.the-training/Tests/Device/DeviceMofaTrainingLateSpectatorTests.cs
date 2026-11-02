@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using HoloKit.DeviceTests;
 using Holoi.Library.ARUX;
 using Holoi.Library.HoloKitAppLib;
@@ -19,6 +20,9 @@ namespace RealityDesignLab.MOFA.TheTraining
     /// A spectator who joins MOFA Training after the host has started it must still see the AI avatar. The host starts
     /// the first round (which spawns the avatar) before it shows its QR code, so the spectator can only join afterwards;
     /// the spectator then scans the code, taps the check button and must have built the avatar.
+    /// The spectator must also hear the round's background music, see the scores and the time left, must not see the
+    /// distance labels over players' heads during the round, and must not record them: after the round, while waiting,
+    /// it records and checks the labels.
     /// Run with MOFA_TRAINING_LATE_SPECTATOR_ROLE=host on the device whose screen the other watches, =client on it.
     /// </summary>
     public sealed class DeviceMofaTrainingLateSpectatorTests : MonoBehaviour
@@ -35,6 +39,26 @@ namespace RealityDesignLab.MOFA.TheTraining
             public bool aiPlayerSpawned, avatarBuilt;
             public int avatarRenderers;
             public float avatarSeconds;
+            public bool hostMusicPlaying;
+            public string fightingUtc;
+            // Where each phone is in the music at a moment (UTC), to compare the host's and the spectator's afterwards.
+            public float hostMusicTime;
+            public string hostMusicUtc;
+            public float musicTime;
+            public string musicUtc;
+            public string phase;
+            public bool musicPlaying;
+            public string musicClip;
+            public float outputDb;
+            public int distanceLabels;
+            public bool scoresShown, timeShown;
+            public string timeText;
+            public string timeCheckedUtc;
+            public bool waitingAgain;
+            public int distanceLabelsWaiting;
+            public bool recording;
+            public int distanceLabelsRecording;
+            public int distanceLabelsAfterRecording;
             public List<string> errors = new();
         }
 
@@ -113,8 +137,14 @@ namespace RealityDesignLab.MOFA.TheTraining
             for (var i = 0; i < 120 && manager.CurrentPhase.Value != MofaPhase.Fighting; i++)
                 yield return new WaitForSecondsRealtime(.1f);
             _report.fighting = manager.CurrentPhase.Value == MofaPhase.Fighting;
+            _report.fightingUtc = DateTime.UtcNow.ToString("o");
             var ai = FindObjectsByType<MofaAIPlayer>(FindObjectsSortMode.None).FirstOrDefault();
             _report.avatarOnHost = ai != null && ai.AvatarAnimator != null;
+            yield return new WaitForSecondsRealtime(1f);
+            _report.hostMusicPlaying = MusicPlaying();
+            var hostMusic = BackgroundMusic();
+            _report.hostMusicTime = hostMusic != null ? hostMusic.time : -1f;
+            _report.hostMusicUtc = DateTime.UtcNow.ToString("o");
             Save();
             Require(_report.fighting, "Training did not reach Fighting: " + manager.CurrentPhase.Value);
             Require(_report.avatarOnHost, "The host did not spawn the avatar.");
@@ -123,9 +153,13 @@ namespace RealityDesignLab.MOFA.TheTraining
             for (var i = 0; i < 1500 && !ClientChecked(app); i++)
                 yield return new WaitForSecondsRealtime(.1f);
             _report.connected = ClientChecked(app);
+            Save();
             Require(_report.connected, "The spectator did not join and confirm the alignment.");
             DeviceTaps.CloseShareQRCode();
-            yield return new WaitForSecondsRealtime(15f); // The spectator checks the avatar before the host leaves.
+            // The spectator checks the avatar and the music, then records once the round is over; stay until then.
+            for (var i = 0; i < 1200 && manager.CurrentPhase.Value != MofaPhase.Waiting; i++)
+                yield return new WaitForSecondsRealtime(.1f);
+            yield return new WaitForSecondsRealtime(25f);
         }
 
         private IEnumerator Client(HoloKitApp app)
@@ -154,11 +188,106 @@ namespace RealityDesignLab.MOFA.TheTraining
             _report.avatarRenderers = ai == null ? 0 : ai.GetComponentsInChildren<Renderer>()
                 .Count(r => r.enabled && r.gameObject.activeInHierarchy);
             yield return new WaitForSecondsRealtime(2f);
+            var manager = app.RealityManager as MofaBaseRealityManager;
+            Require(manager != null, "The spectator has no MOFA reality manager.");
+            _report.phase = manager.CurrentPhase.Value.ToString();
+            var music = BackgroundMusic();
+            _report.musicPlaying = music != null && music.isPlaying;
+            _report.musicClip = music != null && music.clip != null ? music.clip.name : "";
+            _report.musicTime = music != null ? music.time : -1f;
+            _report.musicUtc = DateTime.UtcNow.ToString("o");
+            var level = new OutputLevel();
+            for (var i = 0; i < 20; i++)
+            {
+                level.Sample();
+                yield return new WaitForSecondsRealtime(.05f);
+            }
+            _report.outputDb = level.Db;
+            _report.distanceLabels = DistanceLabels();
+            var scores = FindObjectsByType<MofaFightingPanelScores>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            var times = FindObjectsByType<MofaFightingPanelTime>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            _report.scoresShown = scores.Length > 0;
+            _report.timeShown = times.Length > 0;
+            _report.timeText = times.Length > 0 ? TimeText(times[0]) : "";
+            _report.timeCheckedUtc = DateTime.UtcNow.ToString("o");
             Capture("spectator.png");
+            Save();
+            // After the round the labels come back while waiting; a recording must not show them.
+            for (var i = 0; i < 1200 && manager.CurrentPhase.Value != MofaPhase.Waiting; i++)
+                yield return new WaitForSecondsRealtime(.1f);
+            _report.waitingAgain = manager.CurrentPhase.Value == MofaPhase.Waiting;
+            yield return new WaitForSecondsRealtime(2f);
+            _report.distanceLabelsWaiting = DistanceLabels();
+            Capture("spectator-waiting.png");
+            app.Recorder.StartRecording();
+            yield return new WaitForSecondsRealtime(2f);
+            _report.recording = app.Recorder.IsRecording;
+            _report.distanceLabelsRecording = DistanceLabels();
+            Capture("spectator-recording.png");
+            app.Recorder.StopRecording();
+            yield return new WaitForSecondsRealtime(2f);
+            _report.distanceLabelsAfterRecording = DistanceLabels();
             Save();
             Require(_report.aiPlayerSpawned, "The AI player never reached the spectator.");
             Require(_report.avatarBuilt, "The spectator joined after the round started and never built the AI avatar.");
             Require(_report.avatarRenderers > 0, "The spectator's AI avatar has nothing to render.");
+            Require(_report.phase == nameof(MofaPhase.Fighting), "The spectator joined after the round: " + _report.phase);
+            Require(_report.musicPlaying, "The spectator joined during the round but plays no background music.");
+            Require(_report.scoresShown, "The spectator joined during the round but shows no scores.");
+            Require(_report.timeShown, "The spectator joined during the round but shows no time.");
+            var left = int.TryParse(_report.timeText.TrimEnd('s'), out var seconds) ? seconds : -1;
+            Require(left > 0 && left < manager.RoundDuration - 1,
+                $"The spectator shows {_report.timeText} for a round that started before it joined.");
+            Require(_report.distanceLabels == 0,
+                $"During the round the spectator shows {_report.distanceLabels} distance label(s) over players' heads.");
+            Require(_report.waitingAgain, "The round did not end on the spectator.");
+            Require(_report.distanceLabelsWaiting > 0, "No distance label while waiting, so the recording check proves nothing.");
+            Require(_report.recording, "The spectator's recording did not start.");
+            Require(_report.distanceLabelsRecording == 0,
+                $"While recording the spectator shows {_report.distanceLabelsRecording} distance label(s).");
+            Require(_report.distanceLabelsAfterRecording > 0, "The distance labels did not come back after the recording.");
+        }
+
+        // The AudioSource MOFA plays the round's background music on.
+        private static AudioSource BackgroundMusic()
+        {
+            var effects = FindObjectOfType<MofaAudioEffectManager>(true);
+            var field = typeof(MofaAudioEffectManager).GetField("_bgmAudioSource", BindingFlags.NonPublic | BindingFlags.Instance);
+            return effects != null && field != null ? field.GetValue(effects) as AudioSource : null;
+        }
+
+        private static bool MusicPlaying()
+        {
+            var music = BackgroundMusic();
+            return music != null && music.isPlaying;
+        }
+
+        // The text of the round's timer ("37s").
+        private static string TimeText(MofaFightingPanelTime time)
+        {
+            var field = typeof(MofaFightingPanelTime).GetField("_gameTime", BindingFlags.NonPublic | BindingFlags.Instance);
+            var text = field != null ? field.GetValue(time) : null;
+            return text?.GetType().GetProperty("text")?.GetValue(text) as string ?? "";
+        }
+
+        private static int DistanceLabels() =>
+            FindObjectsByType<HoloKitAppPlayerPoseVisualizer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length;
+
+        // The loudest block of what Unity sends to the speaker, in dBFS.
+        private sealed class OutputLevel
+        {
+            private readonly float[] _samples = new float[1024];
+            private float _peakRms;
+
+            public void Sample()
+            {
+                AudioListener.GetOutputData(_samples, 0);
+                var sum = 0f;
+                foreach (var sample in _samples) sum += sample * sample;
+                _peakRms = Mathf.Max(_peakRms, Mathf.Sqrt(sum / _samples.Length));
+            }
+
+            public float Db => _peakRms > 0f ? (float)Math.Round(20f * Mathf.Log10(_peakRms), 1) : -200f;
         }
 
         // The spectator is connected and every player, the AI one included, confirmed the alignment.

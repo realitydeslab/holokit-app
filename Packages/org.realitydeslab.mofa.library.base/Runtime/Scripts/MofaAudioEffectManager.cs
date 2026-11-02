@@ -2,6 +2,7 @@
 // SPDX-FileContributor: Yuchen Zhang <yuchen@reality.design>
 // SPDX-License-Identifier: MIT
 
+using System.Collections;
 using UnityEngine;
 using Holoi.Library.HoloKitAppLib;
 
@@ -18,6 +19,31 @@ namespace RealityDesignLab.MOFA.Library.Base
         private void Awake()
         {
             MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
+        }
+
+        private void Start()
+        {
+            StartCoroutine(StartMusicIfJoinedDuringRound());
+        }
+
+        // A spectator who joins during a round receives the current phase, not the change to Fighting that starts the
+        // music, so it starts the music itself once the reality manager has arrived.
+        private IEnumerator StartMusicIfJoinedDuringRound()
+        {
+            MofaBaseRealityManager manager = null;
+            while (manager == null || !manager.IsSpawned)
+            {
+                yield return null;
+                manager = HoloKitApp.Instance != null ? HoloKitApp.Instance.RealityManager as MofaBaseRealityManager : null;
+            }
+            if (manager.CurrentPhase.Value != MofaPhase.Fighting || _bgmAudioSource.isPlaying)
+                yield break;
+            StartPlayingFightingBGM();
+            // Play from where the other phones in the room are, not from the start.
+            var clip = _bgmAudioSource.clip;
+            var elapsed = manager.FightingElapsed;
+            if (_bgmAudioSource.isPlaying && clip != null && clip.length > 0f && elapsed > 0)
+                _bgmAudioSource.time = (float)(elapsed % clip.length);
         }
 
         private void OnDestroy()

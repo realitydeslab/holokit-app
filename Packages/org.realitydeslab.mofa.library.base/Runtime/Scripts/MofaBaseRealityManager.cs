@@ -107,6 +107,22 @@ namespace RealityDesignLab.MOFA.Library.Base
         /// </summary>
         public NetworkVariable<int> RoundCount = new(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+        /// <summary>
+        /// The server time at which the current round's fighting ends, so a spectator who joins during the round shows
+        /// the time left.
+        /// </summary>
+        public NetworkVariable<double> FightingEndTime = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+        /// <summary>
+        /// Seconds of fighting left in the current round, by the server's clock.
+        /// </summary>
+        public float FightingTimeLeft => Mathf.Max(0f, (float)(FightingEndTime.Value - NetworkManager.ServerTime.Time));
+
+        /// <summary>
+        /// Seconds since the current round's fighting started, by the server's clock.
+        /// </summary>
+        public double FightingElapsed => NetworkManager.ServerTime.Time - (FightingEndTime.Value - RoundDuration);
+
         public MofaPlayer HostMofaPlayer
         {
             get
@@ -205,6 +221,7 @@ namespace RealityDesignLab.MOFA.Library.Base
                 case MofaPhase.Countdown:
                     break;
                 case MofaPhase.Fighting:
+                    FightingEndTime.Value = NetworkManager.ServerTime.Time + RoundDuration;
                     break;
                 case MofaPhase.RoundOver:
                     UpdateEstimatedHealthData();

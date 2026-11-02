@@ -35,14 +35,20 @@ namespace RealityDesignLab.MOFA.Library.Base
             HoloKitApp.Instance.MultiplayerManager.ShowPoseVisualizers = false;
         }
 
+        // The labels are hidden from the countdown until the round is over. A host who stops showing its QR code, or a
+        // spectator who joins, during a round must not bring them back.
+        private static bool BetweenRounds =>
+            HoloKitApp.Instance.RealityManager is not MofaBaseRealityManager manager ||
+            manager.CurrentPhase.Value == MofaPhase.Waiting;
+
         private void OnStoppedAdvertising()
         {
-            HoloKitApp.Instance.MultiplayerManager.ShowPoseVisualizers = true;
+            HoloKitApp.Instance.MultiplayerManager.ShowPoseVisualizers = BetweenRounds;
         }
 
         private void OnLocalPlayerChecked()
         {
-            HoloKitApp.Instance.MultiplayerManager.ShowPoseVisualizers = true;
+            HoloKitApp.Instance.MultiplayerManager.ShowPoseVisualizers = BetweenRounds;
         }
 
         private void OnLocalPlayerRescan()

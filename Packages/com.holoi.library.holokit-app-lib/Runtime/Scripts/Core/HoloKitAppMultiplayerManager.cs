@@ -46,14 +46,17 @@ namespace Holoi.Library.HoloKitAppLib
         /// </summary>
         private readonly Dictionary<ulong, HoloKitAppPlayer> _playerDict = new();
 
-        private void Update()
+        // LateUpdate, after coroutines and UI events, so a recording started this frame already renders without them.
+        private void LateUpdate()
         {
-            // Update pose visualizers' visibility
+            // Update pose visualizers' visibility. They help the people in the room and stay out of recordings.
+            var recorder = HoloKitApp.Instance != null ? HoloKitApp.Instance.Recorder : null;
+            var show = ShowPoseVisualizers && !(recorder != null && recorder.IsRecording);
             foreach (var player in PlayerList)
             {
                 if (player.SyncingPose.Value && player.PlayerStatus.Value == HoloKitAppPlayerStatus.Checked)
                 {
-                    player.ShowPoseVisualizer = ShowPoseVisualizers;
+                    player.ShowPoseVisualizer = show;
                 }
                 else
                 {

@@ -23,6 +23,13 @@ namespace RealityDesignLab.MOFA.Library.Base
         private void OnEnable()
         {
             MofaBaseRealityManager.OnMofaPhaseChanged += OnPhaseChanged;
+            // A spectator who joins during the fighting shows the time left, not a whole round.
+            if (HoloKitApp.Instance != null && HoloKitApp.Instance.RealityManager is MofaBaseRealityManager manager &&
+                manager.IsSpawned && manager.CurrentPhase.Value == MofaPhase.Fighting)
+            {
+                _isUpdating = true;
+                _timeCounter = manager.FightingTimeLeft;
+            }
         }
 
         private void OnDisable()

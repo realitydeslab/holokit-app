@@ -17,7 +17,7 @@ namespace Holoi.Library.HoloKitAppLib
 
         [SerializeField] private Texture _watermarkImage;
 
-        public bool IsRecording => _recorder.IsRecording;
+        public bool IsRecording => _recorder != null && _recorder.IsRecording;
 
         // Or MP4?
         private HoloKitVideoRecorder _recorder;
