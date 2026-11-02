@@ -54,6 +54,8 @@ SINGLE_PHONE_TESTS = [
     ("Typed", "typed-finger-ribbon", {"FINGER_RIBBON_INTERACTION_TEST": "1"}, "FingerRibbonInteractionTests", 300),
     ("Typed", "typed-sculpture", {"SCULPTURE_INTERACTION_TEST": "1"}, "SculptureInteractionTests", 300),
     ("HoloKit", "holokit-scenes", {"HOLOKIT_SCENE_TEST": "1"}, "HoloKitSceneTests", 1200),
+    # The gallery idles at 60 fps and scrolls through every room without hitches. No person needed.
+    ("HoloKit", "holokit-gallery-frame-rate", {"HOLOKIT_GALLERY_PERF": "1"}, "HoloKitGalleryPerf", 300),
 ]
 
 # (product, name, role variable, result folder, timeout seconds)

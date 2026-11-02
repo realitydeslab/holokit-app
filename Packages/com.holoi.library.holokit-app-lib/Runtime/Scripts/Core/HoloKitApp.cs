@@ -62,6 +62,9 @@ namespace Holoi.Library.HoloKitAppLib
         [Tooltip("Set this value to true to restrict the fps to 60 in editor mode")]
         [SerializeField] private bool _lockFpsInEditor;
 
+        /// <summary>The frame rate of the gallery and the other menu pages.</summary>
+        public const int UIFrameRate = 60;
+
         public Reality CurrentReality
         {
             get => _currentReality;
@@ -160,11 +163,7 @@ namespace Holoi.Library.HoloKitAppLib
                 HoloKitAppWatchConnectivityAPI.ActivateWatchConnectivitySession();
             // Set a default reality
             CurrentReality = GlobalSettings.RealityList.List[0];
-            // Simulate iOS's FPS when testing on Editor
-            if (HoloKitUtils.IsEditor && _lockFpsInEditor)
-            {
-                Application.targetFrameRate = 60;
-            }
+            SetFrameRateForUI();
         }
 
         private void OnDestroy()
@@ -190,6 +189,7 @@ namespace Holoi.Library.HoloKitAppLib
             {
                 UIPanelManager.OnStartSceneLoaded();
                 SetUrpAssetForUI();
+                SetFrameRateForUI();
             } else if (scene.name.Equals("NoLiDAR")) {
 
             }
@@ -447,6 +447,18 @@ namespace Holoi.Library.HoloKitAppLib
         {
             if (_urpAssetForUI != null)
                 GraphicsSettings.defaultRenderPipeline = _urpAssetForUI;
+        }
+
+        /// <summary>
+        /// iOS draws an app at 30 fps unless it asks for more, and the gallery was left at that: every frame took
+        /// 33.3 ms on an iPhone 15 Pro while it needed 6.4 ms of CPU and 7.5 ms of GPU. A reality's AR session sets
+        /// its own rate (ARKit's) and may leave it behind, so the menu pages ask again whenever the Start scene loads.
+        /// The Editor keeps running unthrottled unless _lockFpsInEditor is set.
+        /// </summary>
+        private void SetFrameRateForUI()
+        {
+            if (HoloKitUtils.IsRuntime || _lockFpsInEditor)
+                Application.targetFrameRate = UIFrameRate;
         }
 
         public void Shutdown()
