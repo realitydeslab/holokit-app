@@ -177,11 +177,20 @@ namespace HoloKit {
         private Camera _recordingCamera = null;
         private AudioListener _audioListener = null;
 
-        private AudioSource _microphoneAudioSource = null;
-
         [SerializeField]
         private bool _recordMicrophone = false;
-        
+
+        /// <summary>
+        /// Records the microphone too (iOS, with microphone permission): the movie then has three audio tracks, the
+        /// game and the microphone mixed (the default track), the game alone and the microphone alone. Takes effect at
+        /// the next StartRecording; without permission the movie has the game sound alone.
+        /// </summary>
+        public bool RecordMicrophone
+        {
+            get => _recordMicrophone;
+            set => _recordMicrophone = value;
+        }
+
         private RealtimeClock _clock = null;
         private RenderTexture _bufferCamera;
         private RenderTexture _bufferFrame;
@@ -209,24 +218,6 @@ namespace HoloKit {
             _recordingCamera = GetComponent<Camera>();
             _audioListener = GetComponent<AudioListener>();
             HoloKitCameraManager.OnHoloKitRenderModeChanged += OnHoloKitRenderModeChanged;
-
-            if (_recordMicrophone && Microphone.devices != null) {
-                if (Application.HasUserAuthorization(UserAuthorization.Microphone) ) {
-                    Debug.Log("Microphone access granted");
-                } else {
-                    Debug.Log("Microphone access denied");
-                }
-
-                if (_microphoneAudioSource == null) {
-                    _microphoneAudioSource = gameObject.AddComponent<AudioSource>();
-                }
-                _microphoneAudioSource = GetComponent<AudioSource>();
-                _microphoneAudioSource.clip = Microphone.Start(null, true, 1, 44100);
-                _microphoneAudioSource.loop = true;
-                while (!(Microphone.GetPosition(null) > 0)) {
-                }
-                _microphoneAudioSource.Play();
-            }
         }
 
         public void StartRecording()
@@ -246,6 +237,10 @@ namespace HoloKit {
 
             _bufferCamera = CreateCameraBuffer(width, height);
             _bufferFrame = new RenderTexture(width, height, 0);
+            // The native recorder captures the microphone itself, so it never plays through the speaker. The Editor's
+            // macOS plug-in has no microphone tracks.
+            if (HoloKitUtils.IsRuntime)
+                HoloKitVideoRecorder_SetRecordMicrophone(_recordMicrophone ? 1 : 0);
             int status = HoloKitVideoRecorder_StartRecording(path, width, height, sampleRate, channelCount);
 
             _timeQueue.Clear();
@@ -263,11 +258,6 @@ namespace HoloKit {
         public void EndRecording()
         {
             if (!IsRecording) return;
-            if (_recordMicrophone && _microphoneAudioSource != null) {
-                _microphoneAudioSource.Stop();
-                Microphone.End(null);
-            }
-
             AsyncGPUReadback.WaitAllRequests();
             HoloKitVideoRecorder_EndRecording();
             IsRecording = false;
@@ -401,5 +391,9 @@ namespace HoloKit {
 
         [DllImport(DllName)]
         public static extern void HoloKitVideoRecorder_EndRecording();
+
+        /// <summary>iOS only: 1 records the microphone at the next start (see RecordMicrophone).</summary>
+        [DllImport(DllName)]
+        static extern void HoloKitVideoRecorder_SetRecordMicrophone(int enabled);
     }
 }

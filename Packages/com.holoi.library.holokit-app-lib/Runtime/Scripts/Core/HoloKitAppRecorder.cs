@@ -61,15 +61,13 @@ namespace Holoi.Library.HoloKitAppLib
 
             if (HoloKitUtils.IsRuntime)
             {
-                if (HoloKitApp.Instance.GlobalSettings.RecordMicrophone)
-                {
-                   // _recorder.recordMicrophone = true;
-
-                }
-                else
-                {
-                  //  _recorder.recordMicrophone = false;
-                }
+                // Settings > Record Microphone: the environment's sound gets its own track and joins the game sound in
+                // the default track. iOS asks for permission once, here rather than when the record button is pressed.
+                var recordMicrophone = HoloKitApp.Instance.GlobalSettings.RecordMicrophone;
+                if (_recorder != null)
+                    _recorder.RecordMicrophone = recordMicrophone;
+                if (recordMicrophone && !Application.HasUserAuthorization(UserAuthorization.Microphone))
+                    Application.RequestUserAuthorization(UserAuthorization.Microphone);
 
                 //_watermarkEnabled = HoloKitApp.Instance.GlobalSettings.WatermarkEnabled;
             }

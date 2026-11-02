@@ -84,6 +84,8 @@ namespace RealityDesignLab.MOFA.TheTraining
             public bool ultimateCast;
             public RealWatchWindow realWatch;
             public bool recordingStarted;
+            public bool recordMicrophone;
+            public bool microphoneAuthorized;
             // Frames the recorder rendered, and how far the worst one was from ARKit's camera pose and AR background.
             // The same for frames rendered during Update, when the recorder used to render.
             public int updateTimeFramesChecked;
@@ -440,6 +442,12 @@ namespace RealityDesignLab.MOFA.TheTraining
             while (_updateTimeRenders > 0) yield return null;
             Destroy(_probeBuffer);
             Destroy(_probeFrame);
+            // Settings > Record Microphone (on by default) adds the microphone and the mix tracks, checked on the Mac by
+            // Tools/check_recording_audio.py. iOS asks once; the device's operator answers, never the test.
+            _report.recordMicrophone = recorder.RecordMicrophone;
+            if (recorder.RecordMicrophone)
+                yield return Application.RequestUserAuthorization(UserAuthorization.Microphone);
+            _report.microphoneAuthorized = Application.HasUserAuthorization(UserAuthorization.Microphone);
             recorder.StartRecording();
             // The movie's clock starts with its first frame, at the end of this frame.
             yield return new WaitForEndOfFrame();

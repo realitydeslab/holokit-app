@@ -15,30 +15,50 @@
 #import <CoreMedia/CMBlockBuffer.h>
 #import <Accelerate/Accelerate.h>
 #import <AudioToolbox/AudioToolbox.h>
+#include <os/lock.h>
+#include <algorithm>
+#include <vector>
+
+// The microphone may run ahead of the game sound by at most this much; older samples are dropped.
+static const double MicrophoneBufferSeconds = 0.5;
 
 @interface VideoRecorder ()
 
 @property (nonatomic, strong) AVAssetWriter* writer;
 @property (nonatomic, strong) AVAssetWriterInput* videoWriterInput;
+// The game sound alone (Unity's mix). With the microphone on, two more tracks: the game and the microphone mixed
+// (the default track, written first) and the microphone alone.
 @property (nonatomic, strong) AVAssetWriterInput* audioWriterInput;
+@property (nonatomic, strong) AVAssetWriterInput* mixWriterInput;
+@property (nonatomic, strong) AVAssetWriterInput* micWriterInput;
 @property (nonatomic, strong) AVAssetWriterInputPixelBufferAdaptor* bufferAdaptor;
 @property (assign) AudioStreamBasicDescription audioFormat;
 @property (assign) CMFormatDescriptionRef cmFormat;
-@property (nonatomic, strong) AVCaptureSession* captureSession;
 @property (assign) bool isRecording;
 @property (assign) int width;
 @property (assign) int height;
-@property (nonatomic, strong) AVCaptureDevice* audioDeviceMic;
-@property (nonatomic, strong) AVCaptureDeviceInput* audioInputMic;
+@property (assign) bool recordMicrophone;
 @property (nonatomic, strong) AVAudioEngine* audioEngine;
-@property (nonatomic, strong) AVCaptureAudioDataOutput* audioOutput;
+@property (nonatomic, strong) AVAudioConverter* micConverter;
 
 @end
 
 @implementation VideoRecorder
+{
+    // Microphone samples converted to the game sound's format, interleaved, waiting for the game sound to pair with.
+    std::vector<float> _micRing;
+    size_t _micStart;
+    size_t _micCount;
+    os_unfair_lock _micLock;
+    std::vector<float> _micScratch;
+    std::vector<float> _mixScratch;
+}
 
 - (instancetype)init {
     if (self = [super init]) {
+        _micLock = OS_UNFAIR_LOCK_INIT;
+        _micStart = 0;
+        _micCount = 0;
     }
     return self;
 }
@@ -52,76 +72,155 @@
     return _sharedObject;
 }
 
-// - (void) startMicrophone {
-//     self.captureSession = [[AVCaptureSession alloc] init];    
-//     [self.captureSession setSessionPreset:AVCaptureSessionPresetHigh];
-//     self.audioDeviceMic = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
-//     self.audioInputMic = [AVCaptureDeviceInput deviceInputWithDevice:self.audioDeviceMic error:nil];
-//     if ([self.captureSession canAddInput:self.audioInputMic]) {
-//         [self.captureSession addInput:self.audioInputMic];
-//     }
-//     self.audioOutput = [[AVCaptureAudioDataOutput alloc] init];
-//     [self.audioOutput setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
-//      if ([self.captureSession canAddOutput:self.audioOutput]) {
-//         [self.captureSession addOutput:self.audioOutput];
-//     }
+- (void)setMicrophoneRequested:(bool)requested
+{
+    self.recordMicrophone = requested;
+}
 
-//     // Initialize AVAudioEngine
-//     self.audioEngine = [[AVAudioEngine alloc] init];
-//     self.outputNode = [self.audioEngine outputNode];
-//     [self.outputNode setVoiceProcessingEnabled:YES];
-//     self.outputFormat = [outputNode inputFormatForBus: 0];
-//     playerNode = [[AVAudioPlayerNode alloc] init];
-//     [self.audioEngine attachNode: playerNode];
-//     AVAudioMixerNode *mixerNode = [self.audioEngine mainMixerNode];
-//     [self.audioEngine connect:inputNode to:mixerNode format:inputFormat];
-//     NSArray<AVAudioSessionPortDescription *> *inputPorts = [audioSession availableInputs];
+/// Starts capturing the microphone, converted to the game sound's format. False when the microphone is off, not
+/// permitted or unavailable: the recording then has the game sound alone.
+- (bool)startMicrophoneWithSampleRate:(double)sampleRate channels:(int)channels
+{
+    if (!self.recordMicrophone || sampleRate <= 0 || channels <= 0)
+        return false;
+    if ([AVAudioApplication sharedInstance].recordPermission != AVAudioApplicationRecordPermissionGranted)
+    {
+        NSLog(@"[VideoRecorder] Microphone permission not granted; recording the game sound only.");
+        return false;
+    }
+    AVAudioEngine* engine = [[AVAudioEngine alloc] init];
+    AVAudioInputNode* input = engine.inputNode;
+    AVAudioFormat* inputFormat = [input outputFormatForBus:0];
+    if (inputFormat.sampleRate <= 0 || inputFormat.channelCount == 0)
+    {
+        NSLog(@"[VideoRecorder] No microphone input (%@); recording the game sound only.", inputFormat);
+        return false;
+    }
+    AVAudioFormat* gameFormat = [[AVAudioFormat alloc] initWithCommonFormat:AVAudioPCMFormatFloat32
+                                                                 sampleRate:sampleRate
+                                                                   channels:(AVAudioChannelCount)channels
+                                                                interleaved:YES];
+    AVAudioConverter* converter = [[AVAudioConverter alloc] initFromFormat:inputFormat toFormat:gameFormat];
+    if (converter == nil)
+    {
+        NSLog(@"[VideoRecorder] Cannot convert the microphone from %@ to %@.", inputFormat, gameFormat);
+        return false;
+    }
+    if (inputFormat.channelCount == 1 && channels > 1)
+    {
+        // A mono microphone goes to every channel; the converter would otherwise leave the others silent.
+        NSMutableArray<NSNumber*>* map = [NSMutableArray array];
+        for (int i = 0; i < channels; i++) [map addObject:@0];
+        converter.channelMap = map;
+    }
+    os_unfair_lock_lock(&_micLock);
+    _micRing.assign((size_t)(sampleRate * MicrophoneBufferSeconds) * channels, 0.f);
+    _micStart = 0;
+    _micCount = 0;
+    os_unfair_lock_unlock(&_micLock);
+    self.micConverter = converter;
 
-//     for (AVAudioSessionPortDescription *port in inputPorts) {
-//         if ([port.portType isEqualToString:AVAudioSessionPortUSBAudio]) {
-//             usbPort = port;
-//             break;
-//         }
-//     }
-//     NSError *inputError = nil;
-//     [audioSession setPreferredInput:usbPort error:&inputError];
+    __weak VideoRecorder* weakSelf = self;
+    [input installTapOnBus:0 bufferSize:1024 format:inputFormat block:^(AVAudioPCMBuffer* buffer, AVAudioTime* when) {
+        [weakSelf receiveMicrophone:buffer];
+    }];
+    NSError* error = nil;
+    [engine prepare];
+    if (![engine startAndReturnError:&error])
+    {
+        NSLog(@"[VideoRecorder] Cannot start the microphone (%@); recording the game sound only.", error);
+        [input removeTapOnBus:0];
+        self.micConverter = nil;
+        return false;
+    }
+    self.audioEngine = engine;
+    NSLog(@"[VideoRecorder] Recording the microphone (%@) as its own track and in the mix.", inputFormat);
+    return true;
+}
 
+- (void)stopMicrophone
+{
+    if (self.audioEngine)
+    {
+        [self.audioEngine.inputNode removeTapOnBus:0];
+        [self.audioEngine stop];
+    }
+    self.audioEngine = nil;
+    self.micConverter = nil;
+    os_unfair_lock_lock(&_micLock);
+    _micStart = 0;
+    _micCount = 0;
+    os_unfair_lock_unlock(&_micLock);
+}
 
-//     [self.outputNode installTapOnBus:0
-//           bufferSize:1024
-//           format:recordingFormat
-//           block:^(AVAudioPCMBuffer *buffer, AVAudioTime *when) {
-//                    [request appendBuffer:buffer];
-                   
-//     }];
-    
-//     [self.audioEngine prepare];
-//     [self.audioEngine start];
+- (void)receiveMicrophone:(AVAudioPCMBuffer*)buffer
+{
+    AVAudioConverter* converter = self.micConverter;
+    if (converter == nil || buffer.frameLength == 0)
+        return;
+    double ratio = converter.outputFormat.sampleRate / converter.inputFormat.sampleRate;
+    AVAudioFrameCount capacity = (AVAudioFrameCount)ceil(buffer.frameLength * ratio) + 64;
+    AVAudioPCMBuffer* converted = [[AVAudioPCMBuffer alloc] initWithPCMFormat:converter.outputFormat frameCapacity:capacity];
+    __block bool supplied = false;
+    NSError* error = nil;
+    AVAudioConverterOutputStatus status = [converter convertToBuffer:converted error:&error
+        withInputFromBlock:^AVAudioBuffer* (AVAudioPacketCount count, AVAudioConverterInputStatus* inputStatus) {
+            if (supplied)
+            {
+                *inputStatus = AVAudioConverterInputStatus_NoDataNow;
+                return nil;
+            }
+            supplied = true;
+            *inputStatus = AVAudioConverterInputStatus_HaveData;
+            return buffer;
+        }];
+    if (status == AVAudioConverterOutputStatus_Error || converted.frameLength == 0)
+        return;
+    // Interleaved: one buffer holds every channel.
+    const float* samples = converted.floatChannelData[0];
+    size_t count = (size_t)converted.frameLength * converter.outputFormat.channelCount;
+    os_unfair_lock_lock(&_micLock);
+    size_t size = _micRing.size();
+    if (size > 0)
+    {
+        for (size_t i = 0; i < count; i++)
+        {
+            if (_micCount == size)
+            {
+                // Full: the oldest sample goes, so the microphone never lags the game sound by more than the ring.
+                _micStart = (_micStart + 1) % size;
+                _micCount--;
+            }
+            _micRing[(_micStart + _micCount) % size] = samples[i];
+            _micCount++;
+        }
+    }
+    os_unfair_lock_unlock(&_micLock);
+}
 
-//     [engine connect: playerNode to: mainMixerNode format: outputFormat];
+/// Takes up to count microphone samples; the rest of out is silence (the microphone had not delivered them yet).
+- (void)takeMicrophoneSamples:(float*)out count:(size_t)count
+{
+    os_unfair_lock_lock(&_micLock);
+    size_t size = _micRing.size();
+    size_t taken = std::min(count, _micCount);
+    for (size_t i = 0; i < taken; i++)
+        out[i] = _micRing[(_micStart + i) % size];
+    if (taken > 0)
+    {
+        _micStart = (_micStart + taken) % size;
+        _micCount -= taken;
+    }
+    os_unfair_lock_unlock(&_micLock);
+    std::fill(out + taken, out + count, 0.f);
+}
 
-//     // Create AVAudioPlayerNodes for each microphone
-//     AVAudioPlayerNode *playerNode1 = [[AVAudioPlayerNode alloc] init];
-
-// //    self.mixerNode = [self.audioEngine mainMixerNode];
-//     [self.audioEngine attachNode:playerNode1];
-//     [self.audioEngine attachNode:playerNode2];
-    
-// //    [self.audioEngine connect:playerNode1 to:self.mixerNode format:nil];
-// //    [self.audioEngine connect:playerNode2 to:self.mixerNode format:nil];
-// //    NSError *audioEngineError;
-// //    [self.audioEngine startAndReturnError:&audioEngineError];
-// //    if (audioEngineError) {
-// //        NSLog(@"Error starting AVAudioEngine: %@", audioEngineError.localizedDescription);
-// //    }
-// //
-//    AVAudioFormat *audioOutputFormat = [self.audioEngine.outputNode outputFormatForBus:0];
-//    CMFormatDescriptionRef audioFormatDescription = CMAudioFormatDescriptionCreate(audioOutputFormat.streamDescription,
-//        sizeof(AudioStreamBasicDescription), kCMAudioFormatFlags_IsFloat);
-
-//     // Start AVCaptureSession
-//     [self.captureSession startRunning];
-// }
+- (AVAssetWriterInput*)audioInputWithSettings:(NSDictionary*)settings
+{
+    AVAssetWriterInput* input = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:settings];
+    input.expectsMediaDataInRealTime = YES;
+    return input;
+}
 
 - (int)startRecording:(const char *)filePath width:(int)width height:(int)height audioSampleRate:(float)audioSampleRate audioChannelCount:(int)audioChannelCount
 {
@@ -171,10 +270,11 @@
         AVNumberOfChannelsKey: @(audioChannelCount),
         AVEncoderAudioQualityKey: @(AVAudioQualityHigh)
     };
-    self.audioWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio
-                         outputSettings:audioSettings];
-    self.audioWriterInput.expectsMediaDataInRealTime = YES;
-    
+    self.audioWriterInput = [self audioInputWithSettings:audioSettings];
+    bool microphone = [self startMicrophoneWithSampleRate:audioSampleRate channels:audioChannelCount];
+    self.mixWriterInput = microphone ? [self audioInputWithSettings:audioSettings] : nil;
+    self.micWriterInput = microphone ? [self audioInputWithSettings:audioSettings] : nil;
+
     AudioStreamBasicDescription audioFormat;
     audioFormat = {0};
     audioFormat.mSampleRate = audioSampleRate; // Sample rate, 44100Hz is CD quality
@@ -206,12 +306,31 @@
     self.cmFormat = cmFormat;
    
     [self.writer addInput:self.videoWriterInput];
-    [self.writer addInput:self.audioWriterInput];
-    
+    if (microphone)
+    {
+        // Track order: the mix, the game, the microphone. As alternates with the mix as the default, players
+        // (Photos, social apps) play the mix; editors still get the game and the microphone apart.
+        [self.writer addInput:self.mixWriterInput];
+        [self.writer addInput:self.audioWriterInput];
+        [self.writer addInput:self.micWriterInput];
+        AVAssetWriterInputGroup* group = [AVAssetWriterInputGroup
+            assetWriterInputGroupWithInputs:@[self.mixWriterInput, self.audioWriterInput, self.micWriterInput]
+                               defaultInput:self.mixWriterInput];
+        if ([self.writer canAddInputGroup:group])
+            [self.writer addInputGroup:group];
+        else
+            NSLog(@"[VideoRecorder] Cannot group the audio tracks; every track will play by default.");
+    }
+    else
+    {
+        [self.writer addInput:self.audioWriterInput];
+    }
+
     // Recording start
     if (![self.writer startWriting])
     {
         NSLog(@"Failed to start (%ld: %@)", self.writer.status, self.writer.error);
+        [self stopMicrophone];
         return -1;
     }
 
@@ -235,13 +354,31 @@
         return -1;
     }
 
-    if (!self.audioWriterInput.isReadyForMoreMediaData)
+    if (self.mixWriterInput == nil)
+        return [self appendAudio:source size:size time:time to:self.audioWriterInput];
+
+    // The microphone samples that arrived since the last game buffer, as many as the game delivered, so all three
+    // tracks share this buffer's timestamp.
+    size_t count = (size_t)size / sizeof(float);
+    _micScratch.resize(count);
+    _mixScratch.resize(count);
+    [self takeMicrophoneSamples:_micScratch.data() count:count];
+    const float* game = (const float*)source;
+    for (size_t i = 0; i < count; i++)
+        _mixScratch[i] = std::max(-1.f, std::min(1.f, game[i] + _micScratch[i]));
+    int mix = [self appendAudio:_mixScratch.data() size:size time:time to:self.mixWriterInput];
+    int alone = [self appendAudio:source size:size time:time to:self.audioWriterInput];
+    int mic = [self appendAudio:_micScratch.data() size:size time:time to:self.micWriterInput];
+    return (mix == 0 && alone == 0 && mic == 0) ? 0 : -1;
+}
+
+- (int)appendAudio:(const void *)source size:(int)size time:(double)time to:(AVAssetWriterInput*)input
+{
+    if (!input.isReadyForMoreMediaData)
     {
         NSLog(@"Audio Writer is not ready.");
         return -1;
     }
-
-    // Write _audioInputWriter with buffer 
 
     CMTime presentationTimestamp = CMTimeMakeWithSeconds(time, 240); // Adjust timescale as needed
     
@@ -259,6 +396,7 @@
     
     if (status != kCMBlockBufferNoErr) {
         NSLog(@"CMBlockBufferReplaceDataBytes error");
+        CFRelease(blockBuffer);
         return -1;
     }
 
@@ -278,27 +416,15 @@
         return -1;
     }
 
-    if (!CMSampleBufferDataIsReady(sampleBuffer))
-    {
-        NSLog(@"sample buffer is not ready");
-        return -1;
-    }
-   
-    if (!CMSampleBufferIsValid(sampleBuffer))
-    {
-        NSLog(@"Audio sapmle buffer is not valid");
-        return -1;
-    }
-        
-    bool result = [self.audioWriterInput appendSampleBuffer:sampleBuffer];
+    bool result = CMSampleBufferDataIsReady(sampleBuffer) && CMSampleBufferIsValid(sampleBuffer) &&
+        [input appendSampleBuffer:sampleBuffer];
     if (!result) {
         NSLog(@"appendSampleBuffer error");
-        return -1;
     }
     
     CFRelease(sampleBuffer);
     CFRelease(blockBuffer);
-    return 0;
+    return result ? 0 : -1;
 }
 
 - (int)appendVideoFrame:(void *)source size:(int)size time:(double)time
@@ -383,9 +509,12 @@
         return;
     }
     
+    [self stopMicrophone];
     [self.videoWriterInput markAsFinished];
+    [self.mixWriterInput markAsFinished];
     [self.audioWriterInput markAsFinished];
-    
+    [self.micWriterInput markAsFinished];
+
 #if TARGET_OS_IOS
     NSString* path = self.writer.outputURL.path;
     [self.writer finishWritingWithCompletionHandler: ^{
@@ -398,7 +527,9 @@
 #endif
     self.writer = NULL;
     self.videoWriterInput = NULL;
+    self.mixWriterInput = NULL;
     self.audioWriterInput = NULL;
+    self.micWriterInput = NULL;
     self.bufferAdaptor = NULL;
     self.isRecording = NO;
 }
@@ -426,6 +557,13 @@ int HoloKitVideoRecorder_AppendVideoFrame(void* source, int size, double time)
 void HoloKitVideoRecorder_EndRecording(void)
 {
     [[VideoRecorder sharedInstance] endRecording];
+}
+
+// Takes effect at the next start: with the microphone permitted, the recording gets the game + microphone mix (the
+// default track), the game alone and the microphone alone.
+void HoloKitVideoRecorder_SetRecordMicrophone(int enabled)
+{
+    [[VideoRecorder sharedInstance] setMicrophoneRequested:enabled != 0];
 }
 
 }

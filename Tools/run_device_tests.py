@@ -22,6 +22,8 @@ import tempfile
 import time
 from pathlib import Path
 
+import check_recording_audio
+
 REPO = Path(__file__).resolve().parents[1]
 UNITY = str(Path.home() / ".unity/bin/unity")
 EDITOR = "/Applications/Unity/6000.3.27f1/Unity.app"
@@ -223,6 +225,17 @@ def verdict(report: dict | None) -> tuple[bool, str]:
     return True, f"{len(scenes)} scene case(s)" if scenes else "complete"
 
 
+def check_recordings(folder: Path, passed: bool, detail: str) -> tuple[bool, str]:
+    """Adds the audio check of every recording a test left (mix, game and microphone tracks, each with sound)."""
+    for movie in sorted(folder.rglob("recording.mp4")):
+        if shutil.which("ffprobe") is None:
+            return passed, f"{detail}; {movie.name} not checked (no ffprobe)"
+        issues = check_recording_audio.problems(movie)
+        if issues:
+            passed, detail = False, f"{detail}; {movie.name}: {issues[0]}"
+    return passed, detail
+
+
 def run_test(devices: list[str], product: str, name: str, environments: list[dict[str, str]], folder: str,
              timeout: int, out: Path) -> bool:
     bundle = PRODUCTS[product]["bundle"]
@@ -239,6 +252,7 @@ def run_test(devices: list[str], product: str, name: str, environments: list[dic
         destination.mkdir(parents=True, exist_ok=True)
         fetch(device, bundle, f"Documents/{folder}", destination)
         passed, detail = verdict(report)
+        passed, detail = check_recordings(destination, passed, detail)
         ok &= passed
         log(out, f"{'PASS' if passed else 'FAIL'} {name} on {device[-6:]}: {detail}")
     return ok
