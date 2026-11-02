@@ -86,6 +86,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             public bool recordingStarted;
             public bool recordMicrophone;
             public bool microphoneAuthorized;
+            public int outputSampleRate;
             // Frames the recorder rendered, and how far the worst one was from ARKit's camera pose and AR background.
             // The same for frames rendered during Update, when the recorder used to render.
             public int updateTimeFramesChecked;
@@ -110,6 +111,7 @@ namespace RealityDesignLab.MOFA.TheTraining
         private bool _renderingInUpdate;
         private RenderTexture _probeBuffer, _probeFrame;
         private OrientationCheck _measuring;
+        private bool? _restoreRecordMicrophone;
         private readonly Report _report = new();
         private string _directory;
 
@@ -145,6 +147,8 @@ namespace RealityDesignLab.MOFA.TheTraining
                     yield return Section("real-watch", RealWatch());
                 yield return Section("recording", Recording());
             }
+            if (_restoreRecordMicrophone.HasValue && HoloKitApp.Instance != null)
+                HoloKitApp.Instance.GlobalSettings.RecordMicrophone = _restoreRecordMicrophone.Value;
             _report.complete = true;
             Save();
             Application.logMessageReceived -= OnLog;
@@ -185,6 +189,13 @@ namespace RealityDesignLab.MOFA.TheTraining
             var training = app.GlobalSettings.GetAllRealities().FirstOrDefault(r => r.Scene.SceneName == "MOFATheTraining");
             Require(training != null, "MOFA Training is missing from the product catalog.");
             app.CurrentReality = training;
+            // MOFA_SINGLE_RECORD_MICROPHONE=0 turns Settings > Record Microphone off for this run, as a user would; the
+            // setting is put back at the end (settings are only saved when the app quits).
+            if (Environment.GetEnvironmentVariable("MOFA_SINGLE_RECORD_MICROPHONE") == "0")
+            {
+                _restoreRecordMicrophone = app.GlobalSettings.RecordMicrophone;
+                app.GlobalSettings.RecordMicrophone = false;
+            }
             app.EnterRealityAs(true, HoloKitAppPlayerType.Player);
             yield return new WaitForSecondsRealtime(6);
             Require(SceneManager.GetActiveScene().name == "MOFATheTraining", "Training scene did not open.");
@@ -445,6 +456,7 @@ namespace RealityDesignLab.MOFA.TheTraining
             // Settings > Record Microphone (on by default) adds the microphone and the mix tracks, checked on the Mac by
             // Tools/check_recording_audio.py. iOS asks once; the device's operator answers, never the test.
             _report.recordMicrophone = recorder.RecordMicrophone;
+            _report.outputSampleRate = AudioSettings.outputSampleRate;
             if (recorder.RecordMicrophone)
                 yield return Application.RequestUserAuthorization(UserAuthorization.Microphone);
             _report.microphoneAuthorized = Application.HasUserAuthorization(UserAuthorization.Microphone);

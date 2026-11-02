@@ -50,6 +50,9 @@ SINGLE_PHONE_TESTS = [
     ("MOFA", "mofa-combat", {"MOFA_COMBAT_TEST": "1"}, "MofaCombatTests", 400),
     ("MOFA", "mofa-combat-stereo", {"MOFA_COMBAT_TEST": "1", "MOFA_COMBAT_STEREO_TEST": "1"}, "MofaCombatTests", 400),
     ("MOFA", "mofa-single", {"MOFA_SINGLE_TEST": "1"}, "MofaSinglePlayerTests", 400),
+    # Settings > Record Microphone off: the recording carries the game track alone.
+    ("MOFA", "mofa-single-no-mic", {"MOFA_SINGLE_TEST": "1", "MOFA_SINGLE_RECORD_MICROPHONE": "0"},
+     "MofaSinglePlayerTests", 400),
     # Needs a person wearing the paired Apple Watch to swing during a 90 s window.
     ("MOFA", "mofa-single-real-watch", {"MOFA_SINGLE_TEST": "1", "MOFA_SINGLE_REAL_WATCH": "1"}, "MofaSinglePlayerTests", 600),
     ("Typed", "typed-scenes", {"HOLOKIT_SCENE_TEST": "1"}, "HoloKitSceneTests", 700),
@@ -225,12 +228,18 @@ def verdict(report: dict | None) -> tuple[bool, str]:
     return True, f"{len(scenes)} scene case(s)" if scenes else "complete"
 
 
-def check_recordings(folder: Path, passed: bool, detail: str) -> tuple[bool, str]:
-    """Adds the audio check of every recording a test left (mix, game and microphone tracks, each with sound)."""
+def expects_microphone(environment: dict[str, str]) -> bool:
+    """Whether a test's recordings must carry the microphone: always, unless the test turns Record Microphone off."""
+    return environment.get("MOFA_SINGLE_RECORD_MICROPHONE") != "0"
+
+
+def check_recordings(folder: Path, passed: bool, detail: str, microphone: bool = True) -> tuple[bool, str]:
+    """Adds the audio check of every recording a test left: mix, game and microphone tracks, or the game alone when the
+    test turned Record Microphone off; each with sound. The expectation comes from the test, not from the device."""
     for movie in sorted(folder.rglob("recording.mp4")):
         if shutil.which("ffprobe") is None:
             return passed, f"{detail}; {movie.name} not checked (no ffprobe)"
-        issues = check_recording_audio.problems(movie)
+        issues = check_recording_audio.problems(movie, microphone)
         if issues:
             passed, detail = False, f"{detail}; {movie.name}: {issues[0]}"
     return passed, detail
@@ -246,13 +255,13 @@ def run_test(devices: list[str], product: str, name: str, environments: list[dic
             return False
         time.sleep(5)
     ok = True
-    for device in devices:
+    for device, environment in zip(devices, environments):
         report = poll(device, bundle, folder, timeout, previous[device])
         destination = out / name / device[-6:]
         destination.mkdir(parents=True, exist_ok=True)
         fetch(device, bundle, f"Documents/{folder}", destination)
         passed, detail = verdict(report)
-        passed, detail = check_recordings(destination, passed, detail)
+        passed, detail = check_recordings(destination, passed, detail, expects_microphone(environment))
         ok &= passed
         log(out, f"{'PASS' if passed else 'FAIL'} {name} on {device[-6:]}: {detail}")
     return ok

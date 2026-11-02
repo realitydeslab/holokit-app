@@ -15,8 +15,9 @@ TOOLS = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(TOOLS))
 import check_recording_audio  # noqa: E402
 
-TONE = "sine=frequency=440:duration=1:sample_rate=24000"
-SILENCE = "anullsrc=channel_layout=stereo:sample_rate=24000:duration=1"
+TONE = "sine=frequency=440:duration=1:sample_rate=48000"
+TONE_24K = "sine=frequency=440:duration=1:sample_rate=24000"
+SILENCE = "anullsrc=channel_layout=stereo:sample_rate=48000:duration=1"
 
 
 @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"), "needs ffmpeg and ffprobe")
@@ -60,6 +61,43 @@ class RecordingAudioTests(unittest.TestCase):
         found = check_recording_audio.problems(self.movie([TONE, TONE, TONE], [1, 1, 1]))
         self.assertEqual(len(found), 1)
         self.assertIn("only the mix may play by default", found[0])
+
+    def test_low_sample_rate_fails(self):
+        found = check_recording_audio.problems(self.movie([TONE_24K, TONE_24K, TONE_24K], [1, 0, 0]))
+        self.assertEqual(len(found), 1)
+        self.assertIn("24000 Hz", found[0])
+
+    def test_game_track_alone_passes_when_the_microphone_is_off(self):
+        self.assertEqual(check_recording_audio.problems(self.movie([TONE], [1]), microphone=False), [])
+
+    def test_microphone_tracks_fail_when_the_microphone_is_off(self):
+        found = check_recording_audio.problems(self.movie([TONE, TONE, TONE], [1, 0, 0]), microphone=False)
+        self.assertEqual(len(found), 1)
+        self.assertIn("3 audio track(s), want 1", found[0])
+
+    def test_device_run_with_the_microphone_off_expects_the_game_track_alone(self):
+        import run_device_tests
+        folder = Path(self.directory.name) / "mofa-single-no-mic" / "298D3A"
+        folder.mkdir(parents=True)
+        self.movie([TONE], [1]).rename(folder / "recording.mp4")
+        self.assertEqual(run_device_tests.check_recordings(folder.parent, True, "complete", microphone=False),
+                         (True, "complete"))
+
+    def test_device_run_expects_the_microphone_whatever_the_device_reports(self):
+        import run_device_tests
+        folder = Path(self.directory.name) / "mofa-single" / "298D3A"
+        folder.mkdir(parents=True)
+        self.movie([TONE], [1]).rename(folder / "recording.mp4")
+        # A phone whose Record Microphone setting is off reports so; the test still wants the microphone.
+        (folder / "results.json").write_text('{"recordMicrophone": false}')
+        passed, detail = run_device_tests.check_recordings(folder.parent, True, "complete")
+        self.assertFalse(passed)
+        self.assertIn("1 audio track(s), want 3", detail)
+
+    def test_only_the_microphone_off_variable_turns_the_microphone_off(self):
+        import run_device_tests
+        self.assertFalse(run_device_tests.expects_microphone({"MOFA_SINGLE_RECORD_MICROPHONE": "0"}))
+        self.assertTrue(run_device_tests.expects_microphone({"MOFA_SINGLE_TEST": "1"}))
 
     def test_device_run_fails_when_its_recording_lacks_the_microphone(self):
         import run_device_tests

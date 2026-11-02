@@ -1,7 +1,8 @@
 """Checks the audio of a HoloKit recording.
 
 A recording carries three audio tracks: the game and the microphone mixed (the only default track, which Photos and
-social apps play), the game alone and the microphone alone (for editing). Each must have sound in it.
+social apps play), the game alone and the microphone alone (for editing). With Settings > Record Microphone off it
+carries the game alone. Each track must have sound in it and a sample rate of at least 44.1 kHz.
 
 Usage: check_recording_audio.py RECORDING.mp4 [...]
 """
@@ -16,6 +17,7 @@ from pathlib import Path
 TRACKS = ("game + microphone", "game", "microphone")
 # RMS below this is digital silence: a track that was written but never fed.
 SILENCE_DB = -70.0
+MIN_SAMPLE_RATE = 44100
 
 
 def audio_streams(path: Path) -> list[dict]:
@@ -37,17 +39,23 @@ def rms_db(path: Path, audio_index: int) -> float:
     return float(match.group(1))  # float() reads "-inf"
 
 
-def problems(path: Path) -> list[str]:
-    """What is wrong with the recording's audio; empty when it has the three tracks, each with sound."""
+def problems(path: Path, microphone: bool = True) -> list[str]:
+    """What is wrong with the recording's audio; empty when it has its tracks (three with the microphone, the game
+    alone without), each with sound at a full sample rate."""
     streams = audio_streams(path)
-    if len(streams) != len(TRACKS):
-        return [f"{len(streams)} audio track(s), want {len(TRACKS)} ({', '.join(TRACKS)}): "
-                "the microphone was not recorded (Record Microphone off or microphone permission not granted?)"]
+    names = TRACKS if microphone else ("game",)
+    if len(streams) != len(names):
+        why = ("the microphone was not recorded (Record Microphone off or microphone permission not granted?)"
+               if microphone else "Record Microphone is off, so only the game may be recorded")
+        return [f"{len(streams)} audio track(s), want {len(names)} ({', '.join(names)}): {why}"]
     issues = []
     defaults = [stream.get("disposition", {}).get("default", 0) for stream in streams]
-    if defaults != [1, 0, 0]:
-        issues.append(f"default flags {defaults}, want [1, 0, 0]: only the mix may play by default")
-    for index, name in enumerate(TRACKS):
+    if defaults != [1] + [0] * (len(names) - 1):
+        issues.append(f"default flags {defaults}, want {[1] + [0] * (len(names) - 1)}: only the mix may play by default")
+    rates = sorted({int(stream.get("sample_rate", 0)) for stream in streams})
+    if rates[0] < MIN_SAMPLE_RATE:
+        issues.append(f"sample rate {', '.join(f'{rate} Hz' for rate in rates)}, want at least {MIN_SAMPLE_RATE} Hz")
+    for index, name in enumerate(names):
         level = rms_db(path, index)
         if level < SILENCE_DB:
             issues.append(f"track {index + 1} ({name}) is silent ({level:.1f} dB RMS)")
